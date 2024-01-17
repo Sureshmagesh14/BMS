@@ -4,12 +4,11 @@
                 <div class="col-sm-6">
                     <script>
                         document.write(new Date().getFullYear())
-                    </script> © Drezon.
+                    </script> © {{Config::get('constants.app_title')}}.
                 </div>
                 <div class="col-sm-6">
                     <div class="text-sm-right d-none d-sm-block">
-                        Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://themesbrand.com/"
-                            target="_blank" class="text-reset">Themesbrand</a>
+                       
                     </div>
                 </div>
             </div>
@@ -88,7 +87,4 @@
 
 
 </body>
-
-
-<!-- Mirrored from themesbrand.com/drezon/layouts/vertical/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 06 Jul 2022 05:49:13 GMT -->
 </html>
