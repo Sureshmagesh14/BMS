@@ -2,7 +2,7 @@
         <i class="fa fa-fw fa-bars"></i>
     </button>
 
-    <div class="dropdown d-none d-lg-block ml-2">
+    <!-- <div class="dropdown d-none d-lg-block ml-2">
         <button type="button" class="btn header-item waves-effect" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
             <span key="t-ui-components">UI Components</span>
             <i class="mdi mdi-chevron-down"></i> 
@@ -91,5 +91,5 @@
             <a class="dropdown-item" href="#" key="t-checkout"></i>Checkout</a>
             <a class="dropdown-item" href="#" key="t-register"></i>Register</a>
         </div>
-    </div>
+    </div> -->
 </div>

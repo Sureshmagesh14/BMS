@@ -1,30 +1,11 @@
         <div class="d-flex">
-            <div class="dropdown d-inline-block language-switch">
+            <!-- <div class="dropdown d-inline-block language-switch">
                 <button type="button" class="btn header-item waves-effect"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img id="header-lang-img" src="{{ asset('assets/images/flags/us.jpg') }}" alt="Header Language" height="16">
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="eng">
-                        <img src="{{ asset('public/assets/images/flags/us.jpg') }}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">English</span>
-                    </a>
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="sp">
-                        <img src="{{ asset('public/assets/images/flags/spain.jpg') }}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Spanish</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="gr">
-                        <img src="{{ asset('public/assets/images/flags/germany.jpg') }}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">German</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="it">
-                        <img src="{{ asset('public/assets/images/flags/italy.jpg') }}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Italian</span>
-                    </a>
-
-                    <!-- item-->
+                  
                     <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="ru">
                         <img src="{{ asset('public/assets/images/flags/russia.jpg') }}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Russian</span>
                     </a>
@@ -81,9 +62,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             
-            <div class="dropdown d-inline-block">
+            <!-- <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="icon-sm" data-feather="bell"></i>
@@ -174,7 +155,7 @@
                 <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
                     <i class="icon-sm" data-feather="settings"></i>
                 </button>
-            </div>
+            </div> -->
             
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
@@ -184,10 +165,10 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <!-- item-->
-                    <a class="dropdown-item" href="#"><i class="uil uil-user-circle font-size-16 align-middle text-muted mr-1"></i> <span class="align-middle" key="t-view"> View Profile</span></a>
+                    <!-- <a class="dropdown-item" href="#"><i class="uil uil-user-circle font-size-16 align-middle text-muted mr-1"></i> <span class="align-middle" key="t-view"> View Profile</span></a>
                     <a class="dropdown-item" href="#"><i class="uil uil-wallet font-size-16 align-middle mr-1 text-muted"></i> <span class="align-middle" key="t-my-wallet"> My Wallet</span></a>
                     <a class="dropdown-item d-block" href="#"><i class="uil uil-cog font-size-16 align-middle mr-1 text-muted"></i> <span class="align-middle" key="t-settings"> Settings</span> <span class="badge badge-soft-success badge-pill mt-1 ml-2">03</span></a>
-                    <a class="dropdown-item" href="#"><i class="uil uil-lock-alt font-size-16 align-middle mr-1 text-muted"></i> <span class="align-middle" key="t-lock-screen"> Lock screen</span></a>
+                    <a class="dropdown-item" href="#"><i class="uil uil-lock-alt font-size-16 align-middle mr-1 text-muted"></i> <span class="align-middle" key="t-lock-screen"> Lock screen</span></a> -->
                     <a class="dropdown-item" href="{{ route('signout') }}"><i class="uil uil-sign-out-alt font-size-16 align-middle mr-1 text-muted"></i> <span class="align-middle" key="t-sign-out"> Sign out</span></a>
                 </div>
             </div>
