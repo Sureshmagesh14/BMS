@@ -116,7 +116,7 @@
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="banks" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Banks</span>
                     </a>

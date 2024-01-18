@@ -15,4 +15,4 @@ Route::get('register','CustomAuthController@registration')->name('register');
 Route::post('custom-registration','CustomAuthController@customRegistration')->name('register.custom');
 Route::get('signout','CustomAuthController@signOut')->name('signout');
 
-Route::get('dashboard','CustomAuthController@dashboard')->name('dashboard');
+Route::get('banks','SettingsController@banks')->name('banks');
