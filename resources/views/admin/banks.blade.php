@@ -38,28 +38,20 @@
                                         <h4 class="card-title"> </h4>
                                         <p class="card-title-desc"></p>
         
-                                        <table id="datatable" class="table dt-responsive nowrap w-100">
+                                        <table id="myTable" class="table dt-responsive nowrap w-100">
                                             <thead>
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Position</th>
+                                                <th>Bank</th>
+                                                <th>Branch Code</th>
                                                 <th>Office</th>
-                                                <th>Age</th>
-                                                <th>Start date</th>
+                                                <th>Status</th>
                                                 <th>Salary</th>
                                             </tr>
                                             </thead>
         
         
                                             <tbody>
-                                            <tr>
-                                                <td>Tiger Nixon</td>
-                                                <td>System Architect</td>
-                                                <td>Edinburgh</td>
-                                                <td>61</td>
-                                                <td>2011/04/25</td>
-                                                <td>$320,800</td>
-                                            </tr>
+                                            
                                            
                                             </tbody>
                                         </table>
@@ -77,5 +69,84 @@
                 </div>
                 <!-- End Page-content -->
 
-    @yield('adminside-script')
+@yield('adminside-script')
 @include('admin.layout.footer')
+
+<script>
+$(document).ready(function() {
+    var tempcsrf = '{!! csrf_token() !!}';
+    
+    $('#myTable').DataTable({
+        dom: '<"pull-left"f><"pull-right"l>tip',
+        bFilter: true,
+        bInfo: false,
+        bLengthChange: true,
+        iDisplayLength: 3,
+        lengthChange: true,
+        processing: true,
+        serverSide: true,
+        bAutoWidth: false,
+        oLanguage: {
+            sLengthMenu: "Show more _MENU_ "
+        },
+        lengthMenu: [
+            [3, 25, 50, -1],
+            [3, 25, 50, "All"]
+        ],
+        ajax: {
+            url: 'get_all_banks',
+            data: {
+                _token: tempcsrf,
+            },
+            error: function(xhr, error, thrown) {
+               alert("undefind error")
+            }
+        },
+        order: [
+            [1, 'desc']
+        ],
+        columns: [{
+                data: 'bank_name',
+                name: 'bank_name',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'branch_code',
+                name: 'branch_code',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'active',
+                name: 'active',
+                orderable: false
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }
+        ],
+        columnDefs: [{
+                width: 575,
+                targets: 0
+            },
+            {
+                targets: 1,
+                className: "text-center"
+            },
+            {
+                targets: 2,
+                className: "text-center"
+            },
+            {
+                targets: 3,
+                className: "text-center"
+            }
+        ],
+        aaSorting: [],
+    });
+});
+</script>

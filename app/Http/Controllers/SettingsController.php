@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
+use App\Banks;
 
 class SettingsController extends Controller
 {
@@ -15,54 +16,34 @@ class SettingsController extends Controller
 
         return view('admin.banks');
     }
-    public function customLogin(Request $request)
-    {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
-        $credentials = $request->only('email', 'password');
-        if (Auth::attempt($credentials)) {
-            return redirect()->intended('dashboard')
-                ->withSuccess('Signed in');
-        }
-        return redirect()->route('login.custom')->withSuccess('Login details are not valid');
-    }
-    public function registration()
-    {
-        return view('login_register.register');
-    }
-
-    public function customRegistration(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
-        $data = $request->all();
-        $check = $this->create($data);
-        return redirect("dashboard")->withSuccess('You have signed-in');
-    }
-    public function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password'])
-        ]);
-    }
-    public function dashboard()
-    {
-        if (Auth::check()) {
-            return view('admin.dashboard');
-        }
-        return redirect("/")->withSuccess('You are not allowed to access');
-    }
-    public function signOut()
-    {
-        Session::flush();
-        Auth::logout();
-        return Redirect('/');
+    public function get_all_banks() {
+		
+        $token = csrf_token();
+       
+        
+        $all_datas = DB::table('banks')
+        ->orderby("id","desc")
+        ->get();
+ 
+         
+         return Datatables::of($all_datas)
+          
+         ->addColumn('bank_name', function ($all_data) {
+                     return $all_data->bank_name;
+         }) 
+         ->addColumn('branch_code', function ($all_data) {
+                    return $all_data->branch_code;
+        }) 
+        ->addColumn('active', function ($all_data) {
+            return $all_data->active;
+        })   
+         ->addColumn('action', function ($all_data) use($token) {
+ 
+            return '<a href="javascript:;" data-id = "' . $all_data->id . '" data-policy_id = "' . $all_data->policy_id . '" class="" onclick="delete_data(' . $all_data->id . ')" >&nbsp;<i class="fa fa-trash-o fa-lg"></i>&nbsp;</a>';
+             
+         }) 
+         ->rawColumns(['action','active','branch_code','bank_name'])      
+         ->make(true);
+ 
     }
 }
