@@ -3,21 +3,21 @@
 
     <!-- LOGO -->
     <div class="navbar-brand-box">
-        <a href="index.html" class="logo logo-dark">
+        <a href="{{url('/dashboard')}}" class="logo logo-dark">
             <span class="logo-sm">
-                <img src="{{ asset('public/assets/images/logo-dark-sm.png') }}" alt="" height="22">
+            {{Config::get('constants.app_title')}}
             </span>
             <span class="logo-lg">
-                <img src="{{ asset('public/assets/images/logo-dark.png') }}" alt="" height="18">
+            {{Config::get('constants.app_title')}}
             </span>
         </a>
 
-        <a href="index.html" class="logo logo-light">
-            <span class="logo-sm">
-                <img src="{{ asset('public/assets/images/logo-light-sm.png') }}" alt="" height="22">
+        <a href="{{url('/dashboard')}}" class="logo logo-light">
+            <span class="logo-sm h5 text-white">
+            {{Config::get('constants.app_title')}}
             </span>
-            <span class="logo-lg">
-                <img src="{{ asset('public/assets/images/logo-light.png') }}" alt="" height="18">
+            <span class="logo-lg h5 text-white">
+            {{Config::get('constants.app_title')}}
             </span>
         </a>
     </div>
@@ -116,7 +116,7 @@
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="banks" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Banks</span>
                     </a>

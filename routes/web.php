@@ -14,3 +14,6 @@ Route::any('custom-login','CustomAuthController@customLogin')->name('login.custo
 Route::get('register','CustomAuthController@registration')->name('register');
 Route::post('custom-registration','CustomAuthController@customRegistration')->name('register.custom');
 Route::get('signout','CustomAuthController@signOut')->name('signout');
+
+Route::get('banks','SettingsController@banks')->name('banks');
+Route::any('get_all_banks', 'SettingsController@get_all_banks');
