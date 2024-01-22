@@ -16,4 +16,6 @@ Route::post('custom-registration','CustomAuthController@customRegistration')->na
 Route::get('signout','CustomAuthController@signOut')->name('signout');
 
 Route::get('banks','SettingsController@banks')->name('banks');
-Route::any('get_all_banks', 'SettingsController@get_all_banks');
+
+Route::get('add_banks','SettingsController@add_banks')->name('add_banks');
+Route::any('get_all_banks', 'SettingsController@get_all_banks')->name('get_all_banks');

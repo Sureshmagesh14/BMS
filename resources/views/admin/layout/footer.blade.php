@@ -1,3 +1,29 @@
+<div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"></h5>
+            <input type="hidden" name="colortype" id="colortype">
+            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+        </div>
+        <div class="body">
+
+        </div>
+    </div>
+</div>
+</div>
+<div class="position-fixed top-0 end-0 p-3" >
+<div id="liveToast" class="toast text-white  fade" role="alert" aria-live="assertive"
+    aria-atomic="true">
+    <div class="d-flex">
+        <div class="toast-body"> </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+            aria-label="Close"></button>
+    </div>
+</div>
+</div>
     <footer class="footer">
         <div class="container-fluid">
             <div class="row">
@@ -70,6 +96,8 @@
 
     <!-- JAVASCRIPT -->
     <script src="{{ asset('public/assets/libs/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>
+    
     <script src="{{ asset('public/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('public/assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('public/assets/libs/simplebar/simplebar.min.js') }}"></script>
@@ -111,7 +139,7 @@
   
 
     <script src="{{ asset('public/assets/js/app.js') }}"></script>
-
+    <script src="{{ asset('public/assets/js/custom.js') }}"></script>
 
 </body>
 </html>

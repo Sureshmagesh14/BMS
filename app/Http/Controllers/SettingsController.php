@@ -4,7 +4,8 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Banks;
-
+use DB;
+use Yajra\DataTables\Facades\DataTables;
 class SettingsController extends Controller
 {
     public function banks()
@@ -21,8 +22,8 @@ class SettingsController extends Controller
         $token = csrf_token();
        
         
-        $all_datas = DB::table('banks')
-        ->orderby("id","desc")
+        $all_datas = DB::table('banks')->select('id','bank_name','branch_code','active')
+        ->latest()
         ->get();
  
          
@@ -35,15 +36,31 @@ class SettingsController extends Controller
                     return $all_data->branch_code;
         }) 
         ->addColumn('active', function ($all_data) {
-            return $all_data->active;
+            if($all_data->active==1){
+                $active='Yes';
+                return $active;
+            }else{
+                $active='No';
+                return $active;
+            }
         })   
          ->addColumn('action', function ($all_data) use($token) {
  
-            return '<a href="javascript:;" data-id = "' . $all_data->id . '" data-policy_id = "' . $all_data->policy_id . '" class="" onclick="delete_data(' . $all_data->id . ')" >&nbsp;<i class="fa fa-trash-o fa-lg"></i>&nbsp;</a>';
+            return '<a href="javascript:;" data-id = "' . $all_data->id . '"  class="" onclick="delete_data(' . $all_data->id . ')" >&nbsp;<i class="fa fa-trash-o fa-lg"></i>&nbsp;</a>';
              
          }) 
          ->rawColumns(['action','active','branch_code','bank_name'])      
          ->make(true);
  
+    }
+
+    public function add_banks(){
+
+        $returnHTML = view("admin.bank.create")->render();
+
+            return response()->json([
+                "success" => true,
+                "html" => $returnHTML,
+            ]);
     }
 }

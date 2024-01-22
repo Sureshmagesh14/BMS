@@ -32,20 +32,27 @@
                         <!-- end page title -->
 
                         <div class="row">
+                            
                             <div class="col-12">
                                 <div class="card">
+                                   
                                     <div class="card-body">
                                         <h4 class="card-title"> </h4>
                                         <p class="card-title-desc"></p>
-        
+                                        <div class="text-right">
+                                            <a  href="#" data-size="lg"
+                                            data-url="{{route('add_banks')}}"
+                                            data-ajax-popup="true"
+                                            data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary" >Create Bank</a>
+                                        </div>
                                         <table id="myTable" class="table dt-responsive nowrap w-100">
                                             <thead>
                                             <tr>
-                                                <th>Bank</th>
-                                                <th>Branch Code</th>
-                                                <th>Office</th>
-                                                <th>Status</th>
-                                                <th>Salary</th>
+                                                <th>ID</th>
+                                                <th>BANK NAME</th>
+                                                <th>BRANCH CODE</th>
+                                                <th>ACTIVE</th>
+                                                <th>ACTION</th>
                                             </tr>
                                             </thead>
         
@@ -75,9 +82,9 @@
 <script>
 $(document).ready(function() {
     var tempcsrf = '{!! csrf_token() !!}';
-    
+    $('#myTable').dataTable().fnDestroy();
     $('#myTable').DataTable({
-        dom: '<"pull-left"f><"pull-right"l>tip',
+      
         bFilter: true,
         bInfo: false,
         bLengthChange: true,
@@ -90,11 +97,11 @@ $(document).ready(function() {
             sLengthMenu: "Show more _MENU_ "
         },
         lengthMenu: [
-            [3, 25, 50, -1],
-            [3, 25, 50, "All"]
+            [ 25, 50, 100, -1],
+            [25, 50, 100, "All"]
         ],
         ajax: {
-            url: 'get_all_banks',
+            url: "{{ route('get_all_banks') }}",
             data: {
                 _token: tempcsrf,
             },
@@ -102,10 +109,14 @@ $(document).ready(function() {
                alert("undefind error")
             }
         },
-        order: [
-            [1, 'desc']
-        ],
+       
         columns: [{
+                data: 'id',
+                name: 'id',
+                orderable: true,
+                searchable: true
+            },
+            {
                 data: 'bank_name',
                 name: 'bank_name',
                 orderable: true,
@@ -120,7 +131,8 @@ $(document).ready(function() {
             {
                 data: 'active',
                 name: 'active',
-                orderable: false
+                orderable: false,
+                searchable: false
             },
             {
                 data: 'action',
