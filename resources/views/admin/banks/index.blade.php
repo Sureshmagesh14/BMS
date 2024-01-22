@@ -33,14 +33,25 @@
 
                         <div class="row">
                             <div class="col-12">
+
+                           
+
                                 <div class="card">
                                     <div class="card-body">
+                                    <div class="text-right">
+                                            <a  href="{{ route('create_bank') }}" data-size="lg"
+                                            data-ajax-popup="true"
+                                            data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary" >Create Bank</a>
+                                        </div>
+
                                         <h4 class="card-title"> </h4>
                                         <p class="card-title-desc"></p>
         
                                         <table id="myTable" class="table dt-responsive nowrap w-100">
                                             <thead>
                                             <tr>
+                                                
+                                                <th>#</th>
                                                 <th>Bank</th>
                                                 <th>Branch Code</th>
                                                 <th>Status</th>
@@ -75,25 +86,21 @@
 $(document).ready(function() {
     var tempcsrf = '{!! csrf_token() !!}';
     
+    $('#myTable').dataTable().fnDestroy();
+
     $('#myTable').DataTable({
-        dom: '<"pull-left"f><"pull-right"l>tip',
-        bFilter: true,
-        bInfo: false,
-        bLengthChange: true,
-        iDisplayLength: 3,
-        lengthChange: true,
-        processing: true,
-        serverSide: true,
-        bAutoWidth: false,
-        oLanguage: {
-            sLengthMenu: "Show more _MENU_ "
-        },
+      
+        searching: true,
+        ordering: true,
+        dom : 'lfrtip',
+        info: true,
+        iDisplayLength: 10,
         lengthMenu: [
-            [3, 25, 50, -1],
-            [3, 25, 50, "All"]
+            [ 10, 50, 100, -1],
+            [10, 50, 100, "All"]
         ],
         ajax: {
-            url: 'get_all_banks',
+            url: "{{ route('get_all_banks') }}",
             data: {
                 _token: tempcsrf,
             },
@@ -101,10 +108,14 @@ $(document).ready(function() {
                alert("undefind error")
             }
         },
-        order: [
-            [1, 'desc']
-        ],
+       
         columns: [{
+                data: 'id',
+                name: '#',
+                orderable: true,
+                searchable: true
+            },
+            {
                 data: 'bank_name',
                 name: 'bank_name',
                 orderable: true,
@@ -119,7 +130,8 @@ $(document).ready(function() {
             {
                 data: 'active',
                 name: 'active',
-                orderable: false
+                orderable: false,
+                searchable: false
             },
             {
                 data: 'action',
@@ -128,13 +140,13 @@ $(document).ready(function() {
                 searchable: false
             }
         ],
-        columnDefs: [{
-                width: 575,
-                targets: 0
-            },
+        columnDefs: [
             {
-                targets: 1,
+                targets: 0,
                 className: "text-center"
+            },{
+                width: 375,
+                targets: 1
             },
             {
                 targets: 2,
@@ -143,9 +155,13 @@ $(document).ready(function() {
             {
                 targets: 3,
                 className: "text-center"
+            },
+            {
+                targets: 4,
+                className: "text-center"
             }
         ],
-        aaSorting: [],
     });
 });
 </script>
+<script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>

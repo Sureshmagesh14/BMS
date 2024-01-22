@@ -20,6 +20,21 @@
             <!-- App Css-->
             <link href="{{ asset('public/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
         @stop
+
+<style>
+.dataTables_paginate {
+float: left;
+}
+.dataTables_filter {
+float: left;
+}
+.dataTables_length {
+float: right;
+}
+.dataTables_info {
+float:right;
+}
+</style>
     </head>
 
     <body data-sidebar="dark">

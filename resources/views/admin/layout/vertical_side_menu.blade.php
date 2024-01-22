@@ -46,28 +46,28 @@
                 <li class="menu-title" key="t-apps">Admin</li>
 
                 <li>
-                    <a href="calendar.html" class="waves-effect">
+                    <a href="#" class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Users</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="#" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Internal Reports</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="#" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Cash Outs</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="#" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Action Events</span>
                     </a>
@@ -79,28 +79,28 @@
                 <li class="menu-title" key="t-pages">Database</li>
 
                 <li>
-                    <a href="calendar.html" class="waves-effect">
+                    <a href="#" class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Projects</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="#" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Respondents</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="#" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Panels</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="rewards" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Rewards</span>
                     </a>
@@ -109,7 +109,7 @@
                 <li class="menu-title">Settings</li>
 
                 <li>
-                    <a href="calendar.html" class="waves-effect">
+                    <a href="groups" class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Profile Groups</span>
                     </a>
@@ -123,14 +123,14 @@
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="charities" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Charities</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="networks" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Cellular Networks
                         </span>
@@ -138,7 +138,7 @@
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="contents" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Contents
                         </span>
