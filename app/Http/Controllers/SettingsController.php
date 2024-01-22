@@ -141,12 +141,13 @@ class SettingsController extends Controller
     }
     public function contents()
     {   
-        if (!Auth::check()) {
-            return redirect("/")->withSuccess('You are not allowed to access');
+        try {
+            return view('admin.contents.index');
         }
-        
-
-        return view('admin.contents.index');
+        catch (Exception $e) {
+            //code to handle the exception
+        }
+       
     }
     public function get_all_contents(Request $request) {
 		
@@ -161,8 +162,13 @@ class SettingsController extends Controller
     
             
             return Datatables::of($all_datas)
-            ->addColumn('data', function ($all_data) {
-                return $all_data->type_id;
+            ->addColumn('type_id', function ($all_data) {
+                if($all_data->type_id=='1'){
+                    return 'Terms of use';
+                }else{
+                    return 'Terms and condition';
+                }
+                
             })    
             ->addColumn('action', function ($all_data) use($token) {
     
@@ -235,4 +241,25 @@ class SettingsController extends Controller
         }
 
     }
+
+
+    public function create_contents(){
+        try {
+            return view('admin.contents.create');
+        }
+        catch (exception $e) {
+            //code to handle the exception
+        }
+    }
+
+    public function save_contents(Request $request){
+        try {
+           dd($request);
+        }
+        catch (exception $e) {
+            //code to handle the exception
+        }
+    }
+
+    
 }
