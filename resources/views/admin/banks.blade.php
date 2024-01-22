@@ -43,9 +43,8 @@
                                             <tr>
                                                 <th>Bank</th>
                                                 <th>Branch Code</th>
-                                                <th>Office</th>
                                                 <th>Status</th>
-                                                <th>Salary</th>
+                                                <th>Action</th>
                                             </tr>
                                             </thead>
         
