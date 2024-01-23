@@ -79,21 +79,21 @@
                 <li class="menu-title" key="t-pages">Database</li>
 
                 <li>
-                    <a href="#" class="waves-effect">
+                    <a href="projects" class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Projects</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#" class=" waves-effect">
+                    <a href="respondents" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Respondents</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#" class=" waves-effect">
+                    <a href="tags" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Panels</span>
                     </a>

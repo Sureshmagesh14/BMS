@@ -34,3 +34,11 @@ Route::any('get_all_groups', 'SettingsController@get_all_groups')->name('get_all
 Route::get('rewards','RewardsController@rewards')->name('rewards');
 Route::any('get_all_rewards', 'RewardsController@get_all_rewards')->name('get_all_rewards');
 
+Route::get('tags','TagsController@tags')->name('tags');
+Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
+
+Route::get('respondents','RespondentsController@respondents')->name('respondents');
+Route::any('get_all_respondents', 'RespondentsController@get_all_respondents')->name('get_all_respondents');
+
+Route::get('projects','ProjectsController@projects')->name('projects');
+Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');
