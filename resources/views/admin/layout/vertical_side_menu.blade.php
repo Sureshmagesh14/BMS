@@ -60,14 +60,14 @@
                 </li>
 
                 <li>
-                    <a href="#" class=" waves-effect">
+                    <a href="cashouts" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Cash Outs</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#" class=" waves-effect">
+                    <a href="actions" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Action Events</span>
                     </a>

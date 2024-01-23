@@ -42,3 +42,9 @@ Route::any('get_all_respondents', 'RespondentsController@get_all_respondents')->
 
 Route::get('projects','ProjectsController@projects')->name('projects');
 Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');
+
+Route::get('actions','ActionController@actions')->name('actions');
+Route::any('get_all_actions', 'ActionController@get_all_actions')->name('get_all_actions');
+
+Route::get('cashouts','CashoutsController@cashouts')->name('cashouts');
+Route::any('get_all_cashouts', 'CashoutsController@get_all_cashouts')->name('get_all_cashouts');

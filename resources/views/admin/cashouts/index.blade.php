@@ -17,12 +17,12 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-flex align-items-center justify-content-between">
-                                    <h4 class="mb-0">projects</h4>
+                                    <h4 class="mb-0">Cashouts</h4>
 
                                     <div class="page-title-right">
                                         <ol class="breadcrumb m-0">
                                             <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                                            <li class="breadcrumb-item active">projects</li>
+                                            <li class="breadcrumb-item active">Cashouts</li>
                                         </ol>
                                     </div>
 
@@ -39,9 +39,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                     <div class="text-right">
-                                            <a  href="#" data-size="lg"
-                                            data-ajax-popup="true"
-                                            data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary" >Create Project</a>
+                                            
                                         </div>
 
                                         <h4 class="card-title"> </h4>
@@ -52,15 +50,7 @@
                                             <tr>
                                                 
                                                 <th>#</th>
-                                                <th>Number/Code</th>
-                                                <th>Client</th>
-                                                <th>Name</th>
-                                                <th>Creator</th>
-                                                <th>Type</th>
-                                                <th>Reward Amount</th>
-                                                <th>Project Link</th>
-                                                <th>Created</th>
-                                                <th>Status</th>                                               
+                                                <th>Type</th>                                           
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
@@ -106,7 +96,7 @@ $(document).ready(function() {
             [10, 50, 100, "All"]
         ],
         ajax: {
-            url: "{{ route('get_all_projects') }}",
+            url: "{{ route('get_all_cashouts') }}",
             data: {
                 _token: tempcsrf,
             },
@@ -122,56 +112,8 @@ $(document).ready(function() {
                 searchable: true
             },
             {
-                data: 'numbers',
-                name: 'numbers',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'client',
-                name: 'client',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'name',
-                name: 'name',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'creator',
-                name: 'creator',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'type',
-                name: 'type',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'reward_amount',
-                name: 'reward_amount',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'project_link',
-                name: 'project_link',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'created',
-                name: 'created',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'status',
-                name: 'status',
+                data: 'type_id',
+                name: 'type_id',
                 orderable: true,
                 searchable: true
             },
@@ -191,31 +133,7 @@ $(document).ready(function() {
                 targets: 1
             },
             {
-                targets: 2
-            },
-            {
-                targets: 3
-            },
-            {
-                targets: 4
-            },
-            {
-                targets: 5
-            },
-            {
-                targets: 6
-            },
-            {
-                targets: 7
-            },
-            {
-                targets: 8
-            },
-            {
-                targets: 9
-            },
-            {
-                targets: 10,
+                targets: 2,
                 width: 115,
                 className: "text-center"
             }
