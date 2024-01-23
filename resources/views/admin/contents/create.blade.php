@@ -4,21 +4,19 @@
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
-
+<link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
 <div class="main-content">
-
     <div class="page-content">
         <div class="container-fluid">
-
             <!-- start page title -->
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
                         <h4 class="mb-0">Contents</h4>
-
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
@@ -33,44 +31,43 @@
 
             <div class="row">
                 <div class="col-12">
-
-
-
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form>
+                                    <form id="form-data">
                                         @csrf
-                                    <div class="form-group row">
-                                        <label for="example-text-input" class="col-md-2 col-form-label">Type *</label>
-                                        <div class="col-md-10">
-                                            <select class="form-control" required>
-                                                <option value="" selected="selected" disabled="disabled">
-                                                    Choose an option
-                                                  </option>
-                                               <option value="1">Terms of use</option>
-                                               <option value="2">Terms and Condition</option>
-                                            </select>
+                                        <div class="form-group row">
+                                            <label for="example-text-input" class="col-md-2 col-form-label">Type
+                                                *</label>
+                                            <div class="col-md-10">
+                                                <select name="type_id" id="type_id" class="form-control" required>
+                                                    <option value="" selected="selected" disabled="disabled">
+                                                        Choose an option
+                                                    </option>
+                                                    <option value="1">Terms of use</option>
+                                                    <option value="2">Terms and Condition</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="example-search-input" class="col-md-2 col-form-label">Search</label>
-                                        <div class="col-md-10">
-                                            <textarea  class="form-control" ></textarea>
+                                        <div class="form-group row">
+                                            <label for="example-search-input"
+                                                class="col-md-2 col-form-label">Search</label>
+                                            <div class="col-md-10">
+                                                <textarea id="data" name="data" class="form-control"></textarea>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="d-flex justify-content-end">
-                                        <button class="btn btn-secondary waves-effect" type="button">
-                                          Cancel
-                                        </button>&nbsp;&nbsp;
-                                        <button class="btn btn-success" id="create" type="button">
-                                            Create & Add Another
-                                          </button>&nbsp;&nbsp;
-                                          <button class="btn btn-primary" type="button">
-                                            Create Content
-                                          </button>&nbsp;&nbsp;
-                                      </div>
+                                        <div class="d-flex justify-content-end">
+                                            <button class="btn btn-secondary waves-effect" type="button">
+                                                Cancel
+                                            </button>&nbsp;&nbsp;
+                                            <button class="btn btn-success" id="create_another" type="button">
+                                                Create & Add Another
+                                            </button>&nbsp;&nbsp;
+                                            <button class="btn btn-primary" id="create" type="button">
+                                                Create Content
+                                            </button>&nbsp;&nbsp;
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -85,14 +82,62 @@
         <!-- End Page-content -->
 
         @yield('adminside-script')
-        <script>
-              var tempcsrf = '{!! csrf_token() !!}';
-              $("#create").click(function(){
-                $.post("{{route('save_contents')}}", {username:un,_token: tempcsrf},
-                    function (resp, textStatus, jqXHR) {
-                        
-                    });
-});
+        <script src="{{ asset('public/assets/libs/jquery/jquery.min.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+        @if(Session::has('success'))
+<script>
+
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  		toastr.success("{{ session('success') }}");
+
+</script>
+@endif
+
+@if(Session::has('error'))
+<script>
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  		toastr.error("{{ session('error') }}");
+</script>
+@endif
+<script>
+    toastr.options = {
+  "closeButton": true,
+  "progressBar": true,
+  };
+      
+            $("#create").click(function(e) {
+                e.preventDefault();
+                var data = $('#form-data').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: "{{ route('save_contents') }}",
+                    data: data,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        $('#create').html('....Please wait');
+                    },
+                    success: function(response) {
+                        toastr.success(response.success);
+                 
+                    },
+                    complete: function(response) {
+                        $('#create').html('Create New');
+                    }
+                });
+            });
+           
+           
+         
         </script>
         @include('admin.layout.footer')
         <script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>

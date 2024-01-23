@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/','CustomAuthController@index')->name('login');
-Route::group(['middleware' => ['auth']], function () { 
+Route::any('custom-login','CustomAuthController@customLogin')->name('login.custom');
+Route::get('register','CustomAuthController@registration')->name('register');
+Route::group(['middleware' => ['auth']], function () {
     Route::get('dashboard','CustomAuthController@dashboard')->name('dashboard');
-    Route::any('custom-login','CustomAuthController@customLogin')->name('login.custom');
-    Route::get('register','CustomAuthController@registration')->name('register');
+   
     Route::post('custom-registration','CustomAuthController@customRegistration')->name('register.custom');
     Route::get('signout','CustomAuthController@signOut')->name('signout');
     
@@ -37,7 +38,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('contents','SettingsController@contents')->name('contents');
     Route::any('get_all_contents', 'SettingsController@get_all_contents')->name('get_all_contents');
     Route::get('create_contents','SettingsController@create_contents')->name('create_contents');
-    Route::get('save_contents','SettingsController@save_contents')->name('save_contents');
+    Route::post('save_contents','SettingsController@save_contents')->name('save_contents');
     
 });
 

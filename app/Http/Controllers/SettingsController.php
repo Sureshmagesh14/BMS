@@ -4,10 +4,11 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Banks;
-use App\Contents;
+use App\Models\Contents;
 use App\Networks;
 use App\Charities;
 use App\Groups;
+
 use DB;
 use Yajra\DataTables\DataTables;
 
@@ -254,7 +255,10 @@ class SettingsController extends Controller
 
     public function save_contents(Request $request){
         try {
-           dd($request);
+
+            Contents::create($request->all());
+
+            return response(['success' => 'Employee created successfully.']);
         }
         catch (exception $e) {
             //code to handle the exception
