@@ -4,8 +4,7 @@
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
-<link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
@@ -37,6 +36,7 @@
                                 <div class="card-body">
                                     <form id="form-data">
                                         @csrf
+                                        <input type="text" id="create_type" name="create_type">
                                         <div class="form-group row">
                                             <label for="example-text-input" class="col-md-2 col-form-label">Type
                                                 *</label>
@@ -54,7 +54,7 @@
                                             <label for="example-search-input"
                                                 class="col-md-2 col-form-label">Search</label>
                                             <div class="col-md-10">
-                                                <textarea id="data" name="data" class="form-control"></textarea>
+                                                <textarea id="data" name="data" class="form-control" required></textarea>
                                             </div>
                                         </div>
                                         <div class="d-flex justify-content-end">
@@ -84,37 +84,34 @@
         @yield('adminside-script')
         <script src="{{ asset('public/assets/libs/jquery/jquery.min.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-        @if(Session::has('success'))
-<script>
+        @if (Session::has('success'))
+            <script>
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true
+                }
+                toastr.success("{{ session('success') }}");
+            </script>
+        @endif
 
-  toastr.options =
-  {
-  	"closeButton" : true,
-  	"progressBar" : true
-  }
-  		toastr.success("{{ session('success') }}");
+        @if (Session::has('error'))
+            <script>
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true
+                }
+                toastr.error("{{ session('error') }}");
+            </script>
+        @endif
+        <script>
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+            };
 
-</script>
-@endif
-
-@if(Session::has('error'))
-<script>
-  toastr.options =
-  {
-  	"closeButton" : true,
-  	"progressBar" : true
-  }
-  		toastr.error("{{ session('error') }}");
-</script>
-@endif
-<script>
-    toastr.options = {
-  "closeButton": true,
-  "progressBar": true,
-  };
-      
             $("#create").click(function(e) {
                 e.preventDefault();
+                $('#create_type').val(0);
                 var data = $('#form-data').serialize();
                 $.ajax({
                     type: 'post',
@@ -128,16 +125,41 @@
                     },
                     success: function(response) {
                         toastr.success(response.success);
-                 
+                        $('#form-data')[0].reset();
+                        setTimeout(function() {
+                            window.location.href = "{{ route('view_contents') }}";
+                        }, 200);
+
                     },
                     complete: function(response) {
                         $('#create').html('Create New');
                     }
                 });
             });
-           
-           
-         
+
+            $("#create_another").click(function(e) {
+                e.preventDefault();
+                $('#create_type').val(1);
+                var data = $('#form-data').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: "{{ route('save_contents') }}",
+                    data: data,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        $('#create_another').html('....Please wait');
+                    },
+                    success: function(response) {
+                        toastr.success(response.success);
+                        $('#form-data')[0].reset();
+                    },
+                    complete: function(response) {
+                        $('#create_another').html('Create New');
+                    }
+                });
+            });
         </script>
         @include('admin.layout.footer')
         <script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>

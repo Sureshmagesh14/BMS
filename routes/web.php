@@ -39,6 +39,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('get_all_contents', 'SettingsController@get_all_contents')->name('get_all_contents');
     Route::get('create_contents','SettingsController@create_contents')->name('create_contents');
     Route::post('save_contents','SettingsController@save_contents')->name('save_contents');
+    Route::any('view_contents/{id}', 'SettingsController@view_contents')->name('view_contents');
+    Route::delete('delete_contents/{id}', 'SettingsController@delete_contents')->name('delete_contents');
     
 });
 

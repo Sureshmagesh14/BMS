@@ -157,9 +157,7 @@ class SettingsController extends Controller
             $token = csrf_token();
         
             
-            $all_datas = DB::table('contents')
-            ->orderby("id","desc")
-            ->get();
+            $all_datas = Contents::onlyTrashed()->latest()->get();
     
             
             return Datatables::of($all_datas)
@@ -175,9 +173,9 @@ class SettingsController extends Controller
     
                 return '<div class="">
                 <div class="btn-group mr-2 mb-2 mb-sm-0">
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
+                    <a onclick="view_details(' . $all_data->id . ');" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></a>
                     <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
+                    <a    href="javascript:void(0)" data-toggle="tooltip" id="delete_content" data-id="' . $all_data->id . '"     class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></a>
                 </div>              
             </div>';
                 
@@ -255,15 +253,31 @@ class SettingsController extends Controller
 
     public function save_contents(Request $request){
         try {
+            if($request->create_type==0){
+                Contents::create($request->all());
 
-            Contents::create($request->all());
+                return response(['success' => 'Contents created successfully.']);
+            }else{
+                Contents::create($request->all());
 
-            return response(['success' => 'Employee created successfully.']);
+                return response(['success' => 'Contents created successfully.']);
+            }
+                
+           
         }
         catch (exception $e) {
             //code to handle the exception
         }
     }
 
-    
+    public function view_contents(Request $request){
+        $data=DB::table('contents')->where('id',$request->id)->first();
+        return view('admin.contents.view',compact('data'));
+    }
+
+    public function delete_contents(Request $request){
+        Contents::find($request->id)->delete();
+  
+      return 1;
+    }
 }
