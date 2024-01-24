@@ -34,7 +34,7 @@ class ActionController extends Controller
             
             $all_datas = DB::table('action_events')
             ->orderby("id","desc")
-            ->limit(10)
+            ->limit(30)
             ->get();
     
             

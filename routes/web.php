@@ -48,3 +48,6 @@ Route::any('get_all_actions', 'ActionController@get_all_actions')->name('get_all
 
 Route::get('cashouts','CashoutsController@cashouts')->name('cashouts');
 Route::any('get_all_cashouts', 'CashoutsController@get_all_cashouts')->name('get_all_cashouts');
+
+Route::get('users','UsersController@users')->name('users');
+Route::any('get_all_users', 'UsersController@get_all_users')->name('get_all_users');

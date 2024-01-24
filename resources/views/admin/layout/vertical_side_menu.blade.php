@@ -46,7 +46,7 @@
                 <li class="menu-title" key="t-apps">Admin</li>
 
                 <li>
-                    <a href="#" class="waves-effect">
+                    <a href="users" class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Users</span>
                     </a>

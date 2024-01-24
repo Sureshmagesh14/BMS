@@ -50,7 +50,10 @@
                                             <tr>
                                                 
                                                 <th>#</th>
-                                                <th>Type</th>                                           
+                                                <th>Type</th>          
+                                                <th>Status</th>          
+                                                <th>Amount</th>          
+                                                <th>Respondent</th>                                           
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
@@ -118,6 +121,24 @@ $(document).ready(function() {
                 searchable: true
             },
             {
+                data: 'status_id',
+                name: 'status_id',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'amount',
+                name: 'amount',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'respondent_id',
+                name: 'respondent_id',
+                orderable: true,
+                searchable: true
+            },
+            {
                 data: 'action',
                 name: 'action',
                 orderable: true,
@@ -129,12 +150,22 @@ $(document).ready(function() {
                 targets: 0,
                 width: 75,
                 className: "text-center"
-            },{
+            },
+            {
                 targets: 1
             },
             {
-                targets: 2,
-                width: 115,
+                targets: 2
+            },
+            {
+                targets: 3
+            },
+            {
+                targets: 4
+            },
+            {
+                targets: 5,
+                width: 175,
                 className: "text-center"
             }
         ],
