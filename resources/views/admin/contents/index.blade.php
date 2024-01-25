@@ -81,8 +81,9 @@
     @include('admin.layout.footer')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script>
+        var tempcsrf = '{!! csrf_token() !!}';
         $(document).ready(function() {
-            var tempcsrf = '{!! csrf_token() !!}';
+
 
             $('#myTable').dataTable().fnDestroy();
 
@@ -149,89 +150,59 @@
             document.location.href = url;
         }
 
-//         $(document).on('click', '#delete_content', function(e) {
-//             e.preventDefault();
-//             var id = $(this).data('id');
-//             let url = "delete_contents";
-//                                     url = url + '/' + id;
-//             document.location.href = url;
-//             var trObj = $(this);
 
-// if (confirm("Are you sure you want to delete this user?") == true) {
-//     $.ajax({
-//         url: url,
-//         type: 'DELETE',
-//         dataType: 'json',
-//         success: function(data) {
-//             //alert(data.success);
-//             trObj.parents("tr").remove();
-//         }
-//     });
-// }
+        $(document).on('click', '#delete_content', function(e) {
+            e.preventDefault();
 
-// });
+            $(this).text('Deleting..');
+            var id = $(this).data("id");
 
-$(document).on('click', '#delete_content', function() {
-     
-     var id = $(this).data("id");
-     confirm("Are You sure want to delete !");
-     let url = "delete_contents";
-                                    url = url + '/' + id;
-            document.location.href = url;
-     $.ajax({
-         type: "DELETE",
-         url: url,
-         success: function (data) {
-             table.draw();
-         },
-         error: function (data) {
-             console.log('Error:', data);
-         }
-     });
- });
+            // $.ajaxSetup({
+            //     headers: {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     }
+            // });
 
-        // function delete_contents(id) {
+            $.confirm({
+                title: 'Delete user?',
+                content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.',
+                autoClose: 'cancelAction|8000',
+                buttons: {
+                    deleteUser: {
+                        text: 'delete user',
+                        action: function() {
+                            $.ajax({
+                type: "DELETE",
+                data: {
+                    _token: tempcsrf,
+                },
+                url: "delete_contents/" + id,
+                dataType: "json",
+                success: function(response) {
+                    // console.log(response);
+                    if (response.status == 404) {
+                     
+                        $('.delete_student').text('');
+                    } else {
+                        $('#myTable').DataTable().ajax.reload();
+                        $.alert('Deleted the user!');
+                     
+                        $('.delete_student').text('Yes Delete');
+                      
+                    }
+                }
+            });
+                            
+                        }
+                    },
+                    cancelAction: function() {
+                        $.alert('action is canceled');
+                    }
+                }
+            });
+
+
            
-        //     $.confirm({
-        //                 title: 'Delete Resource?',
-        //                 content: 'Are you sure you want to delete the selected resources?',
-        //                 autoClose: 'cancelAction|8000',
-        //                 buttons: {
-        //                     deleteUser: {
-        //                         text: 'Delete',
-        //                         action: function() {
-        //                             let url = "delete_contents";
-        //                             url = url + '/' + id;
-        //     document.location.href = url;
-        //     var trObj = $(this);
-
-        //                                         $.ajax({
-        //                                             type: 'POST',
-        //                                             url: url,
-                                                  
-        //                                             headers: {
-        //                                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-        //                                                     'content')
-        //                                             },
-
-        //                                             success: function(response) {
-        //                                                 trObj.parents("tr").remove();
-        //                                                 $('#myTable').DataTable().ajax.reload();
-        //                                                 $.alert('Deleted the user!');
-                                                       
-        //                                             },
-                                                  
-
-        //                                         });
-
-                                               
-        //                                     }
-        //                                 },
-        //                                 cancel: function() {
-
-        //                                 }
-        //                         }
-        //                     });
-        //             }
+        });
     </script>
     <script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>
