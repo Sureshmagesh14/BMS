@@ -36,7 +36,7 @@
                                 <div class="card-body">
                                     <form id="form-data">
                                         @csrf
-                                        <input type="text" id="create_type" name="create_type">
+                                        <input type="hidden" id="create_type" name="create_type">
                                         <div class="form-group row">
                                             <label for="example-text-input" class="col-md-2 col-form-label">Type
                                                 *</label>
@@ -127,7 +127,7 @@
                         toastr.success(response.success);
                         $('#form-data')[0].reset();
                         setTimeout(function() {
-                            window.location.href = "{{ route('view_contents') }}";
+                            window.location.href = "view_contents/" + id";
                         }, 200);
 
                     },

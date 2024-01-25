@@ -172,27 +172,27 @@
                         text: 'delete user',
                         action: function() {
                             $.ajax({
-                type: "DELETE",
-                data: {
-                    _token: tempcsrf,
-                },
-                url: "delete_contents/" + id,
-                dataType: "json",
-                success: function(response) {
-                    // console.log(response);
-                    if (response.status == 404) {
-                     
-                        $('.delete_student').text('');
-                    } else {
-                        $('#myTable').DataTable().ajax.reload();
-                        $.alert('Deleted the user!');
-                     
-                        $('.delete_student').text('Yes Delete');
-                      
-                    }
-                }
-            });
-                            
+                                type: "DELETE",
+                                data: {
+                                    _token: tempcsrf,
+                                },
+                                url: "delete_contents/" + id,
+                                dataType: "json",
+                                success: function(response) {
+                                    // console.log(response);
+                                    if (response.status == 404) {
+
+                                        $('.delete_student').text('');
+                                    } else {
+                                        $('#myTable').DataTable().ajax.reload();
+                                        $.alert('Deleted the user!');
+
+                                        $('.delete_student').text('Yes Delete');
+
+                                    }
+                                }
+                            });
+
                         }
                     },
                     cancelAction: function() {
@@ -202,7 +202,7 @@
             });
 
 
-           
+
         });
     </script>
     <script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>
