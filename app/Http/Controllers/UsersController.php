@@ -21,9 +21,7 @@ class UsersController extends Controller
 {   
     public function users()
     {   
-        if (!Auth::check()) {
-            return redirect("/")->withSuccess('You are not allowed to access');
-        }
+       
         
         return view('admin.users.index');
     }

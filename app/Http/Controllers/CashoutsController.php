@@ -20,9 +20,7 @@ class CashoutsController extends Controller
 {   
     public function cashouts()
     {   
-        if (!Auth::check()) {
-            return redirect("/")->withSuccess('You are not allowed to access');
-        }
+       
         
         return view('admin.cashouts.index');
     }

@@ -20,9 +20,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('get_all_banks', 'SettingsController@get_all_banks')->name('get_all_banks');
     Route::any('create_bank', 'SettingsController@create_bank')->name('create_bank');
     
-  
- 
-    
+
     Route::get('networks','SettingsController@networks')->name('networks');
     Route::any('get_all_networks', 'SettingsController@get_all_networks')->name('get_all_networks');
     
@@ -41,24 +39,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('save_contents','SettingsController@save_contents')->name('save_contents');
     Route::any('view_contents/{id}', 'SettingsController@view_contents')->name('view_contents');
     Route::delete('delete_contents/{id}', 'SettingsController@delete_contents')->name('delete_contents');
+
+    Route::get('tags','TagsController@tags')->name('tags');
+    Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
+
+    Route::get('respondents','RespondentsController@respondents')->name('respondents');
+    Route::any('get_all_respondents', 'RespondentsController@get_all_respondents')->name('get_all_respondents');
+
+    Route::get('projects','ProjectsController@projects')->name('projects');
+    Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');
+
+    Route::get('actions','ActionController@actions')->name('actions');
+    Route::any('get_all_actions', 'ActionController@get_all_actions')->name('get_all_actions');
+
+    Route::get('cashouts','CashoutsController@cashouts')->name('cashouts');
+    Route::any('get_all_cashouts', 'CashoutsController@get_all_cashouts')->name('get_all_cashouts');
+
+    Route::get('users','UsersController@users')->name('users');
+    Route::any('get_all_users', 'UsersController@get_all_users')->name('get_all_users');
     
 });
 
 
-Route::get('tags','TagsController@tags')->name('tags');
-Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
-
-Route::get('respondents','RespondentsController@respondents')->name('respondents');
-Route::any('get_all_respondents', 'RespondentsController@get_all_respondents')->name('get_all_respondents');
-
-Route::get('projects','ProjectsController@projects')->name('projects');
-Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');
-
-Route::get('actions','ActionController@actions')->name('actions');
-Route::any('get_all_actions', 'ActionController@get_all_actions')->name('get_all_actions');
-
-Route::get('cashouts','CashoutsController@cashouts')->name('cashouts');
-Route::any('get_all_cashouts', 'CashoutsController@get_all_cashouts')->name('get_all_cashouts');
-
-Route::get('users','UsersController@users')->name('users');
-Route::any('get_all_users', 'UsersController@get_all_users')->name('get_all_users');

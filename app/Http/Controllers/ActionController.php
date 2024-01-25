@@ -19,9 +19,6 @@ class ActionController extends Controller
 {   
     public function actions()
     {   
-        if (!Auth::check()) {
-            return redirect("/")->withSuccess('You are not allowed to access');
-        }
         
         return view('admin.action.index');
     }

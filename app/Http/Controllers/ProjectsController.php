@@ -18,9 +18,7 @@ class ProjectsController extends Controller
 {   
     public function projects()
     {   
-        if (!Auth::check()) {
-            return redirect("/")->withSuccess('You are not allowed to access');
-        }
+       
         
         return view('admin.projects.index');
     }

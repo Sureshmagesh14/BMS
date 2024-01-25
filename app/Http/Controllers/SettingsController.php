@@ -16,9 +16,7 @@ class SettingsController extends Controller
 {   
     public function groups()
     {   
-        if (!Auth::check()) {
-            return redirect("/")->withSuccess('You are not allowed to access');
-        }
+      
         
         return view('admin.groups.index');
     }
@@ -62,9 +60,7 @@ class SettingsController extends Controller
     }
     public function charities()
     {   
-        if (!Auth::check()) {
-            return redirect("/")->withSuccess('You are not allowed to access');
-        }
+      
         
         return view('admin.charities.index');
     }
@@ -102,9 +98,7 @@ class SettingsController extends Controller
     }
     public function networks()
     {   
-        if (!Auth::check()) {
-            return redirect("/")->withSuccess('You are not allowed to access');
-        }
+        
         
         return view('admin.networks.index');
     }

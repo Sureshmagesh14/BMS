@@ -15,9 +15,7 @@ class RewardsController extends Controller
 {   
     public function rewards()
     {   
-        if (!Auth::check()) {
-            return redirect("/")->withSuccess('You are not allowed to access');
-        }
+      
         
         return view('admin.rewards.index');
     }
