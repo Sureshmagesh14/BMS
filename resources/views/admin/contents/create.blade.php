@@ -58,7 +58,8 @@
                                             </div>
                                         </div>
                                         <div class="d-flex justify-content-end">
-                                            <button class="btn btn-secondary waves-effect" type="button">
+                                            <button onclick="window.location='{{ route('contents') }}';"
+                                                class="btn btn-secondary waves-effect" type="button">
                                                 Cancel
                                             </button>&nbsp;&nbsp;
                                             <button class="btn btn-success" id="create_another" type="button">
@@ -125,10 +126,9 @@
                     },
                     success: function(response) {
                         toastr.success(response.success);
-                        $('#form-data')[0].reset();
                         setTimeout(function() {
-                            window.location.href = "view_contents/" + id";
-                        }, 200);
+                            window.location.href = "view_contents/" + response.last_insert_id;
+                        }, 500);
 
                     },
                     complete: function(response) {

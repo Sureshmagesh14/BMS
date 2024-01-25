@@ -8,10 +8,10 @@ use App\Models\Contents;
 use App\Networks;
 use App\Charities;
 use App\Groups;
-
+use Illuminate\Support\Facades\Validator;
 use DB;
 use Yajra\DataTables\DataTables;
-
+use Exception;
 class SettingsController extends Controller
 {   
     public function groups()
@@ -168,7 +168,7 @@ class SettingsController extends Controller
                 return '<div class="">
                 <div class="btn-group mr-2 mb-2 mb-sm-0">
                     <a onclick="view_details(' . $all_data->id . ');" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></a>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
+                    <button type="button" id="edit_content" data-id="' . $all_data->id . '" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
                     <button type="button" id="delete_content" data-id="' . $all_data->id . '"     class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
                 </div>              
             </div>';
@@ -247,20 +247,97 @@ class SettingsController extends Controller
 
     public function save_contents(Request $request){
         try {
-            if($request->create_type==0){
-                Contents::create($request->all());
 
-                return response(['success' => 'Contents created successfully.']);
-            }else{
-                Contents::create($request->all());
-
-                return response(['success' => 'Contents created successfully.']);
+            $validator = Validator::make($request->all(), [
+               'type_id'=> 'required',
+                'data'=>'required',
+            ]);
+    
+            if($validator->fails())
+            {
+                return response()->json([
+                    'status'=>400,
+                    'errors'=>$validator->messages()
+                ]);
             }
-                
+            else
+            {
+                $content = new Contents;
+                $content->type_id = $request->input('type_id');
+                $content->data = $request->input('data');
+                $content->save();
+                $content->id;
+                return response()->json([
+                    'status'=>200,
+                    'last_insert_id' => $content->id,
+                    'message'=>'Content Added Successfully.'
+                ]);
+            }
+
+        }
+        catch (Exception $e) {
+            //code to handle the exception
+        }
+    }
+
+    public function update_contents(Request $request){
+        try {
+            $validator = Validator::make($request->all(), [
+                'type_id'=> 'required',
+                'data'=>'required',
+            ]);
+    
+            if($validator->fails())
+            {
+                return response()->json([
+                    'status'=>400,
+                    'errors'=>$validator->messages()
+                ]);
+            }
+            else
+            {
+               
+                $content = Contents::find($request->id);
+                if($content)
+                {
+                    $content->type_id = $request->input('type_id');
+                    $content->data = $request->input('data');
+                    $content->update();
+                    $content->id;
+                    return response()->json([
+                        'status'=>200,
+                        'last_insert_id' => $content->id,
+                        'success'=>'Contents Updated Successfully.'
+                    ]);
+                }
+                else
+                {
+                    return response()->json([
+                        'status'=>404,
+                        'error'=>'No Student Found.'
+                    ]);
+                }
+    
+            }
            
         }
-        catch (exception $e) {
+        catch (Exception $e) {
             //code to handle the exception
+        }
+    }
+
+    public function edit_contents($id){
+        $content = Contents::find($id);
+        if($content)
+        {
+            return view('admin.contents.edit',compact('content'));
+        }
+        else
+        {
+            return response()->json([
+                'status'=>404,
+                'message'=>'No Content Found.'
+            ]);
         }
     }
 
@@ -269,9 +346,28 @@ class SettingsController extends Controller
         return view('admin.contents.view',compact('data'));
     }
 
+    
+
     public function delete_contents(Request $request){
-        Contents::find($request->id)->delete();
-  
-      return 1;
+
+        $contents = Contents::find($request->id);
+        if($contents)
+        {
+            $contents->delete();
+            return response()->json([
+                'status'=>200,
+                'message'=>'Contents Deleted Successfully.'
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status'=>404,
+                'message'=>'No Contents Found.'
+            ]);
+        }
+
     }
+
+    
 }
