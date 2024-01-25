@@ -11,7 +11,7 @@ use App\Groups;
 use App\Tags;
 use App\Respondents;
 use App\Projects;
-use App\Actions;
+use App\Models\Action;
 use DB;
 use Yajra\DataTables\DataTables;
 
@@ -32,11 +32,8 @@ class ActionController extends Controller
             $token = csrf_token();
         
             
-            $all_datas = DB::table('action_events')
-            ->orderby("id","desc")
-            ->limit(30)
-            ->get();
-    
+            $all_datas = Action::limit(30)->get();
+  
             
             return Datatables::of($all_datas)
              

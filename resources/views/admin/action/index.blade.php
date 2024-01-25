@@ -50,8 +50,12 @@
                                             <tr>
                                                 
                                                 <th>#</th>
-                                                <th>Name</th>                                           
-                                                <th>Action</th>
+                                                <th>ACTION NAME</th>                                           
+                                                <th>ACTION INITIATED BY	</th>
+                                                <th>ACTION TARGET</th>
+                                                <th>ACTION STATUS</th>
+                                                <th>ACTION HAPPENED AT</th>
+                                                <th></th>
                                             </tr>
                                             </thead>
         
@@ -88,6 +92,7 @@ $(document).ready(function() {
       
         searching: true,
         serverSide: true,
+        deferRender: true,
         ordering: true,
         dom : 'lfrtip',
         info: true,
