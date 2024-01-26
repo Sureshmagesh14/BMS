@@ -152,7 +152,7 @@
         $(document).on('click', '#edit_content', function(e) {
             var stud_id = $(this).data("id");
             var url = "{{ route('edit_contents', ':id') }}";
-            url = url.replace(':id', id);
+            url = url.replace(':id', stud_id);
             location.href = url;
         });
 
@@ -169,7 +169,7 @@
             // });
             var url = "{{ route('delete_contents', ':id') }}";
             url = url.replace(':id', id);
-            location.href = url;
+          
             $.confirm({
                 title: 'Delete user?',
                 content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.',

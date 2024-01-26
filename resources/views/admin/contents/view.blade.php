@@ -109,7 +109,7 @@
             });
             var url = "{{ route('delete_contents', ':id') }}";
 	            url = url.replace(':id', id);
-                location.href = url;
+              
             $.confirm({
                 title: 'Delete user?',
                 content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.',
