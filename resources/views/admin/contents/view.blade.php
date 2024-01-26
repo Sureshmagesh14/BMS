@@ -96,17 +96,18 @@
 @include('admin.layout.footer')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script>
+     var tempcsrf = '{!! csrf_token() !!}';
       $(document).on('click', '#delete_content', function(e) {
             e.preventDefault();
 
             // $(this).text('Deleting..');
             var id = $(this).data("id");
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+            // $.ajaxSetup({
+            //     headers: {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     }
+            // });
             var url = "{{ route('delete_contents', ':id') }}";
 	            url = url.replace(':id', id);
               
@@ -120,7 +121,10 @@
                         action: function() {
                             $.ajax({
                                 
-                               
+                                type: "DELETE",
+                                data: {
+                                    _token: tempcsrf,
+                                },
                                 url: url,
                                 dataType: "json",
                                 success: function(response) {
