@@ -5,19 +5,19 @@
     <div class="navbar-brand-box">
         <a href="index.html" class="logo logo-dark">
             <span class="logo-sm">
-                <img src="{{ asset('public/assets/images/logo-dark-sm.png') }}" alt="" height="22">
+                <img src="{{ asset('/assets/images/logo-dark-sm.png') }}" alt="" height="22">
             </span>
             <span class="logo-lg">
-                <img src="{{ asset('public/assets/images/logo-dark.png') }}" alt="" height="18">
+                <img src="{{ asset('/assets/images/logo-dark.png') }}" alt="" height="18">
             </span>
         </a>
 
         <a href="index.html" class="logo logo-light">
             <span class="logo-sm">
-                <img src="{{ asset('public/assets/images/logo-light-sm.png') }}" alt="" height="22">
+                <img src="{{ asset('/assets/images/logo-light-sm.png') }}" alt="" height="22">
             </span>
             <span class="logo-lg">
-                <img src="{{ asset('public/assets/images/logo-light.png') }}" alt="" height="18">
+                <img src="{{ asset('/assets/images/logo-light.png') }}" alt="" height="18">
             </span>
         </a>
     </div>
@@ -49,6 +49,12 @@
                     <a href="calendar.html" class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Users</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/survey" class="waves-effect">
+                        <i class="icon nav-icon" data-feather="calendar"></i>
+                        <span class="menu-item" key="t-calendar">Survey</span>
                     </a>
                 </li>
 

@@ -10,15 +10,15 @@
 
         @section('adminside-favicon')
             <!-- App favicon -->
-            <link rel="shortcut icon" href="{{ asset('public/assets/images/favicon.ico') }}">
+            <link rel="shortcut icon" href="{{ asset('/assets/images/favicon.ico') }}">
         @stop
         @section('adminside-css')
             <!-- Bootstrap Css -->
-            <link href="{{ asset('public/assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+            <link href="{{ asset('/assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
             <!-- Icons Css -->
-            <link href="{{ asset('public/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+            <link href="{{ asset('/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
             <!-- App Css-->
-            <link href="{{ asset('public/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+            <link href="{{ asset('/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
         @stop
     </head>
 
@@ -35,19 +35,19 @@
                             <div class="navbar-brand-box">
                                 <a href="index.html" class="logo logo-dark">
                                     <span class="logo-sm">
-                                        <img src="{{ asset('public/assets/images/logo-dark-sm.png') }}" alt="" height="22">
+                                        <img src="{{ asset('/assets/images/logo-dark-sm.png') }}" alt="" height="22">
                                     </span>
                                     <span class="logo-lg">
-                                        <img src="{{ asset('public/assets/images/logo-dark.png') }}" alt="" height="18">
+                                        <img src="{{ asset('/assets/images/logo-dark.png') }}" alt="" height="18">
                                     </span>
                                 </a>
                 
                                 <a href="index.html" class="logo logo-light">
                                     <span class="logo-sm">
-                                        <img src="{{ asset('public/assets/images/logo-light-sm.png') }}" alt="" height="22">
+                                        <img src="{{ asset('/assets/images/logo-light-sm.png') }}" alt="" height="22">
                                     </span>
                                     <span class="logo-lg">
-                                        <img src="{{ asset('public/assets/images/logo-light.png') }}" alt="" height="18">
+                                        <img src="{{ asset('/assets/images/logo-light.png') }}" alt="" height="18">
                                     </span>
                                 </a>
                             </div>
