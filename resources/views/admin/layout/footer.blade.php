@@ -70,6 +70,7 @@
 
 
     <!-- JAVASCRIPT -->
+
     <script src="{{ asset('/assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('/assets/libs/metismenu/metisMenu.min.js') }}"></script>
@@ -85,7 +86,17 @@
     <script src="{{ asset('/assets/js/pages/dashboard.init.js') }}"></script>
 
     <script src="{{ asset('/assets/js/app.js') }}"></script>
+    <!-- Required datatable js -->
+    <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap.min.css">
+ 
+    <link rel="stylesheet" href="https://demo.mustbuildapp.com/assets/css/datatables.min.css">
+    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
 
 </body>
 

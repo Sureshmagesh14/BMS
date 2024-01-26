@@ -4,61 +4,59 @@ use Illuminate\Http\Request;
 use Hash;
 use Session;
 use App\Models\User;
+use App\Models\Folder;
+use Yajra\DataTables\DataTables;
+
 use Illuminate\Support\Facades\Auth;
 class SurveyController extends Controller
 {
-    public function index()
+    public function folder()
     {
-        return view('admin.survey.index');
+        $foldersList=Folder::get();
+       
+        return view('admin.survey.index', compact('foldersList'));
+
     }
-    public function customLogin(Request $request)
-    {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
-        $credentials = $request->only('email', 'password');
-        if (Auth::attempt($credentials)) {
-            return redirect()->intended('dashboard')
-                ->withSuccess('Signed in');
-        }
-        return redirect()->route('login.custom')->withSuccess('Login details are not valid');
+    public function getFolderList(){
+        $foldersList=Folder::get();
+
+        return Datatables::of($foldersList)
+            ->addColumn('id', function ($list) {
+                return "#".$list->id;
+            })
+            ->addColumn('folder_name', function ($list) {
+                return $list->folder_name;
+            })
+            ->addColumn('folder_type', function ($list) {
+                return ucfirst($list->folder_type);
+            })
+            ->addColumn('survery_count', function ($list) {
+                return $list->survery_count;
+            })
+            ->addColumn('created_at', function ($list) {
+                return date_format($list->created_at, "M j, Y h:i:s");
+            })
+            ->addColumn('actions', function ($list) {
+                $editLink=route('folder.edit',$list->id);
+                $deletedLink=route('folder.delete',$list->id);
+               return '<div class="actionsBtn"><a href="#" class="btn btn-primary waves-effect waves-light editFolder" data-url="'.$editLink.'" data-ajax-popup="true" data-bs-toggle="tooltip" title="Edit Folder" data-title="Edit Folder">Edit</a>
+                <a href="#" class="btn btn-danger waves-effect waves-light" data-url="'.$deletedLink.'" data-ajax-popup="true" data-bs-toggle="tooltip" title="Delete Folder" data-title="Delete Folder">Delete</a></div>';
+            })
+            ->rawColumns(['id','folder_name','folder_type','survery_count','created_at','actions'])
+            ->make(true);
+
+        return response()->json(['data' => $foldersList], 200);
     }
-    public function registration()
-    {
-        return view('login_register.register');
+    public function editFolder($id){
+
+        $folder=Folder::where(['id'=>$id])->first();
+        return view('admin.survey.create', compact('folder'));
+
+
     }
 
-    public function customRegistration(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
-        $data = $request->all();
-        $check = $this->create($data);
-        return redirect("dashboard")->withSuccess('You have signed-in');
+    public function createFolder(Request $request){
+        return view('admin.survey.create');
     }
-    public function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password'])
-        ]);
-    }
-    public function dashboard()
-    {
-        if (Auth::check()) {
-            return view('admin.dashboard');
-        }
-        return redirect("/")->withSuccess('You are not allowed to access');
-    }
-    public function signOut()
-    {
-        Session::flush();
-        Auth::logout();
-        return Redirect('/');
-    }
+   
 }
