@@ -67,12 +67,12 @@
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="py-lg-2 pl-lg-2">
-                        <img src="{{ asset('public/assets/images/menu-product-1.jpg') }}" alt="" class="img-fluid mx-auto rounded shadow">
+                        <img src="{{ asset('/assets/images/menu-product-1.jpg') }}" alt="" class="img-fluid mx-auto rounded shadow">
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="py-lg-2 pr-lg-2">
-                        <img src="{{ asset('public/assets/images/menu-product-2.jpg') }}" alt="" class="img-fluid mx-auto rounded shadow">
+                        <img src="{{ asset('/assets/images/menu-product-2.jpg') }}" alt="" class="img-fluid mx-auto rounded shadow">
                     </div>
                 </div>
             </div>
