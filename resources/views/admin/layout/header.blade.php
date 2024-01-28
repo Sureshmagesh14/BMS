@@ -41,7 +41,7 @@
             .actionsBtn {
                 display: flex;
             }
-            .editFolder {
+            .editSurvey {
                 margin-right: 1rem;
             }
             .createBtn {
@@ -59,7 +59,7 @@
             .privateusers {
                 display:none;
             }
-            .privateusers .form-group.mb-0{
+            .privateusers .form-group.mb-0,.surveyfoldername .form-group.mb-0{
                 display: flex;
                 flex-direction: column-reverse;
             }

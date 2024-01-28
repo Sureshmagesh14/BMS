@@ -58,7 +58,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('folder')}}" key="t-user-grid">Folder</a></li>
-                        <li><a href="contacts-list.html" key="t-user-list">Survey</a></li>
+                        <li><a href="{{route('survey')}}" key="t-user-list">Survey</a></li>
                         <li><a href="contacts-profile.html" key="t-profile">Templates</a></li>
                         <li><a href="contacts-profile.html" key="t-profile">Response</a></li>
                     </ul>
