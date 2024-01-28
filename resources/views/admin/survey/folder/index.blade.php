@@ -102,15 +102,17 @@ function folderdelete(url,id){
         cancelButtonColor: "#f46a6a", 
         confirmButtonText: "Yes, delete it!" 
     }).then(function (t) { 
-        $.ajax({url: url, success: function(result){
-            result = JSON.parse(result);
-            if(result.error!=''){
-                t.value && Swal.fire("Warning!", result.error, "warning") ;
-            }else{
-                t.value && Swal.fire("Deleted!", result.success, "success") ;
-            }
-            activity_datatable(null, null, null);
-        }});
+        if(t.isConfirmed){
+            $.ajax({url: url, success: function(result){
+                result = JSON.parse(result);
+                if(result.error!=''){
+                    t.value && Swal.fire("Warning!", result.error, "warning") ;
+                }else{
+                    t.value && Swal.fire("Deleted!", result.success, "success") ;
+                }
+                activity_datatable(null, null, null);
+            }});
+        }
     })
     console.log(id)
 }
