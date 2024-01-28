@@ -52,10 +52,16 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/survey" class="waves-effect">
-                        <i class="icon nav-icon" data-feather="calendar"></i>
-                        <span class="menu-item" key="t-calendar">Survey</span>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="icon nav-icon" data-feather="book"></i>
+                        <span class="menu-item" key="t-contacts">Survey</span>
                     </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('folder')}}" key="t-user-grid">Folder</a></li>
+                        <li><a href="contacts-list.html" key="t-user-list">Survey</a></li>
+                        <li><a href="contacts-profile.html" key="t-profile">Templates</a></li>
+                        <li><a href="contacts-profile.html" key="t-profile">Response</a></li>
+                    </ul>
                 </li>
 
                 <li>

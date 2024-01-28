@@ -27,7 +27,7 @@
             </div>
             <meta name="csrf-token" content="{{ csrf_token() }}" />
             <div class="createBtn">
-                <button type="button" class="btn btn-primary waves-effect waves-light"><a href="#" class="mx-3 btn btn-sm align-items-center" data-url="{{route('folder.create')}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Create Folder" data-title="Create Folder">Create Folder <i class="icon-sm" data-feather="folder-plus"></i></a></button>
+            <a href="#" class="mx-3 btn btn-sm align-items-center" data-url="{{route('folder.create')}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Create Folder" data-title="Create Folder"><button type="button" class="btn btn-primary waves-effect waves-light">Create Folder <i class="icon-sm" data-feather="folder-plus"></i></button></a>
                 
 
             </div>
@@ -49,8 +49,8 @@
         <!-- container-fluid -->
     </div>
     <!-- End Page-content -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
- 
+    <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
+
 <style>
 div#folder-table_wrapper .row {
     width: 100%;
@@ -93,20 +93,37 @@ function common_bind() {
     select2();
 }
 
-
+function folderdelete(url,id){
+    Swal.fire({ 
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning", showCancelButton: !0, 
+        confirmButtonColor: "#34c38f", 
+        cancelButtonColor: "#f46a6a", 
+        confirmButtonText: "Yes, delete it!" 
+    }).then(function (t) { 
+        $.ajax({url: url, success: function(result){
+            result = JSON.parse(result);
+            if(result.error!=''){
+                t.value && Swal.fire("Warning!", result.error, "warning") ;
+            }else{
+                t.value && Swal.fire("Deleted!", result.success, "success") ;
+            }
+            activity_datatable(null, null, null);
+        }});
+    })
+    console.log(id)
+}
+   
 function select2() {
     if ($(".select2").length > 0) {
-        $($(".select2")).each(function (index, element) {
-            var id = $(element).attr('id');
-            var multipleCancelButton = new Choices(
-                '#' + id, {
-                removeItemButton: true,
-            }
-            );
-        });
-
+        if($('#user_ids').val()!=undefined && $('#user_ids').val()!=''){
+            $('#privateusers').val($('#user_ids').val().split(","));
+        }
+       
+        $('.select2').select2();
     }
-
+    
 }
 
 $.ajaxSetup({
