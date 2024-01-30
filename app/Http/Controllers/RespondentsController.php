@@ -17,17 +17,30 @@ class RespondentsController extends Controller
 {   
     public function respondents()
     {   
-        if (!Auth::check()) {
-            return redirect("/")->withSuccess('You are not allowed to access');
+        try {
+            if (!Auth::check()) {
+                return redirect("/")->withSuccess('You are not allowed to access');
+            }
+            
+            return view('admin.respondents.index');
         }
-        
-        return view('admin.respondents.index');
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+      
     }
     public function get_all_respondents(Request $request) {
 		
-        if ($request->ajax()) {
+        try {
+            if ($request->ajax()) {
 
-            $token = csrf_token();
+                $token = csrf_token();
+            
+                
+                $all_datas = DB::table('respondents')
+                ->orderby("id","desc")
+                ->limit(10)
+                ->get();
         
             
             // $all_datas = Respondents::select('respondents.*','projects.name as uname')
@@ -81,6 +94,10 @@ class RespondentsController extends Controller
             ->rawColumns(['name','surname','mobile','whatsapp','email','age','gender','race','status','profile_completion','inactive_until','opeted_in'])      
             ->make(true);
         }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        
 
     }
 }

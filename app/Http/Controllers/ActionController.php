@@ -14,20 +14,24 @@ use App\Models\Projects;
 use App\Models\Action;
 use DB;
 use Yajra\DataTables\DataTables;
-
+use Exception;
 class ActionController extends Controller
 {   
     public function actions()
     {   
-        
-        return view('admin.action.index');
+        try {
+            return view('admin.action.index');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+       
     }
     public function get_all_actions(Request $request) {
-		
-        if ($request->ajax()) {
+        try {
+            if ($request->ajax()) {
 
-            $token = csrf_token();
-        
+                $token = csrf_token();
             
             $all_datas = Action::select('action_events.*','users.name as uname')
             ->join('users', 'users.id', '=', 'action_events.user_id') 
@@ -63,6 +67,10 @@ class ActionController extends Controller
             ->rawColumns(['action','name','uname','target_id'])      
             ->make(true);
         }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        
 
     }
 }

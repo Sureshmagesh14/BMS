@@ -34,29 +34,17 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form id="form-data">
+                                    <form id="network_form">
                                         @csrf
-                                        <input type="hidden" id="create_type" name="create_type">
+                                        <input class="form-control" type="hidden" id="create_type" name="create_type">
                                         <div class="form-group row">
                                             <label for="example-text-input" class="col-md-2 col-form-label">Type
                                                 *</label>
                                             <div class="col-md-10">
-                                                <select name="type_id" id="type_id" class="form-control" required>
-                                                    <option value="" selected="selected" disabled="disabled">
-                                                        Choose an option
-                                                    </option>
-                                                    <option value="1">Terms of use</option>
-                                                    <option value="2">Terms and Condition</option>
-                                                </select>
+                                               <input class="form-control" type="text" name="name" id="name">
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label for="example-search-input"
-                                                class="col-md-2 col-form-label">Search</label>
-                                            <div class="col-md-10">
-                                                <textarea id="data" name="data" class="form-control" required></textarea>
-                                            </div>
-                                        </div>
+                                     
                                         <div class="d-flex justify-content-end">
                                             <button onclick="window.location='{{ route('contents') }}';"
                                                 class="btn btn-secondary waves-effect" type="button">
@@ -66,7 +54,7 @@
                                                 Create & Add Another
                                             </button>&nbsp;&nbsp;
                                             <button class="btn btn-primary" id="create" type="button">
-                                                Create Content
+                                                Create Celular Network
                                             </button>&nbsp;&nbsp;
                                         </div>
                                     </form>
@@ -113,10 +101,10 @@
             $("#create").click(function(e) {
                 e.preventDefault();
                 $('#create_type').val(0);
-                var data = $('#form-data').serialize();
+                var data = $('#network_form').serialize();
                 $.ajax({
                     type: 'post',
-                    url: "{{ route('save_contents') }}",
+                    url: "{{ route('save_network') }}",
                     data: data,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

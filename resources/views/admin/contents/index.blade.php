@@ -149,12 +149,17 @@
             url = url + '/' + id;
             document.location.href = url;
         }
-
+        $(document).on('click', '#edit_content', function(e) {
+            var stud_id = $(this).data("id");
+            var url = "{{ route('edit_contents', ':id') }}";
+            url = url.replace(':id', stud_id);
+            location.href = url;
+        });
 
         $(document).on('click', '#delete_content', function(e) {
             e.preventDefault();
 
-            $(this).text('Deleting..');
+            // $(this).text('Deleting..');
             var id = $(this).data("id");
 
             // $.ajaxSetup({
@@ -162,7 +167,9 @@
             //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             //     }
             // });
-
+            var url = "{{ route('delete_contents', ':id') }}";
+            url = url.replace(':id', id);
+          
             $.confirm({
                 title: 'Delete user?',
                 content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.',
@@ -176,7 +183,7 @@
                                 data: {
                                     _token: tempcsrf,
                                 },
-                                url: "delete_contents/" + id,
+                                url: url,
                                 dataType: "json",
                                 success: function(response) {
                                     // console.log(response);

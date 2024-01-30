@@ -13,21 +13,26 @@ use App\Models\Respondents;
 use App\Models\Projects;
 use DB;
 use Yajra\DataTables\DataTables;
-
+use Exception;
 class ProjectsController extends Controller
 {   
     public function projects()
     {   
-       
-        
-        return view('admin.projects.index');
+        try {
+            return view('admin.projects.index');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    
     }
+
     public function get_all_projects(Request $request) {
 		
-        if ($request->ajax()) {
+        try {
+            if ($request->ajax()) {
 
-            $token = csrf_token();
-        
+                $token = csrf_token();
             
             $all_datas = Projects::select('projects.*','projects.name as uname')
             ->join('users', 'users.id', '=', 'projects.user_id') 
@@ -94,10 +99,61 @@ class ProjectsController extends Controller
                 </div>              
             </div>';
                 
-            })
-            ->rawColumns(['action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
-            ->make(true);
+                $all_datas = DB::table('projects')
+                ->orderby("id","desc")
+                ->limit(10)
+                ->get();
+        
+                
+                return Datatables::of($all_datas)
+                 
+                ->addColumn('numbers', function ($all_data) {
+                    return $all_data->number;
+                })  
+                ->addColumn('client', function ($all_data) {
+                    return $all_data->client;
+                })  
+                ->addColumn('name', function ($all_data) {
+                    return $all_data->name;
+                }) 
+                ->addColumn('creator', function ($all_data) {
+                    return '-';
+                })
+                ->addColumn('type', function ($all_data) {
+                    return '-';
+                })
+                ->addColumn('reward_amount', function ($all_data) {
+                    return '-';
+                })
+                ->addColumn('project_link', function ($all_data) {
+                    return '-';
+                })
+                ->addColumn('created', function ($all_data) {
+                    return '-';
+                })
+                ->addColumn('status', function ($all_data) {
+                    return '-';
+                })
+                ->addColumn('action', function ($all_data) use($token) {
+        
+                    return '<div class="">
+                    <div class="btn-group mr-2 mb-2 mb-sm-0">
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
+                    </div>              
+                </div>';
+                    
+                })
+                ->rawColumns(['action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
+                ->make(true);
+            }
         }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        
+        
 
     }
 }

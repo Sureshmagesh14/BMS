@@ -39,9 +39,8 @@
                                 <div class="card">
                                     <div class="card-body">
                                     <div class="text-right">
-                                            <a  href="#" data-size="lg"
-                                            data-ajax-popup="true"
-                                            data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary" >Create networks</a>
+                                            <a  href="{{ route('create_networks') }}" 
+                                            data-bs-original-title="{{ __('Create Networks') }}" class="btn btn-primary" >Create networks</a>
                                         </div>
 
                                         <h4 class="card-title"> </h4>
