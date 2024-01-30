@@ -30,124 +30,82 @@ class ProjectsController extends Controller
     public function get_all_projects(Request $request) {
 		
         try {
-            if ($request->ajax()) {
+                    if ($request->ajax()) {
 
-                $token = csrf_token();
-            
-            $all_datas = Projects::select('projects.*','projects.name as uname')
-            ->join('users', 'users.id', '=', 'projects.user_id') 
-            ->orderby("id","desc")
-            ->get();
-    
-            
-            return Datatables::of($all_datas)
-             
-            ->addColumn('numbers', function ($all_data) {
-                return $all_data->number;
-            })  
-            ->addColumn('client', function ($all_data) {
-                return $all_data->client;
-            })  
-            ->addColumn('name', function ($all_data) {
-                return $all_data->description;
-            }) 
-            ->addColumn('creator', function ($all_data) {
-                return $all_data->uname;
-            })
-            ->addColumn('type', function ($all_data) {
-                if($all_data->type_id==1){
-                    return 'Pre-Screener';
-                }else if($all_data->type_id==2){
-                    return 'Pre-Task';
-                }else if($all_data->type_id==3){
-                    return 'Paid  survey';
-                }else if($all_data->type_id==4){
-                    return 'Unpaid  survey';
-                }else{  
-                    return '-';
-                }
-            })
-            ->addColumn('reward_amount', function ($all_data) {
-                return $all_data->reward;
-            })
-            ->addColumn('project_link', function ($all_data) {
-                return $all_data->project_link;
-            })
-            ->addColumn('created', function ($all_data) {
-                return date("M j, Y, g:i A", strtotime($all_data->created_at));
-            })
-            ->addColumn('status', function ($all_data) {
-                if($all_data->status_id==1){
-                    return 'Pending';
-                }else if($all_data->status_id==2){
-                    return 'Active';
-                }else if($all_data->status_id==3){
-                    return 'Completed';
-                }else if($all_data->status_id==4){
-                    return 'Cancelled';
-                }else{  
-                    return '-';
-                }
-            })
-            ->addColumn('action', function ($all_data) use($token) {
-    
-                return '<div class="">
-                <div class="btn-group mr-2 mb-2 mb-sm-0">
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
-                </div>              
-            </div>';
-                
-                $all_datas = DB::table('projects')
-                ->orderby("id","desc")
-                ->limit(10)
-                ->get();
-        
-                
-                return Datatables::of($all_datas)
-                 
-                ->addColumn('numbers', function ($all_data) {
-                    return $all_data->number;
-                })  
-                ->addColumn('client', function ($all_data) {
-                    return $all_data->client;
-                })  
-                ->addColumn('name', function ($all_data) {
-                    return $all_data->name;
-                }) 
-                ->addColumn('creator', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('type', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('reward_amount', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('project_link', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('created', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('status', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('action', function ($all_data) use($token) {
-        
-                    return '<div class="">
-                    <div class="btn-group mr-2 mb-2 mb-sm-0">
-                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
-                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
-                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
-                    </div>              
-                </div>';
+
+                        $token = csrf_token();
                     
-                })
-                ->rawColumns(['action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
-                ->make(true);
-            }
+                        $all_datas = Projects::select('projects.*','projects.name as uname')
+                        ->join('users', 'users.id', '=', 'projects.user_id') 
+                        ->orderby("id","desc")
+                        ->get();
+                
+                        
+                        return Datatables::of($all_datas)
+                        
+                        ->addColumn('numbers', function ($all_data) {
+                            return $all_data->number;
+                        })  
+                        ->addColumn('client', function ($all_data) {
+                            return $all_data->client;
+                        })  
+                        ->addColumn('name', function ($all_data) {
+                            return $all_data->description;
+                        }) 
+                        ->addColumn('creator', function ($all_data) {
+                            return $all_data->uname;
+                        })
+                        ->addColumn('type', function ($all_data) {
+                            if($all_data->type_id==1){
+                                return 'Pre-Screener';
+                            }else if($all_data->type_id==2){
+                                return 'Pre-Task';
+                            }else if($all_data->type_id==3){
+                                return 'Paid  survey';
+                            }else if($all_data->type_id==4){
+                                return 'Unpaid  survey';
+                            }else{  
+                                return '-';
+                            }
+                        })
+                        ->addColumn('reward_amount', function ($all_data) {
+                            return $all_data->reward;
+                        })
+                        ->addColumn('project_link', function ($all_data) {
+                            return $all_data->project_link;
+                        })
+                        ->addColumn('created', function ($all_data) {
+                            return date("M j, Y, g:i A", strtotime($all_data->created_at));
+                        })
+                        ->addColumn('status', function ($all_data) {
+                            if($all_data->status_id==1){
+                                return 'Pending';
+                            }else if($all_data->status_id==2){
+                                return 'Active';
+                            }else if($all_data->status_id==3){
+                                return 'Completed';
+                            }else if($all_data->status_id==4){
+                                return 'Cancelled';
+                            }else{  
+                                return '-';
+                            }
+                        })
+                        ->addColumn('action', function ($all_data) use($token) {
+                
+                            return '<div class="">
+                            <div class="btn-group mr-2 mb-2 mb-sm-0">
+                                <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
+                                <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
+                                <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
+                            </div>              
+                        </div>';
+                            
+                        })
+                        ->rawColumns(['action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
+                        ->make(true);
+                            
+                      
+                    }
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
