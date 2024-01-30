@@ -124,6 +124,30 @@ $(document).ready(function() {
                 searchable: true
             },
             {
+                data: 'uname',
+                name: 'uname',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'target_id',
+                name: 'target_id',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'status',
+                name: 'status',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'updated_at',
+                name: 'updated_at',
+                orderable: true,
+                searchable: true
+            },
+            {
                 data: 'action',
                 name: 'action',
                 orderable: true,

@@ -28,8 +28,7 @@ class RewardsController extends Controller
             
             $all_datas = DB::table('rewards')
             ->orderby("id","desc")
-            ->get();
-    
+            ->get();    
             
             return Datatables::of($all_datas)
             ->addColumn('points', function ($all_data) {

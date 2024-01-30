@@ -3,14 +3,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Banks;
-use App\Contents;
-use App\Networks;
-use App\Charities;
-use App\Groups;
-use App\Tags;
-use App\Respondents;
-use App\Projects;
+use App\Models\Banks;
+use App\Models\Contents;
+use App\Models\Networks;
+use App\Models\Charities;
+use App\Models\Groups;
+use App\Models\Tags;
+use App\Models\Respondents;
+use App\Models\Projects;
 use DB;
 use Yajra\DataTables\DataTables;
 
@@ -29,9 +29,9 @@ class ProjectsController extends Controller
             $token = csrf_token();
         
             
-            $all_datas = DB::table('projects')
+            $all_datas = Projects::select('projects.*','projects.name as uname')
+            ->join('users', 'users.id', '=', 'projects.user_id') 
             ->orderby("id","desc")
-            ->limit(10)
             ->get();
     
             
@@ -44,25 +44,45 @@ class ProjectsController extends Controller
                 return $all_data->client;
             })  
             ->addColumn('name', function ($all_data) {
-                return $all_data->name;
+                return $all_data->description;
             }) 
             ->addColumn('creator', function ($all_data) {
-                return '-';
+                return $all_data->uname;
             })
             ->addColumn('type', function ($all_data) {
-                return '-';
+                if($all_data->type_id==1){
+                    return 'Pre-Screener';
+                }else if($all_data->type_id==2){
+                    return 'Pre-Task';
+                }else if($all_data->type_id==3){
+                    return 'Paid  survey';
+                }else if($all_data->type_id==4){
+                    return 'Unpaid  survey';
+                }else{  
+                    return '-';
+                }
             })
             ->addColumn('reward_amount', function ($all_data) {
-                return '-';
+                return $all_data->reward;
             })
             ->addColumn('project_link', function ($all_data) {
-                return '-';
+                return $all_data->project_link;
             })
             ->addColumn('created', function ($all_data) {
-                return '-';
+                return date("M j, Y, g:i A", strtotime($all_data->created_at));
             })
             ->addColumn('status', function ($all_data) {
-                return '-';
+                if($all_data->status_id==1){
+                    return 'Pending';
+                }else if($all_data->status_id==2){
+                    return 'Active';
+                }else if($all_data->status_id==3){
+                    return 'Completed';
+                }else if($all_data->status_id==4){
+                    return 'Cancelled';
+                }else{  
+                    return '-';
+                }
             })
             ->addColumn('action', function ($all_data) use($token) {
     

@@ -3,13 +3,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Banks;
-use App\Contents;
-use App\Networks;
-use App\Charities;
-use App\Groups;
-use App\Tags;
-use App\Respondents;
+use App\Models\Banks;
+use App\Models\Contents;
+use App\Models\Networks;
+use App\Models\Charities;
+use App\Models\Groups;
+use App\Models\Tags;
+use App\Models\Respondents;
 use DB;
 use Yajra\DataTables\DataTables;
 
@@ -30,6 +30,11 @@ class RespondentsController extends Controller
             $token = csrf_token();
         
             
+            // $all_datas = Respondents::select('respondents.*','projects.name as uname')
+            // ->join('respondent_profiles', 'respondents.id', '=', 'respondent_profiles.respondent_id') 
+            // ->orderby("id","desc")
+            // ->get();
+
             $all_datas = DB::table('respondents')
             ->orderby("id","desc")
             ->limit(10)
