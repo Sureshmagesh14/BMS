@@ -48,7 +48,7 @@ float:right;
                         <div class="d-flex">
                             <!-- LOGO -->
                             <div class="navbar-brand-box">
-                                <a href="index.html" class="logo logo-dark">
+                                <a href="dashboard" class="logo logo-dark">
                                     <span class="logo-sm">
                                         <img src="{{ asset('public/assets/images/logo-dark-sm.png') }}" alt="" height="22">
                                     </span>
@@ -57,7 +57,7 @@ float:right;
                                     </span>
                                 </a>
                 
-                                <a href="index.html" class="logo logo-light">
+                                <a href="dashboard" class="logo logo-light">
                                     <span class="logo-sm">
                                         <img src="{{ asset('public/assets/images/logo-light-sm.png') }}" alt="" height="22">
                                     </span>
