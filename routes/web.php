@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('networks','networks')->name('networks');
         Route::any('get_all_networks', 'get_all_networks')->name('get_all_networks');
         Route::get('create_networks','create_networks')->name('create_networks');
+        Route::get('save_network','save_network')->name('save_network');
         
         Route::get('charities','charities')->name('charities');
         Route::any('get_all_charities', 'get_all_charities')->name('get_all_charities');

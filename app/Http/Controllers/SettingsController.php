@@ -5,7 +5,7 @@ use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Banks;
 use App\Models\Contents;
-use App\Networks;
+use App\Models\Networks;
 use App\Charities;
 use App\Groups;
 use Illuminate\Support\Facades\Validator;
@@ -130,7 +130,48 @@ class SettingsController extends Controller
       
     }
 
+    public function create_networks(Request $request){
+        try {
+            return view('admin.networks.create');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 
+    
+    public function save_network(Request $request){
+        try {
+
+            $validator = Validator::make($request->all(), [
+               'name'=> 'required',
+            ]);
+    
+            if($validator->fails())
+            {
+                return response()->json([
+                    'status'=>400,
+                    'errors'=>$validator->messages()
+                ]);
+            }
+            else
+            {
+                $network = new Network;
+                $network->type_id = $request->input('name');
+                $network->save();
+                $network->id;
+                return response()->json([
+                    'status'=>200,
+                    'last_insert_id' => $network->id,
+                    'message'=>'Network Added Successfully.'
+                ]);
+            }
+
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
     public function get_all_networks(Request $request) {
 		
         try {
