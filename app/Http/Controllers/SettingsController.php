@@ -172,6 +172,110 @@ class SettingsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+
+    public function edit_network($id){
+        try {
+            $network = Networks::find($id);
+            if($network)
+            {
+                return view('admin.networks.edit',compact('network'));
+            }
+            else
+            {
+                return response()->json([
+                    'status'=>404,
+                    'message'=>'No Network Found.'
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+      
+    }
+
+    public function view_network(Request $request){
+        try {
+            $data=Networks::where('id',$request->id)->first();
+            return view('admin.networks.view',compact('data'));
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+       
+    }
+
+    public function update_network(Request $request){
+        try {
+            $validator = Validator::make($request->all(), [
+                'name'=> 'required',
+            ]);
+    
+            if($validator->fails())
+            {
+                return response()->json([
+                    'status'=>400,
+                    'errors'=>$validator->messages()
+                ]);
+            }
+            else
+            {
+               
+                $content = Networks::find($request->id);
+                if($content)
+                {
+                    $content->name = $request->input('name');
+                    $content->update();
+                    $content->id;
+                    return response()->json([
+                        'status'=>200,
+                        'last_insert_id' => $content->id,
+                        'success'=>'Network Updated Successfully.'
+                    ]);
+                }
+                else
+                {
+                    return response()->json([
+                        'status'=>404,
+                        'error'=>'No Network Found.'
+                    ]);
+                }
+    
+            }
+           
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function delete_networks(Request $request){
+        try {
+            $contents = Networks::find($request->id);
+            if($contents)
+            {
+                $contents->delete();
+                return response()->json([
+                    'status'=>200,
+                    'message'=>'Network Deleted Successfully.'
+                ]);
+            }
+            else
+            {
+                return response()->json([
+                    'status'=>404,
+                    'message'=>'No Network Found.'
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+       
+        
+
+    }
+
     public function get_all_networks(Request $request) {
 		
         try {
@@ -179,12 +283,8 @@ class SettingsController extends Controller
 
                 $token = csrf_token();
             
-                
-                $all_datas = DB::table('networks')
-                ->orderby("id","desc")
-                ->get();
-        
-                
+                $all_datas = Networks::latest()->get();
+               
                 return Datatables::of($all_datas)
                 ->addColumn('name', function ($all_data) {
                     return $all_data->name;
@@ -193,14 +293,14 @@ class SettingsController extends Controller
         
                     return '<div class="">
                     <div class="btn-group mr-2 mb-2 mb-sm-0">
-                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
-                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
-                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
+                        <a onclick="view_network(' . $all_data->id . ');" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></a>
+                        <button type="button" id="edit_network" data-id="' . $all_data->id . '" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
+                        <button type="button" id="delete_network" data-id="' . $all_data->id . '"     class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
                     </div>              
                 </div>';
                     
                 }) 
-                ->rawColumns(['action','active','name'])      
+                ->rawColumns(['action','name'])      
                 ->make(true);
             }
         }
@@ -440,7 +540,7 @@ class SettingsController extends Controller
 
     public function view_contents(Request $request){
         try {
-            $data=DB::table('contents')->where('id',$request->id)->first();
+            $data=Contents::where('id',$request->id)->first();
             return view('admin.contents.view',compact('data'));
         }
         catch (Exception $e) {

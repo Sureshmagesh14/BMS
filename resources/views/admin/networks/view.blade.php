@@ -4,6 +4,7 @@
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
       <!-- ============================================================== -->
             <!-- Start right Content here -->
@@ -17,12 +18,12 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-flex align-items-center justify-content-between">
-                                    <h4 class="mb-0">networks</h4>
+                                    <h4 class="mb-0">Content Details: {{$data->id}}</h4>
 
                                     <div class="page-title-right">
                                         <ol class="breadcrumb m-0">
                                             <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                                            <li class="breadcrumb-item active">networks</li>
+                                            <li class="breadcrumb-item active">Contents</li>
                                         </ol>
                                     </div>
 
@@ -38,32 +39,47 @@
 
                                 <div class="card">
                                     <div class="card-body">
-                                    <div class="text-right">
-                                            <a  href="{{ route('create_networks') }}" 
-                                            data-bs-original-title="{{ __('Create Networks') }}" class="btn btn-primary" >Create networks</a>
+                                        <div class="d-flex justify-content-end">
+                                            <button onclick="window.location='{{ route('networks') }}';"
+                                                class="btn btn-secondary waves-effect" type="button">
+                                                <i class="fa fa-arrow-circle-o-left"></i>
+                                            </button>&nbsp;&nbsp;
+                                            <button onclick="window.location='{{route('edit_network',['id' => $data->id])}}';" class="btn btn-success" id="create_another" type="button">
+                                                <i class="fa fa-edit"></i>
+                                            </button>&nbsp;&nbsp;
+                                            <button id="delete_content" data-id="{{$data->id}}" class="btn btn-primary" id="create" type="button">
+                                                <i class="fa fa-trash"></i>
+                                            </button>&nbsp;&nbsp;
                                         </div>
-
-                                        <h4 class="card-title"> </h4>
-                                        <p class="card-title-desc"></p>
-        
-                                        <table id="myTable" class="table dt-responsive nowrap w-100">
-                                            <thead>
-                                            <tr>
-                                                
-                                                <th>#</th>
-                                                <th>Type</th>
-                                                <th>Action</th>
-                                            </tr>
-                                            </thead>
-        
-        
-                                            <tbody>
-                                            
-                                           
-                                            </tbody>
-                                        </table>
-        
-                                    </div>
+                                        <div class="table-responsive mb-0" >
+                                            <table class="table">
+                                                <thead>
+                                              
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <td>{{$data->id}}</td>
+                                                </tr>
+                                                  <tr>
+                                                    <th>Type</th>
+                                                    <td>
+                                                        @if($data->type_id=='1')
+                                                        Terms of use
+                                                        @else
+                                                          Terms and condition';
+                                                        @endif
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Content</th>
+                                                    <td>{{$data->data}}</td>
+                                                </tr>
+                                              
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     <!-- end card-body -->
                                 </div>
                                 <!-- end card -->
@@ -80,90 +96,21 @@
 @include('admin.layout.footer')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script>
-$(document).ready(function() {
-    var tempcsrf = '{!! csrf_token() !!}';
-    
-    $('#myTable').dataTable().fnDestroy();
-
-    $('#myTable').DataTable({
-      
-        searching: true,
-        ordering: true,
-        dom : 'lfrtip',
-        info: true,
-        iDisplayLength: 10,
-        lengthMenu: [
-            [ 10, 50, 100, -1],
-            [10, 50, 100, "All"]
-        ],
-        ajax: {
-            url: "{{ route('get_all_networks') }}",
-            data: {
-                _token: tempcsrf,
-            },
-            error: function(xhr, error, thrown) {
-               alert("undefind error")
-            }
-        },
-       
-        columns: [{
-                data: 'id',
-                name: '#',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'name',
-                name: 'name',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            }
-        ],
-        columnDefs: [
-            {
-                targets: 0,
-                width: 75,
-                className: "text-center"
-            },{
-                targets: 1
-            },
-            {
-                targets: 2,
-                width: 175,
-                className: "text-center"
-            }
-        ],
-    });
-});
-
-function view_network(id) {
-            let url = "view_network";
-            url = url + '/' + id;
-            document.location.href = url;
-        }
-        $(document).on('click', '#edit_network', function(e) {
-            var stud_id = $(this).data("id");
-            var url = "{{ route('edit_network', ':id') }}";
-            url = url.replace(':id', stud_id);
-            location.href = url;
-        });
-
-        $(document).on('click', '#delete_network', function(e) {
+     var tempcsrf = '{!! csrf_token() !!}';
+      $(document).on('click', '#delete_content', function(e) {
             e.preventDefault();
 
-          
+            // $(this).text('Deleting..');
             var id = $(this).data("id");
 
-           
+            // $.ajaxSetup({
+            //     headers: {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     }
+            // });
             var url = "{{ route('delete_network', ':id') }}";
-            url = url.replace(':id', id);
-          
+	            url = url.replace(':id', id);
+              
             $.confirm({
                 title: 'Delete user?',
                 content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.',
@@ -173,6 +120,7 @@ function view_network(id) {
                         text: 'delete user',
                         action: function() {
                             $.ajax({
+                                
                                 type: "DELETE",
                                 data: {
                                     _token: tempcsrf,
@@ -185,10 +133,8 @@ function view_network(id) {
 
                                         $('.delete_student').text('');
                                     } else {
-                                        $('#myTable').DataTable().ajax.reload();
-                                        $.alert('Deleted the user!');
 
-                                        $('.delete_student').text('Yes Delete');
+                                       window.location.href="{{ route('contents') }}";
 
                                     }
                                 }
@@ -205,5 +151,9 @@ function view_network(id) {
 
 
         });
+           
+
+
+       
 </script>
 <script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>

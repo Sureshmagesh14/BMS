@@ -115,7 +115,7 @@
                     success: function(response) {
                         toastr.success(response.success);
                         setTimeout(function() {
-                            window.location.href = "view_contents/" + response.last_insert_id;
+                            window.location.href = "view_network/" + response.last_insert_id;
                         }, 500);
 
                     },
