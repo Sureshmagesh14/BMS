@@ -194,7 +194,8 @@ $(document).ready(function() {
                 targets: 2
             },
             {
-                targets: 3
+                targets: 3,
+                width: 175,
             },
             {
                 targets: 4
