@@ -156,7 +156,7 @@ class SettingsController extends Controller
             }
             else
             {
-                $network = new Network;
+                $network = new Networks;
                 $network->name = $request->input('name');
                 $network->save();
                 $network->id;

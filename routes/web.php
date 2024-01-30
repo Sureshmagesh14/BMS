@@ -17,13 +17,17 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('signout','CustomAuthController@signOut')->name('signout');
 
     Route::controller(SettingsController::class)->group(function(){
-
+        /*Content starts*/
         Route::get('contents','contents')->name('contents');
         Route::any('get_all_contents', 'get_all_contents')->name('get_all_contents');
         Route::get('create_contents','create_contents')->name('create_contents');
         Route::post('save_contents','save_contents')->name('save_contents');
         Route::get('edit_contents/{id}','edit_contents')->name('edit_contents');
-
+        Route::put('update_contents/{id}','update_contents')->name('update_contents');
+        Route::any('view_contents/{id}', 'view_contents')->name('view_contents');
+        Route::delete('delete_contents/{id}', 'delete_contents')->name('delete_contents');
+        /*Content ends*/
+        
         Route::get('banks','banks')->name('banks');
         Route::any('get_all_banks', 'get_all_banks')->name('get_all_banks');
         Route::any('create_bank', 'create_bank')->name('create_bank');
@@ -32,7 +36,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('networks','networks')->name('networks');
         Route::any('get_all_networks', 'get_all_networks')->name('get_all_networks');
         Route::get('create_networks','create_networks')->name('create_networks');
-        Route::get('save_network','save_network')->name('save_network');
+        Route::post('save_network','save_network')->name('save_network');
         
         Route::get('charities','charities')->name('charities');
         Route::any('get_all_charities', 'get_all_charities')->name('get_all_charities');
@@ -40,9 +44,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('groups','groups')->name('groups');
         Route::any('get_all_groups', 'get_all_groups')->name('get_all_groups');
 
-        Route::put('update_contents/{id}','update_contents')->name('update_contents');
-        Route::any('view_contents/{id}', 'view_contents')->name('view_contents');
-        Route::delete('delete_contents/{id}', 'delete_contents')->name('delete_contents');
+       
         Route::get('getrecentcontentid', 'getrecentcontentid')->name('getrecentcontentid');
 
 
