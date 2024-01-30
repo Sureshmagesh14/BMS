@@ -2,7 +2,7 @@
         <i class="fa fa-fw fa-bars"></i>
     </button>
 
-    <div class="dropdown d-none d-lg-block ml-2">
+    <!-- <div class="dropdown d-none d-lg-block ml-2">
         <button type="button" class="btn header-item waves-effect" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
             <span key="t-ui-components">UI Components</span>
             <i class="mdi mdi-chevron-down"></i> 
@@ -67,12 +67,12 @@
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="py-lg-2 pl-lg-2">
-                        <img src="{{ asset('/assets/images/menu-product-1.jpg') }}" alt="" class="img-fluid mx-auto rounded shadow">
+                        <img src="{{ asset('public/assets/images/menu-product-1.jpg') }}" alt="" class="img-fluid mx-auto rounded shadow">
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="py-lg-2 pr-lg-2">
-                        <img src="{{ asset('/assets/images/menu-product-2.jpg') }}" alt="" class="img-fluid mx-auto rounded shadow">
+                        <img src="{{ asset('public/assets/images/menu-product-2.jpg') }}" alt="" class="img-fluid mx-auto rounded shadow">
                     </div>
                 </div>
             </div>
@@ -91,5 +91,5 @@
             <a class="dropdown-item" href="#" key="t-checkout"></i>Checkout</a>
             <a class="dropdown-item" href="#" key="t-register"></i>Register</a>
         </div>
-    </div>
+    </div> -->
 </div>
