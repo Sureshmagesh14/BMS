@@ -16,122 +16,158 @@ class SettingsController extends Controller
 {   
     public function groups()
     {   
-      
+        try {
+            return view('admin.groups.index');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
         
-        return view('admin.groups.index');
+       
     }
     public function get_all_groups(Request $request) {
 		
-        if ($request->ajax()) {
+        try {
+            if ($request->ajax()) {
 
-            $token = csrf_token();
-        
+                $token = csrf_token();
             
-            $all_datas = DB::table('groups')
-            ->orderby("id","desc")
-            ->get();
-    
-            
-            return Datatables::of($all_datas)
-            ->addColumn('name', function ($all_data) {
-                return $all_data->name;
-            })
-            ->addColumn('type_id', function ($all_data) {
-                return $all_data->type_id;
-            })
-            ->addColumn('survey_url', function ($all_data) {
-                return $all_data->survey_url;
-            })    
-            ->addColumn('action', function ($all_data) use($token) {
-    
-                return '<div class="">
-                <div class="btn-group mr-2 mb-2 mb-sm-0">
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
-                </div>              
-            </div>';
                 
-            }) 
-            ->rawColumns(['action','active','name','survey_url','type_id'])      
-            ->make(true);
+                $all_datas = DB::table('groups')
+                ->orderby("id","desc")
+                ->get();
+        
+                
+                return Datatables::of($all_datas)
+                ->addColumn('name', function ($all_data) {
+                    return $all_data->name;
+                })
+                ->addColumn('type_id', function ($all_data) {
+                    return $all_data->type_id;
+                })
+                ->addColumn('survey_url', function ($all_data) {
+                    return $all_data->survey_url;
+                })    
+                ->addColumn('action', function ($all_data) use($token) {
+        
+                    return '<div class="">
+                    <div class="btn-group mr-2 mb-2 mb-sm-0">
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
+                    </div>              
+                </div>';
+                    
+                }) 
+                ->rawColumns(['action','active','name','survey_url','type_id'])      
+                ->make(true);
+            }
         }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+       
 
     }
     public function charities()
     {   
-      
+        try {
+            return view('admin.charities.index');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
         
-        return view('admin.charities.index');
+      
     }
     public function get_all_charities(Request $request) {
 		
-        if ($request->ajax()) {
+        try {
+            if ($request->ajax()) {
 
-            $token = csrf_token();
-        
+                $token = csrf_token();
             
-            $all_datas = DB::table('charities')
-            ->orderby("id","desc")
-            ->get();
-    
-            
-            return Datatables::of($all_datas)
-            ->addColumn('name', function ($all_data) {
-                return $all_data->name;
-            })    
-            ->addColumn('action', function ($all_data) use($token) {
-    
-                return '<div class="">
-                <div class="btn-group mr-2 mb-2 mb-sm-0">
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
-                </div>              
-            </div>';
                 
-            }) 
-            ->rawColumns(['action','active','name'])      
-            ->make(true);
+                $all_datas = DB::table('charities')
+                ->orderby("id","desc")
+                ->get();
+        
+                
+                return Datatables::of($all_datas)
+                ->addColumn('name', function ($all_data) {
+                    return $all_data->name;
+                })    
+                ->addColumn('action', function ($all_data) use($token) {
+        
+                    return '<div class="">
+                    <div class="btn-group mr-2 mb-2 mb-sm-0">
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
+                    </div>              
+                </div>';
+                    
+                }) 
+                ->rawColumns(['action','active','name'])      
+                ->make(true);
+            }
         }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+       
 
     }
     public function networks()
     {   
         
-        
-        return view('admin.networks.index');
+        try {
+            return view('admin.networks.index');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+      
     }
+
+
     public function get_all_networks(Request $request) {
 		
-        if ($request->ajax()) {
+        try {
+            if ($request->ajax()) {
 
-            $token = csrf_token();
-        
+                $token = csrf_token();
             
-            $all_datas = DB::table('networks')
-            ->orderby("id","desc")
-            ->get();
-    
-            
-            return Datatables::of($all_datas)
-            ->addColumn('name', function ($all_data) {
-                return $all_data->name;
-            })    
-            ->addColumn('action', function ($all_data) use($token) {
-    
-                return '<div class="">
-                <div class="btn-group mr-2 mb-2 mb-sm-0">
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
-                </div>              
-            </div>';
                 
-            }) 
-            ->rawColumns(['action','active','name'])      
-            ->make(true);
+                $all_datas = DB::table('networks')
+                ->orderby("id","desc")
+                ->get();
+        
+                
+                return Datatables::of($all_datas)
+                ->addColumn('name', function ($all_data) {
+                    return $all_data->name;
+                })    
+                ->addColumn('action', function ($all_data) use($token) {
+        
+                    return '<div class="">
+                    <div class="btn-group mr-2 mb-2 mb-sm-0">
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
+                    </div>              
+                </div>';
+                    
+                }) 
+                ->rawColumns(['action','active','name'])      
+                ->make(true);
+            }
         }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+      
+        
 
     }
     public function contents()
@@ -140,98 +176,112 @@ class SettingsController extends Controller
             return view('admin.contents.index');
         }
         catch (Exception $e) {
-            //code to handle the exception
+            throw new Exception($e->getMessage());
         }
        
     }
     public function get_all_contents(Request $request) {
 		
-        if ($request->ajax()) {
+        try {
+            if ($request->ajax()) {
 
-            $token = csrf_token();
+                $token = csrf_token();
+            
+                
+                $all_datas = Contents::withoutTrashed()->latest()->get();
         
-            
-            $all_datas = Contents::withoutTrashed()->latest()->get();
-    
-            
-            return Datatables::of($all_datas)
-            ->addColumn('type_id', function ($all_data) {
-                if($all_data->type_id=='1'){
-                    return 'Terms of use';
-                }else{
-                    return 'Terms and condition';
-                }
                 
-            })    
-            ->addColumn('action', function ($all_data) use($token) {
-    
-                return '<div class="">
-                <div class="btn-group mr-2 mb-2 mb-sm-0">
-                    <a onclick="view_details(' . $all_data->id . ');" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></a>
-                    <button type="button" id="edit_content" data-id="' . $all_data->id . '" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
-                    <button type="button" id="delete_content" data-id="' . $all_data->id . '"     class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
-                </div>              
-            </div>';
-                
-            }) 
-            ->rawColumns(['action','active','data'])      
-            ->make(true);
+                return Datatables::of($all_datas)
+                ->addColumn('type_id', function ($all_data) {
+                    if($all_data->type_id=='1'){
+                        return 'Terms of use';
+                    }else{
+                        return 'Terms and condition';
+                    }
+                    
+                })    
+                ->addColumn('action', function ($all_data) use($token) {
+        
+                    return '<div class="">
+                    <div class="btn-group mr-2 mb-2 mb-sm-0">
+                        <a onclick="view_details(' . $all_data->id . ');" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></a>
+                        <button type="button" id="edit_content" data-id="' . $all_data->id . '" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
+                        <button type="button" id="delete_content" data-id="' . $all_data->id . '"     class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
+                    </div>              
+                </div>';
+                    
+                }) 
+                ->rawColumns(['action','active','data'])      
+                ->make(true);
+            }
         }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        
 
     }
     public function banks()
     {   
-        if (!Auth::check()) {
-            return redirect("/")->withSuccess('You are not allowed to access');
+        try {
+            return view('admin.banks.index');
         }
-        
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
 
-        return view('admin.banks.index');
     }
+
     public function get_all_banks(Request $request) {
 		
-        if ($request->ajax()) {
+        try {
+            if ($request->ajax()) {
 
-            $token = csrf_token();
-        
+                $token = csrf_token();
             
-            $all_datas = DB::table('banks')
-            ->orderby("id","desc")
-            ->get();
-    
-            
-            return Datatables::of($all_datas)
-            ->addColumn('bank_name', function ($all_data) {
-                return $all_data->bank_name;
-            }) 
-            ->addColumn('bank_name', function ($all_data) {
-                        return $all_data->bank_name;
-            }) 
-            ->addColumn('branch_code', function ($all_data) {
-                        return $all_data->branch_code;
-            }) 
-            ->addColumn('active', function ($all_data) {
-                if($all_data->active==1){
-                    return '<span class="text-success">Yes</span>';
-                }else{
-                    return '<span class="text-danger">No</span>';
-                }
-                return $all_data->active;
-            })   
-            ->addColumn('action', function ($all_data) use($token) {
-    
-                return '<div class="">
-                <div class="btn-group mr-2 mb-2 mb-sm-0">
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
-                </div>              
-            </div>';
                 
-            }) 
-            ->rawColumns(['action','active','branch_code','bank_name'])      
-            ->make(true);
+                $all_datas = DB::table('banks')
+                ->orderby("id","desc")
+                ->get();
+        
+                
+                return Datatables::of($all_datas)
+                ->addColumn('bank_name', function ($all_data) {
+                    return $all_data->bank_name;
+                }) 
+                ->addColumn('bank_name', function ($all_data) {
+                            return $all_data->bank_name;
+                }) 
+                ->addColumn('branch_code', function ($all_data) {
+                            return $all_data->branch_code;
+                }) 
+                ->addColumn('active', function ($all_data) {
+                    if($all_data->active==1){
+                        return '<span class="text-success">Yes</span>';
+                    }else{
+                        return '<span class="text-danger">No</span>';
+                    }
+                    return $all_data->active;
+                })   
+                ->addColumn('action', function ($all_data) use($token) {
+        
+                    return '<div class="">
+                    <div class="btn-group mr-2 mb-2 mb-sm-0">
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
+                    </div>              
+                </div>';
+                    
+                }) 
+                ->rawColumns(['action','active','branch_code','bank_name'])      
+                ->make(true);
+            }
         }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+       
 
     }
 
@@ -240,8 +290,8 @@ class SettingsController extends Controller
         try {
             return view('admin.contents.create');
         }
-        catch (exception $e) {
-            //code to handle the exception
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -276,7 +326,7 @@ class SettingsController extends Controller
 
         }
         catch (Exception $e) {
-            //code to handle the exception
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -322,50 +372,68 @@ class SettingsController extends Controller
            
         }
         catch (Exception $e) {
-            //code to handle the exception
+            throw new Exception($e->getMessage());
         }
     }
 
     public function edit_contents($id){
-        $content = Contents::find($id);
-        if($content)
-        {
-            return view('admin.contents.edit',compact('content'));
+        try {
+            $content = Contents::find($id);
+            if($content)
+            {
+                return view('admin.contents.edit',compact('content'));
+            }
+            else
+            {
+                return response()->json([
+                    'status'=>404,
+                    'message'=>'No Content Found.'
+                ]);
+            }
         }
-        else
-        {
-            return response()->json([
-                'status'=>404,
-                'message'=>'No Content Found.'
-            ]);
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
+      
     }
 
     public function view_contents(Request $request){
-        $data=DB::table('contents')->where('id',$request->id)->first();
-        return view('admin.contents.view',compact('data'));
+        try {
+            $data=DB::table('contents')->where('id',$request->id)->first();
+            return view('admin.contents.view',compact('data'));
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+       
     }
 
     
 
     public function delete_contents(Request $request){
-
-        $contents = Contents::find($request->id);
-        if($contents)
-        {
-            $contents->delete();
-            return response()->json([
-                'status'=>200,
-                'message'=>'Contents Deleted Successfully.'
-            ]);
+        try {
+            $contents = Contents::find($request->id);
+            if($contents)
+            {
+                $contents->delete();
+                return response()->json([
+                    'status'=>200,
+                    'message'=>'Contents Deleted Successfully.'
+                ]);
+            }
+            else
+            {
+                return response()->json([
+                    'status'=>404,
+                    'message'=>'No Contents Found.'
+                ]);
+            }
         }
-        else
-        {
-            return response()->json([
-                'status'=>404,
-                'message'=>'No Contents Found.'
-            ]);
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
+       
+        
 
     }
 

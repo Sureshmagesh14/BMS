@@ -14,41 +14,51 @@ use App\Projects;
 use App\Models\Action;
 use DB;
 use Yajra\DataTables\DataTables;
-
+use Exception;
 class ActionController extends Controller
 {   
     public function actions()
     {   
-        
-        return view('admin.action.index');
+        try {
+            return view('admin.action.index');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+       
     }
     public function get_all_actions(Request $request) {
-		
-        if ($request->ajax()) {
+        try {
+            if ($request->ajax()) {
 
-            $token = csrf_token();
-        
+                $token = csrf_token();
             
-            $all_datas = Action::limit(30)->get();
-  
-            
-            return Datatables::of($all_datas)
-             
-            ->addColumn('name', function ($all_data) {
-                return $all_data->name;
-            })  
-            ->addColumn('action', function ($all_data) use($token) {
-    
-                return '<div class="">
-                <div class="btn-group mr-2 mb-2 mb-sm-0">
-                    <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
-                </div>              
-            </div>';
                 
-            })
-            ->rawColumns(['action','name'])      
-            ->make(true);
+                $all_datas = Action::limit(30)->get();
+      
+                
+                return Datatables::of($all_datas)
+                 
+                ->addColumn('name', function ($all_data) {
+                    return $all_data->name;
+                })  
+                ->addColumn('action', function ($all_data) use($token) {
+        
+                    return '<div class="">
+                    <div class="btn-group mr-2 mb-2 mb-sm-0">
+                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
+                    </div>              
+                </div>';
+                    
+                })
+                ->rawColumns(['action','name'])      
+                ->make(true);
+            }
         }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        
 
     }
 }
