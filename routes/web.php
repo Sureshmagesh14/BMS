@@ -53,6 +53,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::controller(RewardsController::class)->group(function(){
         Route::get('rewards','rewards')->name('rewards');
         Route::any('get_all_rewards', 'get_all_rewards')->name('get_all_rewards');
+        Route::any('view_rewards/{id}', 'view_rewards')->name('view_rewards');
     
     });
 

@@ -176,5 +176,11 @@ $(document).ready(function() {
         ],
     });
 });
+
+function view_details(id) {
+    let url = "view_rewards";
+    url = url + '/' + id;
+    document.location.href = url;
+}
 </script>
 <script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>
