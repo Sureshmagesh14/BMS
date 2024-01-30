@@ -128,10 +128,10 @@
             $("#create_another").click(function(e) {
                 e.preventDefault();
                 $('#create_type').val(1);
-                var data = $('#form-data').serialize();
+                var data = $('#network_form').serialize();
                 $.ajax({
                     type: 'post',
-                    url: "{{ route('save_contents') }}",
+                    url: "{{ route('save_network') }}",
                     data: data,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
