@@ -35,7 +35,7 @@
                 <li class="menu-title" key="t-menu">Menu</li>
 
                 <li>
-                    <a href="javascript: void(0);" class="waves-effect">
+                    <a href="dashboard" class="waves-effect">
                         <i class="icon nav-icon" data-feather="home"></i>
                         <span class="menu-item" key="t-dashboards">Dashboards</span>
                     </a>
