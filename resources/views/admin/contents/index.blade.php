@@ -1,18 +1,17 @@
 @include('admin.layout.header')
+
 @yield('adminside-favicon')
 @yield('adminside-css')
+
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
 <div class="main-content">
-
     <div class="page-content">
         <div class="container-fluid">
-
             <!-- start page title -->
             <div class="row">
                 <div class="col-12">
@@ -33,15 +32,13 @@
 
             <div class="row">
                 <div class="col-12">
-
-
-
                     <div class="card">
                         <div class="card-body">
                             <div class="text-right">
                                 <a href="{{ route('create_contents') }}"
-                                    data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary">Create
-                                    Content</a>
+                                    data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary">
+                                    Create Content
+                                </a>
                             </div>
 
                             <h4 class="card-title"> </h4>
@@ -50,45 +47,35 @@
                             <table id="myTable" class="table dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
-
                                         <th>#</th>
                                         <th>Type</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-
-
-                                <tbody>
-
-
-                                </tbody>
+                                <tbody></tbody>
                             </table>
-
                         </div>
                         <!-- end card-body -->
                     </div>
                     <!-- end card -->
                 </div> <!-- end col -->
             </div> <!-- end row -->
-
-
-
         </div> <!-- container-fluid -->
     </div>
     <!-- End Page-content -->
 
-    @yield('adminside-script')
     @include('admin.layout.footer')
+        @yield('adminside-js')
+        @yield('adminside-validataion')
+        @yield('adminside-confirm')
+        @yield('adminside-datatable')
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
         $(document).ready(function() {
-
-
             $('#myTable').dataTable().fnDestroy();
-
             $('#myTable').DataTable({
-
                 searching: true,
                 ordering: true,
                 dom: 'lfrtip',
@@ -108,7 +95,8 @@
                     }
                 },
 
-                columns: [{
+                columns: [
+                    {
                         data: 'id',
                         name: '#',
                         orderable: true,
@@ -127,19 +115,10 @@
                         searchable: false
                     }
                 ],
-                columnDefs: [{
-                        targets: 0,
-                        width: 75,
-                        className: "text-center"
-                    }, {
-
-                        targets: 1
-                    },
-                    {
-                        targets: 2,
-                        width: 115,
-                        className: "text-center"
-                    }
+                columnDefs: [
+                    { targets: 0,width: 75,className: "text-center" },
+                    { targets: 1 },
+                    { targets: 2,width: 115,className: "text-center" }
                 ],
             });
         });
@@ -149,6 +128,7 @@
             url = url + '/' + id;
             document.location.href = url;
         }
+
         $(document).on('click', '#edit_content', function(e) {
             var stud_id = $(this).data("id");
             var url = "{{ route('edit_contents', ':id') }}";
@@ -207,9 +187,6 @@
                     }
                 }
             });
-
-
-
         });
     </script>
-    <script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>
+    

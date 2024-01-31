@@ -17,7 +17,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('signout','CustomAuthController@signOut')->name('signout');
 
     Route::controller(SettingsController::class)->group(function(){
-        /*Content starts*/
+        /* Content */
         Route::get('contents','contents')->name('contents');
         Route::any('get_all_contents', 'get_all_contents')->name('get_all_contents');
         Route::get('create_contents','create_contents')->name('create_contents');
@@ -26,8 +26,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('update_contents/{id}','update_contents')->name('update_contents');
         Route::get('view_contents/{id}', 'view_contents')->name('view_contents');
         Route::delete('delete_contents/{id}', 'delete_contents')->name('delete_contents');
-        /*Content ends*/
 
+        /* Bank */
         Route::get('banks','banks')->name('banks');
         Route::any('get_all_banks', 'get_all_banks')->name('get_all_banks');
         Route::any('create_bank', 'create_bank')->name('create_bank');
