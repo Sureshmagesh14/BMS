@@ -57,12 +57,20 @@ Route::group(['middleware' => ['auth']], function () {
     Route::controller(RewardsController::class)->group(function(){
         Route::get('rewards','rewards')->name('rewards');
         Route::any('get_all_rewards', 'get_all_rewards')->name('get_all_rewards');
+        Route::any('view_rewards/{id}', 'view_rewards')->name('view_rewards');
     
     });
 
     Route::controller(TagsController::class)->group(function(){
         Route::get('tags','tags')->name('tags');
         Route::any('get_all_tags', 'get_all_tags')->name('get_all_tags');
+        
+        Route::get('create_tags','create_tags')->name('create_tags');
+        Route::post('save_tags','save_tags')->name('save_tags');
+        Route::get('edit_tags/{id}','edit_tags')->name('edit_tags');
+        Route::put('update_tags/{id}','update_tags')->name('update_tags');
+        Route::any('view_tags/{id}', 'view_tags')->name('view_tags');
+        Route::delete('delete_tags/{id}', 'delete_tags')->name('delete_tags');
     });
 
     Route::controller(RespondentsController::class)->group(function(){

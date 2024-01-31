@@ -15,11 +15,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h4 class="mb-0">Update Content: {{$content->id}}</h4>
+                        <h4 class="mb-0">Update Panels: {{$content->id}}</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                                <li class="breadcrumb-item active">Contents</li>
+                                <li class="breadcrumb-item active">Panels</li>
                             </ol>
                         </div>
 
@@ -37,7 +37,7 @@
                                     <form id="form-data">
                                         @csrf
                                         <input type="hidden" id="update_type" name="update_type">
-                                        <input type="hidden" id="id" name="id" value="{{$content->id}}">
+                                        <input type="text" id="id" name="id" value="{{$content->id}}">
                                         <div class="form-group row">
                                             <label for="example-text-input" class="col-md-2 col-form-label">Type
                                                 *</label>
@@ -117,7 +117,7 @@
                 var id=$("#id").val();
                 var url = "{{ route('update_contents', ':id') }}";
 	            url = url.replace(':id', id);
-           
+                location.href = url;
                 $.ajax({
                     type: "PUT",
                     url: url,
@@ -130,9 +130,7 @@
                     },
                     success: function(response) {
                         toastr.success(response.success);
-                        var url = "{{ route('view_contents', ':id') }}";
-                        url = url.replace(':id', response.last_insert_id);
-                        location.href = url;
+                        $('#form-data')[0].reset();
 
                     },
                     complete: function(response) {
