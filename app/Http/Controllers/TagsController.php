@@ -49,7 +49,7 @@ class TagsController extends Controller
         
                     return '<div class="">
                     <div class="btn-group mr-2 mb-2 mb-sm-0">
-                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
+                        <button type="button" onclick="view_details(' . $all_data->id . ');" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
                     </div>              
                 </div>';
                     
@@ -61,7 +61,39 @@ class TagsController extends Controller
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-       
+    }
 
+    public function view_tags(Request $request){
+        try {
+            
+            $data = DB::table('tags')->where('id',$request->id)->first();
+
+            return view('admin.tags.view',compact('data'));
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+       
+    }
+
+    public function edit_tags($id){
+        try {
+            $content = DB::table('tags')::find($id);
+            if($content)
+            {
+                return view('admin.tags.edit',compact('content'));
+            }
+            else
+            {
+                return response()->json([
+                    'status'=>404,
+                    'message'=>'No Panels Found.'
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+      
     }
 }
