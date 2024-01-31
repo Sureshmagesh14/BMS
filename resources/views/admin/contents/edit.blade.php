@@ -37,7 +37,7 @@
                                     <form id="form-data">
                                         @csrf
                                         <input type="hidden" id="update_type" name="update_type">
-                                        <input type="text" id="id" name="id" value="{{$content->id}}">
+                                        <input type="hidden" id="id" name="id" value="{{$content->id}}">
                                         <div class="form-group row">
                                             <label for="example-text-input" class="col-md-2 col-form-label">Type
                                                 *</label>
@@ -117,7 +117,7 @@
                 var id=$("#id").val();
                 var url = "{{ route('update_contents', ':id') }}";
 	            url = url.replace(':id', id);
-                location.href = url;
+           
                 $.ajax({
                     type: "PUT",
                     url: url,
@@ -130,7 +130,9 @@
                     },
                     success: function(response) {
                         toastr.success(response.success);
-                        $('#form-data')[0].reset();
+                        var url = "{{ route('view_contents', ':id') }}";
+                        url = url.replace(':id', response.last_insert_id);
+                        location.href = url;
 
                     },
                     complete: function(response) {
