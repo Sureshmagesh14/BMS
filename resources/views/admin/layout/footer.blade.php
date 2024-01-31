@@ -67,8 +67,26 @@
 <!-- Right bar overlay-->
 <div class="rightbar-overlay"></div>
 
+<!-- Common modal -->
+<div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0" id="exampleModalScrollableTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+            
+        </div>
+    </div>
+</div>
 
-    @section('adminside-js')
+    
+    @push('adminside-js')
         <!-- JAVASCRIPT -->
         <script src="{{ asset('public/assets/libs/jquery/jquery.min.js') }}"></script>
         <script src="{{ asset('public/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -83,17 +101,24 @@
         <script src="{{ asset('public/assets/libs/admin-resources/rwd-table/rwd-table.min.js') }}"></script>
 
         <script src="{{ asset('public/assets/js/admin/app.js') }}"></script>
-    @endsection
 
-    @section('adminside-validataion')
+        <!-- Toastr js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+        <script src="{{ asset('public/assets/js/admin/common.js') }}"></script>
+
+        
+    @endpush
+
+    @push('adminside-validataion')
         <script src="{{ asset('public/assets/js/admin/jquery.validate.js') }}"></script>
-    @endsection
+    @endpush
 
-    @section('adminside-confirm')
+    @push('adminside-confirm')
         <script src="{{ asset('public/assets/js/admin/confirm.min.js') }}"></script>
-    @endsection
+    @endpush
 
-    @section('adminside-datatable')
+    @push('adminside-datatable')
         <script src="{{ asset('public/assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('public/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
         <script src="{{ asset('public/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
@@ -108,7 +133,7 @@
         <script src="{{ asset('public/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
         <script src="{{ asset('public/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
         <script src="{{ asset('public/assets/js/pages/datatables.init.js') }}"></script>
-    @endsection
+    @endpush
 
 </body>
 </html>

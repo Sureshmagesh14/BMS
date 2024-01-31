@@ -35,9 +35,11 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="text-right">
-                                <a href="{{ route('create_contents') }}"
-                                    data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary">
-                                    Create Content
+                                <a href="#!" data-url="{{ route('contents.create') }}" data-size="xl" data-ajax-popup="true"
+                                    class="btn btn-primary" data-bs-original-title="{{ __('Create Content') }}" class="btn btn-primary" data-size="xl"
+                                     data-ajax-popup="true" data-bs-toggle="tooltip"
+                                    id="create">
+                                    Create Contents
                                 </a>
                             </div>
 
@@ -65,12 +67,11 @@
     <!-- End Page-content -->
 
     @include('admin.layout.footer')
-        @yield('adminside-js')
-        @yield('adminside-validataion')
-        @yield('adminside-confirm')
-        @yield('adminside-datatable')
+        @stack('adminside-js')
+        @stack('adminside-validataion')
+        @stack('adminside-confirm')
+        @stack('adminside-datatable')
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
         $(document).ready(function() {
@@ -86,7 +87,7 @@
                     [10, 50, 100, "All"]
                 ],
                 ajax: {
-                    url: "{{ route('get_all_contents') }}",
+                    url: "{{ route('contents_datatable') }}",
                     data: {
                         _token: tempcsrf,
                     },

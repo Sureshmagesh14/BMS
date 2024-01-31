@@ -21,6 +21,8 @@
             <link href="{{ asset('public/assets/css/admin/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
              <!-- Confirm Css-->
             <link href="{{ asset('public/assets/css/admin/confirm.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+
+            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
         @stop
 
         <style>

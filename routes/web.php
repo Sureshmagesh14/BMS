@@ -16,6 +16,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('custom-registration','CustomAuthController@customRegistration')->name('register.custom');
     Route::get('signout','CustomAuthController@signOut')->name('signout');
 
+    Route::resource('contents', 'ContentsController');
+    Route::get('contents_datatable', 'ContentsController@contents_datatable')->name('contents_datatable');
+
     Route::controller(SettingsController::class)->group(function(){
         /* Content */
         Route::get('contents','contents')->name('contents');

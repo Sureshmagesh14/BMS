@@ -321,47 +321,7 @@ class SettingsController extends Controller
         }
        
     }
-    public function get_all_contents(Request $request) {
-		
-        try {
-            if ($request->ajax()) {
-
-                $token = csrf_token();
-            
-                
-                $all_datas = Contents::withoutTrashed()->latest()->get();
-        
-                
-                return Datatables::of($all_datas)
-                ->addColumn('type_id', function ($all_data) {
-                    if($all_data->type_id=='1'){
-                        return 'Terms of use';
-                    }else{
-                        return 'Terms and condition';
-                    }
-                    
-                })    
-                ->addColumn('action', function ($all_data) use($token) {
-        
-                    return '<div class="">
-                    <div class="btn-group mr-2 mb-2 mb-sm-0">
-                        <a onclick="view_details(' . $all_data->id . ');" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></a>
-                        <button type="button" id="edit_content" data-id="' . $all_data->id . '" class="btn btn-primary waves-light waves-effect"><i class="fa fa-edit"></i></button>
-                        <button type="button" id="delete_content" data-id="' . $all_data->id . '"     class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
-                    </div>              
-                </div>';
-                    
-                }) 
-                ->rawColumns(['action','active','data'])      
-                ->make(true);
-            }
-        }
-        catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-        
-
-    }
+    
     public function banks()
     {   
         try {
