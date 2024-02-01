@@ -117,31 +117,10 @@
             });
         }
 
-        function view_details(id) {
-            let url = "view_contents";
-            url = url + '/' + id;
-            document.location.href = url;
-        }
-
-        $(document).on('click', '#edit_content', function(e) {
-            var stud_id = $(this).data("id");
-            var url = "{{ route('edit_contents', ':id') }}";
-            url = url.replace(':id', stud_id);
-            location.href = url;
-        });
-
         $(document).on('click', '#delete_content', function(e) {
             e.preventDefault();
-
-            // $(this).text('Deleting..');
             var id = $(this).data("id");
-
-            // $.ajaxSetup({
-            //     headers: {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //     }
-            // });
-            var url = "{{ route('delete_contents', ':id') }}";
+            var url = "{{ route('contents.destroy', ':id') }}";
             url = url.replace(':id', id);
           
             $.confirm({
@@ -160,20 +139,15 @@
                                 url: url,
                                 dataType: "json",
                                 success: function(response) {
-                                    // console.log(response);
                                     if (response.status == 404) {
-
                                         $('.delete_student').text('');
                                     } else {
-                                        $('#myTable').DataTable().ajax.reload();
-                                        $.alert('Deleted the user!');
-
+                                        datatable();
+                                        $.alert('Content Deleted!');
                                         $('.delete_student').text('Yes Delete');
-
                                     }
                                 }
                             });
-
                         }
                     },
                     cancelAction: function() {

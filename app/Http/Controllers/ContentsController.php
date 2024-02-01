@@ -195,7 +195,29 @@ class ContentsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $contents = Contents::find($id);
+            if($contents)
+            {
+                $contents->delete();
+                return response()->json([
+                    'status'=>200,
+                    'success' => true,
+                    'message'=>'Contents Deleted'
+                ]);
+            }
+            else
+            {
+                return response()->json([
+                    'status'=> 404,
+                    'success' => false,
+                    'message'=>'No Contents Found.'
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     public function contents_datatable(Request $request) {
