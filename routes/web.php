@@ -79,12 +79,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::controller(RespondentsController::class)->group(function(){
         Route::get('respondents','respondents')->name('respondents');
         Route::any('get_all_respondents', 'get_all_respondents')->name('get_all_respondents');
+        Route::get('respondent_export/{id}','respondent_export')->name('respondent_export');    
     });
 
     Route::controller(ProjectsController::class)->group(function(){
         Route::get('projects','projects')->name('projects');
         Route::any('get_all_projects', 'get_all_projects')->name('get_all_projects');
-
+        Route::get('projects_export/{id}','projects_export')->name('projects_export');      
     });
 
    Route::controller(ActionController::class)->group(function(){

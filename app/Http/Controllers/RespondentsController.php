@@ -12,6 +12,9 @@ use App\Models\Tags;
 use App\Models\Respondents;
 use DB;
 use Yajra\DataTables\DataTables;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 class RespondentsController extends Controller
 {   
@@ -59,7 +62,10 @@ class RespondentsController extends Controller
                     return $all_data->email;
                 }) 
                 ->addColumn('age', function ($all_data) {
-                    return $all_data->date_of_birth;
+
+                    $dob=$all_data->date_of_birth;
+                    $diff = (date('Y') - date('Y',strtotime($dob)));
+                    return $diff;
                 })
                 ->addColumn('gender', function ($all_data) {
                     return '-';
@@ -86,7 +92,63 @@ class RespondentsController extends Controller
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-        
+    }
 
+    public function respondent_export($arg) {
+        
+        $type='xlsx';
+
+        if($arg=='deact'){
+            $active = 2;
+        }else{
+            $active = 1;
+        }
+
+        $all_datas = DB::table('respondents')
+            ->where("active_status_id",$active)
+            ->orderby("id","desc")
+            ->limit(10)
+            ->get();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Name');
+        $sheet->setCellValue('B1', 'Surname');
+        $sheet->setCellValue('C1', 'Phone');
+        $sheet->setCellValue('D1', 'Phone 2');
+        $sheet->setCellValue('E1', 'Email');
+        $sheet->setCellValue('F1', 'Age');
+        $sheet->setCellValue('G1', 'Gender');
+        
+        $rows = 2;
+        $i=1;
+        foreach($all_datas as $all_data){
+
+            $dob=$all_data->date_of_birth;
+            $diff = (date('Y') - date('Y',strtotime($dob)));
+            
+            $sheet->setCellValue('A' . $rows, $i);
+            $sheet->setCellValue('B' . $rows, $all_data->name);
+            $sheet->setCellValue('C' . $rows, $all_data->surname);
+            $sheet->setCellValue('D' . $rows, $all_data->mobile);
+            $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+            $sheet->setCellValue('F' . $rows, $all_data->email);
+            $sheet->setCellValue('G' . $rows, $diff);
+
+            
+            $rows++;
+            $i++;
+        }
+
+        $fileName = "deactivated_respondents_".date('ymd').".".$type;
+        if($type == 'xlsx') {
+            $writer = new Xlsx($spreadsheet);
+        } else if($type == 'xls') {
+            $writer = new Xls($spreadsheet);
+        }
+            $writer->save("export/".$fileName);
+            
+        header("Content-Type: application/vnd.ms-excel");
+        return redirect(url('/')."/export/".$fileName);
     }
 }

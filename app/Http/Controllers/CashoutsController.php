@@ -168,7 +168,7 @@ class CashoutsController extends Controller
             $i++;
         }
 
-        $fileName = "cash.".$type;
+        $fileName = "cash_".date('ymd').".".$type;
         if($type == 'xlsx') {
             $writer = new Xlsx($spreadsheet);
         } else if($type == 'xls') {

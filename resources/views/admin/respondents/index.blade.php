@@ -38,10 +38,30 @@
 
                                 <div class="card">
                                     <div class="card-body">
+
+
+
                                     <div class="text-right">
-                                      
-                                    
+                                        
+                                        <a href="{{url('respondent_export/deact')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export Deactivated Respondents</a>
+
+                                        <div class="btn-group">
+                                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                            Action
+                                            <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                            <li><a href="#">Action</a></li>
+                                            <li><a href="#">Action</a></li>
+                                            </ul>
                                         </div>
+
+
+                                    </div>
+
+                                 
+                                    
+                                 
 
                                         <h4 class="card-title"> </h4>
                                         <p class="card-title-desc"></p>

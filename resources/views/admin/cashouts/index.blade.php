@@ -39,24 +39,12 @@
                                 <div class="card">
                                     <div class="card-body">
 
-                                    <div class="row mb-2">
-                                       
-            
-                                        <div class="col-md-10">
-                                           
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <a href="{{url('cash_export/xlsx')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export</a>
-                                            </div>
-                                        </div>
-            
-                                    </div>
+                                   
 
 
                                     <div class="text-right">
-                                            
-                                        </div>
+                                        <a href="{{url('cash_export/xlsx')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export</a>
+                                    </div>
 
                                         <h4 class="card-title"> </h4>
                                         <p class="card-title-desc"></p>

@@ -39,6 +39,9 @@
                                 <div class="card">
                                     <div class="card-body">
                                     <div class="text-right">
+
+                                            <a href="{{url('projects_export/xlsx')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export</a>
+
                                             <a  href="#" data-size="lg"
                                             data-ajax-popup="true"
                                             data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary" >Create Project</a>
