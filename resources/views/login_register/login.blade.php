@@ -11,6 +11,7 @@
                     <p class="text-muted">Sign in to continue to {{Config::get('constants.app_title')}}.</p>
                 </div>
                 <div class="p-2 mt-4">
+                    @php $token = md5(now()) @endphp
                     <form method="POST" action="{{ route('login.custom') }}">
                         @csrf
                         <div class="form-group">
