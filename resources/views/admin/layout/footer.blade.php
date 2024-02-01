@@ -67,24 +67,61 @@
 <!-- Right bar overlay-->
 <div class="rightbar-overlay"></div>
 
+<!-- Common modal -->
+<div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0" id="exampleModalScrollableTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+            
+        </div>
+    </div>
+</div>
 
-    <!-- JAVASCRIPT -->
-    <script src="{{ asset('public/assets/libs/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('public/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('public/assets/libs/metismenu/metisMenu.min.js') }}"></script>
-    <script src="{{ asset('public/assets/libs/simplebar/simplebar.min.js') }}"></script>
-    <script src="{{ asset('public/assets/libs/node-waves/waves.min.js') }}"></script>
-    <script src="{{ asset('public/assets/libs/waypoints/lib/jquery.waypoints.min.js') }}"></script>
-    <script src="{{ asset('public/assets/libs/jquery.counterup/jquery.counterup.min.js') }}"></script>
-    <script src="{{ asset('public/assets/libs/feather-icons/feather.min.js') }}"></script>
+    
+    @push('adminside-validataion')
+        
+    @endpush
 
+    @push('adminside-js')
+        <!-- JAVASCRIPT -->
+        <script src="{{ asset('public/assets/libs/jquery/jquery.min.js') }}"></script>
+        <script src="{{ asset('public/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('public/assets/libs/metismenu/metisMenu.min.js') }}"></script>
+        <script src="{{ asset('public/assets/libs/simplebar/simplebar.min.js') }}"></script>
+        <script src="{{ asset('public/assets/libs/node-waves/waves.min.js') }}"></script>
+        <script src="{{ asset('public/assets/libs/waypoints/lib/jquery.waypoints.min.js') }}"></script>
+        <script src="{{ asset('public/assets/libs/jquery.counterup/jquery.counterup.min.js') }}"></script>
+        <script src="{{ asset('public/assets/libs/feather-icons/feather.min.js') }}"></script>
+        <script src="{{ asset('public/assets/js/pages/table-responsive.init.js') }}"></script>
+        <!-- Responsive Table js -->
+        <script src="{{ asset('public/assets/libs/admin-resources/rwd-table/rwd-table.min.js') }}"></script>
 
+        <script src="{{ asset('public/assets/js/admin/app.js') }}"></script>
 
-     <!-- Required datatable js -->
-     <script src="{{ asset('public/assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+        <!-- Toastr js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+        <script src="{{ asset('public/assets/js/admin/jquery.validate.js') }}"></script>
+        
+        <script src="{{ asset('public/assets/js/admin/common.js') }}"></script>
+    @endpush
+
+    
+
+    @push('adminside-confirm')
+        <script src="{{ asset('public/assets/js/admin/confirm.min.js') }}"></script>
+    @endpush
+
+    @push('adminside-datatable')
+        <script src="{{ asset('public/assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('public/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-
-        <!-- Buttons examples -->
         <script src="{{ asset('public/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
         <script src="{{ asset('public/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
         <script src="{{ asset('public/assets/libs/jszip/jszip.min.js') }}"></script>
@@ -94,24 +131,10 @@
         <script src="{{ asset('public/assets/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
         <script src="{{ asset('public/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
         <script src="{{ asset('public/assets/libs/datatables.net-select/js/dataTables.select.min.js') }}"></script>
-        
-        <!-- Responsive examples -->
         <script src="{{ asset('public/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
         <script src="{{ asset('public/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
-
-        <!-- Datatable init js -->
         <script src="{{ asset('public/assets/js/pages/datatables.init.js') }}"></script>
-
-
-    <!-- Responsive Table js -->
-        <script src="{{ asset('public/assets/libs/admin-resources/rwd-table/rwd-table.min.js') }}"></script>
-
-        <!-- Init js -->
-        <script src="{{ asset('public/assets/js/pages/table-responsive.init.js') }}"></script>
-  
-
-    <script src="{{ asset('public/assets/js/app.js') }}"></script>
-
+    @endpush
 
 </body>
 </html>

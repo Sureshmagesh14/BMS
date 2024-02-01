@@ -14,27 +14,23 @@
         @stop
         @section('adminside-css')
             <!-- Bootstrap Css -->
-            <link href="{{ asset('public/assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+            <link href="{{ asset('public/assets/css/admin/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
             <!-- Icons Css -->
-            <link href="{{ asset('public/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+            <link href="{{ asset('public/assets/css/admin/icons.min.css') }}" rel="stylesheet" type="text/css" />
             <!-- App Css-->
-            <link href="{{ asset('public/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+            <link href="{{ asset('public/assets/css/admin/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+             <!-- Confirm Css-->
+            <link href="{{ asset('public/assets/css/admin/confirm.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+
+            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
         @stop
 
-<style>
-.dataTables_paginate {
-float: left;
-}
-.dataTables_filter {
-float: left;
-}
-.dataTables_length {
-float: right;
-}
-.dataTables_info {
-float:right;
-}
-</style>
+        <style>
+            .dataTables_paginate {float: left;}
+            .dataTables_filter {float: left;}
+            .dataTables_length {float: right;}
+            .dataTables_info {float:right;}
+        </style>
     </head>
 
     <body data-sidebar="dark">

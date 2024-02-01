@@ -4,21 +4,13 @@
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <a href="{{url('/dashboard')}}" class="logo logo-dark">
-            <span class="logo-sm">
-            {{Config::get('constants.app_title')}}
-            </span>
-            <span class="logo-lg">
-            {{Config::get('constants.app_title')}}
-            </span>
+            <span class="logo-sm">{{Config::get('constants.app_title')}}</span>
+            <span class="logo-lg">{{Config::get('constants.app_title')}}</span>
         </a>
 
         <a href="{{url('/dashboard')}}" class="logo logo-light">
-            <span class="logo-sm h5 text-white">
-            {{Config::get('constants.app_title')}}
-            </span>
-            <span class="logo-lg h5 text-white">
-            {{Config::get('constants.app_title')}}
-            </span>
+            <span class="logo-sm h5 text-white">{{Config::get('constants.app_title')}}</span>
+            <span class="logo-lg h5 text-white">{{Config::get('constants.app_title')}}</span>
         </a>
     </div>
 
@@ -39,7 +31,6 @@
                         <i class="icon nav-icon" data-feather="home"></i>
                         <span class="menu-item" key="t-dashboards">Dashboards</span>
                     </a>
-                  
                 </li>
 
                
@@ -72,9 +63,6 @@
                         <span class="menu-item" key="t-chat">Action Events</span>
                     </a>
                 </li>
-              
-
-            
 
                 <li class="menu-title" key="t-pages">Database</li>
 
