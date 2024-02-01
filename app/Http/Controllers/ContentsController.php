@@ -79,8 +79,9 @@ class ContentsController extends Controller
                 $content->id;
 
                 return response()->json([
-                    'status'=>200,
-                    'message'=>'Content Added Successfully.'
+                    'status'  => 200,
+                    'success' => true,
+                    'message' =>'Content Added Successfully.'
                 ]);
             }
         }
@@ -94,7 +95,20 @@ class ContentsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $data = Contents::find($id);
+            $returnHTML = view('admin.contents.view',compact('data'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**
@@ -156,8 +170,9 @@ class ContentsController extends Controller
                     $content->update();
                     $content->id;
                     return response()->json([
-                        'status'         => 200,
-                        'success'        => 'Contents Updated.'
+                        'status'  => 200,
+                        'success' => true,
+                        'message' => 'Contents Updated.'
                     ]);
                 }
                 else
@@ -167,7 +182,6 @@ class ContentsController extends Controller
                         'error'=>'No Student Found.'
                     ]);
                 }
-    
             }
            
         }
@@ -200,15 +214,21 @@ class ContentsController extends Controller
                 })    
                 ->addColumn('action', function ($all_data) {
                     $edit_route = route("contents.edit",$all_data->id);
+                    $view_route = route("contents.show",$all_data->id);
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
-                            <a onclick="view_details('.$all_data->id.');" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></a>
+                            <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                data-bs-original-title="View Content" class="btn btn-primary waves-light waves-effect">
+                                <i class="fa fa-eye"></i>
+                            </a>
                             <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="{{ __("Edit Client") }}" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="Edit Content" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <button type="button" id="delete_content" data-id="' . $all_data->id . '"     class="btn btn-primary waves-light waves-effect"><i class="far fa-trash-alt"></i></button>
+                            <button type="button" id="delete_content" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
                         </div>
                     </div>';
                 })

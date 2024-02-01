@@ -67,14 +67,22 @@
     <!-- End Page-content -->
 
     @include('admin.layout.footer')
+        
         @stack('adminside-js')
         @stack('adminside-validataion')
         @stack('adminside-confirm')
         @stack('adminside-datatable')
-
+        
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
         $(document).ready(function() {
+            datatable();
+            $("#content_create_form-data").validate();
+        });
+        
+        $("#content_create_form-data").validate();
+
+        function datatable(){
             $('#myTable').dataTable().fnDestroy();
             $('#myTable').DataTable({
                 searching: true,
@@ -92,29 +100,14 @@
                         _token: tempcsrf,
                     },
                     error: function(xhr, error, thrown) {
-                        alert("undefind error")
+                        alert("undefind error");
                     }
                 },
 
                 columns: [
-                    {
-                        data: 'id',
-                        name: '#',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'type_id',
-                        name: 'type_id',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    }
+                    { data: 'id', name: '#', orderable: true, searchable: true },
+                    { data: 'type_id', name: 'type_id', orderable: true, searchable: true },
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
                 ],
                 columnDefs: [
                     { targets: 0,width: 75,className: "text-center" },
@@ -122,7 +115,7 @@
                     { targets: 2,width: 115,className: "text-center" }
                 ],
             });
-        });
+        }
 
         function view_details(id) {
             let url = "view_contents";

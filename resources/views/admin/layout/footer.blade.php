@@ -86,6 +86,10 @@
 </div>
 
     
+    @push('adminside-validataion')
+        
+    @endpush
+
     @push('adminside-js')
         <!-- JAVASCRIPT -->
         <script src="{{ asset('public/assets/libs/jquery/jquery.min.js') }}"></script>
@@ -104,15 +108,12 @@
 
         <!-- Toastr js -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-
-        <script src="{{ asset('public/assets/js/admin/common.js') }}"></script>
-
-        
-    @endpush
-
-    @push('adminside-validataion')
         <script src="{{ asset('public/assets/js/admin/jquery.validate.js') }}"></script>
+        
+        <script src="{{ asset('public/assets/js/admin/common.js') }}"></script>
     @endpush
+
+    
 
     @push('adminside-confirm')
         <script src="{{ asset('public/assets/js/admin/confirm.min.js') }}"></script>

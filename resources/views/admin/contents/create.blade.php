@@ -1,5 +1,5 @@
 
-<form id="content_create_form-data">
+<form id="content_form" class="validation">
     @csrf
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Type*</label>
@@ -21,9 +21,37 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="create_and_store" 
-            data-create_route="{{route('contents.store')}}" data-form_name="content_create_form-data">
-            Create New
-        </button>
+        <button type="button" class="btn btn-primary" id="content_create">Create New</button>
     </div>
 </form>
+
+
+<script>
+    $("#content_create").click(function () {
+        if (!$("#content_form").valid()) { // Not Valid
+            return false;
+        } else {
+            var data = $('#content_form').serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: "{{route('contents.store')}}",
+                data: data,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    $('#content_create').html('....Please wait');
+                },
+                success: function(response) {
+                    toastr.success(response.message);
+                    $("#commonModal").modal('hide');
+                    datatable();
+                },
+                complete: function(response) {
+                    $('#content_create').html('Create New');
+                }
+            });
+        }
+    });
+</script>

@@ -33,50 +33,6 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
     });
 });
 
-// Create Form
-$(document).on('click', '#create_and_store', function (e) {
-    e.preventDefault();
-    create_route = $(this).data('create_route');
-    form_name = $(this).data('form_name');
-    var data = $('#'+form_name).serialize();
-    $.ajax({
-        type: 'POST',
-        url: create_route,
-        data: data,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        // beforeSend: function() {
-        //     $('#create_content').html('....Please wait');
-        // },
-        success: function(response) {
-            toastr.success(response.message);
-        },
-        // complete: function(response) {
-        //     $('#create_content').html('Create New');
-        // }
-    });
-});
-
-// Update Form
-$(document).on('click', '#update_and_edit', function (e) {
-    e.preventDefault();
-    update_route = $(this).data('update_route');
-    form_name = $(this).data('form_name');
-    var data = $('#'+form_name).serialize();
-    
-    $.ajax({
-        type: "POST",
-        url: update_route,
-        data: data,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            toastr.success(response.message);
-        },
-    });
-});
 
 toastr.options = {
     "closeButton": true,
