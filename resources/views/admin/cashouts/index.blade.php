@@ -38,6 +38,22 @@
 
                                 <div class="card">
                                     <div class="card-body">
+
+                                    <div class="row mb-2">
+                                       
+            
+                                        <div class="col-md-10">
+                                           
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="mb-3">
+                                                <a href="{{url('cash_export/xlsx')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export</a>
+                                            </div>
+                                        </div>
+            
+                                    </div>
+
+
                                     <div class="text-right">
                                             
                                         </div>
@@ -49,7 +65,12 @@
                                             <thead>
                                             <tr>
                                                 
-                                                <th>#</th>
+                                                <th>
+                                                    <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="checkAll">
+                                                    <label class="custom-control-label" for="checkAll"></label>
+                                                    </div>
+                                                </th>
                                                 <th>Type</th>          
                                                 <th>Status</th>          
                                                 <th>Amount</th>          

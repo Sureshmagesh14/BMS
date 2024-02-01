@@ -88,7 +88,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::controller(CashoutsController::class)->group(function(){
         Route::get('cashouts','cashouts')->name('cashouts');
         Route::any('get_all_cashouts', 'get_all_cashouts')->name('get_all_cashouts');
-        
+        Route::get('cash_export/{id}','cash_export')->name('cash_export');        
     });
   
     Route::controller(UsersController::class)->group(function(){
