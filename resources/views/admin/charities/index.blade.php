@@ -38,10 +38,13 @@
 
                                 <div class="card">
                                     <div class="card-body">
-                                    <div class="text-right">
-                                            <a  href="#" data-size="lg"
-                                            data-ajax-popup="true"
-                                            data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary" >Create charities</a>
+                                        <div class="text-right">
+                                            <a href="#!" data-url="{{ route('charities.create') }}" data-size="xl" data-ajax-popup="true"
+                                                class="btn btn-primary" data-bs-original-title="{{ __('Create Charities') }}" class="btn btn-primary" data-size="xl"
+                                                 data-ajax-popup="true" data-bs-toggle="tooltip"
+                                                id="create">
+                                                Create Charities
+                                            </a>
                                         </div>
 
                                         <h4 class="card-title"> </h4>
@@ -85,65 +88,86 @@
 @include('admin.layout.footer')
 
 <script>
-$(document).ready(function() {
     var tempcsrf = '{!! csrf_token() !!}';
-    
-    $('#myTable').dataTable().fnDestroy();
-
-    $('#myTable').DataTable({
+    $(document).ready(function() {
+        datatable();
       
-        searching: true,
-        ordering: true,
-        dom : 'lfrtip',
-        info: true,
-        iDisplayLength: 10,
-        lengthMenu: [
-            [ 10, 50, 100, -1],
-            [10, 50, 100, "All"]
-        ],
-        ajax: {
-            url: "{{ route('get_all_charities') }}",
-            data: {
-                _token: tempcsrf,
-            },
-            error: function(xhr, error, thrown) {
-               alert("undefind error")
-            }
-        },
-       
-        columns: [{
-                data: 'id',
-                name: '#',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'name',
-                name: 'name',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            }
-        ],
-        columnDefs: [
-            {
-                targets: 0,
-                width: 75,
-                className: "text-center"
-            },{
-                targets: 1
-            },
-            {
-                targets: 2,
-                width: 115,
-                className: "text-center"
-            }
-        ],
     });
-});
+    
+   
+
+    function datatable(){
+        $('#myTable').dataTable().fnDestroy();
+        $('#myTable').DataTable({
+            searching: true,
+            ordering: true,
+            dom: 'lfrtip',
+            info: true,
+            iDisplayLength: 10,
+            lengthMenu: [
+                [10, 50, 100, -1],
+                [10, 50, 100, "All"]
+            ],
+            ajax: {
+                url: "{{ route('get_all_charities') }}",
+                data: {
+                    _token: tempcsrf,
+                },
+                error: function(xhr, error, thrown) {
+                    alert("undefind error");
+                }
+            },
+
+            columns: [
+                { data: 'id', name: '#', orderable: true, searchable: true },
+                { data: 'name', name: 'name', orderable: true, searchable: true },
+                { data: 'action', name: 'action', orderable: false, searchable: false }
+            ],
+            columnDefs: [
+                { targets: 0,width: 75,className: "text-center" },
+                { targets: 1 },
+                { targets: 2,width: 115,className: "text-center" }
+            ],
+        });
+    }
+
+    $(document).on('click', '#delete_charities', function(e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        var url = "{{ route('charities.destroy', ':id') }}";
+        url = url.replace(':id', id);
+      
+        $.confirm({
+            title: "{{Config::get('constants.delete')}}",
+            content:  "{{Config::get('constants.delete_confirmation')}}",
+            autoClose: 'cancelAction|8000',
+            buttons: {
+                delete: {
+                    text: 'delete',
+                    action: function() {
+                        $.ajax({
+                            type: "DELETE",
+                            data: {
+                                _token: tempcsrf,
+                            },
+                            url: url,
+                            dataType: "json",
+                            success: function(response) {
+                                if (response.status == 404) {
+                                    $('.delete_student').text('');
+                                } else {
+                                    datatable();
+                                    $.alert('Charities Deleted!');
+                                    $('.delete_student').text('Yes Delete');
+                                }
+                            }
+                        });
+                    }
+                },
+                cancel: function() {
+                    
+                }
+            }
+        });
+    });
 </script>

@@ -1,29 +1,23 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Banks;
-use App\Models\Contents;
 use App\Models\Networks;
-use App\Charities;
-use App\Groups;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Yajra\DataTables\DataTables;
 use Exception;
 
-class ContentsController extends Controller
+class NetworkController extends Controller
 {
-    /**
+     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         try {
-            return view('admin.contents.index');
+            return view('admin.networks.index');
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -36,7 +30,8 @@ class ContentsController extends Controller
     public function create()
     {
         try {
-            $returnHTML = view('admin.contents.create')->render();
+           
+            $returnHTML = view('admin.networks.create')->render();
 
             return response()->json(
                 [
@@ -58,9 +53,9 @@ class ContentsController extends Controller
     public function store(Request $request)
     {
         try {
+
             $validator = Validator::make($request->all(), [
-                'type_id' => 'required',
-                'data'    => 'required',
+               'name'=> 'required',
             ]);
     
             if($validator->fails())
@@ -72,18 +67,17 @@ class ContentsController extends Controller
             }
             else
             {
-                $content          = new Contents;
-                $content->type_id = $request->input('type_id');
-                $content->data    = $request->input('data');
-                $content->save();
-                $content->id;
-
+                $network = new Networks;
+                $network->name = $request->input('name');
+                $network->save();
+                $network->id;
                 return response()->json([
-                    'status'  => 200,
-                    'success' => true,
-                    'message' =>'Content Added Successfully.'
+                    'status'=>200,
+                    'last_insert_id' => $network->id,
+                    'message'=>'Network Added Successfully.'
                 ]);
             }
+
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -95,9 +89,10 @@ class ContentsController extends Controller
      */
     public function show(string $id)
     {
+        
         try {
-            $data = Contents::find($id);
-            $returnHTML = view('admin.contents.view',compact('data'))->render();
+            $data = Networks::find($id);
+            $returnHTML = view('admin.networks.view',compact('data'))->render();
 
             return response()->json(
                 [
@@ -117,11 +112,11 @@ class ContentsController extends Controller
     public function edit(string $id)
     {
         try {
-            $content = Contents::find($id);
-            if($content)
+           
+            $network = Networks::find($id);
+            if($network)
             {
-                $returnHTML = view('admin.contents.edit',compact('content'))->render();
-
+                $returnHTML = view('admin.networks.edit',compact('network'))->render();
                 return response()->json(
                     [
                         'success' => true,
@@ -133,13 +128,15 @@ class ContentsController extends Controller
             {
                 return response()->json([
                     'status'=>404,
-                    'message'=>'No Content Found.'
+                    'message'=>'No Network Found.'
                 ]);
             }
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+        
+       
     }
 
     /**
@@ -149,8 +146,7 @@ class ContentsController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'type_id'=> 'required',
-                'data'=>'required',
+                'name'=> 'required',
             ]);
     
             if($validator->fails())
@@ -162,26 +158,27 @@ class ContentsController extends Controller
             }
             else
             {
-                $content = Contents::find($request->id);
+               
+                $content = Networks::find($request->id);
                 if($content)
                 {
-                    $content->type_id = $request->input('type_id');
-                    $content->data    = $request->input('data');
+                    $content->name = $request->input('name');
                     $content->update();
                     $content->id;
                     return response()->json([
-                        'status'  => 200,
-                        'success' => true,
-                        'message' => 'Contents Updated.'
+                        'status'=>200,
+                        'last_insert_id' => $content->id,
+                        'message' => 'Networks Updated.',
                     ]);
                 }
                 else
                 {
                     return response()->json([
                         'status'=>404,
-                        'error'=>'No Contents Found.'
+                        'error'=>'No Network Found.'
                     ]);
                 }
+    
             }
            
         }
@@ -196,14 +193,14 @@ class ContentsController extends Controller
     public function destroy(string $id)
     {
         try {
-            $contents = Contents::find($id);
+            $contents = Networks::find($id);
             if($contents)
             {
                 $contents->delete();
                 return response()->json([
                     'status'=>200,
                     'success' => true,
-                    'message'=>'Contents Deleted'
+                    'message'=>'Network Deleted Successfully.'
                 ]);
             }
             else
@@ -211,50 +208,47 @@ class ContentsController extends Controller
                 return response()->json([
                     'status'=> 404,
                     'success' => false,
-                    'message'=>'No Contents Found.'
+                    'message'=>'No Network Found.'
                 ]);
             }
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+      
     }
 
-    public function contents_datatable(Request $request) {
+    public function get_all_networks(Request $request) {
 		
         try {
             if ($request->ajax()) {
-                $all_datas = Contents::withoutTrashed()->latest()->get();
+                $all_datas = Networks::latest()->get();
         
                 return Datatables::of($all_datas)
-                ->addColumn('type_id', function ($all_data) {
-                    if($all_data->type_id=='1'){
-                        return 'Terms of use';
-                    }else{
-                        return 'Terms and condition';
-                    }
-                })    
+                ->addColumn('name', function ($all_data) {
+                    return $all_data->name;
+                })     
                 ->addColumn('action', function ($all_data) {
-                    $edit_route = route("contents.edit",$all_data->id);
-                    $view_route = route("contents.show",$all_data->id);
+                    $edit_route = route("networks.edit",$all_data->id);
+                    $view_route = route("networks.show",$all_data->id);
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
                             <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="View Content" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>
                             <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="Edit Content" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <button type="button" id="delete_content" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
+                            <button type="button" id="delete_network" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
                                 <i class="far fa-trash-alt"></i>
                             </button>
                         </div>
                     </div>';
                 })
-                ->rawColumns(['action','active','data'])      
+                ->rawColumns(['action','name'])      
                 ->make(true);
             }
         }

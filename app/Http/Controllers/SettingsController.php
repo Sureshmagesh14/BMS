@@ -88,15 +88,16 @@ class SettingsController extends Controller
                 $token = csrf_token();
             
                 
-                $all_datas = DB::table('charities')
-                ->orderby("id","desc")
-                ->get();
+                $all_datas = Charities::latest()->get();
         
                 
                 return Datatables::of($all_datas)
                 ->addColumn('name', function ($all_data) {
                     return $all_data->name;
-                })    
+                })
+                ->addColumn('data', function ($all_data) {
+                    return $all_data->data;
+                })      
                 ->addColumn('action', function ($all_data) use($token) {
         
                     return '<div class="">
@@ -108,7 +109,7 @@ class SettingsController extends Controller
                 </div>';
                     
                 }) 
-                ->rawColumns(['action','active','name'])      
+                ->rawColumns(['action','name','data'])      
                 ->make(true);
             }
         }

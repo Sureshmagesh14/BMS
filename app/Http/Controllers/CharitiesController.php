@@ -5,25 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Banks;
-use App\Models\Contents;
-use App\Models\Networks;
-use App\Charities;
-use App\Groups;
+use App\Models\Charities;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Yajra\DataTables\DataTables;
 use Exception;
-
-class ContentsController extends Controller
+class CharitiesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         try {
-            return view('admin.contents.index');
+            return view('admin.charities.index');
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -36,7 +28,7 @@ class ContentsController extends Controller
     public function create()
     {
         try {
-            $returnHTML = view('admin.contents.create')->render();
+            $returnHTML = view('admin.charities.create')->render();
 
             return response()->json(
                 [
@@ -59,7 +51,7 @@ class ContentsController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'type_id' => 'required',
+                'name' => 'required',
                 'data'    => 'required',
             ]);
     
@@ -72,8 +64,8 @@ class ContentsController extends Controller
             }
             else
             {
-                $content          = new Contents;
-                $content->type_id = $request->input('type_id');
+                $content          = new Charities;
+                $content->name = $request->input('name');
                 $content->data    = $request->input('data');
                 $content->save();
                 $content->id;
@@ -81,7 +73,7 @@ class ContentsController extends Controller
                 return response()->json([
                     'status'  => 200,
                     'success' => true,
-                    'message' =>'Content Added Successfully.'
+                    'message' =>'Charities Added Successfully.'
                 ]);
             }
         }
@@ -96,8 +88,8 @@ class ContentsController extends Controller
     public function show(string $id)
     {
         try {
-            $data = Contents::find($id);
-            $returnHTML = view('admin.contents.view',compact('data'))->render();
+            $data = Charities::find($id);
+            $returnHTML = view('admin.charities.view',compact('data'))->render();
 
             return response()->json(
                 [
@@ -117,10 +109,10 @@ class ContentsController extends Controller
     public function edit(string $id)
     {
         try {
-            $content = Contents::find($id);
-            if($content)
+            $charities = Charities::find($id);
+            if($charities)
             {
-                $returnHTML = view('admin.contents.edit',compact('content'))->render();
+                $returnHTML = view('admin.charities.edit',compact('charities'))->render();
 
                 return response()->json(
                     [
@@ -133,7 +125,7 @@ class ContentsController extends Controller
             {
                 return response()->json([
                     'status'=>404,
-                    'message'=>'No Content Found.'
+                    'message'=>'No Charities Found.'
                 ]);
             }
         }
@@ -149,7 +141,7 @@ class ContentsController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'type_id'=> 'required',
+                'name'=> 'required',
                 'data'=>'required',
             ]);
     
@@ -162,24 +154,24 @@ class ContentsController extends Controller
             }
             else
             {
-                $content = Contents::find($request->id);
+                $content = Charities::find($request->id);
                 if($content)
                 {
-                    $content->type_id = $request->input('type_id');
+                    $content->name = $request->input('name');
                     $content->data    = $request->input('data');
                     $content->update();
                     $content->id;
                     return response()->json([
                         'status'  => 200,
                         'success' => true,
-                        'message' => 'Contents Updated.'
+                        'message' => 'Charities Updated.'
                     ]);
                 }
                 else
                 {
                     return response()->json([
                         'status'=>404,
-                        'error'=>'No Contents Found.'
+                        'error'=>'No Charities Found.'
                     ]);
                 }
             }
@@ -196,14 +188,14 @@ class ContentsController extends Controller
     public function destroy(string $id)
     {
         try {
-            $contents = Contents::find($id);
+            $contents = Charities::find($id);
             if($contents)
             {
                 $contents->delete();
                 return response()->json([
                     'status'=>200,
                     'success' => true,
-                    'message'=>'Contents Deleted'
+                    'message'=>'Charities Deleted'
                 ]);
             }
             else
@@ -211,7 +203,7 @@ class ContentsController extends Controller
                 return response()->json([
                     'status'=> 404,
                     'success' => false,
-                    'message'=>'No Contents Found.'
+                    'message'=>'No Charities Found.'
                 ]);
             }
         }
@@ -220,23 +212,23 @@ class ContentsController extends Controller
         }
     }
 
-    public function contents_datatable(Request $request) {
+    public function get_all_charities(Request $request) {
 		
         try {
             if ($request->ajax()) {
-                $all_datas = Contents::withoutTrashed()->latest()->get();
+                $all_datas = Charities::latest()->get();
         
+                
                 return Datatables::of($all_datas)
-                ->addColumn('type_id', function ($all_data) {
-                    if($all_data->type_id=='1'){
-                        return 'Terms of use';
-                    }else{
-                        return 'Terms and condition';
-                    }
-                })    
+                ->addColumn('name', function ($all_data) {
+                    return $all_data->name;
+                })
+                ->addColumn('data', function ($all_data) {
+                    return $all_data->data;
+                })      
                 ->addColumn('action', function ($all_data) {
-                    $edit_route = route("contents.edit",$all_data->id);
-                    $view_route = route("contents.show",$all_data->id);
+                    $edit_route = route("charities.edit",$all_data->id);
+                    $view_route = route("charities.show",$all_data->id);
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
@@ -248,13 +240,13 @@ class ContentsController extends Controller
                                 data-bs-original-title="Edit Content" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <button type="button" id="delete_content" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
+                            <button type="button" id="delete_charities" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
                                 <i class="far fa-trash-alt"></i>
                             </button>
                         </div>
                     </div>';
                 })
-                ->rawColumns(['action','active','data'])      
+                ->rawColumns(['action','name','data'])          
                 ->make(true);
             }
         }

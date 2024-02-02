@@ -5,25 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Banks;
-use App\Models\Contents;
-use App\Models\Networks;
-use App\Charities;
-use App\Groups;
+use App\Models\Groups;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Yajra\DataTables\DataTables;
 use Exception;
-
-class ContentsController extends Controller
+class ProfileGroupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         try {
-            return view('admin.contents.index');
+            return view('admin.groups.index');
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -36,7 +28,7 @@ class ContentsController extends Controller
     public function create()
     {
         try {
-            $returnHTML = view('admin.contents.create')->render();
+            $returnHTML = view('admin.groups.create')->render();
 
             return response()->json(
                 [
@@ -59,8 +51,8 @@ class ContentsController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'type_id' => 'required',
-                'data'    => 'required',
+                'bank_name' => 'required',
+                'branch_code'    => 'required',
             ]);
     
             if($validator->fails())
@@ -72,16 +64,17 @@ class ContentsController extends Controller
             }
             else
             {
-                $content          = new Contents;
-                $content->type_id = $request->input('type_id');
-                $content->data    = $request->input('data');
-                $content->save();
-                $content->id;
+                $banks          = new Groups;
+                $banks->bank_name = $request->input('bank_name');
+                $banks->branch_code    = $request->input('branch_code');
+                $banks->active    = $request->input('active');
+                $banks->save();
+                $banks->id;
 
                 return response()->json([
                     'status'  => 200,
                     'success' => true,
-                    'message' =>'Content Added Successfully.'
+                    'message' =>'Banks Added Successfully.'
                 ]);
             }
         }
@@ -96,8 +89,8 @@ class ContentsController extends Controller
     public function show(string $id)
     {
         try {
-            $data = Contents::find($id);
-            $returnHTML = view('admin.contents.view',compact('data'))->render();
+            $data = Banks::find($id);
+            $returnHTML = view('admin.groups.view',compact('data'))->render();
 
             return response()->json(
                 [
@@ -117,10 +110,10 @@ class ContentsController extends Controller
     public function edit(string $id)
     {
         try {
-            $content = Contents::find($id);
-            if($content)
+            $banks = Groups::find($id);
+            if($banks)
             {
-                $returnHTML = view('admin.contents.edit',compact('content'))->render();
+                $returnHTML = view('admin.groups.edit',compact('banks'))->render();
 
                 return response()->json(
                     [
@@ -133,7 +126,7 @@ class ContentsController extends Controller
             {
                 return response()->json([
                     'status'=>404,
-                    'message'=>'No Content Found.'
+                    'message'=>'No Groups Found.'
                 ]);
             }
         }
@@ -149,8 +142,8 @@ class ContentsController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'type_id'=> 'required',
-                'data'=>'required',
+                'bank_name' => 'required',
+                'branch_code'    => 'required',
             ]);
     
             if($validator->fails())
@@ -162,24 +155,25 @@ class ContentsController extends Controller
             }
             else
             {
-                $content = Contents::find($request->id);
-                if($content)
+                $banks = Groups::find($request->id);
+                if($banks)
                 {
-                    $content->type_id = $request->input('type_id');
-                    $content->data    = $request->input('data');
-                    $content->update();
-                    $content->id;
+                    $banks->bank_name = $request->input('bank_name');
+                    $banks->branch_code    = $request->input('branch_code');
+                    $banks->active    = $request->input('active');
+                    $banks->update();
+                    $banks->id;
                     return response()->json([
                         'status'  => 200,
                         'success' => true,
-                        'message' => 'Contents Updated.'
+                        'message' => 'Groups Updated.'
                     ]);
                 }
                 else
                 {
                     return response()->json([
                         'status'=>404,
-                        'error'=>'No Contents Found.'
+                        'error'=>'No Groups Found.'
                     ]);
                 }
             }
@@ -196,14 +190,14 @@ class ContentsController extends Controller
     public function destroy(string $id)
     {
         try {
-            $contents = Contents::find($id);
+            $contents = Groups::find($id);
             if($contents)
             {
                 $contents->delete();
                 return response()->json([
                     'status'=>200,
                     'success' => true,
-                    'message'=>'Contents Deleted'
+                    'message'=>'Groups Deleted'
                 ]);
             }
             else
@@ -211,7 +205,7 @@ class ContentsController extends Controller
                 return response()->json([
                     'status'=> 404,
                     'success' => false,
-                    'message'=>'No Contents Found.'
+                    'message'=>'No Groups Found.'
                 ]);
             }
         }
@@ -220,23 +214,34 @@ class ContentsController extends Controller
         }
     }
 
-    public function contents_datatable(Request $request) {
+    public function get_groups_banks(Request $request) {
 		
         try {
             if ($request->ajax()) {
-                $all_datas = Contents::withoutTrashed()->latest()->get();
+                $all_datas = Groups::latest()->get();
         
+                
                 return Datatables::of($all_datas)
+                ->addColumn('name', function ($all_data) {
+                    return $all_data->name;
+                }) 
                 ->addColumn('type_id', function ($all_data) {
-                    if($all_data->type_id=='1'){
-                        return 'Terms of use';
-                    }else{
-                        return 'Terms and condition';
+                    if($all_data->type_id==1){
+                        $type_id='<span class="badge badge-success">Basic</span>';
+                    }else if($all_data->type_id==2){
+                        $type_id='<span class="badge badge-primary">Essential</span>';
                     }
-                })    
+                    else{
+                        $type_id='<span class="badge badge-secondary">Extended</span>';
+                    }
+                    return $type_id;
+                })  
+                ->addColumn('survey_url', function ($all_data) {
+                            return $all_data->survey_url;
+                }) 
                 ->addColumn('action', function ($all_data) {
-                    $edit_route = route("contents.edit",$all_data->id);
-                    $view_route = route("contents.show",$all_data->id);
+                    $edit_route = route("groups.edit",$all_data->id);
+                    $view_route = route("groups.show",$all_data->id);
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
@@ -248,13 +253,13 @@ class ContentsController extends Controller
                                 data-bs-original-title="Edit Content" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <button type="button" id="delete_content" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
+                            <button type="button" id="delete_groups" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
                                 <i class="far fa-trash-alt"></i>
                             </button>
                         </div>
                     </div>';
                 })
-                ->rawColumns(['action','active','data'])      
+                ->rawColumns(['name','survey_url','type_id','action'])          
                 ->make(true);
             }
         }
