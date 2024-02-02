@@ -5,6 +5,7 @@ use Hash;
 use Session;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use DB;
 use Exception;
 class CustomAuthController extends Controller
 {
@@ -83,7 +84,28 @@ class CustomAuthController extends Controller
     {
         try {
             if (Auth::check()) {
-                return view('admin.dashboard');
+
+                $active_val = DB::table('respondents')
+                ->where("active_status_id",1)
+                ->count();
+
+                $deactive_val = DB::table('respondents')
+                ->where("active_status_id",2)
+                ->count();
+
+                $unsub_val = DB::table('respondents')
+                ->where("active_status_id",3)
+                ->count();
+
+                $pending_val = DB::table('respondents')
+                ->where("active_status_id",5)
+                ->count();
+
+                $black_val = DB::table('respondents')
+                ->where("active_status_id",5)
+                ->count();
+
+                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val','black_val','pending_val'));
             }
             return redirect("/")->withSuccess('You are not allowed to access');
         }
