@@ -1,10 +1,11 @@
 @include('admin.layout.header')
-    @yield('adminside-favicon')
-    @yield('adminside-css')
+
+@yield('adminside-favicon')
+@yield('adminside-css')
+
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
       <!-- ============================================================== -->
             <!-- Start right Content here -->
             <!-- ============================================================== -->
@@ -76,9 +77,12 @@
                 </div>
                 <!-- End Page-content -->
 
-@yield('adminside-script')
-@include('admin.layout.footer')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+                @include('admin.layout.footer')
+        
+                @stack('adminside-js')
+                @stack('adminside-validataion')
+                @stack('adminside-confirm')
+                @stack('adminside-datatable')
 <script>
 $(document).ready(function() {
     var tempcsrf = '{!! csrf_token() !!}';
@@ -206,4 +210,3 @@ function view_network(id) {
 
         });
 </script>
-<script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>

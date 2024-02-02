@@ -1,6 +1,8 @@
 @include('admin.layout.header')
-    @yield('adminside-favicon')
-    @yield('adminside-css')
+
+@yield('adminside-favicon')
+@yield('adminside-css')
+
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
@@ -106,8 +108,12 @@
                 </div>
                 <!-- End Page-content -->
 
-@yield('adminside-script')
-@include('admin.layout.footer')
+                @include('admin.layout.footer')
+        
+                @stack('adminside-js')
+                @stack('adminside-validataion')
+                @stack('adminside-confirm')
+                @stack('adminside-datatable')
 
 <script>
 $(document).ready(function() {
@@ -262,4 +268,3 @@ $(document).ready(function() {
     });
 });
 </script>
-<script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>
