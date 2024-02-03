@@ -25,15 +25,18 @@ Route::get('/survey/folders/delete/{id}', ['as' => 'folder.delete','uses' => 'Su
 
 // Survey Routings
 
-Route::get('/survey/survey','SurveyController@survey')->name('survey');
-Route::get('/survey/survey/create', ['as' => 'survey.create','uses' => 'SurveyController@createSurvey',])->middleware(['auth']);
+Route::get('/survey','SurveyController@survey')->name('survey');
+Route::get('/survey/create', ['as' => 'survey.create','uses' => 'SurveyController@createSurvey',])->middleware(['auth']);
 Route::post('/survey/survey', ['as' => 'survery.survey','uses' => 'SurveyController@getSurveyList',])->middleware(['auth']);
-Route::post('/survey/survey/store', ['as' => 'survey.store','uses' => 'SurveyController@storeSurvey',])->middleware(['auth']);
-Route::get('/survey/survey/edit/{id}', ['as' => 'survey.edit','uses' => 'SurveyController@editSurvey',])->middleware(['auth']);
-Route::post('/survey/survey/update/{id}', ['as' => 'survey.update','uses' => 'SurveyController@updateSurvey',])->middleware(['auth']);
-Route::get('/survey/survey/delete/{id}', ['as' => 'survey.delete','uses' => 'SurveyController@deleteSurvey',])->middleware(['auth']);
+Route::post('/survey/store', ['as' => 'survey.store','uses' => 'SurveyController@storeSurvey',])->middleware(['auth']);
+Route::get('/survey/edit/{id}', ['as' => 'survey.edit','uses' => 'SurveyController@editSurvey',])->middleware(['auth']);
+Route::post('/survey/update/{id}', ['as' => 'survey.update','uses' => 'SurveyController@updateSurvey',])->middleware(['auth']);
+Route::get('/survey/delete/{id}', ['as' => 'survey.delete','uses' => 'SurveyController@deleteSurvey',])->middleware(['auth']);
+
+// Survey Template Routings
+Route::get('/survey/template/{id}', ['as' => 'survey.template','uses' => 'SurveyController@templateList',])->middleware(['auth']);
+
 
 // Survey Questions Routings
-
-Route::get('/survey/survey/questions/{id}', ['as' => 'survey.questions','uses' => 'SurveyController@deleteSurvey',])->middleware(['auth']);
+Route::get('/survey/questions/{id}', ['as' => 'survey.questions','uses' => 'SurveyController@questionList',])->middleware(['auth']);
 

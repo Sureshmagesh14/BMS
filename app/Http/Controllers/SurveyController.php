@@ -133,8 +133,8 @@ class SurveyController extends Controller
                 return ucfirst($list->title);
             })
             ->addColumn('add_template', function ($list) {
-                $qusLink=route('survey.questions',$list->id);
-                return '<a href="'.$qusLink.'" class="btn btn-primary waves-effect waves-light" title="Add Questions" data-title="Add Questions">Add Questions</a>';
+                $qusLink=route('survey.template',$list->id);
+                return '<a href="'.$qusLink.'" class="btn btn-primary waves-effect waves-light" title="Questions" data-title="Questions">View</a>';
             })
             ->addColumn('created_at', function ($list) {
                 return date_format($list->created_at, "M j, Y h:i:s");
@@ -196,6 +196,11 @@ class SurveyController extends Controller
             return json_encode(['error'=>"Survey mapped with Questions. Can't able to delete it.","success"=>""]);
         }
         
+    }
+    public function templateList(Request $request,$id){
+        $survey=Survey::where(['id'=>$id])->first();
+        $folders=Folder::withCount('surveycount')->get();
+        return view('admin.survey.template.index', compact('survey','folders'));
     }
    
    

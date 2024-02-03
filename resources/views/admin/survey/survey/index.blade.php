@@ -38,7 +38,7 @@
                         <th>Survey ID</th>
                         <th>Folder Name</th>
                         <th>Survey Name</th>
-                        <th>Add Questions</th>
+                        <th>Template</th>
                         <th>Created On</th>
                         <th>Actions</th>
                     </tr>

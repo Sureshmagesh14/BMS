@@ -27,4 +27,10 @@ class Folder extends Model
         'created_by'
     ];
 
+    public function surveycount()
+    {
+        return $this->hasMany('App\Models\Survey', 'folder_id', 'id');
+    }
+
+
 }
