@@ -1,0 +1,508 @@
+a.surveytitle {
+    font-size: 17px;
+    font-weight: bold;
+    color: black;
+}
+.navbar-brand-box,.vertical-menu {
+    background: white !important;
+}
+a {
+    background-color: transparent;
+}
+
+.ss-builder-add-new .icon-wrapper {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    -webkit-justify-content: flex-start;
+    -moz-justify-content: flex-start;
+    justify-content: flex-start;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+}
+
+.ss-builder-add-new p {
+    margin: 0;
+    padding: 0;
+}
+
+.ss-builder-add-new {
+    width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    -webkit-justify-content: flex-start;
+    -moz-justify-content: flex-start;
+    justify-content: flex-start;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    margin: 0 0 8px;
+    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.ss-builder-add-new .icon-wrapper,
+.ss-builder-add-new p {
+    transition: all 0.3s;
+}
+
+.ss-builder-add-new--sm-sidebar-card {
+    border: 1.5px solid rgba(74, 156, 166, 0.25);
+    box-shadow: none !important;
+    transition: all .2s ease;
+    border-radius: 10px;
+    height: 48px;
+}
+
+.ss-builder-add-new--sm-sidebar-card:hover {
+    border: 1.5px solid rgba(74, 156, 166, 0.8);
+    background-color: rgba(74, 156, 166, 0.04);
+}
+
+.ss-builder-add-new--sm-sidebar-card:has(.ss-builder-features__button:hover):hover {
+    border: 1.5px solid rgba(74, 156, 166, 0.25);
+}
+
+.ss-builder-add-new--sm-sidebar-card .icon-wrapper {
+    height: 48px !important;
+    width: 48px !important;
+    border-radius: 10px 0 0 10px;
+}
+
+.ss-builder-add-new .icon-wrapper {
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    justify-content: center;
+    margin: 0 16px 0 0;
+    padding: 12px;
+    min-height: 42px;
+    background-color: #4A9CA6;
+}
+
+.ss-builder-add-new .icon-wrapper i {
+    color: #fff;
+    font-size: 20px;
+}
+
+.ss-builder-add-new p {
+    font-size: 16px;
+    color: #0D1B1E;
+}
+
+.ss-builder-features__button {
+    height: 28px;
+    border-left: 1px solid #EAEAEA;
+    display: flex;
+    align-items: center;
+    padding-inline: 12px 16px;
+}
+
+.ss-builder-features__button--primary {
+    padding-block: 0 !important;
+    margin-inline: 0 !important;
+}
+
+.ss-builder-features__button--primary::after {
+    left: 38% !important;
+    padding-inline: 8px !important;
+}
+
+.ss-builder-features__button--primary svg {
+    padding: 3px;
+}
+
+.ss-builder-features__button--primary:hover svg>path {
+    stroke: #63686F !important;
+}
+
+body ::selection {
+    color: #fff;
+    background: rgba(55, 36, 89, 0.2);
+}
+
+body a {
+    cursor: pointer;
+}
+
+i[class^='ss-icon'] {
+    font-family: 'SurveySparrow-Icons' !important;
+}
+
+a {
+    background-color: transparent;
+}
+
+div,
+p,
+a,
+i {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+body *,
+body *::after,
+body *::before {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body a:focus {
+    outline: none;
+}
+
+body a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+body a:hover {
+    text-decoration: none;
+}
+
+:focus {
+    outline: none;
+}
+
+:focus {
+    outline: none !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.ss-button {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -moz-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    padding: 10px 16px;
+    margin: 0 .2em;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: all 0.3s;
+    border-radius: 3px;
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+}
+
+.ss-button svg {
+    vertical-align: middle;
+    transition: all 0.3s;
+    opacity: 0.8;
+    line-height: inherit;
+}
+
+.ss-button:hover,
+.ss-button:active,
+.ss-button:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+.ss-button:hover svg,
+.ss-button:active svg,
+.ss-button:focus svg {
+    opacity: 1;
+}
+
+.ss-button__icon-only {
+    padding: .1em;
+    margin: 0 .2em;
+    font-weight: 700;
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -moz-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: transparent;
+    border: none;
+}
+
+[spiketip-title]:after {
+    text-transform: none !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+    color: #fff !important;
+    font-weight: normal !important;
+    font-family: 'proxima-nova', 'Montserrat', sans-serif !important;
+    background: #1d1e1f !important;
+    word-break: break-word;
+}
+
+[spiketip-title]:hover {
+    z-index: 1;
+}
+
+[spiketip-title]:focus {
+    outline: none;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.fx-jc--between {
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    justify-content: space-between;
+}
+
+.fx-ai--center {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+}
+
+i[class^='ss-icon'] {
+    font-family: 'SurveySparrow-Icons' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.ss-icon-plus_round:before {
+    content: "\e94f";
+}
+
+*:focus {
+    outline: none !important;
+}
+
+body * {
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+/*! CSS Used from: Embedded */
+*,
+*::before,
+*::after {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+}
+
+p {
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+
+::selection {
+    background: rgba(125, 188, 255, 0.6);
+}
+
+a {
+    color: #106ba3;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #106ba3;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+:focus {
+    outline: rgba(19, 124, 189, 0.6) auto 2px;
+    outline-offset: 2px;
+    -moz-outline-radius: 6px;
+}
+
+/*! CSS Used from: Embedded */
+[spiketip-title] {
+    position: relative;
+    cursor: pointer;
+}
+
+[spiketip-title]:after {
+    filter: alpha(opactiy=0);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    -moz-opacity: 0;
+    -khtml-opacity: 0;
+    opacity: 0;
+    pointer-events: none;
+    -webkit-transition: all 0.18s ease-out 0.18s;
+    -moz-transition: all 0.18s ease-out 0.18s;
+    -ms-transition: all 0.18s ease-out 0.18s;
+    -o-transition: all 0.18s ease-out 0.18s;
+    transition: all 0.18s ease-out 0.18s;
+    font-family: sans-serif !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+    text-shadow: none !important;
+    font-size: 12px !important;
+    background: rgba(17, 17, 17, 0.9);
+    border-radius: 4px;
+    color: #fff;
+    content: attr(spiketip-title);
+    padding: .5em 1em;
+    position: absolute;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+[spiketip-title]:before {
+    background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba(17,17,17,0.9)%22%20transform%3D%22rotate(0)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+    background-size: 100% auto;
+    width: 18px;
+    height: 6px;
+    filter: alpha(opactiy=0);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    -moz-opacity: 0;
+    -khtml-opacity: 0;
+    opacity: 0;
+    pointer-events: none;
+    -webkit-transition: all 0.18s ease-out 0.18s;
+    -moz-transition: all 0.18s ease-out 0.18s;
+    -ms-transition: all 0.18s ease-out 0.18s;
+    -o-transition: all 0.18s ease-out 0.18s;
+    transition: all 0.18s ease-out 0.18s;
+    content: '';
+    position: absolute;
+    z-index: 10;
+}
+
+[spiketip-title]:hover:before,
+[spiketip-title]:hover:after {
+    filter: alpha(opactiy=100);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    -moz-opacity: 1;
+    -khtml-opacity: 1;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+[spiketip-title][spiketip-pos='bottom']:after {
+    left: 50%;
+    margin-top: 11px;
+    top: 100%;
+    -webkit-transform: translate(-50%, -10px);
+    -moz-transform: translate(-50%, -10px);
+    -ms-transform: translate(-50%, -10px);
+    transform: translate(-50%, -10px);
+}
+
+[spiketip-title][spiketip-pos='bottom']:before {
+    background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba(17,17,17,0.9)%22%20transform%3D%22rotate(180 18 6)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+    background-size: 100% auto;
+    width: 18px;
+    height: 6px;
+    left: 50%;
+    margin-top: 5px;
+    top: 100%;
+    -webkit-transform: translate(-50%, -10px);
+    -moz-transform: translate(-50%, -10px);
+    -ms-transform: translate(-50%, -10px);
+    transform: translate(-50%, -10px);
+}
+
+[spiketip-title][spiketip-pos='bottom']:hover:after {
+    -webkit-transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+
+[spiketip-title][spiketip-pos='bottom']:hover:before {
+    -webkit-transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+.navbar-brand-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#sidebar-menu {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.d-flex.fx-ai--center p{
+    margin-left: 10px;
+}

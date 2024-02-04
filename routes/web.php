@@ -35,8 +35,15 @@ Route::get('/survey/delete/{id}', ['as' => 'survey.delete','uses' => 'SurveyCont
 
 // Survey Template Routings
 Route::get('/survey/template/{id}', ['as' => 'survey.template','uses' => 'SurveyController@templateList',])->middleware(['auth']);
-
+Route::get('/survey/builder/{id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder',])->middleware(['auth']);
+Route::get('/survey/questiontype/{id}', ['as' => 'survey.questiontype','uses' => 'SurveyController@questiontype',])->middleware(['auth']);
+Route::get('/survey/qustype/{survey}/{qustype}', ['as' => 'survey.qustype','uses' => 'SurveyController@questiontypesurvey',])->middleware(['auth']);
+Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'SurveyController@deletequs',])->middleware(['auth']);
 
 // Survey Questions Routings
-Route::get('/survey/questions/{id}', ['as' => 'survey.questions','uses' => 'SurveyController@questionList',])->middleware(['auth']);
+Route::get('/survey/questions/{id}', ['as' => 'survey.quesbuilder','uses' => 'SurveyController@questionList',])->middleware(['auth']);
 
+
+// Clone Survey 
+
+Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication','uses' => 'SurveyController@surveyduplication',])->middleware(['auth']);

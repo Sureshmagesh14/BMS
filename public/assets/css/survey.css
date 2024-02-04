@@ -751,7 +751,7 @@ body a {
     font-weight: 500;
     cursor: pointer;
     position: relative;
-    color: #0052CC;
+    color: #151e33;;
     transition: all 0.3s;
     line-height: 1.2;
     text-decoration: underline;
@@ -1239,7 +1239,7 @@ body:not([dir='rtl']) .px-3 {
     font-weight: 600;
     cursor: pointer;
     position: relative;
-    color: #4A9CA6;
+    color: #151e33;
     transition: all 0.3s;
     line-height: 1.2;
     text-decoration: none;

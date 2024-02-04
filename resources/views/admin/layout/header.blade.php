@@ -41,7 +41,7 @@
             .actionsBtn {
                 display: flex;
             }
-            .editSurvey {
+            .editSurvey,.editFolder {
                 margin-right: 1rem;
             }
             .createBtn {

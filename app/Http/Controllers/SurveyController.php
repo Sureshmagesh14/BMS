@@ -6,7 +6,9 @@ use Session;
 use App\Models\User;
 use App\Models\Folder;
 use App\Models\Survey;
+use App\Models\Questions;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Str;
 
 use Illuminate\Support\Facades\Auth;
 class SurveyController extends Controller
@@ -158,11 +160,13 @@ class SurveyController extends Controller
     }
 
     public function storeSurvey(Request $request){
+        $uuid = Str::uuid()->toString();
         $user = \Auth::user();
         $survey=new Survey();
         $survey->folder_id=$request->folder_id;
         $survey->title=$request->title;
         $survey->created_by=$user->id;
+        $survey->builderID=$uuid;
         $survey->save();
         return redirect()->back()->with('success', __('Survey Created Successfully.'));
 
@@ -202,6 +206,72 @@ class SurveyController extends Controller
         $folders=Folder::withCount('surveycount')->get();
         return view('admin.survey.template.index', compact('survey','folders'));
     }
-   
+    public function builder(Request $request,$survey){
+        // Generatre builder ID
+        $survey=Survey::where(['builderID'=>$survey])->first();
+        $questions=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+        $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
+        $thankQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
+       
+        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus'));
+
+    }
+    public function questiontype(Request $request,$survey){
+        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','mutli_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','ranking'=>'Ranking','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+        return view('admin.survey.builder.create', compact('questionTypes','survey'));
+
+    }
+   public function questiontypesurvey(Request $request,$survey,$qustype){
+    // Create New Question
+    // Create New Qus 
+    $user = \Auth::user();
+    $newqus=new Questions();
+    $newqus->survey_id=$survey;
+    $newqus->qus_type=$qustype;
+    $newqus->created_by=$user->id;
+    $newqus->save();
+    $questions=Questions::where(['survey_id'=>$survey])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+    $survey=Survey::where(['id'=>$survey])->first();
+    return redirect()->back()->with('success', __('Question Created Successfully.'));
+
+
+   }
+   public function deletequs(Request $request,$id){
+        $survey=Questions::where(['id'=>$id])->first();
+        $survey->delete();
+        return json_encode(['success'=>'Question deleted Successfully',"error"=>""]);
+        
+    }
+    public function surveyduplication(Request $request,$id){
+
+        $survey=Survey::where(['id'=>$id])->first();
+        $questions=Questions::where(['survey_id'=>$id])->get();
+        $uuid = Str::uuid()->toString();
+        $user = \Auth::user();
+        
+        // Clone Survey 
+        $clonesurvey=new Survey();
+        $clonesurvey->folder_id=$survey->folder_id;
+        $clonesurvey->title=$survey->title.' Copy';
+        $clonesurvey->created_by=$user->id;
+        $clonesurvey->builderID=$uuid;
+        $clonesurvey->save();
+
+        // Clone Question 
+        foreach($questions as $qus){
+            $newqus=new Questions();
+            $newqus->survey_id=$clonesurvey->id;
+            $newqus->question_name=$qus->question_name;
+            $newqus->qus_template=$qus->qus_template;
+            $newqus->qus_type=$qus->qus_type;
+            $newqus->qus_ans=$qus->qus_ans;
+            $newqus->skip_logic=$qus->skip_logic;
+            $newqus->display_logic=$qus->display_logic;
+            $newqus->created_by=$user->id;
+            $newqus->save();
+        }
+        return redirect()->back()->with('success', __('Survey Duplicated Successfully.'));
+
+    }
    
 }
