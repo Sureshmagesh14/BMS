@@ -1,10 +1,10 @@
 <form id="edit_groups_form">
     @csrf
-    <input type="hidden" id="id" name="id" value="{{$banks->id}}">
+    <input type="hidden" id="id" name="id" value="{{$groups->id}}">
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Name *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name" required>
+            <input type="text" class="form-control" id="name" name="name" value="{{$groups->name}}" required>
         </div>
     </div>
 
@@ -15,15 +15,9 @@
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
-                <option value="1">
-                    Basic
-                </option>
-                <option value="2">
-                    Essential
-                </option>
-                <option value="3">
-                    Extended
-                </option>
+                <option @if($groups->type_id==1) selected @endif value="1">Basic</option>
+                <option @if($groups->type_id==2) selected @endif value="2">Essential</option>
+                <option @if($groups->type_id==3) selected @endif value="3">Extended</option>
             </select>
         </div>
     </div>
@@ -31,7 +25,7 @@
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Survey URL *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="survey_url" name="survey_url" required>
+            <input type="text" class="form-control" id="survey_url" name="survey_url" value="{{$groups->survey_url}}"  required>
         </div>
     </div>
     </div>

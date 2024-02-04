@@ -90,35 +90,39 @@
                 @stack('adminside-validataion')
                 @stack('adminside-confirm')
                 @stack('adminside-datatable')
-
-<script>
-$(document).ready(function() {
-    var tempcsrf = '{!! csrf_token() !!}';
     
-    $('#myTable').dataTable().fnDestroy();
-
-    $('#myTable').DataTable({
+<script>
+    var tempcsrf = '{!! csrf_token() !!}';
+    $(document).ready(function() {
+        datatable();
       
-        searching: true,
-        ordering: true,
-        dom : 'lfrtip',
-        info: true,
-        iDisplayLength: 10,
-        lengthMenu: [
-            [ 10, 50, 100, -1],
-            [10, 50, 100, "All"]
-        ],
-        ajax: {
-            url: "{{ route('get_all_groups') }}",
-            data: {
-                _token: tempcsrf,
+    });
+    
+   
+
+    function datatable(){
+        $('#myTable').dataTable().fnDestroy();
+        $('#myTable').DataTable({
+            searching: true,
+            ordering: true,
+            dom: 'lfrtip',
+            info: true,
+            iDisplayLength: 10,
+            lengthMenu: [
+                [10, 50, 100, -1],
+                [10, 50, 100, "All"]
+            ],
+            ajax: {
+                url: "{{ route('get_groups_banks') }}",
+                data: {
+                    _token: tempcsrf,
+                },
+                error: function(xhr, error, thrown) {
+                    alert("undefind error");
+                }
             },
-            error: function(xhr, error, thrown) {
-               alert("undefind error")
-            }
-        },
-       
-        columns: [{
+
+             columns: [{
                 data: 'id',
                 name: '#',
                 orderable: true,
@@ -149,26 +153,52 @@ $(document).ready(function() {
                 searchable: false
             }
         ],
-        columnDefs: [
-            {
-                targets: 0,
-                width: 75,
-                className: "text-center"
-            },{
-                targets: 1
-            },
-            {
-                targets: 2
-            },
-            {
-                targets: 3
-            },
-            {
-                targets: 4,
-                width: 115,
-                className: "text-center"
+            columnDefs: [
+                { targets: 0,width: 75,className: "text-center" },
+                { targets: 1 },
+                { targets: 2,width: 115,className: "text-center" }
+            ],
+        });
+    }
+
+    $(document).on('click', '#delete_groups', function(e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        var url = "{{ route('groups.destroy', ':id') }}";
+        url = url.replace(':id', id);
+      
+        $.confirm({
+            title: "{{Config::get('constants.delete')}}",
+            content:  "{{Config::get('constants.delete_confirmation')}}",
+            autoClose: 'cancelAction|8000',
+            buttons: {
+                delete: {
+                    text: 'delete',
+                    action: function() {
+                        $.ajax({
+                            type: "DELETE",
+                            data: {
+                                _token: tempcsrf,
+                            },
+                            url: url,
+                            dataType: "json",
+                            success: function(response) {
+                                if (response.status == 404) {
+                                    $('.delete_student').text('');
+                                } else {
+                                    datatable();
+                                    $.alert('Profile Groups Deleted!');
+                                    $('.delete_student').text('Yes Delete');
+                                }
+                            }
+                        });
+                    }
+                },
+                cancel: function() {
+                    
+                }
             }
-        ],
+        });
     });
-});
 </script>
+

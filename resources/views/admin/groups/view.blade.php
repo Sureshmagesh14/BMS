@@ -7,28 +7,34 @@
                 <td>{{$data->id}}</td>
             </tr>
             <tr>
-                <th>Bank Name</th>
-                <td>{{$data->bank_name}}</td>
+                <th>Name</th>
+                <td>{{$data->name}}</td>
             </tr>
             <tr>
-                <th>Branch Code</th>
-                <td>{{$data->branch_code}}</td>
+                <th>Survey URL</th>
+                <td>{{$data->survey_url}}</td>
             </tr>
             <tr>
-                <th>Active</th>
+                <th>Survey URL</th>
                 <td>
-                    @if($data->active==1)
+                    @if($data->type_id==1)
                     @php
-                        $active='Yes';
+                        $type_id='Basic';
+                    @endphp
+                    @elseif($data->type_id==2)
+                    @php
+                        $type_id='Essential';
                     @endphp
                     @else
                     @php
-                    $active='No';
+                    $type_id='Extended';
                 @endphp
                     @endif
-                    {{$active}}
+                    {{$type_id}}
                 </td>
             </tr>
+           
+           
         </tbody>
     </table>
 </div>

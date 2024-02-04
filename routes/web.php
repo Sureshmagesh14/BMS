@@ -46,9 +46,7 @@ Route::group(['middleware' => ['auth']], function () {
       
 
   
-       
-        Route::get('groups','groups')->name('groups');
-        Route::any('get_all_groups', 'get_all_groups')->name('get_all_groups');
+    
 
        
         Route::get('getrecentcontentid', 'getrecentcontentid')->name('getrecentcontentid');

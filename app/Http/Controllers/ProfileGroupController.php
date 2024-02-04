@@ -49,10 +49,12 @@ class ProfileGroupController extends Controller
      */
     public function store(Request $request)
     {
+  
         try {
             $validator = Validator::make($request->all(), [
-                'bank_name' => 'required',
-                'branch_code'    => 'required',
+                'name' => 'required',
+                'type_id'    => 'required',
+                'survey_url'    => 'required',
             ]);
     
             if($validator->fails())
@@ -64,17 +66,17 @@ class ProfileGroupController extends Controller
             }
             else
             {
-                $banks          = new Groups;
-                $banks->bank_name = $request->input('bank_name');
-                $banks->branch_code    = $request->input('branch_code');
-                $banks->active    = $request->input('active');
-                $banks->save();
-                $banks->id;
+                $groups          = new Groups;
+                $groups->name = $request->input('name');
+                $groups->type_id    = $request->input('type_id');
+                $groups->survey_url    = $request->input('survey_url');
+                $groups->save();
+                $groups->sort_order=$groups->id;
 
                 return response()->json([
                     'status'  => 200,
                     'success' => true,
-                    'message' =>'Banks Added Successfully.'
+                    'message' =>'Groups Added Successfully.'
                 ]);
             }
         }
@@ -89,7 +91,7 @@ class ProfileGroupController extends Controller
     public function show(string $id)
     {
         try {
-            $data = Banks::find($id);
+            $data = Groups::find($id);
             $returnHTML = view('admin.groups.view',compact('data'))->render();
 
             return response()->json(
@@ -110,10 +112,10 @@ class ProfileGroupController extends Controller
     public function edit(string $id)
     {
         try {
-            $banks = Groups::find($id);
-            if($banks)
+            $groups = Groups::find($id);
+            if($groups)
             {
-                $returnHTML = view('admin.groups.edit',compact('banks'))->render();
+                $returnHTML = view('admin.groups.edit',compact('groups'))->render();
 
                 return response()->json(
                     [
@@ -142,8 +144,9 @@ class ProfileGroupController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'bank_name' => 'required',
-                'branch_code'    => 'required',
+                'name' => 'required',
+                'type_id'    => 'required',
+                'survey_url'    => 'required',
             ]);
     
             if($validator->fails())
@@ -155,14 +158,14 @@ class ProfileGroupController extends Controller
             }
             else
             {
-                $banks = Groups::find($request->id);
-                if($banks)
+                $groups = Groups::find($request->id);
+                if($groups)
                 {
-                    $banks->bank_name = $request->input('bank_name');
-                    $banks->branch_code    = $request->input('branch_code');
-                    $banks->active    = $request->input('active');
-                    $banks->update();
-                    $banks->id;
+                $groups->name = $request->input('name');
+                $groups->type_id    = $request->input('type_id');
+                $groups->survey_url    = $request->input('survey_url');
+                $groups->update();
+                $groups->id;
                     return response()->json([
                         'status'  => 200,
                         'success' => true,
@@ -218,7 +221,7 @@ class ProfileGroupController extends Controller
 		
         try {
             if ($request->ajax()) {
-                $all_datas = Groups::latest()->get();
+                $all_datas = Groups::get();
         
                 
                 return Datatables::of($all_datas)

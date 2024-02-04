@@ -41,9 +41,8 @@ class RespondentsController extends Controller
 
                 $all_datas = DB::table('respondents')
                 ->orderby("id","desc")
-                ->limit(10)
                 ->get();
-
+             
 
                 return Datatables::of($all_datas)
                 ->addColumn('name', function ($all_data) {
@@ -88,6 +87,7 @@ class RespondentsController extends Controller
                 ->rawColumns(['name','surname','mobile','whatsapp','email','age','gender','race','status','profile_completion','inactive_until','opeted_in'])      
                 ->make(true);
                 }
+                return DataTables::queryBuilder($all_datas)->toJson();
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

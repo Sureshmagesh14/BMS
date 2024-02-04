@@ -10,7 +10,7 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Type *</label>
         <div class="col-md-10">
-            <select id="type_id" dusk="type_id" class="w-full form-control form-select" required>
+            <select id="type_id" name="type_id" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
