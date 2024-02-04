@@ -139,17 +139,17 @@
                                 <div class="row no-gutters align-items-center h-100">
                                 <div class="col-4 d-none d-md-flex flex-column align-items-center justify-content-center">
                                     <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">0</h3>
-                                    <a class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info" href="/builder/edit/504135">Questions</a>
+                                    <a class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Questions</a>
                                 </div>
                                 <div class="col-4 d-none d-md-flex flex-column align-items-center justify-content-center">
                                     <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">0</h3>
-                                    <a class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info" href="/survey/504135/results/responses">Responses</a>
+                                    <a class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Responses</a>
                                 </div>
                                 <div class="col-4 d-none d-md-flex flex-column align-items-center justify-content-center">
                                     <div>
                                         <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black">--</h3>
                                     </div>
-                                    <a class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info" href="/survey/504135/results/questions">Completion Rate</a>
+                                    <a class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Completion Rate</a>
                                 </div>
                                 </div>
                             </div>
@@ -170,45 +170,27 @@
                                     </div>
                                     <div class="d-none d-md-flex align-items-center ss-dashboard-list-item__secondary-actions">
                                         <div class="rounded-md me-3">
-                                            <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="/builder/edit/504135">
-                                            <svg width="16" height="16" class="" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M12.728 6.68608L11.314 5.27208L2 14.5861V16.0001H3.414L12.728 6.68608ZM14.142 5.27208L15.556 3.85808L14.142 2.44408L12.728 3.85808L14.142 5.27208ZM4.242 18.0001H0V13.7571L13.435 0.322083C13.6225 0.134612 13.8768 0.0292969 14.142 0.0292969C14.4072 0.0292969 14.6615 0.134612 14.849 0.322083L17.678 3.15108C17.8655 3.33861 17.9708 3.59292 17.9708 3.85808C17.9708 4.12325 17.8655 4.37756 17.678 4.56508L4.243 18.0001H4.242Z" fill="#0D1B1E"></path>
-                                            </svg>
+                                            <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',$survey->builderID)}}">
+                                                <i data-feather="edit"></i>
                                             </a>
                                         </div>
                                         <div class="rounded-md me-3">
                                             <a class="ss-button__link bg-grey-6 p-3 rounded-md" role="button" spiketip-title="Share Survey" spiketip-pos="top">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="">
-                                                <g stroke="#0D1B1E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" clip-path="url(#clip0_1106_12949)" opacity="0.9">
-                                                    <path d="M8.553 10.114a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M19.219 4.781a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M19.219 15.447a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M9.04 10.81l5.92-2.96M9.04 13.19l5.92 2.96"></path>
-                                                </g>
-                                                <defs>
-                                                    <clipPath id="clip0_1106_12949">
-                                                        <path fill="#fff" d="M0 0H24V24H0z"></path>
-                                                    </clipPath>
-                                                </defs>
-                                            </svg>
+                                                <i data-feather="share-2"></i>
+                                            </a>
+                                        </div>
+                                        <div class="rounded-md me-3">
+                                            <a href="{{route('survey.surveyduplication',$survey->id)}}" class="ss-button__link bg-grey-6 p-3 rounded-md" role="button" spiketip-title="Duplicate Survey" spiketip-pos="top">
+                                                <i data-feather="copy"></i>
+                                            </a>
+                                        </div>
+                                        <div class="rounded-md me-3">
+                                            <a class="ss-button__link bg-grey-6 p-3 rounded-md" role="button" spiketip-title="Duplicate Survey" spiketip-pos="top">
+                                                <i data-feather="trash-2"></i>
                                             </a>
                                         </div>
                                     </div>
-                                    <div>
-                                        <span class="bp3-popover2-target">
-                                            <div class="ss-dashboard__survey-actions-btn d-flex align-items-center bg-grey-6 rounded-md p-3" spiketip-title="More" spiketip-pos="top">
-                                            <a class="ss-button ss-button__icon-only p-0 mx-0" role="button">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24">
-                                                    <g clip-path="url(#clip0_1106_12887)" opacity="0.9">
-                                                        <path fill="#0D1B1E" d="M21 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zM7 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zm7 0c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2z"></path>
-                                                    </g>
-                                                    <defs>
-                                                        <clipPath id="clip0_1106_12887">
-                                                        <path fill="#fff" d="M0 0H24V24H0z" transform="rotate(90 12 12)"></path>
-                                                        </clipPath>
-                                                    </defs>
-                                                </svg>
-                                            </a>
-                                            </div>
-                                        </span>
-                                    </div>
+                                   
                                 </div>
                                 </div>
                             </div>
