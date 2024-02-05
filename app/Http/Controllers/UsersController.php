@@ -82,7 +82,6 @@ class UsersController extends Controller
                 $users->id_passport = $request->input('id_passport');
                 $users->email = $request->input('email');
                 $users->password = $request->input('password');
-                $users->password_confirmation = $request->input('password_confirmation');
                 $users->role_id = $request->input('role_id');
                 $users->status_id = $request->input('status_id');
                 $users->share_link = $request->input('share_link');
@@ -193,7 +192,6 @@ class UsersController extends Controller
                     $users->id_passport = $request->input('id_passport');
                     $users->email = $request->input('email');
                     $users->password = $request->input('password');
-                    $users->password_confirmation = $request->input('password_confirmation');
                     $users->role_id = $request->input('role_id');
                     $users->status_id = $request->input('status_id');
                     $users->share_link = $request->input('share_link');
@@ -314,10 +312,10 @@ class UsersController extends Controller
                                         <i class="fa fa-eye"></i>
                                     </a>
                                     <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                        data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
+                                        data-bs-original-title="Edit Project" class="btn btn-primary waves-light waves-effect">
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                    <button type="button" id="delete_projects" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
+                                    <button type="button" id="delete_users" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
                                         <i class="far fa-trash-alt"></i>
                                     </button>
                                 </div>

@@ -46,7 +46,7 @@
                                         class="btn btn-primary" data-bs-original-title="{{ __('Create Users') }}" class="btn btn-primary" data-size="xl"
                                          data-ajax-popup="true" data-bs-toggle="tooltip"
                                         id="create">
-                                        Create Project
+                                        Create Users
                                     </a>
                                         </div>
 
