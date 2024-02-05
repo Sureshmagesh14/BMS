@@ -3,28 +3,220 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Banks;
-use App\Contents;
-use App\Networks;
-use App\Charities;
-use App\Groups;
-use App\Tags;
+use App\Models\Tags;
 use DB;
 use Yajra\DataTables\DataTables;
 use Exception;
+use Illuminate\Support\Facades\Validator;
 class TagsController extends Controller
 {   
-    public function tags()
-    {   
-      
+    public function index()
+    {
         try {
             return view('admin.tags.index');
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        try {
+           
+            $returnHTML = view('admin.tags.create')->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        try {
+
+            $validator = Validator::make($request->all(), [
+               'name'=> 'required',
+            ]);
+    
+            if($validator->fails())
+            {
+                return response()->json([
+                    'status'=>400,
+                    'errors'=>$validator->messages()
+                ]);
+            }
+            else
+            {
+                $tags = new Tags;
+                $tags->name = $request->input('name');
+                $tags->colour = $request->input('colour');
+                $tags->save();
+                $tags->id;
+                return response()->json([
+                    'status'=>200,
+                    'last_insert_id' => $tags->id,
+                    'message'=>'Tags Added Successfully.'
+                ]);
+            }
+
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        
+        try {
+            $data = Tags::find($id);
+            $returnHTML = view('admin.tags.view',compact('data'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        try {
+           
+            $tags = Tags::find($id);
+            if($tags)
+            {
+                $returnHTML = view('admin.tags.edit',compact('tags'))->render();
+                return response()->json(
+                    [
+                        'success' => true,
+                        'html_page' => $returnHTML,
+                    ]
+                );
+            }
+            else
+            {
+                return response()->json([
+                    'status'=>404,
+                    'message'=>'No Tags Found.'
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        
+       
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'name'=> 'required',
+            ]);
+    
+            if($validator->fails())
+            {
+                return response()->json([
+                    'status'=>400,
+                    'errors'=>$validator->messages()
+                ]);
+            }
+            else
+            {
+               
+                $tags = Tags::find($request->id);
+                if($tags)
+                {
+                    $tags->name = $request->input('name');
+                    $tags->colour = $request->input('colour');
+                    $tags->update();
+                    $tags->id;
+                    return response()->json([
+                        'status'=>200,
+                        'last_insert_id' => $tags->id,
+                        'message' => 'Tags Updated.',
+                    ]);
+                }
+                else
+                {
+                    return response()->json([
+                        'status'=>404,
+                        'error'=>'No Tags Found.'
+                    ]);
+                }
+    
+            }
+           
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        try {
+            $tags = Tags::find($id);
+            if($tags)
+            {
+                $tags->delete();
+                return response()->json([
+                    'status'=>200,
+                    'success' => true,
+                    'message'=>'Tags Deleted Successfully.'
+                ]);
+            }
+            else
+            {
+                return response()->json([
+                    'status'=> 404,
+                    'success' => false,
+                    'message'=>'No Tags Found.'
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
       
     }
+
+   
     public function get_all_tags(Request $request) {
 		
         try {
@@ -33,27 +225,31 @@ class TagsController extends Controller
                 $token = csrf_token();
             
                 
-                $all_datas = DB::table('tags')
-                ->orderby("id","desc")
+                $all_datas =Tags::latest()
                 ->get();
         
                 
                 return Datatables::of($all_datas)
-                ->addColumn('name', function ($all_data) {
-                    return $all_data->name;
-                })            
-                ->addColumn('colour', function ($all_data) {
-                    return '<button type="button" class="btn btn-primary waves-effect waves-light" style="background-color: '.$all_data->name.'; border-color: '.$all_data->name.';"></button>';
-                }) 
-                ->addColumn('action', function ($all_data) use($token) {
-        
+                ->addColumn('action', function ($all_data) {
+                    $edit_route = route("tags.edit",$all_data->id);
+                    $view_route = route("tags.show",$all_data->id);
+
                     return '<div class="">
-                    <div class="btn-group mr-2 mb-2 mb-sm-0">
-                        <button type="button" onclick="view_details(' . $all_data->id . ');" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
-                    </div>              
-                </div>';
-                    
-                }) 
+                        <div class="btn-group mr-2 mb-2 mb-sm-0">
+                            <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <button type="button" id="delete_tags" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>';
+                })
                 ->rawColumns(['action','name','colour'])      
                 ->make(true);
             }
@@ -63,37 +259,5 @@ class TagsController extends Controller
         }
     }
 
-    public function view_tags(Request $request){
-        try {
-            
-            $data = DB::table('tags')->where('id',$request->id)->first();
-
-            return view('admin.tags.view',compact('data'));
-        }
-        catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-       
-    }
-
-    public function edit_tags($id){
-        try {
-            $content = DB::table('tags')::find($id);
-            if($content)
-            {
-                return view('admin.tags.edit',compact('content'));
-            }
-            else
-            {
-                return response()->json([
-                    'status'=>404,
-                    'message'=>'No Panels Found.'
-                ]);
-            }
-        }
-        catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-      
-    }
+   
 }
