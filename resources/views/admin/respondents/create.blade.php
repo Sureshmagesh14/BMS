@@ -181,7 +181,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: "{{ route('groups.store') }}",
+                url: "{{ route('respondents.store') }}",
                 data: data,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

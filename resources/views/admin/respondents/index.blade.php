@@ -89,6 +89,7 @@
                                                 <th>Profile Completion</th>
                                                 <th>Inactive Until</th>
                                                 <th>Opted In</th>
+                                                <th>Action</th>
                                             </tr>
                                             </thead>
         
@@ -118,6 +119,7 @@
                 @stack('adminside-validataion')
                 @stack('adminside-confirm')
                 @stack('adminside-datatable')
+                
 
                 <script>
                 var tempcsrf = '{!! csrf_token() !!}';
@@ -227,6 +229,12 @@
                             name: 'opeted_in',
                             orderable: true,
                             searchable: true
+                        },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
                         }
                     ],
                     columnDefs: [
@@ -268,7 +276,10 @@
                             targets: 11
                         },
                         {
-                            targets: 12,
+                            targets: 12
+                        },
+                        {
+                            targets: 13,
                             width: 115,
                             className: "text-center"
                         }

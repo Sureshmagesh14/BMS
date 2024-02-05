@@ -38,6 +38,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('respondents','RespondentsController');
     Route::any('get_all_respondents', 'RespondentsController@get_all_respondents')->name('get_all_respondents');
     Route::get('respondent_export/{id}','RespondentsController@respondent_export')->name('respondent_export');    
+
+    Route::resource('projects','ProjectsController');
+    Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');
+    Route::get('projects_export/{id}','ProjectsController@projects_export')->name('projects_export');    
     
 
     Route::controller(SettingsController::class)->group(function(){
@@ -88,11 +92,7 @@ Route::group(['middleware' => ['auth']], function () {
     //     Route::get('respondent_export/{id}','respondent_export')->name('respondent_export');    
     // });
 
-    Route::controller(ProjectsController::class)->group(function(){
-        Route::get('projects','projects')->name('projects');
-        Route::any('get_all_projects', 'get_all_projects')->name('get_all_projects');
-        Route::get('projects_export/{id}','projects_export')->name('projects_export');      
-    });
+ 
 
    Route::controller(ActionController::class)->group(function(){
         Route::get('actions','actions')->name('actions');

@@ -57,7 +57,11 @@ class RespondentsController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-               'name'=> 'required',
+               'email'=> 'required',
+               'active_status_id'=> 'required',
+               'password'=> 'required',
+               'accept_terms'=> 'required',
+
             ]);
     
             if($validator->fails())
@@ -69,13 +73,28 @@ class RespondentsController extends Controller
             }
             else
             {
-                $network = new Respondents;
-                $network->name = $request->input('name');
-                $network->save();
-                $network->id;
+                $respondents = new Respondents;
+                $respondents->name = $request->input('name');
+                $respondents->surname = $request->input('surname');
+                $respondents->date_of_birth = $request->input('date_of_birth');
+                $respondents->id_passport = $request->input('id_passport');
+                $respondents->mobile = $request->input('mobile');
+                $respondents->whatsapp = $request->input('whatsapp');
+                $respondents->email = $request->input('email');
+                $respondents->bank_name = $request->input('bank_name');
+                $respondents->branch_code = $request->input('branch_code');
+                $respondents->account_type = $request->input('account_type');
+                $respondents->account_holder = $request->input('account_holder');
+                $respondents->account_number = $request->input('account_number');
+                $respondents->active_status_id = $request->input('active_status_id');
+                $respondents->updated_at = $request->input('updated_at');
+                $respondents->referral_code = $request->input('referral_code');
+                $respondents->accept_terms = $request->input('accept_terms');
+                $respondents->save();
+                $respondents->id;
                 return response()->json([
                     'status'=>200,
-                    'last_insert_id' => $network->id,
+                    'last_insert_id' => $respondents->id,
                     'message'=>'Respondents Added Successfully.'
                 ]);
             }
@@ -161,15 +180,31 @@ class RespondentsController extends Controller
             else
             {
                
-                $content = Respondents::find($request->id);
-                if($content)
+                $respondents = Respondents::find($request->id);
+                if($respondents)
                 {
-                    $content->name = $request->input('name');
-                    $content->update();
-                    $content->id;
+                    $respondents = new Respondents;
+                    $respondents->name = $request->input('name');
+                    $respondents->surname = $request->input('surname');
+                    $respondents->date_of_birth = $request->input('date_of_birth');
+                    $respondents->id_passport = $request->input('id_passport');
+                    $respondents->mobile = $request->input('mobile');
+                    $respondents->whatsapp = $request->input('whatsapp');
+                    $respondents->email = $request->input('email');
+                    $respondents->bank_name = $request->input('bank_name');
+                    $respondents->branch_code = $request->input('branch_code');
+                    $respondents->account_type = $request->input('account_type');
+                    $respondents->account_holder = $request->input('account_holder');
+                    $respondents->account_number = $request->input('account_number');
+                    $respondents->active_status_id = $request->input('active_status_id');
+                    $respondents->updated_at = $request->input('updated_at');
+                    $respondents->referral_code = $request->input('referral_code');
+                    $respondents->accept_terms = $request->input('accept_terms');
+                    $respondents->update();
+                    $respondents->id;
                     return response()->json([
                         'status'=>200,
-                        'last_insert_id' => $content->id,
+                        'last_insert_id' => $respondents->id,
                         'message' => 'Respondents Updated.',
                     ]);
                 }
