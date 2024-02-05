@@ -87,16 +87,16 @@
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
-                <option value="1">
+                <option @if($projects->type_id==1) selected @endif value="1">
                     Pre-Screener
                 </option>
-                <option value="2">
+                <option @if($projects->type_id==2) selected @endif value="2">
                     Pre-Task
                 </option>
-                <option value="3">
+                <option @if($projects->type_id==3) selected @endif value="3">
                     Paid survey
                 </option>
-                <option value="4">
+                <option @if($projects->type_id==4) selected @endif value="4">
                     Unpaid survey
                 </option>
             </select>
@@ -186,7 +186,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Live Date *
         </label>
         <div class="col-md-10">
-            <input type="date" class="form-control" id="published_date" name="published_date" value="{{$projects->published_date}}" required>
+            <input type="date" class="form-control" id="published_date" name="published_date" value="{{date('Y-m-d', strtotime($projects->published_date))}}" required>
         </div>
     </div>
 
@@ -194,7 +194,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Closing Date
         </label>
         <div class="col-md-10">
-            <input type="date" class="form-control" id="closing_date" name="closing_date" value="{{$projects->closing_date}}">
+            <input type="date" class="form-control" id="closing_date" name="closing_date" value="{{date('Y-m-d', strtotime($projects->closing_date))}}">
         </div>
     </div>
 
@@ -244,7 +244,7 @@
             var url_set = "{{ route('projects.update', ':id') }}";
             url_set = url_set.replace(':id', id);
             $.ajax({
-                type: 'POST',
+                type: 'PUT',
                 url: url_set,
                 data: data,
                 headers: {

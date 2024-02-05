@@ -128,7 +128,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Status *
         </label>
         <div class="col-md-10">
-            <select id="accept_terms" name="accept_terms" class="w-full form-control form-select" required>
+            <select id="status_id" name="status_id" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>

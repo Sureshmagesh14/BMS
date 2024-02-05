@@ -42,9 +42,12 @@
                                 <div class="card">
                                     <div class="card-body">
                                     <div class="text-right">
-                                    <a  href="#" data-size="lg"
-                                            data-ajax-popup="true"
-                                            data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary" >Create User</a>
+                                        <a href="#!" data-url="{{ route('users.create') }}" data-size="xl" data-ajax-popup="true"
+                                        class="btn btn-primary" data-bs-original-title="{{ __('Create Users') }}" class="btn btn-primary" data-size="xl"
+                                         data-ajax-popup="true" data-bs-toggle="tooltip"
+                                        id="create">
+                                        Create Project
+                                    </a>
                                         </div>
 
                                         <h4 class="card-title"> </h4>
@@ -94,121 +97,164 @@
                 @stack('adminside-confirm')
                 @stack('adminside-datatable')
 
-<script>
-$(document).ready(function() {
-    var tempcsrf = '{!! csrf_token() !!}';
-    
-    $('#myTable').dataTable().fnDestroy();
-
-    $('#myTable').DataTable({
-      
-        searching: true,
-        ordering: true,
-        dom : 'lfrtip',
-        info: true,
-        iDisplayLength: 10,
-        lengthMenu: [
-            [ 10, 50, 100, -1],
-            [10, 50, 100, "All"]
-        ],
-        ajax: {
-            url: "{{ route('get_all_users') }}",
-            data: {
-                _token: tempcsrf,
-            },
-            error: function(xhr, error, thrown) {
-               alert("undefind error")
-            }
-        },
-       
-        columns: [{
-                data: 'id',
-                name: '#',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'name',
-                name: 'name',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'surname',
-                name: 'surname',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'id_passport',
-                name: 'id_passport',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'email',
-                name: 'email',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'role_id',
-                name: 'role_id',
-                orderable: true,
-                searchable: true
-            },
-           
-            {
-                data: 'status_id',
-                name: 'status_id',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'share_link',
-                name: 'share_link',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: true,
-                searchable: true
-            }
-        ],
-        columnDefs: [
-            {
-                targets: 0,
-                width: 75,
-                className: "text-center"
-            },{
-                targets: 1
-            },
-            {
-                targets: 2
-            },
-            {
-                targets: 3
-            },
-            {
-                targets: 4
-            },
-            {
-                targets: 5
-            },
-            {
-                targets: 6
-            },
-            {
-                targets: 7
-            },
-            {
-                targets: 8,
-                width: 115,
-                className: "text-center"
-            }
-        ],
-    });
-});
-</script>
+                <script>
+                    var tempcsrf = '{!! csrf_token() !!}';
+                    $(document).ready(function() {
+                        datatable();
+                      
+                    });
+                    
+                   
+                
+                    function datatable(){
+                        $('#myTable').dataTable().fnDestroy();
+                        $('#myTable').DataTable({
+                            searching: true,
+                            ordering: true,
+                            dom: 'lfrtip',
+                            info: true,
+                            iDisplayLength: 10,
+                            lengthMenu: [
+                                [10, 50, 100, -1],
+                                [10, 50, 100, "All"]
+                            ],
+                            ajax: {
+                                url: "{{ route('get_all_users') }}",
+                                data: {
+                                    _token: tempcsrf,
+                                },
+                                error: function(xhr, error, thrown) {
+                                    alert("undefind error");
+                                }
+                            },
+                            columns: [{
+                                data: 'id',
+                                name: '#',
+                                orderable: true,
+                                searchable: true
+                            },
+                            {
+                                data: 'name',
+                                name: 'name',
+                                orderable: true,
+                                searchable: true
+                            },
+                            {
+                                data: 'surname',
+                                name: 'surname',
+                                orderable: true,
+                                searchable: true
+                            },
+                            {
+                                data: 'id_passport',
+                                name: 'id_passport',
+                                orderable: true,
+                                searchable: true
+                            },
+                            {
+                                data: 'email',
+                                name: 'email',
+                                orderable: true,
+                                searchable: true
+                            },
+                            {
+                                data: 'role_id',
+                                name: 'role_id',
+                                orderable: true,
+                                searchable: true
+                            },
+                           
+                            {
+                                data: 'status_id',
+                                name: 'status_id',
+                                orderable: true,
+                                searchable: true
+                            },
+                            {
+                                data: 'share_link',
+                                name: 'share_link',
+                                orderable: true,
+                                searchable: true
+                            },
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: true,
+                                searchable: true
+                            }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: 75,
+                                className: "text-center"
+                            },{
+                                targets: 1
+                            },
+                            {
+                                targets: 2
+                            },
+                            {
+                                targets: 3
+                            },
+                            {
+                                targets: 4
+                            },
+                            {
+                                targets: 5
+                            },
+                            {
+                                targets: 6
+                            },
+                            {
+                                targets: 7
+                            },
+                            {
+                                targets: 8,
+                                width: 115,
+                                className: "text-center"
+                            }
+                        ],
+                        });
+                    }
+                
+                    $(document).on('click', '#delete_users', function(e) {
+                        e.preventDefault();
+                        var id = $(this).data("id");
+                        var url = "{{ route('users.destroy', ':id') }}";
+                        url = url.replace(':id', id);
+                      
+                        $.confirm({
+                            title: "{{Config::get('constants.delete')}}",
+                            content:  "{{Config::get('constants.delete_confirmation')}}",
+                            autoClose: 'cancelAction|8000',
+                            buttons: {
+                                delete: {
+                                    text: 'delete',
+                                    action: function() {
+                                        $.ajax({
+                                            type: "DELETE",
+                                            data: {
+                                                _token: tempcsrf,
+                                            },
+                                            url: url,
+                                            dataType: "json",
+                                            success: function(response) {
+                                                if (response.status == 404) {
+                                                    $('.delete_student').text('');
+                                                } else {
+                                                    datatable();
+                                                    $.alert('Users Deleted!');
+                                                    $('.delete_student').text('Yes Delete');
+                                                }
+                                            }
+                                        });
+                                    }
+                                },
+                                cancel: function() {
+                                    
+                                }
+                            }
+                        });
+                    });
+                </script>

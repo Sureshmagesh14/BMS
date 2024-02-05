@@ -61,12 +61,11 @@ class ProjectsController extends Controller
             $validator = Validator::make($request->all(), [
                'client'=> 'required',
                'name'=> 'required',
-               'user_id'=> 'required',
+               'user'=> 'required',
                'status_id'=> 'required',
                'type_id'=> 'required',
                'survey_duration'=> 'required',
                'published_date'=> 'required',
-               'closing_date'=> 'required',
                'access_id'=> 'required',
 
             ]);
@@ -177,12 +176,11 @@ class ProjectsController extends Controller
             $validator = Validator::make($request->all(), [
                 'client'=> 'required',
                 'name'=> 'required',
-                'user_id'=> 'required',
+                'user'=> 'required',
                 'status_id'=> 'required',
                 'type_id'=> 'required',
                 'survey_duration'=> 'required',
                 'published_date'=> 'required',
-                'closing_date'=> 'required',
                 'access_id'=> 'required',
             ]);
     
