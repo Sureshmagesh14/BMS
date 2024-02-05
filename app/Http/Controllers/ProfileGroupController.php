@@ -1,19 +1,21 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Tags;
+use App\Models\Groups;
+use Illuminate\Support\Facades\Validator;
 use DB;
 use Yajra\DataTables\DataTables;
 use Exception;
-use Illuminate\Support\Facades\Validator;
-class TagsController extends Controller
-{   
+class ProfileGroupController extends Controller
+{
     public function index()
     {
         try {
-            return view('admin.tags.index');
+            return view('admin.groups.index');
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -26,8 +28,7 @@ class TagsController extends Controller
     public function create()
     {
         try {
-           
-            $returnHTML = view('admin.tags.create')->render();
+            $returnHTML = view('admin.groups.create')->render();
 
             return response()->json(
                 [
@@ -48,10 +49,12 @@ class TagsController extends Controller
      */
     public function store(Request $request)
     {
+  
         try {
-
             $validator = Validator::make($request->all(), [
-               'name'=> 'required',
+                'name' => 'required',
+                'type_id'    => 'required',
+                'survey_url'    => 'required',
             ]);
     
             if($validator->fails())
@@ -63,18 +66,19 @@ class TagsController extends Controller
             }
             else
             {
-                $tags = new Tags;
-                $tags->name = $request->input('name');
-                $tags->colour = $request->input('colour');
-                $tags->save();
-                $tags->id;
+                $groups          = new Groups;
+                $groups->name = $request->input('name');
+                $groups->type_id    = $request->input('type_id');
+                $groups->survey_url    = $request->input('survey_url');
+                $groups->save();
+                $groups->sort_order=$groups->id;
+
                 return response()->json([
-                    'status'=>200,
-                    'last_insert_id' => $tags->id,
-                    'message'=>'Tags Added Successfully.'
+                    'status'  => 200,
+                    'success' => true,
+                    'message' =>'Groups Added Successfully.'
                 ]);
             }
-
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -86,10 +90,9 @@ class TagsController extends Controller
      */
     public function show(string $id)
     {
-        
         try {
-            $data = Tags::find($id);
-            $returnHTML = view('admin.tags.view',compact('data'))->render();
+            $data = Groups::find($id);
+            $returnHTML = view('admin.groups.view',compact('data'))->render();
 
             return response()->json(
                 [
@@ -109,11 +112,11 @@ class TagsController extends Controller
     public function edit(string $id)
     {
         try {
-           
-            $tags = Tags::find($id);
-            if($tags)
+            $groups = Groups::find($id);
+            if($groups)
             {
-                $returnHTML = view('admin.tags.edit',compact('tags'))->render();
+                $returnHTML = view('admin.groups.edit',compact('groups'))->render();
+
                 return response()->json(
                     [
                         'success' => true,
@@ -125,15 +128,13 @@ class TagsController extends Controller
             {
                 return response()->json([
                     'status'=>404,
-                    'message'=>'No Tags Found.'
+                    'message'=>'No Groups Found.'
                 ]);
             }
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-        
-       
     }
 
     /**
@@ -143,7 +144,9 @@ class TagsController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name'=> 'required',
+                'name' => 'required',
+                'type_id'    => 'required',
+                'survey_url'    => 'required',
             ]);
     
             if($validator->fails())
@@ -155,28 +158,27 @@ class TagsController extends Controller
             }
             else
             {
-               
-                $tags = Tags::find($request->id);
-                if($tags)
+                $groups = Groups::find($request->id);
+                if($groups)
                 {
-                    $tags->name = $request->input('name');
-                    $tags->colour = $request->input('colour');
-                    $tags->update();
-                    $tags->id;
+                $groups->name = $request->input('name');
+                $groups->type_id    = $request->input('type_id');
+                $groups->survey_url    = $request->input('survey_url');
+                $groups->update();
+                $groups->id;
                     return response()->json([
-                        'status'=>200,
-                        'last_insert_id' => $tags->id,
-                        'message' => 'Tags Updated.',
+                        'status'  => 200,
+                        'success' => true,
+                        'message' => 'Groups Updated.'
                     ]);
                 }
                 else
                 {
                     return response()->json([
                         'status'=>404,
-                        'error'=>'No Tags Found.'
+                        'error'=>'No Groups Found.'
                     ]);
                 }
-    
             }
            
         }
@@ -191,14 +193,14 @@ class TagsController extends Controller
     public function destroy(string $id)
     {
         try {
-            $tags = Tags::find($id);
-            if($tags)
+            $contents = Groups::find($id);
+            if($contents)
             {
-                $tags->delete();
+                $contents->delete();
                 return response()->json([
                     'status'=>200,
                     'success' => true,
-                    'message'=>'Tags Deleted Successfully.'
+                    'message'=>'Groups Deleted'
                 ]);
             }
             else
@@ -206,51 +208,61 @@ class TagsController extends Controller
                 return response()->json([
                     'status'=> 404,
                     'success' => false,
-                    'message'=>'No Tags Found.'
+                    'message'=>'No Groups Found.'
                 ]);
             }
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-      
     }
 
-   
-    public function get_all_tags(Request $request) {
+    public function get_groups_banks(Request $request) {
 		
         try {
             if ($request->ajax()) {
-
-                $token = csrf_token();
-            
-                
-                $all_datas =Tags::latest()
-                ->get();
+                $all_datas = Groups::get();
         
                 
                 return Datatables::of($all_datas)
+                ->addColumn('name', function ($all_data) {
+                    return $all_data->name;
+                }) 
+                ->addColumn('type_id', function ($all_data) {
+                    if($all_data->type_id==1){
+                        $type_id='<span class="badge badge-success">Basic</span>';
+                    }else if($all_data->type_id==2){
+                        $type_id='<span class="badge badge-primary">Essential</span>';
+                    }
+                    else{
+                        $type_id='<span class="badge badge-secondary">Extended</span>';
+                    }
+                    return $type_id;
+                })  
+                ->addColumn('survey_url', function ($all_data) {
+                            return $all_data->survey_url;
+                }) 
                 ->addColumn('action', function ($all_data) {
-                    $edit_route = route("tags.edit",$all_data->id);
-                    $view_route = route("tags.show",$all_data->id);
+                    $edit_route = route("groups.edit",$all_data->id);
+                    $view_route = route("groups.show",$all_data->id);
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
                             <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="View Content" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>
                             <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="Edit Content" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <button type="button" id="delete_tags" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
+                            <button type="button" id="delete_groups" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
                                 <i class="far fa-trash-alt"></i>
                             </button>
                         </div>
                     </div>';
                 })
-                ->rawColumns(['action','name','colour'])      
+                ->rawColumns(['name','survey_url','type_id','action'])          
                 ->make(true);
             }
         }
@@ -258,6 +270,4 @@ class TagsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-
-   
 }

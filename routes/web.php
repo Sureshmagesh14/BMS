@@ -19,37 +19,43 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('contents', 'ContentsController');
     Route::get('contents_datatable', 'ContentsController@contents_datatable')->name('contents_datatable');
 
+    Route::resource('networks', 'NetworkController');
+    Route::get('get_all_networks', 'NetworkController@get_all_networks')->name('get_all_networks');
+
+    Route::resource('charities','CharitiesController');
+    Route::any('get_all_charities', 'CharitiesController@get_all_charities')->name('get_all_charities');
+
+    Route::resource('banks','BankController');
+    Route::any('get_all_banks', 'BankController@get_all_banks')->name('get_all_banks');
+
+    Route::resource('groups','ProfileGroupController');
+    Route::any('get_groups_banks', 'ProfileGroupController@get_groups_banks')->name('get_groups_banks');
+
+    Route::resource('tags','TagsController');
+    Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
+
+
+    Route::resource('respondents','RespondentsController');
+    Route::any('get_all_respondents', 'RespondentsController@get_all_respondents')->name('get_all_respondents');
+    Route::get('respondent_export/{id}','RespondentsController@respondent_export')->name('respondent_export');    
+    
+
     Route::controller(SettingsController::class)->group(function(){
         /* Content */
-        Route::get('contents','contents')->name('contents');
-        Route::any('get_all_contents', 'get_all_contents')->name('get_all_contents');
-        Route::get('create_contents','create_contents')->name('create_contents');
-        Route::post('save_contents','save_contents')->name('save_contents');
-        Route::get('edit_contents/{id}','edit_contents')->name('edit_contents');
-        Route::put('update_contents/{id}','update_contents')->name('update_contents');
-        Route::get('view_contents/{id}', 'view_contents')->name('view_contents');
-        Route::delete('delete_contents/{id}', 'delete_contents')->name('delete_contents');
+     
 
         /* Bank */
-        Route::get('banks','banks')->name('banks');
-        Route::any('get_all_banks', 'get_all_banks')->name('get_all_banks');
-        Route::any('create_bank', 'create_bank')->name('create_bank');
+  
+   
+
         
     
-        Route::get('networks','networks')->name('networks');
-        Route::any('get_all_networks', 'get_all_networks')->name('get_all_networks');
-        Route::get('create_networks','create_networks')->name('create_networks');
-        Route::post('save_network','save_network')->name('save_network');
-        Route::get('edit_network/{id}','edit_network')->name('edit_network');
-        Route::put('update_network/{id}','update_network')->name('update_network');
-        Route::get('view_network/{id}', 'view_network')->name('view_network');
-        Route::delete('delete_network/{id}', 'delete_network')->name('delete_network');
+      
+      
+      
 
-        Route::get('charities','charities')->name('charities');
-        Route::any('get_all_charities', 'get_all_charities')->name('get_all_charities');
-       
-        Route::get('groups','groups')->name('groups');
-        Route::any('get_all_groups', 'get_all_groups')->name('get_all_groups');
+  
+    
 
        
         Route::get('getrecentcontentid', 'getrecentcontentid')->name('getrecentcontentid');
@@ -64,23 +70,23 @@ Route::group(['middleware' => ['auth']], function () {
     
     });
 
-    Route::controller(TagsController::class)->group(function(){
-        Route::get('tags','tags')->name('tags');
-        Route::any('get_all_tags', 'get_all_tags')->name('get_all_tags');
+    // Route::controller(TagsController::class)->group(function(){
+    //     Route::get('tags','tags')->name('tags');
+    //     Route::any('get_all_tags', 'get_all_tags')->name('get_all_tags');
         
-        Route::get('create_tags','create_tags')->name('create_tags');
-        Route::post('save_tags','save_tags')->name('save_tags');
-        Route::get('edit_tags/{id}','edit_tags')->name('edit_tags');
-        Route::put('update_tags/{id}','update_tags')->name('update_tags');
-        Route::any('view_tags/{id}', 'view_tags')->name('view_tags');
-        Route::delete('delete_tags/{id}', 'delete_tags')->name('delete_tags');
-    });
+    //     Route::get('create_tags','create_tags')->name('create_tags');
+    //     Route::post('save_tags','save_tags')->name('save_tags');
+    //     Route::get('edit_tags/{id}','edit_tags')->name('edit_tags');
+    //     Route::put('update_tags/{id}','update_tags')->name('update_tags');
+    //     Route::any('view_tags/{id}', 'view_tags')->name('view_tags');
+    //     Route::delete('delete_tags/{id}', 'delete_tags')->name('delete_tags');
+    // });
 
-    Route::controller(RespondentsController::class)->group(function(){
-        Route::get('respondents','respondents')->name('respondents');
-        Route::any('get_all_respondents', 'get_all_respondents')->name('get_all_respondents');
-        Route::get('respondent_export/{id}','respondent_export')->name('respondent_export');    
-    });
+    // Route::controller(RespondentsController::class)->group(function(){
+    //     Route::get('respondents','respondents')->name('respondents');
+    //     Route::any('get_all_respondents', 'get_all_respondents')->name('get_all_respondents');
+    //     Route::get('respondent_export/{id}','respondent_export')->name('respondent_export');    
+    // });
 
     Route::controller(ProjectsController::class)->group(function(){
         Route::get('projects','projects')->name('projects');

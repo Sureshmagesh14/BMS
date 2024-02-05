@@ -23,8 +23,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="content_update" 
-            data-update_route="{{route('contents.update',$content->id)}}" data-form_name="content_update_form-data">
+        <button type="button" class="btn btn-primary" id="content_update">
             Update
         </button>
     </div>

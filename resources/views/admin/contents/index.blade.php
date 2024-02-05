@@ -124,12 +124,12 @@
             url = url.replace(':id', id);
           
             $.confirm({
-                title: 'Delete user?',
-                content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.',
+                title: "{{Config::get('constants.delete')}}",
+                content:  "{{Config::get('constants.delete_confirmation')}}",
                 autoClose: 'cancelAction|8000',
                 buttons: {
-                    deleteUser: {
-                        text: 'delete user',
+                    delete: {
+                        text: 'delete',
                         action: function() {
                             $.ajax({
                                 type: "DELETE",
@@ -150,8 +150,8 @@
                             });
                         }
                     },
-                    cancelAction: function() {
-                        $.alert('action is canceled');
+                    cancel: function() {
+                        
                     }
                 }
             });

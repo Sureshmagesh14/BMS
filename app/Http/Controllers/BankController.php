@@ -1,19 +1,21 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Tags;
+use App\Models\Banks;
+use Illuminate\Support\Facades\Validator;
 use DB;
 use Yajra\DataTables\DataTables;
 use Exception;
-use Illuminate\Support\Facades\Validator;
-class TagsController extends Controller
-{   
+class BankController extends Controller
+{
     public function index()
     {
         try {
-            return view('admin.tags.index');
+            return view('admin.banks.index');
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -26,8 +28,7 @@ class TagsController extends Controller
     public function create()
     {
         try {
-           
-            $returnHTML = view('admin.tags.create')->render();
+            $returnHTML = view('admin.banks.create')->render();
 
             return response()->json(
                 [
@@ -49,9 +50,9 @@ class TagsController extends Controller
     public function store(Request $request)
     {
         try {
-
             $validator = Validator::make($request->all(), [
-               'name'=> 'required',
+                'bank_name' => 'required',
+                'branch_code'    => 'required',
             ]);
     
             if($validator->fails())
@@ -63,18 +64,19 @@ class TagsController extends Controller
             }
             else
             {
-                $tags = new Tags;
-                $tags->name = $request->input('name');
-                $tags->colour = $request->input('colour');
-                $tags->save();
-                $tags->id;
+                $banks          = new Banks;
+                $banks->bank_name = $request->input('bank_name');
+                $banks->branch_code    = $request->input('branch_code');
+                $banks->active    = $request->input('active');
+                $banks->save();
+                $banks->id;
+
                 return response()->json([
-                    'status'=>200,
-                    'last_insert_id' => $tags->id,
-                    'message'=>'Tags Added Successfully.'
+                    'status'  => 200,
+                    'success' => true,
+                    'message' =>'Banks Added Successfully.'
                 ]);
             }
-
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -86,10 +88,9 @@ class TagsController extends Controller
      */
     public function show(string $id)
     {
-        
         try {
-            $data = Tags::find($id);
-            $returnHTML = view('admin.tags.view',compact('data'))->render();
+            $data = Banks::find($id);
+            $returnHTML = view('admin.banks.view',compact('data'))->render();
 
             return response()->json(
                 [
@@ -109,11 +110,11 @@ class TagsController extends Controller
     public function edit(string $id)
     {
         try {
-           
-            $tags = Tags::find($id);
-            if($tags)
+            $banks = Banks::find($id);
+            if($banks)
             {
-                $returnHTML = view('admin.tags.edit',compact('tags'))->render();
+                $returnHTML = view('admin.banks.edit',compact('banks'))->render();
+
                 return response()->json(
                     [
                         'success' => true,
@@ -125,15 +126,13 @@ class TagsController extends Controller
             {
                 return response()->json([
                     'status'=>404,
-                    'message'=>'No Tags Found.'
+                    'message'=>'No Banks Found.'
                 ]);
             }
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-        
-       
     }
 
     /**
@@ -143,7 +142,8 @@ class TagsController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name'=> 'required',
+                'bank_name' => 'required',
+                'branch_code'    => 'required',
             ]);
     
             if($validator->fails())
@@ -155,28 +155,27 @@ class TagsController extends Controller
             }
             else
             {
-               
-                $tags = Tags::find($request->id);
-                if($tags)
+                $banks = Banks::find($request->id);
+                if($banks)
                 {
-                    $tags->name = $request->input('name');
-                    $tags->colour = $request->input('colour');
-                    $tags->update();
-                    $tags->id;
+                    $banks->bank_name = $request->input('bank_name');
+                    $banks->branch_code    = $request->input('branch_code');
+                    $banks->active    = $request->input('active');
+                    $banks->update();
+                    $banks->id;
                     return response()->json([
-                        'status'=>200,
-                        'last_insert_id' => $tags->id,
-                        'message' => 'Tags Updated.',
+                        'status'  => 200,
+                        'success' => true,
+                        'message' => 'Banks Updated.'
                     ]);
                 }
                 else
                 {
                     return response()->json([
                         'status'=>404,
-                        'error'=>'No Tags Found.'
+                        'error'=>'No Banks Found.'
                     ]);
                 }
-    
             }
            
         }
@@ -191,14 +190,14 @@ class TagsController extends Controller
     public function destroy(string $id)
     {
         try {
-            $tags = Tags::find($id);
-            if($tags)
+            $contents = Banks::find($id);
+            if($contents)
             {
-                $tags->delete();
+                $contents->delete();
                 return response()->json([
                     'status'=>200,
                     'success' => true,
-                    'message'=>'Tags Deleted Successfully.'
+                    'message'=>'Banks Deleted'
                 ]);
             }
             else
@@ -206,51 +205,58 @@ class TagsController extends Controller
                 return response()->json([
                     'status'=> 404,
                     'success' => false,
-                    'message'=>'No Tags Found.'
+                    'message'=>'No Charities Found.'
                 ]);
             }
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-      
     }
 
-   
-    public function get_all_tags(Request $request) {
+    public function get_all_banks(Request $request) {
 		
         try {
             if ($request->ajax()) {
-
-                $token = csrf_token();
-            
-                
-                $all_datas =Tags::latest()
-                ->get();
+                $all_datas = Banks::latest()->get();
         
                 
                 return Datatables::of($all_datas)
+                ->addColumn('bank_name', function ($all_data) {
+                    return $all_data->bank_name;
+                }) 
+                ->addColumn('branch_code', function ($all_data) {
+                            return $all_data->branch_code;
+                }) 
+                ->addColumn('active', function ($all_data) {
+                    if($all_data->active==1){
+                        $active='<span class="badge badge-success">Yes</span>';
+                    }else{
+                        $active='<span class="badge badge-danger">No</span>';
+                    }
+                    return $active;
+                })   
                 ->addColumn('action', function ($all_data) {
-                    $edit_route = route("tags.edit",$all_data->id);
-                    $view_route = route("tags.show",$all_data->id);
+                    $edit_route = route("banks.edit",$all_data->id);
+                    $view_route = route("banks.show",$all_data->id);
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
                             <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="View Content" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>
                             <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="Edit Content" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <button type="button" id="delete_tags" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
+                            <button type="button" id="delete_banks" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
                                 <i class="far fa-trash-alt"></i>
                             </button>
                         </div>
                     </div>';
                 })
-                ->rawColumns(['action','name','colour'])      
+                ->rawColumns(['bank_name','branch_code','active','action'])          
                 ->make(true);
             }
         }
@@ -258,6 +264,4 @@ class TagsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-
-   
 }

@@ -3,17 +3,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Tags;
+use App\Models\Networks;
+use Illuminate\Support\Facades\Validator;
 use DB;
 use Yajra\DataTables\DataTables;
 use Exception;
-use Illuminate\Support\Facades\Validator;
-class TagsController extends Controller
-{   
+
+class NetworkController extends Controller
+{
+     /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
         try {
-            return view('admin.tags.index');
+            return view('admin.networks.index');
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -27,7 +31,7 @@ class TagsController extends Controller
     {
         try {
            
-            $returnHTML = view('admin.tags.create')->render();
+            $returnHTML = view('admin.networks.create')->render();
 
             return response()->json(
                 [
@@ -63,15 +67,14 @@ class TagsController extends Controller
             }
             else
             {
-                $tags = new Tags;
-                $tags->name = $request->input('name');
-                $tags->colour = $request->input('colour');
-                $tags->save();
-                $tags->id;
+                $network = new Networks;
+                $network->name = $request->input('name');
+                $network->save();
+                $network->id;
                 return response()->json([
                     'status'=>200,
-                    'last_insert_id' => $tags->id,
-                    'message'=>'Tags Added Successfully.'
+                    'last_insert_id' => $network->id,
+                    'message'=>'Network Added Successfully.'
                 ]);
             }
 
@@ -88,8 +91,8 @@ class TagsController extends Controller
     {
         
         try {
-            $data = Tags::find($id);
-            $returnHTML = view('admin.tags.view',compact('data'))->render();
+            $data = Networks::find($id);
+            $returnHTML = view('admin.networks.view',compact('data'))->render();
 
             return response()->json(
                 [
@@ -110,10 +113,10 @@ class TagsController extends Controller
     {
         try {
            
-            $tags = Tags::find($id);
-            if($tags)
+            $network = Networks::find($id);
+            if($network)
             {
-                $returnHTML = view('admin.tags.edit',compact('tags'))->render();
+                $returnHTML = view('admin.networks.edit',compact('network'))->render();
                 return response()->json(
                     [
                         'success' => true,
@@ -125,7 +128,7 @@ class TagsController extends Controller
             {
                 return response()->json([
                     'status'=>404,
-                    'message'=>'No Tags Found.'
+                    'message'=>'No Network Found.'
                 ]);
             }
         }
@@ -156,24 +159,23 @@ class TagsController extends Controller
             else
             {
                
-                $tags = Tags::find($request->id);
-                if($tags)
+                $content = Networks::find($request->id);
+                if($content)
                 {
-                    $tags->name = $request->input('name');
-                    $tags->colour = $request->input('colour');
-                    $tags->update();
-                    $tags->id;
+                    $content->name = $request->input('name');
+                    $content->update();
+                    $content->id;
                     return response()->json([
                         'status'=>200,
-                        'last_insert_id' => $tags->id,
-                        'message' => 'Tags Updated.',
+                        'last_insert_id' => $content->id,
+                        'message' => 'Networks Updated.',
                     ]);
                 }
                 else
                 {
                     return response()->json([
                         'status'=>404,
-                        'error'=>'No Tags Found.'
+                        'error'=>'No Network Found.'
                     ]);
                 }
     
@@ -191,14 +193,14 @@ class TagsController extends Controller
     public function destroy(string $id)
     {
         try {
-            $tags = Tags::find($id);
-            if($tags)
+            $contents = Networks::find($id);
+            if($contents)
             {
-                $tags->delete();
+                $contents->delete();
                 return response()->json([
                     'status'=>200,
                     'success' => true,
-                    'message'=>'Tags Deleted Successfully.'
+                    'message'=>'Network Deleted Successfully.'
                 ]);
             }
             else
@@ -206,7 +208,7 @@ class TagsController extends Controller
                 return response()->json([
                     'status'=> 404,
                     'success' => false,
-                    'message'=>'No Tags Found.'
+                    'message'=>'No Network Found.'
                 ]);
             }
         }
@@ -216,23 +218,19 @@ class TagsController extends Controller
       
     }
 
-   
-    public function get_all_tags(Request $request) {
+    public function get_all_networks(Request $request) {
 		
         try {
             if ($request->ajax()) {
-
-                $token = csrf_token();
-            
-                
-                $all_datas =Tags::latest()
-                ->get();
+                $all_datas = Networks::latest()->get();
         
-                
                 return Datatables::of($all_datas)
+                ->addColumn('name', function ($all_data) {
+                    return $all_data->name;
+                })     
                 ->addColumn('action', function ($all_data) {
-                    $edit_route = route("tags.edit",$all_data->id);
-                    $view_route = route("tags.show",$all_data->id);
+                    $edit_route = route("networks.edit",$all_data->id);
+                    $view_route = route("networks.show",$all_data->id);
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
@@ -244,13 +242,13 @@ class TagsController extends Controller
                                 data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <button type="button" id="delete_tags" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
+                            <button type="button" id="delete_network" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
                                 <i class="far fa-trash-alt"></i>
                             </button>
                         </div>
                     </div>';
                 })
-                ->rawColumns(['action','name','colour'])      
+                ->rawColumns(['action','name'])      
                 ->make(true);
             }
         }
@@ -258,6 +256,4 @@ class TagsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-
-   
 }

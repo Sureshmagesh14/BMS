@@ -1,6 +1,6 @@
 @include('admin.layout.header')
-    @yield('adminside-favicon')
-    @yield('adminside-css')
+@yield('adminside-favicon')
+@yield('adminside-css')
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
@@ -38,10 +38,13 @@
 
                                 <div class="card">
                                     <div class="card-body">
-                                    <div class="text-right">
-                                            <a  href="#" data-size="lg"
-                                            data-ajax-popup="true"
-                                            data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary" >Create charities</a>
+                                        <div class="text-right">
+                                            <a href="#!" data-url="{{ route('charities.create') }}" data-size="xl" data-ajax-popup="true"
+                                                class="btn btn-primary" data-bs-original-title="{{ __('Create Charities') }}" class="btn btn-primary" data-size="xl"
+                                                 data-ajax-popup="true" data-bs-toggle="tooltip"
+                                                id="create">
+                                                Create Charities
+                                            </a>
                                         </div>
 
                                         <h4 class="card-title"> </h4>
@@ -76,38 +79,46 @@
                     </div> <!-- container-fluid -->
                 </div>
                 <!-- End Page-content -->
-
-@yield('adminside-script')
+                @include('admin.layout.footer')
+        
+                @stack('adminside-js')
+                @stack('adminside-validataion')
+                @stack('adminside-confirm')
+                @stack('adminside-datatable')
 @include('admin.layout.footer')
 
 <script>
-$(document).ready(function() {
     var tempcsrf = '{!! csrf_token() !!}';
-    
-    $('#myTable').dataTable().fnDestroy();
-
-    $('#myTable').DataTable({
+    $(document).ready(function() {
+        datatable();
       
-        searching: true,
-        ordering: true,
-        dom : 'lfrtip',
-        info: true,
-        iDisplayLength: 10,
-        lengthMenu: [
-            [ 10, 50, 100, -1],
-            [10, 50, 100, "All"]
-        ],
-        ajax: {
-            url: "{{ route('get_all_charities') }}",
-            data: {
-                _token: tempcsrf,
+    });
+    
+   
+
+    function datatable(){
+        $('#myTable').dataTable().fnDestroy();
+        $('#myTable').DataTable({
+            searching: true,
+            ordering: true,
+            dom: 'lfrtip',
+            info: true,
+            iDisplayLength: 10,
+            lengthMenu: [
+                [10, 50, 100, -1],
+                [10, 50, 100, "All"]
+            ],
+            ajax: {
+                url: "{{ route('get_all_respondents') }}",
+                data: {
+                    _token: tempcsrf,
+                },
+                error: function(xhr, error, thrown) {
+                    alert("undefind error");
+                }
             },
-            error: function(xhr, error, thrown) {
-               alert("undefind error")
-            }
-        },
-       
-        columns: [{
+
+            columns: [{
                 data: 'id',
                 name: '#',
                 orderable: true,
@@ -120,10 +131,70 @@ $(document).ready(function() {
                 searchable: true
             },
             {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
+                data: 'surname',
+                name: 'surname',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'mobile',
+                name: 'mobile',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'whatsapp',
+                name: 'whatsapp',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'email',
+                name: 'email',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'age',
+                name: 'age',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'gender',
+                name: 'gender',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'race',
+                name: 'race',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'status',
+                name: 'status',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'profile_completion',
+                name: 'profile_completion',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'inactive_until',
+                name: 'inactive_until',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'opeted_in',
+                name: 'opeted_in',
+                orderable: true,
+                searchable: true
             }
         ],
         columnDefs: [
@@ -135,12 +206,81 @@ $(document).ready(function() {
                 targets: 1
             },
             {
-                targets: 2,
+                targets: 2
+            },
+            {
+                targets: 3
+            },
+            {
+                targets: 4
+            },
+            {
+                targets: 5
+            },
+            {
+                targets: 6
+            },
+            {
+                targets: 7
+            },
+            {
+                targets: 8
+            },
+            {
+                targets: 9
+            },
+            {
+                targets: 10
+            },
+            {
+                targets: 11
+            },
+            {
+                targets: 12,
                 width: 115,
                 className: "text-center"
             }
         ],
+        });
+    }
+
+    $(document).on('click', '#delete_respondents', function(e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        var url = "{{ route('charities.destroy', ':id') }}";
+        url = url.replace(':id', id);
+      
+        $.confirm({
+            title: "{{Config::get('constants.delete')}}",
+            content:  "{{Config::get('constants.delete_confirmation')}}",
+            autoClose: 'cancelAction|8000',
+            buttons: {
+                delete: {
+                    text: 'delete',
+                    action: function() {
+                        $.ajax({
+                            type: "DELETE",
+                            data: {
+                                _token: tempcsrf,
+                            },
+                            url: url,
+                            dataType: "json",
+                            success: function(response) {
+                                if (response.status == 404) {
+                                    $('.delete_student').text('');
+                                } else {
+                                    datatable();
+                                    $.alert('Respondents Deleted!');
+                                    $('.delete_student').text('Yes Delete');
+                                }
+                            }
+                        });
+                    }
+                },
+                cancel: function() {
+                    
+                }
+            }
+        });
     });
-});
 </script>
-<script src="{{ asset('public/assets/js/jquery.validate.js') }}"></script>

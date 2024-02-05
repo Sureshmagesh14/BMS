@@ -179,7 +179,7 @@ class ContentsController extends Controller
                 {
                     return response()->json([
                         'status'=>404,
-                        'error'=>'No Student Found.'
+                        'error'=>'No Contents Found.'
                     ]);
                 }
             }

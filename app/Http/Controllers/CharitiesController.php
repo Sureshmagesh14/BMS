@@ -1,19 +1,21 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Tags;
+use App\Models\Charities;
+use Illuminate\Support\Facades\Validator;
 use DB;
 use Yajra\DataTables\DataTables;
 use Exception;
-use Illuminate\Support\Facades\Validator;
-class TagsController extends Controller
-{   
+class CharitiesController extends Controller
+{
     public function index()
     {
         try {
-            return view('admin.tags.index');
+            return view('admin.charities.index');
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -26,8 +28,7 @@ class TagsController extends Controller
     public function create()
     {
         try {
-           
-            $returnHTML = view('admin.tags.create')->render();
+            $returnHTML = view('admin.charities.create')->render();
 
             return response()->json(
                 [
@@ -49,9 +50,9 @@ class TagsController extends Controller
     public function store(Request $request)
     {
         try {
-
             $validator = Validator::make($request->all(), [
-               'name'=> 'required',
+                'name' => 'required',
+                'data'    => 'required',
             ]);
     
             if($validator->fails())
@@ -63,18 +64,18 @@ class TagsController extends Controller
             }
             else
             {
-                $tags = new Tags;
-                $tags->name = $request->input('name');
-                $tags->colour = $request->input('colour');
-                $tags->save();
-                $tags->id;
+                $content          = new Charities;
+                $content->name = $request->input('name');
+                $content->data    = $request->input('data');
+                $content->save();
+                $content->id;
+
                 return response()->json([
-                    'status'=>200,
-                    'last_insert_id' => $tags->id,
-                    'message'=>'Tags Added Successfully.'
+                    'status'  => 200,
+                    'success' => true,
+                    'message' =>'Charities Added Successfully.'
                 ]);
             }
-
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -86,10 +87,9 @@ class TagsController extends Controller
      */
     public function show(string $id)
     {
-        
         try {
-            $data = Tags::find($id);
-            $returnHTML = view('admin.tags.view',compact('data'))->render();
+            $data = Charities::find($id);
+            $returnHTML = view('admin.charities.view',compact('data'))->render();
 
             return response()->json(
                 [
@@ -109,11 +109,11 @@ class TagsController extends Controller
     public function edit(string $id)
     {
         try {
-           
-            $tags = Tags::find($id);
-            if($tags)
+            $charities = Charities::find($id);
+            if($charities)
             {
-                $returnHTML = view('admin.tags.edit',compact('tags'))->render();
+                $returnHTML = view('admin.charities.edit',compact('charities'))->render();
+
                 return response()->json(
                     [
                         'success' => true,
@@ -125,15 +125,13 @@ class TagsController extends Controller
             {
                 return response()->json([
                     'status'=>404,
-                    'message'=>'No Tags Found.'
+                    'message'=>'No Charities Found.'
                 ]);
             }
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-        
-       
     }
 
     /**
@@ -144,6 +142,7 @@ class TagsController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name'=> 'required',
+                'data'=>'required',
             ]);
     
             if($validator->fails())
@@ -155,28 +154,26 @@ class TagsController extends Controller
             }
             else
             {
-               
-                $tags = Tags::find($request->id);
-                if($tags)
+                $content = Charities::find($request->id);
+                if($content)
                 {
-                    $tags->name = $request->input('name');
-                    $tags->colour = $request->input('colour');
-                    $tags->update();
-                    $tags->id;
+                    $content->name = $request->input('name');
+                    $content->data    = $request->input('data');
+                    $content->update();
+                    $content->id;
                     return response()->json([
-                        'status'=>200,
-                        'last_insert_id' => $tags->id,
-                        'message' => 'Tags Updated.',
+                        'status'  => 200,
+                        'success' => true,
+                        'message' => 'Charities Updated.'
                     ]);
                 }
                 else
                 {
                     return response()->json([
                         'status'=>404,
-                        'error'=>'No Tags Found.'
+                        'error'=>'No Charities Found.'
                     ]);
                 }
-    
             }
            
         }
@@ -191,14 +188,14 @@ class TagsController extends Controller
     public function destroy(string $id)
     {
         try {
-            $tags = Tags::find($id);
-            if($tags)
+            $contents = Charities::find($id);
+            if($contents)
             {
-                $tags->delete();
+                $contents->delete();
                 return response()->json([
                     'status'=>200,
                     'success' => true,
-                    'message'=>'Tags Deleted Successfully.'
+                    'message'=>'Charities Deleted'
                 ]);
             }
             else
@@ -206,51 +203,50 @@ class TagsController extends Controller
                 return response()->json([
                     'status'=> 404,
                     'success' => false,
-                    'message'=>'No Tags Found.'
+                    'message'=>'No Charities Found.'
                 ]);
             }
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-      
     }
 
-   
-    public function get_all_tags(Request $request) {
+    public function get_all_charities(Request $request) {
 		
         try {
             if ($request->ajax()) {
-
-                $token = csrf_token();
-            
-                
-                $all_datas =Tags::latest()
-                ->get();
+                $all_datas = Charities::latest()->get();
         
                 
                 return Datatables::of($all_datas)
+                ->addColumn('name', function ($all_data) {
+                    return $all_data->name;
+                })
+                ->addColumn('data', function ($all_data) {
+                    return $all_data->data;
+                })      
                 ->addColumn('action', function ($all_data) {
-                    $edit_route = route("tags.edit",$all_data->id);
-                    $view_route = route("tags.show",$all_data->id);
+                    $edit_route = route("charities.edit",$all_data->id);
+                    $view_route = route("charities.show",$all_data->id);
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
                             <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="View Content" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>
                             <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="Edit Content" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <button type="button" id="delete_tags" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
+                            <button type="button" id="delete_charities" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
                                 <i class="far fa-trash-alt"></i>
                             </button>
                         </div>
                     </div>';
                 })
-                ->rawColumns(['action','name','colour'])      
+                ->rawColumns(['action','name','data'])          
                 ->make(true);
             }
         }
@@ -258,6 +254,4 @@ class TagsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-
-   
 }

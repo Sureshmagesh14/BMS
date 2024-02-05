@@ -10,8 +10,10 @@
                 <th>Name</th>
                 <td>{{$data->name}}</td>
             </tr>
-           
-           
+            <tr>
+                <th>Data</th>
+                <td>{{$data->data}}</td>
+            </tr>
         </tbody>
     </table>
 </div>
