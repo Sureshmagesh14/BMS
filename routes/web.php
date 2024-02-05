@@ -18,6 +18,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('contents', 'ContentsController');
     Route::get('contents_datatable', 'ContentsController@contents_datatable')->name('contents_datatable');
+    Route::any('contents_multi_delete', 'ContentsController@contents_multi_delete')->name('contents_multi_delete');
 
     Route::resource('networks', 'NetworkController');
     Route::get('get_all_networks', 'NetworkController@get_all_networks')->name('get_all_networks');

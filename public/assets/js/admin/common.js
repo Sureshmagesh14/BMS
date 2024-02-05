@@ -33,6 +33,16 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
     });
 });
 
+$(document).on('change', '.select_all', function (e) {
+    var checkboxes = $(this).closest('table').find(':checkbox');
+    checkboxes.prop('checked', $(this).is(':checked'));
+    if ($(this).is(':checked')) {
+        $("#delete_all").show();
+    }
+    else{
+        $("#delete_all").hide();
+    }
+});
 
 toastr.options = {
     "closeButton": true,

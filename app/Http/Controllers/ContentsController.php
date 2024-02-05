@@ -233,7 +233,10 @@ class ContentsController extends Controller
                     }else{
                         return 'Terms and condition';
                     }
-                })    
+                })
+                ->addColumn('select_all', function ($all_data) {
+                    return '<input class="tabel_checkbox" name="contents[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                })
                 ->addColumn('action', function ($all_data) {
                     $edit_route = route("contents.edit",$all_data->id);
                     $view_route = route("contents.show",$all_data->id);
@@ -254,9 +257,28 @@ class ContentsController extends Controller
                         </div>
                     </div>';
                 })
-                ->rawColumns(['action','active','data'])      
+                ->rawColumns(['select_all','action','active','data'])      
                 ->make(true);
             }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function contents_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $contents = Contents::find($id);
+                $contents->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Contents Deleted'
+            ]);
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
