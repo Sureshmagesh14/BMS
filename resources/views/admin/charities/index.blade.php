@@ -109,7 +109,7 @@
                 [10, 50, 100, "All"]
             ],
             ajax: {
-                url: "{{ route('get_all_charities') }}",
+                url: "{{ route('get_all_respondents') }}",
                 data: {
                     _token: tempcsrf,
                 },
@@ -118,20 +118,133 @@
                 }
             },
 
-            columns: [
-                { data: 'id', name: '#', orderable: true, searchable: true },
-                { data: 'name', name: 'name', orderable: true, searchable: true },
-                { data: 'action', name: 'action', orderable: false, searchable: false }
-            ],
-            columnDefs: [
-                { targets: 0,width: 75,className: "text-center" },
-                { targets: 1 },
-                { targets: 2,width: 115,className: "text-center" }
-            ],
+            columns: [{
+                data: 'id',
+                name: '#',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'name',
+                name: 'name',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'surname',
+                name: 'surname',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'mobile',
+                name: 'mobile',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'whatsapp',
+                name: 'whatsapp',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'email',
+                name: 'email',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'age',
+                name: 'age',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'gender',
+                name: 'gender',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'race',
+                name: 'race',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'status',
+                name: 'status',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'profile_completion',
+                name: 'profile_completion',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'inactive_until',
+                name: 'inactive_until',
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: 'opeted_in',
+                name: 'opeted_in',
+                orderable: true,
+                searchable: true
+            }
+        ],
+        columnDefs: [
+            {
+                targets: 0,
+                width: 75,
+                className: "text-center"
+            },{
+                targets: 1
+            },
+            {
+                targets: 2
+            },
+            {
+                targets: 3
+            },
+            {
+                targets: 4
+            },
+            {
+                targets: 5
+            },
+            {
+                targets: 6
+            },
+            {
+                targets: 7
+            },
+            {
+                targets: 8
+            },
+            {
+                targets: 9
+            },
+            {
+                targets: 10
+            },
+            {
+                targets: 11
+            },
+            {
+                targets: 12,
+                width: 115,
+                className: "text-center"
+            }
+        ],
         });
     }
 
-    $(document).on('click', '#delete_charities', function(e) {
+    $(document).on('click', '#delete_respondents', function(e) {
         e.preventDefault();
         var id = $(this).data("id");
         var url = "{{ route('charities.destroy', ':id') }}";
@@ -157,7 +270,7 @@
                                     $('.delete_student').text('');
                                 } else {
                                     datatable();
-                                    $.alert('Charities Deleted!');
+                                    $.alert('Respondents Deleted!');
                                     $('.delete_student').text('Yes Delete');
                                 }
                             }

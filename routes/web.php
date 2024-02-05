@@ -33,6 +33,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('tags','TagsController');
     Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
+
+
+    Route::resource('respondents','RespondentsController');
+    Route::any('get_all_respondents', 'RespondentsController@get_all_respondents')->name('get_all_respondents');
+    Route::get('respondent_export/{id}','RespondentsController@respondent_export')->name('respondent_export');    
     
 
     Route::controller(SettingsController::class)->group(function(){
@@ -77,11 +82,11 @@ Route::group(['middleware' => ['auth']], function () {
     //     Route::delete('delete_tags/{id}', 'delete_tags')->name('delete_tags');
     // });
 
-    Route::controller(RespondentsController::class)->group(function(){
-        Route::get('respondents','respondents')->name('respondents');
-        Route::any('get_all_respondents', 'get_all_respondents')->name('get_all_respondents');
-        Route::get('respondent_export/{id}','respondent_export')->name('respondent_export');    
-    });
+    // Route::controller(RespondentsController::class)->group(function(){
+    //     Route::get('respondents','respondents')->name('respondents');
+    //     Route::any('get_all_respondents', 'get_all_respondents')->name('get_all_respondents');
+    //     Route::get('respondent_export/{id}','respondent_export')->name('respondent_export');    
+    // });
 
     Route::controller(ProjectsController::class)->group(function(){
         Route::get('projects','projects')->name('projects');

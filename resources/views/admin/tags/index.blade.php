@@ -20,12 +20,12 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-flex align-items-center justify-content-between">
-                                    <h4 class="mb-0">Respondents</h4>
+                                    <h4 class="mb-0">Panels</h4>
 
                                     <div class="page-title-right">
                                         <ol class="breadcrumb m-0">
                                             <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                                            <li class="breadcrumb-item active">Respondents</li>
+                                            <li class="breadcrumb-item active">Panels</li>
                                         </ol>
                                     </div>
 
@@ -46,7 +46,7 @@
                                         class="btn btn-primary" data-bs-original-title="{{ __('Create Groups') }}" class="btn btn-primary" data-size="xl"
                                          data-ajax-popup="true" data-bs-toggle="tooltip"
                                         id="create">
-                                        Create Groups
+                                        Create Panels
                                     </a>
                                         </div>
 
