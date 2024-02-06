@@ -1,25 +1,35 @@
 
 <div class="modal-body">
    <div class="sharesurvey">
-   <div class="ss-action-input--wrapper fx-column fx-ai--start fx--fw"><div class="fx-row fx-ai--start fx--fw"><div class="flex_column ss-form--input-group ss-form--input-group__no-padding ss-form--input-group__no-margin"><div class="fx-row fx-ai--stretch fx--fw"><input class="ss-form--input" type="text" id="shareLink" readonly="" value="{{$surveylink}}" style="border-radius: 5px;"></div></div><div class="ss-text__no-wrap"><a class="ss-button ss-button__primary mx--zero fx-jc--center" role="button" id="longURLButton" style="border-radius: 3px;" onclick="myFunction()">Copy URL<svg width="16" height="16" class="ms-3" fill="none" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="M12 0.75H3C2.175 0.75 1.5 1.425 1.5 2.25V12.75H3V2.25H12V0.75ZM11.25 3.75H6C5.175 3.75 4.5075 4.425 4.5075 5.25L4.5 15.75C4.5 16.575 5.1675 17.25 5.9925 17.25H14.25C15.075 17.25 15.75 16.575 15.75 15.75V8.25L11.25 3.75ZM6 15.75V5.25H10.5V9H14.25V15.75H6Z" fill="#FFFFFF"></path></svg></a></div></div></div>
+   <div class="ss-action-input--wrapper fx-column fx-ai--start fx--fw"><div class="fx-row fx-ai--start fx--fw"><div class="flex_column ss-form--input-group ss-form--input-group__no-padding ss-form--input-group__no-margin"><div class="fx-row fx-ai--stretch fx--fw"><input class="ss-form--input" type="text" id="shareLink" readonly="" value="{{$surveylink}}" style="border-radius: 5px;"></div></div><div class="ss-text__no-wrap"><a class="ss-button ss-button__primary mx--zero fx-jc--center" role="button" id="clickCopy" style="border-radius: 3px;">Copy URL<svg width="16" height="16" class="ms-3" fill="none" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="M12 0.75H3C2.175 0.75 1.5 1.425 1.5 2.25V12.75H3V2.25H12V0.75ZM11.25 3.75H6C5.175 3.75 4.5075 4.425 4.5075 5.25L4.5 15.75C4.5 16.575 5.1675 17.25 5.9925 17.25H14.25C15.075 17.25 15.75 16.575 15.75 15.75V8.25L11.25 3.75ZM6 15.75V5.25H10.5V9H14.25V15.75H6Z" fill="#FFFFFF"></path></svg></a></div></div></div>
     <input type="text" value="{{$surveylink}}" id="myInput">
 
     </div>
 </div>
+<div id="shareContent" style="display:none;">
+    {{$surveylink}}
+</div>
+
 <script>
-function myFunction() {
-  // Get the text field
-  var copyText = document.getElementById("myInput");
+document.getElementById("clickCopy").onclick = function () {
+    copyToClipboard(document.getElementById("shareContent"));
+};
 
-  // Select the text field
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); // For mobile devices
+function copyToClipboard(e) {
+    var text_to_copy = document.getElementById("shareContent").innerHTML;
 
-   // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText.value);
-
-  // Alert the copied text
-  alert("Copied the text: " + copyText.value);
+    if (!navigator.clipboard){
+        // use old commandExec() way
+    } else{
+        navigator.clipboard.writeText(text_to_copy).then(
+            function(){
+                alert("URL Copied!"); // success 
+            })
+        .catch(
+            function() {
+                alert("Failed to Copy"); // error
+        });
+    } 
 }
 </script>
 <style>

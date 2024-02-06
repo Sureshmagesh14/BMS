@@ -141,6 +141,7 @@
            
             <!-- end page title -->
             <div class="card card-body">
+            @if(isset($currentQus))
             @php 
             $qusvalue = json_decode($currentQus->qus_ans);   @endphp
             {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation')) }}
@@ -205,7 +206,7 @@
                 
                 <input type="submit" id="update_qus" value="Submit" class="btn  btn-primary">
                 {{Form::close()}}
-               
+               @endif
             </div>
 
         </div>
