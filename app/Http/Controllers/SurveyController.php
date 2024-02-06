@@ -212,8 +212,8 @@ class SurveyController extends Controller
         $questions=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
         $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
         $thankQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
-       
-        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus'));
+        $currentQus=Questions::where(['survey_id'=>$survey->id])->first();
+        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus'));
 
     }
     public function questiontype(Request $request,$survey){
@@ -280,4 +280,43 @@ class SurveyController extends Controller
 
 
    }
+    public function questionList(Request $request,$id){
+        // Generatre builder ID
+        $currentQus=Questions::where(['id'=>$id])->first();
+        $survey=Survey::where(['id'=>$currentQus->survey_id])->first();
+        $questions=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+        $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
+        $thankQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
+        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus'));
+    }
+    public function updateQus(Request $request,$id){
+        $currentQus=Questions::where(['id'=>$id])->first();
+
+        echo $id;
+        echo $request->qus_type;
+        switch ($request->qus_type) {
+            case 'welcome_page':
+                $json=[
+                    'welcome_imagesubtitle'=>$request->welcome_imagesubtitle,'welcome_btn'=>$request->welcome_btn,
+                    'welcome_imagetitle'=>$request->welcome_imagetitle,
+                    'welcome_title'=>$request->welcome_title,
+                    'welcome_image'=>$request->welcome_image
+                ];
+                $updateQus=Questions::where(['id'=>$id])->update(['qus_ans'=>json_encode($json)]);
+
+              break;
+            case 'label2':
+              //code block;
+              break;
+            case 'label3':
+              //code block
+              break;
+            default:
+              //code block
+          }
+          return redirect()->back()->with('success', __('Question Updated Successfully.'));
+
+    }
+
+   
 }
