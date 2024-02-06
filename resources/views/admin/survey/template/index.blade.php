@@ -175,7 +175,7 @@
                                             </a>
                                         </div>
                                         <div class="rounded-md me-3">
-                                            <a class="ss-button__link bg-grey-6 p-3 rounded-md" role="button" spiketip-title="Share Survey" spiketip-pos="top">
+                                        <a href="#" class="ss-button__link bg-grey-6 p-3 rounded-md" data-url="{{route('survey.sharesurvey',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Share Survey" data-title="Share Survey">
                                                 <i data-feather="share-2"></i>
                                             </a>
                                         </div>

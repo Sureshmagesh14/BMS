@@ -43,7 +43,10 @@ Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'Surv
 // Survey Questions Routings
 Route::get('/survey/questions/{id}', ['as' => 'survey.quesbuilder','uses' => 'SurveyController@questionList',])->middleware(['auth']);
 
+Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'SurveyController@updateQus',])->middleware(['auth']);
 
 // Clone Survey 
 
 Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication','uses' => 'SurveyController@surveyduplication',])->middleware(['auth']);
+Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey',])->middleware(['auth']);
+Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@sharesurvey',])->middleware(['auth']);
