@@ -44,9 +44,12 @@
 
                                             <a href="{{url('projects_export/xlsx')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export</a>
 
-                                            <a  href="#" data-size="lg"
-                                            data-ajax-popup="true"
-                                            data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary" >Create Project</a>
+                                            <a href="#!" data-url="{{ route('projects.create') }}" data-size="xl" data-ajax-popup="true"
+                                        class="btn btn-primary" data-bs-original-title="{{ __('Create Projects') }}" class="btn btn-primary" data-size="xl"
+                                         data-ajax-popup="true" data-bs-toggle="tooltip"
+                                        id="create">
+                                        Create Project
+                                    </a>
                                         </div>
 
                                         <h4 class="card-title"> </h4>
@@ -99,34 +102,38 @@
     @stack('adminside-confirm')
     @stack('adminside-datatable')
 
-<script>
-$(document).ready(function() {
-    var tempcsrf = '{!! csrf_token() !!}';
-    
-    $('#myTable').dataTable().fnDestroy();
 
-    $('#myTable').DataTable({
-      
-        searching: true,
-        ordering: true,
-        dom : 'lfrtip',
-        info: true,
-        iDisplayLength: 10,
-        lengthMenu: [
-            [ 10, 50, 100, -1],
-            [10, 50, 100, "All"]
-        ],
-        ajax: {
-            url: "{{ route('get_all_projects') }}",
-            data: {
-                _token: tempcsrf,
-            },
-            error: function(xhr, error, thrown) {
-               alert("undefind error")
-            }
-        },
+    <script>
+        var tempcsrf = '{!! csrf_token() !!}';
+        $(document).ready(function() {
+            datatable();
+          
+        });
+        
        
-        columns: [{
+    
+        function datatable(){
+            $('#myTable').dataTable().fnDestroy();
+            $('#myTable').DataTable({
+                searching: true,
+                ordering: true,
+                dom: 'lfrtip',
+                info: true,
+                iDisplayLength: 10,
+                lengthMenu: [
+                    [10, 50, 100, -1],
+                    [10, 50, 100, "All"]
+                ],
+                ajax: {
+                    url: "{{ route('get_all_projects') }}",
+                    data: {
+                        _token: tempcsrf,
+                    },
+                    error: function(xhr, error, thrown) {
+                        alert("undefind error");
+                    }
+                },
+                columns: [{
                 data: 'id',
                 name: '#',
                 orderable: true,
@@ -232,6 +239,47 @@ $(document).ready(function() {
                 className: "text-center"
             }
         ],
-    });
-});
-</script>
+            });
+        }
+    
+        $(document).on('click', '#delete_projects', function(e) {
+            e.preventDefault();
+            var id = $(this).data("id");
+            var url = "{{ route('projects.destroy', ':id') }}";
+            url = url.replace(':id', id);
+          
+            $.confirm({
+                title: "{{Config::get('constants.delete')}}",
+                content:  "{{Config::get('constants.delete_confirmation')}}",
+                autoClose: 'cancelAction|8000',
+                buttons: {
+                    delete: {
+                        text: 'delete',
+                        action: function() {
+                            $.ajax({
+                                type: "DELETE",
+                                data: {
+                                    _token: tempcsrf,
+                                },
+                                url: url,
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.status == 404) {
+                                        $('.delete_student').text('');
+                                    } else {
+                                        datatable();
+                                        $.alert('Project Deleted!');
+                                        $('.delete_student').text('Yes Delete');
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    cancel: function() {
+                        
+                    }
+                }
+            });
+        });
+    </script>
+    
