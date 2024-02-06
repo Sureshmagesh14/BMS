@@ -66,11 +66,14 @@
                 </div>
               
                @endif
+               <?php $i=1;?>
                 @foreach($questions as $qus)
-                    <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card">
-                        <div class="d-flex fx-ai--center">
-                        <a href="#" data-url="{{route('survey.quesbuilder',$qus->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Choose Question Type" data-title="Choose Question Type">
-                             <p>{{$qus->name}}</p>
+                    <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card" >
+                        <div class="d-flex fx-ai--center" onclick="sectactivequs({{$qus->id}},'{{$qus->qus_type}}')">
+                            <a 
+                            href="#" data-url="{{route('survey.quesbuilder',$qus->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Choose Question Type" data-title="Choose Question Type"
+                            >
+                             <p>{{$i}}.{{$qus->name}}</p>
                             </a>
                         </div>
                         <div class="ss-builder-features__button">
@@ -78,7 +81,9 @@
                             <i data-feather="trash-2" onclick="qusdelete('{{$url}}')"></i>
                         </div>
                     </div>
+                    <?php $i++;?>
                 @endforeach
+                
                 <a href="#" data-url="{{route('survey.questiontype',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Choose Question Type" data-title="Choose Question Type">
                     <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card">
                         <div class="d-flex fx-ai--center">
@@ -136,7 +141,70 @@
            
             <!-- end page title -->
             <div class="card card-body">
-              
+            @php 
+            $qusvalue = json_decode($currentQus->qus_ans);   @endphp
+            {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation')) }}
+                @if($currentQus->qus_type=='welcome_page')
+                    <div class="modal-body">
+                        <div>
+                            {{ Form::label('welcome_title', __('Title'),['class'=>'form-label']) }}
+                            @if(isset($qusvalue->welcome_title))
+                                {{ Form::text('welcome_title', $qusvalue->welcome_title , array('class' => 'form-control',
+                            'placeholder'=>'Enter Welcome Page title')) }}
+                            @else 
+                                {{ Form::text('welcome_title', null , array('class' => 'form-control',
+                            'placeholder'=>'Enter Welcome Page title')) }}
+                            @endif
+                        </div>
+                        <br>
+                        <div>
+                            {{ Form::label('welcome_imagetitle', __('Sub Title'),['class'=>'form-label']) }}
+                            @if(isset($qusvalue->welcome_imagetitle))
+                                {{ Form::text('welcome_imagetitle', $qusvalue->welcome_imagetitle , array('class' => 'form-control',
+                            'placeholder'=>'Sub title')) }}
+                            @else 
+                                {{ Form::text('welcome_imagetitle', null , array('class' => 'form-control',
+                            'placeholder'=>'Sub title')) }}
+                            @endif
+                        </div>
+                        <br>
+                        <div>
+                            {{ Form::label('welcome_imagesubtitle', __('Description'),['class'=>'form-label']) }}
+                            @if(isset($qusvalue->welcome_imagetitle))
+                                {{ Form::text('welcome_imagesubtitle', $qusvalue->welcome_imagesubtitle , array('class' => 'form-control',
+                            'placeholder'=>'Description')) }}
+                            @else 
+                                {{ Form::text('welcome_imagesubtitle', null , array('class' => 'form-control',
+                            'placeholder'=>'Description')) }}
+                            @endif
+                           
+                        </div>
+                        <br>
+                        <div>
+                            {{ Form::label('welcome_btn', __('Button Label'),['class'=>'form-label']) }}
+                            @if(isset($qusvalue->welcome_imagetitle))
+                                {{ Form::text('welcome_btn', $qusvalue->welcome_btn , array('class' => 'form-control',
+                            'placeholder'=>'Enter Button Label')) }}
+                            @else 
+                                {{ Form::text('welcome_btn', null , array('class' => 'form-control',
+                            'placeholder'=>'Enter Button Label')) }}
+                            @endif
+                        </div>
+                        <br>
+<!-- 
+                        <input type="file" style="visibility:hidden;" name="welcome_image" id="welcome_image">
+                        <div class="gallery">
+                            <a target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg">
+                                <img src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400">
+                            </a>
+                        </div> -->
+                    </div>
+                @endif
+                <input type="hidden" name="qus_id" id="qus_id" value="{{$currentQus->id}}">
+                <input type="hidden" name="qus_type" id="qus_type" value="{{$currentQus->qus_type}}">
+                
+                <input type="submit" id="update_qus" value="Submit" class="btn  btn-primary">
+                {{Form::close()}}
                
             </div>
 
@@ -153,29 +221,40 @@ div#survey-table_wrapper .row {
 
 </style>
 <script>
-    function qusdelete(url){
-        Swal.fire({ 
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning", showCancelButton: !0, 
-            confirmButtonColor: "#34c38f", 
-            cancelButtonColor: "#f46a6a", 
-            confirmButtonText: "Yes, delete it!" 
-        }).then(function (t) { 
-            if(t.isConfirmed){
-                $.ajax({url: url, success: function(result){
-                    result = JSON.parse(result);
-                    if(result.error!=''){
-                        t.value && Swal.fire("Warning!", result.error, "warning") ;
-                    }else{
-                        t.value && Swal.fire("Deleted!", result.success, "success") ;
-                    }
-                    window.location.reload();
-                }});
-            }
-            
-        })
-    }
+function qusdelete(url){
+    Swal.fire({ 
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning", showCancelButton: !0, 
+        confirmButtonColor: "#34c38f", 
+        cancelButtonColor: "#f46a6a", 
+        confirmButtonText: "Yes, delete it!" 
+    }).then(function (t) { 
+        if(t.isConfirmed){
+            $.ajax({url: url, success: function(result){
+                result = JSON.parse(result);
+                if(result.error!=''){
+                    t.value && Swal.fire("Warning!", result.error, "warning") ;
+                }else{
+                    t.value && Swal.fire("Deleted!", result.success, "success") ;
+                }
+                window.location.reload();
+            }});
+        }
+        
+    })
+}
+
+function sectactivequs(id,type){
+    console.log(id,type);
+    qustype(type)
+}
+function qustype(type){
+    console.log(type,"type")
+    let qusset={'welcome_page':'Welcome Page','single_choice':'Single Choice','mutli_choice':'Multi Choice','open_qus':'Open Questions','likert':'Likert scale','ranking':'Ranking','dropdown':'Dropdown','picturechoice':'Picture Choice','email':'Email','matrix_qus':'Matrix Question','thank_you':'Thank You Page'};
+    console.log(qusset[type],"qusset")
+}
+
 </script>
     @yield('adminside-script')
 @include('admin.layout.footer')
