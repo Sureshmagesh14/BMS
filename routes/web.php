@@ -47,3 +47,5 @@ Route::get('/survey/questions/{id}', ['as' => 'survey.quesbuilder','uses' => 'Su
 // Clone Survey 
 
 Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication','uses' => 'SurveyController@surveyduplication',])->middleware(['auth']);
+Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey',])->middleware(['auth']);
+Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@sharesurvey',])->middleware(['auth']);

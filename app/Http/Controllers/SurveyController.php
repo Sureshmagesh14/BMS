@@ -273,5 +273,11 @@ class SurveyController extends Controller
         return redirect()->back()->with('success', __('Survey Duplicated Successfully.'));
 
     }
-   
+   public function sharesurvey(Request $request,$id){
+        $survey=Survey::where(['id'=>$id])->first();
+        $surveylink= route('survey.view',$survey->builderID);
+        return view('admin.survey.template.share', compact('surveylink','survey'));
+
+
+   }
 }
