@@ -46,6 +46,8 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::resource('users','UsersController');
     Route::any('get_all_users', 'UsersController@get_all_users')->name('get_all_users');
+    Route::get('export_user_activity','UsersController@export_user_activity')->name('export_user_activity');
+    Route::get('export_referrals','UsersController@export_referrals')->name('export_referrals');  
     
 
     Route::controller(SettingsController::class)->group(function(){

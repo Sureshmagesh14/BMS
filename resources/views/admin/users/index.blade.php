@@ -49,8 +49,8 @@
 Export <i class="mdi mdi-chevron-down"></i>
 </button>&nbsp;
 <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-<a class="dropdown-item" href="#">User Activity by User</a>
-<a class="dropdown-item" href="#">Referrals</a>
+<a class="dropdown-item" href="{{url('export_user_activity')}}">User Activity by User</a>
+<a class="dropdown-item" href="{{url('export_referrals')}}">Referrals</a>
 </div>
 
 </div>
@@ -104,6 +104,9 @@ Export <i class="mdi mdi-chevron-down"></i>
                 </div>
                 <!-- End Page-content -->
 
+
+             
+                
                 @include('admin.layout.footer')
         
                 @stack('adminside-js')

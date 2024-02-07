@@ -43,14 +43,14 @@
                                     <div class="card-body">
 
                                    
-<div class="text-right">
+<div class="text-left">
 
 <div class="btn-group" role="group">
 <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 Export <i class="mdi mdi-chevron-down"></i>
 </button>
 <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-<a class="dropdown-item" href="#">Cash Outs Summary by Month & Year</a>
+<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" data-backdrop="static" data-keyboard="false">Cash Outs Summary by Month & Year</a>
 <a class="dropdown-item" href="#">Cash Outs Summary by Respondent</a>
 </div>
 </div>
@@ -101,6 +101,70 @@ Export <i class="mdi mdi-chevron-down"></i>
                     </div> <!-- container-fluid -->
                 </div>
                 <!-- End Page-content -->
+
+
+   <!-- Modal -->
+   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cash Outs Summary by Month & Year</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <form action="{{url('export_cashout_year')}}">
+        @csrf
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Select Year:</label>
+            <select id="user" name="user" class="w-full form-control form-select" required="">
+                <option value="" selected="selected" disabled="disabled">
+                    Please select
+                </option>
+
+                {{ $last= date('Y')-15 }}
+                {{ $now = date('Y') }}
+
+                @for ($i = $now; $i >= $last; $i--)
+                    <option value="{{ $i }}">{{ $i }}</option>
+                @endfor
+            </select>
+          </div>
+        
+
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Select Month:</label>
+            <select id="user" name="user" class="w-full form-control form-select" required="">
+                <option value="" selected="selected" disabled="disabled">
+                    Please select
+                </option>
+         
+
+                @for ($i = 1; $i <= 12; $i++)
+
+                @php 
+                $lval= date('F', strtotime( "$i/12/10" ));
+                @endphp 
+                <option value="{{ $i }}">{{ $lval }}</option>
+                @endfor
+            </select>
+          </div>
+        
+        
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Export</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- modal -->
 
                 @include('admin.layout.footer')
         

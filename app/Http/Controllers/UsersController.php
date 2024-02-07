@@ -8,6 +8,9 @@ use DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 use Exception;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 class UsersController extends Controller
 {
@@ -17,7 +20,9 @@ class UsersController extends Controller
     public function index()
     {
         try {
-            return view('admin.users.index');
+
+            $users=Users::where('status_id',1)->get();
+            return view('admin.users.index',compact('users'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -331,5 +336,212 @@ class UsersController extends Controller
        
 
     }
+
+    public function export_referrals(Request $request){
+        
+        //dd($request->user);
+
+        $type='xlsx';
+      
+        $all_datas = Users::select('users.*')
+        ->orderby("users.id","desc")
+        ->get();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        
+        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('J')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('K')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('L')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('M')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('N')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('O')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('P')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('Q')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('R')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('S')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('T')->setWidth(25);
+
+        $sheet->setCellValue('A1', 'Referral ID');
+        
+        $sheet->setCellValue('B1', 'Respondent Profile ID');
+
+        $sheet->setCellValue('C1', 'Name');    
+
+        $sheet->setCellValue('D1', 'Surname');
+
+        $sheet->setCellValue('E1', 'Phone Number');
+
+        $sheet->setCellValue('F1', 'WhatsApp Number');
+        
+        $sheet->setCellValue('G1', 'Email');
+        
+        $sheet->setCellValue('H1', 'Age');
+        
+        $sheet->setCellValue('I1', 'Gender');
+        
+        $sheet->setCellValue('J1', 'Race');
+        
+        $sheet->setCellValue('K1', 'Profile Completion');
+
+        $sheet->setCellValue('L1', 'Respondent Status');
+        $sheet->setCellValue('M1', 'Date Opted In');
+        $sheet->setCellValue('N1', 'Referral Source');
+        $sheet->setCellValue('O1', 'Referred by Respondent Profile ID');
+        $sheet->setCellValue('P1', 'Referred by Name');
+        $sheet->setCellValue('Q1', 'Referred by Surname');
+        $sheet->setCellValue('R1', 'Referred by Phone Number');
+        $sheet->setCellValue('S1', 'Referred by WhatsApp Number');
+        $sheet->setCellValue('T1', 'Referred by Email');        
+        
+
+        
+
+        
+
+        $fileName = "referrals_".date('ymd').".".$type;
+        if($type == 'xlsx') {
+            $writer = new Xlsx($spreadsheet);
+        } else if($type == 'xls') {
+            $writer = new Xls($spreadsheet);
+        }
+            $writer->save("export/".$fileName);
+            
+        header("Content-Type: application/vnd.ms-excel");
+        return redirect(url('/')."/export/".$fileName);
+
+    }
     
+    public function export_user_activity(Request $request){
+        
+        //dd($request->user);
+
+        $type='xlsx';
+      
+        $all_datas = Users::select('users.*')
+        ->orderby("users.id","desc")
+        ->get();
+
+        
+
+        foreach ($all_datas as $key => $val) {
+           
+            $get_data = DB::table('user_events')
+                ->where("user_events.user_id",$val->id)
+                ->orderby("id","desc")
+                ->get();
+            $resp_created =0;
+            $resp_updated =0;
+            $resp_deactivated =0;
+    
+            $proj_created =0;
+
+            foreach ($get_data as $key => $adata) {
+                
+                $typeval= $adata->type;
+
+                if($typeval=='respondent'){
+
+                    if($adata->action=='created'){
+                        $resp_created++;
+                    }
+                    if($adata->action=='updated'){
+                        $resp_updated++;
+                    }
+                    if($adata->action=='deactivated'){
+                        $resp_deactivated++;
+                    } 
+                }
+                if($typeval=='project'){
+
+                    if($adata->action=='created'){
+                        $proj_created++;
+                    }
+                }
+            }
+            
+        }
+        
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        
+        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('J')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('K')->setWidth(25);
+
+        $sheet->setCellValue('A1', 'Name');
+        
+
+        $sheet->setCellValue('B1', 'Surname');
+
+        $sheet->setCellValue('C1', 'Respondent Activity Report ID');    
+
+        $sheet->setCellValue('D1', 'Created Respondents');
+
+        $sheet->setCellValue('E1', 'Deactivated Respondents');
+
+        $sheet->setCellValue('F1', 'Updated Respondents');
+        
+        $sheet->setCellValue('G1', 'Blacklisted Respondents');
+        
+        $sheet->setCellValue('H1', 'Project Activity Report ID');
+        
+        $sheet->setCellValue('I1', 'Created Projects');
+        
+        $sheet->setCellValue('J1', 'Projects Managed');
+        
+        $sheet->setCellValue('K1', 'Completed Projects');
+        
+        
+
+        $rows = 2;
+        $i=1;
+        foreach($all_datas as $all_data){
+            $sheet->setCellValue('A' . $rows, $all_data->name);
+            $sheet->setCellValue('B' . $rows, $all_data->surname);
+            $sheet->setCellValue('C' . $rows, '');
+            $sheet->setCellValue('D' . $rows, $resp_created);
+            $sheet->setCellValue('E' . $rows, $resp_deactivated);
+            $sheet->setCellValue('F' . $rows, $resp_updated);
+            $sheet->setCellValue('G' . $rows, '');
+            $sheet->setCellValue('H' . $rows, '');
+            $sheet->setCellValue('I' . $rows, $proj_created);
+            $sheet->setCellValue('J' . $rows, '');
+            $sheet->setCellValue('K' . $rows, '');
+
+            
+            $rows++;
+            $i++;
+        }
+
+        $fileName = "user_activity_".date('ymd').".".$type;
+        if($type == 'xlsx') {
+            $writer = new Xlsx($spreadsheet);
+        } else if($type == 'xls') {
+            $writer = new Xls($spreadsheet);
+        }
+            $writer->save("export/".$fileName);
+            
+        header("Content-Type: application/vnd.ms-excel");
+        return redirect(url('/')."/export/".$fileName);
+
+    }
 }
