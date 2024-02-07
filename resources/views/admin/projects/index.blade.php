@@ -42,6 +42,19 @@
                                     <div class="card-body">
                                     <div class="text-right">
 
+
+
+<div class="btn-group" role="group">
+<button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+Export <i class="mdi mdi-chevron-down"></i>
+</button>
+<div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+<a class="dropdown-item" href="#">Respondent Project Engagement by Month & Year</a>
+<a class="dropdown-item" href="#">Respondent Project Engagement by Respondent</a>
+</div>
+</div>
+
+
                                             <a href="{{url('projects_export/xlsx')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export</a>
 
                                             <a href="#!" data-url="{{ route('projects.create') }}" data-size="xl" data-ajax-popup="true"

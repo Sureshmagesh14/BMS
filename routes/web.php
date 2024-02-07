@@ -34,7 +34,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('tags','TagsController');
     Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
-
+    Route::get('tags_export/{id}','TagsController@tags_export')->name('tags_export'); 
 
     Route::resource('respondents','RespondentsController');
     Route::any('get_all_respondents', 'RespondentsController@get_all_respondents')->name('get_all_respondents');

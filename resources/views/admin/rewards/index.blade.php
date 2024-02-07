@@ -40,11 +40,24 @@
 
                                 <div class="card">
                                     <div class="card-body">
-                                    <!-- <div class="text-right">
-                                            <a  href="#" data-size="lg"
-                                            data-ajax-popup="true"
-                                            data-bs-original-title="{{ __('Edit Consultant') }}" class="btn btn-primary" >Create rewards</a>
-                                        </div> -->
+                                    
+                                    
+                                    
+<div class="text-left">
+
+
+
+<div class="btn-group" role="group">
+<button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+Export <i class="mdi mdi-chevron-down"></i>
+</button>
+<div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+<a class="dropdown-item" href="#">Rewards Summary by Month & Year</a>
+<a class="dropdown-item" href="#">Rewards Summary by Respondent</a>
+</div>
+</div>
+
+</div>
 
                                         <h4 class="card-title"> </h4>
                                         <p class="card-title-desc"></p>

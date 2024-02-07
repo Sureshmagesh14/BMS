@@ -45,6 +45,21 @@
 
                                     <div class="text-right">
                                         
+
+
+<div class="btn-group" role="group">
+    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Export <i class="mdi mdi-chevron-down"></i>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+
+        <a class="dropdown-item" href="#">Respondent Details</a>
+        <a class="dropdown-item" href="#">General Respondent Activity by Respondent</a>
+        <a class="dropdown-item" href="#">General Respondent Activity by Month & Year</a>
+    </div>
+</div>
+
+
                                         <a href="{{url('respondent_export/deact')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export Deactivated Respondents</a>
                                         <a href="#!" data-url="{{ route('respondents.create') }}" data-size="xl" data-ajax-popup="true"
                                         class="btn btn-primary" data-bs-original-title="{{ __('Create Respondents') }}" class="btn btn-primary" data-size="xl"

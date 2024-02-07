@@ -43,9 +43,21 @@
                                     <div class="card-body">
 
                                    
+<div class="text-right">
+
+<div class="btn-group" role="group">
+<button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+Export <i class="mdi mdi-chevron-down"></i>
+</button>
+<div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+<a class="dropdown-item" href="#">Cash Outs Summary by Month & Year</a>
+<a class="dropdown-item" href="#">Cash Outs Summary by Respondent</a>
+</div>
+</div>
 
 
-                                    <div class="text-right">
+
+                               
                                         <a href="{{url('cash_export/xlsx')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export</a>
                                     </div>
 

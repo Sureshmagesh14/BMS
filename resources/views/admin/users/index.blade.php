@@ -42,12 +42,26 @@
                                 <div class="card">
                                     <div class="card-body">
                                     <div class="text-right">
+
+
+<div class="btn-group" role="group">
+<button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+Export <i class="mdi mdi-chevron-down"></i>
+</button>&nbsp;
+<div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+<a class="dropdown-item" href="#">User Activity by User</a>
+<a class="dropdown-item" href="#">Referrals</a>
+</div>
+
+</div>
+
                                         <a href="#!" data-url="{{ route('users.create') }}" data-size="xl" data-ajax-popup="true"
                                         class="btn btn-primary" data-bs-original-title="{{ __('Create Users') }}" class="btn btn-primary" data-size="xl"
                                          data-ajax-popup="true" data-bs-toggle="tooltip"
                                         id="create">
                                         Create Users
-                                    </a>
+                                        </a>
+                                        
                                         </div>
 
                                         <h4 class="card-title"> </h4>

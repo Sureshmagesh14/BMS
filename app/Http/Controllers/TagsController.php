@@ -8,6 +8,10 @@ use DB;
 use Yajra\DataTables\DataTables;
 use Exception;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+
 class TagsController extends Controller
 {   
     public function index()
@@ -230,6 +234,9 @@ class TagsController extends Controller
         
                 
                 return Datatables::of($all_datas)
+                ->addColumn('colour', function ($all_data) {
+                    return '<div class=""><button type="button" class="btn waves-effect waves-light" style="background-color:'.$all_data->colour.'"><i class="uil uil-user"></i></button></div>';
+                })  
                 ->addColumn('action', function ($all_data) {
                     $edit_route = route("tags.edit",$all_data->id);
                     $view_route = route("tags.show",$all_data->id);
@@ -258,6 +265,51 @@ class TagsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+        
+    public function tags_export($arg) {
+        
+        $type='xlsx';
 
-   
+       
+        $all_datas = DB::table('tags')
+            ->orderby("id","desc")
+            ->get();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'Name');
+        $sheet->setCellValue('C1', 'Description');
+        $sheet->setCellValue('D1', 'Colour');
+        $sheet->setCellValue('E1', 'Settings');
+        $sheet->setCellValue('F1', 'Size');
+  
+        $rows = 2;
+        $i=1;
+        foreach($all_datas as $all_data){
+            
+            $sheet->setCellValue('A' . $rows, $i);
+            $sheet->setCellValue('B' . $rows, $all_data->name);
+            $sheet->setCellValue('C' . $rows, '');
+            $sheet->setCellValue('D' . $rows, $all_data->colour);
+            //$sheet->getActiveSheet()->getStyle('D' . $rows)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b');
+            $sheet->setCellValue('E' . $rows, '');
+            $sheet->setCellValue('F' . $rows, '');
+
+            
+            $rows++;
+            $i++;
+        }
+
+        $fileName = "panel_details_".date('ymd').".".$type;
+        if($type == 'xlsx') {
+            $writer = new Xlsx($spreadsheet);
+        } else if($type == 'xls') {
+            $writer = new Xls($spreadsheet);
+        }
+            $writer->save("export/".$fileName);
+            
+        header("Content-Type: application/vnd.ms-excel");
+        return redirect(url('/')."/export/".$fileName);
+    }
 }
