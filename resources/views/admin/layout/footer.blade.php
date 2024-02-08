@@ -103,9 +103,10 @@
         <script src="{{ asset('public/assets/js/pages/table-responsive.init.js') }}"></script>
         <!-- Responsive Table js -->
         <script src="{{ asset('public/assets/libs/admin-resources/rwd-table/rwd-table.min.js') }}"></script>
-
+        <script src="{{ asset('public/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
         <script src="{{ asset('public/assets/js/admin/app.js') }}"></script>
 
+        
         <!-- Toastr js -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
         <script src="{{ asset('public/assets/js/admin/jquery.validate.js') }}"></script>
@@ -135,6 +136,14 @@
         <script src="{{ asset('public/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
         <script src="{{ asset('public/assets/js/pages/datatables.init.js') }}"></script>
     @endpush
-
+    <script type="text/javascript">
+                        var j = jQuery.noConflict();
+                        j(function () {
+                            j('.input-daterange').datetimepicker({
+                                format: 'L',
+                                disabledHours: true,
+                            });
+                        });
+                    </script>
 </body>
 </html>

@@ -353,13 +353,28 @@ class RespondentsController extends Controller
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Name');
-        $sheet->setCellValue('B1', 'Surname');
-        $sheet->setCellValue('C1', 'Phone');
-        $sheet->setCellValue('D1', 'Phone 2');
-        $sheet->setCellValue('E1', 'Email');
-        $sheet->setCellValue('F1', 'Age');
-        $sheet->setCellValue('G1', 'Gender');
+        $sheet->setCellValue('A1', 'Respondent Profile ID');
+        $sheet->setCellValue('B1', 'Name');
+        $sheet->setCellValue('C1', 'Surname');
+        $sheet->setCellValue('D1', 'Phone Number');
+        $sheet->setCellValue('E1', 'WhatsApp Number');
+        $sheet->setCellValue('F1', 'Email');
+        $sheet->setCellValue('G1', 'RSA ID / Passport');
+        $sheet->setCellValue('H1', 'Date of Birth');
+        $sheet->setCellValue('I1', 'Age');
+        $sheet->setCellValue('J1', 'Gender');
+        $sheet->setCellValue('K1', 'Race');
+        $sheet->setCellValue('L1', 'Full Profile Completion %');
+        $sheet->setCellValue('M1', 'Basic Profile Completion %');
+        $sheet->setCellValue('N1', 'Essential Profile Completion %');
+        $sheet->setCellValue('O1', 'Extended Profile Completion %');
+        $sheet->setCellValue('P1', 'Respondent Status');
+        $sheet->setCellValue('Q1', 'Data Inactive Until');
+        $sheet->setCellValue('R1', 'Date Opted In');
+        $sheet->setCellValue('S1', 'Date Last Updated');
+        $sheet->setCellValue('T1', 'Referral Link');
+        $sheet->setCellValue('U1', 'Accepted Terms');
+        $sheet->setCellValue('V1', 'Created By');
         
         $rows = 2;
         $i=1;
@@ -367,21 +382,36 @@ class RespondentsController extends Controller
 
             $dob=$all_data->date_of_birth;
             $diff = (date('Y') - date('Y',strtotime($dob)));
+
+            $opted_in = date('d-m-Y',strtotime($all_data->opted_in));
+            $updated_at = date('d-m-Y',strtotime($all_data->updated_at));
             
+            if($all_data->accept_terms==1){
+                $accept_terms ='Yes';
+            }else{
+                $accept_terms =$all_data->accept_terms;
+            }
+
             $sheet->setCellValue('A' . $rows, $i);
             $sheet->setCellValue('B' . $rows, $all_data->name);
             $sheet->setCellValue('C' . $rows, $all_data->surname);
             $sheet->setCellValue('D' . $rows, $all_data->mobile);
             $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
             $sheet->setCellValue('F' . $rows, $all_data->email);
-            $sheet->setCellValue('G' . $rows, $diff);
+            $sheet->setCellValue('G' . $rows, $all_data->id_passport);
+            $sheet->setCellValue('H' . $rows, $diff);
 
+            $sheet->setCellValue('R' . $rows, $opted_in);
+            $sheet->setCellValue('S' . $rows, $updated_at);
+            $sheet->setCellValue('T' . $rows, $all_data->referral_code);
+            $sheet->setCellValue('U' . $rows, $accept_terms);
+            $sheet->setCellValue('V' . $rows, $all_data->created_by);
             
             $rows++;
             $i++;
         }
 
-        $fileName = "deactivated_respondents_".date('ymd').".".$type;
+        $fileName = "respondent_details_".date('ymd').".".$type;
         if($type == 'xlsx') {
             $writer = new Xlsx($spreadsheet);
         } else if($type == 'xls') {

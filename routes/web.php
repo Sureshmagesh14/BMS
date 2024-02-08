@@ -38,7 +38,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('respondents','RespondentsController');
     Route::any('get_all_respondents', 'RespondentsController@get_all_respondents')->name('get_all_respondents');
-    Route::get('respondent_export/{id}','RespondentsController@respondent_export')->name('respondent_export');    
+    Route::get('respondent_export/{id}','RespondentsController@respondent_export')->name('respondent_export');   
+    Route::get('gen_respondent_res_export','RespondentsController@gen_respondent_res_export')->name('gen_respondent_res_export');   
+    Route::get('gen_respondent_mon_export','RespondentsController@gen_respondent_mon_export')->name('gen_respondent_mon_export');    
 
     Route::resource('projects','ProjectsController');
     Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');

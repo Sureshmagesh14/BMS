@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Users;
+use App\Models\Respondents;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -343,9 +344,7 @@ class UsersController extends Controller
 
         $type='xlsx';
       
-        $all_datas = Users::select('users.*')
-        ->orderby("users.id","desc")
-        ->get();
+    
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -403,10 +402,24 @@ class UsersController extends Controller
         $sheet->setCellValue('S1', 'Referred by WhatsApp Number');
         $sheet->setCellValue('T1', 'Referred by Email');        
         
-
         
+        $all_datas = Respondents::select('respondents.*')
+        ->orderby("respondents.id","desc")
+        ->limit(10)
+        ->get();
 
-        
+        $rows = 2;
+        foreach($all_datas as $all_data){
+            $sheet->setCellValue('C' . $rows, $all_data->name);
+            $sheet->setCellValue('D' . $rows, $all_data->surname);
+            $sheet->setCellValue('E' . $rows, $all_data->mobile);
+            $sheet->setCellValue('F' . $rows, $all_data->whatsapp);
+            $sheet->setCellValue('G' . $rows, $all_data->email);
+            $sheet->setCellValue('M' . $rows, $all_data->opted_in);
+            
+            $rows++;
+        }
+
 
         $fileName = "referrals_".date('ymd').".".$type;
         if($type == 'xlsx') {
