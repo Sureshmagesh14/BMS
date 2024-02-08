@@ -7,6 +7,15 @@
 <link href="{{ asset('assets/css/builder.css') }}" rel="stylesheet" type="text/css" />
 
 <style>
+    a.quesset.active {
+        background: unset !important;
+    }
+    a.quesset.active p {
+        color: #2a4fd7!important;
+    }
+    .surveyques {
+        color: #4A9CA6 !important;
+    }
     a.waves-effect.active span.menu-item {
         color: #495057 !important;
     }
@@ -49,9 +58,9 @@
             <!-- Left Menu Start -->
                <?php $i=1;?>
                @if($welcomQus)
-                <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card">
+                <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques">
                     <div class="d-flex fx-ai--center">
-                        <a href="{{route('survey.quesbuilder',$welcomQus->id)}}">
+                        <a href="{{route('survey.builder',[$survey->builderID,$welcomQus->id])}}" class="quesset">
                             @if($welcomQus->name=='')
                                 <p>Welcome Page</p>
                             @else
@@ -68,11 +77,9 @@
                @endif
                <?php $i=1;?>
                 @foreach($questions as $qus)
-                    <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card" >
+                    <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
                         <div class="d-flex fx-ai--center" onclick="sectactivequs({{$qus->id}},'{{$qus->qus_type}}')">
-                            <a 
-                            href="#" data-url="{{route('survey.quesbuilder',$qus->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Choose Question Type" data-title="Choose Question Type"
-                            >
+                            <a href="{{route('survey.builder',[$survey->builderID,$qus->id])}}" class="quesset">
                              <p>{{$i}}.{{$qus->name}}</p>
                             </a>
                         </div>
@@ -85,7 +92,7 @@
                 @endforeach
                 
                 <a href="#" data-url="{{route('survey.questiontype',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Choose Question Type" data-title="Choose Question Type">
-                    <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card">
+                    <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques">
                         <div class="d-flex fx-ai--center">
                             <div class="icon-wrapper"> <i data-feather="plus"></i></div>
                             <p class="addqus">Add a question</p>
@@ -94,9 +101,9 @@
                 </a>
                 @if($thankQus)
                
-                    <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card">
+                    <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques">
                         <div class="d-flex fx-ai--center">
-                        <a href="#" data-url="{{route('survey.quesbuilder',$thankQus->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Choose Question Type" data-title="Choose Question Type">
+                        <a href="{{route('survey.builder',[$survey->builderID,$thankQus->id])}}" class="quesset">
                             @if($thankQus->name=='')
                                 <p>Thank You Page</p>
                             @else
@@ -142,8 +149,7 @@
             <!-- end page title -->
             <div class="card card-body">
             @if(isset($currentQus))
-            @php 
-            $qusvalue = json_decode($currentQus->qus_ans);   @endphp
+            @php $qusvalue = json_decode($currentQus->qus_ans);   @endphp
             {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation')) }}
                 @if($currentQus->qus_type=='welcome_page')
                     <div class="modal-body">
@@ -192,7 +198,7 @@
                             @endif
                         </div>
                         <br>
-<!-- 
+                        <!-- 
                         <input type="file" style="visibility:hidden;" name="welcome_image" id="welcome_image">
                         <div class="gallery">
                             <a target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg">
