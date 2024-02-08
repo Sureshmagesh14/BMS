@@ -291,9 +291,6 @@ class SurveyController extends Controller
     }
     public function updateQus(Request $request,$id){
         $currentQus=Questions::where(['id'=>$id])->first();
-
-        echo $id;
-        echo $request->qus_type;
         switch ($request->qus_type) {
             case 'welcome_page':
                 $json=[

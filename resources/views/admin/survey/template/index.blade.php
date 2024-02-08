@@ -138,7 +138,7 @@
                             <div class="col-7">
                                 <div class="row no-gutters align-items-center h-100">
                                 <div class="col-4 d-none d-md-flex flex-column align-items-center justify-content-center">
-                                    <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">0</h3>
+                                    <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">{{$survey->questions->count()}}</h3>
                                     <a class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Questions</a>
                                 </div>
                                 <div class="col-4 d-none d-md-flex flex-column align-items-center justify-content-center">
