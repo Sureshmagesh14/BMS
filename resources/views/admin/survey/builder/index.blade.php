@@ -7,6 +7,21 @@
 <link href="{{ asset('assets/css/builder.css') }}" rel="stylesheet" type="text/css" />
 
 <style>
+    #multi_choice_qus,#single_choice_qus{
+        display:none;
+    }
+    .modal-body{
+        color:black;
+    }
+    .allqus{
+        width:80%;
+    }
+    .ss-builder-features__button {
+        color: #4A9CA6;
+    }
+    .ss-builder-add-new .icon-wrapper{
+        color:white;
+    }
     a.quesset.active {
         background: unset !important;
     }
@@ -78,11 +93,11 @@
                <?php $i=1;?>
                 @foreach($questions as $qus)
                     <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
-                        <div class="d-flex fx-ai--center" onclick="sectactivequs({{$qus->id}},'{{$qus->qus_type}}')">
-                            <a href="{{route('survey.builder',[$survey->builderID,$qus->id])}}" class="quesset">
-                             <p>{{$i}}.{{$qus->name}}</p>
-                            </a>
-                        </div>
+                        <a href="{{route('survey.builder',[$survey->builderID,$qus->id])}}" class="quesset allqus">
+                            <div class="d-flex fx-ai--center" onclick="sectactivequs({{$qus->id}},'{{$qus->qus_type}}')">
+                                <p><?php echo $i.'.'.substr($qus->question_name, 0, 15); if(strlen($qus->question_name)>16) echo ".."; ?></p>
+                            </div>
+                        </a>
                         <div class="ss-builder-features__button">
                         <?php $url =route("survey.deletequs",$qus->id);?>
                             <i data-feather="trash-2" onclick="qusdelete('{{$url}}')"></i>
@@ -92,7 +107,7 @@
                 @endforeach
                 
                 <a href="#" data-url="{{route('survey.questiontype',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Choose Question Type" data-title="Choose Question Type">
-                    <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques">
+                    <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card ">
                         <div class="d-flex fx-ai--center">
                             <div class="icon-wrapper"> <i data-feather="plus"></i></div>
                             <p class="addqus">Add a question</p>
@@ -207,6 +222,73 @@
                         </div> -->
                     </div>
                 @endif
+                @if($currentQus->qus_type=='thank_you')
+                    <div class="modal-body">
+                        <div>
+                            {{ Form::label('thankyou_title', __('Title'),['class'=>'form-label']) }}
+                            @if(isset($qusvalue->thankyou_title))
+                                {{ Form::text('thankyou_title', $qusvalue->thankyou_title , array('class' => 'form-control',
+                            'placeholder'=>'Enter thank you page title')) }}
+                            @else 
+                                {{ Form::text('thankyou_title', null , array('class' => 'form-control',
+                            'placeholder'=>'Enter thank you page title')) }}
+                            @endif
+                        </div>
+                        <br>
+                        <div>
+                            {{ Form::label('thankyou_imagetitle', __('Sub Title'),['class'=>'form-label']) }}
+                            @if(isset($qusvalue->thankyou_imagetitle))
+                                {{ Form::text('thankyou_imagetitle', $qusvalue->thankyou_imagetitle , array('class' => 'form-control',
+                            'placeholder'=>'Sub title')) }}
+                            @else 
+                                {{ Form::text('thankyou_imagetitle', null , array('class' => 'form-control',
+                            'placeholder'=>'Sub title')) }}
+                            @endif
+                        </div>
+                        <br>
+                    </div>
+                @endif
+                @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
+                    <div class="modal-body">
+                            <div>
+                                {{ Form::label('question_name', __('Add description to your question'),['class'=>'form-label']) }}
+                                @if(isset($qusvalue->question_name))
+                                    {{ Form::text('question_name', $qusvalue->question_name , array('class' => 'form-control',
+                                'placeholder'=>'Enter Question Description')) }}
+                                @else 
+                                    {{ Form::text('question_name', null , array('class' => 'form-control',
+                                'placeholder'=>'Enter Question Description')) }}
+                                @endif
+                            </div>
+                            <br>
+                            @if($currentQus->qus_type=='open_qus')
+                                    <div class="open_qus">
+                                        {{ Form::label('question_name', __('Type'),['class'=>'form-label']) }}<br>
+                                        <div>
+                                            @if($qusvalue->open_qus_choice == 'single')
+                                                <input type="radio" id="single" name="open_qus_choice" value="single" checked>
+                                            @else 
+                                                <input type="radio" id="single" name="open_qus_choice" value="single">
+                                            @endif
+                                            <label for="single">Single Line</label>
+                                        </div>
+                                        <div>
+                                            @if($qusvalue->open_qus_choice == 'multi')
+                                                <input type="radio" id="multi" name="open_qus_choice" value="multi" checked>
+                                            @else 
+                                                <input type="radio" id="multi" name="open_qus_choice" value="multi">
+                                            @endif
+                                            <label for="multi">Multi Lines</label>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div>
+                                    {{ Form::text('single_choice_qus', null , array('id'=>'single_choice_qus','class' => 'form-control','placeholder'=>'Single Line')) }}
+                                    {{ Form::textarea('multi_choice_qus', null , array('id'=>'multi_choice_qus','class' => 'form-control','placeholder'=>'Multi Lines')) }}
+                                    </div>
+                            @endif
+                    </div>
+                @endif
                 <input type="hidden" name="qus_id" id="qus_id" value="{{$currentQus->id}}">
                 <input type="hidden" name="qus_type" id="qus_type" value="{{$currentQus->qus_type}}">
                 
@@ -261,6 +343,16 @@ function qustype(type){
     let qusset={'welcome_page':'Welcome Page','single_choice':'Single Choice','mutli_choice':'Multi Choice','open_qus':'Open Questions','likert':'Likert scale','ranking':'Ranking','dropdown':'Dropdown','picturechoice':'Picture Choice','email':'Email','matrix_qus':'Matrix Question','thank_you':'Thank You Page'};
     console.log(qusset[type],"qusset")
 }
+$('input[type=radio][name=open_qus_choice]').change(function() {
+    console.log(this.value)
+    if(this.value=='single'){
+        $('#single_choice_qus').css('display','block');
+        $('#multi_choice_qus').css('display','none');
+    }else{
+        $('#multi_choice_qus').css('display','block');
+        $('#single_choice_qus').css('display','none');
+    }
+});
 
 </script>
     @yield('adminside-script')

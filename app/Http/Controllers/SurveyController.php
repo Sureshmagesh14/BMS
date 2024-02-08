@@ -311,11 +311,20 @@ class SurveyController extends Controller
                 $updateQus=Questions::where(['id'=>$id])->update(['qus_ans'=>json_encode($json)]);
 
               break;
-            case 'label2':
-              //code block;
+            case 'thank_you':
+                $json=[
+                    'thankyou_title'=>$request->thankyou_title,
+                    'thankyou_imagetitle'=>$request->thankyou_imagetitle,
+                    'thankyou_image'=>$request->thankyou_image
+                ];
+                $updateQus=Questions::where(['id'=>$id])->update(['qus_ans'=>json_encode($json)]);
               break;
-            case 'label3':
-              //code block
+            case 'open_qus':
+                $json=[
+                    'open_qus_choice'=>$request->open_qus_choice,
+                    'question_name'=>$request->question_name
+                ];
+                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             default:
               //code block
