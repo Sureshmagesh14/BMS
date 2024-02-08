@@ -70,6 +70,29 @@ Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'Su
     Route::get('export_user_activity','UsersController@export_user_activity')->name('export_user_activity');
     Route::get('export_referrals','UsersController@export_referrals')->name('export_referrals');  
     
+   
+
+    Route::controller(InternalReportController::class)->group(function(){
+        /* Content */
+     
+
+        /* Bank */
+  
+        
+    
+      
+      
+      
+
+  
+    
+
+       
+        Route::get('user-events', 'index')->name('user-events');
+        Route::any('user-events-show', 'show')->name('user-events-show');
+        Route::get('user-events-view/{id}', 'view')->name('user-events-view');
+
+    });
 
     Route::controller(SettingsController::class)->group(function(){
         /* Content */

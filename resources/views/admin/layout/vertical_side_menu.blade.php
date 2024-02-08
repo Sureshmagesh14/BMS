@@ -58,7 +58,7 @@
                 </li>
 
                 <li>
-                    <a href="#" class=" waves-effect">
+                    <a href="{{route('user-events')}}" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Internal Reports</span>
                     </a>
