@@ -206,13 +206,22 @@ class SurveyController extends Controller
         $folders=Folder::withCount('surveycount')->get();
         return view('admin.survey.template.index', compact('survey','folders'));
     }
-    public function builder(Request $request,$survey){
+    public function builder(Request $request,$survey,$qusID){
         // Generatre builder ID
         $survey=Survey::where(['builderID'=>$survey])->first();
         $questions=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
         $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
         $thankQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
-        $currentQus=Questions::where(['survey_id'=>$survey->id])->first();
+        if($qusID==0){
+            if($welcomQus){
+                $currentQus=$welcomQus;
+            }else{
+                $currentQus=Questions::where(['survey_id'=>$survey->id])->first();
+            }
+        }else{
+            $currentQus=Questions::where(['id'=>$qusID])->first();
+        }
+        
         return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus'));
 
     }
@@ -312,6 +321,12 @@ class SurveyController extends Controller
               //code block
           }
           return redirect()->back()->with('success', __('Question Updated Successfully.'));
+
+    }
+    public function viewsurvey(Request $request, $id){
+        echo $id;
+        $survey=Survey::where(['builderID'=>$id])->first();
+        echo "<pre>"; print_r($survey);
 
     }
 

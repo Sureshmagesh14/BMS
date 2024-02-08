@@ -35,7 +35,7 @@ Route::get('/survey/delete/{id}', ['as' => 'survey.delete','uses' => 'SurveyCont
 
 // Survey Template Routings
 Route::get('/survey/template/{id}', ['as' => 'survey.template','uses' => 'SurveyController@templateList',])->middleware(['auth']);
-Route::get('/survey/builder/{id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder',])->middleware(['auth']);
+Route::get('/survey/builder/{id}/{qus_id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder',])->middleware(['auth']);
 Route::get('/survey/questiontype/{id}', ['as' => 'survey.questiontype','uses' => 'SurveyController@questiontype',])->middleware(['auth']);
 Route::get('/survey/qustype/{survey}/{qustype}', ['as' => 'survey.qustype','uses' => 'SurveyController@questiontypesurvey',])->middleware(['auth']);
 Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'SurveyController@deletequs',])->middleware(['auth']);
@@ -49,4 +49,4 @@ Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'Su
 
 Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication','uses' => 'SurveyController@surveyduplication',])->middleware(['auth']);
 Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey',])->middleware(['auth']);
-Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@sharesurvey',])->middleware(['auth']);
+Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@viewsurvey',])->middleware(['auth']);
