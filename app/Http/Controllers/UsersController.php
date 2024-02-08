@@ -232,8 +232,10 @@ class UsersController extends Controller
     {
         try {
             $users = Users::find($id);
+           
             if($users)
             {
+               
                 $users->delete();
                 return response()->json([
                     'status'=>200,
@@ -243,6 +245,7 @@ class UsersController extends Controller
             }
             else
             {
+              
                 return response()->json([
                     'status'=> 404,
                     'success' => false,
@@ -263,10 +266,7 @@ class UsersController extends Controller
                 $token = csrf_token();
             
                 
-                $all_datas = DB::table('users')
-                ->where('status_id','1')
-                ->orderby("id","desc")
-                ->get();
+                $all_datas = Users::withoutTrashed()->latest()->get();
         
                 
                 return Datatables::of($all_datas)

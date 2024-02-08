@@ -164,14 +164,6 @@ function select2() {
         <script src="{{ asset('public/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
         <script src="{{ asset('public/assets/js/pages/datatables.init.js') }}"></script>
     @endpush
-    <script type="text/javascript">
-                        var j = jQuery.noConflict();
-                        j(function () {
-                            j('.input-daterange').datetimepicker({
-                                format: 'L',
-                                disabledHours: true,
-                            });
-                        });
-                    </script>
+   
 </body>
 </html>

@@ -11,29 +11,46 @@
                 <td>{{$data->name}}</td>
             </tr>
             <tr>
-                <th>Survey URL</th>
-                <td>{{$data->survey_url}}</td>
+                <th>Surname</th>
+                <td>{{$data->surname}}</td>
             </tr>
             <tr>
-                <th>Survey URL</th>
+                <th>RSA ID / Passport</th>
                 <td>
-                    @if($data->type_id==1)
-                    @php
-                        $type_id='Basic';
-                    @endphp
-                    @elseif($data->type_id==2)
-                    @php
-                        $type_id='Essential';
-                    @endphp
-                    @else
-                    @php
-                    $type_id='Extended';
-                @endphp
-                    @endif
-                    {{$type_id}}
+                    {{$data->id_passport}}
                 </td>
             </tr>
-           
+            <tr>
+                <th>Email</th>
+                <td>{{$data->email }}</td>
+            </tr>
+            <tr>
+                <th>Role</th>
+                <td>
+                    @if($data->role_id==1)
+                        Admin
+                      @elseif($data->role_id==2)
+                        User
+                    @else
+                        Temp
+                   @endif
+                </td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>
+                    @if($data->status_id==1)
+                        Active
+                     @else
+                        Inactive
+                     @endif
+                   
+                </td>
+            </tr>
+            <tr>
+                <th>Share Link</th>
+                <td>{{$data->share_link}}</td>
+            </tr>
            
         </tbody>
     </table>
