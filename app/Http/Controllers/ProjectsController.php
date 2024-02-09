@@ -284,8 +284,12 @@ class ProjectsController extends Controller
                     
                         $all_datas = Projects::select('projects.*','projects.name as uname')
                         ->join('users', 'users.id', '=', 'projects.user_id') 
-                        ->orderby("id","desc")
-                        ->get();
+                        ->orderby("id","desc");
+
+                        if(isset($request->id)){
+                            $all_datas->where('user_id',$request->id);
+                        }
+                        $all_datas = $all_datas->get();
                 
                         
                         return Datatables::of($all_datas)
