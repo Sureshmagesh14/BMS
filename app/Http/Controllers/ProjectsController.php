@@ -148,7 +148,8 @@ class ProjectsController extends Controller
             $projects = Projects::find($id);
             if($projects)
             {
-                $returnHTML = view('admin.projects.edit',compact('projects'))->render();
+                $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
+                $returnHTML = view('admin.projects.edit',compact('projects','users'))->render();
                 return response()->json(
                     [
                         'success' => true,
