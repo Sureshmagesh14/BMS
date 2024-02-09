@@ -6,9 +6,14 @@
 <?php echo $__env->make('admin.layout.horizontal_left_menu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <?php echo $__env->make('admin.layout.horizontal_right_menu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <?php echo $__env->make('admin.layout.vertical_side_menu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
-<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>            
-<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.0.0/js/bootstrap-datetimepicker.min.js"></script>
+<style>
+.datepicker{
+z-index: 1100 !important;
+}
+#ui-datepicker-div {
+width: 30% !important;
+}
+</style>
       <!-- ============================================================== -->
             <!-- Start right Content here -->
             <!-- ============================================================== -->
@@ -46,19 +51,7 @@
 
 
                                     <div class="text-right">
-                             
-                                    
-                                    <div class="form-group">
-    <label>Date Range</label>
-    <div>
-        <div class="input-daterange input-group" data-provide="datepicker" data-date-format="dd M, yyyy" data-date-autoclose="true">
-            <input type="text" class="form-control" name="start" />
-            <input type="text" class="form-control" name="end" />
-        </div>
-    </div>
-</div>
-
-
+        
 
 
 <div class="btn-group" role="group">
@@ -75,9 +68,12 @@ Export <i class="mdi mdi-chevron-down"></i>
 
 
 
-<a data-toggle="modal" data-target="#exampleModal" data-backdrop="static" data-keyboard="false" class="btn btn-primary waves-effect waves-light">
-    <i class="fa fa-file-excel"></i> Export </a>
-
+<a href="#!" data-url="<?php echo e(route('export_resp')); ?>" data-size="xl" data-ajax-popup="true"
+                                        class="btn btn-primary" data-bs-original-title="<?php echo e(__('export Respondents')); ?>" class="btn btn-primary" data-size="xl"
+                                         data-ajax-popup="true" data-bs-toggle="tooltip"
+                                        id="export">
+                                        export Respondents
+                                    </a>
 
 
                                         <a href="#!" data-url="<?php echo e(route('respondents.create')); ?>" data-size="xl" data-ajax-popup="true"
@@ -139,83 +135,6 @@ Export <i class="mdi mdi-chevron-down"></i>
                 <!-- End Page-content -->
 
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Cash Outs Summary by Month & Year</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        
-        <form action="<?php echo e(url('export_cashout_year')); ?>">
-        <?php echo csrf_field(); ?>
-
-
-        <div class="form-group">
-            <label>Date Range</label>
-            <div>
-                <div class="input-daterange input-group" data-provide="datepicker" data-date-format="dd M, yyyy" data-date-autoclose="true">
-                    <input type="text" class="form-control" name="start" />
-                    <input type="text" class="form-control" name="end" />
-                </div>
-            </div>
-        </div>
-
-        
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Select Year:</label>
-            <select id="user" name="user" class="w-full form-control form-select" required="">
-                <option value="" selected="selected" disabled="disabled">
-                    Please select
-                </option>
-
-                <?php echo e($last= date('Y')-15); ?>
-
-                <?php echo e($now = date('Y')); ?>
-
-
-                <?php for($i = $now; $i >= $last; $i--): ?>
-                    <option value="<?php echo e($i); ?>"><?php echo e($i); ?></option>
-                <?php endfor; ?>
-            </select>
-          </div>
-        
-
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Select Month:</label>
-            <select id="user" name="user" class="w-full form-control form-select" required="">
-                <option value="" selected="selected" disabled="disabled">
-                    Please select
-                </option>
-         
-
-                <?php for($i = 1; $i <= 12; $i++): ?>
-
-                <?php 
-                $lval= date('F', strtotime( "$i/12/10" ));
-                ?> 
-                <option value="<?php echo e($i); ?>"><?php echo e($lval); ?></option>
-                <?php endfor; ?>
-            </select>
-          </div>
-        
-        
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Export</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- modal -->
 
 
                 <?php echo $__env->make('admin.layout.footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
@@ -230,14 +149,11 @@ Export <i class="mdi mdi-chevron-down"></i>
                 var tempcsrf = '<?php echo csrf_token(); ?>';
                 $(document).ready(function() {
                     datatable();
-                    
-                    $('#datetimepicker1').datetimepicker({
-                        format: 'L',
-                        disabledHours: true,
-                    });
+                  
+                 
                 });
                 
-               
+             
             
                 function datatable(){
                     $('#myTable').dataTable().fnDestroy();

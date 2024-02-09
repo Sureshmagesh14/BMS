@@ -58,7 +58,7 @@
                 </li>
 
                 <li>
-                    <a href="<?php echo e(route('user-events')); ?>" class=" waves-effect">
+                    <a href="#" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Internal Reports</span>
                     </a>

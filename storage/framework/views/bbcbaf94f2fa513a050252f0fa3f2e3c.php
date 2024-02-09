@@ -103,7 +103,7 @@
         <script src="<?php echo e(asset('public/assets/js/pages/table-responsive.init.js')); ?>"></script>
         <!-- Responsive Table js -->
         <script src="<?php echo e(asset('public/assets/libs/admin-resources/rwd-table/rwd-table.min.js')); ?>"></script>
-
+        <script src="<?php echo e(asset('public/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')); ?>"></script>
         <script src="<?php echo e(asset('public/assets/js/admin/app.js')); ?>"></script>
 
         
