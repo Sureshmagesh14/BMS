@@ -243,7 +243,8 @@ class SurveyController extends Controller
     $newqus->save();
     $questions=Questions::where(['survey_id'=>$survey])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
     $survey=Survey::where(['id'=>$survey])->first();
-    return redirect()->back()->with('success', __('Question Created Successfully.'));
+    
+    return redirect()->route('survey.builder',[$survey->builderID,$newqus->id])->with('success', __('Question Created Successfully.'));
 
 
    }
@@ -333,13 +334,39 @@ class SurveyController extends Controller
               break;
             case 'single_choice':
                 $json=[
-                    'choices_list'=>$request->choices_list,
+                    'choices_list'=>implode(",",$request->choices_list) ,
                     'choices_type'=>'single',
                     'question_name'=>$request->question_name
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
-              
+            case 'mutli_choice':
+                $json=[
+                    'choices_list'=>implode(",",$request->choices_list) ,
+                    'choices_type'=>'mulitple',
+                    'question_name'=>$request->question_name
+                ];
+                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+              break;
+            case 'likert':
+                break;
+            case 'ranking':
+                break;
+            case 'dropdown':
+                $json=[
+                    'choices_list'=>implode(",",$request->choices_list) ,
+                    'choices_type'=>'dropdown',
+                    'question_name'=>$request->question_name
+                ];
+                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                break;
+            case 'picturechoice':
+                break;
+            case 'email':
+                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>'email']);
+                break;
+            case 'matrix_qus':
+                break;
             default:
               //code block
           }

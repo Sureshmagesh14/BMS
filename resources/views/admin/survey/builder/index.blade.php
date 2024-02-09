@@ -178,148 +178,169 @@
            
             <!-- end page title -->
             <div class="card card-body">
-            @if(isset($currentQus))
-            @php $qusvalue = json_decode($currentQus->qus_ans);   @endphp
-            {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation')) }}
-                <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
-                @if($currentQus->qus_type=='welcome_page')
-                    <div class="modal-body">
-                        <div>
-                            {{ Form::label('welcome_title', __('Title'),['class'=>'form-label']) }}
-                            @if(isset($qusvalue->welcome_title))
-                                {{ Form::text('welcome_title', $qusvalue->welcome_title , array('class' => 'form-control',
-                            'placeholder'=>'Enter Welcome Page title')) }}
-                            @else 
-                                {{ Form::text('welcome_title', null , array('class' => 'form-control',
-                            'placeholder'=>'Enter Welcome Page title')) }}
-                            @endif
-                        </div>
-                        <br>
-                        <div>
-                            {{ Form::label('welcome_imagetitle', __('Sub Title'),['class'=>'form-label']) }}
-                            @if(isset($qusvalue->welcome_imagetitle))
-                                {{ Form::text('welcome_imagetitle', $qusvalue->welcome_imagetitle , array('class' => 'form-control',
-                            'placeholder'=>'Sub title')) }}
-                            @else 
-                                {{ Form::text('welcome_imagetitle', null , array('class' => 'form-control',
-                            'placeholder'=>'Sub title')) }}
-                            @endif
-                        </div>
-                        <br>
-                        <div>
-                            {{ Form::label('welcome_imagesubtitle', __('Description'),['class'=>'form-label']) }}
-                            @if(isset($qusvalue->welcome_imagetitle))
-                                {{ Form::text('welcome_imagesubtitle', $qusvalue->welcome_imagesubtitle , array('class' => 'form-control',
-                            'placeholder'=>'Description')) }}
-                            @else 
-                                {{ Form::text('welcome_imagesubtitle', null , array('class' => 'form-control',
-                            'placeholder'=>'Description')) }}
-                            @endif
-                           
-                        </div>
-                        <br>
-                        <div>
-                            {{ Form::label('welcome_btn', __('Button Label'),['class'=>'form-label']) }}
-                            @if(isset($qusvalue->welcome_imagetitle))
-                                {{ Form::text('welcome_btn', $qusvalue->welcome_btn , array('class' => 'form-control',
-                            'placeholder'=>'Enter Button Label')) }}
-                            @else 
-                                {{ Form::text('welcome_btn', null , array('class' => 'form-control',
-                            'placeholder'=>'Enter Button Label')) }}
-                            @endif
-                        </div>
-                        <br>
-                        <!-- 
-                        <input type="file" style="visibility:hidden;" name="welcome_image" id="welcome_image">
-                        <div class="gallery">
-                            <a target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg">
-                                <img src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400">
-                            </a>
-                        </div> -->
-                    </div>
-                @endif
-                @if($currentQus->qus_type=='thank_you')
-                    <div class="modal-body">
-                        <div>
-                            {{ Form::label('thankyou_title', __('Title'),['class'=>'form-label']) }}
-                            @if(isset($qusvalue->thankyou_title))
-                                {{ Form::text('thankyou_title', $qusvalue->thankyou_title , array('class' => 'form-control',
-                            'placeholder'=>'Enter thank you page title')) }}
-                            @else 
-                                {{ Form::text('thankyou_title', null , array('class' => 'form-control',
-                            'placeholder'=>'Enter thank you page title')) }}
-                            @endif
-                        </div>
-                        <br>
-                        <div>
-                            {{ Form::label('thankyou_imagetitle', __('Sub Title'),['class'=>'form-label']) }}
-                            @if(isset($qusvalue->thankyou_imagetitle))
-                                {{ Form::text('thankyou_imagetitle', $qusvalue->thankyou_imagetitle , array('class' => 'form-control',
-                            'placeholder'=>'Sub title')) }}
-                            @else 
-                                {{ Form::text('thankyou_imagetitle', null , array('class' => 'form-control',
-                            'placeholder'=>'Sub title')) }}
-                            @endif
-                        </div>
-                        <br>
-                    </div>
-                @endif
-                @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
-                    <div class="modal-body">
+                @if(isset($currentQus))
+                    <?php  $qusvalue = json_decode($currentQus->qus_ans); 
+                    $qus_name='';
+                    if(isset($qusvalue->question_name)){
+                        $qus_name=$qusvalue->question_name; 
+                    } else if(isset($currentQus->question_name)){
+                        $qus_name=$currentQus->question_name; 
+                    } 
+                    ?>
+                    {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation')) }}
+                    <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
+                    @if($currentQus->qus_type=='welcome_page')
+                        <div class="modal-body">
                             <div>
-                                {{ Form::label('question_name', __('Add description to your question'),['class'=>'form-label']) }}
-                                @if(isset($qusvalue->question_name))
-                                    {{ Form::text('question_name', $qusvalue->question_name , array('class' => 'form-control',
-                                'placeholder'=>'Enter Question Description')) }}
+                                {{ Form::label('welcome_title', __('Title'),['class'=>'form-label']) }}
+                                @if(isset($qusvalue->welcome_title))
+                                    {{ Form::text('welcome_title', $qusvalue->welcome_title , array('class' => 'form-control',
+                                'placeholder'=>'Enter Welcome Page title')) }}
                                 @else 
-                                    {{ Form::text('question_name', null , array('class' => 'form-control',
-                                'placeholder'=>'Enter Question Description')) }}
+                                    {{ Form::text('welcome_title', null , array('class' => 'form-control',
+                                'placeholder'=>'Enter Welcome Page title')) }}
                                 @endif
                             </div>
                             <br>
-                            @if($currentQus->qus_type=='open_qus')
-                                    <div class="open_qus">
-                                        {{ Form::label('question_name', __('Type'),['class'=>'form-label']) }}<br>
-                                        <div>
-                                            @if($qusvalue!=null && $qusvalue->open_qus_choice == 'single')
-                                                <input type="radio" id="single" name="open_qus_choice" value="single" checked>
-                                            @else 
-                                                <input type="radio" id="single" name="open_qus_choice" value="single">
-                                            @endif
-                                            <label for="single">Single Line</label>
-                                        </div>
-                                        <div>
-                                            @if($qusvalue!=null && $qusvalue->open_qus_choice == 'multi')
-                                                <input type="radio" id="multi" name="open_qus_choice" value="multi" checked>
-                                            @else 
-                                                <input type="radio" id="multi" name="open_qus_choice" value="multi">
-                                            @endif
-                                            <label for="multi">Multi Lines</label>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div>
-                                    {{ Form::text('single_choice_qus', null , array('id'=>'single_choice_qus','class' => 'form-control','placeholder'=>'Single Line','readonly'=>true)) }}
-                                    {{ Form::textarea('multi_choice_qus', null , array('id'=>'multi_choice_qus','class' => 'form-control','placeholder'=>'Multi Lines','readonly'=>true)) }}
-                                    </div>
-                            @endif
+                            <div>
+                                {{ Form::label('welcome_imagetitle', __('Sub Title'),['class'=>'form-label']) }}
+                                @if(isset($qusvalue->welcome_imagetitle))
+                                    {{ Form::text('welcome_imagetitle', $qusvalue->welcome_imagetitle , array('class' => 'form-control',
+                                'placeholder'=>'Sub title')) }}
+                                @else 
+                                    {{ Form::text('welcome_imagetitle', null , array('class' => 'form-control',
+                                'placeholder'=>'Sub title')) }}
+                                @endif
+                            </div>
+                            <br>
+                            <div>
+                                {{ Form::label('welcome_imagesubtitle', __('Description'),['class'=>'form-label']) }}
+                                @if(isset($qusvalue->welcome_imagetitle))
+                                    {{ Form::text('welcome_imagesubtitle', $qusvalue->welcome_imagesubtitle , array('class' => 'form-control',
+                                'placeholder'=>'Description')) }}
+                                @else 
+                                    {{ Form::text('welcome_imagesubtitle', null , array('class' => 'form-control',
+                                'placeholder'=>'Description')) }}
+                                @endif
                             
-                            @if($currentQus->qus_type=='single_choice' || $currentQus->qus_type=='mutli_choice')
-                                <div class="addchoice">
-                                    <input type="button" id="add_choice" onclick="addchoice();" value="Add Choice" class="btn btn-primary">
+                            </div>
+                            <br>
+                            <div>
+                                {{ Form::label('welcome_btn', __('Button Label'),['class'=>'form-label']) }}
+                                @if(isset($qusvalue->welcome_imagetitle))
+                                    {{ Form::text('welcome_btn', $qusvalue->welcome_btn , array('class' => 'form-control',
+                                'placeholder'=>'Enter Button Label')) }}
+                                @else 
+                                    {{ Form::text('welcome_btn', null , array('class' => 'form-control',
+                                'placeholder'=>'Enter Button Label')) }}
+                                @endif
+                            </div>
+                            <br>
+                            <!-- 
+                            <input type="file" style="visibility:hidden;" name="welcome_image" id="welcome_image">
+                            <div class="gallery">
+                                <a target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg">
+                                    <img src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400">
+                                </a>
+                            </div> -->
+                        </div>
+                    @endif
+                    @if($currentQus->qus_type=='thank_you')
+                        <div class="modal-body">
+                            <div>
+                                {{ Form::label('thankyou_title', __('Title'),['class'=>'form-label']) }}
+                                @if(isset($qusvalue->thankyou_title))
+                                    {{ Form::text('thankyou_title', $qusvalue->thankyou_title , array('class' => 'form-control',
+                                'placeholder'=>'Enter thank you page title')) }}
+                                @else 
+                                    {{ Form::text('thankyou_title', null , array('class' => 'form-control',
+                                'placeholder'=>'Enter thank you page title')) }}
+                                @endif
+                            </div>
+                            <br>
+                            <div>
+                                {{ Form::label('thankyou_imagetitle', __('Sub Title'),['class'=>'form-label']) }}
+                                @if(isset($qusvalue->thankyou_imagetitle))
+                                    {{ Form::text('thankyou_imagetitle', $qusvalue->thankyou_imagetitle , array('class' => 'form-control',
+                                'placeholder'=>'Sub title')) }}
+                                @else 
+                                    {{ Form::text('thankyou_imagetitle', null , array('class' => 'form-control',
+                                'placeholder'=>'Sub title')) }}
+                                @endif
+                            </div>
+                            <br>
+                        </div>
+                    @endif
+                    @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
+                        <div class="modal-body">
+                                <div>
+                                    {{ Form::label('question_name', __('Add description to your question'),['class'=>'form-label']) }}
+                                        {{ Form::text('question_name', $qus_name , array('class' => 'form-control',
+                                    'placeholder'=>'Enter Question Description')) }}
                                 </div>
-                                <div id="choices_section" class="row"></div> 
-                                <input type="hidden" id="choices_list" name="choices_list[]">                           
-                            @endif
-                            <?php //echo $currentQus->qus_type; ?>
-                    </div>
+                                <br>
+                                @if($currentQus->qus_type=='open_qus')
+                                        <div class="open_qus">
+                                            {{ Form::label('open_qus_choice', __('Type'),['class'=>'form-label']) }}<br>
+                                            <div>
+                                                @if($qusvalue!=null && $qusvalue->open_qus_choice == 'single')
+                                                    <input type="radio" id="single" name="open_qus_choice" value="single" checked>
+                                                @else 
+                                                    <input type="radio" id="single" name="open_qus_choice" value="single">
+                                                @endif
+                                                <label for="single">Single Line</label>
+                                            </div>
+                                            <div>
+                                                @if($qusvalue!=null && $qusvalue->open_qus_choice == 'multi')
+                                                    <input type="radio" id="multi" name="open_qus_choice" value="multi" checked>
+                                                @else 
+                                                    <input type="radio" id="multi" name="open_qus_choice" value="multi">
+                                                @endif
+                                                <label for="multi">Multi Lines</label>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div>
+                                        {{ Form::text('single_choice_qus', null , array('id'=>'single_choice_qus','class' => 'form-control','placeholder'=>'Single Line','readonly'=>true)) }}
+                                        {{ Form::textarea('multi_choice_qus', null , array('id'=>'multi_choice_qus','class' => 'form-control','placeholder'=>'Multi Lines','readonly'=>true)) }}
+                                        </div>
+                                @endif
+                                
+                                @if($currentQus->qus_type=='single_choice' || $currentQus->qus_type=='mutli_choice' || $currentQus->qus_type=='dropdown')
+                                    <div class="addchoice">
+                                        <input type="button" id="add_choice" onclick="addchoice();" value="Add Choice" class="btn btn-primary">
+                                    </div>
+                                    <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): []; ?>
+                                    <?php //echo "<pre>"; print_r($qusvalue); ?>
+
+                                    <div id="choices_section" class="row">
+                                        @foreach($exiting_choices as $choice)
+                                            <div id="row" class="col-md-3">
+                                                <div class="input-group choicequs">
+                                                    <input type="text" name="choice" value="{{$choice}}" class="form-control m-input">
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-danger" id="DeleteRow" type="button">X</button> 
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                        @endforeach
+                                    </div> 
+                                    <input type="hidden" id="choices_list" name="choices_list[]">                           
+                                @endif
+                                @if($currentQus->qus_type=='email')
+                                {{ Form::label('email', __('Email Box Sample'),['class'=>'form-label']) }}
+                                {{ Form::text('email', 'info@bms.com' , array('class' => 'form-control',
+                                    'readonly'=>'true')) }}
+                                @endif
+                                <?php //echo $currentQus->qus_type; ?>
+                        </div>
+                    @endif
+                    <input type="hidden" name="qus_id" id="qus_id" value="{{$currentQus->id}}">
+                    <input type="hidden" name="qus_type" id="qus_type" value="{{$currentQus->qus_type}}">
+                    <input type="button" id="update_qus" onclick="triggersubmit('{{$currentQus->qus_type}}')" value="Submit" class="btn  btn-primary">
+                    <input type="submit" id="update_qus_final" value="Submit" class="btn  btn-primary">
+                    {{Form::close()}}
                 @endif
-                <input type="hidden" name="qus_id" id="qus_id" value="{{$currentQus->id}}">
-                <input type="hidden" name="qus_type" id="qus_type" value="{{$currentQus->qus_type}}">
-                <input type="button" id="update_qus" value="Submit" class="btn  btn-primary">
-                <input type="submit" id="update_qus_final" value="Submit" class="btn  btn-primary">
-                {{Form::close()}}
-               @endif
             </div>
 
         </div>
@@ -343,21 +364,22 @@ function addchoice(){
 $("body").on("click", "#DeleteRow", function () {
     $(this).parents("#row").remove();
 });
-$('#update_qus').click(function(){
-    let qus_type=$('#qus_type').val();
-    if(qus_type=='single_choice' || qus_choice=='mutli_choice'){
+function triggersubmit(qus_type){
+    console.log(qus_type,"dd")
+    if(qus_type=='single_choice' || qus_type=='mutli_choice' || qus_type=='dropdown'){
         let choices=[];
         $("input[name=choice]").each(function(idx, elem) {
             choices.push($(elem).val());
         });
         $('#choices_list').val(choices);
-        setTimeout(() => {
+        console.log(choices,"choices");
+        if(choices.length>0){
             $('#update_qus_final').click();
-        }, 100);
+        }
     }else{
         $('#update_qus_final').click();
     }
-});
+}
 function qusdelete(url){
     Swal.fire({ 
         title: "Are you sure?",
