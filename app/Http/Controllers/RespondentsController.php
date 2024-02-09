@@ -417,7 +417,92 @@ class RespondentsController extends Controller
         
         }else if($module_name=='gen_respondent_res_export'){
 
+            $all_datas = DB::table('respondents')
+                        ->where("active_status_id",1)
+                        ->whereBetween('created_at', [$from, $to])
+                        ->orderby("id","desc")
+                        ->limit(10)
+                        ->get();
+
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'Respondent Profile ID');
+            $sheet->setCellValue('B1', 'Name');
+            $sheet->setCellValue('C1', 'Surname');
+            $sheet->setCellValue('D1', 'Phone Number');
+            $sheet->setCellValue('E1', 'WhatsApp Number');
+            $sheet->setCellValue('F1', 'Email');
+            $sheet->setCellValue('G1', 'Respondent Status');
+            $sheet->setCellValue('H1', 'Profile Completion');
+            $sheet->setCellValue('I1', 'Average Login Time');
+            $sheet->setCellValue('J1', 'Membership Duration');
+            $sheet->setCellValue('K1', 'Invite-to-Join Conversion Rate');
+
+            $rows = 2;
+            $i=1;
+            foreach($all_datas as $all_data){
+
+                $dob=$all_data->date_of_birth;
+                $diff = (date('Y') - date('Y',strtotime($dob)));
+
+                $opted_in = date('d-m-Y',strtotime($all_data->opted_in));
+                $updated_at = date('d-m-Y',strtotime($all_data->updated_at));
+                
+                if($all_data->accept_terms==1){
+                    $accept_terms ='Yes';
+                }else{
+                    $accept_terms =$all_data->accept_terms;
+                }
+
+                $sheet->setCellValue('A' . $rows, $i);
+                $sheet->setCellValue('B' . $rows, $all_data->name);
+                $sheet->setCellValue('C' . $rows, $all_data->surname);
+                $sheet->setCellValue('D' . $rows, $all_data->mobile);
+                $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                $sheet->setCellValue('F' . $rows, $all_data->email);
+                
+                $rows++;
+                $i++;
+            }
+
+            $fileName = "respondent_activity_".date('ymd').".".$type;
+
         }else if($module_name=='gen_respondent_mon_export'){
+
+            $all_datas = DB::table('respondents')
+                        ->where("active_status_id",1)
+                        ->whereBetween('created_at', [$from, $to])
+                        ->orderby("id","desc")
+                        ->limit(10)
+                        ->get();
+
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'Month');
+            $sheet->setCellValue('B1', 'Year');
+            $sheet->setCellValue('C1', 'Respondent Status Breakdown');
+            $sheet->setCellValue('D1', 'Profile Completion Breakdown');
+            $sheet->setCellValue('E1', 'Average Login Time');
+            $sheet->setCellValue('F1', 'Membership Duration');
+            $sheet->setCellValue('G1', 'Invite-to-Join Conversion Rate');
+
+            $rows = 2;
+            $i=1;
+            // foreach($all_datas as $all_data){
+
+
+            //     $sheet->setCellValue('A' . $rows, $i);
+            //     $sheet->setCellValue('B' . $rows, $all_data->name);
+            //     $sheet->setCellValue('C' . $rows, $all_data->surname);
+            //     $sheet->setCellValue('D' . $rows, $all_data->mobile);
+            //     $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+            //     $sheet->setCellValue('F' . $rows, $all_data->email);
+                
+            //     $rows++;
+            //     $i++;
+            // }
+
+            $fileName = "respondent_month_activity_".date('ymd').".".$type;
 
         }
 
