@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Projects;
+use App\Models\Users;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -33,8 +34,8 @@ class ProjectsController extends Controller
     public function create()
     {
         try {
-           
-            $returnHTML = view('admin.projects.create')->render();
+            $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
+            $returnHTML = view('admin.projects.create',compact('users'))->render();
 
             return response()->json(
                 [
@@ -58,6 +59,9 @@ class ProjectsController extends Controller
        
         try {
 
+            Session::forget('user_to_project');
+            Session::forget('user_to_project_id');
+            
             $validator = Validator::make($request->all(), [
                'client'=> 'required',
                'name'=> 'required',

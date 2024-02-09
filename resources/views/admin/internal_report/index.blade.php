@@ -1,4 +1,8 @@
 @include('admin.layout.header')
+
+@yield('adminside-favicon')
+@yield('adminside-css')
+
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
@@ -12,12 +16,12 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h4 class="mb-0">Networks</h4>
+                        <h4 class="mb-0">Internal Report</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                                <li class="breadcrumb-item active">Networks</li>
+                                <li class="breadcrumb-item active">Internal Report</li>
                             </ol>
                         </div>
 
@@ -30,14 +34,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="text-right">
-                                <a href="#!" data-url="{{ route('networks.create') }}" data-size="xl" data-ajax-popup="true"
-                                    class="btn btn-primary" data-bs-original-title="{{ __('Create Networks') }}" class="btn btn-primary" data-size="xl"
-                                     data-ajax-popup="true" data-bs-toggle="tooltip"
-                                    >
-                                    Create Networks
-                                </a>
-                            </div>
+                            
 
                             <h4 class="card-title"> </h4>
                             <p class="card-title-desc"></p>
@@ -46,8 +43,13 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Type</th>
+                                        <th>User</th>
                                         <th>Action</th>
+                                        <th>Type</th>
+                                        <th>Month</th>
+                                        <th>Year</th>
+                                        <th>Count</th>
+                                        <th>View</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -73,10 +75,9 @@
         var tempcsrf = '{!! csrf_token() !!}';
         $(document).ready(function() {
             datatable();
-            $("#content_create_form-data").validate();
         });
         
-        $("#content_create_form-data").validate();
+   
 
         function datatable(){
             $('#myTable').dataTable().fnDestroy();
@@ -91,7 +92,7 @@
                     [10, 50, 100, "All"]
                 ],
                 ajax: {
-                    url: "{{ route('get_all_networks') }}",
+                    url: "{{ route('user-events-show') }}",
                     data: {
                         _token: tempcsrf,
                     },
@@ -102,8 +103,13 @@
 
                 columns: [
                     { data: 'id', name: '#', orderable: true, searchable: true },
-                    { data: 'name', name: 'name', orderable: true, searchable: true },
-                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                    { data: 'user_id ', name: 'user_id ', orderable: true, searchable: true },
+                    { data: 'action', name: 'action', orderable: false, searchable: true },
+                    { data: 'type', name: 'type', orderable: false, searchable: true },
+                    { data: 'month', name: 'month', orderable: false, searchable: true },
+                    { data: 'year', name: 'year', orderable: false, searchable: true },
+                    { data: 'count', name: 'count', orderable: false, searchable: true },
+                    { data: 'view', name: 'view', orderable: false, searchable: false },
                 ],
                 columnDefs: [
                     { targets: 0,width: 75,className: "text-center" },
@@ -113,44 +119,5 @@
             });
         }
 
-        $(document).on('click', '#delete_network', function(e) {
-            e.preventDefault();
-            var id = $(this).data("id");
-            var url = "{{ route('networks.destroy', ':id') }}";
-            url = url.replace(':id', id);
-          
-            $.confirm({
-                title: "{{Config::get('constants.delete')}}",
-                content:  "{{Config::get('constants.delete_confirmation')}}",
-                autoClose: 'cancelAction|8000',
-                buttons: {
-                    delete: {
-                        text: 'delete',
-                        action: function() {
-                            $.ajax({
-                                type: "DELETE",
-                                data: {
-                                    _token: tempcsrf,
-                                },
-                                url: url,
-                                dataType: "json",
-                                success: function(response) {
-                                    if (response.status == 404) {
-                                        $('.delete_student').text('');
-                                    } else {
-                                        datatable();
-                                        $.alert('Network Deleted!');
-                                        $('.delete_student').text('Yes Delete');
-                                    }
-                                }
-                            });
-                        }
-                    },
-                    cancel: function() {
-                       
-                    }
-                }
-            });
-        });
     </script>
     
