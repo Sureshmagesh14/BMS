@@ -114,14 +114,7 @@ class UsersController extends Controller
         
         try {
             $data = Users::find($id);
-            $returnHTML = view('admin.users.view',compact('data'))->render();
-
-            return response()->json(
-                [
-                    'success' => true,
-                    'html_page' => $returnHTML,
-                ]
-            );
+            return view('admin.users.view',compact('data'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -313,8 +306,7 @@ class UsersController extends Controller
                     $view_route = route("users.show",$all_data->id);
                     return '<div class="">
                                 <div class="btn-group mr-2 mb-2 mb-sm-0">
-                                    <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                        data-bs-original-title="View Project" class="btn btn-primary waves-light waves-effect">
+                                    <a href="'.$view_route.'" class="btn btn-primary waves-light waves-effect">
                                         <i class="fa fa-eye"></i>
                                     </a>
                                     <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"

@@ -37,7 +37,7 @@
                 <li class="menu-title" key="t-apps">Admin</li>
 
                 <li>
-                    <a href="users" class="waves-effect">
+                    <a href="{{ route('users.index') }}" class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Users</span>
                     </a>
@@ -81,14 +81,14 @@
                 <li class="menu-title" key="t-pages">Database</li>
 
                 <li>
-                    <a href="projects" class="waves-effect">
+                    <a href="{{ route('projects.index') }}" class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Projects</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="respondents" class=" waves-effect">
+                    <a href="{{ route('respondents.index') }}" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Respondents</span>
                     </a>
