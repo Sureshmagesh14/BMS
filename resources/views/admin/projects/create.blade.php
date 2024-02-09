@@ -27,51 +27,11 @@
         <label for="example-text-input" class="col-md-2 col-form-label">Creator *</label>
         <div class="col-md-10">
             <select id="user" name="user" class="w-full form-control form-select" required>
-                <option value="" selected="selected" disabled="disabled">
-                    Choose an option
-                </option>
-                <option value="3">
-                    Alison Steven
-                </option>
-                <option value="8">
-                    Ano Gandure
-                </option>
-                <option value="4">
-                    Brad FV
-                </option>
-                <option value="21">
-                    Busisiwe Nhlapo
-                </option>
-                <option value="13">
-                    Clinton Mtambo
-                </option>
-                <option value="12">
-                    Demo User
-                </option>
-                <option value="16">
-                    Michelle Cremer
-                </option>
-                <option value="17">
-                    Mojalefa Malope
-                </option>
-                <option value="19">
-                    Nissar Goolam
-                </option>
-                <option value="22">
-                    Nokuthula Magubane
-                </option>
-                <option value="20">
-                    Nontando Diniso
-                </option>
-                <option value="23">
-                    Tebogo Dlamini
-                </option>
-                <option value="6">
-                    Towdah Ndhlovu
-                </option>
-                <option value="1">
-                    Wade FV
-                </option>
+                <option value="" selected="selected" disabled="disabled">Choose an option</option>
+                @foreach ($users as $user)
+                    <option @if(Session::has('user_to_project_id')) @if(Session::get('user_to_project_id') == $user->id) selected @endif @endif
+                    value="{{$user->id}}">{{$user->name}} {{$user->surname}}</option>
+                @endforeach
             </select>
         </div>
     </div>
