@@ -54,4 +54,6 @@
            
         </tbody>
     </table>
+
+    <a href="{{ route('inner_module',['module' => 'user_to_project', 'id' => $data->id]) }}" class="btn btn-primary">Create Project</a>
 </div>

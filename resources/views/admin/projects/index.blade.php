@@ -118,7 +118,13 @@ Export <i class="mdi mdi-chevron-down"></i>
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
+
+
         $(document).ready(function() {
+            user_to_project = "{{ Session::get('user_to_project') }}";
+            if(user_to_project == 1){
+                $("#create").click();
+            }
             datatable();
           
         });

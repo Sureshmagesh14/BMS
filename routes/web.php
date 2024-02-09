@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/','CustomAuthController@index')->name('login');
 Route::any('custom-login','CustomAuthController@customLogin')->name('login.custom');
 Route::get('register','CustomAuthController@registration')->name('register');
+
 Route::group(['middleware' => ['auth']], function () {
     Route::get('dashboard','CustomAuthController@dashboard')->name('dashboard');
    
@@ -20,25 +21,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('contents_datatable', 'ContentsController@contents_datatable')->name('contents_datatable');
     Route::any('contents_multi_delete', 'ContentsController@contents_multi_delete')->name('contents_multi_delete');
 
-Route::get('/survey','SurveyController@survey')->name('survey');
-Route::get('/survey/create', ['as' => 'survey.create','uses' => 'SurveyController@createSurvey',])->middleware(['auth']);
-Route::post('/survey/survey', ['as' => 'survery.survey','uses' => 'SurveyController@getSurveyList',])->middleware(['auth']);
-Route::post('/survey/store', ['as' => 'survey.store','uses' => 'SurveyController@storeSurvey',])->middleware(['auth']);
-Route::get('/survey/edit/{id}', ['as' => 'survey.edit','uses' => 'SurveyController@editSurvey',])->middleware(['auth']);
-Route::post('/survey/update/{id}', ['as' => 'survey.update','uses' => 'SurveyController@updateSurvey',])->middleware(['auth']);
-Route::get('/survey/delete/{id}', ['as' => 'survey.delete','uses' => 'SurveyController@deleteSurvey',])->middleware(['auth']);
+    Route::get('/survey','SurveyController@survey')->name('survey');
+    Route::get('/survey/create', ['as' => 'survey.create','uses' => 'SurveyController@createSurvey',]);
+    Route::post('/survey/survey', ['as' => 'survery.survey','uses' => 'SurveyController@getSurveyList',]);
+    Route::post('/survey/store', ['as' => 'survey.store','uses' => 'SurveyController@storeSurvey',]);
+    Route::get('/survey/edit/{id}', ['as' => 'survey.edit','uses' => 'SurveyController@editSurvey',]);
+    Route::post('/survey/update/{id}', ['as' => 'survey.update','uses' => 'SurveyController@updateSurvey',]);
+    Route::get('/survey/delete/{id}', ['as' => 'survey.delete','uses' => 'SurveyController@deleteSurvey',]);
 
-// Survey Template Routings
-Route::get('/survey/template/{id}', ['as' => 'survey.template','uses' => 'SurveyController@templateList',])->middleware(['auth']);
-Route::get('/survey/builder/{id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder',])->middleware(['auth']);
-Route::get('/survey/questiontype/{id}', ['as' => 'survey.questiontype','uses' => 'SurveyController@questiontype',])->middleware(['auth']);
-Route::get('/survey/qustype/{survey}/{qustype}', ['as' => 'survey.qustype','uses' => 'SurveyController@questiontypesurvey',])->middleware(['auth']);
-Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'SurveyController@deletequs',])->middleware(['auth']);
+    // Survey Template Routings
+    Route::get('/survey/template/{id}', ['as' => 'survey.template','uses' => 'SurveyController@templateList',]);
+    Route::get('/survey/builder/{id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder',]);
+    Route::get('/survey/questiontype/{id}', ['as' => 'survey.questiontype','uses' => 'SurveyController@questiontype',]);
+    Route::get('/survey/qustype/{survey}/{qustype}', ['as' => 'survey.qustype','uses' => 'SurveyController@questiontypesurvey',]);
+    Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'SurveyController@deletequs',]);
 
-// Survey Questions Routings
-Route::get('/survey/questions/{id}', ['as' => 'survey.quesbuilder','uses' => 'SurveyController@questionList',])->middleware(['auth']);
+    // Survey Questions Routings
+    Route::get('/survey/questions/{id}', ['as' => 'survey.quesbuilder','uses' => 'SurveyController@questionList',]);
 
-Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'SurveyController@updateQus',])->middleware(['auth']);
+    Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'SurveyController@updateQus',]);
     Route::resource('networks', 'NetworkController');
     Route::get('get_all_networks', 'NetworkController@get_all_networks')->name('get_all_networks');
 
@@ -73,21 +74,6 @@ Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'Su
    
 
     Route::controller(InternalReportController::class)->group(function(){
-        /* Content */
-     
-
-        /* Bank */
-  
-        
-    
-      
-      
-      
-
-  
-    
-
-       
         Route::get('user-events', 'index')->name('user-events');
         Route::any('user-events-show', 'show')->name('user-events-show');
         Route::get('user-events-view/{id}', 'view')->name('user-events-view');
@@ -95,33 +81,13 @@ Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'Su
     });
 
     Route::controller(SettingsController::class)->group(function(){
-        /* Content */
-     
-
-        /* Bank */
-  
-   
-
-        
-    
-      
-      
-      
-
-  
-    
-
-       
         Route::get('getrecentcontentid', 'getrecentcontentid')->name('getrecentcontentid');
-
-
     });
 
     Route::controller(RewardsController::class)->group(function(){
         Route::get('rewards','rewards')->name('rewards');
         Route::any('get_all_rewards', 'get_all_rewards')->name('get_all_rewards');
         Route::any('view_rewards/{id}', 'view_rewards')->name('view_rewards');
-    
     });
 
     // Route::controller(TagsController::class)->group(function(){
@@ -142,9 +108,7 @@ Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'Su
     //     Route::get('respondent_export/{id}','respondent_export')->name('respondent_export');    
     // });
 
- 
-
-   Route::controller(ActionController::class)->group(function(){
+    Route::controller(ActionController::class)->group(function(){
         Route::get('actions','actions')->name('actions');
         Route::any('get_all_actions', 'get_all_actions')->name('get_all_actions');
     });
@@ -154,14 +118,13 @@ Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'Su
         Route::any('get_all_cashouts', 'get_all_cashouts')->name('get_all_cashouts');
         Route::get('cash_export/{id}','cash_export')->name('cash_export');        
     });
-  
-   
 
+    Route::get('inner_module','CommonAdminController@inner_module')->name('inner_module');  
 });
 
 
 // Clone Survey 
 
-Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication','uses' => 'SurveyController@surveyduplication',])->middleware(['auth']);
-Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey',])->middleware(['auth']);
-Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@sharesurvey',])->middleware(['auth']);
+Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication','uses' => 'SurveyController@surveyduplication',]);
+Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey',]);
+Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@sharesurvey',]);
