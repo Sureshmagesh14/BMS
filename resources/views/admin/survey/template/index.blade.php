@@ -170,7 +170,7 @@
                                     </div>
                                     <div class="d-none d-md-flex align-items-center ss-dashboard-list-item__secondary-actions">
                                         <div class="rounded-md me-3">
-                                            <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',$survey->builderID,0)}}">
+                                            <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',[$survey->builderID,0])}}">
                                                 <i data-feather="edit"></i>
                                             </a>
                                         </div>

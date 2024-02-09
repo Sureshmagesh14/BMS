@@ -221,8 +221,10 @@ class SurveyController extends Controller
         }else{
             $currentQus=Questions::where(['id'=>$qusID])->first();
         }
+        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','mutli_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','ranking'=>'Ranking','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+        $qus_type=$questionTypes[$currentQus->qus_type];
         
-        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus'));
+        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type'));
 
     }
     public function questiontype(Request $request,$survey){
@@ -296,7 +298,10 @@ class SurveyController extends Controller
         $questions=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
         $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
         $thankQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
-        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus'));
+        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','mutli_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','ranking'=>'Ranking','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+        $qus_type=$questionTypes[$currentQus->qus_type];
+        
+        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type'));
     }
     public function updateQus(Request $request,$id){
         $currentQus=Questions::where(['id'=>$id])->first();
@@ -326,6 +331,15 @@ class SurveyController extends Controller
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
+            case 'single_choice':
+                $json=[
+                    'choices_list'=>$request->choices_list,
+                    'choices_type'=>'single',
+                    'question_name'=>$request->question_name
+                ];
+                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+              break;
+              
             default:
               //code block
           }

@@ -7,6 +7,21 @@
 <link href="{{ asset('assets/css/builder.css') }}" rel="stylesheet" type="text/css" />
 
 <style>
+    span#qus_type {
+        font-weight: bold;
+    }
+    #update_qus_final{
+        display:none;
+    }
+    .addchoice {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+    }
+    .input-group.choicequs {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
     #multi_choice_qus,#single_choice_qus{
         display:none;
     }
@@ -166,6 +181,7 @@
             @if(isset($currentQus))
             @php $qusvalue = json_decode($currentQus->qus_ans);   @endphp
             {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation')) }}
+                <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
                 @if($currentQus->qus_type=='welcome_page')
                     <div class="modal-body">
                         <div>
@@ -265,7 +281,7 @@
                                     <div class="open_qus">
                                         {{ Form::label('question_name', __('Type'),['class'=>'form-label']) }}<br>
                                         <div>
-                                            @if($qusvalue->open_qus_choice == 'single')
+                                            @if($qusvalue!=null && $qusvalue->open_qus_choice == 'single')
                                                 <input type="radio" id="single" name="open_qus_choice" value="single" checked>
                                             @else 
                                                 <input type="radio" id="single" name="open_qus_choice" value="single">
@@ -273,7 +289,7 @@
                                             <label for="single">Single Line</label>
                                         </div>
                                         <div>
-                                            @if($qusvalue->open_qus_choice == 'multi')
+                                            @if($qusvalue!=null && $qusvalue->open_qus_choice == 'multi')
                                                 <input type="radio" id="multi" name="open_qus_choice" value="multi" checked>
                                             @else 
                                                 <input type="radio" id="multi" name="open_qus_choice" value="multi">
@@ -283,16 +299,25 @@
                                     </div>
                                     <br>
                                     <div>
-                                    {{ Form::text('single_choice_qus', null , array('id'=>'single_choice_qus','class' => 'form-control','placeholder'=>'Single Line')) }}
-                                    {{ Form::textarea('multi_choice_qus', null , array('id'=>'multi_choice_qus','class' => 'form-control','placeholder'=>'Multi Lines')) }}
+                                    {{ Form::text('single_choice_qus', null , array('id'=>'single_choice_qus','class' => 'form-control','placeholder'=>'Single Line','readonly'=>true)) }}
+                                    {{ Form::textarea('multi_choice_qus', null , array('id'=>'multi_choice_qus','class' => 'form-control','placeholder'=>'Multi Lines','readonly'=>true)) }}
                                     </div>
                             @endif
+                            
+                            @if($currentQus->qus_type=='single_choice' || $currentQus->qus_type=='mutli_choice')
+                                <div class="addchoice">
+                                    <input type="button" id="add_choice" onclick="addchoice();" value="Add Choice" class="btn btn-primary">
+                                </div>
+                                <div id="choices_section" class="row"></div> 
+                                <input type="hidden" id="choices_list" name="choices_list[]">                           
+                            @endif
+                            <?php //echo $currentQus->qus_type; ?>
                     </div>
                 @endif
                 <input type="hidden" name="qus_id" id="qus_id" value="{{$currentQus->id}}">
                 <input type="hidden" name="qus_type" id="qus_type" value="{{$currentQus->qus_type}}">
-                
-                <input type="submit" id="update_qus" value="Submit" class="btn  btn-primary">
+                <input type="button" id="update_qus" value="Submit" class="btn  btn-primary">
+                <input type="submit" id="update_qus_final" value="Submit" class="btn  btn-primary">
                 {{Form::close()}}
                @endif
             </div>
@@ -310,6 +335,29 @@ div#survey-table_wrapper .row {
 
 </style>
 <script>
+function addchoice(){
+        newRowAdd ='<div id="row" class="col-md-3"><div class="input-group choicequs"><input type="text" name="choice" class="form-control m-input"><div class="input-group-prepend"><button class="btn btn-danger" id="DeleteRow" type="button">X</button> </div></div> </div>';
+ 
+        $('#choices_section').append(newRowAdd);
+}
+$("body").on("click", "#DeleteRow", function () {
+    $(this).parents("#row").remove();
+});
+$('#update_qus').click(function(){
+    let qus_type=$('#qus_type').val();
+    if(qus_type=='single_choice' || qus_choice=='mutli_choice'){
+        let choices=[];
+        $("input[name=choice]").each(function(idx, elem) {
+            choices.push($(elem).val());
+        });
+        $('#choices_list').val(choices);
+        setTimeout(() => {
+            $('#update_qus_final').click();
+        }, 100);
+    }else{
+        $('#update_qus_final').click();
+    }
+});
 function qusdelete(url){
     Swal.fire({ 
         title: "Are you sure?",
