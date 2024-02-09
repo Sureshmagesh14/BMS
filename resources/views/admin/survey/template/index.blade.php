@@ -138,7 +138,7 @@
                             <div class="col-7">
                                 <div class="row no-gutters align-items-center h-100">
                                 <div class="col-4 d-none d-md-flex flex-column align-items-center justify-content-center">
-                                    <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">0</h3>
+                                    <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">{{$survey->questions->count()}}</h3>
                                     <a class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Questions</a>
                                 </div>
                                 <div class="col-4 d-none d-md-flex flex-column align-items-center justify-content-center">
@@ -170,7 +170,7 @@
                                     </div>
                                     <div class="d-none d-md-flex align-items-center ss-dashboard-list-item__secondary-actions">
                                         <div class="rounded-md me-3">
-                                            <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',$survey->builderID)}}">
+                                            <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',[$survey->builderID,0])}}">
                                                 <i data-feather="edit"></i>
                                             </a>
                                         </div>
