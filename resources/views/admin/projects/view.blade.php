@@ -32,7 +32,18 @@
             </tr>
             <tr>
                 <th>Status</th>
-                <td>{{$data->status_id}}</td>
+                <td>
+                    @if($data->status_id==1)
+                        Pending
+                    @elseif($data->status_id==2)
+                        Active
+                   @elseif($data->status_id==3)
+                        Completed
+                    @elseif($data->status_id==4)
+                        Cancelled
+                    @endif
+                    
+                </td>
             </tr>
             <tr>
                 <th>Description</th>
@@ -63,7 +74,13 @@
             </tr>
             <tr>
                 <th>Accessibility</th>
-                <td>{{$data->access_id}}</td>
+                <td>
+                @if($data->access_id==1)
+                Shareable
+                @else
+                Assigned
+                @endif
+                </td>
             </tr>
             <tr>
                 <th>Survey Link</th>

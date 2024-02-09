@@ -30,7 +30,7 @@
             <select id="user" name="user" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">Choose an option</option>
                 @foreach ($users as $user)
-                    <option @if(Session::has('user_to_project_id')) @if(Session::get('user_to_project_id') == $user->id) selected @endif @endif
+                    <option @if($projects->user_id  == $user->id) selected @endif
                     value="{{$user->id}}">{{$user->name}} {{$user->surname}}</option>
                 @endforeach
             </select>
