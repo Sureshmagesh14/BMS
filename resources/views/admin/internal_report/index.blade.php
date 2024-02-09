@@ -103,7 +103,7 @@
 
                 columns: [
                     { data: 'id', name: '#', orderable: true, searchable: true },
-                    { data: 'user_id ', name: 'user_id ', orderable: true, searchable: true },
+                    { data: 'users ', name: 'users ', orderable: true, searchable: true },
                     { data: 'action', name: 'action', orderable: false, searchable: true },
                     { data: 'type', name: 'type', orderable: false, searchable: true },
                     { data: 'month', name: 'month', orderable: false, searchable: true },

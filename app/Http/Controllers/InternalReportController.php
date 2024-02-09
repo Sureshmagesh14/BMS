@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserEvents;
+
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Yajra\DataTables\DataTables;
@@ -34,15 +35,24 @@ class InternalReportController extends Controller
      */
     public function show(Request $request)
     {
+     
+        // print_r($all_datas);
+        // echo "<pre><br>";
+
         try {
             if ($request->ajax()) {
-                $all_datas = UserEvents::latest()->get();
+                
+                $all_datas = UserEvents::with('users_data')->latest()->where('user_id',1)->take(2)->get();
         
                 return Datatables::of($all_datas)
-                // ->addColumn('user_id', function ($all_data) {
-                //     $user_name=DB::table('users')->select('name')->where('id',$all_data->user_id)->first();
-                //     return $user_name;
-                // }) 
+                ->addColumn('users', function ($all_data) {
+                    if(isset($all_data->users_data->name)){
+                        return $all_data->users_data->name;
+                    }
+                    else{
+                        return '-';
+                    }
+                })
                 ->addColumn('view', function ($all_data) {
                    
                     $view_route = route("user-events-view",$all_data->id);
@@ -56,7 +66,7 @@ class InternalReportController extends Controller
                         </div>
                     </div>';
                 })
-                ->rawColumns(['id','user_id','action','type','month','year','count','view'])      
+                ->rawColumns(['view','users'])      
                 ->make(true);
             }
         }
