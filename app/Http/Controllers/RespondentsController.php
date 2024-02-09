@@ -350,7 +350,6 @@ class RespondentsController extends Controller
             ->where("active_status_id",1)
             ->whereBetween('created_at', [$from, $to])
             ->orderby("id","desc")
-            ->limit(10)
             ->get();
 
             $spreadsheet = new Spreadsheet();

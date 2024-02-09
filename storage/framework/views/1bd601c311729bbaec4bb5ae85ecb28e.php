@@ -54,25 +54,11 @@ width: 30% !important;
         
 
 
-<div class="btn-group" role="group">
-<button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-Export <i class="mdi mdi-chevron-down"></i>
-</button>
-<div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-
-<a class="dropdown-item" href="<?php echo e(url('respondent_export/act')); ?>">Respondent Details</a>
-<a class="dropdown-item" href="<?php echo e(url('gen_respondent_res_export')); ?>">General Respondent Activity by Respondent</a>
-<a class="dropdown-item" href="<?php echo e(url('gen_respondent_mon_export')); ?>">General Respondent Activity by Month & Year</a>
-</div>
-</div>
-
-
-
 <a href="#!" data-url="<?php echo e(route('export_resp')); ?>" data-size="xl" data-ajax-popup="true"
                                         class="btn btn-primary" data-bs-original-title="<?php echo e(__('export Respondents')); ?>" class="btn btn-primary" data-size="xl"
                                          data-ajax-popup="true" data-bs-toggle="tooltip"
                                         id="export">
-                                        export Respondents
+                                        Export
                                     </a>
 
 

@@ -110,65 +110,126 @@ class CashoutsController extends Controller
         }
     }
 
-    public function cash_export($type) {
+    
+     /**
+     * Show the form for creating a new resource.
+     */
+    public function export_cash()
+    {
+        try {
+           
+            $returnHTML = view('admin.cashouts.export')->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        
+    }
+
+    public function cash_export(Request $request) {
+
+        $module_name = $request->module_name;
+        $from = date('Y-m-d',strtotime($request->start));
+        $to = date('Y-m-d',strtotime($request->end));
 
         $type='xlsx';
+        
+        if($module_name=='cash_summary_export'){
+
         $all_datas = DB::table('cashouts')
                 ->select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
                 ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id') 
+                ->whereBetween('cashouts.created_at', [$from, $to])
                 ->orderby("id","desc")
-                ->limit(10)
                 ->get();
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Id');
-        $sheet->setCellValue('B1', 'Type');
-        $sheet->setCellValue('C1', 'Status');
-        $sheet->setCellValue('D1', 'Amount');
-        $sheet->setCellValue('E1', 'Respondent');
+        $sheet->setCellValue('A1', 'Month');
+        $sheet->setCellValue('B1', 'Year');
+        $sheet->setCellValue('C1', 'Cash Out Status Breakdown');
+        $sheet->setCellValue('D1', 'Total Pending Cash Outs Amount');
+        $sheet->setCellValue('E1', 'Total Completed Cash Outs Amount');
+        $sheet->setCellValue('F1', 'Most & Least Used Cash Out Method');
         
         $rows = 2;
         $i=1;
         foreach($all_datas as $all_data){
 
-            if($all_data->type_id==1){
-                $type_val ='EFT';
-            }else if($all_data->type_id==2){
-                $type_val ='Data';
-            }else if($all_data->type_id==3){
-                $type_val ='Airtime';
-            }else{  
-                $type_val ='-';
-            }
+            // if($all_data->type_id==1){
+            //     $type_val ='EFT';
+            // }else if($all_data->type_id==2){
+            //     $type_val ='Data';
+            // }else if($all_data->type_id==3){
+            //     $type_val ='Airtime';
+            // }else{  
+            //     $type_val ='-';
+            // }
             
-            if($all_data->status_id==0){
-                $status_val ='Failed';
-            }else if($all_data->status_id==1){
-                $status_val ='';
-            }else if($all_data->status_id==2){
-                $status_val ='';
-            }else if($all_data->status_id==3){
-                $status_val ='Complete';
-            }else if($all_data->status_id==4){
-                $status_val ='Declined';
-            }else{  
-                $status_val ='-';
-            }
+            // if($all_data->status_id==0){
+            //     $status_val ='Failed';
+            // }else if($all_data->status_id==1){
+            //     $status_val ='';
+            // }else if($all_data->status_id==2){
+            //     $status_val ='';
+            // }else if($all_data->status_id==3){
+            //     $status_val ='Complete';
+            // }else if($all_data->status_id==4){
+            //     $status_val ='Declined';
+            // }else{  
+            //     $status_val ='-';
+            // }
 
-            $amount = $all_data->amount/10;
-            $respondent = $all_data->name.' - '.$all_data->email.' - '.$all_data->mobile;
+            // $amount = $all_data->amount/10;
+            // $respondent = $all_data->name.' - '.$all_data->email.' - '.$all_data->mobile;
             
-            $sheet->setCellValue('A' . $rows, $i);
-            $sheet->setCellValue('B' . $rows, $type_val);
-            $sheet->setCellValue('C' . $rows, $status_val);
-            $sheet->setCellValue('D' . $rows, $amount);
-            $sheet->setCellValue('E' . $rows, $respondent);
-            $rows++;
-            $i++;
+            // $sheet->setCellValue('A' . $rows, $i);
+            // $sheet->setCellValue('B' . $rows, $type_val);
+            // $sheet->setCellValue('C' . $rows, $status_val);
+            // $sheet->setCellValue('D' . $rows, $amount);
+            // $sheet->setCellValue('E' . $rows, $respondent);
+            // $rows++;
+            // $i++;
         }
 
-        $fileName = "cash_".date('ymd').".".$type;
+        $fileName = "cashout_month_summary_".date('ymd').".".$type;
+
+        }else if($module_name=='cash_summary_resp_export'){
+
+
+            $all_datas = DB::table('cashouts')
+                ->select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
+                ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id') 
+                ->whereBetween('cashouts.created_at', [$from, $to])
+                ->orderby("id","desc")
+                ->get();
+
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'Respondent Profile ID');
+            $sheet->setCellValue('B1', 'Name');
+            $sheet->setCellValue('C1', 'Surname');
+            $sheet->setCellValue('D1', 'Phone Number');
+            $sheet->setCellValue('E1', 'WhatsApp Number');
+            $sheet->setCellValue('F1', 'Email');
+            $sheet->setCellValue('G1', 'Cash Out Status Breakdown');
+            $sheet->setCellValue('H1', 'Total Pending Cash Outs Amount');
+            $sheet->setCellValue('I1', 'Total Completed Cash Outs Amount');
+            $sheet->setCellValue('J1', 'Most & Least Used Cash Out Method');
+            
+            $fileName = "cashout_resp_summary_".date('ymd').".".$type;
+        }else{
+
+        }
+        
         if($type == 'xlsx') {
             $writer = new Xlsx($spreadsheet);
         } else if($type == 'xls') {

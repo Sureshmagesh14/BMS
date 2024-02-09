@@ -131,7 +131,8 @@ Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'Su
     Route::controller(CashoutsController::class)->group(function(){
         Route::get('cashouts','cashouts')->name('cashouts');
         Route::any('get_all_cashouts', 'get_all_cashouts')->name('get_all_cashouts');
-        Route::get('cash_export/{id}','cash_export')->name('cash_export');        
+        Route::get('cash_export','cash_export')->name('cash_export');     
+        Route::get('export_cash','CashoutsController@export_cash')->name('export_cash');      
     });
   
    
