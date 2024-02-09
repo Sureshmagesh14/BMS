@@ -42,21 +42,19 @@ class InternalReportController extends Controller
         try {
             if ($request->ajax()) {
                 
-                $all_datas = UserEvents::with('users_data')->latest()->where('user_id',1)->take(2)->get();
+                $all_datas = UserEvents::with('users_data')->latest()->get();
         
                 return Datatables::of($all_datas)
-                ->addColumn('users', function ($all_data) {
+                ->addColumn('user_show', function ($all_data) {
                     if(isset($all_data->users_data->name)){
-                        return $all_data->users_data->name;
+                        return $all_data->users_data->name.' '.$all_data->users_data->surname;
                     }
                     else{
                         return '-';
                     }
                 })
                 ->addColumn('view', function ($all_data) {
-                   
                     $view_route = route("user-events-view",$all_data->id);
-
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
                             <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
@@ -66,7 +64,7 @@ class InternalReportController extends Controller
                         </div>
                     </div>';
                 })
-                ->rawColumns(['view','users'])      
+                ->rawColumns(['view','user_show'])      
                 ->make(true);
             }
         }
