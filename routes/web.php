@@ -42,15 +42,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'SurveyController@updateQus',]);
     Route::resource('networks', 'NetworkController');
     Route::get('get_all_networks', 'NetworkController@get_all_networks')->name('get_all_networks');
+    Route::any('networks_multi_delete', 'NetworkController@networks_multi_delete')->name('networks_multi_delete');
 
     Route::resource('charities','CharitiesController');
     Route::any('get_all_charities', 'CharitiesController@get_all_charities')->name('get_all_charities');
-
+    Route::any('charities_multi_delete', 'CharitiesController@charities_multi_delete')->name('charities_multi_delete');
+    
     Route::resource('banks','BankController');
     Route::any('get_all_banks', 'BankController@get_all_banks')->name('get_all_banks');
+    Route::any('banks_multi_delete', 'BankController@banks_multi_delete')->name('banks_multi_delete');
 
     Route::resource('groups','ProfileGroupController');
     Route::any('get_groups_banks', 'ProfileGroupController@get_groups_banks')->name('get_groups_banks');
+    Route::any('groups_multi_delete', 'ProfileGroupController@groups_multi_delete')->name('groups_multi_delete');
 
     Route::resource('tags','TagsController');
     Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
