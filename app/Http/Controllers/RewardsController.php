@@ -35,8 +35,12 @@ class RewardsController extends Controller
                 $all_datas = Rewards::select('rewards.*','respondents.name as rname','respondents.email as remail','respondents.mobile as rmobile','users.name as uname','projects.name as pname')
                 ->join('respondents', 'respondents.id', '=', 'rewards.user_id') 
                 ->join('users', 'users.id', '=', 'rewards.user_id') 
-                ->join('projects', 'projects.id', '=', 'rewards.project_id') 
-                ->orderby("rewards.id","desc")
+                ->join('projects', 'projects.id', '=', 'rewards.project_id');
+
+                if(isset($request->id)){
+                    $all_datas->where('rewards.user_id',$request->id);
+                }
+                $all_datas = $all_datas->orderby("rewards.id","desc")
                 ->withoutTrashed()
                 ->get();
 

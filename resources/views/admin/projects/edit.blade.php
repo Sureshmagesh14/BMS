@@ -183,7 +183,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Survey Link *
         </label>
         <div class="col-md-10">
-            <input type="url" class="form-control" id="survey_link" name="survey_link" value="{{$projects->survey_link}}">
+            <input type="text" class="form-control" id="survey_link" name="survey_link" value="{{$projects->survey_link}}">
         </div>
     </div>
 
