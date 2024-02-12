@@ -63,6 +63,9 @@ Export <i class="mdi mdi-chevron-down"></i>
                                         id="create">
                                         Create Project
                                     </a>
+                                    <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
+                                        Delete Selected All
+                                    </a>
                                         </div>
 
                                         <h4 class="card-title"> </h4>
@@ -71,7 +74,12 @@ Export <i class="mdi mdi-chevron-down"></i>
                                         <table id="myTable" class="table dt-responsive nowrap w-100">
                                             <thead>
                                             <tr>
-                                                
+                                                <th>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input select_all" id="inlineForm-customCheck">
+                                                        <label class="custom-control-label" for="inlineForm-customCheck" style="font-weight: bold;">Select All</label>
+                                                    </div>
+                                                </th>
                                                 <th>#</th>
                                                 <th>Number/Code</th>
                                                 <th>Client</th>
@@ -118,7 +126,65 @@ Export <i class="mdi mdi-chevron-down"></i>
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
+        function table_checkbox(get_this){
+            count_checkbox = $(".tabel_checkbox").filter(':checked').length;
+            if(count_checkbox > 1){
+                $("#delete_all").show();
+            }
+            else{
+                $("#delete_all").hide();
+            }
+        }
 
+        $(document).on('click', '#delete_all', function(e) {
+            e.preventDefault();
+            var all_id = [];
+
+            var values = $("#myTable tbody tr").map(function() {
+                var $this = $(this);
+                if($this.find("[type=checkbox]").is(':checked')){
+                    all_id.push($this.find("[type=checkbox]").attr('id')); 
+                    // return {
+                    //     id: $this.find("[type=checkbox]").attr('id'),
+                    // };
+                }
+                
+            }).get();
+          
+            $.confirm({
+                title: "{{Config::get('constants.delete')}}",
+                content:  "{{Config::get('constants.delete_confirmation')}}",
+                autoClose: 'cancelAction|8000',
+                buttons: {
+                    delete: {
+                        text: 'delete',
+                        action: function() {
+                            $.ajax({
+                                type: "POST",
+                                data: {
+                                    _token: tempcsrf,
+                                    all_id: all_id
+                                },
+                                url: "{{ route('projects_multi_delete') }}",
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.status == 404) {
+                                        $('.delete_student').text('');
+                                    } else {
+                                        datatable();
+                                        $.alert('Projects Deleted!');
+                                        $("#delete_all").hide();
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    cancel: function() {
+                        
+                    }
+                }
+            });
+        });
 
         $(document).ready(function() {
             user_to_project = "{{ Session::get('user_to_project') }}";
@@ -152,7 +218,9 @@ Export <i class="mdi mdi-chevron-down"></i>
                         alert("undefind error");
                     }
                 },
-                columns: [{
+                columns: [
+                    { data: 'select_all', name: 'select_all', orderable: false, searchable: false },
+            {
                 data: 'id',
                 name: '#',
                 orderable: true,
@@ -256,7 +324,12 @@ Export <i class="mdi mdi-chevron-down"></i>
                 targets: 10,
                 width: 115,
                 className: "text-center"
-            }
+            },
+            {
+                targets: 11,
+                width: 115,
+                className: "text-center"
+            },
         ],
             });
         }

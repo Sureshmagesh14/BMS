@@ -59,6 +59,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('tags','TagsController');
     Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
     Route::get('tags_export/{id}','TagsController@tags_export')->name('tags_export'); 
+    Route::any('tags_multi_delete', 'TagsController@tags_multi_delete')->name('tags_multi_delete');
 
     Route::resource('respondents','RespondentsController');
     Route::any('get_all_respondents', 'RespondentsController@get_all_respondents')->name('get_all_respondents');
@@ -71,13 +72,18 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('projects','ProjectsController');
     Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');
     Route::get('projects_export/{id}','ProjectsController@projects_export')->name('projects_export');  
-    
+    Route::any('projects_multi_delete', 'ProjectsController@projects_multi_delete')->name('projects_multi_delete');
+
     Route::resource('users','UsersController');
     Route::any('get_all_users', 'UsersController@get_all_users')->name('get_all_users');
     Route::get('export_user_activity','UsersController@export_user_activity')->name('export_user_activity');
-    Route::get('export_referrals','UsersController@export_referrals')->name('export_referrals');  
-    
-   
+    Route::get('export_referrals','UsersController@export_referrals')->name('export_referrals');
+
+
+    Route::resource('rewards','RewardsController');
+    Route::any('get_all_rewards', 'RewardsController@get_all_rewards')->name('get_all_rewards');
+    Route::any('view_rewards/{id}', 'RewardsController@view_rewards')->name('view_rewards');
+    Route::any('rewards_multi_delete', 'RewardsController@rewards_multi_delete')->name('rewards_multi_delete');
 
     Route::controller(InternalReportController::class)->group(function(){
         Route::get('user-events', 'index')->name('user-events');
@@ -90,11 +96,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('getrecentcontentid', 'getrecentcontentid')->name('getrecentcontentid');
     });
 
-    Route::controller(RewardsController::class)->group(function(){
-        Route::get('rewards','rewards')->name('rewards');
-        Route::any('get_all_rewards', 'get_all_rewards')->name('get_all_rewards');
-        Route::any('view_rewards/{id}', 'view_rewards')->name('view_rewards');
-    });
+    // Route::controller(RewardsController::class)->group(function(){
+    //     Route::get('rewards','rewards')->name('rewards');
+    //     Route::any('get_all_rewards', 'get_all_rewards')->name('get_all_rewards');
+    //     Route::any('view_rewards/{id}', 'view_rewards')->name('view_rewards');
+    // });
 
     // Route::controller(TagsController::class)->group(function(){
     //     Route::get('tags','tags')->name('tags');
@@ -123,7 +129,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('cashouts','cashouts')->name('cashouts');
         Route::any('get_all_cashouts', 'get_all_cashouts')->name('get_all_cashouts');
         Route::get('cash_export','cash_export')->name('cash_export');     
-        Route::get('export_cash','CashoutsController@export_cash')->name('export_cash');      
+        Route::get('export_cash','export_cash')->name('export_cash');
+        Route::any('cash_multi_delete', 'CashoutsController@cash_multi_delete')->name('cash_multi_delete');
     });
 
     Route::get('inner_module','CommonAdminController@inner_module')->name('inner_module');  

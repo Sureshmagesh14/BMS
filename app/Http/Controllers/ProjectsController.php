@@ -293,7 +293,9 @@ class ProjectsController extends Controller
                 
                         
                         return Datatables::of($all_datas)
-                        
+                        ->addColumn('select_all', function ($all_data) {
+                            return '<input class="tabel_checkbox" name="projects[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                        })
                         ->addColumn('numbers', function ($all_data) {
                             return $all_data->number;
                         })  
@@ -361,7 +363,7 @@ class ProjectsController extends Controller
                                 </div>
                             </div>';
                         })
-                        ->rawColumns(['action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
+                        ->rawColumns(['select_all','action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
                         ->make(true);
                             
                       
@@ -431,5 +433,24 @@ class ProjectsController extends Controller
             
         header("Content-Type: application/vnd.ms-excel");
         return redirect(url('/')."/export/".$fileName);
+    }
+
+    public function projects_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $rewards = Projects::find($id);
+                $rewards->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Projects Deleted'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }
