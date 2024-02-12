@@ -100,7 +100,8 @@
                             <div class="text-right">
                                 <a href="{{ route('inner_module', ['module' => 'user_to_project', 'id' => $data->id]) }}" class="btn btn-primary">Create Project</a>
                             </div>
-
+                            <h4 class="card-title"> </h4>
+                            <p class="card-title-desc"></p>
                             <table id="myTable" class="table dt-responsive nowrap w-100">
                                 <thead>
                                 <tr>
