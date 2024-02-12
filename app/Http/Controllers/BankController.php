@@ -222,6 +222,9 @@ class BankController extends Controller
         
                 
                 return Datatables::of($all_datas)
+                ->addColumn('select_all', function ($all_data) {
+                    return '<input class="tabel_checkbox" name="banks[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                })
                 ->addColumn('bank_name', function ($all_data) {
                     return $all_data->bank_name;
                 }) 
@@ -256,9 +259,28 @@ class BankController extends Controller
                         </div>
                     </div>';
                 })
-                ->rawColumns(['bank_name','branch_code','active','action'])          
+                ->rawColumns(['select_all','bank_name','branch_code','active','action'])          
                 ->make(true);
             }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function banks_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $contents = Banks::find($id);
+                $contents->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Banks Deleted'
+            ]);
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

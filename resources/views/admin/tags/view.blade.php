@@ -12,7 +12,7 @@
             </tr>
             <tr>
                 <th>color</th>
-                <td>{{$data->colour}}</td>
+                <td><button type="button" class="btn waves-effect waves-light" style="background-color:{{$data->colour}}"><i class="uil uil-user"></i></button></td>
             </tr>
            
         </tbody>

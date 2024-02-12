@@ -3,16 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Banks;
-use App\Models\Contents;
-use App\Models\Networks;
-use App\Models\Charities;
-use App\Models\Groups;
-use App\Models\Tags;
-use App\Models\Respondents;
-use App\Models\Projects;
-use App\Models\Actions;
-use App\Models\Cashouts;
+use App\Models\Cashout;
 use DB;
 use Yajra\DataTables\DataTables;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -40,17 +31,17 @@ class CashoutsController extends Controller
                 $token = csrf_token();
             
                 
-                $all_datas = DB::table('cashouts')
-                ->select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
+                $all_datas =Cashout::select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
                 ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id') 
                 ->orderby("id","desc")
+                ->withoutTrashed()
                 ->get();
         
                 
                 return Datatables::of($all_datas)
-                 ->addColumn('id', function ($all_data){
-                    return '<div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="contacusercheck3"><label class="custom-control-label" for="contacusercheck3"></label></div>';
-                 })
+                ->addColumn('select_all', function ($all_data) {
+                    return '<input class="tabel_checkbox" name="cash_out[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                })
                 ->addColumn('type_id', function ($all_data) {
                     if($all_data->type_id==1){
                         return 'EFT';
@@ -101,7 +92,7 @@ class CashoutsController extends Controller
                 </div>';
                     
                 })
-                ->rawColumns(['id','action','type_id','status_id','amount','respondent_id'])      
+                ->rawColumns(['select_all','id','action','type_id','status_id','amount','respondent_id'])      
                 ->make(true);
             }
         }
@@ -144,8 +135,7 @@ class CashoutsController extends Controller
         
         if($module_name=='cash_summary_export'){
 
-        $all_datas = DB::table('cashouts')
-                ->select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
+        $all_datas = Cashout::select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
                 ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id') 
                 ->whereBetween('cashouts.created_at', [$from, $to])
                 ->orderby("id","desc")
@@ -205,8 +195,7 @@ class CashoutsController extends Controller
         }else if($module_name=='cash_summary_resp_export'){
 
 
-            $all_datas = DB::table('cashouts')
-                ->select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
+            $all_datas =Cashout::select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
                 ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id') 
                 ->whereBetween('cashouts.created_at', [$from, $to])
                 ->orderby("id","desc")
@@ -239,5 +228,25 @@ class CashoutsController extends Controller
             
         header("Content-Type: application/vnd.ms-excel");
         return redirect(url('/')."/export/".$fileName);
+    }
+    
+
+    public function cash_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $tags = Cashout::find($id);
+                $tags->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Tags Deleted'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }

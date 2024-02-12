@@ -37,10 +37,14 @@ class RewardsController extends Controller
                 ->join('users', 'users.id', '=', 'rewards.user_id') 
                 ->join('projects', 'projects.id', '=', 'rewards.project_id') 
                 ->orderby("rewards.id","desc")
+                ->withoutTrashed()
                 ->get();
 
                 
                 return Datatables::of($all_datas)
+                ->addColumn('select_all', function ($all_data) {
+                    return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                })
                 ->addColumn('points', function ($all_data) {
                     return $all_data->points;
                 })            
@@ -79,7 +83,7 @@ class RewardsController extends Controller
                 </div>';
                     
                 }) 
-                ->rawColumns(['action','active','points','status_id','respondent_id','user_id','project_id'])      
+                ->rawColumns(['select_all','action','active','points','status_id','respondent_id','user_id','project_id'])      
                 ->make(true);
             }
         }
@@ -104,6 +108,25 @@ class RewardsController extends Controller
             throw new Exception($e->getMessage());
         }
        
+    }
+
+    public function rewards_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $rewards = Rewards::find($id);
+                $rewards->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Rewards Deleted'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
 }

@@ -1,6 +1,4 @@
 @include('admin.layout.header')
-@yield('adminside-favicon')
-@yield('adminside-css')
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
@@ -45,6 +43,10 @@
                                                 id="create">
                                                 Create Charities
                                             </a>
+                                            
+                                <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
+                                    Delete Selected All
+                                </a>
                                         </div>
 
                                         <h4 class="card-title"> </h4>
@@ -53,9 +55,14 @@
                                         <table id="myTable" class="table dt-responsive nowrap w-100">
                                             <thead>
                                             <tr>
-                                                
+                                                <th>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input select_all" id="inlineForm-customCheck">
+                                                        <label class="custom-control-label" for="inlineForm-customCheck" style="font-weight: bold;">Select All</label>
+                                                    </div>
+                                                </th>
                                                 <th>#</th>
-                                                <th>Type</th>
+                                                <th>Name</th>
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
@@ -78,14 +85,15 @@
                         
                     </div> <!-- container-fluid -->
                 </div>
-                <!-- End Page-content -->
                 @include('admin.layout.footer')
         
                 @stack('adminside-js')
                 @stack('adminside-validataion')
                 @stack('adminside-confirm')
                 @stack('adminside-datatable')
-@include('admin.layout.footer')
+        
+               
+
 
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
@@ -94,7 +102,65 @@
       
     });
     
-   
+    function table_checkbox(get_this){
+            count_checkbox = $(".tabel_checkbox").filter(':checked').length;
+            if(count_checkbox > 1){
+                $("#delete_all").show();
+            }
+            else{
+                $("#delete_all").hide();
+            }
+        }
+
+        $(document).on('click', '#delete_all', function(e) {
+            e.preventDefault();
+            var all_id = [];
+
+            var values = $("#myTable tbody tr").map(function() {
+                var $this = $(this);
+                if($this.find("[type=checkbox]").is(':checked')){
+                    all_id.push($this.find("[type=checkbox]").attr('id')); 
+                    // return {
+                    //     id: $this.find("[type=checkbox]").attr('id'),
+                    // };
+                }
+                
+            }).get();
+          
+            $.confirm({
+                title: "{{Config::get('constants.delete')}}",
+                content:  "{{Config::get('constants.delete_confirmation')}}",
+                autoClose: 'cancelAction|8000',
+                buttons: {
+                    delete: {
+                        text: 'delete',
+                        action: function() {
+                            $.ajax({
+                                type: "POST",
+                                data: {
+                                    _token: tempcsrf,
+                                    all_id: all_id
+                                },
+                                url: "{{ route('charities_multi_delete') }}",
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.status == 404) {
+                                        $('.delete_student').text('');
+                                    } else {
+                                        datatable();
+                                        $.alert('Contents Deleted!');
+                                        $("#delete_all").hide();
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    cancel: function() {
+                        
+                    }
+                }
+            });
+        });
 
     function datatable(){
         $('#myTable').dataTable().fnDestroy();
@@ -109,7 +175,7 @@
                 [10, 50, 100, "All"]
             ],
             ajax: {
-                url: "{{ route('get_all_respondents') }}",
+                url: "{{ route('get_all_charities') }}",
                 data: {
                     _token: tempcsrf,
                 },
@@ -118,7 +184,9 @@
                 }
             },
 
-            columns: [{
+            columns: [
+                { data: 'select_all', name: 'select_all', orderable: false, searchable: false },
+            {
                 data: 'id',
                 name: '#',
                 orderable: true,
@@ -131,112 +199,30 @@
                 searchable: true
             },
             {
-                data: 'surname',
-                name: 'surname',
-                orderable: true,
-                searchable: true
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
             },
-            {
-                data: 'mobile',
-                name: 'mobile',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'whatsapp',
-                name: 'whatsapp',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'email',
-                name: 'email',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'age',
-                name: 'age',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'gender',
-                name: 'gender',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'race',
-                name: 'race',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'status',
-                name: 'status',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'profile_completion',
-                name: 'profile_completion',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'inactive_until',
-                name: 'inactive_until',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'opeted_in',
-                name: 'opeted_in',
-                orderable: true,
-                searchable: true
-            }
         ],
         columnDefs: [
             {
                 targets: 0,
                 width: 75,
                 className: "text-center"
-            },{
-                targets: 1
             },
             {
-                targets: 2
+                targets: 1,
+                width: 115,
+                className: "text-center"
             },
             {
-                targets: 3
+                targets: 2,
+                width: 115,
+                className: "text-center"
             },
             {
-                targets: 4
-            },
-            {
-                targets: 5
-            },
-            {
-                targets: 6
-            },
-            {
-                targets: 7
-            },
-            {
-                targets: 8
-            },
-            {
-                targets: 9
-            },
-            {
-                targets: 10
-            },
-            {
-                targets: 11
-            },
-            {
-                targets: 12,
+                targets: 3,
                 width: 115,
                 className: "text-center"
             }
@@ -270,7 +256,7 @@
                                     $('.delete_student').text('');
                                 } else {
                                     datatable();
-                                    $.alert('Respondents Deleted!');
+                                    $.alert('Charities Deleted!');
                                     $('.delete_student').text('Yes Delete');
                                 }
                             }

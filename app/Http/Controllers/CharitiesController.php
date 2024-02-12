@@ -220,6 +220,9 @@ class CharitiesController extends Controller
         
                 
                 return Datatables::of($all_datas)
+                ->addColumn('select_all', function ($all_data) {
+                    return '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                })
                 ->addColumn('name', function ($all_data) {
                     return $all_data->name;
                 })
@@ -246,9 +249,28 @@ class CharitiesController extends Controller
                         </div>
                     </div>';
                 })
-                ->rawColumns(['action','name','data'])          
+                ->rawColumns(['select_all','action','name','data'])          
                 ->make(true);
             }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function charities_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $charitie = Charities::find($id);
+                $charitie->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Charities Deleted'
+            ]);
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

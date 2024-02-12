@@ -234,6 +234,9 @@ class TagsController extends Controller
         
                 
                 return Datatables::of($all_datas)
+                ->addColumn('select_all', function ($all_data) {
+                    return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                })
                 ->addColumn('colour', function ($all_data) {
                     return '<div class=""><button type="button" class="btn waves-effect waves-light" style="background-color:'.$all_data->colour.'"><i class="uil uil-user"></i></button></div>';
                 })  
@@ -257,7 +260,7 @@ class TagsController extends Controller
                         </div>
                     </div>';
                 })
-                ->rawColumns(['action','name','colour'])      
+                ->rawColumns(['select_all','action','name','colour'])      
                 ->make(true);
             }
         }
@@ -311,5 +314,24 @@ class TagsController extends Controller
             
         header("Content-Type: application/vnd.ms-excel");
         return redirect(url('/')."/export/".$fileName);
+    }
+
+    public function tags_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $tags = Tags::find($id);
+                $tags->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Tags Deleted'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }
