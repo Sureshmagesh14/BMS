@@ -6,71 +6,6 @@
 <!-- ========== Left Sidebar Start ========== -->
 <link href="{{ asset('assets/css/builder.css') }}" rel="stylesheet" type="text/css" />
 
-<style>
-    .iconssec svg {
-        height: 24px;
-    }
-    span#qus_type {
-        font-weight: bold;
-    }
-    #update_qus_final{
-        display:none;
-    }
-    .addchoice {
-        display: flex;
-        justify-content: flex-end;
-        margin-bottom: 10px;
-    }
-    .input-group.choicequs {
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-    #multi_choice_qus,#single_choice_qus{
-        display:none;
-    }
-    .modal-body{
-        color:black;
-    }
-    .allqus{
-        width:80%;
-    }
-    .ss-builder-features__button {
-        color: #4A9CA6;
-    }
-    .ss-builder-add-new .icon-wrapper{
-        color:white;
-    }
-    a.quesset.active {
-        background: unset !important;
-    }
-    a.quesset.active p {
-        color: #2a4fd7!important;
-    }
-    .surveyques {
-        color: #4A9CA6 !important;
-    }
-    a.waves-effect.active span.menu-item {
-        color: #495057 !important;
-    }
-    a.waves-effect.active {
-        background: white !important;
-    }
-    li.mm-active {
-        background: white;
-    }
-    .surveyrow {
-        border-bottom: 1px solid #EAEAEA;
-    }
-    .ss-text__size--h3 {
-        font-size: 16px;
-    }
-    .ss-text__weight--semibold {
-        font-weight: 600;
-    }
-    .ss-text__color--dark, .ss-text__color--black {
-        color: #25292D;
-    }
-</style>
 <div class="vertical-menu">
 
     <!-- LOGO -->
@@ -188,12 +123,29 @@
             <div class="card card-body">
                 @if(isset($currentQus))
                     <?php  $qusvalue = json_decode($currentQus->qus_ans); 
+                    
                     $qus_name='';
+                    $icon_type='';
+                    $left_label='Least Likely';
+                    $middle_label='Netural';
+                    $right_label='Most Likely';
                     if(isset($qusvalue->question_name)){
                         $qus_name=$qusvalue->question_name; 
                     } else if(isset($currentQus->question_name)){
                         $qus_name=$currentQus->question_name; 
                     } 
+                    if(isset($qusvalue->icon_type)){
+                        $icon_type=$qusvalue->icon_type;
+                    }
+                    if(isset($qusvalue->right_label)){
+                        $right_label=$qusvalue->right_label;
+                    }
+                    if(isset($qusvalue->middle_label)){
+                        $middle_label=$qusvalue->middle_label;
+                    }
+                    if(isset($qusvalue->left_label)){
+                        $left_label=$qusvalue->left_label;
+                    }
                     ?>
                     {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation')) }}
                     <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
@@ -313,8 +265,85 @@
                                         {{ Form::textarea('multi_choice_qus', null , array('id'=>'multi_choice_qus','class' => 'form-control','placeholder'=>'Multi Lines','readonly'=>true)) }}
                                         </div>
                                 @endif
+                                @if($currentQus->qus_type=='likert')
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {{ Form::label('left_label','Left label',['class'=>'form-label']) }}
+                                        {{ Form::text('left_label', $left_label , array('id'=>'left_label','class' => 'form-control','placeholder'=>'Left Label')) }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ Form::label('middle_label','Middle label',['class'=>'form-label']) }}
+                                        {{ Form::text('middle_label', $middle_label , array('id'=>'middle_label','class' => 'form-control','placeholder'=>'Middle Label')) }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ Form::label('right_label','Right label',['class'=>'form-label']) }}
+                                        {{ Form::text('right_label', $right_label , array('id'=>'right_label','class' => 'form-control','placeholder'=>'Right Label')) }}
+                                    </div>
+                                </div>
+                                <div class="ss_row--builder ss-paddding--top-bottom"><div class="opinion-scale-container ss-paddding--top-bottom"><div class="opinion-scale-box"><div class="label label--start"><p id="left_lable_text">{{$left_label}}</p></div><div class="label label--middle"><p id="middle_lable_text">{{$middle_label}}</p></div><div class="label label--end"><p id="right_lable_text">{{$right_label}}</p></div><div class="scale-element"><span>1</span></div><div class="scale-element"><span>2</span></div><div class="scale-element"><span>3</span></div><div class="scale-element"><span>4</span></div><div class="scale-element"><span>5</span></div><div class="scale-element"><span>6</span></div><div class="scale-element"><span>7</span></div><div class="scale-element"><span>8</span></div><div class="scale-element"><span>9</span></div></div></div></div>
+                                @endif
+                                @if($currentQus->qus_type=='rating')
+                                <input type="hidden" value="{{$icon_type}}" id="icon_type" name="icon_type"/>
+                                <div class="ss_row--builder ss-paddding--top-bottom ">
+                                    <div class="rating-container">
+                                        <div class="rating-box smiley_icon"><div class="rating-element"><svg width="22" height="22" class="ss-smiley-icon ss-smiley-icon--1 undefined" viewBox="0 0 44 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 2)" class="ss-smiley-icon__g"><circle cx="20.125" cy="20.125" r="20.125"></circle><path transform="translate(-2 -1)" class="ss-smiley-icon__path" d="M9.77783 17.1117C10.7434 15.9261 12.0634 15.2539 13.4445 15.2539C14.8256 15.2539 16.1089 15.9261 17.1112 17.1117M26.889 17.1117C27.8545 15.9261 29.1745 15.2539 30.5556 15.2539C31.9367 15.2539 33.2201 15.9261 34.2223 17.1117" stroke="inherit" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path><path transform="translate(-1.7 -1)" class="ss-smiley-icon__path" d="M13.4441 31.7765C13.4441 31.7765 16.6537 28.5693 21.9997 28.5693C27.3481 28.5693 30.5552 31.7765 30.5552 31.7765" stroke="inherit" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" class="ss-smiley-icon ss-smiley-icon--2 undefined" viewBox="0 0 44 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 1)" class="ss-smiley-icon__g"><circle cx="21" cy="21" r="20.125"></circle><path class="ss-smiley-icon__path" d="M11.375 17.063a.437.437 0 110 .874.437.437 0 010-.875m19.25.001a.437.437 0 100 .874.437.437 0 000-.875M18.375 34.32a11.9 11.9 0 0112.25-5.25"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" class="ss-smiley-icon ss-smiley-icon--3 undefined" viewBox="0 0 44 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 1)" class="ss-smiley-icon__g"><circle cx="21" cy="21" r="20.125"></circle><path class="ss-smiley-icon__path" d="M14.875 13.563a.437.437 0 110 .874.437.437 0 010-.874m12.25 0a.437.437 0 100 .874.437.437 0 000-.874m-17.5 13.562h22.75"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" class="ss-smiley-icon ss-smiley-icon--4 undefined" viewBox="0 0 44 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 2)" class="ss-smiley-icon__g"><circle cx="20.125" cy="20.125" r="20.125"></circle><path class="ss-smiley-icon__path" d="M15.75 15.939a4.128 4.128 0 00-7 0m15.75 0a4.128 4.128 0 017 0M9.625 26.25a11.375 11.375 0 0021 0"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" class="ss-smiley-icon ss-smiley-icon--5 undefined" viewBox="0 0 44 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 1)" class="ss-smiley-icon__g"><circle cx="21" cy="21" r="20.125"></circle><path class="ss-smiley-icon__path" d="M10.5 27.125a11.375 11.375 0 0021 0m-19-7l-4.688-4.89a2.775 2.775 0 01-.525-3.202 2.775 2.775 0 014.443-.72l.765.765.767-.764a2.774 2.774 0 014.441.719 2.774 2.774 0 01-.525 3.203L12.5 20.125zm17 0l4.688-4.891a2.776 2.776 0 00.525-3.203 2.775 2.775 0 00-4.443-.719l-.765.765-.767-.765a2.774 2.774 0 00-4.441.72 2.776 2.776 0 00.525 3.202l4.678 4.891z"></path></g></svg></div></div>
+                                        <div class="rating-box star_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path></svg></div></div>
+                                        <div class="rating-box thumb_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 41"><path fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 41"><path fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 41"><path fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 41"><path fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 41"><path fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path></svg></div></div>
+                                        <div class="rating-box crown_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 39"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)"><circle cx="3.5" cy="7.583" r="2.625"></circle><circle cx="38.5" cy="7.73" r="2.625"></circle><path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path><circle cx="21" cy="3.5" r="3.5"></circle></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 39"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)"><circle cx="3.5" cy="7.583" r="2.625"></circle><circle cx="38.5" cy="7.73" r="2.625"></circle><path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path><circle cx="21" cy="3.5" r="3.5"></circle></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 39"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)"><circle cx="3.5" cy="7.583" r="2.625"></circle><circle cx="38.5" cy="7.73" r="2.625"></circle><path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path><circle cx="21" cy="3.5" r="3.5"></circle></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 39"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)"><circle cx="3.5" cy="7.583" r="2.625"></circle><circle cx="38.5" cy="7.73" r="2.625"></circle><path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path><circle cx="21" cy="3.5" r="3.5"></circle></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 39"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)"><circle cx="3.5" cy="7.583" r="2.625"></circle><circle cx="38.5" cy="7.73" r="2.625"></circle><path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path><circle cx="21" cy="3.5" r="3.5"></circle></g></svg></div></div>
+                                        <div class="rating-box user_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div></div>
+                                        <div class="rating-box thunder_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div></div>
+                                    </div>
+                                    </div>
+
+                                <div class="flex-column flex-column--full">
+                                    <label class="ss-common-label ss-common-label--no-margin">Choose an icon</label>
+                                    <div class="ss-rating-icons fx-row fx-align-center">
+                                        <a class="ss-rating-icon star_icon" data-value='star_icon'>
+                                            <svg width="18" height="18" class="ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 44 44">
+                                                <path fill="none" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="ss-survey-text-color--secondary ss-rating-icon-fill" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path>
+                                            </svg>
+                                        </a>
+                                        <a class="ss-rating-icon thumb_icon" data-value='thumb_icon'>
+                                            <svg width="18" height="18" class="ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 44 41">
+                                                <path fill="none" fill-rule="evenodd" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="ss-survey-text-color--secondary ss-rating-icon-fill" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path>
+                                            </svg>
+                                        </a>
+                                        <a class="ss-rating-icon crown_icon" data-value='crown_icon'>
+                                            <svg width="18" height="18" class="ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 44 39">
+                                                <g fill="none" fill-rule="evenodd" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)" class="ss-survey-text-color--secondary ss-rating-icon-fill">
+                                                <circle cx="3.5" cy="7.583" r="2.625"></circle>
+                                                <circle cx="38.5" cy="7.73" r="2.625"></circle>
+                                                <path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path>
+                                                <circle cx="21" cy="3.5" r="3.5"></circle>
+                                                </g>
+                                            </svg>
+                                        </a>
+                                        <a class="ss-rating-icon user_icon" data-value='user_icon'>
+                                            <svg width="18" height="18" class="ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 39 44">
+                                                <g fill="none" fill-rule="evenodd" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)" class="ss-survey-text-color--secondary ss-rating-icon-fill">
+                                                <circle cx="17.304" cy="12.261" r="11.375"></circle>
+                                                <path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path>
+                                                </g>
+                                            </svg>
+                                        </a>
+                                        <a class="ss-rating-icon thunder_icon" data-value='thunder_icon'>
+                                            <svg width="18" height="18" class="ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 21 44">
+                                                <path fill="none" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="ss-survey-text-color--secondary ss-rating-icon-fill" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path>
+                                            </svg>
+                                        </a>
+                                        <a class="ss-rating-icon smiley_icon" data-value='smiley_icon'>
+                                            <svg width="18" height="18" class="ss-smiley-icon ss-smiley-icon--3 ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 44 44">
+                                                <g fill="none" fill-rule="evenodd" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 1)" class="ss-smiley-icon__g">
+                                                <circle cx="21" cy="21" r="20.125"></circle>
+                                                <path class="ss-smiley-icon__path" d="M14.875 13.563a.437.437 0 110 .874.437.437 0 010-.874m12.25 0a.437.437 0 100 .874.437.437 0 000-.874m-17.5 13.562h22.75"></path>
+                                                </g>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    </div>
+                                @endif
                                 
-                                @if($currentQus->qus_type=='single_choice' || $currentQus->qus_type=='mutli_choice' || $currentQus->qus_type=='dropdown')
+                                @if($currentQus->qus_type=='single_choice' || $currentQus->qus_type=='mutli_choice' || $currentQus->qus_type=='dropdown' || $currentQus->qus_type=='rankorder')
                                     <div class="addchoice">
                                         <input type="button" id="add_choice" onclick="addchoice();" value="Add Choice" class="btn btn-primary">
                                     </div>
@@ -374,7 +403,7 @@ $("body").on("click", "#DeleteRow", function () {
 });
 function triggersubmit(qus_type){
     console.log(qus_type,"dd")
-    if(qus_type=='single_choice' || qus_type=='mutli_choice' || qus_type=='dropdown'){
+    if(qus_type=='single_choice' || qus_type=='mutli_choice' || qus_type=='dropdown' || qus_type=='rankorder'){
         let choices=[];
         $("input[name=choice]").each(function(idx, elem) {
             choices.push($(elem).val());
@@ -418,7 +447,7 @@ function sectactivequs(id,type){
 }
 function qustype(type){
     console.log(type,"type")
-    let qusset={'welcome_page':'Welcome Page','single_choice':'Single Choice','mutli_choice':'Multi Choice','open_qus':'Open Questions','likert':'Likert scale','ranking':'Ranking','dropdown':'Dropdown','picturechoice':'Picture Choice','email':'Email','matrix_qus':'Matrix Question','thank_you':'Thank You Page'};
+    let qusset={'welcome_page':'Welcome Page','single_choice':'Single Choice','mutli_choice':'Multi Choice','open_qus':'Open Questions','likert':'Likert scale','rankorder':'Rank Order','rating':'Rating','dropdown':'Dropdown','picturechoice':'Picture Choice','email':'Email','matrix_qus':'Matrix Question','thank_you':'Thank You Page'};
     console.log(qusset[type],"qusset")
 }
 $('input[type=radio][name=open_qus_choice]').change(function() {
@@ -431,7 +460,27 @@ $('input[type=radio][name=open_qus_choice]').change(function() {
         $('#single_choice_qus').css('display','none');
     }
 });
-
+$('.ss-rating-icon').click(function() {
+    $('.ss-rating-icon').not(this).removeClass('active');
+    $('.rating-box').css('display','none');
+    $(this).addClass("active");
+    $('.rating-box.'+$(this).data("value")).css('display','flex');
+    $('#icon_type').val($(this).data("value"));
+});
+document.addEventListener("DOMContentLoaded", (event) => {
+    let icon_type= $('#icon_type').val();
+    $('.rating-box.'+icon_type).css('display','flex');
+    $('.'+icon_type).addClass("active");
+});
+$('#left_label').change(function(){
+    $('#left_lable_text').html($(this).val())
+});
+$('#middle_label').change(function(){
+    $('#middle_lable_text').html($(this).val())
+});
+$('#right_label').change(function(){
+    $('#right_lable_text').html($(this).val())
+});
 </script>
     @yield('adminside-script')
 @include('admin.layout.footer')
