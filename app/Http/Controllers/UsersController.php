@@ -263,7 +263,9 @@ class UsersController extends Controller
         
                 
                 return Datatables::of($all_datas)
-                 
+                ->addColumn('select_all', function ($all_data) {
+                    return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                })
                 ->addColumn('name', function ($all_data) {
                     return $all_data->name;
                 })  
@@ -319,7 +321,7 @@ class UsersController extends Controller
                                 </div>
                             </div>';
                         })
-                ->rawColumns(['action','name','surname','id_passport','email','role_id','share_link','status_id'])      
+                ->rawColumns(['select_all','action','name','surname','id_passport','email','role_id','share_link','status_id'])      
                 ->make(true);
             }
         }
@@ -548,5 +550,24 @@ class UsersController extends Controller
         header("Content-Type: application/vnd.ms-excel");
         return redirect(url('/')."/export/".$fileName);
 
+    }
+
+    public function users_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $tags = Users::find($id);
+                $tags->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Users Deleted'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }

@@ -78,7 +78,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('get_all_users', 'UsersController@get_all_users')->name('get_all_users');
     Route::get('export_user_activity','UsersController@export_user_activity')->name('export_user_activity');
     Route::get('export_referrals','UsersController@export_referrals')->name('export_referrals');
-
+    Route::any('users_multi_delete', 'UsersController@users_multi_delete')->name('users_multi_delete');
 
     Route::resource('rewards','RewardsController');
     Route::any('get_all_rewards', 'RewardsController@get_all_rewards')->name('get_all_rewards');
