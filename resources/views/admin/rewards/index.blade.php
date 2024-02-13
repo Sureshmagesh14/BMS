@@ -6,7 +6,14 @@
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
-
+<style>
+.datepicker{
+z-index: 1100 !important;
+}
+#ui-datepicker-div {
+width: 30% !important;
+}
+</style>
       <!-- ============================================================== -->
             <!-- Start right Content here -->
             <!-- ============================================================== -->
@@ -43,19 +50,17 @@
                                     
                                     
                                     
-<div class="text-left">
+<div class="text-right">
 
 
+<a href="#!" data-url="{{ route('export_rewards') }}" data-size="xl" data-ajax-popup="true"
+                                        class="btn btn-primary" data-bs-original-title="{{ __('Rewards Summary') }}" class="btn btn-primary" data-size="xl"
+                                         data-ajax-popup="true" data-bs-toggle="tooltip"
+                                        id="export">
+                                        Export
+                                    </a>
 
-<div class="btn-group" role="group">
-<button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-Export <i class="mdi mdi-chevron-down"></i>
-</button>
-<div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-<a class="dropdown-item" href="#">Rewards Summary by Month & Year</a>
-<a class="dropdown-item" href="#">Rewards Summary by Respondent</a>
-</div>
-</div>
+
 
 </div>
 

@@ -6,7 +6,14 @@
 <?php echo $__env->make('admin.layout.horizontal_left_menu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <?php echo $__env->make('admin.layout.horizontal_right_menu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <?php echo $__env->make('admin.layout.vertical_side_menu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-
+<style>
+.datepicker{
+z-index: 1100 !important;
+}
+#ui-datepicker-div {
+width: 30% !important;
+}
+</style>
       <!-- ============================================================== -->
             <!-- Start right Content here -->
             <!-- ============================================================== -->
@@ -43,26 +50,12 @@
                                     <div class="text-right">
 
 
-
-<div class="btn-group" role="group">
-<button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-Export <i class="mdi mdi-chevron-down"></i>
-</button>
-<div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-<a class="dropdown-item" href="#">Respondent Project Engagement by Month & Year</a>
-<a class="dropdown-item" href="#">Respondent Project Engagement by Respondent</a>
-</div>
-</div>
-
-
-                                            <a href="<?php echo e(url('projects_export/xlsx')); ?>" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export</a>
-
-                                            <a href="#!" data-url="<?php echo e(route('projects.create')); ?>" data-size="xl" data-ajax-popup="true"
-                                        class="btn btn-primary" data-bs-original-title="<?php echo e(__('Create Projects')); ?>" class="btn btn-primary" data-size="xl"
-                                         data-ajax-popup="true" data-bs-toggle="tooltip"
-                                        id="create">
-                                        Create Project
-                                    </a>
+<a href="#!" data-url="<?php echo e(route('export_projects')); ?>" data-size="xl" data-ajax-popup="true"
+    class="btn btn-primary" data-bs-original-title="<?php echo e(__('Respondent Projects')); ?>" class="btn btn-primary" data-size="xl"
+        data-ajax-popup="true" data-bs-toggle="tooltip"
+    id="export">
+    Export
+</a>
                                         </div>
 
                                         <h4 class="card-title"> </h4>

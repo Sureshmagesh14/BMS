@@ -65,8 +65,9 @@ Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'Su
     
     Route::resource('projects','ProjectsController');
     Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');
-    Route::get('projects_export/{id}','ProjectsController@projects_export')->name('projects_export');  
-    
+    Route::get('projects_export','ProjectsController@projects_export')->name('projects_export');
+    Route::any('export_projects', 'ProjectsController@export_projects')->name('export_projects');    
+
     Route::resource('users','UsersController');
     Route::any('get_all_users', 'UsersController@get_all_users')->name('get_all_users');
     Route::get('export_user_activity','UsersController@export_user_activity')->name('export_user_activity');
@@ -100,7 +101,8 @@ Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'Su
         Route::get('rewards','rewards')->name('rewards');
         Route::any('get_all_rewards', 'get_all_rewards')->name('get_all_rewards');
         Route::any('view_rewards/{id}', 'view_rewards')->name('view_rewards');
-    
+        Route::get('rewards_export','rewards_export')->name('rewards_export');     
+        Route::get('export_rewards','RewardsController@export_rewards')->name('export_rewards');        
     });
 
     // Route::controller(TagsController::class)->group(function(){
