@@ -405,6 +405,12 @@ class SurveyController extends Controller
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'picturechoice':
+                $json=[
+                    'choices_list'=>$request->choices_list_pic,
+                    'choices_type'=>'picturechoice',
+                    'question_name'=>$request->question_name
+                ];
+                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'email':
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>'email']);
@@ -422,6 +428,20 @@ class SurveyController extends Controller
         $survey=Survey::where(['builderID'=>$id])->first();
         echo "<pre>"; print_r($survey);
 
+    }
+    public function uploadimage(Request $request){
+        $filename='';
+        if($request->hasfile('image'))
+        {
+            $file = $request->file('image');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/survey/', $filename);
+            echo $filename;
+
+        }else{
+            echo "no file";
+        }
     }
 
    
