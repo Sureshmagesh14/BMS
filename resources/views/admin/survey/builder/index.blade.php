@@ -171,7 +171,7 @@
                         $left_label=$qusvalue->left_label;
                     }
                     ?>
-                    {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation')) }}
+                    {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation','enctype'=>"multipart/form-data")) }}
                     <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
                     @if($currentQus->qus_type=='welcome_page')
                         <div class="modal-body">
@@ -209,6 +209,18 @@
                             
                             </div>
                             <br>
+                            @if(isset($qusvalue->welcome_image))
+                            <image src="{{ asset('uploads/survey/'.$qusvalue->welcome_image) }}" alt="image" width="100" height="100" id="existing_image">
+                            <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="12" height="12" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            @endif
+                            <div id="imgPreview"></div>
+                            <div style="<?php if(isset($qusvalue->welcome_image) && $qusvalue->welcome_image!=''){ echo "display:none;"; } ?>" class="upload-image-placeholder" id="trigger_welcome_image">
+                                <div class="upload-image-placeholder__upload-btn">
+                                    <svg width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
+                                    <p>Click here to upload a welcome image</p>
+                                </div>
+                            </div>
+                            <input style="display:none;" type="file" id="welcome_image" name="welcome_image" required class="course form-control">
                             <div>
                                 {{ Form::label('welcome_btn', __('Button Label'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->welcome_imagetitle))
@@ -253,6 +265,19 @@
                                 @endif
                             </div>
                             <br>
+                            @if(isset($qusvalue->thankyou_image))
+                            <image src="{{ asset('uploads/survey/'.$qusvalue->thankyou_image) }}" alt="image" width="100" height="100" id="existing_image_thankyou">
+                            <a id="ss_draft_remove_image_thankyou" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="12" height="12" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            @endif
+                            <div id="imgPreview"></div>
+                            <div style="<?php if(isset($qusvalue->thankyou_image) && $qusvalue->thankyou_image!=''){ echo "display:none;"; } ?>" class="upload-image-placeholder" id="trigger_thankyou_image">
+                                <div class="upload-image-placeholder__upload-btn">
+                                    <svg width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
+                                    <p>Click here to upload a thank you image</p>
+                                </div>
+                            </div>
+                            <input style="display:none;" type="file" id="thankyou_image" name="thankyou_image" required class="course form-control">
+                            
                         </div>
                     @endif
                     @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
@@ -366,6 +391,30 @@
                                     </div>
                                     </div>
                                 @endif
+                                @if($currentQus->qus_type=='picturechoice')
+                                <input type="hidden" id="choices_list_pic" name="choices_list_pic">                           
+                                <div class="addchoice">
+                                    <input type="button" id="add_choice_pic" onclick="addchoice_pic();" value="Add Choice" class="btn btn-primary">
+                                </div>
+                                <?php $exiting_choices=$qusvalue!=null ? json_decode($qusvalue->choices_list): []; ?>
+                                <div id="picture_choices_section" class="row">
+                                    @foreach($exiting_choices as $choice)
+                                    <div class="img_placeholder">
+                                        <img class="current_image" src="{{$choice->img}}">
+                                        <div class="trigger_choice"  style="display:none;">
+                                            <svg class="svgsection" width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
+                                        </div>
+                                        <input type="file" class="choice_image"   name="choice_image" style="visibility:hidden;"/>
+                                        <div class="option-action">
+                                            <textarea class="choice_desc"  maxlength="500" name="choice_desc" placeholder="Enter Choice" style="max-height: 44px; height: 25px;">{{$choice->text}}</textarea>
+                                            <a class="deletepic_choice ss-button ss-button__icon-only mr--zero" role="button">
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.90912 4H3.18185H13.3637" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.09093 4.00004V2.66671C5.09093 2.31309 5.22502 1.97395 5.4637 1.7239C5.70239 1.47385 6.02611 1.33337 6.36366 1.33337H8.90913C9.24669 1.33337 9.57041 1.47385 9.80909 1.7239C10.0478 1.97395 10.1819 2.31309 10.1819 2.66671V4.00004M12.091 4.00004V13.3334C12.091 13.687 11.9569 14.0261 11.7182 14.2762C11.4795 14.5262 11.1558 14.6667 10.8182 14.6667H4.45456C4.11701 14.6667 3.79328 14.5262 3.5546 14.2762C3.31592 14.0261 3.18182 13.687 3.18182 13.3334V4.00004H12.091Z" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.36368 7.33337V11.3334" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.90915 7.33337V11.3334" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                @endif
                                 
                                 @if($currentQus->qus_type=='single_choice' || $currentQus->qus_type=='multi_choice' || $currentQus->qus_type=='dropdown' || $currentQus->qus_type=='rankorder')
                                     <div class="addchoice">
@@ -417,17 +466,74 @@ div#survey-table_wrapper .row {
 
 </style>
 <script>
+
+function addchoice_pic(){
+    let wrapperID='';
+    let containerID='';
+    // newRowAdd ='<div class="col-md-3 picture_choice"><input type="file"  name="picture_choice" required class="course form-control"></div>';
+    newRowAdd='<div class="img_placeholder"><img class="current_image" style="display:none;"><div class="trigger_choice"><svg class="svgsection" width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg></div><input type="file" class="choice_image"   name="choice_image" style="visibility:hidden;"/><div class="option-action"><textarea class="choice_desc" maxlength="500" name="choice_desc" placeholder="Enter Choice" style="max-height: 44px; height: 25px;"></textarea><a class="deletepic_choice ss-button ss-button__icon-only mr--zero" role="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.90912 4H3.18185H13.3637" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.09093 4.00004V2.66671C5.09093 2.31309 5.22502 1.97395 5.4637 1.7239C5.70239 1.47385 6.02611 1.33337 6.36366 1.33337H8.90913C9.24669 1.33337 9.57041 1.47385 9.80909 1.7239C10.0478 1.97395 10.1819 2.31309 10.1819 2.66671V4.00004M12.091 4.00004V13.3334C12.091 13.687 11.9569 14.0261 11.7182 14.2762C11.4795 14.5262 11.1558 14.6667 10.8182 14.6667H4.45456C4.11701 14.6667 3.79328 14.5262 3.5546 14.2762C3.31592 14.0261 3.18182 13.687 3.18182 13.3334V4.00004H12.091Z" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.36368 7.33337V11.3334" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.90915 7.33337V11.3334" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path></svg></a></div></div>'
+    $('#picture_choices_section').append(newRowAdd);
+}
 function addchoice(){
         newRowAdd ='<div id="row" class="col-md-3"><div class="input-group choicequs"><input type="text" name="choice" class="form-control m-input"><div class="input-group-prepend"><button class="btn btn-danger" id="DeleteRow" type="button">X</button> </div></div> </div>';
  
         $('#choices_section').append(newRowAdd);
 }
+$("body").on("click",".deletepic_choice",function(){
+    $(this).parent().parent().remove();
+});
 $("body").on("click", "#DeleteRow", function () {
     $(this).parents("#row").remove();
 });
+$("body").on("click",".trigger_choice",function(){
+    $(this).next(".choice_image").trigger('click');
+});
+$("body").on("change",".choice_image",function(e){
+    console.log($(this));
+    var id=$(this).parent();
+    const files = e.target.files[0];
+    console.log(id.children('img.current_image'),"id.children().find('img.current_image'")
+    if (files) {
+       uploadfile(files,id); 
+    }
+});
+async function  uploadfile(file,id){
+    const formdata = new FormData();
+    formdata.append("image", file);
+    const requestOptions = {
+        method: "POST",
+        body: formdata,
+        redirect: "follow",
+    };
+    let img='';
+
+    await fetch("{{route('survey.uploadimage')}}", requestOptions)
+    .then((response) => response.text())
+    .then((result) => {
+        let img="http://127.0.0.1:8000/uploads/survey/"+result;
+        id.children('img.current_image').attr('src',img);
+        id.children('img.current_image').css('display','block');
+        id.children(".trigger_choice").css('display','none');
+    })
+    .catch((error) => console.error(error));
+    return img;
+}
 function triggersubmit(qus_type){
     console.log(qus_type,"dd")
-    if(qus_type=='single_choice' || qus_type=='multi_choice' || qus_type=='dropdown' || qus_type=='rankorder'){
+    if(qus_type=='picturechoice'){
+        let choice_pic=[];
+        $('.img_placeholder').each(function(){
+            choice_pic.push({'img':$(this).children('.current_image').attr('src'),'text':$(this).children('.option-action').children('textarea.choice_desc').val()});
+        });
+        $('#choices_list_pic').val(JSON.stringify(choice_pic));
+        if(choice_pic.length>0){
+            $('#update_qus_final').click();
+        }else{
+            Swal.fire("Warning", 'Add Choices', "warning") ;
+        }
+
+    }
+    else if(qus_type=='single_choice' || qus_type=='multi_choice' || qus_type=='dropdown' || qus_type=='rankorder'){
         let choices=[];
         $("input[name=choice]").each(function(idx, elem) {
             choices.push($(elem).val());
@@ -509,6 +615,67 @@ $('#middle_label').change(function(){
 $('#right_label').change(function(){
     $('#right_lable_text').html($(this).val())
 });
+// Welcome Image
+$('#trigger_welcome_image').click(function(){
+    $('#welcome_image').click();
+});
+$('#welcome_image').change(function(){
+    getImgData();
+})
+function getImgData() {
+const chooseFile = document.getElementById("welcome_image");
+const imgPreview = document.getElementById("imgPreview");
+  const files = chooseFile.files[0];
+  if (files) {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(files);
+    fileReader.addEventListener("load", function () {
+      imgPreview.style.display = "block";
+      imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
+      $('#trigger_welcome_image').css('display','none');
+      $('#ss_draft_remove_image_welcome').css('display','block');
+
+    });    
+  }
+}
+$('#ss_draft_remove_image_welcome').click(function(){
+    $('#imgPreview').css('display','none');
+    $('#existing_image').css('display','none');
+    $('#trigger_welcome_image').css('display','inline-block');
+    $('#ss_draft_remove_image_welcome').css('display','none');
+});
+// Welcome Image
+// Thank you Image 
+$('#trigger_thankyou_image').click(function(){
+    $('#thankyou_image').click();
+});
+$('#thankyou_image').change(function(){
+    getImgData();
+})
+function getImgData() {
+const chooseFile = document.getElementById("thankyou_image");
+const imgPreview = document.getElementById("imgPreview");
+  const files = chooseFile.files[0];
+  if (files) {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(files);
+    fileReader.addEventListener("load", function () {
+      imgPreview.style.display = "block";
+      imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
+      $('#trigger_thankyou_image').css('display','none');
+      $('#ss_draft_remove_image_thankyou').css('display','block');
+
+    });    
+  }
+}
+$('#ss_draft_remove_image_thankyou').click(function(){
+    $('#existing_image_thankyou').css('display','none');
+    $('#trigger_thankyou_image').css('display','inline-block');
+    $('#ss_draft_remove_image_thankyou').css('display','none');
+    $('#imgPreview').css('display','none');
+
+});
+// Thank you Image 
 </script>
     @yield('adminside-script')
 @include('admin.layout.footer')
