@@ -415,6 +415,27 @@
                                     @endforeach
                                 </div>
                                 @endif
+                                @if($currentQus->qus_type=='matrix_qus')
+                                <div>
+                                    <table id="matrix_sec">
+                                        <tr>
+                                            <td></td>
+                                            <td>Choice 1</td>
+                                            <td>Choice 2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Qus 1</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Qus 1</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                @endif
                                 
                                 @if($currentQus->qus_type=='single_choice' || $currentQus->qus_type=='multi_choice' || $currentQus->qus_type=='dropdown' || $currentQus->qus_type=='rankorder')
                                     <div class="addchoice">
