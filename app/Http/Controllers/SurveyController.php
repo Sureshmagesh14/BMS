@@ -316,20 +316,36 @@ class SurveyController extends Controller
         $currentQus=Questions::where(['id'=>$id])->first();
         switch ($request->qus_type) {
             case 'welcome_page':
+                $filename='';
+                if($request->hasfile('welcome_image'))
+                {
+                    $file = $request->file('welcome_image');
+                    $extenstion = $file->getClientOriginalExtension();
+                    $filename = time().'.'.$extenstion;
+                    $file->move('uploads/survey/', $filename);
+                }
                 $json=[
                     'welcome_imagesubtitle'=>$request->welcome_imagesubtitle,'welcome_btn'=>$request->welcome_btn,
                     'welcome_imagetitle'=>$request->welcome_imagetitle,
                     'welcome_title'=>$request->welcome_title,
-                    'welcome_image'=>$request->welcome_image
+                    'welcome_image'=>$filename
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['qus_ans'=>json_encode($json)]);
 
               break;
             case 'thank_you':
+                $filename='';
+                if($request->hasfile('thankyou_image'))
+                {
+                    $file = $request->file('thankyou_image');
+                    $extenstion = $file->getClientOriginalExtension();
+                    $filename = time().'.'.$extenstion;
+                    $file->move('uploads/survey/', $filename);
+                }
                 $json=[
                     'thankyou_title'=>$request->thankyou_title,
                     'thankyou_imagetitle'=>$request->thankyou_imagetitle,
-                    'thankyou_image'=>$request->thankyou_image,
+                    'thankyou_image'=>$filename,
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->thankyou_title,'qus_ans'=>json_encode($json)]);
               break;

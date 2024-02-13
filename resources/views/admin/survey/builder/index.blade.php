@@ -171,7 +171,7 @@
                         $left_label=$qusvalue->left_label;
                     }
                     ?>
-                    {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation')) }}
+                    {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation','enctype'=>"multipart/form-data")) }}
                     <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
                     @if($currentQus->qus_type=='welcome_page')
                         <div class="modal-body">
@@ -209,6 +209,18 @@
                             
                             </div>
                             <br>
+                            @if(isset($qusvalue->welcome_image))
+                            <image src="{{ asset('uploads/survey/'.$qusvalue->welcome_image) }}" alt="image" width="100" height="100" id="existing_image">
+                            <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="12" height="12" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            @endif
+                            <div id="imgPreview"></div>
+                            <div style="<?php if(isset($qusvalue->welcome_image) && $qusvalue->welcome_image!=''){ echo "display:none;"; } ?>" class="upload-image-placeholder" id="trigger_welcome_image">
+                                <div class="upload-image-placeholder__upload-btn">
+                                    <svg width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
+                                    <p>Click here to upload a welcome image</p>
+                                </div>
+                            </div>
+                            <input style="display:none;" type="file" id="welcome_image" name="welcome_image" required class="course form-control">
                             <div>
                                 {{ Form::label('welcome_btn', __('Button Label'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->welcome_imagetitle))
@@ -253,6 +265,19 @@
                                 @endif
                             </div>
                             <br>
+                            @if(isset($qusvalue->thankyou_image))
+                            <image src="{{ asset('uploads/survey/'.$qusvalue->thankyou_image) }}" alt="image" width="100" height="100" id="existing_image_thankyou">
+                            <a id="ss_draft_remove_image_thankyou" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="12" height="12" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            @endif
+                            <div id="imgPreview"></div>
+                            <div style="<?php if(isset($qusvalue->thankyou_image) && $qusvalue->thankyou_image!=''){ echo "display:none;"; } ?>" class="upload-image-placeholder" id="trigger_thankyou_image">
+                                <div class="upload-image-placeholder__upload-btn">
+                                    <svg width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
+                                    <p>Click here to upload a thank you image</p>
+                                </div>
+                            </div>
+                            <input style="display:none;" type="file" id="thankyou_image" name="thankyou_image" required class="course form-control">
+                            
                         </div>
                     @endif
                     @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
@@ -509,6 +534,67 @@ $('#middle_label').change(function(){
 $('#right_label').change(function(){
     $('#right_lable_text').html($(this).val())
 });
+// Welcome Image
+$('#trigger_welcome_image').click(function(){
+    $('#welcome_image').click();
+});
+$('#welcome_image').change(function(){
+    getImgData();
+})
+function getImgData() {
+const chooseFile = document.getElementById("welcome_image");
+const imgPreview = document.getElementById("imgPreview");
+  const files = chooseFile.files[0];
+  if (files) {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(files);
+    fileReader.addEventListener("load", function () {
+      imgPreview.style.display = "block";
+      imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
+      $('#trigger_welcome_image').css('display','none');
+      $('#ss_draft_remove_image_welcome').css('display','block');
+
+    });    
+  }
+}
+$('#ss_draft_remove_image_welcome').click(function(){
+    $('#imgPreview').css('display','none');
+    $('#existing_image').css('display','none');
+    $('#trigger_welcome_image').css('display','inline-block');
+    $('#ss_draft_remove_image_welcome').css('display','none');
+});
+// Welcome Image
+// Thank you Image 
+$('#trigger_thankyou_image').click(function(){
+    $('#thankyou_image').click();
+});
+$('#thankyou_image').change(function(){
+    getImgData();
+})
+function getImgData() {
+const chooseFile = document.getElementById("thankyou_image");
+const imgPreview = document.getElementById("imgPreview");
+  const files = chooseFile.files[0];
+  if (files) {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(files);
+    fileReader.addEventListener("load", function () {
+      imgPreview.style.display = "block";
+      imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
+      $('#trigger_thankyou_image').css('display','none');
+      $('#ss_draft_remove_image_thankyou').css('display','block');
+
+    });    
+  }
+}
+$('#ss_draft_remove_image_thankyou').click(function(){
+    $('#existing_image_thankyou').css('display','none');
+    $('#trigger_thankyou_image').css('display','inline-block');
+    $('#ss_draft_remove_image_thankyou').css('display','none');
+    $('#imgPreview').css('display','none');
+
+});
+// Thank you Image 
 </script>
     @yield('adminside-script')
 @include('admin.layout.footer')
