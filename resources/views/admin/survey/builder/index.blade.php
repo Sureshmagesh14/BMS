@@ -416,8 +416,16 @@
                                 </div>
                                 @endif
                                 @if($currentQus->qus_type=='matrix_qus')
+                                <div class="matrix_action">
+                                <input type="button"  onclick="insert('coloumn')" value="Insert Column" class="btn matrixbtn">
+                                <input type="button" onclick="insert('row')" value="Insert Row" class="btn   matrixbtn">
+                                <input type="button" onclick="remove('coloumn')" value="Remove Column" class="btn   matrixbtn">
+                                <input type="button" onclick="remove('row')" value="Remove Row" class="btn  matrixbtn">
+
+                                </div>
                                 <div>
                                     <table id="matrix_sec">
+                                        <tbody>
                                         <tr>
                                             <td></td>
                                             <td>Choice 1</td>
@@ -433,6 +441,7 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                                 @endif
@@ -697,6 +706,38 @@ $('#ss_draft_remove_image_thankyou').click(function(){
 
 });
 // Thank you Image 
+let table = document.querySelectorAll("#matrix_sec tbody");
+const addColumn = () => {
+    [...document.querySelectorAll('#matrix_sec tr')].forEach((row, i) => {
+        const input = document.createElement("input")
+        input.setAttribute('type', 'text')
+        const cell = document.createElement("td")
+        // cell.appendChild(input)
+        row.appendChild(cell)
+    });
+ }
+ 
+function insert(type){
+    if(type=='row'){
+        let tr = document.createElement('tr');
+        for (let i = 1; i <= $("#matrix_sec > tbody > tr:first > td").length; i++) {
+            console.log(i,"dd");
+            let td = document.createElement('td');
+            tr.appendChild(td);
+        }
+        table[0].appendChild(tr);
+    }else{
+        addColumn();
+    }
+
+}
+function remove(type){
+    if(type=='row'){
+        $('#matrix_sec tr:last').remove();
+    }else{
+        $("#matrix_sec td:last-child").remove();
+    }
+}
 </script>
     @yield('adminside-script')
 @include('admin.layout.footer')
