@@ -93,14 +93,9 @@ class TagsController extends Controller
         
         try {
             $data = Tags::find($id);
-            $returnHTML = view('admin.tags.view',compact('data'))->render();
+            return view('admin.tags.view',compact('data'));
 
-            return response()->json(
-                [
-                    'success' => true,
-                    'html_page' => $returnHTML,
-                ]
-            );
+          
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -246,8 +241,7 @@ class TagsController extends Controller
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
-                            <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
+                            <a href="'.$view_route.'" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>
                             <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
