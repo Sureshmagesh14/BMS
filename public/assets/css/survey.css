@@ -1389,3 +1389,621 @@ body * {
 .ss-text__color--black {
     color: #25292D;
 }
+
+
+
+/* Side bar */
+a {
+    background-color: transparent;
+}
+
+body ::selection {
+    color: #fff;
+    background: rgba(55, 36, 89, 0.2);
+}
+
+body a {
+    cursor: pointer;
+}
+
+a {
+    background-color: transparent;
+}
+
+div,
+span,
+h3,
+a,
+ul,
+li {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+ul {
+    list-style: none;
+}
+
+body *,
+body *::after,
+body *::before {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body a:focus {
+    outline: none;
+}
+
+body a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+body a:hover {
+    text-decoration: none;
+}
+
+:focus {
+    outline: none;
+}
+
+:focus {
+    outline: none !important;
+}
+
+.flex-column {
+    flex-direction: column !important;
+}
+
+.justify-content-between {
+    justify-content: space-between !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.bg-grey-7 {
+    background-color: #F2F5F8 !important;
+}
+
+.h-100 {
+    height: 100% !important;
+}
+
+.my-2 {
+    margin-top: 4px !important;
+}
+
+.my-2 {
+    margin-bottom: 4px !important;
+}
+
+.mb-3 {
+    margin-bottom: 8px !important;
+}
+
+body:not([dir='rtl']) .ms-4 {
+    margin-left: 12px !important;
+}
+
+.mb-5 {
+    margin-bottom: 16px !important;
+}
+
+.py-3 {
+    padding-top: 8px !important;
+}
+
+.py-3 {
+    padding-bottom: 8px !important;
+}
+
+.pb-7 {
+    padding-bottom: 32px !important;
+}
+
+body:not([dir='rtl']) .px-7 {
+    padding-right: 32px !important;
+}
+
+body:not([dir='rtl']) .px-7 {
+    padding-left: 32px !important;
+}
+
+.pt-10 {
+    padding-top: 56px !important;
+}
+
+.ss-text {
+    margin: 0;
+    font-size: 16px;
+    color: #25292D;
+    font-weight: 500;
+}
+
+.ss-text__size--h3 {
+    font-size: 16px;
+}
+
+.ss-text__weight--normal {
+    font-weight: 400;
+}
+
+.ss-text__weight--semibold {
+    font-weight: 600;
+}
+
+.ss-text__color--black {
+    color: #25292D;
+}
+
+.ss-text__color--grey {
+    color: #63686F;
+}
+
+.ss-text__color--red {
+    color: #F86060;
+}
+
+.ss-text__line-height--medium {
+    line-height: 1.4;
+}
+
+.ss-button {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -moz-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    padding: 10px 16px;
+    margin: 0 .2em;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: all 0.3s;
+    border-radius: 3px;
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+}
+
+.ss-button svg {
+    vertical-align: middle;
+    transition: all 0.3s;
+    opacity: 0.8;
+    line-height: inherit;
+}
+
+.ss-button:hover,
+.ss-button:active,
+.ss-button:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+.ss-button:hover svg,
+.ss-button:active svg,
+.ss-button:focus svg {
+    opacity: 1;
+}
+
+.ss-button__icon-only {
+    padding: .1em;
+    margin: 0 .2em;
+    font-weight: 700;
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -moz-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: transparent;
+    border: none;
+}
+
+.ss-button--dropdown {
+    position: relative;
+    outline: none;
+    cursor: pointer;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    -webkit-justify-content: flex-start;
+    -moz-justify-content: flex-start;
+    justify-content: flex-start;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    border-radius: 4px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.ss-button--dropdown span.ss-button {
+    margin: 0;
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -moz-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    pointer-events: none;
+}
+
+.ss-button--dropdown span.ss-button svg {
+    transition: all 0.3s;
+}
+
+.ss-button--dropdown ul {
+    display: none;
+    z-index: 2;
+    width: auto;
+    min-width: 125px;
+    max-height: 360px;
+    overflow: auto;
+    left: auto;
+    right: 0;
+    top: 102.5%;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0px 2px 14px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0px 2px 14px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 0px 2px 14px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    padding: 8px 0;
+    margin: 0;
+}
+
+.ss-button--dropdown ul:empty {
+    display: none !important;
+}
+
+.ss-button--dropdown ul li {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    list-style-type: none;
+    white-space: nowrap;
+    font-size: 14px;
+    transition: all 0.3s;
+    cursor: pointer;
+    font-weight: 500;
+    font-weight: 500;
+    color: #63686F;
+    padding: 6px 16px;
+}
+
+.ss-button--dropdown ul li:hover {
+    background-color: #F6F6F6;
+}
+
+.ss-button--dropdown:hover,
+.ss-button--dropdown:focus,
+.ss-button--dropdown:active {
+    text-decoration: none;
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar {
+    width: 20%;
+    min-width: 273px;
+    max-width: 273px;
+    border-right: 1px solid #EAEAEA;
+    transition: width 0.5s ease, min-width 0.5s ease;
+    scrollbar-color: rgba(0, 0, 0, 0.1) rgba(64, 64, 64, 0.1);
+    scrollbar-width: thin;
+    scrollbar-face-color: rgba(0, 0, 0, 0.1);
+    scrollbar-track-color: rgba(64, 64, 64, 0.1);
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar::-webkit-scrollbar-track {
+    background: rgba(64, 64, 64, 0.1);
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar .ss-dashboard--sidebar-container {
+    position: fixed;
+    width: 273px;
+    border-right: 1px solid #EAEAEA;
+    top: 64px;
+    transform: translate(0, 0);
+    transition: transform 0.5s ease;
+    padding-bottom: 64px;
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar .ss-dashboard--sidebar-container>div {
+    padding-top: 30px;
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar .ss-dashboard--folder-item {
+    height: 40px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar .ss-dashboard--folder-item .ss-button {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar .ss-dashboard--folder-item:hover .ss-button {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar .ss-dashboard--folder-item:last-of-type {
+    margin-bottom: 16px !important;
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar .ss-dashboard--folder-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background-color: transparent;
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar .ss-dashboard--folder-item.active {
+    background-color: rgba(174, 203, 203, 0.25);
+}
+
+.ss-dashboard--wrapper .ss-dashboard--sidebar .ss-dashboard--folder-item.active::before {
+    background-color: #4A9CA6;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.fx-row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+}
+
+.fx-column {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.fx-ai--center {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+}
+
+.fx-grow-1 {
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    -moz-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+}
+
+.ss-overflow-y--auto {
+    overflow-y: auto;
+}
+
+.fx--fh {
+    height: 100%;
+}
+
+.position--relative {
+    position: relative;
+}
+
+.ss-scrollbar--hide {
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    overflow: -moz-scrollbars-none;
+    scrollbar-width: none;
+}
+
+.ss-scrollbar--hide::-webkit-scrollbar,
+.ss-scrollbar--hide::-webkit-scrollbar-thumb,
+.ss-scrollbar--hide::-webkit-scrollbar-track,
+.ss-scrollbar--hide::-webkit-scrollbar-button,
+.ss-scrollbar--hide::-webkit-scrollbar-track-piece,
+.ss-scrollbar--hide::-webkit-scrollbar-corner,
+.ss-scrollbar--hide::-webkit-resizer {
+    display: none !important;
+    width: 0 !important;
+    background: transparent;
+}
+
+*:focus {
+    outline: none !important;
+}
+
+body * {
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+/*! CSS Used from: Embedded */
+span.bp3-popover2-target {
+    display: inline-block;
+}
+
+/*! CSS Used from: Embedded */
+*,
+*::before,
+*::after {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+}
+
+::selection {
+    background: rgba(125, 188, 255, 0.6);
+}
+
+a {
+    color: #106ba3;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #106ba3;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+:focus {
+    outline: rgba(19, 124, 189, 0.6) auto 2px;
+    outline-offset: 2px;
+    -moz-outline-radius: 6px;
+}
+.surveyIcon {
+    height: 56px;
+    min-width: 56px;
+    width: 56px;
+    background-color: #ddd;
+    border-radius: 8px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow: inset 0 0 0 60px rgba(0,0,0,0.25);
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+}
+header#page-topbar,.main-content {
+    background: #F2F5F8 !important;
+}
+/* side bar */
+.ss-dashboard--folder-item.active {
+    background-color: rgba(174,203,203,0.25);
+}
+.ss-dashboard--folder-item {
+    height: 40px;
+    text-decoration: none;
+    cursor: pointer;
+}
+.ss-dashboard--folder-item.active::before {
+    background-color: #4A9CA6;
+}
+.ss-dashboard--folder-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background-color: transparent;
+}
+.folder.active .ss-text {
+    color: #25292D;
+    font-weight: 600;
+}
+.vertical-menu-btn1 {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 2;
+}
+.createfoldericon{
+    position: relative;
+    left: 37%;
+}
