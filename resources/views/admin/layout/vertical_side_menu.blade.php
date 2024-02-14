@@ -51,7 +51,17 @@
                         <span class="menu-item" key="t-calendar">Users</span>
                     </a>
                 </li>
+                <?php $getfirstSurvey=\App\Models\Survey::orderBy("id", "asc")->first(); if(isset($getfirstSurvey)) 
+                $templateRoute=route('survey.template',$getfirstSurvey->folder_id); else $templateRoute=''; 
+                
+                ?>
                 <li>
+                    <a href="{{$templateRoute}}" class="waves-effect">
+                        <i class="icon nav-icon" data-feather="calendar"></i>
+                        <span class="menu-item" key="t-contacts">Survey</span>
+                    </a>
+                </li>
+                <li style="display:none;">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="icon nav-icon" data-feather="book"></i>
                         <span class="menu-item" key="t-contacts">Survey</span>
@@ -59,7 +69,6 @@
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('folder')}}" key="t-user-grid">Folder</a></li>
                         <li><a href="{{route('survey')}}" key="t-user-list">Survey</a></li>
-                        <?php $getfirstSurvey=\App\Models\Survey::orderBy("id", "asc")->first(); if(isset($getfirstSurvey)) $templateRoute=route('survey.template',$getfirstSurvey->id); else $templateRoute=''; ?>
                         <li><a href="{{$templateRoute}}" key="t-profile">Templates</a></li>
                         <li><a href="contacts-profile.html" key="t-profile">Response</a></li>
                     </ul>

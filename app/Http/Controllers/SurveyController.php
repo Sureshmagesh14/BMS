@@ -202,7 +202,7 @@ class SurveyController extends Controller
         
     }
     public function templateList(Request $request,$id){
-        $survey=Survey::where(['id'=>$id])->first();
+        $survey=Survey::where(['folder_id'=>$id])->first();
         $folders=Folder::withCount('surveycount')->get();
         return view('admin.survey.template.index', compact('survey','folders'));
     }
