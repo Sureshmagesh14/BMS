@@ -416,6 +416,9 @@
                                 </div>
                                 @endif
                                 @if($currentQus->qus_type=='matrix_qus')
+                                <input type="hidden" id="choices_list_matrix" name="choices_list_matrix[]">                           
+                                <input type="hidden" id="question_list_matrix" name="question_list_matrix[]">                           
+
                                 <div class="matrix_action">
                                 <input type="button"  onclick="insert('coloumn')" value="Insert Column" class="btn matrixbtn">
                                 <input type="button" onclick="insert('row')" value="Insert Row" class="btn   matrixbtn">
@@ -425,22 +428,45 @@
                                 </div>
                                 <div>
                                     <table id="matrix_sec">
+                                    <?php $exiting_choices_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_choice): [];
+                                    $exiting_qus_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_qus): []; $i=0;
+                                     ?>
                                         <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td><input type="text" placeholder="Enter Choice" class="matrix_head"  name="matrix_choice"></td>
-                                            <td><input type="text" placeholder="Enter Choice" class="matrix_head"  name="matrix_choice"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
-                                            <td><input type="radio" name="matrxi_anstype"></td>
-                                            <td><input type="radio" name="matrxi_anstype"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
-                                            <td><input type="radio" name="matrxi_anstype"></td>
-                                            <td><input type="radio" name="matrxi_anstype"></td>
-                                        </tr>
+                                            @if(count($exiting_qus_matrix)>0)
+                                                <tr>
+                                                    <td></td>
+                                                    @foreach($exiting_choices_matrix as $ans)
+                                                    <td><input type="text" placeholder="Enter Choice" class="matrix_head" value="{{$ans}}"  name="matrix_choice"></td>
+                                                    @endforeach
+                                                </tr>
+                                            @endif
+                                            <?php foreach($exiting_qus_matrix as $qus){
+                                                ?>
+                                                    <tr>
+                                                        <td><input type="text" value="{{$qus}}" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
+                                                        <td><input type="radio" name="matrix_anstype"></td>
+                                                        <td><input type="radio" name="matrix_anstype"></td>
+                                                    </tr>
+                                               <?php  
+                                                $i++;
+                                            } ?>
+                                            @if(count($exiting_qus_matrix)<=0)
+                                            <tr>
+                                                <td></td>
+                                                <td><input type="text" placeholder="Enter Choice" class="matrix_head"  name="matrix_choice"></td>
+                                                <td><input type="text" placeholder="Enter Choice" class="matrix_head"  name="matrix_choice"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="text" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
+                                                <td><input type="radio" name="matrix_anstype"></td>
+                                                <td><input type="radio" name="matrix_anstype"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="text" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
+                                                <td><input type="radio" name="matrix_anstype"></td>
+                                                <td><input type="radio" name="matrix_anstype"></td>
+                                            </tr>
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -561,7 +587,6 @@ function triggersubmit(qus_type){
         }else{
             Swal.fire("Warning", 'Add Choices', "warning") ;
         }
-
     }
     else if(qus_type=='single_choice' || qus_type=='multi_choice' || qus_type=='dropdown' || qus_type=='rankorder'){
         let choices=[];
@@ -574,6 +599,22 @@ function triggersubmit(qus_type){
             $('#update_qus_final').click();
         }else{
             Swal.fire("Warning", 'Add Choices', "warning") ;
+        }
+    }else if(qus_type=='matrix_qus'){
+        let choices=[];
+        $("input[name=matrix_choice]").each(function(idx, elem) {
+            choices.push($(elem).val());
+        });
+        let qus=[];
+        $("input[name=matrix_qus]").each(function(idx, elem) {
+            qus.push($(elem).val());
+        });
+        $('#choices_list_matrix').val(choices);
+        $('#question_list_matrix').val(qus);
+        if(qus.length>=1 && choices.length>=2){
+            $('#update_qus_final').click();
+        }else{
+            Swal.fire("Warning", 'Add Choice & Question to proceed', "warning") ;
         }
     }else{
         $('#update_qus_final').click();
@@ -719,7 +760,7 @@ const addColumn = () => {
             cell.appendChild(input)
         }else{
             input.setAttribute("type", "radio");
-            input.setAttribute("name", "matrxi_anstype");
+            input.setAttribute("name", "matrix_anstype");
             cell.appendChild(input)
         }
         row.appendChild(cell)
@@ -740,7 +781,7 @@ function insert(type){
                 cell.appendChild(input)
             }else{
                 input.setAttribute("type", "radio");
-                input.setAttribute("name", "matrxi_anstype");
+                input.setAttribute("name", "matrix_anstype");
                 cell.appendChild(input)
             }
             cell.appendChild(input);
@@ -755,13 +796,15 @@ function insert(type){
 function remove(type){
     if(type=='row'){
         if($("#matrix_sec > tbody >tr").length<=2){
-            alert('Minimum one row required');
+            Swal.fire("Warning", 'Minimum one row required', "warning") ;
+
         }else{
             $('#matrix_sec tr:last').remove();
         }
     }else{
         if($("#matrix_sec > tbody > tr:first > td").length<=3){
-            alert('Minimum two choices required');
+            Swal.fire("Warning", 'Minimum two choices required', "warning") ;
+
         }else{
             $("#matrix_sec td:last-child").remove();
         }
