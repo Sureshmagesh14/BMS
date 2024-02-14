@@ -1101,3 +1101,14 @@ table#matrix_sec td {
 .matrix_action{
     text-align: end;
 }
+.matrix_head{
+    margin: 0;
+    font-weight: 400;
+    font-size: 16px;
+    color: #1d1e1f;
+    background-color: transparent;
+    border: none;
+    resize: none;
+    text-align: left;
+    line-height: 1.3;
+}

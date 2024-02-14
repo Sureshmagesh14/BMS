@@ -428,18 +428,18 @@
                                         <tbody>
                                         <tr>
                                             <td></td>
-                                            <td>Choice 1</td>
-                                            <td>Choice 2</td>
+                                            <td><input type="text" placeholder="Enter Choice" class="matrix_head"  name="matrix_choice"></td>
+                                            <td><input type="text" placeholder="Enter Choice" class="matrix_head"  name="matrix_choice"></td>
                                         </tr>
                                         <tr>
-                                            <td>Qus 1</td>
-                                            <td></td>
-                                            <td></td>
+                                            <td><input type="text" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
+                                            <td><input type="radio" name="matrxi_anstype"></td>
+                                            <td><input type="radio" name="matrxi_anstype"></td>
                                         </tr>
                                         <tr>
-                                            <td>Qus 1</td>
-                                            <td></td>
-                                            <td></td>
+                                            <td><input type="text" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
+                                            <td><input type="radio" name="matrxi_anstype"></td>
+                                            <td><input type="radio" name="matrxi_anstype"></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -709,10 +709,19 @@ $('#ss_draft_remove_image_thankyou').click(function(){
 let table = document.querySelectorAll("#matrix_sec tbody");
 const addColumn = () => {
     [...document.querySelectorAll('#matrix_sec tr')].forEach((row, i) => {
-        const input = document.createElement("input")
-        input.setAttribute('type', 'text')
         const cell = document.createElement("td")
-        // cell.appendChild(input)
+        const input = document.createElement("input")
+        if(i==0){
+            input.setAttribute("type", "text");
+            input.setAttribute("name", "matrix_choice");
+            input.setAttribute("placeholder", "Enter Choice");
+            input.setAttribute("class", "matrix_head");
+            cell.appendChild(input)
+        }else{
+            input.setAttribute("type", "radio");
+            input.setAttribute("name", "matrxi_anstype");
+            cell.appendChild(input)
+        }
         row.appendChild(cell)
     });
  }
@@ -721,9 +730,21 @@ function insert(type){
     if(type=='row'){
         let tr = document.createElement('tr');
         for (let i = 1; i <= $("#matrix_sec > tbody > tr:first > td").length; i++) {
-            console.log(i,"dd");
-            let td = document.createElement('td');
-            tr.appendChild(td);
+            let cell = document.createElement('td');
+            const input = document.createElement("input")
+            if(i==1){
+                input.setAttribute("type", "text");
+                input.setAttribute("name", "matrix_qus");
+                input.setAttribute("placeholder", "Enter Question");
+                input.setAttribute("class", "matrix_head");
+                cell.appendChild(input)
+            }else{
+                input.setAttribute("type", "radio");
+                input.setAttribute("name", "matrxi_anstype");
+                cell.appendChild(input)
+            }
+            cell.appendChild(input);
+            tr.appendChild(cell);
         }
         table[0].appendChild(tr);
     }else{
@@ -733,9 +754,17 @@ function insert(type){
 }
 function remove(type){
     if(type=='row'){
-        $('#matrix_sec tr:last').remove();
+        if($("#matrix_sec > tbody >tr").length<=2){
+            alert('Minimum one row required');
+        }else{
+            $('#matrix_sec tr:last').remove();
+        }
     }else{
-        $("#matrix_sec td:last-child").remove();
+        if($("#matrix_sec > tbody > tr:first > td").length<=3){
+            alert('Minimum two choices required');
+        }else{
+            $("#matrix_sec td:last-child").remove();
+        }
     }
 }
 </script>
