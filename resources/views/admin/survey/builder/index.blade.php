@@ -426,7 +426,7 @@
                                 <input type="button" onclick="remove('row')" value="Remove Row" class="btn  matrixbtn">
 
                                 </div>
-                                <div>
+                                <div id="matrix_table">
                                     <table id="matrix_sec">
                                     <?php $exiting_choices_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_choice): [];
                                     $exiting_qus_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_qus): []; $i=0;
