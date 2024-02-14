@@ -416,6 +416,14 @@ class SurveyController extends Controller
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>'email']);
                 break;
             case 'matrix_qus':
+                $json=[
+                    'matrix_choice'=>implode(",",$request->choices_list_matrix),
+                    'matrix_qus'=>implode(",",$request->question_list_matrix),
+                    'qus_type'=>'matrix',
+                    'choices_type'=>'radio',
+                    'question_name'=>$request->question_name
+                ];
+                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             default:
               //code block
