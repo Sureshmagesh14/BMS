@@ -33,7 +33,8 @@ return [
 
     'lifetime' => env('SESSION_LIFETIME', 120),
 
-    'expire_on_close' => false,
+    
+    'expire_on_close' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -72,7 +73,7 @@ return [
     |
     */
 
-    'connection' => env('SESSION_CONNECTION'),
+    'connection' => env('SESSION_CONNECTION', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -100,7 +101,7 @@ return [
     |
     */
 
-    'store' => env('SESSION_STORE'),
+    'store' => env('SESSION_STORE', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -196,7 +197,7 @@ return [
     |
     */
 
-    'same_site' => 'lax',
+    'same_site' => null,
 
     /*
     |--------------------------------------------------------------------------

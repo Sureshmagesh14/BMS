@@ -3,22 +3,14 @@
 
     <!-- LOGO -->
     <div class="navbar-brand-box">
-        <a href="index.html" class="logo logo-dark">
-            <span class="logo-sm">
-                <img src="{{ asset('/assets/images/logo-dark-sm.png') }}" alt="" height="22">
-            </span>
-            <span class="logo-lg">
-                <img src="{{ asset('/assets/images/logo-dark.png') }}" alt="" height="18">
-            </span>
+        <a href="{{url('/dashboard')}}" class="logo logo-dark">
+            <span class="logo-sm">{{Config::get('constants.app_title')}}</span>
+            <span class="logo-lg">{{Config::get('constants.app_title')}}</span>
         </a>
 
-        <a href="index.html" class="logo logo-light">
-            <span class="logo-sm">
-                <img src="{{ asset('/assets/images/logo-light-sm.png') }}" alt="" height="22">
-            </span>
-            <span class="logo-lg">
-                <img src="{{ asset('/assets/images/logo-light.png') }}" alt="" height="18">
-            </span>
+        <a href="{{url('/dashboard')}}" class="logo logo-light">
+            <span class="logo-sm h5 text-white">{{Config::get('constants.app_title')}}</span>
+            <span class="logo-lg h5 text-white">{{Config::get('constants.app_title')}}</span>
         </a>
     </div>
 
@@ -35,18 +27,17 @@
                 <li class="menu-title" key="t-menu">Menu</li>
 
                 <li>
-                    <a href="javascript: void(0);" class="waves-effect">
+                    <a href="dashboard" class="waves-effect">
                         <i class="icon nav-icon" data-feather="home"></i>
                         <span class="menu-item" key="t-dashboards">Dashboards</span>
                     </a>
-                  
                 </li>
 
                
                 <li class="menu-title" key="t-apps">Admin</li>
 
                 <li>
-                    <a href="calendar.html" class="waves-effect">
+                    <a href="{{ route('users.index') }}" class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Users</span>
                     </a>
@@ -57,7 +48,8 @@
                         <span class="menu-item" key="t-contacts">Survey</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('folder')}}" key="t-user-grid">Folder</a></li>
+                        <li><a href="#" key="t-user-grid">Folder</a></li>
+                        {{-- <li><a href="{{route('folder')}}" key="t-user-grid">Folder</a></li> --}}
                         <li><a href="{{route('survey')}}" key="t-user-list">Survey</a></li>
                         <?php $getfirstSurvey=\App\Models\Survey::orderBy("id", "asc")->first(); if(isset($getfirstSurvey)) $templateRoute=route('survey.template',$getfirstSurvey->id); else $templateRoute=''; ?>
                         <li><a href="{{$templateRoute}}" key="t-profile">Templates</a></li>
@@ -66,54 +58,51 @@
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="{{route('user-events')}}" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Internal Reports</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="cashouts" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Cash Outs</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="actions" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Action Events</span>
                     </a>
                 </li>
-              
-
-            
 
                 <li class="menu-title" key="t-pages">Database</li>
 
                 <li>
-                    <a href="calendar.html" class="waves-effect">
+                    <a href="{{ route('projects.index') }}" class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Projects</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="{{ route('respondents.index') }}" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Respondents</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="tags" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Panels</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="rewards" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Rewards</span>
                     </a>
@@ -122,28 +111,28 @@
                 <li class="menu-title">Settings</li>
 
                 <li>
-                    <a href="calendar.html" class="waves-effect">
+                    <a href="groups" class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Profile Groups</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="banks" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Banks</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="charities" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Charities</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="networks" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Cellular Networks
                         </span>
@@ -151,7 +140,7 @@
                 </li>
 
                 <li>
-                    <a href="chat.html" class=" waves-effect">
+                    <a href="contents" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Contents
                         </span>

@@ -3,34 +3,34 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Log In | Drezon - Responsive Bootstrap 4 Admin Dashboard</title>
+    <title>Log In | {{Config::get('constants.app_title')}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     @section('favicon')
         <!-- App favicon -->
-        <link rel="shortcut icon" href="{{ asset('/assets/images/favicon.ico') }}">
+        <link rel="shortcut icon" href="{{ asset('public/assets/images/favicon.ico') }}">
     @stop
 
     @section('login-css')
         <!-- Bootstrap Css -->
-        <link href="{{ asset('/assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('public/assets/css/admin/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
         <!-- Icons Css -->
-        <link href="{{ asset('/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('public/assets/css/admin/icons.min.css') }}" rel="stylesheet" type="text/css" />
         <!-- App Css-->
-        <link href="{{ asset('/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('public/assets/css/admin/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
     @stop
 </head>
 
-<body class="authentication-bg" style="background-image: url({{ asset('/assets/images/auth-bg.png') }})">
+<body class="authentication-bg" style="background-image: url({{ asset('public/assets/images/auth-bg.png') }})">
     <div class="account-pages mt-5 mb-4 pt-sm-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="text-center">
                         <a href="index.html" class="mb-5 d-block auth-logo">
-                            <img src="{{ asset('/assets/images/brand_surgen.png') }}" alt="" height="45" class="logo logo-dark">
-                            {{-- <img src="{{ asset('/assets/images/brand_surgen.png') }}" alt="" height="22" class="logo logo-light"> --}}
+                            <img src="{{ asset('public/assets/images/brand_surgen.png') }}" alt="" height="45" class="logo logo-dark">
+                            {{-- <img src="{{ asset('public/assets/images/brand_surgen.png') }}" alt="" height="22" class="logo logo-light"> --}}
                         </a>
                     </div>
                 </div>
