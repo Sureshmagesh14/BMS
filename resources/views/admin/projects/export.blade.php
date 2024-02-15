@@ -33,8 +33,8 @@
     <label class="col-md-2 col-form-label">Date Range</label>
     <div class="col-md-10">
     <div class="input-daterange input-group" data-provide="datepicker" data-date-format="dd M, yyyy" data-date-autoclose="true">
-    <input type="text" class="form-control" name="start" />
-    <input type="text" class="form-control" name="end" />
+    <input type="text" class="form-control" name="start" required />
+    <input type="text" class="form-control" name="end" required />
     </div>
     </div>
     </div>

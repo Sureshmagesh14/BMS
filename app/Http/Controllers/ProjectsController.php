@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Projects;
+use App\Models\project_respondent;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -441,6 +442,18 @@ class ProjectsController extends Controller
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             
+            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('J')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('K')->setWidth(25);
+            
             $sheet->setCellValue('A1', 'Respondent Profile ID');
             $sheet->setCellValue('B1', 'Name');
             $sheet->setCellValue('C1', 'Surname');
@@ -452,6 +465,28 @@ class ProjectsController extends Controller
             $sheet->setCellValue('I1', 'Completion Rate');
             $sheet->setCellValue('J1', 'Conversion Rate (Response & Completion)');
             $sheet->setCellValue('K1', 'Drop-Out Rate');
+            
+            $all_datas = DB::table('project_respondent')->select('respondents.name as rname','respondents.surname as rsurname','respondents.email as remail','respondents.mobile as rmobile','respondents.whatsapp as rwhatsapp')
+                ->join('respondents', 'respondents.id', '=', 'project_respondent.respondent_id') 
+                ->join('projects', 'projects.id', '=', 'project_respondent.project_id') 
+                ->whereBetween('project_respondent.created_at', ["'".$from."'", "'".$to."'"])
+                ->orderby("project_respondent.id","desc")
+                ->get();
+
+            $rows = 2;
+            $sno = 1;
+            foreach($all_datas as $all_data){
+
+                $sheet->setCellValue('A' . $rows, $sno);
+                $sheet->setCellValue('B' . $rows, $all_data->rname);
+                $sheet->setCellValue('C' . $rows, $all_data->rsurname);
+                $sheet->setCellValue('D' . $rows, $all_data->rmobile);
+                $sheet->setCellValue('E' . $rows, $all_data->rwhatsapp);
+                $sheet->setCellValue('F' . $rows, $all_data->remail);
+                
+                $sno++;
+                $rows++;
+            }
             
             $fileName = "project_respondent_".date('ymd').".".$type;
         }
