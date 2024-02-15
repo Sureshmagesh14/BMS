@@ -93,14 +93,9 @@ class TagsController extends Controller
         
         try {
             $data = Tags::find($id);
-            $returnHTML = view('admin.tags.view',compact('data'))->render();
+            return view('admin.tags.view',compact('data'));
 
-            return response()->json(
-                [
-                    'success' => true,
-                    'html_page' => $returnHTML,
-                ]
-            );
+          
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -234,6 +229,9 @@ class TagsController extends Controller
         
                 
                 return Datatables::of($all_datas)
+                ->addColumn('select_all', function ($all_data) {
+                    return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                })
                 ->addColumn('colour', function ($all_data) {
                     return '<div class=""><button type="button" class="btn waves-effect waves-light" style="background-color:'.$all_data->colour.'"><i class="uil uil-user"></i></button></div>';
                 })  
@@ -243,8 +241,7 @@ class TagsController extends Controller
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
-                            <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
+                            <a href="'.$view_route.'" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>
                             <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
@@ -257,7 +254,7 @@ class TagsController extends Controller
                         </div>
                     </div>';
                 })
-                ->rawColumns(['action','name','colour'])      
+                ->rawColumns(['select_all','action','name','colour'])      
                 ->make(true);
             }
         }
@@ -311,5 +308,24 @@ class TagsController extends Controller
             
         header("Content-Type: application/vnd.ms-excel");
         return redirect(url('/')."/export/".$fileName);
+    }
+
+    public function tags_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $tags = Tags::find($id);
+                $tags->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Tags Deleted'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }

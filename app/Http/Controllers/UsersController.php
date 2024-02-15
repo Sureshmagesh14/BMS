@@ -114,14 +114,7 @@ class UsersController extends Controller
         
         try {
             $data = Users::find($id);
-            $returnHTML = view('admin.users.view',compact('data'))->render();
-
-            return response()->json(
-                [
-                    'success' => true,
-                    'html_page' => $returnHTML,
-                ]
-            );
+            return view('admin.users.view',compact('data'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -270,7 +263,9 @@ class UsersController extends Controller
         
                 
                 return Datatables::of($all_datas)
-                 
+                ->addColumn('select_all', function ($all_data) {
+                    return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                })
                 ->addColumn('name', function ($all_data) {
                     return $all_data->name;
                 })  
@@ -313,8 +308,7 @@ class UsersController extends Controller
                     $view_route = route("users.show",$all_data->id);
                     return '<div class="">
                                 <div class="btn-group mr-2 mb-2 mb-sm-0">
-                                    <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                        data-bs-original-title="View Project" class="btn btn-primary waves-light waves-effect">
+                                    <a href="'.$view_route.'" class="btn btn-primary waves-light waves-effect">
                                         <i class="fa fa-eye"></i>
                                     </a>
                                     <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
@@ -327,7 +321,7 @@ class UsersController extends Controller
                                 </div>
                             </div>';
                         })
-                ->rawColumns(['action','name','surname','id_passport','email','role_id','share_link','status_id'])      
+                ->rawColumns(['select_all','action','name','surname','id_passport','email','role_id','share_link','status_id'])      
                 ->make(true);
             }
         }
@@ -556,5 +550,24 @@ class UsersController extends Controller
         header("Content-Type: application/vnd.ms-excel");
         return redirect(url('/')."/export/".$fileName);
 
+    }
+
+    public function users_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $tags = Users::find($id);
+                $tags->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Users Deleted'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }

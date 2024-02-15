@@ -7,52 +7,27 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesbrand" name="author" />
+        <link rel="shortcut icon" href="{{ asset('public/assets/images/favicon.ico') }}">
 
-        @section('adminside-favicon')
-            <!-- App favicon -->
-            <link rel="shortcut icon" href="{{ asset('public/assets/images/favicon.ico') }}">
-        @stop
-        @section('adminside-css')
-            <!-- Bootstrap Css -->
-            <link href="{{ asset('public/assets/css/admin/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
-            <!-- Icons Css -->
-            <link href="{{ asset('public/assets/css/admin/icons.min.css') }}" rel="stylesheet" type="text/css" />
-            <!-- App Css-->
-            <link href="{{ asset('public/assets/css/admin/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
-             <!-- Confirm Css-->
-            <link href="{{ asset('public/assets/css/admin/confirm.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
-
-            <link href="{{ asset('public/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
-
-            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-        @stop
+        <!-- Bootstrap Css -->
+        <link href="{{ asset('public/assets/css/admin/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="{{ asset('public/assets/css/admin/icons.min.css') }}" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="{{ asset('public/assets/css/admin/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+        <!-- Confirm Css-->
+        <link href="{{ asset('public/assets/css/admin/confirm.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('public/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
         <style>
-            .actionsBtn {
-                display: flex;
-            }
-            .editSurvey,.editFolder {
-                margin-right: 1rem;
-            }
-            .createBtn {
-                display: flex;
-                justify-content: flex-end;
-                margin-right: 3rem;
-                margin-bottom: 3rem;
-            }
-            .createBtn a {
-                color: white;
-            }
-            .select2-container{
-                width:100% !important;
-            }
-            .privateusers {
-                display:none;
-            }
-            .privateusers .form-group.mb-0,.surveyfoldername .form-group.mb-0{
-                display: flex;
-                flex-direction: column-reverse;
-            }
+            .actionsBtn {display: flex;}
+            .editSurvey,.editFolder {margin-right: 1rem;}
+            .createBtn {display: flex;justify-content: flex-end;margin-right: 3rem;margin-bottom: 3rem;}
+            .createBtn a {color: white;}
+            .select2-container{width:100% !important;}
+            .privateusers {display:none;}
+            .privateusers .form-group.mb-0,.surveyfoldername .form-group.mb-0{display: flex;flex-direction: column-reverse;}
             .dataTables_paginate {float: left;}
             .dataTables_filter {float: left;}
             .dataTables_length {float: right;}

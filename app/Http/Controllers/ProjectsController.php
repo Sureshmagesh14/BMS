@@ -5,6 +5,7 @@ use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Projects;
 use App\Models\project_respondent;
+use App\Models\Users;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -34,8 +35,8 @@ class ProjectsController extends Controller
     public function create()
     {
         try {
-           
-            $returnHTML = view('admin.projects.create')->render();
+            $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
+            $returnHTML = view('admin.projects.create',compact('users'))->render();
 
             return response()->json(
                 [
@@ -59,6 +60,9 @@ class ProjectsController extends Controller
        
         try {
 
+            Session::forget('user_to_project');
+            Session::forget('user_to_project_id');
+            
             $validator = Validator::make($request->all(), [
                'client'=> 'required',
                'name'=> 'required',
@@ -121,14 +125,10 @@ class ProjectsController extends Controller
         
         try {
             $data = Projects::find($id);
-            $returnHTML = view('admin.projects.view',compact('data'))->render();
+            return view('admin.projects.view',compact('data'));
 
-            return response()->json(
-                [
-                    'success' => true,
-                    'html_page' => $returnHTML,
-                ]
-            );
+           
+            
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -145,7 +145,8 @@ class ProjectsController extends Controller
             $projects = Projects::find($id);
             if($projects)
             {
-                $returnHTML = view('admin.projects.edit',compact('projects'))->render();
+                $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
+                $returnHTML = view('admin.projects.edit',compact('projects','users'))->render();
                 return response()->json(
                     [
                         'success' => true,
@@ -280,12 +281,18 @@ class ProjectsController extends Controller
                     
                         $all_datas = Projects::select('projects.*','projects.name as uname')
                         ->join('users', 'users.id', '=', 'projects.user_id') 
-                        ->orderby("id","desc")
-                        ->get();
+                        ->orderby("id","desc");
+
+                        if(isset($request->id)){
+                            $all_datas->where('user_id',$request->id);
+                        }
+                        $all_datas = $all_datas->get();
                 
                         
                         return Datatables::of($all_datas)
-                        
+                        ->addColumn('select_all', function ($all_data) {
+                            return '<input class="tabel_checkbox" name="projects[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                        })
                         ->addColumn('numbers', function ($all_data) {
                             return $all_data->number;
                         })  
@@ -339,7 +346,7 @@ class ProjectsController extends Controller
         
                             return '<div class="">
                                 <div class="btn-group mr-2 mb-2 mb-sm-0">
-                                    <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                    <a href="'.$view_route.'" 
                                         data-bs-original-title="View Project" class="btn btn-primary waves-light waves-effect">
                                         <i class="fa fa-eye"></i>
                                     </a>
@@ -353,7 +360,7 @@ class ProjectsController extends Controller
                                 </div>
                             </div>';
                         })
-                        ->rawColumns(['action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
+                        ->rawColumns(['select_all','action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
                         ->make(true);
                             
                       
@@ -521,5 +528,24 @@ class ProjectsController extends Controller
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }   
+    }
+
+    public function projects_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $rewards = Projects::find($id);
+                $rewards->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Projects Deleted'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }

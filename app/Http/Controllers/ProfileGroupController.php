@@ -91,15 +91,12 @@ class ProfileGroupController extends Controller
     public function show(string $id)
     {
         try {
+            
             $data = Groups::find($id);
-            $returnHTML = view('admin.groups.view',compact('data'))->render();
 
-            return response()->json(
-                [
-                    'success' => true,
-                    'html_page' => $returnHTML,
-                ]
-            );
+            return view('admin.groups.view',compact('data'));
+
+           
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -225,6 +222,9 @@ class ProfileGroupController extends Controller
         
                 
                 return Datatables::of($all_datas)
+                ->addColumn('select_all', function ($all_data) {
+                    return '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                })
                 ->addColumn('name', function ($all_data) {
                     return $all_data->name;
                 }) 
@@ -248,7 +248,7 @@ class ProfileGroupController extends Controller
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
-                            <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                            <a href="'.$view_route.'"
                                 data-bs-original-title="View Content" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>
@@ -262,7 +262,7 @@ class ProfileGroupController extends Controller
                         </div>
                     </div>';
                 })
-                ->rawColumns(['name','survey_url','type_id','action'])          
+                ->rawColumns(['select_all','name','survey_url','type_id','action'])          
                 ->make(true);
             }
         }
@@ -270,4 +270,24 @@ class ProfileGroupController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+
+    public function groups_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $contents = Groups::find($id);
+                $contents->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Groups Deleted'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    
 }

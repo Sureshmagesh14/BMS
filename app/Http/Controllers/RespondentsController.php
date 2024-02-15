@@ -113,14 +113,9 @@ class RespondentsController extends Controller
         
         try {
             $data = Respondents::find($id);
-            $returnHTML = view('admin.respondents.view',compact('data'))->render();
+            return view('admin.respondents.view',compact('data'));
 
-            return response()->json(
-                [
-                    'success' => true,
-                    'html_page' => $returnHTML,
-                ]
-            );
+          
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -311,7 +306,7 @@ class RespondentsController extends Controller
 
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
-                            <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                            <a href="'.$view_route.'"
                                 data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>

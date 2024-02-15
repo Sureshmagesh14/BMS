@@ -39,12 +39,20 @@ class RewardsController extends Controller
                 $all_datas = Rewards::select('rewards.*','respondents.name as rname','respondents.email as remail','respondents.mobile as rmobile','users.name as uname','projects.name as pname')
                 ->join('respondents', 'respondents.id', '=', 'rewards.user_id') 
                 ->join('users', 'users.id', '=', 'rewards.user_id') 
-                ->join('projects', 'projects.id', '=', 'rewards.project_id') 
-                ->orderby("rewards.id","desc")
+                ->join('projects', 'projects.id', '=', 'rewards.project_id');
+
+                if(isset($request->id)){
+                    $all_datas->where('rewards.user_id',$request->id);
+                }
+                $all_datas = $all_datas->orderby("rewards.id","desc")
+                ->withoutTrashed()
                 ->get();
 
                 
                 return Datatables::of($all_datas)
+                ->addColumn('select_all', function ($all_data) {
+                    return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                })
                 ->addColumn('points', function ($all_data) {
                     return $all_data->points;
                 })            
@@ -83,7 +91,7 @@ class RewardsController extends Controller
                 </div>';
                     
                 }) 
-                ->rawColumns(['action','active','points','status_id','respondent_id','user_id','project_id'])      
+                ->rawColumns(['select_all','action','active','points','status_id','respondent_id','user_id','project_id'])      
                 ->make(true);
             }
         }
@@ -234,4 +242,23 @@ class RewardsController extends Controller
         header("Content-Type: application/vnd.ms-excel");
         return redirect(url('/')."/export/".$fileName);
     }
+    public function rewards_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $rewards = Rewards::find($id);
+                $rewards->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Rewards Deleted'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
 }
