@@ -69,7 +69,7 @@
             <div class="ss-dashboard--sidebar position--relative fx--fh fx-column pb-7 bg-grey-7">
                 <div class="ss-dashboard--sidebar-container h-100 d-flex flex-column">
                     <div class="ss-overflow-y--auto ss-scrollbar--hide h-100" style="padding-top: 30px;">
-                        <div class="fx-row mb-5 fx-ai--center justify-content-between px-7">
+                        <div class="fx-row mb-5 fx-ai--center justify-content-between px-7 folderplus">
                             <h3 class="ss-text ss-text__size--h3 ss-text__weight--semibold ss-text__color--grey">Folders</h3>
                             <div class="fx-row create-workspace--button">
                             <span class="bp3-popover2-target" tabindex="0">
@@ -94,30 +94,30 @@
                                     </a>
                                 </div>
                                 <div tabindex="0" class="ss-button--dropdown actionfolder" aria-haspopup="true" aria-expanded="false" aria-controls="ss-drop-menu-106" role="menubar">
-                                <span class="ss-button ss-button__icon-only">
-                                    <svg height="16" width="16" class="" fill="none" viewBox="0 0 18 4" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="2" cy="2" fill="#0D1B1E" r="2"></circle>
-                                        <circle cx="9" cy="2" fill="#0D1B1E" r="2"></circle>
-                                        <circle cx="16" cy="2" fill="#0D1B1E" r="2"></circle>
-                                    </svg>
-                                </span>
-                                <ul class="ss-dropdown__main-list action_list" role="menu" id="ss-drop-menu-106" aria-label="Open Menu" style="margin-top: 8px;">
-                                <a href="#"  data-url="{{route('folder.edit',$folder->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Edit Folder" data-title="Edit Folder">
-                                    <li class="d-flex align-items-center py-3 my-2">
-                                        <svg width="18" height="18" class="" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12.728 6.68608L11.314 5.27208L2 14.5861V16.0001H3.414L12.728 6.68608ZM14.142 5.27208L15.556 3.85808L14.142 2.44408L12.728 3.85808L14.142 5.27208ZM4.242 18.0001H0V13.7571L13.435 0.322083C13.6225 0.134612 13.8768 0.0292969 14.142 0.0292969C14.4072 0.0292969 14.6615 0.134612 14.849 0.322083L17.678 3.15108C17.8655 3.33861 17.9708 3.59292 17.9708 3.85808C17.9708 4.12325 17.8655 4.37756 17.678 4.56508L4.243 18.0001H4.242Z" fill="#0D1B1E"></path>
+                                    <span class="ss-button ss-button__icon-only">
+                                        <svg height="16" width="16" class="" fill="none" viewBox="0 0 18 4" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="2" cy="2" fill="#0D1B1E" r="2"></circle>
+                                            <circle cx="9" cy="2" fill="#0D1B1E" r="2"></circle>
+                                            <circle cx="16" cy="2" fill="#0D1B1E" r="2"></circle>
                                         </svg>
-                                        <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Edit</h3>
-                                    </li>
-                                    </a>
-                                    <?php $deleteLink =route('folder.delete',$folder->id); ?>
-                                    <li class="d-flex align-items-center py-3 my-2" onclick="folderdelete('{{$deleteLink}}',{{$folder->id}})">
-                                        <svg width="18" height="18" class="" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M5 2V0H15V2H20V4H18V19C18 19.2652 17.8946 19.5196 17.7071 19.7071C17.5196 19.8946 17.2652 20 17 20H3C2.73478 20 2.48043 19.8946 2.29289 19.7071C2.10536 19.5196 2 19.2652 2 19V4H0V2H5ZM4 4V18H16V4H4ZM7 7H9V15H7V7ZM11 7H13V15H11V7Z" fill="#F46685"></path>
-                                        </svg>
-                                        <h3 class="ss-text ss-text__size--h3 ss-text__color--red ms-4">Delete</h3>
-                                    </li>
-                                </ul>
+                                    </span>
+                                    <ul class="ss-dropdown__main-list action_list" role="menu" id="ss-drop-menu-106" aria-label="Open Menu" style="margin-top: 8px;">
+                                    <a href="#"  data-url="{{route('folder.edit',$folder->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Edit Folder" data-title="Edit Folder">
+                                        <li class="d-flex align-items-center py-3 my-2">
+                                            <svg width="18" height="18" class="" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12.728 6.68608L11.314 5.27208L2 14.5861V16.0001H3.414L12.728 6.68608ZM14.142 5.27208L15.556 3.85808L14.142 2.44408L12.728 3.85808L14.142 5.27208ZM4.242 18.0001H0V13.7571L13.435 0.322083C13.6225 0.134612 13.8768 0.0292969 14.142 0.0292969C14.4072 0.0292969 14.6615 0.134612 14.849 0.322083L17.678 3.15108C17.8655 3.33861 17.9708 3.59292 17.9708 3.85808C17.9708 4.12325 17.8655 4.37756 17.678 4.56508L4.243 18.0001H4.242Z" fill="#0D1B1E"></path>
+                                            </svg>
+                                            <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Edit</h3>
+                                        </li>
+                                        </a>
+                                        <?php $deleteLink =route('folder.delete',$folder->id); ?>
+                                        <li class="d-flex align-items-center py-3 my-2" onclick="folderdelete('{{$deleteLink}}',{{$folder->id}})">
+                                            <svg width="18" height="18" class="" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M5 2V0H15V2H20V4H18V19C18 19.2652 17.8946 19.5196 17.7071 19.7071C17.5196 19.8946 17.2652 20 17 20H3C2.73478 20 2.48043 19.8946 2.29289 19.7071C2.10536 19.5196 2 19.2652 2 19V4H0V2H5ZM4 4V18H16V4H4ZM7 7H9V15H7V7ZM11 7H13V15H11V7Z" fill="#F46685"></path>
+                                            </svg>
+                                            <h3 class="ss-text ss-text__size--h3 ss-text__color--red ms-4">Delete</h3>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         @endforeach
@@ -133,7 +133,7 @@
 <!-- Start right Content here -->
 <!-- ============================================================== -->
 <?php $selectedFolder = \App\Models\Folder::where(['id'=>$page])->first(); $getSurveys = App\Models\Survey::where(['folder_id'=>$page])->get();?>
-<div class="main-content">
+<div class="main-content1">
     <div class="page-content">
         <div class="container-fluid">
             <!-- start page title -->
@@ -202,32 +202,56 @@
                             </div>
                             <div class="col-5">
                                 <div class="row no-gutters">
-                                <div class="col-12 ss-dashboard__list-item-nav d-flex align-items-center justify-content-end flex-shrink-0">
+                                    <div class="col-12 ss-dashboard__list-item-nav d-flex align-items-center justify-content-end flex-shrink-0">
+                                        <div class="d-none d-md-flex align-items-center ss-dashboard-list-item__secondary-actions">
+                                            <div class="rounded-md me-3">
+                                                <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',[$survey->builderID,0])}}">
+                                                    <svg width="16" height="16" class="" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M12.728 6.68608L11.314 5.27208L2 14.5861V16.0001H3.414L12.728 6.68608ZM14.142 5.27208L15.556 3.85808L14.142 2.44408L12.728 3.85808L14.142 5.27208ZM4.242 18.0001H0V13.7571L13.435 0.322083C13.6225 0.134612 13.8768 0.0292969 14.142 0.0292969C14.4072 0.0292969 14.6615 0.134612 14.849 0.322083L17.678 3.15108C17.8655 3.33861 17.9708 3.59292 17.9708 3.85808C17.9708 4.12325 17.8655 4.37756 17.678 4.56508L4.243 18.0001H4.242Z" fill="#0D1B1E"></path>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                            <div class="rounded-md me-3">
+                                                <a class="ss-button__link bg-grey-6 p-3 rounded-md" role="button" spiketip-title="Share Survey" spiketip-pos="top"  data-url="{{route('survey.sharesurvey',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip"
+                                                        title="Share Survey" data-title="Share Survey">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="">
+                                                        <g stroke="#0D1B1E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" clip-path="url(#clip0_1106_12949)" opacity="0.9">
+                                                        <path d="M8.553 10.114a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M19.219 4.781a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M19.219 15.447a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M9.04 10.81l5.92-2.96M9.04 13.19l5.92 2.96"></path>
+                                                        </g>
+                                                        <defs>
+                                                        <clipPath id="clip0_1106_12949">
+                                                            <path fill="#fff" d="M0 0H24V24H0z"></path>
+                                                        </clipPath>
+                                                        </defs>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
                                    
-                                    <div class="d-none d-md-flex align-items-center ss-dashboard-list-item__secondary-actions">
-                                        <div class="rounded-md me-3">
-                                            <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',[$survey->builderID,0])}}">
-                                                <i data-feather="edit"></i>
-                                            </a>
-                                        </div>
-                                        <div class="rounded-md me-3">
-                                        <a href="#" class="ss-button__link bg-grey-6 p-3 rounded-md" data-url="{{route('survey.sharesurvey',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Share Survey" data-title="Share Survey">
-                                                <i data-feather="share-2"></i>
-                                            </a>
-                                        </div>
-                                        <div class="rounded-md me-3">
-                                            <a href="{{route('survey.surveyduplication',$survey->id)}}" class="ss-button__link bg-grey-6 p-3 rounded-md" role="button" spiketip-title="Duplicate Survey" spiketip-pos="top">
-                                                <i data-feather="copy"></i>
-                                            </a>
-                                        </div>
-                                        <div class="rounded-md me-3">
-                                            <a class="ss-button__link bg-grey-6 p-3 rounded-md" role="button" spiketip-title="Duplicate Survey" spiketip-pos="top">
-                                                <i data-feather="trash-2"></i>
-                                            </a>
+                                        <div tabindex="0" class="ss-dashboard__survey-actions-btn d-flex align-items-center bg-grey-6 rounded-md p-3 ss-button--dropdown actionsurvey1" data-toggle="popover" data-htmlcontent='#myPopoverContent{{$survey->id}}' aria-haspopup="true" aria-expanded="false" aria-controls="#myPopoverContent{{$survey->id}}" role="menubar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><g clip-path="url(#clip0_1106_12887)" opacity="0.9"><path fill="#0D1B1E" d="M21 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zM7 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zm7 0c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2z"></path></g><defs><clipPath id="clip0_1106_12887"><path fill="#fff" d="M0 0H24V24H0z" transform="rotate(90 12 12)"></path></clipPath></defs></svg>
+                                            <ul class="ss-dropdown__main-list action_list_survey link-popover" role="menu" id="myPopoverContent{{$survey->id}}" aria-label="Open Menu" style="margin-top: 8px;">
+                                                <a href="{{route('survey.builder',[$survey->builderID,0])}}">
+                                                    <li class="d-flex align-items-center py-3 my-2">
+                                                        <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Edit Survey</h3>
+                                                    </li>
+                                                </a>
+                                                <a href="#" data-url="{{route('survey.sharesurvey',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip"  title="Share Survey" data-title="Share Survey">
+                                                    <li class="d-flex align-items-center py-3 my-2">
+                                                    <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Share Survey</h3>
+                                                    </li>
+                                                </a>
+                                                <a href="{{route('survey.surveyduplication',$survey->id)}}">
+                                                    <li class="d-flex align-items-center py-3 my-2">
+                                                    <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Duplicate Survey</h3>
+                                                    </li>
+                                                </a>
+                                                <li class="d-flex align-items-center py-3 my-2">
+                                                    <h3 class="ss-text ss-text__size--h3 ss-text__color--red ms-4">Close</h3>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
-                                   
-                                </div>
                                 </div>
                             </div>
                         </div>
@@ -257,10 +281,18 @@ div#survey-table_wrapper .row {
 <script>
 $(document).mouseup(function(e) 
 {
+    $('[data-toggle="popover"]').each(function () {
+        //the 'is' for buttons that trigger popups
+        //the 'has' for icons within a button that triggers a popup
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            $(this).popover('hide');
+        }
+    });
     var container = $(".action_list");
 
+
     // if the target of the click isn't the container nor a descendant of the container
-    if (!container.is(e.target) && container.has(e.target).length === 0) 
+    if (!container.is(e.target) && container.has(e.target).length === 0)
     {
         container.hide();
     }
@@ -299,7 +331,18 @@ function folderdelete(url,id){
     })
     console.log(id)
 }
-   
+$(document).ready(function(){
+    $('.actionsurvey1').popover({
+    html: true,
+    content: function() {
+      let contentID = $(this).data('htmlcontent');
+      return $(contentID).html();
+    }
+  });
+});
+$('.actionsurvey1').on('click', function (e) {
+    $('.actionsurvey1').not(this).popover('hide');
+});
 </script>
     @yield('adminside-script')
 @include('admin.layout.footer')
