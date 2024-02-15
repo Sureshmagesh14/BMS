@@ -51,7 +51,7 @@
                         <span class="menu-item" key="t-calendar">Users</span>
                     </a>
                 </li>
-                <?php $getfirstSurvey=\App\Models\Survey::orderBy("id", "asc")->first(); if(isset($getfirstSurvey)) 
+                <?php $getfirstSurvey=\App\Models\Survey::where(['is_deleted'=>0])->orderBy("id", "asc")->first(); if(isset($getfirstSurvey)) 
                 $templateRoute=route('survey.template',$getfirstSurvey->folder_id); else $templateRoute=''; 
                 
                 ?>

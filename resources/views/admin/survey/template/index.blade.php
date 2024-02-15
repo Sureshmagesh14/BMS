@@ -132,7 +132,7 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<?php $selectedFolder = \App\Models\Folder::where(['id'=>$page])->first(); $getSurveys = App\Models\Survey::where(['folder_id'=>$page])->get();?>
+<?php $selectedFolder = \App\Models\Folder::where(['id'=>$page])->first(); $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->get();?>
 <div class="main-content1">
     <div class="page-content">
         <div class="container-fluid">
@@ -227,8 +227,7 @@
                                                 </a>
                                             </div>
                                         </div>
-                                   
-                                        <div tabindex="0" class="ss-dashboard__survey-actions-btn d-flex align-items-center bg-grey-6 rounded-md p-3 ss-button--dropdown actionsurvey1" data-toggle="popover" data-htmlcontent='#myPopoverContent{{$survey->id}}' aria-haspopup="true" aria-expanded="false" aria-controls="#myPopoverContent{{$survey->id}}" role="menubar">
+                                        <div tabindex="0" class="ss-dashboard__survey-actions-btn d-flex align-items-center bg-grey-6 rounded-md p-3 ss-button--dropdown actionsurvey1" data-html="true" data-toggle="popover" data-htmlcontent='#myPopoverContent{{$survey->id}}' aria-haspopup="true" aria-expanded="false" aria-controls="#myPopoverContent{{$survey->id}}" role="menubar">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><g clip-path="url(#clip0_1106_12887)" opacity="0.9"><path fill="#0D1B1E" d="M21 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zM7 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zm7 0c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2z"></path></g><defs><clipPath id="clip0_1106_12887"><path fill="#fff" d="M0 0H24V24H0z" transform="rotate(90 12 12)"></path></clipPath></defs></svg>
                                             <ul class="ss-dropdown__main-list action_list_survey link-popover" role="menu" id="myPopoverContent{{$survey->id}}" aria-label="Open Menu" style="margin-top: 8px;">
                                                 <a href="{{route('survey.builder',[$survey->builderID,0])}}">
@@ -246,9 +245,12 @@
                                                     <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Duplicate Survey</h3>
                                                     </li>
                                                 </a>
-                                                <li class="d-flex align-items-center py-3 my-2">
-                                                    <h3 class="ss-text ss-text__size--h3 ss-text__color--red ms-4">Close</h3>
-                                                </li>
+                                               
+                                                <a href="{{route('survey.delete',$survey->id)}}" data-html="true" class="deletesurvey">
+                                                    <li class="d-flex align-items-center py-3 my-2" >
+                                                        <h3 class="ss-text ss-text__size--h3 ss-text__color--red ms-4" >Close</h3>
+                                                    </li>
+                                                </a>
                                             </ul>
                                         </div>
                                     </div>
@@ -343,6 +345,42 @@ $(document).ready(function(){
 $('.actionsurvey1').on('click', function (e) {
     $('.actionsurvey1').not(this).popover('hide');
 });
+
+function surveydelete(url,id){
+    Swal.fire({ 
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning", showCancelButton: !0, 
+        confirmButtonColor: "#34c38f", 
+        cancelButtonColor: "#f46a6a", 
+        confirmButtonText: "Yes, delete it!" 
+    }).then(function (t) { 
+        if(t.isConfirmed){
+            $.ajax({url: url, success: function(result){
+                result = JSON.parse(result);
+                if(result.error!=''){
+                    t.value && Swal.fire("Warning!", result.error, "warning") ;
+                }else{
+                    t.value && Swal.fire({
+                        title:"Deleted!", 
+                        text:result.success, 
+                        icon:"success"
+                    }).then(function (t) { 
+                        window.location.reload();
+                    }) ;
+                }
+            }});
+        }
+        
+    })
+    console.log(id)
+}
+// $(document).on('click', '.deletesurvey', function(){
+//       console.log($(this).parent().parent().siblings('#deletelink'))
+// });
+// $('.deletesurvey').on('click', function (e) {
+//     console.log($(this).data('deleteurl'))
+// });
 </script>
     @yield('adminside-script')
 @include('admin.layout.footer')
