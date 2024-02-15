@@ -210,8 +210,10 @@
                             </div>
                             <br>
                             @if(isset($qusvalue->welcome_image))
+                            <div class="exitingImg">
                             <image src="{{ asset('uploads/survey/'.$qusvalue->welcome_image) }}" alt="image" width="100" height="100" id="existing_image">
-                            <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="12" height="12" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                                    </div>
                             @endif
                             <div id="imgPreview"></div>
                             <div style="<?php if(isset($qusvalue->welcome_image) && $qusvalue->welcome_image!=''){ echo "display:none;"; } ?>" class="upload-image-placeholder" id="trigger_welcome_image">
@@ -266,8 +268,10 @@
                             </div>
                             <br>
                             @if(isset($qusvalue->thankyou_image))
+                            <div class="exitingImg">
                             <image src="{{ asset('uploads/survey/'.$qusvalue->thankyou_image) }}" alt="image" width="100" height="100" id="existing_image_thankyou">
-                            <a id="ss_draft_remove_image_thankyou" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="12" height="12" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            <a id="ss_draft_remove_image_thankyou" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                                    </div>
                             @endif
                             <div id="imgPreview"></div>
                             <div style="<?php if(isset($qusvalue->thankyou_image) && $qusvalue->thankyou_image!=''){ echo "display:none;"; } ?>" class="upload-image-placeholder" id="trigger_thankyou_image">
@@ -398,6 +402,7 @@
                                 </div>
                                 <?php $exiting_choices=$qusvalue!=null ? json_decode($qusvalue->choices_list): []; ?>
                                 <div id="picture_choices_section" class="row">
+                                    @if($exiting_choices!=null)
                                     @foreach($exiting_choices as $choice)
                                     <div class="img_placeholder">
                                         <img class="current_image" src="{{$choice->img}}">
@@ -413,6 +418,7 @@
                                         </div>
                                     </div>
                                     @endforeach
+                                    @endif
                                 </div>
                                 @endif
                                 @if($currentQus->qus_type=='matrix_qus')
@@ -691,9 +697,9 @@ $('#trigger_welcome_image').click(function(){
     $('#welcome_image').click();
 });
 $('#welcome_image').change(function(){
-    getImgData();
+    getImgDataweclome();
 })
-function getImgData() {
+function getImgDataweclome() {
 const chooseFile = document.getElementById("welcome_image");
 const imgPreview = document.getElementById("imgPreview");
   const files = chooseFile.files[0];
@@ -701,8 +707,10 @@ const imgPreview = document.getElementById("imgPreview");
     const fileReader = new FileReader();
     fileReader.readAsDataURL(files);
     fileReader.addEventListener("load", function () {
-      imgPreview.style.display = "block";
-      imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
+    //   imgPreview.style.display = "block";
+      $('#existing_image').attr('src',this.result);
+      $('#existing_image').css('display',"block");
+    //   imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
       $('#trigger_welcome_image').css('display','none');
       $('#ss_draft_remove_image_welcome').css('display','block');
 
@@ -731,8 +739,10 @@ const imgPreview = document.getElementById("imgPreview");
     const fileReader = new FileReader();
     fileReader.readAsDataURL(files);
     fileReader.addEventListener("load", function () {
-      imgPreview.style.display = "block";
-      imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
+    //   imgPreview.style.display = "block";
+    //   imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
+      $('#existing_image_thankyou').attr('src',this.result);
+      $('#existing_image_thankyou').css('display',"block");
       $('#trigger_thankyou_image').css('display','none');
       $('#ss_draft_remove_image_thankyou').css('display','block');
 
@@ -810,6 +820,12 @@ function remove(type){
         }
     }
 }
+$('form').bind("keypress", function(e) {
+  if (e.keyCode == 13) {               
+    e.preventDefault();
+    return false;
+  }
+});
 </script>
     @yield('adminside-script')
 @include('admin.layout.footer')

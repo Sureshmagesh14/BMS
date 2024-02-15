@@ -1117,3 +1117,25 @@ table#matrix_sec td {
     overflow-x: scroll;
     scrollbar-width: none;
 }
+img#existing_image,img#existing_image_thankyou {
+    object-fit: contain;
+    margin: 2px;
+    border: 1px solid #ced4da;
+    padding: 7px;
+    border-radius: 5px;
+    width: 150px;
+    height: 150px;
+}
+
+.exitingImg{
+    display: flex;
+}
+a#ss_draft_remove_image_welcome,a#ss_draft_remove_image_thankyou {
+    text-align: center;
+    position: relative;
+    right: 35px;
+    top: 5px;
+    z-index: 999;
+    width: 30px;
+    height: 30px;
+}
