@@ -227,50 +227,37 @@
                                                 </a>
                                             </div>
                                         </div>
-                                        <!-- Actions -->
-                                        <div tabindex="0" class="ss-button--dropdown actionsurvey" aria-haspopup="true" aria-expanded="false"
-                                            aria-controls="ss-drop-menu-106" role="menubar">
-                                            <span class="ss-button ss-button__icon-only">
-                                                <svg height="16" width="16" class="" fill="none" viewBox="0 0 18 4" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="2" cy="2" fill="#0D1B1E" r="2"></circle>
-                                                    <circle cx="9" cy="2" fill="#0D1B1E" r="2"></circle>
-                                                    <circle cx="16" cy="2" fill="#0D1B1E" r="2"></circle>
-                                                </svg>
-                                            </span>
-                                            <ul class="ss-dropdown__main-list action_list action_list_survey" role="menu" id="ss-drop-menu-106" aria-label="Open Menu"
-                                                style="margin-top: 8px;">
+                                        <div tabindex="0" class="ss-dashboard__survey-actions-btn d-flex align-items-center bg-grey-6 rounded-md p-3 ss-button--dropdown actionsurvey1" data-html="true" data-toggle="popover" data-htmlcontent='#myPopoverContent{{$survey->id}}' aria-haspopup="true" aria-expanded="false" aria-controls="#myPopoverContent{{$survey->id}}" role="menubar">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><g clip-path="url(#clip0_1106_12887)" opacity="0.9"><path fill="#0D1B1E" d="M21 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zM7 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zm7 0c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2z"></path></g><defs><clipPath id="clip0_1106_12887"><path fill="#fff" d="M0 0H24V24H0z" transform="rotate(90 12 12)"></path></clipPath></defs></svg>
+                                            <ul class="ss-dropdown__main-list action_list_survey link-popover" role="menu" id="myPopoverContent{{$survey->id}}" aria-label="Open Menu" style="margin-top: 8px;">
                                                 <a href="{{route('survey.builder',[$survey->builderID,0])}}">
                                                     <li class="d-flex align-items-center py-3 my-2">
                                                         <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Edit Survey</h3>
                                                     </li>
                                                 </a>
-                                                <a href="#" data-html="true" data-url="{{route('survey.sharesurvey',$survey->id)}}" data-ajax-popup="true"
-                                                    data-bs-toggle="tooltip" title="Share Survey" data-title="Share Survey">
+                                                <a href="#" data-html="true"  data-url="{{route('survey.sharesurvey',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip"  title="Share Survey" data-title="Share Survey">
                                                     <li class="d-flex align-items-center py-3 my-2">
-                                                        <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Share Survey</h3>
+                                                    <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Share Survey</h3>
                                                     </li>
                                                 </a>
-                                                <a data-html="true" href="#" data-url="{{route('survey.movesurvey',$survey->id)}}" data-ajax-popup="true"
-                                                    data-bs-toggle="tooltip" title="Move Survey" data-title="Move Survey">
+                                                <a data-html="true" href="#" data-url="{{route('survey.movesurvey',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip"  title="Move Survey" data-title="Move Survey">
                                                     <li class="d-flex align-items-center py-3 my-2">
-                                                        <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Move to</h3>
+                                                    <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Move to</h3>
                                                     </li>
                                                 </a>
                                                 <a href="{{route('survey.surveyduplication',$survey->id)}}">
                                                     <li class="d-flex align-items-center py-3 my-2">
-                                                        <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Duplicate</h3>
+                                                    <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Duplicate</h3>
                                                     </li>
                                                 </a>
-
+                                               
                                                 <a href="{{route('survey.delete',$survey->id)}}" data-html="true" class="deletesurvey">
-                                                    <li class="d-flex align-items-center py-3 my-2">
-                                                        <h3 class="ss-text ss-text__size--h3 ss-text__color--red ms-4">Close</h3>
+                                                    <li class="d-flex align-items-center py-3 my-2" >
+                                                        <h3 class="ss-text ss-text__size--h3 ss-text__color--red ms-4" >Close</h3>
                                                     </li>
                                                 </a>
                                             </ul>
                                         </div>
-                                        <!-- Actions -->
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -322,11 +309,6 @@ $("body").on("click", ".actionfolder", function () {
     $(this).children(".action_list").toggle();
 });
 
-$("body").on("click", ".actionsurvey", function () {
-    $(".action_list_survey").css('display','none');
-    $(this).children(".action_list_survey").toggle();
-});
-
 function folderdelete(url,id){
     Swal.fire({ 
         title: "Are you sure?",
@@ -359,6 +341,7 @@ function folderdelete(url,id){
 $(document).ready(function(){
     $('.actionsurvey1').popover({
     html: true,
+    trigger: "click",
     content: function() {
       let contentID = $(this).data('htmlcontent');
       return $(contentID).html();

@@ -114,14 +114,14 @@ class SurveyController extends Controller
 
     public function survey()
     {
-        $surveyList=Survey::orderBy("id", "desc")->get();
+        $surveyList=Survey::where(['is_deleted'=>0])->orderBy("id", "desc")->get();
        
         return view('admin.survey.survey.index', compact('surveyList'));
 
     }
 
     public function getSurveyList(){
-        $surveyList=Survey::orderBy("id", "desc")->get();
+        $surveyList=Survey::where(['is_deleted'=>0])->orderBy("id", "desc")->get();
 
         return Datatables::of($surveyList)
             ->addColumn('id', function ($list) {
@@ -193,16 +193,18 @@ class SurveyController extends Controller
 
     public function deleteSurvey(Request $request,$id){
         $survey=Survey::where(['id'=>$id])->first();
-        if($survey->qus_count==0){
-            $survey->delete();
+        // if($survey->qus_count==0){
+            $survey->is_deleted=1;
+            $survey->save();
+            return redirect()->back()->with('success', __('Survey deleted Successfully.'));
             return json_encode(['success'=>'Survey deleted Successfully',"error"=>""]);
-        }else{
-            return json_encode(['error'=>"Survey mapped with Questions. Can't able to delete it.","success"=>""]);
-        }
+        // }else{
+        //     return json_encode(['error'=>"Survey mapped with Questions. Can't able to delete it.","success"=>""]);
+        // }
         
     }
     public function templateList(Request $request,$id){
-        $survey=Survey::where(['id'=>$id])->first();
+        $survey=Survey::where(['folder_id'=>$id,'is_deleted'=>0])->first();
         $folders=Folder::withCount('surveycount')->get();
         return view('admin.survey.template.index', compact('survey','folders'));
     }
@@ -297,9 +299,19 @@ class SurveyController extends Controller
         $survey=Survey::where(['id'=>$id])->first();
         $surveylink= route('survey.view',$survey->builderID);
         return view('admin.survey.template.share', compact('surveylink','survey'));
-
-
    }
+    public function movesurvey(Request $request,$id){
+        $survey=Survey::where(['id'=>$id])->first();
+        $surveylink= route('survey.movesurveyupdate',$survey->builderID);
+        $folders=Folder::pluck('folder_name', 'id')->toArray();
+        return view('admin.survey.template.move', compact('surveylink','survey','folders'));
+    }
+    public function movesurveyupdate(Request $request,$id){
+        $folder_id=$request->folder_id;
+        $survey_id=$request->survey_id;
+        Survey::where(['id'=>$request->survey_id])->update(['folder_id'=>$request->folder_id]);
+        return redirect()->back()->with('success', __('Folder Moved Successfully.'));
+    }
     public function questionList(Request $request,$id){
         // Generatre builder ID
         $currentQus=Questions::where(['id'=>$id])->first();

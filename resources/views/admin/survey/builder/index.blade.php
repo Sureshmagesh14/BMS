@@ -10,10 +10,10 @@
 
     <!-- LOGO -->
     <div class="navbar-brand-box">
-        <a href="{{route('survey')}}"  class="logo  surveytitle">
+        <a href="{{route('survey.template',$survey->folder_id)}}"  class="logo  surveytitle">
             {{$survey->title}}
         </a>
-        <a href="{{route('survey')}}" ><i data-feather="home"></i></a>
+        <a href="{{route('survey.template',$survey->folder_id)}}" ><i data-feather="home"></i></a>
 
        
     </div>
@@ -426,7 +426,7 @@
                                 <input type="button" onclick="remove('row')" value="Remove Row" class="btn  matrixbtn">
 
                                 </div>
-                                <div>
+                                <div id="matrix_table">
                                     <table id="matrix_sec">
                                     <?php $exiting_choices_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_choice): [];
                                     $exiting_qus_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_qus): []; $i=0;
