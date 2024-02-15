@@ -10,10 +10,10 @@
 
     <!-- LOGO -->
     <div class="navbar-brand-box">
-        <a href="{{route('survey')}}"  class="logo  surveytitle">
+        <a href="{{route('survey.template',$survey->folder_id)}}"  class="logo  surveytitle">
             {{$survey->title}}
         </a>
-        <a href="{{route('survey')}}" ><i data-feather="home"></i></a>
+        <a href="{{route('survey.template',$survey->folder_id)}}" ><i data-feather="home"></i></a>
 
        
     </div>
