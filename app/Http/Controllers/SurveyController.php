@@ -299,9 +299,19 @@ class SurveyController extends Controller
         $survey=Survey::where(['id'=>$id])->first();
         $surveylink= route('survey.view',$survey->builderID);
         return view('admin.survey.template.share', compact('surveylink','survey'));
-
-
    }
+    public function movesurvey(Request $request,$id){
+        $survey=Survey::where(['id'=>$id])->first();
+        $surveylink= route('survey.movesurveyupdate',$survey->builderID);
+        $folders=Folder::pluck('folder_name', 'id')->toArray();
+        return view('admin.survey.template.move', compact('surveylink','survey','folders'));
+    }
+    public function movesurveyupdate(Request $request,$id){
+        $folder_id=$request->folder_id;
+        $survey_id=$request->survey_id;
+        Survey::where(['id'=>$request->survey_id])->update(['folder_id'=>$request->folder_id]);
+        return redirect()->back()->with('success', __('Folder Moved Successfully.'));
+    }
     public function questionList(Request $request,$id){
         // Generatre builder ID
         $currentQus=Questions::where(['id'=>$id])->first();
