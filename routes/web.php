@@ -104,9 +104,7 @@ Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'Surv
     });
 
     Route::controller(RewardsController::class)->group(function(){
-        Route::get('rewards','rewards')->name('rewards');
-        Route::any('get_all_rewards', 'get_all_rewards')->name('get_all_rewards');
-        Route::any('view_rewards/{id}', 'view_rewards')->name('view_rewards');
+
         Route::get('rewards_export','rewards_export')->name('rewards_export');     
         Route::get('export_rewards','RewardsController@export_rewards')->name('export_rewards');        
     });

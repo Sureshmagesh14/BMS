@@ -16,7 +16,7 @@
                         <?php echo csrf_field(); ?>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input name="email" type="text" class="form-control" id="email" placeholder="Enter email">
+                            <input name="email" type="text" class="form-control" id="email" placeholder="Enter email" required>
                         </div>
 
                         <div class="form-group">
@@ -24,7 +24,7 @@
                                 <a href="auth-recoverpw.html" class="text-muted">Forgot password?</a>
                             </div> -->
                             <label for="password">Password</label>
-                            <input name="password" type="password" class="form-control" id="password" placeholder="Enter password">
+                            <input name="password" type="password" class="form-control" id="password" placeholder="Enter password" required>
                         </div>
 
                         <div class="custom-control custom-checkbox">
