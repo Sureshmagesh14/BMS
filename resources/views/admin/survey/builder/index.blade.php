@@ -181,8 +181,20 @@
                         $left_label=$qusvalue->left_label;
                     }
                     ?>
+                    <div id="preview_content">
+                        <div class="page_head">
+                            <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
+                            <button class="btn btn-primary" id="back_editor">Back </button>
+                        </div>
+                    </div>
+                    
+                    <div id="qus_content">
+                    <div class="page_head">
+                        <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
+                        <button class="btn  btn-primary" id="preview_qus">Preview</button>
+                    </div>
                     {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation','enctype'=>"multipart/form-data")) }}
-                    <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
+                    
                     @if($currentQus->qus_type=='welcome_page')
                         <div class="modal-body">
                             <div>
@@ -522,6 +534,7 @@
                     <input type="button" id="update_qus" onclick="triggersubmit('{{$currentQus->qus_type}}')" value="Submit" class="btn  btn-primary">
                     <input type="submit" id="update_qus_final" value="Submit" class="btn  btn-primary">
                     {{Form::close()}}
+                    </div>
                 @endif
             </div>
 
@@ -835,6 +848,15 @@ $('form').bind("keypress", function(e) {
     e.preventDefault();
     return false;
   }
+});
+$('#preview_qus').click(function(){
+    $('#preview_content').css('display','block');
+    $('#qus_content').css('display','none');});
+
+$('#back_editor').click(function(){
+    $('#preview_content').css('display','none');
+    $('#qus_content').css('display','block');
+
 });
 </script>
     @yield('adminside-script')

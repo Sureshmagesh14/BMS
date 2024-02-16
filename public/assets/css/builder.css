@@ -858,7 +858,7 @@ div.gallery {
     padding: 15px;
     text-align: center;
   }
-  input#update_qus,.matrixbtn {
+  input#update_qus,.matrixbtn,#preview_qus,#back_editor {
     color:white !important;
     background: #4A9CA6;
     border: 1px solid #4A9CA6;
@@ -1150,4 +1150,11 @@ a#ss_draft_remove_image_welcome,a#ss_draft_remove_image_thankyou {
 a.setbackground {
     background: unset !important;
     align-items: center;
+}
+.page_head {
+    display: flex;
+    justify-content: space-between;
+}
+div#preview_content {
+    display: none;
 }
