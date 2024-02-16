@@ -2,7 +2,33 @@
 <html>
 
 <head>
-    <style>
+
+<style>
+        button.w3-bar-item.w3-button {
+            padding: 10px;
+            width: 17%;
+            text-align: center;
+            color: white;
+            background: #106ba3;
+            border-radius: 7px;
+        }
+        .w3-bar.w3-black {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1002;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(52,58,64,.06);
+            display: flex;
+            -webkit-box-pack: justify;
+            justify-content: space-evenly;
+            -webkit-box-align: center;
+            align-items: center;
+            margin: 0 auto;
+            height: 70px;
+            padding: 0 calc(24px / 2) 0 0;
+        }
         .fade {
             opacity: 0;
             transition: all 0.5s;
@@ -558,78 +584,146 @@
         .gradient .choose {
             margin-bottom: 10px;
         }
+        div.w3-container {
+            padding: calc(70px + 24px) calc(24px / 2) 60px calc(24px / 2);
+        }
     </style>
 </head>
 
 <body class="gradient">
-    <div class="bgnew" id="gradient" style="background-image: linear-gradient(to right top,
-				#9164b7, #3d94de, #00b7d7, #6dd1bd, #c2e3b1);"></div>
-    <div class="bg">
-        <div class="wrap">
-            <div class="outer">
-                <div class=" box color-input">
-                    <form method="get" id="form1">
-                        <div class="choose">
-                            <p>Choose orientation</p>
-                            <input type="radio" name="ori" value="to right top" id="radio1" checked>
-                            <label class="rLab" for="radio1"><i class="fa fa-arrow-right degtop"
-                                    aria-hidden="true"></i></label>
+   
+    <div class="w3-bar w3-black">
+        <button class="w3-bar-item w3-button Single" onclick="openCity('Single')">Single Color</button>
+        <button class="w3-bar-item w3-button Gradient" onclick="openCity('Gradient')">Gradient Color</button>
+        <button class="w3-bar-item w3-button Image" onclick="openCity('Image')">Image</button>
+    </div>
 
-                            <input type="radio" name="ori" value="to right" id="radio2">
-                            <label class="rLab" for="radio2"><i class="fa fa-arrow-right"
-                                    aria-hidden="true"></i></label>
-
-                            <input type="radio" name="ori" value="to right bottom" id="radio3">
-                            <label class="rLab" for="radio3"><i class="fa fa-arrow-right degbot"
-                                    aria-hidden="true"></i></label>
-
-                            <input type="radio" name="ori" value="to bottom" id="radio4">
-                            <label class="rLab" for="radio4"><i class="fa fa-arrow-down" aria-hidden="true"></i></label>
-
-                            <input type="radio" name="ori" value="to left bottom" id="radio5">
-                            <label class="rLab" for="radio5"><i class="fa fa-arrow-left degtop"
-                                    aria-hidden="true"></i></label>
-
-                            <input type="radio" name="ori" value="to left" id="radio6">
-                            <label class="rLab" for="radio6"><i class="fa fa-arrow-left" aria-hidden="true"></i></label>
-
-                            <input type="radio" name="ori" value="to left top" id="radio7">
-                            <label class="rLab" for="radio7"><i class="fa fa-arrow-left degbot"
-                                    aria-hidden="true"></i></label>
-
-                            <input type="radio" name="ori" value="to top" id="radio8">
-                            <label class="rLab" for="radio8"><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
-
-                        </div>
-                        <p>Enter colors</p>
-                        <div class="fade labels">
-                            <div class="label">
-                                <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
-                                    type="text" name='hex' id='hex' value="#9164B7">
+    <div id="Single" class="w3-container city">
+        <h2>Single Color</h2>
+        <div class="bgnew" id="gradient" style=""></div>
+        <div class="bg">
+            <div class="wrap">
+                <div class="outer">
+                    <div class=" box color-input">
+                        <form method="get" id="form1">
+                            <div class="choose" style="margin-bottom:1rem;">
                             </div>
-                            <div class="label">
-                                <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
-                                    type="text" name='hex2' id='hex1' value="#C2E3B1">
+                            <p>Enter colors</p>
+                            <div class="fade labels">
+                                <div class="label">
+                                    <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
+                                        type="text" name='hex' id='hex' value="#9164B7">
+                                </div>
                             </div>
-                        </div>
-                        <button class="fade" type="button" onclick="setgradient()" name="sub" value="1">
-                            <i class="fa fa-rocket" aria-hidden="true"></i>Generate
-                        </button>
-                    </form>
-                    <p id='return'>
-                    </p>
-                </div>
-                <div class="code-box">
+                            <button class="fade" type="button" onclick="setsinglecolor()" name="sub" value="1">
+                                <i class="fa fa-rocket" aria-hidden="true"></i>Generate
+                            </button>
+                        </form>
+                        <p id='return'>
+                        </p>
+                    </div>
+                    <div class="code-box">
 
-                    <p>CSS Code:</p>
-                    <code id="selectable">
-				    background-image: linear-gradient(to right top,#9164b7, #3d94de, #00b7d7, #6dd1bd, #c2e3b1);</code>
+                        <p>CSS Code:</p>
+                        <code id="selectable"></code>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </div> 
+        </div>
+    </div>
+
+    <div id="Gradient" class="w3-container city" style="display:none">
+        <h2>Gradient</h2>
+        <div class="bgnew" id="gradient" style="background-image: linear-gradient(to right top,#9164b7, #3d94de, #00b7d7, #6dd1bd, #c2e3b1);"></div>
+        <div class="bg">
+            <div class="wrap">
+                <div class="outer">
+                    <div class=" box color-input">
+                        <form method="get" id="form1">
+                            <div class="choose">
+                                <p>Choose orientation</p>
+                                <input type="radio" name="ori" value="to right top" id="radio1" checked>
+                                <label class="rLab" for="radio1"><i class="fa fa-arrow-right degtop"
+                                        aria-hidden="true"></i></label>
+
+                                <input type="radio" name="ori" value="to right" id="radio2">
+                                <label class="rLab" for="radio2"><i class="fa fa-arrow-right" aria-hidden="true"></i></label>
+
+                                <input type="radio" name="ori" value="to right bottom" id="radio3">
+                                <label class="rLab" for="radio3"><i class="fa fa-arrow-right degbot"
+                                        aria-hidden="true"></i></label>
+
+                                <input type="radio" name="ori" value="to bottom" id="radio4">
+                                <label class="rLab" for="radio4"><i class="fa fa-arrow-down" aria-hidden="true"></i></label>
+
+                                <input type="radio" name="ori" value="to left bottom" id="radio5">
+                                <label class="rLab" for="radio5"><i class="fa fa-arrow-left degtop"
+                                        aria-hidden="true"></i></label>
+
+                                <input type="radio" name="ori" value="to left" id="radio6">
+                                <label class="rLab" for="radio6"><i class="fa fa-arrow-left" aria-hidden="true"></i></label>
+
+                                <input type="radio" name="ori" value="to left top" id="radio7">
+                                <label class="rLab" for="radio7"><i class="fa fa-arrow-left degbot"
+                                        aria-hidden="true"></i></label>
+
+                                <input type="radio" name="ori" value="to top" id="radio8">
+                                <label class="rLab" for="radio8"><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
+
+                            </div>
+                            <p>Enter colors</p>
+                            <div class="fade labels">
+                                <div class="label">
+                                    <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
+                                        type="text" name='hex' id='hex' value="#9164B7">
+                                </div>
+                                <div class="label">
+                                    <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
+                                        type="text" name='hex2' id='hex1' value="#C2E3B1">
+                                </div>
+                            </div>
+                            <button class="fade" type="button" onclick="setgradient()" name="sub" value="1">
+                                <i class="fa fa-rocket" aria-hidden="true"></i>Generate
+                            </button>
+                            <!-- <button class="fade" type="button" onclick="setgradient()" name="sub" value="1">
+                                <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
+                            </button> -->
+                        </form>
+                        <p id='return'>
+                        </p>
+                    </div>
+                    <div class="code-box">
+
+                        <p>CSS Code:</p>
+                        <code id="selectable">
+                            background-image: linear-gradient(to right top,#9164b7, #3d94de, #00b7d7, #6dd1bd, #c2e3b1);</code>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="Image" class="w3-container city" style="display:none">
+        <h2>Image</h2>
+    </div>
+
     <script type="text/javascript">
+        function openCity(cityName) {
+            var i;
+            var x = document.getElementsByClassName("city");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";  
+            }
+            document.getElementById(cityName).style.display = "block";  
+        }
+        function setsinglecolor(){
+            let v1 = $('#hex').val();
+            var body = document.getElementById("gradient");
+            body.style.background = v1;
+            $('#selectable').html(body.style.background + ";");
+        }
         function setgradient() {
             let v1 = $('#hex').val();
             let v2 = $('#hex1').val();
