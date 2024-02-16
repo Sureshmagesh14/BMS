@@ -55,3 +55,7 @@ Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyControll
 
 // Upload Image
 Route::post('/survey/upload-image', ['as' => 'survey.uploadimage','uses' => 'SurveyController@uploadimage',])->middleware(['auth']);
+
+
+// Survey Background 
+Route::get('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@background',])->middleware(['auth']);

@@ -463,6 +463,12 @@ class SurveyController extends Controller
             echo "no file";
         }
     }
+    public function background(Request $request,$id){
+        $survey=Survey::where(['id'=>$id])->first();
+        return view('admin.survey.background', compact('survey'));
+
+
+    }
 
    
 }

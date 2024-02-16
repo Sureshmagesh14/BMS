@@ -22,6 +22,11 @@
 
         <!--- Sidemenu -->
         <div id="sidebar-menu">
+            <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
+                <a class="setbackground"  href="{{route('survey.background',$survey->id)}}">
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g><path d="M17.839 7.66998C18.934 6.57198 20.713 5.79898 21.524 4.55698C22.411 3.19198 22.026 1.36898 20.661 0.474979C19.298 -0.410021 17.473 -0.024021 16.575 1.33998C15.737 2.62798 15.784 4.66398 15.151 6.12098C14.339 8.00398 11.599 8.24398 8.445 6.60898C6.723 9.96498 4.38 13.566 2 16.493L13.548 24C15.044 21.114 17.955 16.652 19.989 14.117C17.162 11.854 16.314 9.19198 17.839 7.66998ZM19.591 2.12498C20.043 2.41898 20.173 3.03098 19.873 3.48198C19.579 3.94298 18.968 4.06598 18.517 3.77198C18.059 3.47298 17.932 2.86898 18.23 2.41598C18.522 1.95798 19.133 1.82698 19.591 2.12498ZM12.927 21.352L4.677 15.99C5.653 14.725 6.43 13.509 7.489 11.886C7.916 11.23 8.422 11.093 8.723 11.288C9.827 12.005 7.216 14.913 8.394 15.679C9.563 16.438 11.283 12.311 12.555 13.14C13.54 13.78 11.765 15.838 12.764 16.486C13.229 16.789 13.897 16.228 14.48 15.855C15.486 15.21 16.419 15.861 15.436 17.371C14.455 18.872 13.92 19.686 12.927 21.352Z" fill="#63686F"></path></g></svg> <p>Design Background</p>
+                </a>
+            </div>
        
             <!-- Left Menu Start -->
                <?php $i=1;?>
@@ -131,7 +136,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h4 class="mb-0">My Surveys</h4>
+                        <h4 class="mb-0">{{$survey->title}}</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Survey</a></li>

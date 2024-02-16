@@ -1139,3 +1139,15 @@ a#ss_draft_remove_image_welcome,a#ss_draft_remove_image_thankyou {
     width: 30px;
     height: 30px;
 }
+.setbackground {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 6px;
+}
+.setbackground p {
+    padding-left: 5px;
+}
+a.setbackground {
+    background: unset !important;
+    align-items: center;
+}
