@@ -135,10 +135,11 @@
             right: 0;
             bottom: 0;
             z-index: -2;
-            background-image: -webkit-gradient(linear, left bottom, right top, from(#38438b), color-stop(#944b94), color-stop(#d75a88), color-stop(#ff7e71), color-stop(#ffb25f), to(#ffeb68));
+            background-color:#ec226c94;
+            /* background-image: -webkit-gradient(linear, left bottom, right top, from(#38438b), color-stop(#944b94), color-stop(#d75a88), color-stop(#ff7e71), color-stop(#ffb25f), to(#ffeb68));
             background-image: -webkit-linear-gradient(left bottom, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);
             background-image: -o-linear-gradient(left bottom, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);
-            background-image: linear-gradient(to right top, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);
+            background-image: linear-gradient(to right top, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68); */
         }
 
         .bg-bottom {}
@@ -415,7 +416,7 @@
             position: relative;
             border-radius: 50px;
             background: #00c9b7;
-            width: 180px;
+            width: 46%;
             height: 50px;
             position: relative;
             color: #fff;
@@ -600,7 +601,7 @@
 
     <div id="Single" class="w3-container city">
         <h2>Single Color</h2>
-        <div class="bgnew" id="gradient" style=""></div>
+        <div class="bgnew2" id="gradient1" style=""></div>
         <div class="bg">
             <div class="wrap">
                 <div class="outer">
@@ -612,12 +613,17 @@
                             <div class="fade labels">
                                 <div class="label">
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
-                                        type="text" name='hex' id='hex' value="#9164B7">
+                                        type="text" name='hex' id='hex' value="#ec226c94">
                                 </div>
                             </div>
-                            <button class="fade" type="button" onclick="setsinglecolor()" name="sub" value="1">
-                                <i class="fa fa-rocket" aria-hidden="true"></i>Generate
-                            </button>
+                            <div class="actionbutton">
+                                <button class="fade" type="button" onclick="setsinglecolor()" name="sub" value="1">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>Preview
+                                </button>
+                                <button class="fade" type="button" onclick="setbackground()" name="sub" value="1">
+                                    <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
+                                </button>
+                            </div>
                         </form>
                         <p id='return'>
                         </p>
@@ -625,7 +631,7 @@
                     <div class="code-box">
 
                         <p>CSS Code:</p>
-                        <code id="selectable"></code>
+                        <code id="selectable">background-color: #ec226c94;</code>
                     </div>
                 </div>
             </div>
@@ -683,12 +689,14 @@
                                         type="text" name='hex2' id='hex1' value="#C2E3B1">
                                 </div>
                             </div>
-                            <button class="fade" type="button" onclick="setgradient()" name="sub" value="1">
-                                <i class="fa fa-rocket" aria-hidden="true"></i>Generate
-                            </button>
-                            <!-- <button class="fade" type="button" onclick="setgradient()" name="sub" value="1">
-                                <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
-                            </button> -->
+                            <div class="actionbutton">
+                                <button class="fade" type="button" onclick="setgradient()" name="sub" value="1">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>Preview
+                                </button>
+                                <button class="fade" type="button" onclick="setbackground()" name="sub" value="1">
+                                    <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
+                                </button>
+                            </div>
                         </form>
                         <p id='return'>
                         </p>
@@ -720,7 +728,7 @@
         }
         function setsinglecolor(){
             let v1 = $('#hex').val();
-            var body = document.getElementById("gradient");
+            var body = document.getElementById("gradient1");
             body.style.background = v1;
             $('#selectable').html(body.style.background + ";");
         }

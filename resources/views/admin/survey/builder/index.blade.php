@@ -186,6 +186,205 @@
                             <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
                             <button class="btn btn-primary" id="back_editor">Back </button>
                         </div>
+                        <div class="survey_background">
+                            <div class="survey_content_sec">
+                                @if($currentQus->qus_type=='welcome_page')
+                                    @if(isset($qusvalue->welcome_title))
+                                        <p>{{$qusvalue->welcome_title}}</p>
+                                    @endif
+                                    @if(isset($qusvalue->welcome_image))
+                                        <figure>
+                                            <span>
+                                                <div class="ss_image_wrapper">
+                                                    <img src="{{ asset('uploads/survey/'.$qusvalue->welcome_image) }}" alt="welcome image">
+                                                </div>
+                                            </span>
+                                        </figure>
+                                    @endif
+                                    @if(isset($qusvalue->welcome_imagetitle))
+                                        <p>{{$qusvalue->welcome_imagetitle}}</p>
+                                    @endif
+                                    @if(isset($qusvalue->welcome_imagesubtitle))
+                                        <p class="description">{{$qusvalue->welcome_imagesubtitle}}</p>
+                                    @endif
+                                    @if(isset($qusvalue->welcome_btn))
+                                    <div class="ss_cl_qstn_action">
+                                        <button class="next_qus_btn">
+                                            <span class="ss-primary-action-btn__copy">{{$qusvalue->welcome_btn}}</span>
+                                            <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke="#fff" stroke-width="1"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    @endif
+                                @elseif($currentQus->qus_type=='thank_you')
+                                    @if(isset($qusvalue->thankyou_title))
+                                        <p class="thankyoutitle">{{$qusvalue->thankyou_title}}</p>
+                                    @endif
+                                    @if(isset($qusvalue->thankyou_image))
+                                        <figure>
+                                            <span>
+                                                <div class="ss_image_wrapper">
+                                                    <img class="thankyou_image" src="{{ asset('uploads/survey/'.$qusvalue->thankyou_image) }}" alt="thankyou image">
+                                                </div>
+                                            </span>
+                                        </figure>
+                                    @endif
+                                    @if(isset($qusvalue->thankyou_imagetitle))
+                                        <p class="thankyousubtitle">{{$qusvalue->thankyou_imagetitle}}</p>
+                                    @endif
+                                @elseif($currentQus->qus_type=='likert')
+                                <div class="prev_inside">
+                                    <p class="question_no">Question </p>
+                                    <p class="question_desc">{{$currentQus->question_name}} </p>
+                                    <div class="preview_likert ss_row--builder ss-paddding--top-bottom"><div class="opinion-scale-container ss-paddding--top-bottom"><div class="opinion-scale-box preview"><div class="label label--start"><p id="left_lable_text">{{$left_label}}</p></div><div class="label label--middle"><p id="middle_lable_text">{{$middle_label}}</p></div><div class="label label--end"><p id="right_lable_text">{{$right_label}}</p></div><div class="scale-element"><span>1</span></div><div class="scale-element"><span>2</span></div><div class="scale-element"><span>3</span></div><div class="scale-element"><span>4</span></div><div class="scale-element"><span>5</span></div><div class="scale-element"><span>6</span></div><div class="scale-element"><span>7</span></div><div class="scale-element"><span>8</span></div><div class="scale-element"><span>9</span></div></div></div></div>
+                                </div>
+                                @elseif($currentQus->qus_type=='email')
+                                <div class="prev_inside">
+                                    <p class="question_no">Question </p>
+                                    <p class="question_desc">{{$currentQus->question_name}} </p>
+                                    <div class="content_sect">
+                                        <input type="email" placeholder="Please enter an email" class="form-control email" name="email"/>
+                                    </div>
+                                </div>
+                                @elseif($currentQus->qus_type=='open_qus')
+                                <div class="prev_inside">
+                                    <p class="question_no">Question </p>
+                                    <p class="question_desc">{{$currentQus->question_name}} </p>
+                                    <div class="content_sect">
+                                        @if($qusvalue->open_qus_choice == 'single')
+                                        <input class="form-control" placeholder="Please enter your response" name="single_choice_qus" type="text">                                        
+                                        @else
+                                        <textarea class="form-control" placeholder="Please enter your response" name="multi_choice_qus" cols="50" rows="10"></textarea>
+                                        @endif
+                                    </div>
+                                </div>
+                                @elseif($currentQus->qus_type=='dropdown')
+                                <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): []; ?>
+                                <div class="prev_inside">
+                                    <p class="question_no">Question </p>
+                                    <p class="question_desc">{{$currentQus->question_name}} </p>
+                                    <div class="content_sect dropdownsec">
+                                        <select class="select2 form-control" id="preview_choices" name="preview_choices[]" data-placeholder="Choose ...">
+                                            <option value="">Select</option>
+                                            @foreach($exiting_choices as $value)
+                                                <option value="{{$value}}">{{$value}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                @elseif($currentQus->qus_type=='rating')
+                                <div class="prev_inside">
+                                    <p class="question_no">Question </p>
+                                    <p class="question_desc">{{$currentQus->question_name}} </p>
+                                    <div class="content_sect">
+                                        <div class="ss_row--builder ss-paddding--top-bottom ratingsection">
+                                            <div class="rating-container">
+                                                @if($icon_type=='smiley_icon')
+                                                    <div class="rating-box smiley_icon"><div class="rating-element"><svg width="22" height="22" class="ss-smiley-icon ss-smiley-icon--1 undefined" viewBox="0 0 44 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 2)" class="ss-smiley-icon__g"><circle cx="20.125" cy="20.125" r="20.125"></circle><path transform="translate(-2 -1)" class="ss-smiley-icon__path" d="M9.77783 17.1117C10.7434 15.9261 12.0634 15.2539 13.4445 15.2539C14.8256 15.2539 16.1089 15.9261 17.1112 17.1117M26.889 17.1117C27.8545 15.9261 29.1745 15.2539 30.5556 15.2539C31.9367 15.2539 33.2201 15.9261 34.2223 17.1117" stroke="inherit" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path><path transform="translate(-1.7 -1)" class="ss-smiley-icon__path" d="M13.4441 31.7765C13.4441 31.7765 16.6537 28.5693 21.9997 28.5693C27.3481 28.5693 30.5552 31.7765 30.5552 31.7765" stroke="inherit" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" class="ss-smiley-icon ss-smiley-icon--2 undefined" viewBox="0 0 44 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 1)" class="ss-smiley-icon__g"><circle cx="21" cy="21" r="20.125"></circle><path class="ss-smiley-icon__path" d="M11.375 17.063a.437.437 0 110 .874.437.437 0 010-.875m19.25.001a.437.437 0 100 .874.437.437 0 000-.875M18.375 34.32a11.9 11.9 0 0112.25-5.25"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" class="ss-smiley-icon ss-smiley-icon--3 undefined" viewBox="0 0 44 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 1)" class="ss-smiley-icon__g"><circle cx="21" cy="21" r="20.125"></circle><path class="ss-smiley-icon__path" d="M14.875 13.563a.437.437 0 110 .874.437.437 0 010-.874m12.25 0a.437.437 0 100 .874.437.437 0 000-.874m-17.5 13.562h22.75"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" class="ss-smiley-icon ss-smiley-icon--4 undefined" viewBox="0 0 44 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 2)" class="ss-smiley-icon__g"><circle cx="20.125" cy="20.125" r="20.125"></circle><path class="ss-smiley-icon__path" d="M15.75 15.939a4.128 4.128 0 00-7 0m15.75 0a4.128 4.128 0 017 0M9.625 26.25a11.375 11.375 0 0021 0"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" class="ss-smiley-icon ss-smiley-icon--5 undefined" viewBox="0 0 44 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 1)" class="ss-smiley-icon__g"><circle cx="21" cy="21" r="20.125"></circle><path class="ss-smiley-icon__path" d="M10.5 27.125a11.375 11.375 0 0021 0m-19-7l-4.688-4.89a2.775 2.775 0 01-.525-3.202 2.775 2.775 0 014.443-.72l.765.765.767-.764a2.774 2.774 0 014.441.719 2.774 2.774 0 01-.525 3.203L12.5 20.125zm17 0l4.688-4.891a2.776 2.776 0 00.525-3.203 2.775 2.775 0 00-4.443-.719l-.765.765-.767-.765a2.774 2.774 0 00-4.441.72 2.776 2.776 0 00.525 3.202l4.678 4.891z"></path></g></svg></div></div>
+                                                @elseif($icon_type=='star_icon')
+                                                    <div class="rating-box star_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path></svg></div></div>
+                                                @elseif($icon_type=='thumb_icon')
+                                                    <div class="rating-box thumb_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 41"><path fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 41"><path fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 41"><path fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 41"><path fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 41"><path fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path></svg></div></div>
+                                                @elseif($icon_type=='crown_icon')
+                                                    <div class="rating-box crown_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 39"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)"><circle cx="3.5" cy="7.583" r="2.625"></circle><circle cx="38.5" cy="7.73" r="2.625"></circle><path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path><circle cx="21" cy="3.5" r="3.5"></circle></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 39"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)"><circle cx="3.5" cy="7.583" r="2.625"></circle><circle cx="38.5" cy="7.73" r="2.625"></circle><path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path><circle cx="21" cy="3.5" r="3.5"></circle></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 39"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)"><circle cx="3.5" cy="7.583" r="2.625"></circle><circle cx="38.5" cy="7.73" r="2.625"></circle><path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path><circle cx="21" cy="3.5" r="3.5"></circle></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 39"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)"><circle cx="3.5" cy="7.583" r="2.625"></circle><circle cx="38.5" cy="7.73" r="2.625"></circle><path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path><circle cx="21" cy="3.5" r="3.5"></circle></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 44 39"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)"><circle cx="3.5" cy="7.583" r="2.625"></circle><circle cx="38.5" cy="7.73" r="2.625"></circle><path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path><circle cx="21" cy="3.5" r="3.5"></circle></g></svg></div></div>
+                                                @elseif($icon_type=='user_icon')
+                                                    <div class="rating-box user_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div></div>
+                                                @elseif($icon_type=='thunder_icon')
+                                                    <div class="rating-box thunder_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div></div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @elseif($currentQus->qus_type=='rankorder')
+                                <div class="prev_inside">
+                                    <p class="question_no">Question </p>
+                                    <p class="question_desc">{{$currentQus->question_name}} </p>
+                                    <div class="content_sect">
+                                    <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): []; ?>
+                                        @foreach($exiting_choices as $key=>$choice)
+                                            <div class="rank-order-container" role="listbox">
+                                                <div  class="ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" tabindex="0" aria-describedby="operation" aria-labelledby="lb-8966750-23016586" draggable="true" style="opacity: 1;">
+                                                    <div class="ss-option--rank-order__data">
+                                                        <span class="ss-option--rank-order__drag-handle-icon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16">
+                                                            <circle cx="2" cy="2" r="2" fill="currentColor"></circle>
+                                                            <circle cx="2" cy="8" r="2" fill="currentColor"></circle>
+                                                            <circle cx="2" cy="14" r="2" fill="currentColor"></circle>
+                                                            <circle cx="8" cy="2" r="2" fill="currentColor"></circle>
+                                                            <circle cx="8" cy="8" r="2" fill="currentColor"></circle>
+                                                            <circle cx="8" cy="14" r="2" fill="currentColor"></circle>
+                                                            </svg>
+                                                        </span>
+                                                        <p id="lb-8966750-23016586">{{$choice}}</p>
+                                                    </div>
+                                                    <span class="ss-option--rank-order__select-wrap">
+                                                        <div class="css-1pcexqc-container">
+                                                            <select class="form-control" id="rank_order_choice" name="rank_order_choice" data-placeholder="Choose ...">
+                                                                <?php for($i=1; $i<=count($exiting_choices); $i++){ echo "<option value='$i'>$i</option>"; } ?>
+                                                            </select>
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                @elseif($currentQus->qus_type=='matrix_qus')
+                                <div class="prev_inside">
+                                    <p class="question_no">Question </p>
+                                    <p class="question_desc">{{$currentQus->question_name}} </p>
+                                        <table id="matrix_sec" class="matrix_sec">
+                                        <?php $exiting_choices_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_choice): [];
+                                        $exiting_qus_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_qus): []; $i=0;
+                                            ?>
+                                            <tbody>
+                                                @if(count($exiting_qus_matrix)>0)
+                                                    <tr>
+                                                        <td></td>
+                                                        @foreach($exiting_choices_matrix as $ans)
+                                                        <td><input type="text" placeholder="Enter Choice" class="matrix_head" value="{{$ans}}"  name="matrix_choice"></td>
+                                                        @endforeach
+                                                    </tr>
+                                                @endif
+                                                <?php foreach($exiting_qus_matrix as $qus){
+                                                    ?>
+                                                        <tr>
+                                                            <td><input type="text" value="{{$qus}}" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
+                                                            <td><input type="radio" name="matrix_anstype"></td>
+                                                            <td><input type="radio" name="matrix_anstype"></td>
+                                                        </tr>
+                                                    <?php  
+                                                    $i++;
+                                                } ?>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                @elseif($currentQus->qus_type=='single_choice' || $currentQus->qus_type=='multi_choice')
+                                <?php $azRange = range('A', 'Z'); ?>
+                                <div class="prev_inside">
+                                    <p class="question_no">Question </p>
+                                    <p class="question_desc">{{$currentQus->question_name}} </p>
+                                    <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): []; ?>
+                                        <div id="choices_section" class="row choices_section">
+                                            @foreach($exiting_choices as $key=>$choice)
+                                                <div class="col-md-4">
+                                                    <button class="ss-answer-option--choice ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-item--has-key-assist">
+                                                        <span class="ss-answer-option--choice__copy">{{$choice}}</span>
+                                                        <div class="ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--bold ss-option-no">
+                                                            <span class="ss-option-no__index">{{$azRange[$key]}}</span>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            @endforeach
+                                        </div> 
+                                        
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                     
                     <div id="qus_content">
@@ -233,9 +432,9 @@
                             <br>
                             @if(isset($qusvalue->welcome_image))
                             <div class="exitingImg">
-                            <image src="{{ asset('uploads/survey/'.$qusvalue->welcome_image) }}" alt="image" width="100" height="100" id="existing_image">
-                            <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
-                                    </div>
+                                <image src="{{ asset('uploads/survey/'.$qusvalue->welcome_image) }}" alt="image" width="100" height="100" id="existing_image">
+                                <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            </div>
                             @endif
                             <div id="imgPreview"></div>
                             <div style="<?php if(isset($qusvalue->welcome_image) && $qusvalue->welcome_image!=''){ echo "display:none;"; } ?>" class="upload-image-placeholder" id="trigger_welcome_image">
@@ -244,7 +443,12 @@
                                     <p>Click here to upload a welcome image</p>
                                 </div>
                             </div>
-                            <input style="display:none;" type="file" id="welcome_image" name="welcome_image" required class="course form-control">
+                            
+                            @if(isset($qusvalue->welcome_image))
+                            <input style="display:none;" type="hidden" id="existing_image_uploaded" name="existing_image_uploaded"  class="course form-control" value="{{$qusvalue->welcome_image}}">
+                            @endif
+                           
+                            <input style="display:none;" type="file" id="welcome_image" name="welcome_image"  class="course form-control">
                             <div>
                                 {{ Form::label('welcome_btn', __('Button Label'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->welcome_imagetitle))
@@ -290,19 +494,25 @@
                             </div>
                             <br>
                             @if(isset($qusvalue->thankyou_image))
+                            <input style="display:none;" type="hidden" id="existing_image_uploaded" name="existing_image_uploaded_thankyou"  class="course form-control" value="{{$qusvalue->thankyou_image}}">
                             <div class="exitingImg">
-                            <image src="{{ asset('uploads/survey/'.$qusvalue->thankyou_image) }}" alt="image" width="100" height="100" id="existing_image_thankyou">
-                            <a id="ss_draft_remove_image_thankyou" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
-                                    </div>
+                                <image src="{{ asset('uploads/survey/'.$qusvalue->thankyou_image) }}" alt="image" width="100" height="100" id="existing_image_thankyou">
+                                <a id="ss_draft_remove_image_thankyou" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            </div>
+                            @else
+                            <div class="exitingImg" style="display:none;">
+                                <image src="" alt="image" width="100" height="100" id="existing_image_thankyou">
+                                <a id="ss_draft_remove_image_thankyou" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            </div>
                             @endif
-                            <div id="imgPreview"></div>
+                            <div id="imgPreviewthanksyou"></div>
                             <div style="<?php if(isset($qusvalue->thankyou_image) && $qusvalue->thankyou_image!=''){ echo "display:none;"; } ?>" class="upload-image-placeholder" id="trigger_thankyou_image">
                                 <div class="upload-image-placeholder__upload-btn">
                                     <svg width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
                                     <p>Click here to upload a thank you image</p>
                                 </div>
                             </div>
-                            <input style="display:none;" type="file" id="thankyou_image" name="thankyou_image" required class="course form-control">
+                            <input style="display:none;" type="file" id="thankyou_image" name="thankyou_image"  class="course form-control">
                             
                         </div>
                     @endif
@@ -368,7 +578,7 @@
                                         <div class="rating-box user_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div></div>
                                         <div class="rating-box thunder_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div></div>
                                     </div>
-                                    </div>
+                                </div>
 
                                 <div class="flex-column flex-column--full">
                                     <label class="ss-common-label ss-common-label--no-margin">Choose an icon</label>
@@ -756,7 +966,7 @@ $('#thankyou_image').change(function(){
 })
 function getImgData() {
 const chooseFile = document.getElementById("thankyou_image");
-const imgPreview = document.getElementById("imgPreview");
+const imgPreview = document.getElementById("imgPreviewthanksyou");
   const files = chooseFile.files[0];
   if (files) {
     const fileReader = new FileReader();
@@ -764,6 +974,7 @@ const imgPreview = document.getElementById("imgPreview");
     fileReader.addEventListener("load", function () {
     //   imgPreview.style.display = "block";
     //   imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
+      $('.exitingImg').css('display','flex');
       $('#existing_image_thankyou').attr('src',this.result);
       $('#existing_image_thankyou').css('display',"block");
       $('#trigger_thankyou_image').css('display','none');
@@ -776,7 +987,7 @@ $('#ss_draft_remove_image_thankyou').click(function(){
     $('#existing_image_thankyou').css('display','none');
     $('#trigger_thankyou_image').css('display','inline-block');
     $('#ss_draft_remove_image_thankyou').css('display','none');
-    $('#imgPreview').css('display','none');
+    $('#imgPreviewthanksyou').css('display','none');
 
 });
 // Thank you Image 
