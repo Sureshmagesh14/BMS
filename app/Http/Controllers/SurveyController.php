@@ -335,6 +335,8 @@ class SurveyController extends Controller
                     $extenstion = $file->getClientOriginalExtension();
                     $filename = time().'.'.$extenstion;
                     $file->move('uploads/survey/', $filename);
+                }else{
+                    $filename=$request->existing_image_uploaded;
                 }
                 $json=[
                     'welcome_imagesubtitle'=>$request->welcome_imagesubtitle,'welcome_btn'=>$request->welcome_btn,
@@ -353,6 +355,8 @@ class SurveyController extends Controller
                     $extenstion = $file->getClientOriginalExtension();
                     $filename = time().'.'.$extenstion;
                     $file->move('uploads/survey/', $filename);
+                }else{
+                    $filename=$request->existing_image_uploaded_thankyou;
                 }
                 $json=[
                     'thankyou_title'=>$request->thankyou_title,
