@@ -62,8 +62,6 @@ Export
 
 
 
-                                            <a href="{{url('projects_export/xlsx')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export</a>
-
                                             <a href="#!" data-url="{{ route('projects.create') }}" data-size="xl" data-ajax-popup="true"
                                         class="btn btn-primary" data-bs-original-title="{{ __('Create Projects') }}" class="btn btn-primary" data-size="xl"
                                          data-ajax-popup="true" data-bs-toggle="tooltip"

@@ -147,6 +147,7 @@ width: 30% !important;
                         searching: true,
                         ordering: true,
                         dom: 'lfrtip',
+                        deferRender: true,
                         info: true,
                         iDisplayLength: 10,
                         lengthMenu: [
