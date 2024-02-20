@@ -951,7 +951,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         $('#pagetype').val('editor');
         $('#preview_content').css('display','none');
         $('#qus_content').css('display','block');
-    }else{
+    }else if($('#pagetype').val()=='preview'){
         $('#pagetype').val('preview');
         $('#preview_content').css('display','block');
         $('#qus_content').css('display','none');

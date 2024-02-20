@@ -450,9 +450,11 @@ class SurveyController extends Controller
 
     }
     public function viewsurvey(Request $request, $id){
-        echo $id;
-        $survey=Survey::where(['builderID'=>$id])->first();
-        echo "<pre>"; print_r($survey);
+        $survey=Survey::with('questions')->where(['builderID'=>$id])->first();
+        $questions=Questions::where(['survey_id'=>$survey->id])->whereIn('qus_type',['welcome_page','thank_you'])->get();
+
+        return view('admin.survey.response', compact('survey','questions'));
+
 
     }
     public function uploadimage(Request $request){

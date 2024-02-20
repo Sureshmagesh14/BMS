@@ -1,0 +1,19 @@
+.ss_classic_form_navigator button {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
+    border: solid 2px #888589;
+}
+
+.ss_classic_form_navigator {
+    position: absolute;
+    right: 2%;
+    bottom: 5%;
+}
+
+.ss_classic_form_navigator button.inactive {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
