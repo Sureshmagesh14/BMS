@@ -228,8 +228,9 @@ class SurveyController extends Controller
         if($currentQus){
             $qus_type=$questionTypes[$currentQus->qus_type];
         }
+        $pagetype=$request->pagetype;
         
-        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type'));
+        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype'));
 
     }
     public function questiontype(Request $request,$survey){
@@ -321,8 +322,9 @@ class SurveyController extends Controller
         $thankQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->get();
         $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
         $qus_type=$questionTypes[$currentQus->qus_type];
-        
-        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type'));
+        $pagetype=$request->pagetype;
+
+        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype'));
     }
     public function updateQus(Request $request,$id){
         $currentQus=Questions::where(['id'=>$id])->first();

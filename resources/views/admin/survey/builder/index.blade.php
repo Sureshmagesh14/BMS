@@ -181,6 +181,14 @@
                         $left_label=$qusvalue->left_label;
                     }
                     ?>
+                    <input type="hidden" name="page_type" id="pagetype" value="{{$pagetype}}"/>
+                    <?php 
+                    $qusNo=1;
+                    foreach($questions as $key=>$qus){
+                        if($currentQus->id==$qus->id){
+                            $qusNo=$qusNo+$key;
+                        }
+                    } ?>
                     <div id="preview_content">
                         <div class="page_head">
                             <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
@@ -235,13 +243,13 @@
                                     @endif
                                 @elseif($currentQus->qus_type=='likert')
                                 <div class="prev_inside">
-                                    <p class="question_no">Question </p>
+                                    <p class="question_no">Question {{$qusNo}}</p>
                                     <p class="question_desc">{{$currentQus->question_name}} </p>
                                     <div class="preview_likert ss_row--builder ss-paddding--top-bottom"><div class="opinion-scale-container ss-paddding--top-bottom"><div class="opinion-scale-box preview"><div class="label label--start"><p id="left_lable_text">{{$left_label}}</p></div><div class="label label--middle"><p id="middle_lable_text">{{$middle_label}}</p></div><div class="label label--end"><p id="right_lable_text">{{$right_label}}</p></div><div class="scale-element"><span>1</span></div><div class="scale-element"><span>2</span></div><div class="scale-element"><span>3</span></div><div class="scale-element"><span>4</span></div><div class="scale-element"><span>5</span></div><div class="scale-element"><span>6</span></div><div class="scale-element"><span>7</span></div><div class="scale-element"><span>8</span></div><div class="scale-element"><span>9</span></div></div></div></div>
                                 </div>
                                 @elseif($currentQus->qus_type=='email')
                                 <div class="prev_inside">
-                                    <p class="question_no">Question </p>
+                                    <p class="question_no">Question {{$qusNo}}</p>
                                     <p class="question_desc">{{$currentQus->question_name}} </p>
                                     <div class="content_sect">
                                         <input type="email" placeholder="Please enter an email" class="form-control email" name="email"/>
@@ -249,7 +257,7 @@
                                 </div>
                                 @elseif($currentQus->qus_type=='open_qus')
                                 <div class="prev_inside">
-                                    <p class="question_no">Question </p>
+                                    <p class="question_no">Question {{$qusNo}}</p>
                                     <p class="question_desc">{{$currentQus->question_name}} </p>
                                     <div class="content_sect">
                                         @if($qusvalue->open_qus_choice == 'single')
@@ -262,7 +270,7 @@
                                 @elseif($currentQus->qus_type=='dropdown')
                                 <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): []; ?>
                                 <div class="prev_inside">
-                                    <p class="question_no">Question </p>
+                                    <p class="question_no">Question {{$qusNo}}</p>
                                     <p class="question_desc">{{$currentQus->question_name}} </p>
                                     <div class="content_sect dropdownsec">
                                         <select class="select2 form-control" id="preview_choices" name="preview_choices[]" data-placeholder="Choose ...">
@@ -275,7 +283,7 @@
                                 </div>
                                 @elseif($currentQus->qus_type=='rating')
                                 <div class="prev_inside">
-                                    <p class="question_no">Question </p>
+                                    <p class="question_no">Question {{$qusNo}}</p>
                                     <p class="question_desc">{{$currentQus->question_name}} </p>
                                     <div class="content_sect">
                                         <div class="ss_row--builder ss-paddding--top-bottom ratingsection">
@@ -299,7 +307,7 @@
                                 </div>
                                 @elseif($currentQus->qus_type=='rankorder')
                                 <div class="prev_inside">
-                                    <p class="question_no">Question </p>
+                                    <p class="question_no">Question {{$qusNo}}</p>
                                     <p class="question_desc">{{$currentQus->question_name}} </p>
                                     <div class="content_sect">
                                     <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): []; ?>
@@ -334,7 +342,7 @@
 
                                 @elseif($currentQus->qus_type=='matrix_qus')
                                 <div class="prev_inside">
-                                    <p class="question_no">Question </p>
+                                    <p class="question_no">Question {{$qusNo}}</p>
                                     <p class="question_desc">{{$currentQus->question_name}} </p>
                                         <table id="matrix_sec" class="matrix_sec">
                                         <?php $exiting_choices_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_choice): [];
@@ -365,7 +373,7 @@
                                 @elseif($currentQus->qus_type=='single_choice' || $currentQus->qus_type=='multi_choice')
                                 <?php $azRange = range('A', 'Z'); ?>
                                 <div class="prev_inside">
-                                    <p class="question_no">Question </p>
+                                    <p class="question_no">Question {{$qusNo}}</p>
                                     <p class="question_desc">{{$currentQus->question_name}} </p>
                                     <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): []; ?>
                                         <div id="choices_section" class="row choices_section">
@@ -375,6 +383,29 @@
                                                         <span class="ss-answer-option--choice__copy">{{$choice}}</span>
                                                         <div class="ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--bold ss-option-no">
                                                             <span class="ss-option-no__index">{{$azRange[$key]}}</span>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            @endforeach
+                                        </div> 
+                                        
+                                    </div>
+                                @elseif($currentQus->qus_type=='picturechoice')
+                                <?php $azRange = range('A', 'Z'); ?>
+                                <div class="prev_inside">
+                                    <p class="question_no">Question {{$qusNo}}</p>
+                                    <p class="question_desc">{{$currentQus->question_name}} </p>
+                                    <?php $exiting_choices=$qusvalue!=null ? json_decode($qusvalue->choices_list): []; ?>
+                                        <div id="choices_section" class="row choices_section">
+                                            @foreach($exiting_choices as $key=>$choice)
+                                                <div class="col-md-3">
+                                                    <button class="picturepreview ss-answer-option--choice ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-item--has-key-assist">
+                                                        <img class="current_image" src="{{$choice->img}}">
+                                                        <div class="ss-choice-content">
+                                                            <p title="{{$choice->text}}">{{$choice->text}}</p>
+                                                            <div class="ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--bold ss-option-no">
+                                                                <span class="ss-option-no__index">{{$azRange[$key]}}</span>
+                                                            </div>
                                                         </div>
                                                     </button>
                                                 </div>
@@ -886,8 +917,9 @@ function qusdelete(url){
 function sectactivequs(id,type,url){
     console.log(url)
     // console.log(id,type);
+    let pagetype=$('#pagetype').val();
     // qustype(type)
-    window.location.href=url;
+    window.location.href=url+"?pagetype="+pagetype;
 }
 function qustype(type){
     console.log(type,"type")
@@ -915,6 +947,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let icon_type= $('#icon_type').val();
     $('.rating-box.'+icon_type).css('display','flex');
     $('.'+icon_type).addClass("active");
+    if($('#pagetype').val()=='editor'){
+        $('#pagetype').val('editor');
+        $('#preview_content').css('display','none');
+        $('#qus_content').css('display','block');
+    }else{
+        $('#pagetype').val('preview');
+        $('#preview_content').css('display','block');
+        $('#qus_content').css('display','none');
+    }
+        
 });
 $('#left_label').change(function(){
     $('#left_lable_text').html($(this).val())
@@ -1061,10 +1103,12 @@ $('form').bind("keypress", function(e) {
   }
 });
 $('#preview_qus').click(function(){
+    $('#pagetype').val('preview');
     $('#preview_content').css('display','block');
     $('#qus_content').css('display','none');});
 
 $('#back_editor').click(function(){
+    $('#pagetype').val('editor');
     $('#preview_content').css('display','none');
     $('#qus_content').css('display','block');
 
