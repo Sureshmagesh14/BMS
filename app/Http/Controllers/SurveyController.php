@@ -462,7 +462,8 @@ class SurveyController extends Controller
         }else{
             $question=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
         }
-        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('qus_type', 'id')->toArray();
+        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+
         $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
         if($question1){
             $question1=$question1;
@@ -478,7 +479,7 @@ class SurveyController extends Controller
         // $started_count=Survey::where(['id'=>$id])->update(['started_count'=>$survey->started_count+1]);
         $question=Questions::where(['id'=>$qus])->first();
 
-        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('qus_type', 'id')->toArray();
+        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
        
         $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
         return view('admin.survey.response', compact('survey','question','question1','questionsset'));
