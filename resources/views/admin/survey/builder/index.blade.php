@@ -344,7 +344,8 @@
                                 <div class="prev_inside">
                                     <p class="question_no">Question {{$qusNo}}</p>
                                     <p class="question_desc">{{$currentQus->question_name}} </p>
-                                        <table id="matrix_sec" class="matrix_sec">
+                                    <div id="matrix_table1">
+                                        <table id="matrix_sec1" class="matrix_sec">
                                         <?php $exiting_choices_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_choice): [];
                                         $exiting_qus_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_qus): []; $i=0;
                                             ?>
@@ -353,22 +354,24 @@
                                                     <tr>
                                                         <td></td>
                                                         @foreach($exiting_choices_matrix as $ans)
-                                                        <td><input type="text" placeholder="Enter Choice" class="matrix_head" value="{{$ans}}"  name="matrix_choice"></td>
+                                                        <td><input type="text" placeholder="Enter Choice" class="matrix_head" value="{{$ans}}"  name="matrix_choice_preview"></td>
                                                         @endforeach
                                                     </tr>
                                                 @endif
                                                 <?php foreach($exiting_qus_matrix as $qus){
                                                     ?>
                                                         <tr>
-                                                            <td><input type="text" value="{{$qus}}" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
-                                                            <td><input type="radio" name="matrix_anstype"></td>
-                                                            <td><input type="radio" name="matrix_anstype"></td>
+                                                            <td><input type="text" value="{{$qus}}" placeholder="Enter Question" class="matrix_head" name="matrix_qus_preview"></td>
+                                                            @foreach($exiting_choices_matrix as $ans)
+                                                            <td><input type="radio" name="matrix_anstype{{$qus}}"></td>
+                                                            @endforeach
                                                         </tr>
                                                     <?php  
                                                     $i++;
                                                 } ?>
                                             </tbody>
                                         </table>
+                                    </div>
                                 </div>
                                 @elseif($currentQus->qus_type=='single_choice' || $currentQus->qus_type=='multi_choice')
                                 <?php $azRange = range('A', 'Z'); ?>
@@ -701,7 +704,7 @@
                                     $exiting_qus_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_qus): []; $i=0;
                                      ?>
                                         <tbody>
-                                            @if(count($exiting_qus_matrix)>0)
+                                            @if(count($exiting_choices_matrix)>0)
                                                 <tr>
                                                     <td></td>
                                                     @foreach($exiting_choices_matrix as $ans)
@@ -713,8 +716,9 @@
                                                 ?>
                                                     <tr>
                                                         <td><input type="text" value="{{$qus}}" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
-                                                        <td><input type="radio" name="matrix_anstype"></td>
-                                                        <td><input type="radio" name="matrix_anstype"></td>
+                                                        @foreach($exiting_choices_matrix as $ans)
+                                                        <td><input type="radio" name="matrix_anstype{{$qus}}"></td>
+                                                        @endforeach
                                                     </tr>
                                                <?php  
                                                 $i++;
@@ -951,7 +955,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         $('#pagetype').val('editor');
         $('#preview_content').css('display','none');
         $('#qus_content').css('display','block');
-    }else{
+    }else if($('#pagetype').val()=='preview'){
         $('#pagetype').val('preview');
         $('#preview_content').css('display','block');
         $('#qus_content').css('display','none');

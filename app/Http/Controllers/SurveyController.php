@@ -450,11 +450,40 @@ class SurveyController extends Controller
 
     }
     public function viewsurvey(Request $request, $id){
-        echo $id;
-        $survey=Survey::where(['builderID'=>$id])->first();
-        echo "<pre>"; print_r($survey);
+        $survey=Survey::with('questions')->where(['builderID'=>$id])->first();
+        // Update Visited Count 
+        
+        $visited_count=Survey::where(['builderID'=>$id])->update(['visited_count'=>$survey->visited_count+1]);
 
+        $questions=Questions::where(['survey_id'=>$survey->id])->whereIn('qus_type',['welcome_page','thank_you'])->get();
+        $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
+        if($welcomQus){
+            $question=$welcomQus;
+        }else{
+            $question=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+        }
+        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('qus_type', 'id')->toArray();
+        $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+        if($question1){
+            $question1=$question1;
+        }else{
+            $question1=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
+        }
+        return view('admin.survey.response', compact('survey','question','question1','questionsset'));
     }
+    public function startsurvey(Request $request, $id,$qus){
+        $survey=Survey::with('questions')->where(['id'=>$id])->first();
+        // Update started Count 
+        
+        // $started_count=Survey::where(['id'=>$id])->update(['started_count'=>$survey->started_count+1]);
+        $question=Questions::where(['id'=>$qus])->first();
+
+        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('qus_type', 'id')->toArray();
+       
+        $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
+        return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+    }
+
     public function uploadimage(Request $request){
         $filename='';
         if($request->hasfile('image'))

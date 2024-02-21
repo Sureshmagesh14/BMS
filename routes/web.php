@@ -53,6 +53,10 @@ Route::get('/survey/movesurvey/{id}', ['as' => 'survey.movesurvey','uses' => 'Su
 Route::post('/survey/movesurveyupdate/{id}', ['as' => 'survey.movesurveyupdate','uses' => 'SurveyController@movesurveyupdate',])->middleware(['auth']);
 Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@viewsurvey',])->middleware(['auth']);
 
+// Start Survey 
+Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.startsurvey','uses' => 'SurveyController@startsurvey',])->middleware(['auth']);
+
+
 // Upload Image
 Route::post('/survey/upload-image', ['as' => 'survey.uploadimage','uses' => 'SurveyController@uploadimage',])->middleware(['auth']);
 
