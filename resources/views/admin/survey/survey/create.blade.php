@@ -47,3 +47,10 @@
     });
    
 </script>
+<style>
+.btn.btn-primary{
+    color: #fff !important;
+    border: thin solid #448E97 !important;
+    background-color: #448E97 !important;
+}
+</style>
