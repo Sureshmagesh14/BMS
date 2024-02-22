@@ -21,6 +21,8 @@ Route::group([
 Route::any('custom-login','CustomAuthController@customLogin')->name('login.custom');
 Route::get('register','CustomAuthController@registration')->name('register');
 
+});
+
 Route::group([
     'prefix' => 'bmsAdmin',
     'middleware' => ['auth']], function () {
@@ -33,12 +35,12 @@ Route::group([
     Route::get('contents_datatable', 'ContentsController@contents_datatable')->name('contents_datatable');
     Route::any('contents_multi_delete', 'ContentsController@contents_multi_delete')->name('contents_multi_delete');
 
-// Survey Template Routings
-Route::get('/survey/template/{id}', ['as' => 'survey.template','uses' => 'SurveyController@templateList',])->middleware(['auth']);
-Route::get('/survey/builder/{id}/{qus_id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder',])->middleware(['auth']);
-Route::get('/survey/questiontype/{id}', ['as' => 'survey.questiontype','uses' => 'SurveyController@questiontype',])->middleware(['auth']);
-Route::get('/survey/qustype/{survey}/{qustype}', ['as' => 'survey.qustype','uses' => 'SurveyController@questiontypesurvey',])->middleware(['auth']);
-Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'SurveyController@deletequs',])->middleware(['auth']);
+    // Survey Template Routings
+    Route::get('/survey/template/{id}', ['as' => 'survey.template','uses' => 'SurveyController@templateList',])->middleware(['auth']);
+    Route::get('/survey/builder/{id}/{qus_id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder',])->middleware(['auth']);
+    Route::get('/survey/questiontype/{id}', ['as' => 'survey.questiontype','uses' => 'SurveyController@questiontype',])->middleware(['auth']);
+    Route::get('/survey/qustype/{survey}/{qustype}', ['as' => 'survey.qustype','uses' => 'SurveyController@questiontypesurvey',])->middleware(['auth']);
+    Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'SurveyController@deletequs',])->middleware(['auth']);
     Route::get('/survey','SurveyController@survey')->name('survey');
     Route::get('/survey/create', ['as' => 'survey.create','uses' => 'SurveyController@createSurvey',]);
     Route::post('/survey/survey', ['as' => 'survery.survey','uses' => 'SurveyController@getSurveyList',]);
@@ -89,7 +91,7 @@ Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'Surv
     
     Route::resource('projects','ProjectsController');
     Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');
-    Route::get('projects_export','ProjectsController@projects_export')->name('projects_export');
+    Route::any('projects_export','ProjectsController@projects_export')->name('projects_export');
     Route::any('export_projects', 'ProjectsController@export_projects')->name('export_projects');   
     Route::any('projects_multi_delete', 'ProjectsController@projects_multi_delete')->name('projects_multi_delete');
 
@@ -153,7 +155,7 @@ Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'Surv
     });
 
     Route::get('inner_module','CommonAdminController@inner_module')->name('inner_module');  
-});
+
 
 
 });
