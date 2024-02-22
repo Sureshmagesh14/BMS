@@ -7,11 +7,23 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/','CustomAuthController@index')->name('login');
+Route::get('/','WelcomeController@home')->name('home');
+Route::any('userlogin','WelcomeController@userlogin')->name('userlogin');
+Route::any('userregister','WelcomeController@userregister')->name('userregister');
+Route::any('userdashboard','WelcomeController@userdashboard')->name('userdashboard');
+
+Route::group([
+    'prefix' => 'bmsAdmin'
+], function()
+{
+
+    Route::get('/','CustomAuthController@index')->name('login');
 Route::any('custom-login','CustomAuthController@customLogin')->name('login.custom');
 Route::get('register','CustomAuthController@registration')->name('register');
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group([
+    'prefix' => 'bmsAdmin',
+    'middleware' => ['auth']], function () {
     Route::get('dashboard','CustomAuthController@dashboard')->name('dashboard');
    
     Route::post('custom-registration','CustomAuthController@customRegistration')->name('register.custom');
@@ -142,6 +154,11 @@ Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'Surv
 
     Route::get('inner_module','CommonAdminController@inner_module')->name('inner_module');  
 });
+
+
+});
+
+
 
 
 // Clone Survey 

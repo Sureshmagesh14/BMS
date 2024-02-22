@@ -60,7 +60,9 @@ width: 30% !important;
                                         id="export">
                                         Export
                                     </a>
-
+                                    <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
+                                        Delete Selected All
+                                    </a>
                                     </div>
 
                                         <h4 class="card-title"> </h4>
@@ -72,10 +74,11 @@ width: 30% !important;
                                                 
                                                 <th>
                                                     <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="checkAll">
-                                                    <label class="custom-control-label" for="checkAll"></label>
+                                                        <input type="checkbox" class="custom-control-input select_all" id="inlineForm-customCheck">
+                                                        <label class="custom-control-label" for="inlineForm-customCheck" style="font-weight: bold;">Select All</label>
                                                     </div>
                                                 </th>
+                                                <th>#</th>      
                                                 <th>Type</th>          
                                                 <th>Status</th>          
                                                 <th>Amount</th>          
@@ -178,10 +181,73 @@ width: 30% !important;
                 <?php echo $__env->yieldPushContent('adminside-datatable'); ?>
 
 <script>
-$(document).ready(function() {
     var tempcsrf = '<?php echo csrf_token(); ?>';
+function table_checkbox(get_this){
+            count_checkbox = $(".tabel_checkbox").filter(':checked').length;
+            if(count_checkbox > 1){
+                $("#delete_all").show();
+            }
+            else{
+                $("#delete_all").hide();
+            }
+        }
+
+        $(document).on('click', '#delete_all', function(e) {
+            e.preventDefault();
+            var all_id = [];
+
+            var values = $("#myTable tbody tr").map(function() {
+                var $this = $(this);
+                if($this.find("[type=checkbox]").is(':checked')){
+                    all_id.push($this.find("[type=checkbox]").attr('id')); 
+                    // return {
+                    //     id: $this.find("[type=checkbox]").attr('id'),
+                    // };
+                }
+                
+            }).get();
+          
+            $.confirm({
+                title: "<?php echo e(Config::get('constants.delete')); ?>",
+                content:  "<?php echo e(Config::get('constants.delete_confirmation')); ?>",
+                autoClose: 'cancelAction|8000',
+                buttons: {
+                    delete: {
+                        text: 'delete',
+                        action: function() {
+                            $.ajax({
+                                type: "POST",
+                                data: {
+                                    _token: tempcsrf,
+                                    all_id: all_id
+                                },
+                                url: "<?php echo e(route('cash_multi_delete')); ?>",
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.status == 404) {
+                                        $('.delete_student').text('');
+                                    } else {
+                                        datatable();
+                                        $.alert('Groups Deleted!');
+                                        $("#delete_all").hide();
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    cancel: function() {
+                        
+                    }
+                }
+            });
+        });
+$(document).ready(function() {
+
+    datatable();
     
-    $('#myTable').dataTable().fnDestroy();
+});
+function datatable(){
+$('#myTable').dataTable().fnDestroy();
 
     $('#myTable').DataTable({
       
@@ -204,7 +270,10 @@ $(document).ready(function() {
             }
         },
        
-        columns: [{
+        columns: [
+           
+        { data: 'select_all', name: 'select_all', orderable: false, searchable: false },
+            {
                 data: 'id',
                 name: '#',
                 orderable: true,
@@ -244,8 +313,7 @@ $(document).ready(function() {
         columnDefs: [
             {
                 targets: 0,
-                width: 75,
-                className: "text-center"
+
             },
             {
                 targets: 1
@@ -261,11 +329,12 @@ $(document).ready(function() {
             },
             {
                 targets: 5,
-                width: 175,
-                className: "text-center"
-            }
+            },
+            { targets: 6,width: 115,className: "text-center" }
+           
+          
         ],
     });
-});
+}
 </script>
 <?php /**PATH C:\wamp64\www\bms_new\resources\views/admin/cashouts/index.blade.php ENDPATH**/ ?>
