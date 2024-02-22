@@ -189,7 +189,7 @@
                             $qusNo=$qusNo+$key;
                         }
                     } ?>
-                    <div id="preview_content">
+                    <!-- <div id="preview_content">
                         <div class="page_head">
                             <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
                             <button class="btn btn-primary" id="back_editor">Back </button>
@@ -419,12 +419,13 @@
                                 @endif
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     
                     <div id="qus_content">
                     <div class="page_head">
                         <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
-                        <button class="btn  btn-primary" id="preview_qus">Preview</button>
+                        <?php  $qus_url=route('survey.builder',[$survey->builderID,$currentQus->id]); ?>
+                        <button class="btn  btn-primary" data-url="{{$qus_url}}" id="preview_qus">Preview</button>
                     </div>
                     {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation','enctype'=>"multipart/form-data")) }}
                     
@@ -1108,8 +1109,11 @@ $('form').bind("keypress", function(e) {
 });
 $('#preview_qus').click(function(){
     $('#pagetype').val('preview');
-    $('#preview_content').css('display','block');
-    $('#qus_content').css('display','none');});
+    let url=$('#preview_qus').data('url');
+    window.location.href=url+"?pagetype=preview";
+    // $('#preview_content').css('display','block');
+    // $('#qus_content').css('display','none');
+});
 
 $('#back_editor').click(function(){
     $('#pagetype').val('editor');

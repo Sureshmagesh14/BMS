@@ -229,8 +229,13 @@ class SurveyController extends Controller
             $qus_type=$questionTypes[$currentQus->qus_type];
         }
         $pagetype=$request->pagetype;
-        
-        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype'));
+        if($pagetype=='preview'){
+            $question1=Questions::where('id', '>', $currentQus->id)->where('survey_id', $survey->id)->orderBy('id')->first();
+
+            return view('admin.survey.builder.preview',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype','question1'));
+        }else{
+            return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype'));
+        }
 
     }
     public function questiontype(Request $request,$survey){

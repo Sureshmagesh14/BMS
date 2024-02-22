@@ -7502,25 +7502,6 @@ body ::selection {
     box-sizing: border-box;
 }
 
-/*! CSS Used keyframes */
-@keyframes ss-action-fade {
-    0% {
-        opacity: 1;
-    }
-
-    33% {
-        opacity: 0.65;
-    }
-
-    67% {
-        opacity: 0.85;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
 .welcome-page .ss_cl_qstn_action {
     justify-content: center !important;
 }
@@ -9455,7 +9436,7 @@ h4 {
     -webkit-align-items: center;
     -moz-align-items: center;
     align-items: center;
-    
+
     transition: margin 0.3s;
 }
 
@@ -10753,7 +10734,7 @@ h4 {
     -webkit-align-items: center;
     -moz-align-items: center;
     align-items: center;
-    
+
     transition: margin 0.3s;
 }
 
@@ -12191,7 +12172,7 @@ h4 {
     -webkit-align-items: center;
     -moz-align-items: center;
     align-items: center;
-    
+
     transition: margin 0.3s;
 }
 
