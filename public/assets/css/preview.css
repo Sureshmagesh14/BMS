@@ -3076,12 +3076,12 @@ screen and (-ms-high-contrast: none) and (max-width: 767px) {
     background-color: rgba(63, 63, 63, 0.1);
 }
 
-.ss-answer-option--bg:hover,
+/* .ss-answer-option--bg:hover,
 .ss-answer-option--bg:focus {
     background-color: rgba(63, 63, 63, 0.2);
     z-index: 1;
     box-shadow: 0 0 1px 4px rgba(63, 63, 63, 0.2);
-}
+} */
 
 .ss-answer-option--bg:active {
     background-color: rgba(63, 63, 63, 0.8);
@@ -5846,12 +5846,12 @@ screen and (-ms-high-contrast: none) and (max-width: 767px) {
     background-color: rgba(63, 63, 63, 0.1);
 }
 
-.ss-answer-option--bg:hover,
+/* .ss-answer-option--bg:hover,
 .ss-answer-option--bg:focus {
     background-color: rgba(63, 63, 63, 0.2);
     z-index: 1;
     box-shadow: 0 0 1px 4px rgba(63, 63, 63, 0.2);
-}
+} */
 
 .ss-answer-option--bg:active,
 .ss-answer-option--bg.active {
@@ -11620,12 +11620,12 @@ screen and (-ms-high-contrast: none) and (max-width: 767px) {
     background-color: rgba(63, 63, 63, 0.1);
 }
 
-.ss-answer-option--bg:hover,
+/* .ss-answer-option--bg:hover,
 .ss-answer-option--bg:focus {
     background-color: rgba(63, 63, 63, 0.2);
     z-index: 1;
     box-shadow: 0 0 1px 4px rgba(63, 63, 63, 0.2);
-}
+} */
 
 .ss-answer-option--bg:active {
     background-color: rgba(63, 63, 63, 0.8);
