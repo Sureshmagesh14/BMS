@@ -70,7 +70,7 @@ class SurveyController extends Controller
             $folder->user_ids=implode(',', $request->privateusers);
         }
         $folder->save();
-        return redirect()->back()->with('success', __('Folder Created Successfully.'));
+        return redirect()->route('survey.template',$folder->id)->with('success', __('Folder Created Successfully.'));
 
     }
 
@@ -168,6 +168,8 @@ class SurveyController extends Controller
         $survey->created_by=$user->id;
         $survey->builderID=$uuid;
         $survey->save();
+        return redirect()->route('survey.template',$request->folder_id)->with('success', __('Survey Created Successfully.'));
+
         return redirect()->back()->with('success', __('Survey Created Successfully.'));
 
     }

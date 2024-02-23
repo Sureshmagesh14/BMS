@@ -52,7 +52,7 @@
                     </a>
                 </li>
                 <?php $getfirstSurvey=\App\Models\Survey::where(['is_deleted'=>0])->orderBy("id", "asc")->first(); if(isset($getfirstSurvey)) 
-                $templateRoute=route('survey.template',$getfirstSurvey->folder_id); else $templateRoute=''; 
+                $templateRoute=route('survey.template',$getfirstSurvey->folder_id); else $templateRoute=route('survey.template',0); 
                 
                 ?>
                 <li>
