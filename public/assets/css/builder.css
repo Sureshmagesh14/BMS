@@ -1755,3 +1755,8 @@ body *{font-family:"Source Sans Pro", sans-serif;}
 a{color:#106ba3;text-decoration:none;}
 a:hover{color:#106ba3;cursor:pointer;text-decoration:underline;}
 :focus{outline:rgba(19, 124, 189, 0.6) auto 2px;outline-offset:2px;-moz-outline-radius:6px;}
+.btn.btn-primary{
+    color: #fff !important;
+    border: thin solid #448E97 !important;
+    background-color: #448E97 !important;
+}

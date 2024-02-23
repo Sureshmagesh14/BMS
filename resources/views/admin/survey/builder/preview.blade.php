@@ -7,7 +7,7 @@
         color:rgb(63, 63, 63);
         background-color:rgb(255, 255, 255)
     }
-       select#rankorderkey {
+       select.rankorderkey {
             outline: 0px;
             background: unset !important;
             border: white !important;
@@ -43,6 +43,9 @@
 $azRange = range('A', 'Z');
 $qusNo=1;
 $icon_type='';
+$left_label='Least Likely';
+$middle_label='Netural';
+$right_label='Most Likely';
 if(isset($qusvalue->icon_type)){
     $icon_type=$qusvalue->icon_type;
 }
@@ -50,7 +53,17 @@ foreach($questions as $key=>$qus){
     if($currentQus->id==$qus->id){
         $qusNo=$qusNo+$key;
     }
-} ?>
+}
+if(isset($qusvalue->right_label)){
+    $right_label=$qusvalue->right_label;
+}
+if(isset($qusvalue->middle_label)){
+    $middle_label=$qusvalue->middle_label;
+}
+if(isset($qusvalue->left_label)){
+    $left_label=$qusvalue->left_label;
+}
+ ?>
 <body>
 <!-- <p>{{$currentQus->qus_type}}</p> -->
 <?php  $qus_url=route('survey.builder',[$survey->builderID,$currentQus->id]); ?>
@@ -165,15 +178,13 @@ foreach($questions as $key=>$qus){
                                                 </div>
                                             </div>
                                             <div class="ss_cl_qstn_action ">
-                                                <a href="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif">
-                                                    <div class="">
-                                                        <button id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
-                                                            <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                </a>
+                                                <div class="">
+                                                    <button id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                                        <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                                 <div class="ss-skip-container">
                                                     <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
                                                 </div>
@@ -268,9 +279,8 @@ foreach($questions as $key=>$qus){
                                 </div>
                                 <div class="ss_cl_survey_qstn_right">
                                     <div class="ss_cl_survey_qstn">
-                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text"
-                                            id="question-title-8982683">
-                                            <span class="d-block ss-survey-heading--text__span">open type qus</span>
+                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                            <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
                                         <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
                                             id="question-description-8982683">
@@ -348,19 +358,19 @@ foreach($questions as $key=>$qus){
                                     <div class="ss_rating_container ss_component_animated">
                                         <div class="ss_rating_input--classic">
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">1
-                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--min-label">Least Likely</label>
+                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--min-label">{{$left_label}}</label>
                                             </button>
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >2</button>
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >3</button>
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">4</button>
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >5
-                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--middle-label">Neutral</label>
+                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--middle-label">{{$middle_label}}</label>
                                             </button>
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">6</button>
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">7</button>
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">8</button>
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >9
-                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--max-label">Most Likely</label>
+                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--max-label">{{$right_label}}</label>
                                             </button>
                                         </div>
                                     </div>
@@ -408,10 +418,12 @@ foreach($questions as $key=>$qus){
                                 </div>
                             </div><span class="ss_span_wrapper">
                                 <div class="ss_options_container ss_options_container--rank-order">
-                                    <div class="rank-order-container rank_option_container" role="listbox">
-                                        <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): []; $dropdowncount=count($exiting_choices); ?>
+                                <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): []; $dropdowncount=count($exiting_choices); ?>
+                                    <input type="hidden" id="rank_order_value" value="{{implode(',',$exiting_choices)}}"/>
+                                    <input type="hidden" id="dropdowncount" value="{{$dropdowncount}}"/>
+                                    <div class="rank-order-container rank_option_container" id="rank_order_container">
                                         @foreach($exiting_choices as $key=>$choice)
-                                            <div style="order:{{$key+1}}" class="rank_option rank_option_{{$key+1}} ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;">
+                                            <div data-id="{{$key+1}}" id="rank_option_{{$key+1}}" class="rank_option ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;">
                                                 <div class="ss-option--rank-order__data">
                                                     <span class="ss-option--rank-order__drag-handle-icon">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16">
@@ -429,7 +441,7 @@ foreach($questions as $key=>$qus){
                                                     <div class="css-1pcexqc-container">
                                                         <div class="css-bg1rzq-control ss-option--rank-order-react-select__control">
                                                             <div class="css-1hwfws3 ss-option--rank-order-react-select__value-container ss-option--rank-order-react-select__value-container--has-value">
-                                                                <select class="rankorderkey" name="rankorderkey" id="rankorderkey">
+                                                                <select class="rankorderkey" data-value="{{$key+1}}" name="rankorderkey" id="rankorderkey{{$key+1}}">
                                                                     @for($i=1; $i<=$dropdowncount; $i++)
                                                                         @if($key+1==$i)
                                                                         <option value="{{$i}}" selected>{{$i}}</option>
@@ -484,8 +496,8 @@ foreach($questions as $key=>$qus){
                                 </div>
                                 <div class="ss_cl_survey_qstn_right">
                                     <div class="ss_cl_survey_qstn">
-                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text" id="question-title-8966749">
-                                            <span class="d-block ss-survey-heading--text__span">Give your ratings</span>
+                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                            <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
                                         <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07" id="question-description-8966749">
                                         <p><br> </p>
@@ -615,15 +627,15 @@ foreach($questions as $key=>$qus){
                             class="ss_cl_survey_qstn_item active ss_cl_survey_qstn_item--has-dropdown" style="width: 100%;">
                             <div class="ss_cl_survey_qstn_wrapper">
                                 <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                    <p
-                                        class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
-                                        Question 1</p>
+                                    <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                        Question {{$qusNo}}
+                                    </p>
                                 </div>
                                 <div class="ss_cl_survey_qstn_right">
                                     <div class="ss_cl_survey_qstn">
-                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text"
-                                            id="question-title-8966664"><span
-                                                class="d-block ss-survey-heading--text__span">Choose your ans</span></h1>
+                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                            <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
+                                        </h1>
                                         <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
                                             id="question-description-8966664">
                                         <p>
@@ -634,45 +646,14 @@ foreach($questions as $key=>$qus){
                                 </div>
                             </div><span class="ss_span_wrapper">
                                 <div class="ss_options_container">
-                                    <div
-                                        class="dropdown-container ss_component_animated answer-option--input ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--primary">
-                                        <div class="css-1pcexqc-container ss-eui-dropdown">
-                                            <div class="css-bg1rzq-control ss-eui-dropdown__control">
-                                                <div
-                                                    class="css-1hwfws3 ss-eui-dropdown__value-container ss-eui-dropdown__value-container--has-value">
-                                                    <div class="css-dvua67-singleValue ss-eui-dropdown__single-value">Option
-                                                        B</div>
-                                                    <div class="css-1g6gooi">
-                                                        <div class="ss-eui-dropdown__input" style="display: inline-block;">
-                                                            <input autocapitalize="none" autocomplete="off"
-                                                                autocorrect="off" id="react-select-3-input"
-                                                                spellcheck="false" tabindex="0" type="text"
-                                                                aria-autocomplete="list"
-                                                                aria-labelledby="question-title-8966664" value=""
-                                                                aria-valuetext="Option B, selected"
-                                                                style="box-sizing: content-box; width: 2px; background: 0px center; border: 0px; font-size: inherit; opacity: 1; outline: 0px; padding: 0px; color: inherit;">
-                                                            <div
-                                                                style="position: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px; overflow: scroll; white-space: pre; font-size: 18px; font-family: 'Source Sans Pro'; font-weight: 400; font-style: normal; letter-spacing: normal; text-transform: none;">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="css-1wy0on6 ss-eui-dropdown__indicators"><span
-                                                        class="css-bgvzuu-indicatorSeparator ss-eui-dropdown__indicator-separator"></span>
-                                                    <div aria-hidden="true"
-                                                        class="css-16pqwjk-indicatorContainer ss-eui-dropdown__indicator ss-eui-dropdown__dropdown-indicator">
-                                                        <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true"
-                                                            focusable="false" class="css-19bqh2r">
-                                                            <path
-                                                                d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z">
-                                                            </path>
-                                                        </svg>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <input name="timeZone" type="hidden" value="23016365"><span
-                                                class="ss-form-group__highlight"></span>
-                                        </div>
+                                <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): []; ?>
+                                    <div class="dropdown-container ss_component_animated answer-option--input ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--primary">
+                                        <select class="select2 form-control select2-multiple" id="dropdownlist" name="dropdownlist" data-placeholder="Choose ...">
+                                            <option value="">Choose your choice</option>
+                                            @foreach($exiting_choices as $key=>$value)
+                                                <option value="{{$value}}">{{$value}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="ss_cl_qstn_action">
@@ -701,15 +682,15 @@ foreach($questions as $key=>$qus){
                             data-qa="question_normal" class="ss_cl_survey_qstn_item active" style="width: 100%;">
                             <div class="ss_cl_survey_qstn_wrapper">
                                 <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                    <p
-                                        class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
-                                        Question 1</p>
+                                    <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                        Question {{$qusNo}}
+                                    </p>
                                 </div>
                                 <div class="ss_cl_survey_qstn_right">
                                     <div class="ss_cl_survey_qstn">
-                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text"
-                                            id="question-title-8972084"><span
-                                                class="d-block ss-survey-heading--text__span">select picture</span></h1>
+                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                            <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
+                                        </h1>
                                         <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
                                             id="question-description-8972084">
                                         <p>
@@ -720,77 +701,38 @@ foreach($questions as $key=>$qus){
                                 </div>
                             </div><span class="ss_span_wrapper">
                                 <div class="ss_options_container">
-                                    <div class="ss_multiple_choice_visual ss_component_animated" role="radiogroup"
-                                        aria-labelledby="question-title-8972084"
-                                        aria-describedby="question-title-8972084 question-description-8972084">
-                                        <div tabindex="0"
-                                            class="ss-answer-option--picture-choice ss-answer-option--border ss-answer-option--bg ss-answer-option--text-light ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-item--has-key-assist"
-                                            data-qa="option_0" name="8972084-23036772" role="radio"
-                                            data-hotkey-refkey="hotkey-item-A" data-hotkey-value="23036772"
-                                            aria-checked="false">
-                                            <div class="ss-option-checked--picture"><svg width="24" height="24"
-                                                    viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                                        d="M12.7698 4.20939C13.0684 4.49648 13.0777 4.97127 12.7906 5.26984L6.54055 11.7699C6.39617 11.92 6.19584 12.0034 5.98755 11.9999C5.77927 11.9965 5.5818 11.9066 5.44245 11.7517L3.19248 9.25171C2.91539 8.94383 2.94035 8.46961 3.24823 8.19252C3.55612 7.91543 4.03034 7.94039 4.30743 8.24828L6.01809 10.1491L11.7093 4.23018C11.9964 3.9316 12.4712 3.92229 12.7698 4.20939Z"
-                                                        fill="#FFFFFF"></path>
-                                                </svg></div>
-                                            <div
-                                                class="ss-picturechoice-image-holder ss-picturechoice-image--holder--cover">
-                                                <div class="ss-img-container ss-img-container--default"><img
-                                                        alt="bird's eye view photograph of green mountains"
-                                                        class="ss-img-container__img ss-img-container__cover"
-                                                        src="https://images.unsplash.com/photo-1501854140801-50d01698950b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w4MDMyOHwwfDF8c2VhcmNofDN8fG5hdHVyZXxlbnwwfHx8fDE3MDgzMzMyOTN8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=400"
-                                                        style="object-fit: cover; height: 100%; width: 100%;"></div>
-                                                <div class="ss-img-container ss-img-container--fallback"
-                                                    style="background-image: url(&quot;https://images.unsplash.com/photo-1501854140801-50d01698950b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w4MDMyOHwwfDF8c2VhcmNofDN8fG5hdHVyZXxlbnwwfHx8fDE3MDgzMzMyOTN8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=400&quot;); background-size: cover;">
+                                    <div class="ss_multiple_choice_visual ss_component_animated">
+                                    <?php $exiting_choices=$qusvalue!=null ? json_decode($qusvalue->choices_list): []; ?>
+                                        @if($exiting_choices!=null)
+                                            @foreach($exiting_choices as $key=>$choice)
+                                                <div class="ss-answer-option--picture-choice ss-answer-option--border ss-answer-option--bg ss-answer-option--text-light ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-item--has-key-assist">
+                                                    <div class="ss-option-checked--picture">
+                                                        <svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7698 4.20939C13.0684 4.49648 13.0777 4.97127 12.7906 5.26984L6.54055 11.7699C6.39617 11.92 6.19584 12.0034 5.98755 11.9999C5.77927 11.9965 5.5818 11.9066 5.44245 11.7517L3.19248 9.25171C2.91539 8.94383 2.94035 8.46961 3.24823 8.19252C3.55612 7.91543 4.03034 7.94039 4.30743 8.24828L6.01809 10.1491L11.7093 4.23018C11.9964 3.9316 12.4712 3.92229 12.7698 4.20939Z" fill="#FFFFFF"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <div class="ss-picturechoice-image-holder ss-picturechoice-image--holder--cover">
+                                                        <div class="ss-img-container ss-img-container--default">
+                                                            <img alt="{{$choice->text}}" class="ss-img-container__img ss-img-container__cover" src="{{$choice->img}}" style="object-fit: contain; height: 100%; width: 100%;">
+                                                        </div>
+                                                        <div class="ss-img-container ss-img-container--fallback" style="background-image: url(&quot;{{$choice->img}}&quot;); background-size: cover;">
+                                                        </div>
+                                                    </div>
+                                                    <div class="ss-choice-content">
+                                                        <p title="{{$choice->text}}">{{$choice->text}}</p>
+                                                        <div class="ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--bold ss-option-no"
+                                                            aria-label="Press {{$azRange[$key]}} to select">
+                                                            <div class="ss-option-no__index">{{$azRange[$key]}}</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="ss-choice-content">
-                                                <p title="a">a</p>
-                                                <div class="ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--bold ss-option-no"
-                                                    aria-label="Press A to select">
-                                                    <div class="ss-option-no__key-assist">KEY</div>
-                                                    <div class="ss-option-no__index">A</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div tabindex="0"
-                                            class="ss-answer-option--picture-choice ss-answer-option--border ss-answer-option--bg ss-answer-option--text-light ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-item--has-key-assist"
-                                            data-qa="option_1" name="8972084-23036794" role="radio"
-                                            data-hotkey-refkey="hotkey-item-B" data-hotkey-value="23036794"
-                                            aria-checked="false">
-                                            <div class="ss-option-checked--picture"><svg width="24" height="24"
-                                                    viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                                        d="M12.7698 4.20939C13.0684 4.49648 13.0777 4.97127 12.7906 5.26984L6.54055 11.7699C6.39617 11.92 6.19584 12.0034 5.98755 11.9999C5.77927 11.9965 5.5818 11.9066 5.44245 11.7517L3.19248 9.25171C2.91539 8.94383 2.94035 8.46961 3.24823 8.19252C3.55612 7.91543 4.03034 7.94039 4.30743 8.24828L6.01809 10.1491L11.7093 4.23018C11.9964 3.9316 12.4712 3.92229 12.7698 4.20939Z"
-                                                        fill="#FFFFFF"></path>
-                                                </svg></div>
-                                            <div
-                                                class="ss-picturechoice-image-holder ss-picturechoice-image--holder--cover">
-                                                <div class="ss-img-container ss-img-container--default"><img
-                                                        alt="foggy mountain summit"
-                                                        class="ss-img-container__img ss-img-container__cover"
-                                                        src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w4MDMyOHwwfDF8c2VhcmNofDV8fG5hdHVyZXxlbnwwfHx8fDE3MDgzMzMyOTN8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=400"
-                                                        style="object-fit: cover; height: 100%; width: 100%;"></div>
-                                                <div class="ss-img-container ss-img-container--fallback"
-                                                    style="background-image: url(&quot;https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w4MDMyOHwwfDF8c2VhcmNofDV8fG5hdHVyZXxlbnwwfHx8fDE3MDgzMzMyOTN8MA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=400&quot;); background-size: cover;">
-                                                </div>
-                                            </div>
-                                            <div class="ss-choice-content">
-                                                <p title="b">b</p>
-                                                <div class="ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--bold ss-option-no"
-                                                    aria-label="Press B to select">
-                                                    <div class="ss-option-no__key-assist">KEY</div>
-                                                    <div class="ss-option-no__index">B</div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="ss_cl_qstn_action">
-                                    <div class="ss-skip-container"><button data-qa="skip_button"
-                                            data-hotkey-item="hotkey-skip-button"
-                                            class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                    <div class="ss-skip-container">
+                                        <button class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
                                     </div>
                                 </div>
                             </span>
@@ -813,15 +755,15 @@ foreach($questions as $key=>$qus){
                             data-qa="question_normal" class="ss_cl_survey_qstn_item active" style="width: 100%;">
                             <div class="ss_cl_survey_qstn_wrapper">
                                 <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                    <p
-                                        class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
-                                        Question 1</p>
+                                    <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                        Question {{$qusNo}}
+                                    </p>
                                 </div>
                                 <div class="ss_cl_survey_qstn_right">
                                     <div class="ss_cl_survey_qstn">
-                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text"
-                                            id="question-title-8966644"><span
-                                                class="d-block ss-survey-heading--text__span">Enter you email</span></h1>
+                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                            <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
+                                        </h1>
                                         <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
                                             id="question-description-8966644">
                                         <p>
@@ -842,22 +784,17 @@ foreach($questions as $key=>$qus){
                                             value=""><span class="ss-form-group__highlight"></span>
                                     </div>
                                 </div>
-                                <div class="ss_cl_qstn_action">
-                                    <div class="action-btn--disabled">
-                                        <button id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button"
-                                            class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"
-                                            disabled=""><span class="ss-primary-action-btn__copy">Next</span>
-                                            <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z"
-                                                    stroke-width="1"></path>
+                                
+                                <div class="ss_cl_qstn_action ">
+                                    <div class="">
+                                        <button id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                            <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
                                             </svg>
                                         </button>
                                     </div>
                                     <div class="ss-skip-container">
-                                        <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button"
-                                            class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                        <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
                                     </div>
                                 </div>
                             </span>
@@ -919,16 +856,51 @@ $('#back_editor').click(function(){
     let url=$('#back_editor').data('url');
     window.location.href=url+"?pagetype=editor";
 });
-$('.rankorderkey').change(function(){
-    $(".rank_option").each(function() {
-        console.log($(this).css('order'),'val')
-    });
-    console.log($(this).val(),'rank_option_container');
-    $('.rank_option_'+$(this).val()).css('order',$(this).val());
-    $(".rank_option").each(function() {
-        console.log($(this).css('order'),'val')
-    });
-    
+$('.ss-answer-option--picture-choice').click(function(){
+    $(this).toggleClass("active");
+    $('.ss-answer-option--picture-choice').not(this).removeClass("active");
 });
+var array = $('#rank_order_value').val();
+document.addEventListener("DOMContentLoaded", (event) => {
+    array=array.split(",");
+    var elem='';
+    array.forEach((value,key)=>{
+        let val1=key+1;
+        let option=$('#dropdowncount').val();
+        let optionval='';
+        for(let v=1; v<=option; v++){
+            if(v==val1){
+                optionval+='<option selected value='+v+'>'+v+'</option>';
+            }else{
+                optionval+='<option value='+v+'>'+v+'</option>';
+            } 
+        }
+        elem+='<div class="rank_option ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;"><div class="ss-option--rank-order__data"><span class="ss-option--rank-order__drag-handle-icon"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16"><circle cx="2" cy="2" r="2" fill="currentColor"></circle><circle cx="2" cy="8" r="2" fill="currentColor"></circle><circle cx="2" cy="14" r="2" fill="currentColor"></circle><circle cx="8" cy="2" r="2" fill="currentColor"></circle><circle cx="8" cy="8" r="2" fill="currentColor"></circle><circle cx="8" cy="14" r="2" fill="currentColor"></circle></svg></span><p>'+value+'</p></div><span class="rankorderkey_option ss-option--rank-order__select-wrap"><div class="css-1pcexqc-container"><div class="css-bg1rzq-control ss-option--rank-order-react-select__control"><div class="css-1hwfws3 ss-option--rank-order-react-select__value-container ss-option--rank-order-react-select__value-container--has-value"><select onchange="changepos(`'+value+'`,event)"  class="rankorderkey" name="rankorderkey">'+optionval+'</select></div></div></div></span></div>';
+    });
+    document.getElementById('rank_order_container').innerHTML = elem;
+});
+function changepos(val,event){
+    const index = array.indexOf(val);
+    if (index > -1) { 
+    array.splice(index, 1); 
+    }
+    array.splice(event.target.value-1, 0, val);
+    var elem='';
+    array.forEach((value,key)=>{
+        let val1=key+1;
+        let option=$('#dropdowncount').val();
+        let optionval='';
+        for(let v=1; v<=option; v++){
+            if(v==val1){
+                optionval+='<option selected value='+v+'>'+v+'</option>';
+            }else{
+                optionval+='<option value='+v+'>'+v+'</option>';
+            } 
+        }
+        elem+='<div class="rank_option ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;"><div class="ss-option--rank-order__data"><span class="ss-option--rank-order__drag-handle-icon"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16"><circle cx="2" cy="2" r="2" fill="currentColor"></circle><circle cx="2" cy="8" r="2" fill="currentColor"></circle><circle cx="2" cy="14" r="2" fill="currentColor"></circle><circle cx="8" cy="2" r="2" fill="currentColor"></circle><circle cx="8" cy="8" r="2" fill="currentColor"></circle><circle cx="8" cy="14" r="2" fill="currentColor"></circle></svg></span><p>'+value+'</p></div><span class="rankorderkey_option ss-option--rank-order__select-wrap"><div class="css-1pcexqc-container"><div class="css-bg1rzq-control ss-option--rank-order-react-select__control"><div class="css-1hwfws3 ss-option--rank-order-react-select__value-container ss-option--rank-order-react-select__value-container--has-value"><select onchange="changepos(`'+value+'`,event)"  class="rankorderkey" name="rankorderkey">'+optionval+'</select></div></div></div></span></div>';
+    });
+    document.getElementById('rank_order_container').innerHTML = elem;
+}
+
 </script>
 </html>
