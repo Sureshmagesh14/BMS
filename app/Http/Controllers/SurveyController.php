@@ -70,7 +70,7 @@ class SurveyController extends Controller
             $folder->user_ids=implode(',', $request->privateusers);
         }
         $folder->save();
-        return redirect()->back()->with('success', __('Folder Created Successfully.'));
+        return redirect()->route('survey.template',$folder->id)->with('success', __('Folder Created Successfully.'));
 
     }
 
@@ -168,6 +168,8 @@ class SurveyController extends Controller
         $survey->created_by=$user->id;
         $survey->builderID=$uuid;
         $survey->save();
+        return redirect()->route('survey.template',$request->folder_id)->with('success', __('Survey Created Successfully.'));
+
         return redirect()->back()->with('success', __('Survey Created Successfully.'));
 
     }
@@ -229,8 +231,13 @@ class SurveyController extends Controller
             $qus_type=$questionTypes[$currentQus->qus_type];
         }
         $pagetype=$request->pagetype;
-        
-        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype'));
+        if($pagetype=='preview'){
+            $question1=Questions::where('id', '>', $currentQus->id)->where('survey_id', $survey->id)->orderBy('id')->first();
+
+            return view('admin.survey.builder.preview',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype','question1'));
+        }else{
+            return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype'));
+        }
 
     }
     public function questiontype(Request $request,$survey){
@@ -462,7 +469,8 @@ class SurveyController extends Controller
         }else{
             $question=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
         }
-        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('qus_type', 'id')->toArray();
+        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+
         $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
         if($question1){
             $question1=$question1;
@@ -478,7 +486,7 @@ class SurveyController extends Controller
         // $started_count=Survey::where(['id'=>$id])->update(['started_count'=>$survey->started_count+1]);
         $question=Questions::where(['id'=>$qus])->first();
 
-        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('qus_type', 'id')->toArray();
+        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
        
         $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
         return view('admin.survey.response', compact('survey','question','question1','questionsset'));
