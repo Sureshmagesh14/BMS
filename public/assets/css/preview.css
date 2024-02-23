@@ -13423,3 +13423,14 @@ body ::selection {
     color: #fff;
     background: rgba(57, 57, 57, 0.5);
 }
+.ss-fp-scroll__item-data-wrap{
+    scrollbar-width: none;
+}
+select#dropdownlist {
+    width: 100%;
+    border: none;
+}
+select#dropdownlist:focus-visible {
+    border: none !important;
+    outline: none;
+}
