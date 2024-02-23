@@ -259,8 +259,13 @@ class SurveyController extends Controller
     $newqus->qus_type=$qustype;
     $newqus->created_by=$user->id;
     $newqus->save();
-    $questions=Questions::where(['survey_id'=>$survey])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+    // Update Qus Count 
     $survey=Survey::where(['id'=>$survey])->first();
+    if($qustype!='welcome_page' && $qustype!='thank_you'){
+        $survey->qus_count=$survey->qus_count+1;
+    }
+    $survey->save();
+    $questions=Questions::where(['survey_id'=>$survey])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
     
     return redirect()->route('survey.builder',[$survey->builderID,$newqus->id])->with('success', __('Question Created Successfully.'));
 
@@ -335,6 +340,12 @@ class SurveyController extends Controller
     }
     public function updateQus(Request $request,$id){
         $currentQus=Questions::where(['id'=>$id])->first();
+        // Update Qus Count 
+        $survey=Survey::where(['id'=>$currentQus->survey_id])->first();
+        if($request->qus_type!='welcome_page' && $request->qus_type!='thank_you'){
+            $survey->qus_count=$survey->qus_count+1;
+        }
+        $survey->save();
         switch ($request->qus_type) {
             case 'welcome_page':
                 $filename='';
