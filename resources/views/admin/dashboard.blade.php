@@ -1,6 +1,4 @@
 @include('admin.layout.header')
-    @yield('adminside-favicon')
-    @yield('adminside-css')
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
@@ -63,6 +61,10 @@
     <!-- End Page-content -->
 
     @yield('adminside-script')
+    @include('admin.layout.footer')
+    @stack('adminside-js')
+
+
 @include('admin.layout.footer')
 
 <script src="{{ asset('public/assets//libs/apexcharts/apexcharts.min.js') }}"></script>
