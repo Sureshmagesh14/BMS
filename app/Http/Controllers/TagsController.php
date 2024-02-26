@@ -239,20 +239,35 @@ class TagsController extends Controller
                     $edit_route = route("tags.edit",$all_data->id);
                     $view_route = route("tags.show",$all_data->id);
 
-                    return '<div class="">
-                        <div class="btn-group mr-2 mb-2 mb-sm-0">
-                            <a href="'.$view_route.'" class="btn btn-primary waves-light waves-effect">
-                                <i class="fa fa-eye"></i>
-                            </a>
-                            <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
-                                <i class="fa fa-edit"></i>
-                            </a>
-                            <button type="button" id="delete_tags" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
-                                <i class="far fa-trash-alt"></i>
+                    $design = '<div class="col-md-2">
+                            <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                                title="Action" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-tasks" aria-hidden="true"></i>
+                                <i class="mdi mdi-chevron-down"></i>
                             </button>
-                        </div>
-                    </div>';
+                            <ul class="dropdown-menu dropdown-menu-center">
+                                <li class="list-group-item">
+                                    <a href="'.$view_route.'" data-bs-original-title="View Panel" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-eye"></i> View
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                        data-bs-original-title="Edit Panel" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </li>';
+                                if(Auth::user()->role_id == 1){
+                                    $design .= '<li class="list-group-item">
+                                        <a href="#!" id="delete_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                            <i class="far fa-trash-alt"></i> Delete
+                                        </a>
+                                    </li>';
+                                }
+                            $design .='</ul>
+                        </div>';
+
+                    return $design;
                 })
                 ->rawColumns(['select_all','action','name','colour'])      
                 ->make(true);

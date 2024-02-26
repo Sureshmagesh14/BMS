@@ -274,97 +274,111 @@ class ProjectsController extends Controller
     public function get_all_projects(Request $request) {
 		
         try {
-                    if ($request->ajax()) {
-
-
-                        $token = csrf_token();
-                    
-                        $all_datas = Projects::select('projects.*','projects.name as uname')
-                        ->join('users', 'users.id', '=', 'projects.user_id') 
-                        ->orderby("id","desc");
-
-                        if(isset($request->id)){
-                            $all_datas->where('user_id',$request->id);
-                        }
-                        $all_datas = $all_datas->get();
-                
-                        
-                        return Datatables::of($all_datas)
-                        ->addColumn('select_all', function ($all_data) {
-                            return '<input class="tabel_checkbox" name="projects[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
-                        })
-                        ->addColumn('numbers', function ($all_data) {
-                            return $all_data->number;
-                        })  
-                        ->addColumn('client', function ($all_data) {
-                            return $all_data->client;
-                        })  
-                        ->addColumn('name', function ($all_data) {
-                            return $all_data->description;
-                        }) 
-                        ->addColumn('creator', function ($all_data) {
-                            return $all_data->uname;
-                        })
-                        ->addColumn('type', function ($all_data) {
-                            if($all_data->type_id==1){
-                                return 'Pre-Screener';
-                            }else if($all_data->type_id==2){
-                                return 'Pre-Task';
-                            }else if($all_data->type_id==3){
-                                return 'Paid  survey';
-                            }else if($all_data->type_id==4){
-                                return 'Unpaid  survey';
-                            }else{  
-                                return '-';
-                            }
-                        })
-                        ->addColumn('reward_amount', function ($all_data) {
-                            return $all_data->reward;
-                        })
-                        ->addColumn('project_link', function ($all_data) {
-                            return $all_data->project_link;
-                        })
-                        ->addColumn('created', function ($all_data) {
-                            return date("M j, Y, g:i A", strtotime($all_data->created_at));
-                        })
-                        ->addColumn('status', function ($all_data) {
-                            if($all_data->status_id==1){
-                                return 'Pending';
-                            }else if($all_data->status_id==2){
-                                return 'Active';
-                            }else if($all_data->status_id==3){
-                                return 'Completed';
-                            }else if($all_data->status_id==4){
-                                return 'Cancelled';
-                            }else{  
-                                return '-';
-                            }
-                        })
-                        ->addColumn('action', function ($all_data) {
-                            $edit_route = route("projects.edit",$all_data->id);
-                            $view_route = route("projects.show",$all_data->id);
-        
-                            return '<div class="">
-                                <div class="btn-group mr-2 mb-2 mb-sm-0">
-                                    <a href="'.$view_route.'" 
-                                        data-bs-original-title="View Project" class="btn btn-primary waves-light waves-effect">
-                                        <i class="fa fa-eye"></i>
-                                    </a>
-                                    <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                        data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <button type="button" id="delete_projects" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                            </div>';
-                        })
-                        ->rawColumns(['select_all','action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
-                        ->make(true);
-                            
-                      
+            if ($request->ajax()) {
+                $all_datas = Projects::select('projects.*','projects.name as uname')
+                    ->join('users', 'users.id', '=', 'projects.user_id') 
+                    ->orderby("id","desc");
+                    if(isset($request->id)){
+                        $all_datas->where('user_id',$request->id);
                     }
+                $all_datas = $all_datas->get();
+
+                return Datatables::of($all_datas)
+                    ->addColumn('select_all', function ($all_data) {
+                        return '<input class="tabel_checkbox" name="projects[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                    })
+                    ->addColumn('numbers', function ($all_data) {
+                        return $all_data->number;
+                    })  
+                    ->addColumn('client', function ($all_data) {
+                        return $all_data->client;
+                    })  
+                    ->addColumn('name', function ($all_data) {
+                        return $all_data->description;
+                    }) 
+                    ->addColumn('creator', function ($all_data) {
+                        return $all_data->uname;
+                    })
+                    ->addColumn('type', function ($all_data) {
+                        if($all_data->type_id==1){
+                            return 'Pre-Screener';
+                        }else if($all_data->type_id==2){
+                            return 'Pre-Task';
+                        }else if($all_data->type_id==3){
+                            return 'Paid  survey';
+                        }else if($all_data->type_id==4){
+                            return 'Unpaid  survey';
+                        }else{  
+                            return '-';
+                        }
+                    })
+                    ->addColumn('reward_amount', function ($all_data) {
+                        return $all_data->reward;
+                    })
+                    ->addColumn('project_link', function ($all_data) {
+                        return $all_data->project_link;
+                    })
+                    ->addColumn('created', function ($all_data) {
+                        return date("M j, Y, g:i A", strtotime($all_data->created_at));
+                    })
+                    ->addColumn('status', function ($all_data) {
+                        if($all_data->status_id==1){
+                            return 'Pending';
+                        }else if($all_data->status_id==2){
+                            return 'Active';
+                        }else if($all_data->status_id==3){
+                            return 'Completed';
+                        }else if($all_data->status_id==4){
+                            return 'Cancelled';
+                        }else{  
+                            return '-';
+                        }
+                    })
+                    ->addColumn('action', function ($all_data) {
+                        $edit_route = route("projects.edit",$all_data->id);
+                        $view_route = route("projects.show",$all_data->id);
+
+                        $design = '<div class="col-md-2">
+                            <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                                title="Action" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-tasks" aria-hidden="true"></i>
+                                <i class="mdi mdi-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-center">
+                                <li class="list-group-item">
+                                    <a href="'.$view_route.'" data-bs-original-title="View Project" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-eye"></i> View
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                        data-bs-original-title="Edit Project" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" id="delete_projects" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                        <i class="far fa-trash-alt"></i> Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>';
+
+                        if(Auth::user()->role_id == 1){
+                            return $design;
+                        }
+                        else{
+                            if(Auth::user()->id == $all_data->user_id){
+                                return $design;
+                            }
+                            else{
+                                return '-';
+                            }
+                        }
+                    })
+                    ->rawColumns(['select_all','action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
+                    ->make(true);
+            }
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

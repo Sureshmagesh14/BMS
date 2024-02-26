@@ -18,7 +18,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 class RewardsController extends Controller
 {   
-    public function rewards()
+    public function index()
     {   
         try {
             return view('admin.rewards.index');
