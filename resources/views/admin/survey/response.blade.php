@@ -1,12 +1,11 @@
 <html>
-
 <head>
     <link href="{{ asset('assets/css/preview.css') }}" rel="stylesheet" type="text/css" />
     <style>
-    .rankorderkey_option.ss-option--rank-order__select-wrap .ss-option--rank-order-react-select__control{
-        color:rgb(63, 63, 63);
-        background-color:rgb(255, 255, 255)
-    }
+        .rankorderkey_option.ss-option--rank-order__select-wrap .ss-option--rank-order-react-select__control{
+            color:rgb(63, 63, 63);
+            background-color:rgb(255, 255, 255)
+        }
        select.rankorderkey {
             outline: 0px;
             background: unset !important;
@@ -14,12 +13,6 @@
             width: 100%;
             text-align: center;
         }
-        /* select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            text-indent: 1px;
-            text-overflow: '';
-        } */
         button#back_editor {
             position: fixed;
             right: 10%;
@@ -65,9 +58,7 @@ if(isset($qusvalue->left_label)){
 }
  ?>
 <body>
-<!-- <p>{{$question->qus_type}}</p> -->
 <?php  $qus_url=route('survey.builder',[$survey->builderID,$question->id]); ?>
-
     @if($question->qus_type=='welcome_page')
     <div class="surveysparrow-survey-container--classic-form welcome-page">
         <div class="ss-fp-section surveysparrow-survey-form-wrapper--centered ss-survey-background d-flex fx-column fx-jc--center fx-ai--center">
@@ -247,10 +238,10 @@ if(isset($qusvalue->left_label)){
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="ss_cl_qstn_action ">
+                            <div class="ss_cl_qstn_action disabled {{$question->qus_type}}_action">
                                     <div class="">
                                         <a href="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif">
-                                            <button id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                            <button disabled id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
                                                 <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
                                                 </svg>
@@ -632,7 +623,7 @@ if(isset($qusvalue->left_label)){
         </div>
     </div>
     @elseif($question->qus_type=='dropdown')
-    <div class="surveysparrow-survey-container--classic-form" data-current-item-id="8966664" data-section-id="4788566">
+    <div class="surveysparrow-survey-container--classic-form">
         <div class="ss_classic_top_bar d-flex fx-row fx-jc--between fx-ai--center" role="banner">
             <div class="d-flex fx-column fx-jc--center fx-ai--start ss_classic_top_bar_section_details"></div>
         </div>
@@ -689,7 +680,7 @@ if(isset($qusvalue->left_label)){
         </div>
     </div>
     @elseif($question->qus_type=='picturechoice')
-    <div class="surveysparrow-survey-container--classic-form" data-current-item-id="8972084" data-section-id="4791226">
+    <div class="surveysparrow-survey-container--classic-form">
         <div class="ss_classic_top_bar d-flex fx-row fx-jc--between fx-ai--center" role="banner">
             <div class="d-flex fx-column fx-jc--center fx-ai--start ss_classic_top_bar_section_details"></div>
         </div>
@@ -764,7 +755,7 @@ if(isset($qusvalue->left_label)){
         </div>
     </div>
     @elseif($question->qus_type=='email')
-    <div class="surveysparrow-survey-container--classic-form" data-current-item-id="8966644" data-section-id="4788547">
+    <div class="surveysparrow-survey-container--classic-form">
         <div class="ss_classic_top_bar d-flex fx-row fx-jc--between fx-ai--center" role="banner">
             <div class="d-flex fx-column fx-jc--center fx-ai--start ss_classic_top_bar_section_details"></div>
         </div>
@@ -856,22 +847,41 @@ if(isset($qusvalue->left_label)){
             </div>
         </div>
     </div>
-
     @endif
 </body>
 <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
 
 <script>
-$('.single_choice_choice ').click(function(){
+$('.single_choice_choice').click(function(){
     $(this).toggleClass("active");
     $('.single_choice_choice').not(this).removeClass("active");
+    // Enable Next Button 
+    enableNextButton('.single_choice_choice','.single_choice_action')
 });
+function enableNextButton(classname,btnname){
+    // Enable Next Button 
+    var enable=0;
+    $(classname).each(function(){
+        if($(this).hasClass('active')){
+            enable=1;
+        }
+    });
+    if(enable==1){
+        $(btnname).toggleClass('disabled');
+        $('#next_button').attr('disabled',false);
+    }else{
+        $(btnname).toggleClass('disabled');
+        $('#next_button').attr('disabled',true);
+    }
+}
 $('.likert_choice').click(function(){
     $(this).toggleClass("active");
     $('.likert_choice').not(this).removeClass("active");
 });
 $('.multi_choice_choice').click(function(){
     $(this).toggleClass("active");
+    enableNextButton('.multi_choice_choice','.multi_choice_action')
+
 });
 $('.answer-option-rating--icons').click(function(){
     $(this).toggleClass("active");
@@ -887,7 +897,11 @@ $('.ss-answer-option--picture-choice').click(function(){
 });
 var array = $('#rank_order_value').val();
 document.addEventListener("DOMContentLoaded", (event) => {
-    array=array.split(",");
+    if(array!=undefined && array!=''){
+        array=array.split(",");
+    }else{
+        array=[];
+    }
     var elem='';
     array.forEach((value,key)=>{
         let val1=key+1;
@@ -902,6 +916,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         }
         elem+='<div class="rank_option ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;"><div class="ss-option--rank-order__data"><span class="ss-option--rank-order__drag-handle-icon"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16"><circle cx="2" cy="2" r="2" fill="currentColor"></circle><circle cx="2" cy="8" r="2" fill="currentColor"></circle><circle cx="2" cy="14" r="2" fill="currentColor"></circle><circle cx="8" cy="2" r="2" fill="currentColor"></circle><circle cx="8" cy="8" r="2" fill="currentColor"></circle><circle cx="8" cy="14" r="2" fill="currentColor"></circle></svg></span><p>'+value+'</p></div><span class="rankorderkey_option ss-option--rank-order__select-wrap"><div class="css-1pcexqc-container"><div class="css-bg1rzq-control ss-option--rank-order-react-select__control"><div class="css-1hwfws3 ss-option--rank-order-react-select__value-container ss-option--rank-order-react-select__value-container--has-value"><select onchange="changepos(`'+value+'`,event)"  class="rankorderkey" name="rankorderkey">'+optionval+'</select></div></div></div></span></div>';
     });
+    if(elem!='')
     document.getElementById('rank_order_container').innerHTML = elem;
 });
 function changepos(val,event){

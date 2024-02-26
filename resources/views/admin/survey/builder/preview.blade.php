@@ -862,7 +862,11 @@ $('.ss-answer-option--picture-choice').click(function(){
 });
 var array = $('#rank_order_value').val();
 document.addEventListener("DOMContentLoaded", (event) => {
-    array=array.split(",");
+    if(array!=undefined && array!=''){
+        array=array.split(",");
+    }else{
+        array=[];
+    }
     var elem='';
     array.forEach((value,key)=>{
         let val1=key+1;
@@ -877,6 +881,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         }
         elem+='<div class="rank_option ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;"><div class="ss-option--rank-order__data"><span class="ss-option--rank-order__drag-handle-icon"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16"><circle cx="2" cy="2" r="2" fill="currentColor"></circle><circle cx="2" cy="8" r="2" fill="currentColor"></circle><circle cx="2" cy="14" r="2" fill="currentColor"></circle><circle cx="8" cy="2" r="2" fill="currentColor"></circle><circle cx="8" cy="8" r="2" fill="currentColor"></circle><circle cx="8" cy="14" r="2" fill="currentColor"></circle></svg></span><p>'+value+'</p></div><span class="rankorderkey_option ss-option--rank-order__select-wrap"><div class="css-1pcexqc-container"><div class="css-bg1rzq-control ss-option--rank-order-react-select__control"><div class="css-1hwfws3 ss-option--rank-order-react-select__value-container ss-option--rank-order-react-select__value-container--has-value"><select onchange="changepos(`'+value+'`,event)"  class="rankorderkey" name="rankorderkey">'+optionval+'</select></div></div></div></span></div>';
     });
+    if(elem!='')
     document.getElementById('rank_order_container').innerHTML = elem;
 });
 function changepos(val,event){

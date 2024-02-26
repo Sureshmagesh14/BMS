@@ -63,3 +63,6 @@ Route::post('/survey/upload-image', ['as' => 'survey.uploadimage','uses' => 'Sur
 
 // Survey Background 
 Route::get('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@background',])->middleware(['auth']);
+
+// Get Qus 
+Route::get('/survey/getqus', ['as' => 'survey.getqus','uses' => 'SurveyController@getqus',])->middleware(['auth']);

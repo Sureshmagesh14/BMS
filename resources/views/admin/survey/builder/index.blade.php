@@ -8,6 +8,45 @@
 .horizontal_left_menu {
     display: none;
 }
+.respondant_selection.row {
+    margin-top: 1rem;
+}
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
 </style>
 @include('admin.layout.horizontal_right_menu')
 <!-- ========== Left Sidebar Start ========== -->
@@ -558,10 +597,45 @@
                     @endif
                     <input type="hidden" name="qus_id" id="qus_id" value="{{$currentQus->id}}">
                     <input type="hidden" name="qus_type" id="qus_type" value="{{$currentQus->qus_type}}">
+                    @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
+                        <div class="tab">
+                            <button type="button" class="tablinks" onclick="openLogic(event, 'display_logic')">Display Logic</button>
+                            <button  type="button" class="tablinks" onclick="openLogic(event, 'skip_logic')">Skip Logic</button>
+                        </div>
+                        <div id="display_logic" class="tabcontent">
+                            <input type="hidden" value="{{json_encode($display_logic)}}" name="display_qus" id="display_qus"/>
+                                <p>Display the question only</p>
+                                {{ Form::label('display_type','If',['class'=>'form-label']) }}
+                                <div id="logic_section_display">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{ Form::text('display_type',"Question" , array('id'=>'display_type','class' => 'form-control','readonly'=>true)) }}
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group mb-0">
+                                                <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
+                                                    <option value="">Choose ...</option>
+                                                    @foreach($display_logic as $key=>$value)
+                                                        <option value="{{$key}}">{{$value}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div id="skip_logic" class="tabcontent">
+                            <h3>Paris</h3>
+                            <p>Paris is the capital of France.</p> 
+                        </div>
+                        <div class="below_space"></div>
+                    @endif
                     <input type="button" id="update_qus" onclick="triggersubmit('{{$currentQus->qus_type}}')" value="Submit" class="btn  btn-primary">
                     <input type="submit" id="update_qus_final" value="Submit" class="btn  btn-primary">
-                    {{Form::close()}}
                     </div>
+                   
+                    {{Form::close()}}
                 @endif
                 @if(!$currentQus)
                 <div class="ss-dashboard--contents px-5 px-xl-11 pb-7">
@@ -961,6 +1035,53 @@ $('#back_editor').click(function(){
     $('#qus_content').css('display','block');
 
 });
+function openLogic(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+$('.display_qus_choice').change(function(){
+let val=$(this).val();
+let parentv=$(this).parent().parent().parent().parent();
+let url="{{route('survey.getqus')}}?qus_id="+val;
+    $.ajax({url: url, success: function(result){
+        console.log(result,'result')
+        var optionv=result?.resp_logic_type;
+        let textDiv='<div class="respondant_selection row"><div class="col-md-4"><select class="form-control logic_type_value" name="logic_type_value"><option value="">Choose</option>';
+        Object.entries(optionv).forEach(([key, value]) => {
+            textDiv+='<option value="'+key+'">'+value+'</option>';
+        });
+        textDiv+='</select></div>';
+        if(result?.qus_type=='single_choice' || result?.qus_type=='multi_choice'){
+            let choice_list=JSON.parse(result?.qus?.qus_ans);
+            optionv=choice_list?.choices_list.split(',');
+        }
+        textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+        Object.entries(optionv).forEach(([key, value]) => {
+            textDiv+='<option value="'+key+'">'+value+'</option>';
+        });
+        textDiv+='</select></div></div>';
+        parentv.append(textDiv);
+
+    }});
+});
+$("html body").delegate('.logic_type_value', "change", function() {    
+    let val=$(this).val();
+    if(val=='isAnswered' || val=='isNotAnswered'){
+        $(this).parent().siblings().css('display','none')
+    }else{
+        $(this).parent().siblings().css('display','block')
+    }
+});
+
 </script>
     @yield('adminside-script')
 @include('admin.layout.footer')
