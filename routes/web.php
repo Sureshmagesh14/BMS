@@ -69,6 +69,7 @@ Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'Surv
 
     Route::resource('respondents','RespondentsController');
     Route::any('get_all_respondents', 'RespondentsController@get_all_respondents')->name('get_all_respondents');
+    Route::any('get_all_respond', 'RespondentsController@indexDataTable')->name('get_all_respond');
     Route::any('respondent_export','RespondentsController@respondent_export')->name('respondent_export');   
     Route::get('gen_respondent_res_export','RespondentsController@gen_respondent_res_export')->name('gen_respondent_res_export');   
     Route::get('gen_respondent_mon_export','RespondentsController@gen_respondent_mon_export')->name('gen_respondent_mon_export');    
