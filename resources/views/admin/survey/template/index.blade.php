@@ -6,10 +6,10 @@
 <!-- ========== Left Sidebar Start ========== -->
 <link href="{{ asset('assets/css/survey.css') }}" rel="stylesheet" type="text/css" />
 <?php
-            $link = $_SERVER['PHP_SELF'];
-            $link_array = explode('/',$link);
-            $page = end($link_array);
-        ?>
+    $link = $_SERVER['PHP_SELF'];
+    $link_array = explode('/',$link);
+    $page = end($link_array);
+?>
 <style>
     a.waves-effect.active span.menu-item {
         color: #495057 !important;
@@ -34,7 +34,6 @@
     }
 </style>
 <div class="vertical-menu  bg-grey-7">
-
     <!-- LOGO -->
     <div class="navbar-brand-box  bg-grey-7">
         <a href="index.html" class="logo logo-dark">
@@ -45,7 +44,6 @@
                 <img src="{{ asset('/assets/images/brand_surgen.png') }}" alt="" height="18">
             </span>
         </a>
-
         <a href="index.html" class="logo logo-light">
             <span class="logo-sm">
                 <img src="{{ asset('/assets/images/brand_surgen.png') }}" alt="" height="22">
@@ -55,20 +53,17 @@
             </span>
         </a>
     </div>
-
     <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn1">
     <a href="/dashboard">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
     </a>
     </button>
-
-    <div data-simplebar class="sidebar-menu-scroll">
-
+    <div class="sidebar-menu-scroll">
         <!--- Sidemenu -->
         <div id="sidebar-menu1">
             <div class="ss-dashboard--sidebar position--relative fx--fh fx-column pb-7 bg-grey-7">
                 <div class="ss-dashboard--sidebar-container h-100 d-flex flex-column">
-                    <div class="ss-overflow-y--auto ss-scrollbar--hide h-100" style="padding-top: 30px;">
+                    <div class="ss-overflow-y--auto ss-scrollbar--hide h-100" style="padding-top: 30px;padding-bottom: 300px;">
                         <div class="fx-row mb-5 fx-ai--center justify-content-between px-7 folderplus">
                             <h3 class="ss-text ss-text__size--h3 ss-text__weight--semibold ss-text__color--grey">Folders</h3>
                             <div class="fx-row create-workspace--button">
@@ -145,10 +140,29 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
                         <h4 class="mb-0">{{$selectedFolder->folder_name}}</h4>
                         @endif
                         <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Survey</a></li>
-                                <li class="breadcrumb-item active">Survey</li>
-                            </ol>
+                            @if($selectedFolder)
+                                <div class="ms-3 ps-3 border-left createsurveyBtn">
+                                    <a href="#" class="ss-button ss-button__primary mb--sm" data-url="{{route('survey.create')}}" id="tracking-survey__new-survey" data-ajax-popup="true" data-bs-toggle="tooltip" title="Create Survey" data-title="Create Survey">
+                                        <svg width="14" height="14" class="me-3" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g opacity="1">
+                                                <line x1="10" y1="1" x2="10" y2="19" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></line>
+                                                <line x1="19" y1="10.5" x2="1" y2="10.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></line>
+                                            </g>
+                                        </svg>New Survey
+                                    </a>
+                                </div>
+                            @else
+                                <div class="ms-3 ps-3 border-left createsurveyBtn">
+                                    <a href="#" class="ss-button ss-button__primary mb--sm" data-url="{{route('folder.create')}}" id="tracking-survey__new-survey" data-ajax-popup="true" data-bs-toggle="tooltip" title="Create Folder" data-title="Create Folder">
+                                        <svg width="14" height="14" class="me-3" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g opacity="1">
+                                                <line x1="10" y1="1" x2="10" y2="19" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></line>
+                                                <line x1="19" y1="10.5" x2="1" y2="10.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></line>
+                                            </g>
+                                        </svg>New Folder
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -156,29 +170,7 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
             <meta name="csrf-token" content="{{ csrf_token() }}" />
            
             <!-- end page title -->
-            @if($selectedFolder)
-            <div class="ms-3 ps-3 border-left createsurveyBtn">
-                <a href="#" class="ss-button ss-button__primary mb--sm" data-url="{{route('survey.create')}}" id="tracking-survey__new-survey" data-ajax-popup="true" data-bs-toggle="tooltip" title="Create Survey" data-title="Create Survey">
-                    <svg width="14" height="14" class="me-3" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g opacity="1">
-                            <line x1="10" y1="1" x2="10" y2="19" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></line>
-                            <line x1="19" y1="10.5" x2="1" y2="10.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></line>
-                        </g>
-                    </svg>New Survey
-                </a>
-            </div>
-            @else
-            <div class="ms-3 ps-3 border-left createsurveyBtn">
-                <a href="#" class="ss-button ss-button__primary mb--sm" data-url="{{route('folder.create')}}" id="tracking-survey__new-survey" data-ajax-popup="true" data-bs-toggle="tooltip" title="Create Folder" data-title="Create Folder">
-                    <svg width="14" height="14" class="me-3" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g opacity="1">
-                            <line x1="10" y1="1" x2="10" y2="19" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></line>
-                            <line x1="19" y1="10.5" x2="1" y2="10.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></line>
-                        </g>
-                    </svg>New Folder
-                </a>
-            </div>
-            @endif
+           
             <div class="card card-body">
 
                 
