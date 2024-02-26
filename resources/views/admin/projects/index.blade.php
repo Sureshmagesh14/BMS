@@ -57,15 +57,17 @@ Export <i class="mdi mdi-chevron-down"></i>
 
                                             <a href="{{url('projects_export/xlsx')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export</a>
 
-                                            <a href="#!" data-url="{{ route('projects.create') }}" data-size="xl" data-ajax-popup="true"
+                                    <a href="#!" data-url="{{ route('projects.create') }}" data-size="xl" data-ajax-popup="true"
                                         class="btn btn-primary" data-bs-original-title="{{ __('Create Projects') }}" class="btn btn-primary" data-size="xl"
                                          data-ajax-popup="true" data-bs-toggle="tooltip"
                                         id="create">
                                         Create Project
                                     </a>
-                                    <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
-                                        Delete Selected All
-                                    </a>
+                                    @if (Auth::user()->role_id == 1)
+                                        <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
+                                            Delete Selected All
+                                        </a>
+                                    @endif
                                         </div>
 
                                         <h4 class="card-title"> </h4>

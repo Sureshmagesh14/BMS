@@ -14,7 +14,7 @@ use Yajra\DataTables\DataTables;
 use Exception;
 class RewardsController extends Controller
 {   
-    public function rewards()
+    public function index()
     {   
         try {
             return view('admin.rewards.index');

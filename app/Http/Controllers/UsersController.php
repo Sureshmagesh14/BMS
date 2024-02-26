@@ -306,21 +306,60 @@ class UsersController extends Controller
                 ->addColumn('action', function ($all_data) use($token) {
                     $edit_route = route("users.edit",$all_data->id);
                     $view_route = route("users.show",$all_data->id);
-                    return '<div class="">
-                                <div class="btn-group mr-2 mb-2 mb-sm-0">
-                                    <a href="'.$view_route.'" class="btn btn-primary waves-light waves-effect">
-                                        <i class="fa fa-eye"></i>
+
+                    // $design = '<div class="">
+                    //     <div class="btn-group mr-2 mb-2 mb-sm-0 gap">
+                    //         <a href="'.$view_route.'" class="rounded btn btn-primary waves-light waves-effect">
+                    //             <i class="fa fa-eye"></i>
+                    //         </a>
+                    //         <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                    //             data-bs-original-title="Edit Project" class="rounded btn btn-primary waves-light waves-effect">
+                    //             <i class="fa fa-edit"></i>
+                    //         </a>
+                    //         <button type="button" id="delete_users" data-id="'.$all_data->id.'" class="rounded btn btn-primary waves-light waves-effect">
+                    //             <i class="far fa-trash-alt"></i>
+                    //         </button>
+                    //     </div>
+                    // </div>';
+
+                    $design = '<div class="col-md-2">
+                            <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                                title="Action" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-tasks" aria-hidden="true"></i>
+                                <i class="mdi mdi-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-center">
+                                <li class="list-group-item">
+                                    <a href="'.$view_route.'" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-eye"></i> View
                                     </a>
+                                </li>
+                                <li class="list-group-item">
                                     <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                        data-bs-original-title="Edit Project" class="btn btn-primary waves-light waves-effect">
-                                        <i class="fa fa-edit"></i>
+                                        data-bs-original-title="Edit User" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-edit"></i> Edit
                                     </a>
-                                    <button type="button" id="delete_users" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                            </div>';
-                        })
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" id="delete_users" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                        <i class="far fa-trash-alt"></i> Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>';
+
+                    if(Auth::user()->role_id == 1){
+                        return $design;
+                    }
+                    else{
+                        if(Auth::user()->id == $all_data->id){
+                            return $design;
+                        }
+                        else{
+                            return '-';
+                        }
+                    }
+                })
                 ->rawColumns(['select_all','action','name','surname','id_passport','email','role_id','share_link','status_id'])      
                 ->make(true);
             }
@@ -328,8 +367,6 @@ class UsersController extends Controller
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-       
-
     }
 
     public function export_referrals(Request $request){

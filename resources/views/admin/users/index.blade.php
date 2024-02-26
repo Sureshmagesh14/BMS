@@ -54,15 +54,18 @@
 
                                 </div>
 
-                                <a href="#!" data-url="{{ route('users.create') }}" data-size="xl"
-                                    data-ajax-popup="true" class="btn btn-primary"
-                                    data-bs-original-title="{{ __('Create Users') }}" class="btn btn-primary"
-                                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-                                    Create Users
-                                </a>
-                                <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
-                                    Delete Selected All
-                                </a>
+                                @if (Auth::user()->role_id == 1)
+                                    <a href="#!" data-url="{{ route('users.create') }}" data-size="xl"
+                                        data-ajax-popup="true" class="btn btn-primary"
+                                        data-bs-original-title="{{ __('Create Users') }}" class="btn btn-primary"
+                                        data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                                        Create Users
+                                    </a>
+                                    <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
+                                        Delete Selected All
+                                    </a>
+                                @endif
+                                
                             </div>
 
                             <h4 class="card-title"> </h4>

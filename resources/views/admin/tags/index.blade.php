@@ -54,22 +54,25 @@
                                     <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
                                         <a class="dropdown-item" href="{{ url('tags_export/xlsx') }}">Panels</a>
                                     </div>
-                                    <a class="btn btn-danger" class="btn btn-primary" id="delete_all"
-                                        style="display: none;">
-                                        Delete Selected All
-                                    </a>
+
+                                    @if (Auth::user()->role_id == 1)
+                                        <a class="btn btn-danger" class="btn btn-primary" id="delete_all"
+                                            style="display: none;">
+                                            Delete Selected All
+                                        </a>
+                                    @endif
                                 </div>
 
                                 &nbsp;
 
-
-
-                                <a href="#!" data-url="{{ route('tags.create') }}" data-size="xl"
-                                    data-ajax-popup="true" class="btn btn-primary"
-                                    data-bs-original-title="{{ __('Create Groups') }}" class="btn btn-primary"
-                                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-                                    Create Panels
-                                </a>
+                                @if (Auth::user()->role_id == 1)
+                                    <a href="#!" data-url="{{ route('tags.create') }}" data-size="xl"
+                                        data-ajax-popup="true" class="btn btn-primary"
+                                        data-bs-original-title="{{ __('Create Groups') }}" class="btn btn-primary"
+                                        data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                                        Create Panels
+                                    </a>
+                                @endif
                             </div>
 
                             <h4 class="card-title"> </h4>
