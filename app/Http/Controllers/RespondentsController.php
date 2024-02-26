@@ -1,27 +1,26 @@
 <?php
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use Session;
-use Illuminate\Support\Facades\Auth;
+
 use App\Models\Respondents;
-use Illuminate\Support\Facades\Validator;
 use DB;
-use Yajra\DataTables\DataTables;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Yajra\DataTables\DataTables;
+
 class RespondentsController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
         try {
             return view('admin.respondents.index');
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
@@ -32,7 +31,7 @@ class RespondentsController extends Controller
     public function create()
     {
         try {
-           
+
             $returnHTML = view('admin.respondents.create')->render();
 
             return response()->json(
@@ -41,12 +40,10 @@ class RespondentsController extends Controller
                     'html_page' => $returnHTML,
                 ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
 
-        
     }
 
     /**
@@ -57,22 +54,19 @@ class RespondentsController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-               'email'=> 'required',
-               'active_status_id'=> 'required',
-               'password'=> 'required',
-               'accept_terms'=> 'required',
+                'email' => 'required',
+                'active_status_id' => 'required',
+                'password' => 'required',
+                'accept_terms' => 'required',
 
             ]);
-    
-            if($validator->fails())
-            {
+
+            if ($validator->fails()) {
                 return response()->json([
-                    'status'=>400,
-                    'errors'=>$validator->messages()
+                    'status' => 400,
+                    'errors' => $validator->messages(),
                 ]);
-            }
-            else
-            {
+            } else {
                 $respondents = new Respondents;
                 $respondents->name = $request->input('name');
                 $respondents->surname = $request->input('surname');
@@ -93,14 +87,13 @@ class RespondentsController extends Controller
                 $respondents->save();
                 $respondents->id;
                 return response()->json([
-                    'status'=>200,
+                    'status' => 200,
                     'last_insert_id' => $respondents->id,
-                    'message'=>'Respondents Added Successfully.'
+                    'message' => 'Respondents Added Successfully.',
                 ]);
             }
 
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
@@ -110,14 +103,12 @@ class RespondentsController extends Controller
      */
     public function show(string $id)
     {
-        
+
         try {
             $data = Respondents::find($id);
-            return view('admin.respondents.view',compact('data'));
+            return view('admin.respondents.view', compact('data'));
 
-          
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
@@ -128,31 +119,26 @@ class RespondentsController extends Controller
     public function edit(string $id)
     {
         try {
-           
+
             $respondents = Respondents::find($id);
-            if($respondents)
-            {
-                $returnHTML = view('admin.respondents.edit',compact('respondents'))->render();
+            if ($respondents) {
+                $returnHTML = view('admin.respondents.edit', compact('respondents'))->render();
                 return response()->json(
                     [
                         'success' => true,
                         'html_page' => $returnHTML,
                     ]
                 );
-            }
-            else
-            {
+            } else {
                 return response()->json([
-                    'status'=>404,
-                    'message'=>'No Respondents Found.'
+                    'status' => 404,
+                    'message' => 'No Respondents Found.',
                 ]);
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-        
-       
+
     }
 
     /**
@@ -162,22 +148,18 @@ class RespondentsController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name'=> 'required',
+                'name' => 'required',
             ]);
-    
-            if($validator->fails())
-            {
+
+            if ($validator->fails()) {
                 return response()->json([
-                    'status'=>400,
-                    'errors'=>$validator->messages()
+                    'status' => 400,
+                    'errors' => $validator->messages(),
                 ]);
-            }
-            else
-            {
-               
+            } else {
+
                 $respondents = Respondents::find($request->id);
-                if($respondents)
-                {
+                if ($respondents) {
                     $respondents = new Respondents;
                     $respondents->name = $request->input('name');
                     $respondents->surname = $request->input('surname');
@@ -198,23 +180,20 @@ class RespondentsController extends Controller
                     $respondents->update();
                     $respondents->id;
                     return response()->json([
-                        'status'=>200,
+                        'status' => 200,
                         'last_insert_id' => $respondents->id,
                         'message' => 'Respondents Updated.',
                     ]);
-                }
-                else
-                {
+                } else {
                     return response()->json([
-                        'status'=>404,
-                        'error'=>'No Respondents Found.'
+                        'status' => 404,
+                        'error' => 'No Respondents Found.',
                     ]);
                 }
-    
+
             }
-           
-        }
-        catch (Exception $e) {
+
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
@@ -226,126 +205,223 @@ class RespondentsController extends Controller
     {
         try {
             $contents = Respondents::find($id);
-            if($contents)
-            {
+            if ($contents) {
                 $contents->delete();
                 return response()->json([
-                    'status'=>200,
+                    'status' => 200,
                     'success' => true,
-                    'message'=>'Respondents Deleted Successfully.'
+                    'message' => 'Respondents Deleted Successfully.',
                 ]);
-            }
-            else
-            {
+            } else {
                 return response()->json([
-                    'status'=> 404,
+                    'status' => 404,
                     'success' => false,
-                    'message'=>'No Respondents Found.'
+                    'message' => 'No Respondents Found.',
                 ]);
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-      
+
     }
 
-    public function get_all_respondents(Request $request) {
-		
+    public function get_all_respondents(Request $request)
+    {
+
         try {
-                if ($request->ajax()) {
+            if ($request->ajax()) {
 
                 $token = csrf_token();
 
                 $all_datas = Respondents::latest()->get();
-             
 
                 return Datatables::of($all_datas)
-                ->addColumn('name', function ($all_data) {
-                    return $all_data->name;
-                })  
-                ->addColumn('surname', function ($all_data) {
-                    return $all_data->surname;
-                })  
-                ->addColumn('mobile', function ($all_data) {
-                    return $all_data->mobile;
-                })  
-                ->addColumn('whatsapp', function ($all_data) {
-                    return $all_data->whatsapp;
-                })  
-                ->addColumn('email', function ($all_data) {
-                    return $all_data->email;
-                }) 
-                ->addColumn('age', function ($all_data) {
+                    ->addColumn('name', function ($all_data) {
+                        return $all_data->name;
+                    })
+                    ->addColumn('surname', function ($all_data) {
+                        return $all_data->surname;
+                    })
+                    ->addColumn('mobile', function ($all_data) {
+                        return $all_data->mobile;
+                    })
+                    ->addColumn('whatsapp', function ($all_data) {
+                        return $all_data->whatsapp;
+                    })
+                    ->addColumn('email', function ($all_data) {
+                        return $all_data->email;
+                    })
+                    ->addColumn('age', function ($all_data) {
 
-                    $dob=$all_data->date_of_birth;
-                    $diff = (date('Y') - date('Y',strtotime($dob)));
-                    return $diff;
-                })
-                ->addColumn('gender', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('race', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('status', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('profile_completion', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('inactive_until', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('opeted_in', function ($all_data) {
-                    return '-';
-                })
-                ->addColumn('action', function ($all_data) {
-                    $edit_route = route("respondents.edit",$all_data->id);
-                    $view_route = route("respondents.show",$all_data->id);
+                        $dob = $all_data->date_of_birth;
+                        $diff = (date('Y') - date('Y', strtotime($dob)));
+                        return $diff;
+                    })
+                    ->addColumn('gender', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('race', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('status', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('profile_completion', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('inactive_until', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('opeted_in', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('action', function ($all_data) {
+                        $edit_route = route("respondents.edit", $all_data->id);
+                        $view_route = route("respondents.show", $all_data->id);
 
-                    return '<div class="">
+                        return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
-                            <a href="'.$view_route.'"
+                            <a href="' . $view_route . '"
                                 data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>
-                            <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                            <a href="#!" data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
                                 data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <button type="button" id="delete_respondents" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
+                            <button type="button" id="delete_respondents" data-id="' . $all_data->id . '" class="btn btn-primary waves-light waves-effect">
                                 <i class="far fa-trash-alt"></i>
                             </button>
                         </div>
                     </div>';
-                })
-                ->rawColumns(['action','name','surname','mobile','whatsapp','email','age','gender','race','status','profile_completion','inactive_until','opeted_in'])      
-                ->make(true);
-                }
-                return DataTables::queryBuilder($all_datas)->toJson();
-        }
-        catch (Exception $e) {
+                    })
+                    ->rawColumns(['action', 'name', 'surname', 'mobile', 'whatsapp', 'email', 'age', 'gender', 'race', 'status', 'profile_completion', 'inactive_until', 'opeted_in'])
+                    ->make(true);
+            }
+
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
 
-    public function respondent_export(Request $request) {
-        
+    public function indexDataTable(Request $request)
+    {
+        $columns = array(
+           
+            0 => 'id',
+            1 => 'name',
+            2 => 'surname',
+            3 => 'mobile',
+            4 => 'whatsapp',
+        5 => 'gender',
+            6=> 'date_of_birth',
+        7=> 'race',
+           8 => 'status',
+           9 => 'profile_completion',
+            10=> 'inactive_until',
+            11=> 'opeted_in',
+            12 => 'action',
+        );
+
+       
+        $totalData = Respondents::count();
+
+        $totalFiltered = $totalData;
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+
+        if (empty($request->input('search.value'))) {
+            $posts = Respondents::offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+        } else {
+            $search = $request->input('search.value');
+
+            $posts = Respondents::where('id', 'LIKE', "%{$search}%")
+                ->orWhere('name', 'LIKE', "%{$search}%")
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->cursor();
+
+            $totalFiltered = Respondents::where('id', 'LIKE', "%{$search}%")
+                ->orWhere('name', 'LIKE', "%{$search}%")
+                ->count();
+        }
+
+        $data = array();
+        if (!empty($posts)) {
+            $i = 1;
+            foreach ($posts as $key => $post) {
+                $edit_route = route('respondents.edit', $post->id);
+                $view_route = route('respondents.show', $post->id);
+                $nestedData['select_all'] = '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this)" id="'.$post->id.'">';
+                $nestedData['id'] = $i;
+                $nestedData['name'] = $post->name ?? '-';
+                $nestedData['surname'] = $post->surname ?? '-';
+                $nestedData['mobile'] = $post->mobile ?? '-';
+                $nestedData['whatsapp'] = $post->whatsapp ?? '-';
+                $nestedData['email'] = $post->email ?? '-';
+                $dob = $post->date_of_birth;
+                $diff = (date('Y') - date('Y', strtotime($dob)));
+                $nestedData['date_of_birth'] = $diff ?? '-';
+                $nestedData['race'] = $post->race ?? '-';
+                $nestedData['status'] = $post->status ?? '-';
+                $nestedData['profile_completion'] = $post->profile_completion ?? '-';
+                $nestedData['inactive_until'] = $post->inactive_until ?? '-';
+                $nestedData['opeted_in'] = $post->opeted_in ?? '-';
+
+                $nestedData['options'] = '<div class="">
+                <div class="btn-group mr-2 mb-2 mb-sm-0">
+                    <a href="' . $view_route . '"
+                        data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    <a href="#!" data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                        data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    <button type="button" id="delete_respondents" data-id="' . $post->id . '" class="btn btn-primary waves-light waves-effect">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>';
+                $data[] = $nestedData;
+                $i++;
+            }
+        }
+
+        $json_data = array(
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $data,
+        );
+
+        echo json_encode($json_data);
+
+    }
+
+    public function respondent_export(Request $request)
+    {
+
         $module_name = $request->module_name;
-        $from = date('Y-m-d',strtotime($request->start));
-        $to = date('Y-m-d',strtotime($request->end));
+        $from = date('Y-m-d', strtotime($request->start));
+        $to = date('Y-m-d', strtotime($request->end));
 
-        $type='xlsx';
+        $type = 'xlsx';
 
-        if($module_name=='respondent_export'){
-            
+        if ($module_name == 'respondent_export') {
 
             $all_datas = DB::table('respondents')
-            ->where("active_status_id",1)
-            ->whereBetween('created_at', [$from, $to])
-            ->orderby("id","desc")
-            ->get();
+                ->where("active_status_id", 1)
+                ->whereBetween('created_at', [$from, $to])
+                ->orderby("id", "desc")
+                ->get();
 
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
@@ -371,21 +447,21 @@ class RespondentsController extends Controller
             $sheet->setCellValue('T1', 'Referral Link');
             $sheet->setCellValue('U1', 'Accepted Terms');
             $sheet->setCellValue('V1', 'Created By');
-            
+
             $rows = 2;
-            $i=1;
-            foreach($all_datas as $all_data){
+            $i = 1;
+            foreach ($all_datas as $all_data) {
 
-                $dob=$all_data->date_of_birth;
-                $diff = (date('Y') - date('Y',strtotime($dob)));
+                $dob = $all_data->date_of_birth;
+                $diff = (date('Y') - date('Y', strtotime($dob)));
 
-                $opted_in = date('d-m-Y',strtotime($all_data->opted_in));
-                $updated_at = date('d-m-Y',strtotime($all_data->updated_at));
-                
-                if($all_data->accept_terms==1){
-                    $accept_terms ='Yes';
-                }else{
-                    $accept_terms =$all_data->accept_terms;
+                $opted_in = date('d-m-Y', strtotime($all_data->opted_in));
+                $updated_at = date('d-m-Y', strtotime($all_data->updated_at));
+
+                if ($all_data->accept_terms == 1) {
+                    $accept_terms = 'Yes';
+                } else {
+                    $accept_terms = $all_data->accept_terms;
                 }
 
                 $sheet->setCellValue('A' . $rows, $i);
@@ -402,21 +478,21 @@ class RespondentsController extends Controller
                 $sheet->setCellValue('T' . $rows, $all_data->referral_code);
                 $sheet->setCellValue('U' . $rows, $accept_terms);
                 $sheet->setCellValue('V' . $rows, $all_data->created_by);
-                
+
                 $rows++;
                 $i++;
             }
 
-            $fileName = "respondent_details_".date('ymd').".".$type;
-        
-        }else if($module_name=='gen_respondent_res_export'){
+            $fileName = "respondent_details_" . date('ymd') . "." . $type;
+
+        } else if ($module_name == 'gen_respondent_res_export') {
 
             $all_datas = DB::table('respondents')
-                        ->where("active_status_id",1)
-                        ->whereBetween('created_at', [$from, $to])
-                        ->orderby("id","desc")
-                        ->limit(10)
-                        ->get();
+                ->where("active_status_id", 1)
+                ->whereBetween('created_at', [$from, $to])
+                ->orderby("id", "desc")
+                ->limit(10)
+                ->get();
 
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
@@ -433,19 +509,19 @@ class RespondentsController extends Controller
             $sheet->setCellValue('K1', 'Invite-to-Join Conversion Rate');
 
             $rows = 2;
-            $i=1;
-            foreach($all_datas as $all_data){
+            $i = 1;
+            foreach ($all_datas as $all_data) {
 
-                $dob=$all_data->date_of_birth;
-                $diff = (date('Y') - date('Y',strtotime($dob)));
+                $dob = $all_data->date_of_birth;
+                $diff = (date('Y') - date('Y', strtotime($dob)));
 
-                $opted_in = date('d-m-Y',strtotime($all_data->opted_in));
-                $updated_at = date('d-m-Y',strtotime($all_data->updated_at));
-                
-                if($all_data->accept_terms==1){
-                    $accept_terms ='Yes';
-                }else{
-                    $accept_terms =$all_data->accept_terms;
+                $opted_in = date('d-m-Y', strtotime($all_data->opted_in));
+                $updated_at = date('d-m-Y', strtotime($all_data->updated_at));
+
+                if ($all_data->accept_terms == 1) {
+                    $accept_terms = 'Yes';
+                } else {
+                    $accept_terms = $all_data->accept_terms;
                 }
 
                 $sheet->setCellValue('A' . $rows, $i);
@@ -454,21 +530,21 @@ class RespondentsController extends Controller
                 $sheet->setCellValue('D' . $rows, $all_data->mobile);
                 $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
                 $sheet->setCellValue('F' . $rows, $all_data->email);
-                
+
                 $rows++;
                 $i++;
             }
 
-            $fileName = "respondent_activity_".date('ymd').".".$type;
+            $fileName = "respondent_activity_" . date('ymd') . "." . $type;
 
-        }else if($module_name=='gen_respondent_mon_export'){
+        } else if ($module_name == 'gen_respondent_mon_export') {
 
             $all_datas = DB::table('respondents')
-                        ->where("active_status_id",1)
-                        ->whereBetween('created_at', [$from, $to])
-                        ->orderby("id","desc")
-                        ->limit(10)
-                        ->get();
+                ->where("active_status_id", 1)
+                ->whereBetween('created_at', [$from, $to])
+                ->orderby("id", "desc")
+                ->limit(10)
+                ->get();
 
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
@@ -481,9 +557,8 @@ class RespondentsController extends Controller
             $sheet->setCellValue('G1', 'Invite-to-Join Conversion Rate');
 
             $rows = 2;
-            $i=1;
+            $i = 1;
             // foreach($all_datas as $all_data){
-
 
             //     $sheet->setCellValue('A' . $rows, $i);
             //     $sheet->setCellValue('B' . $rows, $all_data->name);
@@ -491,34 +566,33 @@ class RespondentsController extends Controller
             //     $sheet->setCellValue('D' . $rows, $all_data->mobile);
             //     $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
             //     $sheet->setCellValue('F' . $rows, $all_data->email);
-                
+
             //     $rows++;
             //     $i++;
             // }
 
-            $fileName = "respondent_month_activity_".date('ymd').".".$type;
+            $fileName = "respondent_month_activity_" . date('ymd') . "." . $type;
 
         }
 
-       
-        if($type == 'xlsx') {
+        if ($type == 'xlsx') {
             $writer = new Xlsx($spreadsheet);
-        } else if($type == 'xls') {
+        } else if ($type == 'xls') {
             $writer = new Xls($spreadsheet);
         }
-            $writer->save("export/".$fileName);
-            
+        $writer->save("export/" . $fileName);
+
         header("Content-Type: application/vnd.ms-excel");
-        return redirect(url('/')."/export/".$fileName);
+        return redirect(url('/') . "/export/" . $fileName);
     }
 
-     /**
+    /**
      * Show the form for creating a new resource.
      */
     public function export_resp()
     {
         try {
-           
+
             $returnHTML = view('admin.respondents.export')->render();
 
             return response()->json(
@@ -527,11 +601,9 @@ class RespondentsController extends Controller
                     'html_page' => $returnHTML,
                 ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
 
-        
     }
 }

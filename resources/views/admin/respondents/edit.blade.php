@@ -116,11 +116,11 @@
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
-                <option @if ($content->active_status_id == 1) selected @endif value="1">Active</option>
-                <option @if ($content->active_status_id == 2) selected @endif value="2">Deactivated</option>
-                <option @if ($content->active_status_id == 3) selected @endif value="3">Unsubscribed</option>
-                <option @if ($content->active_status_id == 4) selected @endif value="4">Pending</option>
-                <option @if ($content->active_status_id == 5) selected @endif value="5">Blacklisted</option>
+                <option @if ($respondents->active_status_id == 1) selected @endif value="1">Active</option>
+                <option @if ($respondents->active_status_id == 2) selected @endif value="2">Deactivated</option>
+                <option @if ($respondents->active_status_id == 3) selected @endif value="3">Unsubscribed</option>
+                <option @if ($respondents->active_status_id == 4) selected @endif value="4">Pending</option>
+                <option @if ($respondents->active_status_id == 5) selected @endif value="5">Blacklisted</option>
             </select>
 
         </div>
@@ -164,8 +164,8 @@
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
-                <option @if ($content->accept_terms == 0) selected @endif value="0">No</option>
-                <option @if ($content->accept_terms == 1) selected @endif value="1">Yes</option>
+                <option @if ($respondents->accept_terms == 0) selected @endif value="0">No</option>
+                <option @if ($respondents->accept_terms == 1) selected @endif value="1">Yes</option>
             </select>
         </div>
     </div>
