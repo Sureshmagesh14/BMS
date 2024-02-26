@@ -306,103 +306,105 @@ class RespondentsController extends Controller
 
     public function indexDataTable(Request $request)
     {
-        $columns = array(
-           
-            0 => 'id',
-            1 => 'name',
-            2 => 'surname',
-            3 => 'mobile',
-            4 => 'whatsapp',
-            5 => 'gender',
-            6=> 'date_of_birth',
-            7=> 'race',
-            8 => 'status',
-            9 => 'profile_completion',
-            10=> 'inactive_until',
-            11=> 'opeted_in',
-            12 => 'action',
-        );
+        if ($request->ajax()) {
+            $columns = array(
+            
+                0 => 'id',
+                1 => 'name',
+                2 => 'surname',
+                3 => 'mobile',
+                4 => 'whatsapp',
+                5 => 'gender',
+                6=> 'date_of_birth',
+                7=> 'race',
+                8 => 'status',
+                9 => 'profile_completion',
+                10=> 'inactive_until',
+                11=> 'opeted_in',
+                12 => 'action',
+            );
 
-       
-        $totalData = Respondents::count();
+        
+            $totalData = Respondents::count();
 
-        $totalFiltered = $totalData;
+            $totalFiltered = $totalData;
 
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
+            $limit = $request->input('length');
+            $start = $request->input('start');
+            $order = $columns[$request->input('order.0.column')];
+            $dir = $request->input('order.0.dir');
 
-        if (empty($request->input('search.value'))) {
-            $posts = Respondents::offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-        } else {
-            $search = $request->input('search.value');
+            if (empty($request->input('search.value'))) {
+                $posts = Respondents::offset($start)
+                    ->limit($limit)
+                    ->orderBy($order, $dir)
+                    ->get();
+            } else {
+                $search = $request->input('search.value');
 
-            $posts = Respondents::where('id', 'LIKE', "%{$search}%")
-                ->orWhere('name', 'LIKE', "%{$search}%")
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->cursor();
+                $posts = Respondents::where('id', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "%{$search}%")
+                    ->offset($start)
+                    ->limit($limit)
+                    ->orderBy($order, $dir)
+                    ->cursor();
 
-            $totalFiltered = Respondents::where('id', 'LIKE', "%{$search}%")
-                ->orWhere('name', 'LIKE', "%{$search}%")
-                ->count();
-        }
-
-        $data = array();
-        if (!empty($posts)) {
-            $i = 1;
-            foreach ($posts as $key => $post) {
-                $edit_route = route('respondents.edit', $post->id);
-                $view_route = route('respondents.show', $post->id);
-                $nestedData['select_all'] = '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this)" id="'.$post->id.'">';
-                $nestedData['id'] = $i;
-                $nestedData['name'] = $post->name ?? '-';
-                $nestedData['surname'] = $post->surname ?? '-';
-                $nestedData['mobile'] = $post->mobile ?? '-';
-                $nestedData['whatsapp'] = $post->whatsapp ?? '-';
-                $nestedData['email'] = $post->email ?? '-';
-                $dob = $post->date_of_birth;
-                $diff = (date('Y') - date('Y', strtotime($dob)));
-                $nestedData['date_of_birth'] = $diff ?? '-';
-                $nestedData['race'] = $post->race ?? '-';
-                $nestedData['status'] = $post->status ?? '-';
-                $nestedData['profile_completion'] = $post->profile_completion ?? '-';
-                $nestedData['inactive_until'] = $post->inactive_until ?? '-';
-                $nestedData['opeted_in'] = $post->opeted_in ?? '-';
-
-                $nestedData['options'] = '<div class="">
-                <div class="btn-group mr-2 mb-2 mb-sm-0">
-                    <a href="' . $view_route . '"
-                        data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
-                        <i class="fa fa-eye"></i>
-                    </a>
-                    <a href="#!" data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                        data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                    <button type="button" id="delete_respondents" data-id="' . $post->id . '" class="btn btn-primary waves-light waves-effect">
-                        <i class="far fa-trash-alt"></i>
-                    </button>
-                </div>
-            </div>';
-                $data[] = $nestedData;
-                $i++;
+                $totalFiltered = Respondents::where('id', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "%{$search}%")
+                    ->count();
             }
+
+            $data = array();
+            if (!empty($posts)) {
+                $i = 1;
+                foreach ($posts as $key => $post) {
+                    $edit_route = route('respondents.edit', $post->id);
+                    $view_route = route('respondents.show', $post->id);
+                    $nestedData['select_all'] = '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this)" id="'.$post->id.'">';
+                    $nestedData['id'] = $i;
+                    $nestedData['name'] = $post->name ?? '-';
+                    $nestedData['surname'] = $post->surname ?? '-';
+                    $nestedData['mobile'] = $post->mobile ?? '-';
+                    $nestedData['whatsapp'] = $post->whatsapp ?? '-';
+                    $nestedData['email'] = $post->email ?? '-';
+                    $dob = $post->date_of_birth;
+                    $diff = (date('Y') - date('Y', strtotime($dob)));
+                    $nestedData['date_of_birth'] = $diff ?? '-';
+                    $nestedData['race'] = $post->race ?? '-';
+                    $nestedData['status'] = $post->status ?? '-';
+                    $nestedData['profile_completion'] = $post->profile_completion ?? '-';
+                    $nestedData['inactive_until'] = $post->inactive_until ?? '-';
+                    $nestedData['opeted_in'] = $post->opeted_in ?? '-';
+
+                    $nestedData['options'] = '<div class="">
+                    <div class="btn-group mr-2 mb-2 mb-sm-0">
+                        <a href="' . $view_route . '"
+                            data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                        <a href="#!" data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                            data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <button type="button" id="delete_respondents" data-id="' . $post->id . '" class="btn btn-primary waves-light waves-effect">
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>';
+                    $data[] = $nestedData;
+                    $i++;
+                }
+            }
+
+            $json_data = array(
+                "draw" => intval($request->input('draw')),
+                "recordsTotal" => intval($totalData),
+                "recordsFiltered" => intval($totalFiltered),
+                "data" => $data,
+            );
+
+            echo json_encode($json_data);
         }
-
-        $json_data = array(
-            "draw" => intval($request->input('draw')),
-            "recordsTotal" => intval($totalData),
-            "recordsFiltered" => intval($totalFiltered),
-            "data" => $data,
-        );
-
-        echo json_encode($json_data);
 
     }
 

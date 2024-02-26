@@ -7297,3 +7297,573 @@
 #47 C:\\wamp64\\www\\newui\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #48 {main}
 "} 
+[2024-02-26 14:42:27] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:42:27] local.ERROR: Uncaught ReflectionException: Class "view" does not exist in C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php:912
+Stack trace:
+#0 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(912): ReflectionClass->__construct('view')
+#1 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(795): Illuminate\Container\Container->build('view')
+#2 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(957): Illuminate\Container\Container->resolve('view', Array, true)
+#3 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(731): Illuminate\Foundation\Application->resolve('view', Array)
+#4 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(942): Illuminate\Container\Container->make('view', Array)
+#5 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\helpers.php(120): Illuminate\Foundation\Application->make('view', Array)
+#6 Command line code(1): app('view')
+#7 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [view] does not exist. in C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php:914
+Stack trace:
+#0 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(795): Illuminate\Container\Container->build('view')
+#1 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(957): Illuminate\Container\Container->resolve('view', Array, true)
+#2 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(731): Illuminate\Foundation\Application->resolve('view', Array)
+#3 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(942): Illuminate\Container\Container->make('view', Array)
+#4 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\helpers.php(120): Illuminate\Foundation\Application->make('view', Array)
+#5 Command line code(1): app('view')
+#6 {main}
+  thrown {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught ReflectionException: Class \"view\" does not exist in C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:912
+Stack trace:
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(912): ReflectionClass->__construct('view')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('view')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(957): Illuminate\\Container\\Container->resolve('view', Array, true)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('view', Array)
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(942): Illuminate\\Container\\Container->make('view', Array)
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(120): Illuminate\\Foundation\\Application->make('view', Array)
+#6 Command line code(1): app('view')
+#7 {main}
+
+Next Illuminate\\Contracts\\Container\\BindingResolutionException: Target class [view] does not exist. in C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:914
+Stack trace:
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('view')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(957): Illuminate\\Container\\Container->resolve('view', Array, true)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('view', Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(942): Illuminate\\Container\\Container->make('view', Array)
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(120): Illuminate\\Foundation\\Application->make('view', Array)
+#5 Command line code(1): app('view')
+#6 {main}
+  thrown at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:914)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(244): Symfony\\Component\\ErrorHandler\\Error\\FatalError->__construct(message: ''Uncaught Refle...', code: '0', error: '['type' => 1, '...', traceOffset: '0', traceArgs: '???', trace: '???')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(231): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->fatalErrorFromPhpError(error: '['type' => 1, '...', traceOffset: '0')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleShutdown()
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(0): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php:254-256}()
+#4 {main}
+"} 
+[2024-02-26 14:42:28] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:42:33] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(186): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(170): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#8 C:\\wamp64\\www\\new_bms\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#9 {main}
+"} 
+[2024-02-26 14:42:39] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:42:39] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:42:39] local.ERROR: Uncaught Illuminate\Contracts\Container\BindingResolutionException: Target [Illuminate\Contracts\Auth\Access\Gate] is not instantiable. in C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php:1126
+Stack trace:
+#0 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(921): Illuminate\Container\Container->notInstantiable('Illuminate\\Cont...')
+#1 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(795): Illuminate\Container\Container->build('Illuminate\\Cont...')
+#2 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(957): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array, true)
+#3 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(731): Illuminate\Foundation\Application->resolve('Illuminate\\Cont...', Array)
+#4 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(942): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#5 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(1454): Illuminate\Foundation\Application->make('Illuminate\\Cont...')
+#6 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(237): Illuminate\Container\Container->offsetGet('Illuminate\\Cont...')
+#7 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(208): Illuminate\Support\Facades\Facade::resolveFacadeInstance('Illuminate\\Cont...')
+#8 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(349): Illuminate\Support\Facades\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\Support\Facades\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught Illuminate\\Contracts\\Container\\BindingResolutionException: Target [Illuminate\\Contracts\\Auth\\Access\\Gate] is not instantiable. in C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126
+Stack trace:
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(921): Illuminate\\Container\\Container->notInstantiable('Illuminate\\\\Cont...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('Illuminate\\\\Cont...')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(957): Illuminate\\Container\\Container->resolve('Illuminate\\\\Cont...', Array, true)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('Illuminate\\\\Cont...', Array)
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(942): Illuminate\\Container\\Container->make('Illuminate\\\\Cont...', Array)
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(1454): Illuminate\\Foundation\\Application->make('Illuminate\\\\Cont...')
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(237): Illuminate\\Container\\Container->offsetGet('Illuminate\\\\Cont...')
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(208): Illuminate\\Support\\Facades\\Facade::resolveFacadeInstance('Illuminate\\\\Cont...')
+#8 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(349): Illuminate\\Support\\Facades\\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\\Support\\Facades\\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(244): Symfony\\Component\\ErrorHandler\\Error\\FatalError->__construct(message: ''Uncaught Illum...', code: '0', error: '['type' => 1, '...', traceOffset: '0', traceArgs: '???', trace: '???')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(231): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->fatalErrorFromPhpError(error: '['type' => 1, '...', traceOffset: '0')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleShutdown()
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(0): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php:254-256}()
+#4 {main}
+"} 
+[2024-02-26 14:43:39] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:43:39] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:43:39] local.ERROR: Uncaught Illuminate\Contracts\Container\BindingResolutionException: Target [Illuminate\Contracts\Auth\Access\Gate] is not instantiable. in C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php:1126
+Stack trace:
+#0 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(921): Illuminate\Container\Container->notInstantiable('Illuminate\\Cont...')
+#1 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(795): Illuminate\Container\Container->build('Illuminate\\Cont...')
+#2 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(957): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array, true)
+#3 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(731): Illuminate\Foundation\Application->resolve('Illuminate\\Cont...', Array)
+#4 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(942): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#5 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(1454): Illuminate\Foundation\Application->make('Illuminate\\Cont...')
+#6 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(237): Illuminate\Container\Container->offsetGet('Illuminate\\Cont...')
+#7 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(208): Illuminate\Support\Facades\Facade::resolveFacadeInstance('Illuminate\\Cont...')
+#8 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(349): Illuminate\Support\Facades\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\Support\Facades\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught Illuminate\\Contracts\\Container\\BindingResolutionException: Target [Illuminate\\Contracts\\Auth\\Access\\Gate] is not instantiable. in C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126
+Stack trace:
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(921): Illuminate\\Container\\Container->notInstantiable('Illuminate\\\\Cont...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('Illuminate\\\\Cont...')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(957): Illuminate\\Container\\Container->resolve('Illuminate\\\\Cont...', Array, true)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('Illuminate\\\\Cont...', Array)
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(942): Illuminate\\Container\\Container->make('Illuminate\\\\Cont...', Array)
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(1454): Illuminate\\Foundation\\Application->make('Illuminate\\\\Cont...')
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(237): Illuminate\\Container\\Container->offsetGet('Illuminate\\\\Cont...')
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(208): Illuminate\\Support\\Facades\\Facade::resolveFacadeInstance('Illuminate\\\\Cont...')
+#8 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(349): Illuminate\\Support\\Facades\\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\\Support\\Facades\\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(244): Symfony\\Component\\ErrorHandler\\Error\\FatalError->__construct(message: ''Uncaught Illum...', code: '0', error: '['type' => 1, '...', traceOffset: '0', traceArgs: '???', trace: '???')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(231): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->fatalErrorFromPhpError(error: '['type' => 1, '...', traceOffset: '0')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleShutdown()
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(0): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php:254-256}()
+#4 {main}
+"} 
+[2024-02-26 14:44:39] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:44:39] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:44:39] local.ERROR: Uncaught Illuminate\Contracts\Container\BindingResolutionException: Target [Illuminate\Contracts\Auth\Access\Gate] is not instantiable. in C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php:1126
+Stack trace:
+#0 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(921): Illuminate\Container\Container->notInstantiable('Illuminate\\Cont...')
+#1 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(795): Illuminate\Container\Container->build('Illuminate\\Cont...')
+#2 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(957): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array, true)
+#3 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(731): Illuminate\Foundation\Application->resolve('Illuminate\\Cont...', Array)
+#4 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(942): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#5 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(1454): Illuminate\Foundation\Application->make('Illuminate\\Cont...')
+#6 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(237): Illuminate\Container\Container->offsetGet('Illuminate\\Cont...')
+#7 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(208): Illuminate\Support\Facades\Facade::resolveFacadeInstance('Illuminate\\Cont...')
+#8 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(349): Illuminate\Support\Facades\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\Support\Facades\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught Illuminate\\Contracts\\Container\\BindingResolutionException: Target [Illuminate\\Contracts\\Auth\\Access\\Gate] is not instantiable. in C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126
+Stack trace:
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(921): Illuminate\\Container\\Container->notInstantiable('Illuminate\\\\Cont...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('Illuminate\\\\Cont...')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(957): Illuminate\\Container\\Container->resolve('Illuminate\\\\Cont...', Array, true)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('Illuminate\\\\Cont...', Array)
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(942): Illuminate\\Container\\Container->make('Illuminate\\\\Cont...', Array)
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(1454): Illuminate\\Foundation\\Application->make('Illuminate\\\\Cont...')
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(237): Illuminate\\Container\\Container->offsetGet('Illuminate\\\\Cont...')
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(208): Illuminate\\Support\\Facades\\Facade::resolveFacadeInstance('Illuminate\\\\Cont...')
+#8 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(349): Illuminate\\Support\\Facades\\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\\Support\\Facades\\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(244): Symfony\\Component\\ErrorHandler\\Error\\FatalError->__construct(message: ''Uncaught Illum...', code: '0', error: '['type' => 1, '...', traceOffset: '0', traceArgs: '???', trace: '???')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(231): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->fatalErrorFromPhpError(error: '['type' => 1, '...', traceOffset: '0')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleShutdown()
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(0): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php:254-256}()
+#4 {main}
+"} 
+[2024-02-26 14:45:42] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:45:42] local.ERROR: Uncaught Illuminate\Contracts\Container\BindingResolutionException: Target [Illuminate\Contracts\Auth\Access\Gate] is not instantiable. in C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php:1126
+Stack trace:
+#0 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(921): Illuminate\Container\Container->notInstantiable('Illuminate\\Cont...')
+#1 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(795): Illuminate\Container\Container->build('Illuminate\\Cont...')
+#2 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(957): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array, true)
+#3 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(731): Illuminate\Foundation\Application->resolve('Illuminate\\Cont...', Array)
+#4 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(942): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#5 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(1454): Illuminate\Foundation\Application->make('Illuminate\\Cont...')
+#6 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(237): Illuminate\Container\Container->offsetGet('Illuminate\\Cont...')
+#7 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(208): Illuminate\Support\Facades\Facade::resolveFacadeInstance('Illuminate\\Cont...')
+#8 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(349): Illuminate\Support\Facades\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\Support\Facades\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught Illuminate\\Contracts\\Container\\BindingResolutionException: Target [Illuminate\\Contracts\\Auth\\Access\\Gate] is not instantiable. in C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126
+Stack trace:
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(921): Illuminate\\Container\\Container->notInstantiable('Illuminate\\\\Cont...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('Illuminate\\\\Cont...')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(957): Illuminate\\Container\\Container->resolve('Illuminate\\\\Cont...', Array, true)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('Illuminate\\\\Cont...', Array)
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(942): Illuminate\\Container\\Container->make('Illuminate\\\\Cont...', Array)
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(1454): Illuminate\\Foundation\\Application->make('Illuminate\\\\Cont...')
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(237): Illuminate\\Container\\Container->offsetGet('Illuminate\\\\Cont...')
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(208): Illuminate\\Support\\Facades\\Facade::resolveFacadeInstance('Illuminate\\\\Cont...')
+#8 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(349): Illuminate\\Support\\Facades\\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\\Support\\Facades\\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(244): Symfony\\Component\\ErrorHandler\\Error\\FatalError->__construct(message: ''Uncaught Illum...', code: '0', error: '['type' => 1, '...', traceOffset: '0', traceArgs: '???', trace: '???')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(231): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->fatalErrorFromPhpError(error: '['type' => 1, '...', traceOffset: '0')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleShutdown()
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(0): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php:254-256}()
+#4 {main}
+"} 
+[2024-02-26 14:46:39] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:46:39] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:46:39] local.ERROR: Uncaught Illuminate\Contracts\Container\BindingResolutionException: Target [Illuminate\Contracts\Auth\Access\Gate] is not instantiable. in C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php:1126
+Stack trace:
+#0 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(921): Illuminate\Container\Container->notInstantiable('Illuminate\\Cont...')
+#1 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(795): Illuminate\Container\Container->build('Illuminate\\Cont...')
+#2 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(957): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array, true)
+#3 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(731): Illuminate\Foundation\Application->resolve('Illuminate\\Cont...', Array)
+#4 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(942): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#5 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(1454): Illuminate\Foundation\Application->make('Illuminate\\Cont...')
+#6 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(237): Illuminate\Container\Container->offsetGet('Illuminate\\Cont...')
+#7 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(208): Illuminate\Support\Facades\Facade::resolveFacadeInstance('Illuminate\\Cont...')
+#8 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(349): Illuminate\Support\Facades\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\Support\Facades\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught Illuminate\\Contracts\\Container\\BindingResolutionException: Target [Illuminate\\Contracts\\Auth\\Access\\Gate] is not instantiable. in C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126
+Stack trace:
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(921): Illuminate\\Container\\Container->notInstantiable('Illuminate\\\\Cont...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('Illuminate\\\\Cont...')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(957): Illuminate\\Container\\Container->resolve('Illuminate\\\\Cont...', Array, true)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('Illuminate\\\\Cont...', Array)
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(942): Illuminate\\Container\\Container->make('Illuminate\\\\Cont...', Array)
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(1454): Illuminate\\Foundation\\Application->make('Illuminate\\\\Cont...')
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(237): Illuminate\\Container\\Container->offsetGet('Illuminate\\\\Cont...')
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(208): Illuminate\\Support\\Facades\\Facade::resolveFacadeInstance('Illuminate\\\\Cont...')
+#8 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(349): Illuminate\\Support\\Facades\\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\\Support\\Facades\\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(244): Symfony\\Component\\ErrorHandler\\Error\\FatalError->__construct(message: ''Uncaught Illum...', code: '0', error: '['type' => 1, '...', traceOffset: '0', traceArgs: '???', trace: '???')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(231): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->fatalErrorFromPhpError(error: '['type' => 1, '...', traceOffset: '0')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleShutdown()
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(0): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php:254-256}()
+#4 {main}
+"} 
+[2024-02-26 14:46:48] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(186): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(170): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#8 C:\\wamp64\\www\\new_bms\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#9 {main}
+"} 
+[2024-02-26 14:47:39] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:47:39] local.ERROR: Uncaught Illuminate\Contracts\Container\BindingResolutionException: Target [Illuminate\Contracts\Auth\Access\Gate] is not instantiable. in C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php:1126
+Stack trace:
+#0 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(921): Illuminate\Container\Container->notInstantiable('Illuminate\\Cont...')
+#1 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(795): Illuminate\Container\Container->build('Illuminate\\Cont...')
+#2 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(957): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array, true)
+#3 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(731): Illuminate\Foundation\Application->resolve('Illuminate\\Cont...', Array)
+#4 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(942): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#5 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(1454): Illuminate\Foundation\Application->make('Illuminate\\Cont...')
+#6 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(237): Illuminate\Container\Container->offsetGet('Illuminate\\Cont...')
+#7 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(208): Illuminate\Support\Facades\Facade::resolveFacadeInstance('Illuminate\\Cont...')
+#8 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(349): Illuminate\Support\Facades\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\Support\Facades\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught Illuminate\\Contracts\\Container\\BindingResolutionException: Target [Illuminate\\Contracts\\Auth\\Access\\Gate] is not instantiable. in C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126
+Stack trace:
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(921): Illuminate\\Container\\Container->notInstantiable('Illuminate\\\\Cont...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('Illuminate\\\\Cont...')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(957): Illuminate\\Container\\Container->resolve('Illuminate\\\\Cont...', Array, true)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('Illuminate\\\\Cont...', Array)
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(942): Illuminate\\Container\\Container->make('Illuminate\\\\Cont...', Array)
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(1454): Illuminate\\Foundation\\Application->make('Illuminate\\\\Cont...')
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(237): Illuminate\\Container\\Container->offsetGet('Illuminate\\\\Cont...')
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(208): Illuminate\\Support\\Facades\\Facade::resolveFacadeInstance('Illuminate\\\\Cont...')
+#8 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(349): Illuminate\\Support\\Facades\\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\\Support\\Facades\\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(244): Symfony\\Component\\ErrorHandler\\Error\\FatalError->__construct(message: ''Uncaught Illum...', code: '0', error: '['type' => 1, '...', traceOffset: '0', traceArgs: '???', trace: '???')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(231): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->fatalErrorFromPhpError(error: '['type' => 1, '...', traceOffset: '0')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleShutdown()
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(0): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php:254-256}()
+#4 {main}
+"} 
+[2024-02-26 14:48:39] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:48:39] local.ERROR: Uncaught Illuminate\Contracts\Container\BindingResolutionException: Target [Illuminate\Contracts\Auth\Access\Gate] is not instantiable. in C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php:1126
+Stack trace:
+#0 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(921): Illuminate\Container\Container->notInstantiable('Illuminate\\Cont...')
+#1 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(795): Illuminate\Container\Container->build('Illuminate\\Cont...')
+#2 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(957): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array, true)
+#3 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(731): Illuminate\Foundation\Application->resolve('Illuminate\\Cont...', Array)
+#4 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(942): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#5 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Container\Container.php(1454): Illuminate\Foundation\Application->make('Illuminate\\Cont...')
+#6 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(237): Illuminate\Container\Container->offsetGet('Illuminate\\Cont...')
+#7 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(208): Illuminate\Support\Facades\Facade::resolveFacadeInstance('Illuminate\\Cont...')
+#8 C:\wamp64\www\new_bms\vendor\laravel\framework\src\Illuminate\Support\Facades\Facade.php(349): Illuminate\Support\Facades\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\Support\Facades\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught Illuminate\\Contracts\\Container\\BindingResolutionException: Target [Illuminate\\Contracts\\Auth\\Access\\Gate] is not instantiable. in C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126
+Stack trace:
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(921): Illuminate\\Container\\Container->notInstantiable('Illuminate\\\\Cont...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('Illuminate\\\\Cont...')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(957): Illuminate\\Container\\Container->resolve('Illuminate\\\\Cont...', Array, true)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('Illuminate\\\\Cont...', Array)
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(942): Illuminate\\Container\\Container->make('Illuminate\\\\Cont...', Array)
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(1454): Illuminate\\Foundation\\Application->make('Illuminate\\\\Cont...')
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(237): Illuminate\\Container\\Container->offsetGet('Illuminate\\\\Cont...')
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(208): Illuminate\\Support\\Facades\\Facade::resolveFacadeInstance('Illuminate\\\\Cont...')
+#8 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(349): Illuminate\\Support\\Facades\\Facade::getFacadeRoot()
+#9 Command line code(1): Illuminate\\Support\\Facades\\Facade::__callStatic('abilities', Array)
+#10 {main}
+  thrown at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:1126)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(244): Symfony\\Component\\ErrorHandler\\Error\\FatalError->__construct(message: ''Uncaught Illum...', code: '0', error: '['type' => 1, '...', traceOffset: '0', traceArgs: '???', trace: '???')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(231): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->fatalErrorFromPhpError(error: '['type' => 1, '...', traceOffset: '0')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleShutdown()
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(0): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php:254-256}()
+#4 {main}
+"} 
+[2024-02-26 14:50:14] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 C:\\wamp64\\www\\new_bms\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:50:17] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 C:\\wamp64\\www\\new_bms\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:50:20] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 C:\\wamp64\\www\\new_bms\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-02-26 14:51:30] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(186): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(170): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#8 C:\\wamp64\\www\\new_bms\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#9 {main}
+"} 
+[2024-02-26 14:55:26] local.ERROR: Class "Collective\Html\HtmlServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Collective\\Html\\HtmlServiceProvider\" not found at C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:206)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(142): Illuminate\\Foundation\\ProviderRepository->createProvider('Collective\\\\Html...')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(186): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(170): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#8 C:\\wamp64\\www\\new_bms\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#9 {main}
+"} 
+[2024-02-26 16:03:34] local.ERROR: Cannot redeclare App\Http\Controllers\InternalReportController::show() {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare App\\Http\\Controllers\\InternalReportController::show() at C:\\wamp64\\www\\new_bms\\app\\Http\\Controllers\\InternalReportController.php:77)
+[stacktrace]
+#0 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(244): Symfony\\Component\\ErrorHandler\\Error\\FatalError->__construct(message: ''Cannot redecla...', code: '0', error: '['type' => 64, ...', traceOffset: '0', traceArgs: '???', trace: '???')
+#1 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(231): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->fatalErrorFromPhpError(error: '['type' => 64, ...', traceOffset: '0')
+#2 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleShutdown()
+#3 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(0): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php:254-256}()
+#4 C:\\wamp64\\www\\new_bms\\vendor\\composer\\ClassLoader.php(427): Composer\\Autoload\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\composer\\ClassLoader.php:575-577}(file: ''C:\\\\\\\\wamp64\\\\\\\\ww...')
+#5 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(1096): Composer\\Autoload\\ClassLoader->loadClass(class: ''App\\\\\\\\Http\\\\\\\\Con...')
+#6 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(1096): is_a(object_or_class: ''App\\\\\\\\Http\\\\\\\\Con...', class: ''Illuminate\\\\\\\\Ro...', allow_string: 'TRUE')
+#7 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(1035): Illuminate\\Routing\\Route->controllerMiddleware()
+#8 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(818): Illuminate\\Routing\\Route->gatherMiddleware()
+#9 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(800): Illuminate\\Routing\\Router->gatherRouteMiddleware(route: 'class Illuminat...')
+#10 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(route: 'class Illuminat...', request: 'class Illuminat...')
+#11 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(request: 'class Illuminat...', route: 'class Illuminat...')
+#12 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(request: 'class Illuminat...')
+#13 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(request: 'class Illuminat...')
+#14 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): App\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php:197-201}(request: 'class Illuminat...')
+#15 C:\\wamp64\\www\\new_bms\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Routing\\Pipeline->Illuminate\\Pipeline\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php:142-148}(passable: 'class Illuminat...')
+#16 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(request: 'class Illuminat...', next: 'class Closure {...')
+#17 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Routing\\Pipeline->Illuminate\\Pipeline\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php:159-190}(passable: 'class Illuminat...')
+#18 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(request: 'class Illuminat...', next: 'class Closure {...')
+#19 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(request: 'class Illuminat...', next: 'class Closure {...')
+#20 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Routing\\Pipeline->Illuminate\\Pipeline\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php:159-190}(passable: 'class Illuminat...')
+#21 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): App\\Http\\Middleware\\TrimStrings->handle(request: 'class Illuminat...', next: 'class Closure {...')
+#22 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\TrimStrings->handle(request: 'class Illuminat...', next: 'class Closure {...')
+#23 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Routing\\Pipeline->Illuminate\\Pipeline\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php:159-190}(passable: 'class Illuminat...')
+#24 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(request: 'class Illuminat...', next: 'class Closure {...')
+#25 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Routing\\Pipeline->Illuminate\\Pipeline\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php:159-190}(passable: 'class Illuminat...')
+#26 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(request: 'class Illuminat...', next: 'class Closure {...')
+#27 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Routing\\Pipeline->Illuminate\\Pipeline\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php:159-190}(passable: 'class Illuminat...')
+#28 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(request: 'class Illuminat...', next: 'class Closure {...')
+#29 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Routing\\Pipeline->Illuminate\\Pipeline\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php:159-190}(passable: 'class Illuminat...')
+#30 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\TrustProxies->handle(request: 'class Illuminat...', next: 'class Closure {...')
+#31 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Routing\\Pipeline->Illuminate\\Pipeline\\{closure:C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php:159-190}(passable: 'class Illuminat...')
+#32 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Routing\\Pipeline->then(destination: 'class Closure {...')
+#33 C:\\wamp64\\www\\new_bms\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): App\\Http\\Kernel->sendRequestThroughRouter(request: 'class Illuminat...')
+#34 C:\\wamp64\\www\\new_bms\\index.php(51): App\\Http\\Kernel->handle(request: 'class Illuminat...')
+#35 C:\\wamp64\\www\\new_bms\\index.php(0): {main}()
+#36 {main}
+"} 
