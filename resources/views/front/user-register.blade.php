@@ -30,60 +30,67 @@
         </div>
         <div class="col-md-6">
             <div class="text-center">
-                <p>Let's get you started</p>
-                <h3>Join our Database</h3>
-                <div class="first-row d-md-flex mt-5">
-                    <div class="fname text-start w-48 m-auto">
-                        <label for="fname" >First Name <span class="text-danger">*</span></label>
-                        <input type="text" name="fname" placeholder="John" class="form-control vi-border-clr border-radius-0" id="">
-                    
+               
+                <form id="respondents_register" class="validation" action="{{route('user_create')}}">
+                @csrf
+                    <p>Let's get you started</p>
+                    <h3>Join our Database</h3>
+                    <div class="first-row d-md-flex mt-5">
+                        <div class="fname text-start w-48 m-auto">
+                            <label for="fname" >First Name <span class="text-danger">*</span></label>
+                            <input type="text" name="fname" id="fname" placeholder="Enter First Name" class="form-control vi-border-clr border-radius-0" id="">
+                        
+                        </div>
+                        <div class="lname text-start w-48 m-auto">
+                            <label for="fname" >Last Name <span class="text-danger">*</span></label>
+                            <input type="text" name="lname" id="lname" placeholder="Enter Last Name" class="form-control vi-border-clr border-radius-0" id="">
+                        </div>
+                        
                     </div>
-                    <div class="lname text-start w-48 m-auto">
-                        <label for="fname" >Last Name <span class="text-danger">*</span></label>
-                        <input type="text" name="lname" placeholder="Doe" class="form-control vi-border-clr border-radius-0" id="">
+                    <div class="first-row d-md-flex">
+                        <div class="mobile text-start w-48 m-auto my-3">
+                            <label for="mobile" >Mobile <span class="text-danger">*</span></label>
+                            <input type="text" name="mobile" id="mobile" placeholder="Enter Mobile" class="form-control vi-border-clr border-radius-0" id="">
+                        
+                        </div>
+                        <div class="lname text-start w-48 m-auto my-3">
+                            <label for="whatsapp" >Whatsapp <span class="text-danger">*</span></label>
+                            <input type="text" name="whatsapp" id="whatsapp" placeholder="Enter Whatsapp" class="form-control vi-border-clr border-radius-0" id="">
+                        </div>
+                        
                     </div>
-                    
-                </div>
-                <div class="first-row d-md-flex">
-                    <div class="mobile text-start w-48 m-auto my-3">
-                        <label for="mobile" >Mobile <span class="text-danger">*</span></label>
-                        <input type="text" name="mobile" placeholder="John" class="form-control vi-border-clr border-radius-0" id="">
-                    
+                    <div class="first-row d-md-flex">
+                        <div class="email text-start w-48 m-auto my-3">
+                            <label for="email" >Email <span class="text-danger">*</span></label>
+                            <input type="email" name="email" id="email" placeholder="Enter Valid Email" class="form-control vi-border-clr border-radius-0" id="">
+                        
+                        </div>
+                        <div class="lname text-start w-48 m-auto my-3">
+                            <label for="passport" >ID \ Passport Number <span class="text-danger"></span></label>
+                            <input type="text" name="passport" id="passport" placeholder="Enter ID Number" class="form-control vi-border-clr border-radius-0" id="">
+                        </div>
+                        
                     </div>
-                    <div class="lname text-start w-48 m-auto my-3">
-                        <label for="whatsapp" >Whatsapp <span class="text-danger">*</span></label>
-                        <input type="text" name="whatsapp" placeholder="081 966 0786" class="form-control vi-border-clr border-radius-0" id="">
+                    <div class="first-row d-md-flex">
+                        <div class="date text-start w-48 my-3">
+                            <label for="date" >Date of Birth <span class="text-danger">*</span></label>
+                            <input type="date" name="dob" id="dob"  class="form-control vi-border-clr border-radius-0" id="">
+                        </div>                   
                     </div>
-                    
-                </div>
-                <div class="first-row d-md-flex">
-                    <div class="email text-start w-48 m-auto my-3">
-                        <label for="email" >Email <span class="text-danger">*</span></label>
-                        <input type="text" name="email" placeholder="john@example.com" class="form-control vi-border-clr border-radius-0" id="">
-                    
+                    <div class="first-row">
+                        <div class="date text-start w-48 my-3">
+                            <label for="date" >Password<span class="text-danger">*</span></label>
+                            <input type="password" name="password" id="password" placeholder="Create Password" class="form-control vi-border-clr border-radius-0" id="">
+                            <input type="password" name="cpassword" id="cpassword" placeholder="Confirm/Retype Password" class="form-control vi-border-clr border-radius-0 my-2" id="">
+                        </div>                   
                     </div>
-                    <div class="lname text-start w-48 m-auto my-3">
-                        <label for="whatsapp" >Whatsapp <span class="text-danger">*</span></label>
-                        <input type="text" name="whatsapp" placeholder="081 966 0786" class="form-control vi-border-clr border-radius-0" id="">
+                    <div class="submit-btn text-start">
+                        <button class="btn vi-nav-bg border-radius-0 text-white px-5 py-3">Continue</button>
                     </div>
-                    
-                </div>
-                <div class="first-row d-md-flex">
-                    <div class="date text-start w-48 my-3">
-                        <label for="date" >Date of Birth <span class="text-danger">*</span></label>
-                        <input type="date" name="date"  class="form-control vi-border-clr border-radius-0" id="">
-                    </div>                   
-                </div>
-                <div class="first-row">
-                    <div class="date text-start w-48 my-3">
-                        <label for="date" >Password<span class="text-danger">*</span></label>
-                        <input type="password" name="date" placeholder="Create Password" class="form-control vi-border-clr border-radius-0" id="">
-                        <input type="password" name="date" placeholder="Confirm/Retype Password" class="form-control vi-border-clr border-radius-0 my-2" id="">
-                    </div>                   
-                </div>
-                <div class="submit-btn text-start">
-                    <button class="btn vi-nav-bg border-radius-0 text-white px-5 py-3">Continue</button>
-                </div>
+
+                </form>
+
+
             </div>
                
         </div>

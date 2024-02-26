@@ -41,6 +41,44 @@ class WelcomeController extends Controller
         }
     }
     
+     /**
+     * Store a newly created resource in storage.
+     */
+    public function user_create(Request $request)
+    {
+        try {
+
+            $validator = Validator::make($request->all(), [
+               'name'=> 'required',
+            ]);
+    
+            if($validator->fails())
+            {
+                return response()->json([
+                    'status'=>400,
+                    'errors'=>$validator->messages()
+                ]);
+            }
+            else
+            {
+                $tags = new Tags;
+                $tags->name = $request->input('name');
+                $tags->colour = $request->input('colour');
+                $tags->save();
+                $tags->id;
+                return response()->json([
+                    'status'=>200,
+                    'last_insert_id' => $tags->id,
+                    'message'=>'Tags Added Successfully.'
+                ]);
+            }
+
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function userdashboard()
     {   
         try {
