@@ -21,6 +21,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('contents_datatable', 'ContentsController@contents_datatable')->name('contents_datatable');
     Route::any('contents_multi_delete', 'ContentsController@contents_multi_delete')->name('contents_multi_delete');
 
+// Survey Template Routings
+Route::get('/survey/template/{id}', ['as' => 'survey.template','uses' => 'SurveyController@templateList',])->middleware(['auth']);
+Route::get('/survey/builder/{id}/{qus_id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder',])->middleware(['auth']);
+Route::get('/survey/questiontype/{id}', ['as' => 'survey.questiontype','uses' => 'SurveyController@questiontype',])->middleware(['auth']);
+Route::get('/survey/qustype/{survey}/{qustype}', ['as' => 'survey.qustype','uses' => 'SurveyController@questiontypesurvey',])->middleware(['auth']);
+Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'SurveyController@deletequs',])->middleware(['auth']);
     Route::get('/survey','SurveyController@survey')->name('survey');
     Route::get('/survey/create', ['as' => 'survey.create','uses' => 'SurveyController@createSurvey',]);
     Route::post('/survey/survey', ['as' => 'survery.survey','uses' => 'SurveyController@getSurveyList',]);
@@ -139,6 +145,12 @@ Route::group(['middleware' => ['auth']], function () {
 
 // Clone Survey 
 
+Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication','uses' => 'SurveyController@surveyduplication',])->middleware(['auth']);
+Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey',])->middleware(['auth']);
+Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@viewsurvey',])->middleware(['auth']);
+
+// Upload Image
+Route::post('/survey/upload-image', ['as' => 'survey.uploadimage','uses' => 'SurveyController@uploadimage',])->middleware(['auth']);
 Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication','uses' => 'SurveyController@surveyduplication',]);
 Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey',]);
 Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@sharesurvey',]);

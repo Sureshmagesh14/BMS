@@ -30,5 +30,10 @@ class Survey extends Model
         'builderID',
         'created_by'
     ];
+    public function questions()
+    {
+        return $this->hasMany('App\Models\Questions', 'survey_id', 'id')->whereNotIn('qus_type',['welcome_page','thank_you']);
+    }
+
 
 }

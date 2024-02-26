@@ -164,22 +164,29 @@
                         <div class="card-body">
                             <div class="text-right">
                                 <div class="btn-group" role="group">
-                                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">Export <i class="mdi mdi-chevron-down"></i>
+                                    <button id="btnGroupVerticalDrop1" type="button"
+                                        class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">Export <i
+                                            class="mdi mdi-chevron-down"></i>
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                        <a class="dropdown-item" href="#">Respondent Project Engagement by Month & Year</a>
-                                        <a class="dropdown-item" href="#">Respondent Project Engagement by Respondent</a>
+                                        <a class="dropdown-item" href="#">Respondent Project Engagement by Month &
+                                            Year</a>
+                                        <a class="dropdown-item" href="#">Respondent Project Engagement by
+                                            Respondent</a>
                                     </div>
                                 </div>
-                                <a href="{{url('projects_export/xlsx')}}" class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i> Export</a>
-                                <a href="#!" data-url="{{ route('projects.create') }}" data-size="xl" data-ajax-popup="true"
-                                    class="btn btn-primary" data-bs-original-title="{{ __('Create Projects') }}" class="btn btn-primary" data-size="xl"
-                                    data-ajax-popup="true" data-bs-toggle="tooltip"
-                                    id="create">
+                                <a href="{{ url('projects_export/xlsx') }}"
+                                    class="btn btn-primary waves-effect waves-light"><i class="fa fa-file-excel"></i>
+                                    Export</a>
+                                <a href="#!" data-url="{{ route('projects.create') }}" data-size="xl"
+                                    data-ajax-popup="true" class="btn btn-primary"
+                                    data-bs-original-title="{{ __('Create Projects') }}" class="btn btn-primary"
+                                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
                                     Create Project
                                 </a>
-                                <a class="btn btn-danger" class="btn btn-primary" id="project_delete_all" style="display: none;">
+                                <a class="btn btn-danger" class="btn btn-primary" id="project_delete_all"
+                                    style="display: none;">
                                     Delete Selected All
                                 </a>
                                 {{-- <a href="{{ route('inner_module', ['module' => 'user_to_project', 'id' => $data->id]) }}" class="btn btn-primary">Create Project</a> --}}
@@ -188,25 +195,27 @@
                             <p class="card-title-desc"></p>
                             <table id="projects_datatable" class="table dt-responsive nowrap w-100">
                                 <thead>
-                                <tr>
-                                    <th>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input select_all" id="inlineForm-customCheck">
-                                            <label class="custom-control-label" for="inlineForm-customCheck" style="font-weight: bold;">Select All</label>
-                                        </div>
-                                    </th>
-                                    <th>#</th>
-                                    <th>Number/Code</th>
-                                    <th>Client</th>
-                                    <th>Name</th>
-                                    <th>Creator</th>
-                                    <th>Type</th>
-                                    <th>Reward Amount</th>
-                                    <th>Project Link</th>
-                                    <th>Created</th>
-                                    <th>Status</th>                                               
-                                    <th>Action</th>
-                                </tr>
+                                    <tr>
+                                        <th>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input select_all"
+                                                    id="inlineForm-customCheck">
+                                                <label class="custom-control-label" for="inlineForm-customCheck"
+                                                    style="font-weight: bold;">Select All</label>
+                                            </div>
+                                        </th>
+                                        <th>#</th>
+                                        <th>Number/Code</th>
+                                        <th>Client</th>
+                                        <th>Name</th>
+                                        <th>Creator</th>
+                                        <th>Type</th>
+                                        <th>Reward Amount</th>
+                                        <th>Project Link</th>
+                                        <th>Created</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
@@ -219,7 +228,7 @@
         </div> <!-- container-fluid -->
     </div>
     <!-- End Page-content -->
-
+</div>
     @include('admin.layout.footer')
 
     @stack('adminside-js')
@@ -234,7 +243,7 @@
             rewards_datatable();
         });
 
-        function rewards_datatable(){
+        function rewards_datatable() {
             $('#rewards_datatable').dataTable().fnDestroy();
             $('#rewards_datatable').DataTable({
                 searching: true,
@@ -250,31 +259,81 @@
                     url: "{{ route('get_all_rewards') }}",
                     data: {
                         _token: tempcsrf,
-                        id: '{{$data->id}}',
+                        id: '{{ $data->id }}',
                     },
                     error: function(xhr, error, thrown) {
                         alert("undefind error")
                     }
                 },
-                columns: [
-                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                    { data: 'id',name: '#',orderable: true,searchable: true },
-                    { data: 'points',name: 'points',orderable: true,searchable: true },
-                    { data: 'status_id',name: 'status_id',orderable: true,searchable: true },
-                    { data: 'respondent_id',name: 'respondent_id',orderable: true,searchable: true },
-                    { data: 'user_id',name: 'user_id',orderable: true,searchable: true },
-                    { data: 'project_id',name: 'project_id',orderable: true,searchable: true },
-                    { data: 'action',name: 'action',orderable: false,searchable: false }
+                columns: [{
+                        data: 'select_all',
+                        name: 'select_all',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'id',
+                        name: '#',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'points',
+                        name: 'points',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'status_id',
+                        name: 'status_id',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'respondent_id',
+                        name: 'respondent_id',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'user_id',
+                        name: 'user_id',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'project_id',
+                        name: 'project_id',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
                 ],
-                columnDefs: [
-                    { targets: 0,width: 75,className: "text-center" },
-                    { targets: 4,width: 115,className: "text-center" },
-                    { targets: 5,width: 115,className: "text-center" },
+                columnDefs: [{
+                        targets: 0,
+                        width: 75,
+                        className: "text-center"
+                    },
+                    {
+                        targets: 4,
+                        width: 115,
+                        className: "text-center"
+                    },
+                    {
+                        targets: 5,
+                        width: 115,
+                        className: "text-center"
+                    },
                 ],
             });
         }
 
-        function projects_datatable(){
+        function projects_datatable() {
             $('#projects_datatable').dataTable().fnDestroy();
             $('#projects_datatable').DataTable({
                 searching: true,
@@ -290,40 +349,108 @@
                     url: "{{ route('get_all_projects') }}",
                     data: {
                         _token: tempcsrf,
-                        id: '{{$data->id}}',
+                        id: '{{ $data->id }}',
                     },
                     error: function(xhr, error, thrown) {
                         alert("undefind error");
                     }
                 },
-                columns: [
-                    {data: 'select_all', name: 'select_all', orderable: false, searchable: false },
-                    {data: 'id', name: '#', orderable: true, searchable: true},
-                    {data: 'numbers', name: 'numbers', orderable: true, searchable: true},
-                    {data: 'client', name: 'client', orderable: true, searchable: true},
-                    {data: 'name', name: 'name', orderable: true, searchable: true},
-                    {data: 'creator', name: 'creator', orderable: true, searchable: true },
-                    {data: 'type', name: 'type', orderable: true, searchable: true },
-                    {data: 'reward_amount', name: 'reward_amount', orderable: true, searchable: true},
-                    {data: 'project_link', name: 'project_link', orderable: true, searchable: true},
-                    {data: 'created', name: 'created', orderable: true, searchable: true},
-                    {data: 'status', name: 'status', orderable: true, searchable: true},
-                    {data: 'action', name: 'action', orderable: true, searchable: true}
+                columns: [{
+                        data: 'select_all',
+                        name: 'select_all',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'id',
+                        name: '#',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'numbers',
+                        name: 'numbers',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'client',
+                        name: 'client',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'name',
+                        name: 'name',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'creator',
+                        name: 'creator',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'type',
+                        name: 'type',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'reward_amount',
+                        name: 'reward_amount',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'project_link',
+                        name: 'project_link',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'created',
+                        name: 'created',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: true,
+                        searchable: true
+                    }
                 ],
-                columnDefs: [
-                    {targets: 0,width: 75,className: "text-center"},
-                    {targets: 3,width: 175,},
-                    {targets: 10,width: 115,className: "text-center"}
+                columnDefs: [{
+                        targets: 0,
+                        width: 75,
+                        className: "text-center"
+                    },
+                    {
+                        targets: 3,
+                        width: 175,
+                    },
+                    {
+                        targets: 10,
+                        width: 115,
+                        className: "text-center"
+                    }
                 ],
             });
         }
 
-        function table_checkbox(get_this){
+        function table_checkbox(get_this) {
             count_checkbox = $(".tabel_checkbox").filter(':checked').length;
-            if(count_checkbox > 1){
+            if (count_checkbox > 1) {
                 $("#project_delete_all").show();
-            }
-            else{
+            } else {
                 $("#project_delete_all").hide();
             }
         }
@@ -334,14 +461,14 @@
 
             var values = $("#myTable tbody tr").map(function() {
                 var $this = $(this);
-                if($this.find("[type=checkbox]").is(':checked')){
-                    all_id.push($this.find("[type=checkbox]").attr('id')); 
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
                 }
             }).get();
-          
+
             $.confirm({
-                title: "{{Config::get('constants.delete')}}",
-                content:  "{{Config::get('constants.delete_confirmation')}}",
+                title: "{{ Config::get('constants.delete') }}",
+                content: "{{ Config::get('constants.delete_confirmation') }}",
                 autoClose: 'cancelAction|8000',
                 buttons: {
                     delete: {
@@ -368,7 +495,7 @@
                         }
                     },
                     cancel: function() {
-                        
+
                     }
                 }
             });
@@ -379,10 +506,10 @@
             var id = $(this).data("id");
             var url = "{{ route('projects.destroy', ':id') }}";
             url = url.replace(':id', id);
-          
+
             $.confirm({
-                title: "{{Config::get('constants.delete')}}",
-                content:  "{{Config::get('constants.delete_confirmation')}}",
+                title: "{{ Config::get('constants.delete') }}",
+                content: "{{ Config::get('constants.delete_confirmation') }}",
                 autoClose: 'cancelAction|8000',
                 buttons: {
                     delete: {
@@ -408,7 +535,7 @@
                         }
                     },
                     cancel: function() {
-                        
+
                     }
                 }
             });

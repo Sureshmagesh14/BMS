@@ -65,14 +65,14 @@
                 </li>
 
                 <li>
-                    <a href="cashouts" class=" waves-effect">
+                    <a href="{{route('cashouts')}}"  class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Cash Outs</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="actions" class=" waves-effect">
+                    <a href="{{route('actions')}}" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Action Events</span>
                     </a>
@@ -95,14 +95,14 @@
                 </li>
 
                 <li>
-                    <a href="tags" class=" waves-effect">
+                    <a href="{{route('tags.index')}}"  class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Panels</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="rewards" class=" waves-effect">
+                    <a href="{{route('rewards.index')}}"  class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Rewards</span>
                     </a>
@@ -111,28 +111,28 @@
                 <li class="menu-title">Settings</li>
 
                 <li>
-                    <a href="groups" class="waves-effect">
+                    <a href="{{route('groups.index')}}"  class="waves-effect">
                         <i class="icon nav-icon" data-feather="calendar"></i>
                         <span class="menu-item" key="t-calendar">Profile Groups</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="banks" class=" waves-effect">
+                    <a href="{{route('banks.index')}}"  class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Banks</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="charities" class=" waves-effect">
+                    <a href="{{route('charities.index')}}"  class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Charities</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="networks" class=" waves-effect">
+                    <a href="{{route('networks.index')}}"  class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Cellular Networks
                         </span>
@@ -140,7 +140,7 @@
                 </li>
 
                 <li>
-                    <a href="contents" class=" waves-effect">
+                    <a  href="{{route('contents.index')}}" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Contents
                         </span>
