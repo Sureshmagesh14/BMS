@@ -62,15 +62,17 @@ Export
 
 
 
-                                            <a href="#!" data-url="<?php echo e(route('projects.create')); ?>" data-size="xl" data-ajax-popup="true"
+                                    <a href="#!" data-url="<?php echo e(route('projects.create')); ?>" data-size="xl" data-ajax-popup="true"
                                         class="btn btn-primary" data-bs-original-title="<?php echo e(__('Create Projects')); ?>" class="btn btn-primary" data-size="xl"
                                          data-ajax-popup="true" data-bs-toggle="tooltip"
                                         id="create">
                                         Create Project
                                     </a>
-                                    <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
-                                        Delete Selected All
-                                    </a>
+                                    <?php if(Auth::user()->role_id == 1): ?>
+                                        <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
+                                            Delete Selected All
+                                        </a>
+                                    <?php endif; ?>
                                         </div>
 
                                         <h4 class="card-title"> </h4>

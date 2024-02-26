@@ -85,7 +85,7 @@
                         </div>                   
                     </div>
                     <div class="submit-btn text-start">
-                        <button class="btn vi-nav-bg border-radius-0 text-white px-5 py-3">Continue</button>
+                        <button type="button" class="btn vi-nav-bg border-radius-0 text-white px-5 py-3" id="respondents_create">Continue</button>
                     </div>
 
                 </form>
@@ -98,3 +98,32 @@
     </div>
 
 @include('front.layout.footer')
+<script>
+    $("#respondents_create").click(function() {
+        if (!$("#respondents_form").valid()) { // Not Valid
+            return false;
+        } else {
+            var data = $('#respondents_form').serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('respondents.store') }}",
+                data: data,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    $('#respondents_create').html('....Please wait');
+                },
+                success: function(response) {
+                    toastr.success(response.message);
+                    $("#commonModal").modal('hide');
+                    datatable();
+                },
+                complete: function(response) {
+                    $('#respondents_create').html('Create New');
+                }
+            });
+        }
+    });
+</script>

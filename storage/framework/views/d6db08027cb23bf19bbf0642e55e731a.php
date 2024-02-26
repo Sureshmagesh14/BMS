@@ -64,12 +64,14 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="<?php echo e(route('cashouts')); ?>"  class=" waves-effect">
-                        <i class="icon nav-icon" data-feather="message-square"></i>
-                        <span class="menu-item" key="t-chat">Cash Outs</span>
-                    </a>
-                </li>
+                <?php if(Auth::user()->role_id == 1): ?>
+                    <li>
+                        <a href="<?php echo e(route('cashouts')); ?>"  class=" waves-effect">
+                            <i class="icon nav-icon" data-feather="message-square"></i>
+                            <span class="menu-item" key="t-chat">Cash Outs</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
                 <li>
                     <a href="<?php echo e(route('actions')); ?>" class=" waves-effect">
@@ -139,14 +141,15 @@
                     </a>
                 </li>
 
-                <li>
-                    <a  href="<?php echo e(route('contents.index')); ?>" class=" waves-effect">
-                        <i class="icon nav-icon" data-feather="message-square"></i>
-                        <span class="menu-item" key="t-chat">Contents
-                        </span>
-                    </a>
-                </li>
-
+                <?php if(Auth::user()->role_id == 1): ?>
+                    <li>
+                        <a  href="<?php echo e(route('contents.index')); ?>" class=" waves-effect">
+                            <i class="icon nav-icon" data-feather="message-square"></i>
+                            <span class="menu-item" key="t-chat">Contents
+                            </span>
+                        </a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
         <!-- Sidebar -->
