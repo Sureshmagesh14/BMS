@@ -12,6 +12,7 @@ Route::any('userlogin','WelcomeController@userlogin')->name('userlogin');
 Route::any('userregister','WelcomeController@userregister')->name('userregister');
 Route::any('userdashboard','WelcomeController@userdashboard')->name('userdashboard');
 Route::any('user_create','WelcomeController@user_create')->name('user_create');
+Route::any('terms','WelcomeController@terms')->name('terms');
 
 Route::group([
     'prefix' => 'bmsAdmin'

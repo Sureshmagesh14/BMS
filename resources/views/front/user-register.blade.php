@@ -36,56 +36,58 @@
                     <p>Let's get you started</p>
                     <h3>Join our Database</h3>
                     <div class="first-row d-md-flex mt-5">
-                        <div class="fname text-start w-48 m-auto">
-                            <label for="fname" >First Name <span class="text-danger">*</span></label>
-                            <input type="text" name="fname" id="fname" placeholder="Enter First Name" class="form-control vi-border-clr border-radius-0" id="">
+                        <div class="name text-start w-48 m-auto">
+                            <label for="name" >First Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" id="name" placeholder="Enter First Name" class="form-control vi-border-clr border-radius-0" required>
                         
                         </div>
-                        <div class="lname text-start w-48 m-auto">
-                            <label for="fname" >Last Name <span class="text-danger">*</span></label>
-                            <input type="text" name="lname" id="lname" placeholder="Enter Last Name" class="form-control vi-border-clr border-radius-0" id="">
+                        <div class="surname text-start w-48 m-auto">
+                            <label for="surname" >Last Name <span class="text-danger">*</span></label>
+                            <input type="text" name="surname" id="surname" placeholder="Enter Last Name" class="form-control vi-border-clr border-radius-0" required>
                         </div>
                         
                     </div>
                     <div class="first-row d-md-flex">
                         <div class="mobile text-start w-48 m-auto my-3">
                             <label for="mobile" >Mobile <span class="text-danger">*</span></label>
-                            <input type="text" name="mobile" id="mobile" placeholder="Enter Mobile" class="form-control vi-border-clr border-radius-0" id="">
+                            <input type="text" name="mobile" id="mobile" placeholder="Enter Mobile" class="form-control vi-border-clr border-radius-0" required>
                         
                         </div>
                         <div class="lname text-start w-48 m-auto my-3">
                             <label for="whatsapp" >Whatsapp <span class="text-danger">*</span></label>
-                            <input type="text" name="whatsapp" id="whatsapp" placeholder="Enter Whatsapp" class="form-control vi-border-clr border-radius-0" id="">
+                            <input type="text" name="whatsapp" id="whatsapp" placeholder="Enter Whatsapp" class="form-control vi-border-clr border-radius-0" required>
                         </div>
                         
                     </div>
                     <div class="first-row d-md-flex">
                         <div class="email text-start w-48 m-auto my-3">
                             <label for="email" >Email <span class="text-danger">*</span></label>
-                            <input type="email" name="email" id="email" placeholder="Enter Valid Email" class="form-control vi-border-clr border-radius-0" id="">
+                            <input type="email" name="email" id="email" placeholder="Enter Valid Email" class="form-control vi-border-clr border-radius-0" required>
                         
                         </div>
                         <div class="lname text-start w-48 m-auto my-3">
-                            <label for="passport" >ID \ Passport Number <span class="text-danger"></span></label>
-                            <input type="text" name="passport" id="passport" placeholder="Enter ID Number" class="form-control vi-border-clr border-radius-0" id="">
+                            <label for="id_passport" >ID \ Passport Number <span class="text-danger"></span></label>
+                            <input type="text" name="id_passport" id="id_passport" placeholder="Enter ID Number" class="form-control vi-border-clr border-radius-0" required>
                         </div>
                         
                     </div>
                     <div class="first-row d-md-flex">
                         <div class="date text-start w-48 my-3">
-                            <label for="date" >Date of Birth <span class="text-danger">*</span></label>
-                            <input type="date" name="dob" id="dob"  class="form-control vi-border-clr border-radius-0" id="">
+                            <label for="date_of_birth" >Date of Birth <span class="text-danger">*</span></label>
+                            <input type="date" name="date_of_birth" id="date_of_birth"  class="form-control vi-border-clr border-radius-0" required>
                         </div>                   
                     </div>
                     <div class="first-row">
                         <div class="date text-start w-48 my-3">
                             <label for="date" >Password<span class="text-danger">*</span></label>
-                            <input type="password" name="password" id="password" placeholder="Create Password" class="form-control vi-border-clr border-radius-0" id="">
-                            <input type="password" name="cpassword" id="cpassword" placeholder="Confirm/Retype Password" class="form-control vi-border-clr border-radius-0 my-2" id="">
+                            <input type="password" name="password" id="password" placeholder="Create Password" class="form-control vi-border-clr border-radius-0" required>
+                            <input type="password" name="cpassword" id="cpassword" placeholder="Confirm/Retype Password" class="form-control vi-border-clr border-radius-0 my-2" required>
                         </div>                   
                     </div>
                     <div class="submit-btn text-start">
-                        <button type="button" class="btn vi-nav-bg border-radius-0 text-white px-5 py-3" id="respondents_create">Continue</button>
+
+                        <button type="submit" class="btn vi-nav-bg border-radius-0 text-white px-5 py-3" id="respondents_create">Continue</button>
+                        
                     </div>
 
                 </form>
@@ -104,6 +106,8 @@
             return false;
         } else {
             var data = $('#respondents_form').serialize();
+
+            alert(data);
 
             $.ajax({
                 type: 'POST',
