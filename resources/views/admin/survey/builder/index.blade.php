@@ -607,6 +607,8 @@
                         </div>
                         <div id="display_logic" class="tabcontent">
                             <input type="hidden" value="{{json_encode($display_logic)}}" name="display_qus" id="display_qus"/>
+                            <input type="hidden" value="{{json_encode($display_logic_matrix)}}" name="display_qus_matrix" id="display_qus_matrix"/>
+                           
                                 <p>Display the question only</p>
                                 {{ Form::label('display_type','If',['class'=>'form-label']) }}
                                 <div id="logic_section_display">
@@ -621,6 +623,15 @@
                                                         <option value="">Choose ...</option>
                                                         @foreach($display_logic as $key=>$value)
                                                             <option value="{{$key}}">{{$value}}</option>
+                                                        @endforeach
+                                                        @foreach($display_logic_matrix as $key=>$value) 
+                                                            <optgroup label="{{$value->question_name}}">
+                                                                <?php $qusvalue1 = json_decode($value->qus_ans); 
+                                                                $exiting_qus_matrix=$qusvalue1!=null ? explode(",",$qusvalue1->matrix_qus): []; $i=0; ?>
+                                                                @foreach($exiting_qus_matrix as $qus) 
+                                                                    <option value="{{$value->id}}">{{$qus}}</option>
+                                                                @endforeach
+                                                            </optgroup>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -1047,7 +1058,6 @@ $("html body").delegate('.display_qus_choice', "change", function() {
     let val=$(this).val();
     let parentv=$(this).parent().parent().parent();
     parentv.siblings().remove()
-    console.log(parentv.siblings().remove(),'parentv')
     let url="{{route('survey.getqus')}}?qus_id="+val;
     $.ajax({url: url, success: function(result){
         var optionv=result?.resp_logic_type;
@@ -1061,7 +1071,7 @@ $("html body").delegate('.display_qus_choice', "change", function() {
             optionv=choice_list?.choices_list.split(',');
             textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
             Object.entries(optionv).forEach(([key, value]) => {
-                textDiv+='<option value="'+key+'">'+value+'</option>';
+                textDiv+='<option value="'+value+'">'+value+'</option>';
             });
             textDiv+='</select>';
         }else if(result?.qus_type=='picturechoice'){
@@ -1070,6 +1080,15 @@ $("html body").delegate('.display_qus_choice', "change", function() {
             textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+key+'">'+value.text+'</option>';
+            });
+            textDiv+='</select>';
+        }
+        else if(result?.qus_type=='matrix_qus'){
+            let choice_list=JSON.parse(result?.qus?.qus_ans);
+            optionv=choice_list?.matrix_choice.split(',');
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            Object.entries(optionv).forEach(([key, value]) => {
+                textDiv+='<option value="'+value+'">'+value+'</option>';
             });
             textDiv+='</select>';
         }
@@ -1117,6 +1136,17 @@ $("html body").delegate('.addchoicelist', "click", function() {
     display_qus=JSON.parse(display_qus);
     Object.entries(display_qus).forEach(([key, value]) => {
         appendDiv+='<option value="'+key+'">'+value+'</option>';
+    });
+    let display_qus_matrix=$('#display_qus_matrix').val();
+    display_qus_matrix=JSON.parse(display_qus_matrix);
+    Object.entries(display_qus_matrix).forEach(([key, value]) => {
+        appendDiv+='<optgroup label="'+value.question_name+'">';
+        let option1=JSON.parse(value.qus_ans);
+        option1=option1?.matrix_qus.split(',');
+        Object.entries(option1).forEach(([key, value1]) => {
+            appendDiv+='<option value="'+value.id+'">'+value1+'</option>';
+        });
+        appendDiv+='</optgroup>';
     });
     appendDiv+='</select></div></div></div></div>';
     $(this).parent().parent().parent().parent().after(appendDiv);
