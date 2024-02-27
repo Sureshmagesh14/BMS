@@ -10,14 +10,21 @@
             <img src="{{ asset('public/inc/images/small-logo.png') }}" class="img-fluid w-50 m-auto mb-4" alt="" />
             <h2 class="vi-common-clr vi-welcome-size fw-bolder">Welcome!</h2>
             <p>Login with email or Mobile</p>
-            <form action="" method="post">
+            <form action="{{ route('validate_login') }}" method="post">
+            @csrf
               <div class="my-3  w-75 m-auto">
                 <label class="email-start vi-common-clr" for="email">Email ID/Mobile</label>
-                <input type="text" class="form-control vi-border-clr vi-cs-textbox" name="email" id="" />
+                <input type="text" class="form-control vi-border-clr vi-cs-textbox" name="email" id="email" required />
+                @if($errors->has('email'))
+							  <span class="text-danger">{{ $errors->first('email') }}</span>
+						    @endif
               </div>
               <div  class="my-3 w-75 m-auto">
-                <label class="pass-start vi-common-clr" for="email text-start">Password</label>
-                <input type="email" class="form-control vi-border-clr vi-cs-textbox" name="" id="" />
+                <label class="pass-start vi-common-clr" for="password text-start">Password</label>
+                <input type="password" class="form-control vi-border-clr vi-cs-textbox" name="password" id="password" />
+                @if($errors->has('password'))
+                  <span class="text-danger">{{ $errors->first('password') }}</span>
+                @endif
               </div>
               <div class="forgetpass me-5">
                 <a href="" class="nav-link text-end me-5">Forgot your Password?</a>
