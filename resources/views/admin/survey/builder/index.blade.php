@@ -11,6 +11,9 @@
 .respondant_selection.row {
     margin-top: 1rem;
 }
+.logic_section_display_row {
+    margin-bottom: 1rem;
+}
 /* Style the tab */
 .tab {
   overflow: hidden;
@@ -607,18 +610,20 @@
                                 <p>Display the question only</p>
                                 {{ Form::label('display_type','If',['class'=>'form-label']) }}
                                 <div id="logic_section_display">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            {{ Form::text('display_type',"Question" , array('id'=>'display_type','class' => 'form-control','readonly'=>true)) }}
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="form-group mb-0">
-                                                <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
-                                                    <option value="">Choose ...</option>
-                                                    @foreach($display_logic as $key=>$value)
-                                                        <option value="{{$key}}">{{$value}}</option>
-                                                    @endforeach
-                                                </select>
+                                    <div class="logic_section_display_row">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                {{ Form::text('display_type',"Question" , array('id'=>'display_type','class' => 'form-control','readonly'=>true)) }}
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group mb-0">
+                                                    <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
+                                                        <option value="">Choose ...</option>
+                                                        @foreach($display_logic as $key=>$value)
+                                                            <option value="{{$key}}">{{$value}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -735,10 +740,8 @@ $("body").on("click",".trigger_choice",function(){
     $(this).next(".choice_image").trigger('click');
 });
 $("body").on("change",".choice_image",function(e){
-    console.log($(this));
     var id=$(this).parent();
     const files = e.target.files[0];
-    console.log(id.children('img.current_image'),"id.children().find('img.current_image'")
     if (files) {
        uploadfile(files,id); 
     }
@@ -765,7 +768,6 @@ async function  uploadfile(file,id){
     return img;
 }
 function triggersubmit(qus_type){
-    console.log(qus_type,"dd")
     if(qus_type=='picturechoice'){
         let choice_pic=[];
         $('.img_placeholder').each(function(){
@@ -784,7 +786,6 @@ function triggersubmit(qus_type){
             choices.push($(elem).val());
         });
         $('#choices_list').val(choices);
-        console.log(choices,"choices");
         if(choices.length>0){
             $('#update_qus_final').click();
         }else{
@@ -835,19 +836,13 @@ function qusdelete(url){
 }
 
 function sectactivequs(id,type,url){
-    console.log(url)
-    // console.log(id,type);
     let pagetype=$('#pagetype').val();
-    // qustype(type)
     window.location.href=url+"?pagetype="+pagetype;
 }
 function qustype(type){
-    console.log(type,"type")
     let qusset={'welcome_page':'Welcome Page','single_choice':'Single Choice','multi_choice':'Multi Choice','open_qus':'Open Questions','likert':'Likert scale','rankorder':'Rank Order','rating':'Rating','dropdown':'Dropdown','picturechoice':'Picture Choice','email':'Email','matrix_qus':'Matrix Question','thank_you':'Thank You Page'};
-    console.log(qusset[type],"qusset")
 }
 $('input[type=radio][name=open_qus_choice]').change(function() {
-    console.log(this.value)
     if(this.value=='single'){
         $('#single_choice_qus').css('display','block');
         $('#multi_choice_qus').css('display','none');
@@ -1048,37 +1043,91 @@ function openLogic(evt, cityName) {
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " active";
 }
-$('.display_qus_choice').change(function(){
-let val=$(this).val();
-let parentv=$(this).parent().parent().parent().parent();
-let url="{{route('survey.getqus')}}?qus_id="+val;
+$("html body").delegate('.display_qus_choice', "change", function() {    
+    let val=$(this).val();
+    let parentv=$(this).parent().parent().parent();
+    parentv.siblings().remove()
+    console.log(parentv.siblings().remove(),'parentv')
+    let url="{{route('survey.getqus')}}?qus_id="+val;
     $.ajax({url: url, success: function(result){
-        console.log(result,'result')
         var optionv=result?.resp_logic_type;
         let textDiv='<div class="respondant_selection row"><div class="col-md-4"><select class="form-control logic_type_value" name="logic_type_value"><option value="">Choose</option>';
         Object.entries(optionv).forEach(([key, value]) => {
             textDiv+='<option value="'+key+'">'+value+'</option>';
         });
         textDiv+='</select></div>';
-        if(result?.qus_type=='single_choice' || result?.qus_type=='multi_choice'){
+        if(result?.qus_type=='single_choice' || result?.qus_type=='multi_choice' || result?.qus_type =='dropdown'){
             let choice_list=JSON.parse(result?.qus?.qus_ans);
             optionv=choice_list?.choices_list.split(',');
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            Object.entries(optionv).forEach(([key, value]) => {
+                textDiv+='<option value="'+key+'">'+value+'</option>';
+            });
+            textDiv+='</select>';
+        }else if(result?.qus_type=='picturechoice'){
+            let choice_list=JSON.parse(result?.qus?.qus_ans);
+            optionv=JSON.parse(choice_list?.choices_list);
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            Object.entries(optionv).forEach(([key, value]) => {
+                textDiv+='<option value="'+key+'">'+value.text+'</option>';
+            });
+            textDiv+='</select>';
         }
-        textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
-        Object.entries(optionv).forEach(([key, value]) => {
-            textDiv+='<option value="'+key+'">'+value+'</option>';
-        });
-        textDiv+='</select></div></div>';
-        parentv.append(textDiv);
+
+        else if(result?.qus_type=='likert'){
+            optionv={"1":1,"2":3,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9};
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            Object.entries(optionv).forEach(([key, value]) => {
+                textDiv+='<option value="'+key+'">'+value+'</option>';
+            });
+            textDiv+='</select>';
+        }
+        else if(result?.qus_type=='rankorder'){
+            textDiv+='<div class="col-md-4 choice_list_sec">';
+        }
+        else if(result?.qus_type=='rating'){
+            optionv={"1":1,"2":3,"3":3,"4":4,"5":5};
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            Object.entries(optionv).forEach(([key, value]) => {
+                textDiv+='<option value="'+key+'">'+value+'</option>';
+            });
+            textDiv+='</select>';
+        }
+        else if(result?.qus_type=='open_qus' || result?.qus_type=='email'){
+            textDiv+='<div class="col-md-4 choice_list_sec"><input class="form-control" type="text" name="logic_type_text"/>';
+        }
+        
+        textDiv+='</div><div class="col-md-4"><div class="ss-logic-item-actions mb-3"><button type="button" name="minus" class="removechoicelist">−</button><button type="button" name="add" class="addchoicelist">+</button> </div></div></div>';
+        parentv.after(textDiv);
 
     }});
+});
+$("html body").delegate('.removechoicelist', "click", function() {  
+    if( document.getElementById("logic_section_display").children.length <=1){
+        $(this).parent().parent().parent().remove();
+    }else{
+        $(this).parent().parent().parent().parent().remove();
+    }
+    
+});
+$("html body").delegate('.addchoicelist', "click", function() {  
+    // $(this).parent().parent().remove();  
+    let appendDiv='<div class="logic_section_display_row"><div class="row"><div class="col-md-4"><select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ..."><option value="">Choose ...</option><option value="and">AND</option><option value="or">OR</option></select></div><div class="col-md-4"><input id="display_type" class="form-control" readonly="" name="display_type" type="text" value="Question"></div><div class="col-md-4"><div class="form-group mb-0"><select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ..."><option value="">Choose ...</option>';
+    let display_qus=$('#display_qus').val();
+    display_qus=JSON.parse(display_qus);
+    Object.entries(display_qus).forEach(([key, value]) => {
+        appendDiv+='<option value="'+key+'">'+value+'</option>';
+    });
+    appendDiv+='</select></div></div></div></div>';
+    $(this).parent().parent().parent().parent().after(appendDiv);
+
 });
 $("html body").delegate('.logic_type_value', "change", function() {    
     let val=$(this).val();
     if(val=='isAnswered' || val=='isNotAnswered'){
-        $(this).parent().siblings().css('display','none')
+        $(this).parent().siblings().first().css('display','none')
     }else{
-        $(this).parent().siblings().css('display','block')
+        $(this).parent().siblings().first().css('display','block')
     }
 });
 

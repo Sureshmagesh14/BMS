@@ -1762,3 +1762,15 @@ a:hover{color:#106ba3;cursor:pointer;text-decoration:underline;}
     border: thin solid #448E97 !important;
     background-color: #448E97 !important;
 }
+.ss-logic-item-actions.mb-3 {
+    display: flex;
+}
+button.removechoicelist {
+    margin-right: 1rem;
+}
+.ss-logic-item-actions.mb-3 button{
+    color: white !important;
+    background: #4A9CA6;
+    border: 1px solid #4A9CA6;
+    box-shadow: none !important;
+}
