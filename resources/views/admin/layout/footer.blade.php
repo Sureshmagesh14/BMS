@@ -137,6 +137,8 @@ function common_bind() {
     select2();
 }
 
+
+
 function select2() {
     if ($(".select2").length > 0) {
         if($('#user_ids').val()!=undefined && $('#user_ids').val()!=''){

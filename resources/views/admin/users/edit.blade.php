@@ -25,19 +25,19 @@
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Email *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="email" name="email" value="{{$users->email}}" required>
+            <input type="email" class="form-control" id="email" name="email" value="{{$users->email}}" required>
         </div>
     </div>
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Password *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="password" name="password" required>
         </div>
     </div>
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Password Confirmation </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="cpassword" name="cpassword">
+            <input type="password" class="form-control" id="cpassword" name="cpassword">
         </div>
     </div>
 
@@ -124,4 +124,19 @@
             });
         }
     });
+
+    $(function () {
+        $('#edit_users_form').validate({
+    rules: {
+        password: {
+            required: true,
+            minlength: 8
+        },
+        cpassword: {
+            required: true,
+            minlength: 8,
+            equalTo: "#password"
+        }
+    }
+}); 
 </script>

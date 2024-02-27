@@ -6,6 +6,7 @@
 @section('login-script')
     <!-- JAVASCRIPT -->
     <script src="{{ asset('public/assets/libs/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.validate.js') }}"></script>
     <script src="{{ asset('public/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('public/assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('public/assets/libs/simplebar/simplebar.min.js') }}"></script>

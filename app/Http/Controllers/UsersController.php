@@ -12,7 +12,7 @@ use Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
-
+use Illuminate\Support\Facades\Hash;
 class UsersController extends Controller
 {
      /**
@@ -87,7 +87,7 @@ class UsersController extends Controller
                 $users->surname = $request->input('surname');
                 $users->id_passport = $request->input('id_passport');
                 $users->email = $request->input('email');
-                $users->password = $request->input('password');
+                $users->password = Hash::make($request->password);
                 $users->role_id = $request->input('role_id');
                 $users->status_id = $request->input('status_id');
                 $users->share_link = $request->input('share_link');
@@ -190,7 +190,7 @@ class UsersController extends Controller
                     $users->surname = $request->input('surname');
                     $users->id_passport = $request->input('id_passport');
                     $users->email = $request->input('email');
-                    $users->password = $request->input('password');
+                    $users->password = Hash::make($request->password);
                     $users->role_id = $request->input('role_id');
                     $users->status_id = $request->input('status_id');
                     $users->share_link = $request->input('share_link');
