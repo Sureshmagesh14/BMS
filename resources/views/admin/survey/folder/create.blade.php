@@ -73,4 +73,8 @@
     border: thin solid #448E97 !important;
     background-color: #448E97 !important;
 }
+input.folder_type{
+    accent-color: #448E97;
+}
+
 </style>
