@@ -4,8 +4,6 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use DB;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\UserProvider;
 use Yajra\DataTables\DataTables;
 use App\Models\Respondents;
 use App\Models\Contents;
@@ -34,28 +32,6 @@ class WelcomeController extends Controller
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-    }
-
-    function validate_login(Request $request)
-    {
-        $request->validate([
-            'email' =>  'required',
-            'password'  =>  'required'
-        ]);
-
-        
-
-        $credentials = $request->only('email', 'password');
-        //dd($credentials);
-
-        if (Auth::guard('usercustom')->attempt($credentials)){
-            echo "1";
-          }else {
-            echo "0";
-          }
-          
-
-        return redirect('login')->with('success', 'Login details are not valid');
     }
 
     public function userregister()

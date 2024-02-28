@@ -19,4 +19,3 @@
 
 </body>
 </html>
-<script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>

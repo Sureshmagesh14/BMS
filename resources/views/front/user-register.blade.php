@@ -31,14 +31,14 @@
         <div class="col-md-6">
             <div class="text-center">
                
-                <form id="respondents_register" class="validation" action="{{route('user_create')}}">
+                <form method="POST" name="Frm_sign" id="Frm_sign" class="validation" action="{{route('user_create')}}">
                 @csrf
                     <p>Let's get you started</p>
                     <h3>Join our Database</h3>
                     <div class="first-row d-md-flex mt-5">
                         <div class="name text-start w-48 m-auto">
-                            <label for="name" >First Name <span class="text-danger">*</span></label>
-                            <input type="text" name="name" id="name" placeholder="Enter First Name" class="form-control vi-border-clr border-radius-0" required>
+                            <label for="fname" >First Name <span class="text-danger">*</span></label>
+                            <input type="text" name="fname" id="fname" placeholder="Enter First Name" class="form-control vi-border-clr border-radius-0" required>
                         
                         </div>
                         <div class="surname text-start w-48 m-auto">
@@ -100,34 +100,54 @@
     </div>
 
 @include('front.layout.footer')
-<script>
-    $("#respondents_create").click(function() {
-        if (!$("#respondents_form").valid()) { // Not Valid
-            return false;
-        } else {
-            var data = $('#respondents_form').serialize();
+<script  src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script  src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.min.js"></script>
+<script  src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/additional-methods.js"></script>
 
-            alert(data);
+<script type="text/javascript">
+    $(document).ready(function () {
+// - validation
+        if ($('#Frm_sign').length > 0) {
+            $('#Frm_sign').validate({
+                rules: {
+                    email: {
+                        remote: {
+                            url: "{{url("varifyemail")}}",
+                            type: "GET",
+                            data: {
+                                action: function () {
+                                    return "1";
+                                },
+                            }
+                        }
+                    },
+                    password: {
+                        equalTo: "#repass"
+                    }
+                },
+                messages: {
+                    email: {
+                        remote: "Email id already registred"
+                    },
+                    contact: {
+                        remote: "Mobile number already registred",
+                        maxlength: "Please enter valid mobile number",
+                        minlength: "Please enter valid mobile number"
+                    },
+                    password: {
+                        equalTo: "Password is not equal"
+                    }
+                },
 
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('respondents.store') }}",
-                data: data,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                submitHandler: function (form) {
+
+                    form.submit();
                 },
-                beforeSend: function() {
-                    $('#respondents_create').html('....Please wait');
-                },
-                success: function(response) {
-                    toastr.success(response.message);
-                    $("#commonModal").modal('hide');
-                    datatable();
-                },
-                complete: function(response) {
-                    $('#respondents_create').html('Create New');
+                errorPlacement: function (error, element) {
+                    error.appendTo(element.parent());
                 }
             });
         }
     });
+</script>
 </script>
