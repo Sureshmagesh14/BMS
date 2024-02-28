@@ -1,8 +1,7 @@
 @include('front.layout.header-2')
 
-
-<section class="bg-greybg vh-md-100">
-      <div class="container">
+<section class="">
+      <div class="container-fluid">
         <div class="row justify-content-center py-5 m-auto">
          <div class="col-md-2 vi-light-grey mx-0 px-0">
                 <div class="logo bg-white pt-3">
@@ -28,16 +27,16 @@
                   <p class="small-font">Stop receiving any research request</p>
               </div>
               <div class="button text-center">
-                  <button class="btn w-100 vi-nav-bg text-white border-radius-0"><img class="w-10 me-3" src="./assets/images/sent.png" alt="">Contact Us</button>
+                  <button class="btn w-100 vi-nav-bg text-white border-radius-0"><img class="w-10 me-3" src="{{ asset('public/inc/images/sent.png') }}" alt="">Contact Us</button>
               </div>
                
          </div>    
          <div class="col-md-5 my-sm-5-mob">
           <div class="bg-white">
-            <iframe class="w-100 px-5 my-3" style="height: 200px;;" src="https://www.youtube.com/embed/vGq8cT1qF60?si=7D_j6L0CbrIj-wBw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe class="w-100 px-5 my-3" style="height:400px;" src="https://www.youtube.com/embed/vGq8cT1qF60?si=7D_j6L0CbrIj-wBw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           </div>
-          <div class="bg-white my-2 max-w-100">
-            <h4 class="d-flex align-items-center justify-content-around"><div><img class="w-5 me-2 ms-3 my-3" src="./assets/images/icons/1c-07.png" alt="">
+          <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
+            <h4 class="d-flex align-items-center justify-content-around"><div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('public/inc/images/icons/1c-07.png') }}" alt="">
               <span class="small-font-sm">Client Survey</span></div><div class="px-3"> <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                   <a
@@ -68,10 +67,10 @@
          </div>    
            
          <div class="col-md-5">
-          <div class="bg-white">
+          <div class="bg-white" style="min-height: 440px;;">
             
 
-            <h4 class="d-flex align-items-center justify-content-around vi-light-grey small-font-sm"><div><img class="w-5 me-2 ms-3 my-3" src="./assets/images/icons/1c-06.png" alt="">
+            <h4 class="d-flex align-items-center justify-content-around vi-light-grey small-font-sm"><div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('public/inc/images/icons/1c-06.png') }}" alt="">
               <span>Plan Status</span></div><div class="px-3 d-flex align-items-center"> 
                  <ul class="ps-2 navbar-nav">
                 <li class="nav-item dropdown">
@@ -113,8 +112,14 @@
                </h4>
             
 
-            <div class="d-flex justify-content-around align-items-center">
-              <div class="w-50 m-auto">
+            <div class="mt-4">
+                <h4 class="text-center fw-bolder percentage-size">35%</h4>
+              <div class="percent-border mx-5">
+                <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:35%"></div>
+                
+              </div>
+              <h5 class="text-center my-3">Profile Percentage</h5>
+              <!-- <div class="w-50 m-auto">
                 <div class="c100 p100 yellow">
                   <span>100%</span>
                   <div class="slice">
@@ -123,8 +128,9 @@
                   </div>
                 </div>
                 <h5 class="text-center my-3">Profile Percentage</h5>
-              </div>
-              <div class="w-50">
+              </div> -->
+
+              <!-- <div class="w-50">
                 <div class="c100 p75 yellow">
                   <span>75%</span>
                   <div class="slice">
@@ -133,7 +139,7 @@
                   </div>
                 </div>
                 <h5 class="text-center my-3">Profile Percentage</h5>
-              </div>
+              </div> -->
                 <!-- <div class="percentage-1 text-center">
                   <div style="width:120px;height:120px;border:6px solid #edbf1b;margin:auto;display:flex;justify-content: center;align-items: center;border-radius:50%;"><span>70%</span></div>
                   <p class="mt-2">Profile percentage</p>
@@ -143,11 +149,20 @@
                     <p  class="mt-2">Reward Amount</p> 
                   </div> -->
             </div>
+            <div class="mt-4">
+              <h4 class="text-center fw-bolder percentage-size">100%</h4>
+            <div class="percent-border mx-5">
+              <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:100%"></div>
+              
+            </div>
+            <h5 class="text-center my-3">Reward Point</h5>
+            </div>
+
            
              
             </div>
-            <div class="bg-white my-2 max-w-100">
-             <h4 class="d-flex align-items-center justify-content-around"><div><img class="w-5 me-2 ms-3 my-3" src="./assets/images/icons/1c-07.png" alt="">
+            <div class="bg-white my-2 max-w-100" style="min-height: 400px;"> 
+             <h4 class="d-flex align-items-center justify-content-around"><div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('public/inc/images/icons/1c-07.png') }}" alt="">
                 <span class="small-font-sm">Completed Survey</span></div><div class="px-3"> <ul class="navbar-nav">
                   <li class="nav-item dropdown">
                     <a
@@ -182,5 +197,8 @@
         </div>
       </div>
     </section>
+
+
+    
 
 @include('front.layout.footer')

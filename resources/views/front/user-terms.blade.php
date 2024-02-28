@@ -1,6 +1,6 @@
 @include('front.layout.header')
 
-<section class="vh-md-100">
+<section class="vh-md-100 bg-white">
       <div class="container">
         <div class="row justify-content-center py-5 m-auto">
         <p>

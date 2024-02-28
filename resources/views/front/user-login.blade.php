@@ -1,4 +1,5 @@
-@include('front.layout.header')
+@include('front.layout.nomenu-header')
+
 
 <div class="container-fluid vh-100">
       <div class="row">
@@ -9,25 +10,18 @@
           <div class="rightside text-center"  >
             <img src="{{ asset('public/inc/images/small-logo.png') }}" class="img-fluid w-50 m-auto mb-4" alt="" />
             <h2 class="vi-common-clr vi-welcome-size fw-bolder">Welcome!</h2>
-            <p>Login with email or Mobile</p>
-            <form action="{{ route('validate_login') }}" method="post">
-            @csrf
+            <p>Login with Username or Mobile</p>
+            <form action="" method="post">
               <div class="my-3  w-75 m-auto">
-                <label class="email-start vi-common-clr" for="email">Email ID/Mobile</label>
-                <input type="text" class="form-control vi-border-clr vi-cs-textbox" name="email" id="email" required />
-                @if($errors->has('email'))
-							  <span class="text-danger">{{ $errors->first('email') }}</span>
-						    @endif
+                <label class="email-start vi-common-clr" for="email">Username</label>
+                <input type="text" class="form-control vi-border-clr vi-cs-textbox" name="email" id="" />
               </div>
               <div  class="my-3 w-75 m-auto">
-                <label class="pass-start vi-common-clr" for="password text-start">Password</label>
-                <input type="password" class="form-control vi-border-clr vi-cs-textbox" name="password" id="password" />
-                @if($errors->has('password'))
-                  <span class="text-danger">{{ $errors->first('password') }}</span>
-                @endif
+                <label class="pass-start vi-common-clr" for="email text-start">Password</label>
+                <input type="email" placeholder="" class="form-control vi-border-clr vi-cs-textbox" name="" id="" />
               </div>
               <div class="forgetpass me-5">
-                <a href="" class="nav-link text-end me-5">Forgot your Password?</a>
+                <a href="" class="nav-link text-end me-5 my-2">Forgot your Username/Password?</a>
               </div>
               <div class="mobile-space">
                 <input type="submit" value="Login" class="btn vi-nav-bg text-white py-3 px-5" />
@@ -40,11 +34,12 @@
               <span class="vi-bdr-set-or position-relative px-3">OR</span>
             </div>
             <div class="regaccount ">
-              <p class="d-flex align-items-center justify-content-center">Don't have account ? <a class="ps-2 nav-link fw-500" href="{{route('userregister')}}">Register</a></p>
+              <p class="d-flex align-items-center justify-content-center"><a class="ps-2 nav-link fw-500" href="{{route('userregister')}}">Don't have an account? Register now</a></p>
             </div>
           </div>
         </div>
       </div>
     </div>
+
 
 @include('front.layout.footer')
