@@ -81,42 +81,57 @@
 
         function datatable(){
             $('#myTable').dataTable().fnDestroy();
-            $('#myTable').DataTable({
-                searching: true,
-                ordering: true,
+            var postsTable = $('#myTable').dataTable({
+                "ordering": true,
+                "processing": true,
+                "serverSide": true,
                 dom: 'lfrtip',
-                info: true,
-                iDisplayLength: 10,
-                lengthMenu: [
-                    [10, 50, 100, -1],
-                    [10, 50, 100, "All"]
-                ],
-                ajax: {
-                    url: "{{ route('user-events-show') }}",
-                    data: {
+                "ajax": {
+                    "url": "{{ route('user-events-show') }}",
+                    "data": {
                         _token: tempcsrf,
                     },
-                    error: function(xhr, error, thrown) {
-                        alert("undefind error");
-                    }
+                    "dataType": "json",
+                    "type": "POST"
                 },
+                "columns": [
 
-                columns: [
-                    { data: 'id', name: '#', orderable: true, searchable: true },
-                    { data: 'user_show', name: 'user_show', orderable: true, searchable: true },
-                    { data: 'action', name: 'action', orderable: false, searchable: true },
-                    { data: 'type', name: 'type', orderable: false, searchable: true },
-                    { data: 'month', name: 'month', orderable: false, searchable: true },
-                    { data: 'year', name: 'year', orderable: false, searchable: true },
-                    { data: 'count', name: 'count', orderable: false, searchable: true },
-                    { data: 'view', name: 'view', orderable: false, searchable: false },
+                    {
+                        "data": "id"
+                    },
+                    {
+                        "data": "user_id"
+                    },
+                    {
+                        "data": "action"
+                    },
+                    {
+                        "data": "type"
+                    },
+                    {
+                        "data": "month"
+                    },
+                    {
+                        "data": "year"
+                    },
+                    {
+                        "data": "count"
+                    },
+                    {
+                        "data": "options"
+                    },
+                  
+                    ],
+                "order": [
+                    [1, "asc"]
                 ],
-                columnDefs: [
-                    { targets: 0,width: 75,className: "text-center" },
-                    { targets: 1 },
-                    { targets: 2,width: 115,className: "text-center" }
-                ],
+
+                stateSave: false,
             });
+
+
+
+        
         }
 
     </script>

@@ -12,4 +12,6 @@ class Users extends Model
     protected $fillable = ['name','surname','id_passport','email','password','role_id','status_id','share_link'];
     protected $table = 'users';
 
+    
+
 }
