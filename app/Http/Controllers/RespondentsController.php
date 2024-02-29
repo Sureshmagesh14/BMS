@@ -324,8 +324,20 @@ class RespondentsController extends Controller
                 12 => 'action',
             );
 
+            $inside_form = $request->inside_form;
         
-            $totalData = Respondents::count();
+            if(isset($request->id)){
+                if($inside_form == 'projects'){
+                    $totalData = Respondents::Join('project_respondent as pr','respondents.id','pr.respondent_id')->where('pr.project_id',$request->id)->count();
+                }
+                else{
+
+                    $totalData = Respondents::count();
+                }
+            }
+            else{
+                $totalData = Respondents::count();
+            }
 
             $totalFiltered = $totalData;
 
@@ -333,25 +345,44 @@ class RespondentsController extends Controller
             $start = $request->input('start');
             $order = $columns[$request->input('order.0.column')];
             $dir = $request->input('order.0.dir');
+            
 
             if (empty($request->input('search.value'))) {
-                $posts = Respondents::offset($start)
-                    ->limit($limit)
+                $posts = Respondents::select('respondents.*')->offset($start);
+                    if(isset($request->id)){
+                        if($inside_form == 'projects'){
+                            $posts->Join('project_respondent as pr','respondents.id','pr.respondent_id')
+                            ->where('pr.project_id',$request->id);
+                        }
+                    }
+                $posts = $posts->limit($limit)
                     ->orderBy($order, $dir)
                     ->get();
-            } else {
+            }
+            else {
                 $search = $request->input('search.value');
 
-                $posts = Respondents::where('id', 'LIKE', "%{$search}%")
-                    ->orWhere('name', 'LIKE', "%{$search}%")
+                $posts = Respondents::select('respondents.*')->where('id', 'LIKE', "%{$search}%");
+                    if(isset($request->id)){
+                        if($inside_form == 'projects'){
+                            $posts->Join('project_respondent as pr','respondents.id','pr.respondent_id')
+                            ->where('pr.project_id',$request->id);
+                        }
+                    }
+                $posts = $posts->orWhere('name', 'LIKE', "%{$search}%")
                     ->offset($start)
                     ->limit($limit)
                     ->orderBy($order, $dir)
                     ->cursor();
 
-                $totalFiltered = Respondents::where('id', 'LIKE', "%{$search}%")
-                    ->orWhere('name', 'LIKE', "%{$search}%")
-                    ->count();
+                $totalFiltered = Respondents::where('id', 'LIKE', "%{$search}%");
+                    if(isset($request->id)){
+                        if($inside_form == 'projects'){
+                            $totalFiltered->Join('project_respondent as pr','respondents.id','pr.respondent_id')
+                            ->where('pr.project_id',$request->id);
+                        }
+                    }
+                $totalFiltered = $totalFiltered->orWhere('name', 'LIKE', "%{$search}%") ->count();
             }
 
             $data = array();

@@ -31,6 +31,7 @@ class RewardsController extends Controller
             if ($request->ajax()) {
 
                 $token = csrf_token();
+                $inside_form = $request->inside_form;
                 
                 $all_datas = Rewards::select('rewards.*','respondents.name as rname','respondents.email as remail','respondents.mobile as rmobile','users.name as uname','projects.name as pname')
                 ->join('respondents', 'respondents.id', '=', 'rewards.user_id') 
@@ -38,8 +39,14 @@ class RewardsController extends Controller
                 ->join('projects', 'projects.id', '=', 'rewards.project_id');
 
                 if(isset($request->id)){
-                    $all_datas->where('rewards.user_id',$request->id);
+                    if($inside_form == 'users'){
+                        $all_datas->where('rewards.user_id',$request->id);
+                    }
+                    elseif($inside_form == 'projects'){
+                        $all_datas->where('rewards.project_id',$request->id);
+                    }
                 }
+                
                 $all_datas = $all_datas->orderby("rewards.id","desc")
                 ->withoutTrashed()
                 ->get();

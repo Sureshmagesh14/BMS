@@ -350,6 +350,7 @@
                     data: {
                         _token: tempcsrf,
                         id: '{{ $data->id }}',
+                        inside_form: 'users',
                     },
                     error: function(xhr, error, thrown) {
                         alert("undefind error");

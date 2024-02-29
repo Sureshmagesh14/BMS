@@ -23,5 +23,4 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 .htaccess
-/storage/
-storage/
+/storage
