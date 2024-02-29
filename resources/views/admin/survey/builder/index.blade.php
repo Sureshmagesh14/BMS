@@ -600,10 +600,18 @@
                     @endif
                     <input type="hidden" name="qus_id" id="qus_id" value="{{$currentQus->id}}">
                     <input type="hidden" name="qus_type" id="qus_type" value="{{$currentQus->qus_type}}">
+                    <!-- Display Logic  -->
                     <input type="hidden" id="logic_type_value_display" name="logic_type_value_display">   
                     <input type="hidden" id="logic_type_value_option_display" name="logic_type_value_option_display">   
                     <input type="hidden" id="display_qus_choice_andor_display" name="display_qus_choice_andor_display">   
-                    <input type="hidden" id="display_qus_choice_display" name="display_qus_choice_display">   
+                    <input type="hidden" id="display_qus_choice_display" name="display_qus_choice_display"> 
+                    <!-- Display Logic  -->
+                    <!-- Skip Logic  -->
+                    <input type="hidden" id="skiplogic_type_value_skip" name="skiplogic_type_value_skip">   
+                    <input type="hidden" id="logic_type_value_option_skip" name="logic_type_value_option_skip">   
+                    <input type="hidden" id="display_qus_choice_andor_skip" name="display_qus_choice_andor_skip">   
+                    <input type="hidden" id="display_qus_choice_skip" name="display_qus_choice_skip"> 
+                    <!-- Skip Logic -->
                     @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you' && $qusNo!=1)
                         <div class="tab">
                             <button type="button" class="tablinks" onclick="openLogic(event, 'display_logic')">Display Logic</button>
@@ -833,35 +841,40 @@
                                 <?php 
                                     $skip_logic_DB = json_decode($currentQus->skip_logic); 
                                     if($skip_logic_DB!=null){
-                                        $skip_logic_DB1=json_decode($skip_logic_DB->skip_qus_choice_skip); 
-                                        $logic_type_value=json_decode($skip_logic_DB->logic_type_value_skip); 
+                                        $skip_logic_DB1=json_decode($skip_logic_DB->display_qus_choice_skip); 
+                                        $logic_type_value_skip=json_decode($skip_logic_DB->skiplogic_type_value_skip); 
                                         $logic_type_value_option_skip=json_decode($skip_logic_DB->logic_type_value_option_skip); 
-                                        $skip_qus_choice_andor_skip=json_decode($skip_logic_DB->skip_qus_choice_andor_skip); 
+                                        $skip_qus_choice_andor_skip=json_decode($skip_logic_DB->display_qus_choice_andor_skip); 
+                                        $jump_type=$skip_logic_DB->jump_type;
                                     }else{
-                                        $skip_logic_DB1=[]; $logic_type_value=[];
+                                        $skip_logic_DB1=[]; $logic_type_value_skip=[];
                                         $logic_type_value_option_skip=[]; $skip_qus_choice_andor_skip=[];
+                                        $jump_type='';
+
                                     }
-                                    // echo "<pre>"; print_r($skip_logic);
-                                    ?>
+                                ?>
                                     @foreach($skip_logic_DB1 as $key=>$v1)
                                         <?php 
-                                        if($logic_type_value){
-                                            $vlogic= $logic_type_value[$key]; 
-                                            $vlogicoption= $logic_type_value_option_skip[$key]; 
-                                            $andOrVal=$skip_qus_choice_andor_skip[$key]; 
+                                        // echo $key;
+                                        // echo "<pre>"; print_r($skip_qus_choice_andor_skip[$key]);
+                                        if($logic_type_value_skip){
+                                            $vlogic_skip= $logic_type_value_skip[$key]; 
+                                            $vlogicoption_skip= $logic_type_value_option_skip[$key]; 
+                                            $andOrVal_skip=$skip_qus_choice_andor_skip[$key]; 
                                         }else{
-                                            $vlogic= ''; 
-                                            $vlogicoption= ''; 
-                                            $andOrVal=''; 
+                                            $vlogic_skip= ''; 
+                                            $vlogicoption_skip= ''; 
+                                            $andOrVal_skip=''; 
                                         }
+                                        // echo $andOrVal_skip;
                                         ?>
                                         <div class="logic_section_skip_row">
                                             <div class="row">
                                                 @if($key>0)
                                                 <div class="col-md-4">
                                                     <select class="skip_qus_choice_andor form-control" name="skip_qus_choice_andor" data-placeholder="Choose ...">
-                                                        <option value="and" @if($andOrVal=='and') selected @endif>AND</option>
-                                                        <option value="or" @if($andOrVal=='or') selected @endif>OR</option>
+                                                        <option value="and" @if($andOrVal_skip=='and') selected @endif>AND</option>
+                                                        <option value="or" @if($andOrVal_skip=='or') selected @endif>OR</option>
                                                     </select>
                                                 </div>
                                                 @endif
@@ -960,7 +973,7 @@
                                                     <select class="form-control logic_type_value_skip" name="logic_type_value_skip">
                                                         <option value="">Choose</option>
                                                         @foreach($resp_logic_type_skip as $key1=>$value)
-                                                            @if($key1 == $vlogic)
+                                                            @if($key1 == $vlogic_skip)
                                                             <option value="{{$key1}}" selected>{{$value}}</option>
                                                             @else
                                                             <option value="{{$key1}}">{{$value}}</option>
@@ -968,16 +981,16 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div class="col-md-4 choice_list_sec" style="@if($vlogic=='isAnswered' || $vlogic=='isNotAnswered') display:none; @endif">
+                                                <div class="col-md-4 choice_list_sec" style="@if($vlogic_skip=='isAnswered' || $vlogic_skip=='isNotAnswered') display:none; @endif">
                                                 @if($qus_skip->qus_type=='email' || $qus_skip->qus_type=='open_qus')
-                                                    <input class="form-control logic_type_value_option" value="{{$vlogicoption}}" type="text" name="logic_type_value_option"/>
+                                                    <input class="form-control skip_logic_type_value_option" value="{{$vlogicoption_skip}}" type="text" name="skip_logic_type_value_option"/>
                                                 @elseif($qus_skip->qus_type=='rankorder')
-                                                    <input style="display:none;" class="form-control logic_type_value_option" value="{{$vlogicoption}}" type="text" name="logic_type_value_option"/>
+                                                    <input style="display:none;" class="form-control skip_logic_type_value_option" value="{{$vlogicoption_skip}}" type="text" name="skip_logic_type_value_option"/>
                                                 @elseif($qus_skip->qus_type=='picturechoice')
-                                                    <select class="form-control logic_type_value_option" name="logic_type_value_option">
+                                                    <select class="form-control skip_logic_type_value_option" name="skip_logic_type_value_option">
                                                         <option value="">Choose</option>
                                                         @foreach($resp_logic_type_skip_value as $key=>$value)
-                                                            @if($key==$vlogicoption)
+                                                            @if($key==$vlogicoption_skip)
                                                                 <option selected value="{{$key}}">{{$value->text}}</option>
                                                             @else 
                                                                 <option value="{{$key}}">{{$value->text}}</option>
@@ -985,10 +998,10 @@
                                                         @endforeach
                                                     </select>
                                                 @else
-                                                    <select class="form-control logic_type_value_option" name="logic_type_value_option">
+                                                    <select class="form-control skip_logic_type_value_option" name="skip_logic_type_value_option">
                                                         <option value="">Choose</option>
                                                         @foreach($resp_logic_type_skip_value as $key=>$value)
-                                                            @if($value==$vlogicoption || $key==$vlogicoption)
+                                                            @if($value==$vlogicoption_skip || $key==$vlogicoption_skip)
                                                                 <option selected value="{{$key}}">{{$value}}</option>
                                                             @else 
                                                                 <option value="{{$key}}">{{$value}}</option>
@@ -1035,6 +1048,18 @@
                                             </div>
                                         </div>
                                     @endif
+                                <div class="ss-logic-row c_jump_to">
+                                    <p style="margin-top: 6px;">Then Jump to</p>
+                                    <select class="form-control jump_type" name="jump_type">
+                                        <option value="">--Select--</option>
+                                        @foreach($jump_to as $key=>$value)
+                                            <option value="{{$key}}" @if($jump_type == $key) selected @endif>{{$value}}</option>
+                                        @endforeach
+                                        @foreach($jump_to_tq as $key=>$value)
+                                            <option value="{{$key}}"  @if($jump_type == $key) selected @endif>{{$value}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="below_space"></div>
@@ -1213,7 +1238,56 @@ function triggersubmit(qus_type){
     $('#logic_type_value_option_display').val(JSON.stringify(logic_type_value_option));
     $('#display_qus_choice_andor_display').val(JSON.stringify(display_qus_choice_andor));
     $('#display_qus_choice_display').val(JSON.stringify(display_qus_choice));
-   
+    
+    // Display Logic
+    // Skip Logic 
+    let emptyVal_skip='';
+    let skip_qus_choice=[];
+    let skip_qus_choice_andor =[''];
+    let skip_logic_type_value=[];
+    let skip_logic_type_value_option=[];
+
+    $('.skip_qus_choice').each(function(){
+        if($(this).val()==''){
+            emptyVal_skip=1;
+        }
+        skip_qus_choice.push($(this).val())
+    });
+    
+    $('.skip_qus_choice_andor').each(function(){
+        if($(this).val()==''){
+            emptyVal_skip=1;
+        }
+        skip_qus_choice_andor.push($(this).val())
+    });
+    $('.logic_type_value_skip').each(function(){
+        if($(this).val()==''){
+            emptyVal_skip=1;
+        }
+        skip_logic_type_value.push($(this).val())
+    });
+    $('.skip_logic_type_value_option').each(function(){
+        skip_logic_type_value_option.push($(this).val())
+    });
+    if(skip_qus_choice.length==1){
+        if(skip_qus_choice[0]==''){
+            emptyVal_skip='';
+        }
+    }
+    console.log(emptyVal_skip,'emptyVal_skip')
+    if(emptyVal_skip!=''){
+        Swal.fire("Warning", 'Invalid skip logic settings', "warning") ;
+        return false;
+    }
+    $('#skiplogic_type_value_skip').val(JSON.stringify(skip_logic_type_value));
+    $('#logic_type_value_option_skip').val(JSON.stringify(skip_logic_type_value_option));
+    $('#display_qus_choice_andor_skip').val(JSON.stringify(skip_qus_choice_andor));
+    $('#display_qus_choice_skip').val(JSON.stringify(skip_qus_choice));
+
+    
+    // Skip Logic
+    
+
     if(qus_type=='picturechoice'){
         let choice_pic=[];
         $('.img_placeholder').each(function(){
@@ -1617,7 +1691,7 @@ $("html body").delegate('.skip_qus_choice', "change", function() {
         if(result?.qus_type=='single_choice' || result?.qus_type=='multi_choice' || result?.qus_type =='dropdown'){
             let choice_list=JSON.parse(result?.qus?.qus_ans);
             optionv=choice_list?.choices_list.split(',');
-            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control skip_logic_type_value_option" name="skip_logic_type_value_option"><option value="">Choose</option>';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+value+'">'+value+'</option>';
             });
@@ -1625,7 +1699,7 @@ $("html body").delegate('.skip_qus_choice', "change", function() {
         }else if(result?.qus_type=='picturechoice'){
             let choice_list=JSON.parse(result?.qus?.qus_ans);
             optionv=JSON.parse(choice_list?.choices_list);
-            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control skip_logic_type_value_option" name="skip_logic_type_value_option"><option value="">Choose</option>';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+key+'">'+value.text+'</option>';
             });
@@ -1634,7 +1708,7 @@ $("html body").delegate('.skip_qus_choice', "change", function() {
         else if(result?.qus_type=='matrix_qus'){
             let choice_list=JSON.parse(result?.qus?.qus_ans);
             optionv=choice_list?.matrix_choice.split(',');
-            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control skip_logic_type_value_option" name="skip_logic_type_value_option"><option value="">Choose</option>';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+value+'">'+value+'</option>';
             });
@@ -1643,25 +1717,25 @@ $("html body").delegate('.skip_qus_choice', "change", function() {
 
         else if(result?.qus_type=='likert'){
             optionv={"1":1,"2":3,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9};
-            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control skip_logic_type_value_option" name="skip_logic_type_value_option"><option value="">Choose</option>';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+key+'">'+value+'</option>';
             });
             textDiv+='</select>';
         }
         else if(result?.qus_type=='rankorder'){
-            textDiv+='<div class="col-md-4 choice_list_sec"><input style="display:none;" class="form-control logic_type_value_option" type="text" name="logic_type_value_option"/>';
+            textDiv+='<div class="col-md-4 choice_list_sec"><input style="display:none;" class="form-control skip_logic_type_value_option" type="text" name="skip_logic_type_value_option"/>';
         }
         else if(result?.qus_type=='rating'){
             optionv={"1":1,"2":3,"3":3,"4":4,"5":5};
-            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control skip_logic_type_value_option" name="skip_logic_type_value_option"><option value="">Choose</option>';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+key+'">'+value+'</option>';
             });
             textDiv+='</select>';
         }
         else if(result?.qus_type=='open_qus' || result?.qus_type=='email'){
-            textDiv+='<div class="col-md-4 choice_list_sec"><input class="form-control logic_type_value_option" type="text" name="logic_type_value_option"/>';
+            textDiv+='<div class="col-md-4 choice_list_sec"><input class="form-control skip_logic_type_value_option" type="text" name="skip_logic_type_value_option"/>';
         }
         
         textDiv+='</div><div class="col-md-4"><div class="ss-logic-item-actions mb-3"><button type="button" name="minus" class="removechoicelist_skip">−</button><button type="button" name="add" class="addchoicelist_skip">+</button> </div></div></div>';

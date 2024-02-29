@@ -231,13 +231,18 @@ class SurveyController extends Controller
             $qus_type=$questionTypes[$currentQus->qus_type];
             $display_logic=Questions::where('id', '<', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
             $display_logic_matrix=Questions::where('id', '<', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
-            $skip_logic=Questions::where('id', '>=', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
-            $skip_logic_matrix=Questions::where('id', '>=', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
+            $skip_logic=Questions::where('id', '<=', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you','matrix_qus'])->pluck('question_name', 'id')->toArray();
+            $skip_logic_matrix=Questions::where('id', '<=', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
+            $jump_to=Questions::where('id', '>', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+            $jump_to_tq=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->pluck('question_name', 'id')->toArray();
+
         }else{
             $skip_logic=[];
             $display_logic_matrix=[];
             $display_logic=[];
             $skip_logic_matrix=[];
+            $jump_to_tq=[];
+            $jump_to=[];
         }
 
         
@@ -247,7 +252,7 @@ class SurveyController extends Controller
 
             return view('admin.survey.builder.preview',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype','question1'));
         }else{
-            return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype','skip_logic','skip_logic_matrix','display_logic','display_logic_matrix'));
+            return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype','skip_logic','skip_logic_matrix','display_logic','display_logic_matrix','jump_to','jump_to_tq'));
         }
 
     }
@@ -359,7 +364,9 @@ class SurveyController extends Controller
         $survey->save();
         // Update Display Logic 
         $display_logic=json_encode(['logic_type_value_display'=>$request->logic_type_value_display,'logic_type_value_option_display'=>$request->logic_type_value_option_display,'display_qus_choice_andor_display'=>$request->display_qus_choice_andor_display,'display_qus_choice_display'=>$request->display_qus_choice_display]);
-        Questions::where(['id'=>$id])->update(['display_logic'=>$display_logic]);
+        // Update Skip Logic 
+        $skip_logic=json_encode(['skiplogic_type_value_skip'=>$request->skiplogic_type_value_skip,'logic_type_value_option_skip'=>$request->logic_type_value_option_skip,'display_qus_choice_andor_skip'=>$request->display_qus_choice_andor_skip,'display_qus_choice_skip'=>$request->display_qus_choice_skip,'jump_type'=>$request->jump_type]);
+        Questions::where(['id'=>$id])->update(['display_logic'=>$display_logic,'skip_logic'=>$skip_logic]);
         switch ($request->qus_type) {
             case 'welcome_page':
                 $filename='';
