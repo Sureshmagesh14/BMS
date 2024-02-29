@@ -74,4 +74,28 @@ class ActionController extends Controller
         
 
     }
+
+    public function view(string $id)
+    {
+        
+        try {
+            $data = Action::select('action_events.*','users.name as uname')
+            ->join('users', 'users.id', '=', 'action_events.user_id')
+            ->where('id','=',$id)
+            ->first();
+
+            $returnHTML = view('admin.internal_report.view',compact('data'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
 }

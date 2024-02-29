@@ -103,7 +103,7 @@ class InternalReportController extends Controller
                     $nestedData['options'] = '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
                             <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="View Network" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="View Internal Reports" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>
                         </div>

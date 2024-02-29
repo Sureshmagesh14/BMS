@@ -62,16 +62,17 @@ class CashoutsController extends Controller
                     if($all_data->status_id==0){
                         return 'Failed';
                     }else if($all_data->status_id==1){
-                        return '';
+                        return 'Pending';
                     }else if($all_data->status_id==2){
-                        return '';
+                        return 'Processing';
                     }else if($all_data->status_id==3){
                         return 'Complete';
                     }else if($all_data->status_id==4){
                         return 'Declined';
                     }else{  
-                        return '-';
+                        return 'Approved For Processing';
                     }
+
                     
                 })  
                 ->addColumn('amount', function ($all_data) {
@@ -88,17 +89,43 @@ class CashoutsController extends Controller
                     
                 })  
                 ->addColumn('action', function ($all_data) use($token) {
-        
+                    
+                    $view_route = route("cashouts-view",$all_data->id);
                     return '<div class="">
                     <div class="btn-group mr-2 mb-2 mb-sm-0">
-                        <button type="button" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
-                    </div>              
+                        <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                            data-bs-original-title="View Cashouts" class="btn btn-primary waves-light waves-effect">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                    </div>
                 </div>';
                     
                 })
                 ->rawColumns(['select_all','id','action','type_id','status_id','amount','respondent_id'])      
                 ->make(true);
             }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function view(string $id)
+    {
+        
+        try {
+            $data = Cashout::select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
+            ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id')
+            ->where('cashouts.id',$id)
+            ->first();
+            $returnHTML = view('admin.cashouts.view',compact('data'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

@@ -89,11 +89,14 @@ class RewardsController extends Controller
                     return $all_data->pname;
                 }) 
                 ->addColumn('action', function ($all_data) use($token) {
-        
+                    $view_route = route("view_rewards",$all_data->id);
                     return '<div class="">
                     <div class="btn-group mr-2 mb-2 mb-sm-0">
-                        <button type="button" onclick="view_details(' . $all_data->id . ');" class="btn btn-primary waves-light waves-effect"><i class="fa fa-eye"></i></button>
-                    </div>              
+                        <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                            data-bs-original-title="View Internal Reports" class="btn btn-primary waves-light waves-effect">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                    </div>
                 </div>';
                     
                 }) 
@@ -116,7 +119,16 @@ class RewardsController extends Controller
                 ->where('rewards.id',$request->id)
                 ->first();
 
-            return view('admin.rewards.view',compact('data'));
+                $returnHTML = view('admin.rewards.view',compact('data'))->render();
+
+                return response()->json(
+                    [
+                        'success' => true,
+                        'html_page' => $returnHTML,
+                    ]
+                );
+
+            
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
