@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use Illuminate\Support\Facades\Hash;
 
 class WelcomeController extends Controller
 {   
@@ -63,18 +64,7 @@ class WelcomeController extends Controller
     {
         try {
 
-            $validator = Validator::make($request->all(), [
-                'email' => 'required',
-                'password' => 'required',
-
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => 400,
-                    'errors' => $validator->messages(),
-                ]);
-            } else {
+           
                 $respondents = new Respondents;
                 $respondents->name = $request->input('name');
                 $respondents->surname = $request->input('surname');
@@ -83,6 +73,7 @@ class WelcomeController extends Controller
                 $respondents->mobile = $request->input('mobile');
                 $respondents->whatsapp = $request->input('whatsapp');
                 $respondents->email = $request->input('email');
+                $respondents->password = Hash::make($request->input('password'));
                 $respondents->save();
                 $respondents->id;
                 return response()->json([
@@ -90,7 +81,7 @@ class WelcomeController extends Controller
                     'last_insert_id' => $respondents->id,
                     'message' => 'Registered Successfully.',
                 ]);
-            }
+        
 
         }
         catch (Exception $e) {

@@ -22,7 +22,7 @@
                   </div>
                 <div class="forgetpass text-center my-3 d-flex align-items-center justify-content-center">
                    <p class="p-0 m-0">Forgot your Password?</p> 
-                  <a href="" class="nav-link p-0 m-0 ps-1">Click here</a>
+                  <a href="{{route('userlogin')}}" class="nav-link p-0 m-0 ps-1">Click here</a>
                 </div>
               
   
@@ -34,65 +34,69 @@
             <div class="text-center">
                 <p>Let's get you started</p>
                 <h3>Join our Database</h3>
-                <div class="first-row d-md-flex mt-5">
-                    <div class="fname text-start w-48 m-auto">
-                        <label for="fname" >First Name <span class="text-danger">*</span></label>
-                        <input type="text" name="fname" placeholder="John" class="form-control vi-border-clr border-radius-0" id="">
-                    
+
+                <form id="reg_form" class="validation">
+                @csrf
+                    <div class="first-row d-md-flex mt-5">
+                        <div class="fname text-start w-48 m-auto">
+                            <label for="name" >First Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" id="name" placeholder="John" class="form-control vi-border-clr border-radius-0" required>
+                        
+                        </div>
+                        <div class="lname text-start w-48 m-auto">
+                            <label for="surname" >Last Name <span class="text-danger">*</span></label>
+                            <input type="text" name="surname" id="surname" placeholder="Doe" class="form-control vi-border-clr border-radius-0" required>
+                        </div>
+                        
                     </div>
-                    <div class="lname text-start w-48 m-auto">
-                        <label for="fname" >Last Name <span class="text-danger">*</span></label>
-                        <input type="text" name="lname" placeholder="Doe" class="form-control vi-border-clr border-radius-0" id="">
+                    <div class="first-row d-md-flex">
+                        <div class="mobile text-start w-48 m-auto my-3 position-relative">
+                            <label for="mobile" >Mobile <span class="text-danger">*</span></label>
+                            <span class="bg-white vi-mobile-code position-absolute">+21</span>
+                            <input type="text" name="mobile" id="mobile" placeholder="081 966 0786" class="form-control vi-border-clr border-radius-0 vi-mobile-input" required>
+                        
+                        </div>
+                        <div class="lname text-start w-48 m-auto my-3 position-relative">
+                            <label for="whatsapp" >Whatsapp <span class="text-danger">*</span></label>
+                            <span class="bg-white vi-mobile-code position-absolute">+21</span>
+                            <input type="text" name="whatsapp" id="whatsapp" placeholder="081 966 0786" class="form-control vi-border-clr border-radius-0 vi-mobile-input" required>
+                        </div>
+                        
                     </div>
-                    
-                </div>
-                <div class="first-row d-md-flex">
-                    <div class="mobile text-start w-48 m-auto my-3 position-relative">
-                        <label for="mobile" >Mobile <span class="text-danger">*</span></label>
-                        <span class="bg-white vi-mobile-code position-absolute">+21</span>
-                        <input type="text" name="mobile"  placeholder="081 966 0786" class="form-control vi-border-clr border-radius-0 vi-mobile-input" id="">
-                    
+                    <div class="first-row d-md-flex">
+                        <div class="email text-start w-48 m-auto my-3">
+                            <label for="email" >Email <span class="text-danger">*</span></label>
+                            <input type="text" name="email" id="email" placeholder="john@example.com" class="form-control vi-border-clr border-radius-0" required>
+                        
+                        </div>
+                        <div class="lname text-start w-48 m-auto my-3">
+                            <label for="id_passport" >ID Number \ Passport Number (Opt) <span class="text-danger"></span></label>
+                            <input type="text" name="id_passport" id="id_passport" placeholder="Valid RSA ID number or Passport number" class="form-control vi-border-clr border-radius-0" >
+                        </div>
+                        
                     </div>
-                    <div class="lname text-start w-48 m-auto my-3 position-relative">
-                        <label for="whatsapp" >Whatsapp <span class="text-danger">*</span></label>
-                        <span class="bg-white vi-mobile-code position-absolute">+21</span>
-                        <input type="text" name="whatsapp" placeholder="081 966 0786" class="form-control vi-border-clr border-radius-0 vi-mobile-input" id="">
+                    <div class="first-row d-md-flex">
+                        <div class="date text-start w-48 my-3">
+                            <label for="date_of_birth" >Date of Birth <span class="text-danger">*</span></label>
+                            <input type="date" name="date_of_birth" id="date_of_birth" class="form-control vi-border-clr border-radius-0" required>
+                        
+                        </div>  
+                        <div class="lname text-start w-48 m-auto my-3">
+                        <label for="password" >Password<span class="text-danger">*</span></label>
+                        <input type="password" name="password" id="password" placeholder="Create Password" class="form-control vi-border-clr border-radius-0" required>
+                    </div>                 
                     </div>
-                    
-                </div>
-                <div class="first-row d-md-flex">
-                    <div class="email text-start w-48 m-auto my-3">
-                        <label for="email" >Email <span class="text-danger">*</span></label>
-                        <input type="text" name="email" placeholder="john@example.com" class="form-control vi-border-clr border-radius-0" id="">
-                    
+                    <div class="first-row">
+                        <div class="cpassword text-start w-48 my-3">
+                        
+                            <input type="password" name="cpassword" id="cpassword" placeholder="Confirm/Retype Password" class="form-control vi-border-clr border-radius-0 my-2" required>
+                        </div>                   
                     </div>
-                    <div class="lname text-start w-48 m-auto my-3">
-                        <label for="whatsapp" >ID Number \ Passport Number (Opt) <span class="text-danger">*</span></label>
-                        <input type="text" name="whatsapp" placeholder="Valid RSA ID number or Passport number" class="form-control vi-border-clr border-radius-0" id="">
+                    <div class="submit-btn text-center m-auto d-flex flex-column">
+                        <button type="button" class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto" id="respondents_create">Continue</button>
+                        <a class="nav-link mt-2" href="{{route('userlogin')}}" >Already have Account? Login Here</a>
                     </div>
-                    
-                </div>
-                <div class="first-row d-md-flex">
-                    <div class="date text-start w-48 my-3">
-                        <label for="date" >Date of Birth <span class="text-danger">*</span></label>
-                        <input type="date" name="date"  class="form-control vi-border-clr border-radius-0" id="">
-                       
-                    </div>  
-                    <div class="lname text-start w-48 m-auto my-3">
-                      <label for="date" >Password<span class="text-danger">*</span></label>
-                      <input type="password" name="date" placeholder="Create Password" class="form-control vi-border-clr border-radius-0" id="">
-                  </div>                 
-                </div>
-                <div class="first-row">
-                    <div class="date text-start w-48 my-3">
-                      
-                        <input type="password" name="date" placeholder="Confirm/Retype Password" class="form-control vi-border-clr border-radius-0 my-2" id="">
-                    </div>                   
-                </div>
-                <div class="submit-btn text-center m-auto d-flex flex-column">
-                    <button class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto">Continue</button>
-                    <a class="nav-link mt-2" href="login.html">Already have Account? Login Here</a>
-                </div>
+                </form>
             </div>
                
         </div>
@@ -100,3 +104,38 @@
     </div>
 
 @include('front.layout.footer')
+<script src="{{ asset('public/assets/libs/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('public/assets/js/admin/jquery.validate.js') }}"></script>
+<script>
+
+$("#respondents_create").click(function () {
+
+    
+    if (!$("#reg_form").valid()) { // Not Valid
+        return false;
+    } else {
+        
+        var data = $('#reg_form').serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('user_create') }}",
+            data: data,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            beforeSend: function() {
+                //$('#respondents_create').html('....Please wait');
+            },
+            success: function(response) {
+                alert("succsess");
+                // toastr.success(response.message);
+                // $("#commonModal").modal('hide');
+                // datatable();
+            },
+            complete: function(response) {
+                //$('#respondents_create').html('Create New');
+            }
+        });
+    }
+});
+</script>
