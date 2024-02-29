@@ -29,15 +29,19 @@ class CashoutsController extends Controller
             if ($request->ajax()) {
 
                 $token = csrf_token();
-            
+                $inside_form = $request->inside_form;
                 
                 $all_datas =Cashout::select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
-                ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id') 
-                ->orderby("id","desc")
-                ->withoutTrashed()
-                ->get();
+                    ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
+
+                    if(isset($request->id)){
+                        if($inside_form == 'respondents'){
+                            $all_datas->where('cashouts.respondent_id',$request->id);
+                        }
+                    }
+
+                $all_datas = $all_datas->orderby("id","desc")->withoutTrashed()->get();
         
-                
                 return Datatables::of($all_datas)
                 ->addColumn('select_all', function ($all_data) {
                     return '<input class="tabel_checkbox" name="cash_out[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';

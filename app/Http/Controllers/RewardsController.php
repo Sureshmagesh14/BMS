@@ -45,6 +45,9 @@ class RewardsController extends Controller
                     elseif($inside_form == 'projects'){
                         $all_datas->where('rewards.project_id',$request->id);
                     }
+                    elseif($inside_form == 'respondents'){
+                        $all_datas->where('rewards.respondent_id',$request->id);
+                    }
                 }
                 
                 $all_datas = $all_datas->orderby("rewards.id","desc")
