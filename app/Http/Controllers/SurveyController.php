@@ -229,11 +229,16 @@ class SurveyController extends Controller
         $qus_type='';
         if($currentQus){
             $qus_type=$questionTypes[$currentQus->qus_type];
+            $display_logic=Questions::where('id', '<', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+            $display_logic_matrix=Questions::where('id', '<', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
+            $skip_logic=Questions::where('id', '<=', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page'])->pluck('question_name', 'id')->toArray();;
+        }else{
+            $skip_logic=[];
+            $display_logic_matrix=[];
+            $display_logic=[];
         }
-        $display_logic=Questions::where('id', '<', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
-        $display_logic_matrix=Questions::where('id', '<', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
-        $skip_logic=Questions::where('id', '<=', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page'])->pluck('question_name', 'id')->toArray();;
 
+        
         $pagetype=$request->pagetype;
         if($pagetype=='preview'){
             $question1=Questions::where('id', '>', $currentQus->id)->where('survey_id', $survey->id)->orderBy('id')->first();
@@ -350,6 +355,9 @@ class SurveyController extends Controller
             $survey->qus_count=$survey->qus_count+1;
         }
         $survey->save();
+        // Update Display Logic 
+        $display_logic=json_encode(['logic_type_value_display'=>$request->logic_type_value_display,'logic_type_value_option_display'=>$request->logic_type_value_option_display,'display_qus_choice_andor_display'=>$request->display_qus_choice_andor_display,'display_qus_choice_display'=>$request->display_qus_choice_display]);
+        Questions::where(['id'=>$id])->update(['display_logic'=>$display_logic]);
         switch ($request->qus_type) {
             case 'welcome_page':
                 $filename='';

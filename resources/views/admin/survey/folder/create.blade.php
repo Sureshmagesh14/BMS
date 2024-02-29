@@ -77,4 +77,7 @@ input.folder_type{
     accent-color: #448E97;
 }
 
+.select2-container--default .select2-results__option[aria-selected=true]:hover,.select2-container--default .select2-results__option--highlighted[aria-selected]{
+    background-color:#448E97 !important;
+}
 </style>
