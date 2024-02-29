@@ -231,11 +231,13 @@ class SurveyController extends Controller
             $qus_type=$questionTypes[$currentQus->qus_type];
             $display_logic=Questions::where('id', '<', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
             $display_logic_matrix=Questions::where('id', '<', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
-            $skip_logic=Questions::where('id', '<=', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page'])->pluck('question_name', 'id')->toArray();;
+            $skip_logic=Questions::where('id', '>=', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+            $skip_logic_matrix=Questions::where('id', '>=', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
         }else{
             $skip_logic=[];
             $display_logic_matrix=[];
             $display_logic=[];
+            $skip_logic_matrix=[];
         }
 
         
@@ -245,7 +247,7 @@ class SurveyController extends Controller
 
             return view('admin.survey.builder.preview',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype','question1'));
         }else{
-            return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype','skip_logic','display_logic','display_logic_matrix'));
+            return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype','skip_logic','skip_logic_matrix','display_logic','display_logic_matrix'));
         }
 
     }
