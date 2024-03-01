@@ -1,7 +1,56 @@
 @include('admin.layout.header')
     @yield('adminside-favicon')
     @yield('adminside-css')
+<div class="horizontal_left_menu">
 @include('admin.layout.horizontal_left_menu')
+</div>
+<style>
+.horizontal_left_menu {
+    display: none;
+}
+.respondant_selection.row {
+    margin-top: 1rem;
+}
+.logic_section_display_row {
+    margin-bottom: 1rem;
+}
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
 @include('admin.layout.horizontal_right_menu')
 <!-- ========== Left Sidebar Start ========== -->
 <link href="{{ asset('assets/css/builder.css') }}" rel="stylesheet" type="text/css" />
@@ -10,10 +59,10 @@
 
     <!-- LOGO -->
     <div class="navbar-brand-box">
-        <a href="{{route('survey')}}"  class="logo  surveytitle">
+        <a href="{{route('survey.template',$survey->folder_id)}}"  class="logo  surveytitle">
             {{$survey->title}}
         </a>
-        <a href="{{route('survey')}}" ><i data-feather="home"></i></a>
+        <a href="{{route('survey.template',$survey->folder_id)}}" ><i data-feather="home"></i></a>
 
        
     </div>
@@ -22,6 +71,16 @@
 
         <!--- Sidemenu -->
         <div id="sidebar-menu">
+            <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
+                <a class="setbackground"  href="{{route('survey.background',$survey->id)}}">
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g><path d="M17.839 7.66998C18.934 6.57198 20.713 5.79898 21.524 4.55698C22.411 3.19198 22.026 1.36898 20.661 0.474979C19.298 -0.410021 17.473 -0.024021 16.575 1.33998C15.737 2.62798 15.784 4.66398 15.151 6.12098C14.339 8.00398 11.599 8.24398 8.445 6.60898C6.723 9.96498 4.38 13.566 2 16.493L13.548 24C15.044 21.114 17.955 16.652 19.989 14.117C17.162 11.854 16.314 9.19198 17.839 7.66998ZM19.591 2.12498C20.043 2.41898 20.173 3.03098 19.873 3.48198C19.579 3.94298 18.968 4.06598 18.517 3.77198C18.059 3.47298 17.932 2.86898 18.23 2.41598C18.522 1.95798 19.133 1.82698 19.591 2.12498ZM12.927 21.352L4.677 15.99C5.653 14.725 6.43 13.509 7.489 11.886C7.916 11.23 8.422 11.093 8.723 11.288C9.827 12.005 7.216 14.913 8.394 15.679C9.563 16.438 11.283 12.311 12.555 13.14C13.54 13.78 11.765 15.838 12.764 16.486C13.229 16.789 13.897 16.228 14.48 15.855C15.486 15.21 16.419 15.861 15.436 17.371C14.455 18.872 13.92 19.686 12.927 21.352Z" fill="#63686F"></path></g></svg> <p>Design Background</p>
+                </a>
+            </div>
+            <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
+                <a class="setbackground"  href="{{route('survey.background',$survey->id)}}">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 13.616V10.384C22.349 9.797 21.306 9.632 20.781 8.365V8.364C20.254 7.093 20.881 6.23 21.628 4.657L19.343 2.372C17.782 3.114 16.91 3.747 15.636 3.219H15.635C14.366 2.693 14.2 1.643 13.616 0H10.384C9.802 1.635 9.635 2.692 8.365 3.219H8.364C7.093 3.747 6.232 3.121 4.657 2.372L2.372 4.657C3.117 6.225 3.747 7.091 3.219 8.364C2.692 9.635 1.635 9.802 0 10.384V13.616C1.632 14.196 2.692 14.365 3.219 15.635C3.749 16.917 3.105 17.801 2.372 19.342L4.657 21.628C6.219 20.885 7.091 20.253 8.364 20.781H8.365C9.635 21.307 9.801 22.36 10.384 24H13.616C14.198 22.364 14.366 21.31 15.643 20.778H15.644C16.906 20.254 17.764 20.879 19.342 21.629L21.627 19.343C20.883 17.78 20.252 16.91 20.779 15.637C21.306 14.366 22.367 14.197 24 13.616ZM12 16C9.791 16 8 14.209 8 12C8 9.791 9.791 8 12 8C14.209 8 16 9.791 16 12C16 14.209 14.209 16 12 16Z" fill="#63686F"></path></svg><p>Settings</p>
+                </a>
+            </div>
        
             <!-- Left Menu Start -->
                <?php $i=1;?>
@@ -131,7 +190,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h4 class="mb-0">My Surveys</h4>
+                        <h4 class="mb-0">{{$survey->title}}</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Survey</a></li>
@@ -171,8 +230,23 @@
                         $left_label=$qusvalue->left_label;
                     }
                     ?>
+                    <input type="hidden" name="page_type" id="pagetype" value="{{$pagetype}}"/>
+                    <?php 
+                    $qusNo=1;
+                    foreach($questions as $key=>$qus){
+                        if($currentQus->id==$qus->id){
+                            $qusNo=$qusNo+$key;
+                        }
+                    } ?>
+                  
+                    <div id="qus_content">
+                    <div class="page_head">
+                        <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
+                        <?php  $qus_url=route('survey.builder',[$survey->builderID,$currentQus->id]); ?>
+                        <button class="btn  btn-primary" data-url="{{$qus_url}}" id="preview_qus">Preview</button>
+                    </div>
                     {{ Form::open(array('url' => route('survey.qus.update',$currentQus->id),'id'=>'updatequs','class'=>'needs-validation','enctype'=>"multipart/form-data")) }}
-                    <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
+                    
                     @if($currentQus->qus_type=='welcome_page')
                         <div class="modal-body">
                             <div>
@@ -210,8 +284,15 @@
                             </div>
                             <br>
                             @if(isset($qusvalue->welcome_image))
-                            <image src="{{ asset('uploads/survey/'.$qusvalue->welcome_image) }}" alt="image" width="100" height="100" id="existing_image">
-                            <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="12" height="12" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            <div class="exitingImg">
+                                <image src="{{ asset('uploads/survey/'.$qusvalue->welcome_image) }}" alt="image" width="100" height="100" id="existing_image">
+                                <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            </div>
+                            @else
+                            <div class="exitingImg" style="display:none;">
+                                <image src="" alt="image" width="100" height="100" id="existing_image">
+                                <a id="ss_draft_remove_image_thankyou" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            </div>
                             @endif
                             <div id="imgPreview"></div>
                             <div style="<?php if(isset($qusvalue->welcome_image) && $qusvalue->welcome_image!=''){ echo "display:none;"; } ?>" class="upload-image-placeholder" id="trigger_welcome_image">
@@ -220,7 +301,12 @@
                                     <p>Click here to upload a welcome image</p>
                                 </div>
                             </div>
-                            <input style="display:none;" type="file" id="welcome_image" name="welcome_image" required class="course form-control">
+                            
+                            @if(isset($qusvalue->welcome_image))
+                            <input style="display:none;" type="hidden" id="existing_image_uploaded" name="existing_image_uploaded"  class="course form-control" value="{{$qusvalue->welcome_image}}">
+                            @endif
+                           
+                            <input style="display:none;" type="file" id="welcome_image" name="welcome_image"  class="course form-control">
                             <div>
                                 {{ Form::label('welcome_btn', __('Button Label'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->welcome_imagetitle))
@@ -266,17 +352,25 @@
                             </div>
                             <br>
                             @if(isset($qusvalue->thankyou_image))
-                            <image src="{{ asset('uploads/survey/'.$qusvalue->thankyou_image) }}" alt="image" width="100" height="100" id="existing_image_thankyou">
-                            <a id="ss_draft_remove_image_thankyou" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="12" height="12" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            <input style="display:none;" type="hidden" id="existing_image_uploaded" name="existing_image_uploaded_thankyou"  class="course form-control" value="{{$qusvalue->thankyou_image}}">
+                            <div class="exitingImg">
+                                <image src="{{ asset('uploads/survey/'.$qusvalue->thankyou_image) }}" alt="image" width="100" height="100" id="existing_image_thankyou">
+                                <a id="ss_draft_remove_image_thankyou" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            </div>
+                            @else
+                            <div class="exitingImg" style="display:none;">
+                                <image src="" alt="image" width="100" height="100" id="existing_image_thankyou">
+                                <a id="ss_draft_remove_image_thankyou" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                            </div>
                             @endif
-                            <div id="imgPreview"></div>
+                            <div id="imgPreviewthanksyou"></div>
                             <div style="<?php if(isset($qusvalue->thankyou_image) && $qusvalue->thankyou_image!=''){ echo "display:none;"; } ?>" class="upload-image-placeholder" id="trigger_thankyou_image">
                                 <div class="upload-image-placeholder__upload-btn">
                                     <svg width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
                                     <p>Click here to upload a thank you image</p>
                                 </div>
                             </div>
-                            <input style="display:none;" type="file" id="thankyou_image" name="thankyou_image" required class="course form-control">
+                            <input style="display:none;" type="file" id="thankyou_image" name="thankyou_image"  class="course form-control">
                             
                         </div>
                     @endif
@@ -342,7 +436,7 @@
                                         <div class="rating-box user_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 39 44"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)"><circle cx="17.304" cy="12.261" r="11.375"></circle><path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path></g></svg></div></div>
                                         <div class="rating-box thunder_icon"><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div><div class="rating-element"><svg width="22" height="22" viewBox="0 0 21 44"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path></svg></div></div>
                                     </div>
-                                    </div>
+                                </div>
 
                                 <div class="flex-column flex-column--full">
                                     <label class="ss-common-label ss-common-label--no-margin">Choose an icon</label>
@@ -398,6 +492,7 @@
                                 </div>
                                 <?php $exiting_choices=$qusvalue!=null ? json_decode($qusvalue->choices_list): []; ?>
                                 <div id="picture_choices_section" class="row">
+                                    @if($exiting_choices!=null)
                                     @foreach($exiting_choices as $choice)
                                     <div class="img_placeholder">
                                         <img class="current_image" src="{{$choice->img}}">
@@ -413,6 +508,64 @@
                                         </div>
                                     </div>
                                     @endforeach
+                                    @endif
+                                </div>
+                                @endif
+                                @if($currentQus->qus_type=='matrix_qus')
+                                <input type="hidden" id="choices_list_matrix" name="choices_list_matrix[]">                           
+                                <input type="hidden" id="question_list_matrix" name="question_list_matrix[]">                           
+
+                                <div class="matrix_action">
+                                <input type="button"  onclick="insert('coloumn')" value="Insert Column" class="btn matrixbtn">
+                                <input type="button" onclick="insert('row')" value="Insert Row" class="btn   matrixbtn">
+                                <input type="button" onclick="remove('coloumn')" value="Remove Column" class="btn   matrixbtn">
+                                <input type="button" onclick="remove('row')" value="Remove Row" class="btn  matrixbtn">
+
+                                </div>
+                                <div id="matrix_table">
+                                    <table id="matrix_sec">
+                                    <?php $exiting_choices_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_choice): [];
+                                    $exiting_qus_matrix=$qusvalue!=null ? explode(",",$qusvalue->matrix_qus): []; $i=0;
+                                     ?>
+                                        <tbody>
+                                            @if(count($exiting_choices_matrix)>0)
+                                                <tr>
+                                                    <td></td>
+                                                    @foreach($exiting_choices_matrix as $ans)
+                                                    <td><input type="text" placeholder="Enter Choice" class="matrix_head" value="{{$ans}}"  name="matrix_choice"></td>
+                                                    @endforeach
+                                                </tr>
+                                            @endif
+                                            <?php foreach($exiting_qus_matrix as $qus){
+                                                ?>
+                                                    <tr>
+                                                        <td><input type="text" value="{{$qus}}" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
+                                                        @foreach($exiting_choices_matrix as $ans)
+                                                        <td><input type="radio" name="matrix_anstype{{$qus}}"></td>
+                                                        @endforeach
+                                                    </tr>
+                                               <?php  
+                                                $i++;
+                                            } ?>
+                                            @if(count($exiting_qus_matrix)<=0)
+                                            <tr>
+                                                <td></td>
+                                                <td><input type="text" placeholder="Enter Choice" class="matrix_head"  name="matrix_choice"></td>
+                                                <td><input type="text" placeholder="Enter Choice" class="matrix_head"  name="matrix_choice"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="text" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
+                                                <td><input type="radio" name="matrix_anstype"></td>
+                                                <td><input type="radio" name="matrix_anstype"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="text" placeholder="Enter Question" class="matrix_head" name="matrix_qus"></td>
+                                                <td><input type="radio" name="matrix_anstype"></td>
+                                                <td><input type="radio" name="matrix_anstype"></td>
+                                            </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
                                 </div>
                                 @endif
                                 
@@ -447,9 +600,118 @@
                     @endif
                     <input type="hidden" name="qus_id" id="qus_id" value="{{$currentQus->id}}">
                     <input type="hidden" name="qus_type" id="qus_type" value="{{$currentQus->qus_type}}">
+                    @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
+                        <div class="tab">
+                            <button type="button" class="tablinks" onclick="openLogic(event, 'display_logic')">Display Logic</button>
+                            <button  type="button" class="tablinks" onclick="openLogic(event, 'skip_logic')">Skip Logic</button>
+                        </div>
+                        <div id="display_logic" class="tabcontent">
+                            <input type="hidden" value="{{json_encode($display_logic)}}" name="display_qus" id="display_qus"/>
+                            <input type="hidden" value="{{json_encode($display_logic_matrix)}}" name="display_qus_matrix" id="display_qus_matrix"/>
+                           
+                                <p>Display the question only</p>
+                                {{ Form::label('display_type','If',['class'=>'form-label']) }}
+                                <div id="logic_section_display">
+                                    <div class="logic_section_display_row">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                {{ Form::text('display_type',"Question" , array('id'=>'display_type','class' => 'form-control','readonly'=>true)) }}
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group mb-0">
+                                                    <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
+                                                        <option value="">Choose ...</option>
+                                                        @foreach($display_logic as $key=>$value)
+                                                            <option value="{{$key}}">{{$value}}</option>
+                                                        @endforeach
+                                                        @foreach($display_logic_matrix as $key=>$value) 
+                                                            <optgroup label="{{$value->question_name}}">
+                                                                <?php $qusvalue1 = json_decode($value->qus_ans); 
+                                                                $exiting_qus_matrix=$qusvalue1!=null ? explode(",",$qusvalue1->matrix_qus): []; $i=0; ?>
+                                                                @foreach($exiting_qus_matrix as $qus) 
+                                                                    <option value="{{$value->id}}">{{$qus}}</option>
+                                                                @endforeach
+                                                            </optgroup>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div id="skip_logic" class="tabcontent">
+                            <h3>Paris</h3>
+                            <p>Paris is the capital of France.</p> 
+                        </div>
+                        <div class="below_space"></div>
+                    @endif
                     <input type="button" id="update_qus" onclick="triggersubmit('{{$currentQus->qus_type}}')" value="Submit" class="btn  btn-primary">
                     <input type="submit" id="update_qus_final" value="Submit" class="btn  btn-primary">
+                    </div>
+                   
                     {{Form::close()}}
+                @endif
+                @if(!$currentQus)
+                <div class="ss-dashboard--contents px-5 px-xl-11 pb-7">
+                    <div class="ss-dashboard--inner-container px-5 px-xl-6 py-5 py-xl-7 h-100 bg-white">
+                        <div class="ss-dashboard--contents ss-no-survey--container px-11 fx-column fx-ai--center fx-jc--center">
+                            <div class="ss-no-survey--wrapper d-flex flex-column align-items-center justify-content-center px-7 w-100 h-100">
+                                <svg width="126" height="147" viewBox="0 0 126 147" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-6">
+                                    <path d="M114.306 12.9721C114.306 12.9721 114.306 12.9721 114.001 12.3962C113.696 11.8203 112.995 12.4871 112.995 12.4871C112.995 12.4871 113.117 12.1234 112.812 11.5476C112.507 10.9717 112.141 12.5478 112.141 12.5478C112.141 12.5478 112.233 11.8507 111.44 10.608C110.648 9.36529 110.617 13.3358 110.617 13.3358C110.617 13.3358 110.709 17.5185 114.306 12.9721Z" fill="#19AF99"></path>
+                                    <path d="M110.648 13.3359C110.648 12.6994 110.678 12.0932 110.77 11.4567C110.8 11.1536 110.831 10.7292 111.044 10.4868C111.105 10.3958 111.166 10.3958 111.227 10.4565C111.288 10.5171 111.318 10.5777 111.379 10.6383C111.501 10.8202 111.623 11.0323 111.715 11.2445C111.898 11.6082 112.111 12.0932 112.05 12.5175C112.05 12.6084 112.172 12.6084 112.172 12.5478C112.233 12.2447 112.324 11.9113 112.477 11.6385C112.507 11.6082 112.568 11.487 112.599 11.487C112.69 11.487 112.782 11.7598 112.812 11.8204C112.873 12.0022 112.965 12.275 112.904 12.4872C112.873 12.5478 112.965 12.6084 113.025 12.5478C113.208 12.3659 113.605 12.0932 113.849 12.3053C114.001 12.4569 114.092 12.7297 114.214 12.9115C114.245 12.9418 114.245 12.9721 114.275 13.0024C114.306 13.0934 114.428 13.0024 114.397 12.9418C114.367 12.8812 114.336 12.8206 114.306 12.76C114.184 12.5478 114.092 12.2447 113.849 12.1235C113.544 12.0022 113.178 12.2447 112.965 12.4569C112.995 12.4872 113.056 12.4872 113.086 12.5175C113.147 12.275 112.965 11.0929 112.568 11.4263C112.385 11.5476 112.324 11.8204 112.233 12.0325C112.172 12.2144 112.111 12.3659 112.08 12.5478C112.111 12.5478 112.172 12.5478 112.202 12.5781C112.233 12.2144 112.08 11.7901 111.928 11.4567C111.776 11.1233 111.623 10.7595 111.379 10.4868C111.318 10.3958 111.196 10.3352 111.074 10.3352C110.8 10.3958 110.739 10.8808 110.709 11.0929C110.617 11.5476 110.587 12.0022 110.556 12.4872C110.526 12.7903 110.526 13.0934 110.526 13.3965C110.495 13.4268 110.648 13.4268 110.648 13.3359Z" fill="black"></path><path d="M111.135 69.0747L63 55.678L16.2668 68.8626L62.2379 82.0774L111.135 69.0747Z" fill="#364250"></path>
+                                    <path d="M63 131.755V91.2916" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M63 135.452V141.029" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M109.215 89.0486V133.058L62.9999 146L15.2607 133.513L16.0229 100.354" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M16.2668 89.0486V95.1712" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M73.0294 120.328C74.5952 120.328 75.8645 118.808 75.8645 116.933C75.8645 115.059 74.5952 113.539 73.0294 113.539C71.4637 113.539 70.1943 115.059 70.1943 116.933C70.1943 118.808 71.4637 120.328 73.0294 120.328Z" fill="black"></path>
+                                    <path d="M99.5817 112.023C101.147 112.023 102.417 110.503 102.417 108.628C102.417 106.754 101.147 105.234 99.5817 105.234C98.0159 105.234 96.7466 106.754 96.7466 108.628C96.7466 110.503 98.0159 112.023 99.5817 112.023Z" fill="black"></path>
+                                    <path d="M81.9617 124.45C81.9617 124.45 82.6628 116.903 88.4854 116.903C92.5703 116.903 92.5703 122.177 92.5703 122.177" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M93.6982 73.5908L97.3259 72.6209" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M101.289 71.7116L111.135 69.0747L63 55.678L16.2668 68.8626L62.2379 82.0774L89.3998 74.7426" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M65.6523 84.1386L77.267 92.1099L122.506 78.8647L112.629 70.5903" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M80.803 47.2218L124 58.5272L112.629 66.832" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M60.3173 53.9808L48.977 44.9789L39.5876 47.2218" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M31.2044 49.4645L2.45728 57.0419L14.1329 67.5896" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M33.4297 49.4647L37.6061 48.7372" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M14.1329 70.5903L2 80.3802L48.977 92.4433L60.3173 83.6536" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M58.0919 55.769C58.0919 54.9507 58.1529 54.1323 58.2443 53.314C58.7321 48.5251 60.5002 43.8574 64.89 41.0387C75.4987 34.2494 81.4432 44.5849 75.2853 48.1917C65.6521 53.8595 54.2813 36.5226 50.4707 29.7333" stroke="black" stroke-miterlimit="10" stroke-dasharray="6 6"></path>
+                                    <path d="M60.3172 69.681C59.9514 68.6504 58.1528 62.8916 58.0918 56.5873" stroke="white" stroke-miterlimit="10" stroke-dasharray="6 6"></path>
+                                    <path d="M47.3003 24.6412C48.1538 24.429 49.0684 24.3381 49.9524 24.3078C51.3547 24.2775 53.1229 24.3987 54.0679 25.5808C54.769 26.4901 54.7385 27.6721 53.7021 28.248C52.6961 28.8239 51.3547 28.7633 50.3183 28.3692C48.6416 27.7327 47.6661 26.2173 47.4222 24.4896C47.3917 24.3381 47.1783 24.3987 47.2088 24.5503C47.4527 26.187 48.3063 27.6418 49.8305 28.3995C50.9584 28.9451 52.3607 29.0967 53.5192 28.6117C54.5252 28.1874 55.0739 27.2478 54.6776 26.187C54.0984 24.6715 52.4217 24.1865 50.9584 24.0956C49.739 24.035 48.4587 24.1562 47.2698 24.429C47.0869 24.4593 47.1478 24.6715 47.3003 24.6412Z" fill="#0D1B1E"></path>
+                                    <path d="M47.1478 24.5502C47.4527 25.2473 47.6966 26.0051 47.91 26.7325C48.2758 28.0661 48.6111 29.4906 48.4282 30.8849C48.3368 31.4911 48.1538 32.0973 47.6966 32.5216C47.2088 33.0065 46.4162 33.1884 45.7456 33.1278C44.2213 32.9762 43.825 31.4001 43.9774 30.0968C44.2213 27.9146 45.6541 25.9141 47.3612 24.5805C47.4832 24.4896 47.3003 24.338 47.2088 24.429C45.5626 25.702 44.2518 27.5205 43.8555 29.5513C43.6116 30.8243 43.6726 32.5519 45.0444 33.1581C46.2943 33.7036 47.849 33.1278 48.3977 31.9154C48.9769 30.5818 48.7026 28.9754 48.3977 27.6115C48.1538 26.5506 47.8185 25.4898 47.3917 24.4593C47.3308 24.3684 47.1174 24.429 47.1478 24.5502Z" fill="#0D1B1E"></path>
+                                    <path d="M46.8126 25.7323C47.7891 25.7323 48.5807 24.9453 48.5807 23.9744C48.5807 23.0035 47.7891 22.2165 46.8126 22.2165C45.8361 22.2165 45.0444 23.0035 45.0444 23.9744C45.0444 24.9453 45.8361 25.7323 46.8126 25.7323Z" fill="#0D1B1E"></path>
+                                    <path d="M94.0641 35.977C103.779 35.977 111.654 28.1472 111.654 18.4885C111.654 8.82988 103.779 1 94.0641 1C84.3495 1 76.4744 8.82988 76.4744 18.4885C76.4744 28.1472 84.3495 35.977 94.0641 35.977Z" fill="white"></path>
+                                    <path d="M111.196 22.0044C113.483 22.0044 115.312 20.1858 115.312 17.9126C115.312 15.6394 113.33 13.8209 111.044 13.8209C111.044 13.8209 111.745 15.9728 111.654 18.0642C111.562 20.1555 111.196 22.0044 111.196 22.0044Z" fill="white"></path>
+                                    <path d="M94.0641 35.977C103.779 35.977 111.654 28.1472 111.654 18.4885C111.654 8.82988 103.779 1 94.0641 1C84.3495 1 76.4744 8.82988 76.4744 18.4885C76.4744 28.1472 84.3495 35.977 94.0641 35.977Z" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M84.2174 32.1278C84.5541 32.1278 84.827 31.8564 84.827 31.5217C84.827 31.1869 84.5541 30.9155 84.2174 30.9155C83.8806 30.9155 83.6077 31.1869 83.6077 31.5217C83.6077 31.8564 83.8806 32.1278 84.2174 32.1278Z" fill="black"></path>
+                                    <path d="M88.7291 31.3094C89.0658 31.3094 89.3388 31.038 89.3388 30.7032C89.3388 30.3684 89.0658 30.097 88.7291 30.097C88.3924 30.097 88.1194 30.3684 88.1194 30.7032C88.1194 31.038 88.3924 31.3094 88.7291 31.3094Z" fill="black"></path>
+                                    <path d="M85.6196 32.1883C85.6196 32.1883 84.9794 36.2195 86.4122 35.4618C87.8755 34.704 88.3327 33.2188 88.3327 33.2188C88.3327 33.2188 87.1743 31.3396 85.6196 32.1883Z" fill="#E6823A"></path>
+                                    <path d="M114.855 16.0941C114.855 16.0941 116.989 16.7002 117.294 17.3064C117.598 17.9126 115.312 17.7611 115.312 17.7611" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M85.5282 32.1581C85.4063 32.9764 85.3148 33.8251 85.4063 34.6131C85.4368 34.9768 85.5282 35.5224 85.955 35.6437C86.1684 35.7043 86.3818 35.6133 86.5647 35.5224C86.961 35.3102 87.3268 35.0072 87.6317 34.6738C87.9975 34.2797 88.3024 33.7645 88.4853 33.2492C88.5158 33.0977 88.3024 33.0371 88.2719 33.1886C88.15 33.5523 87.9366 33.916 87.6927 34.2494C87.4488 34.5828 87.1439 34.8859 86.8391 35.0981C86.6562 35.2193 86.3513 35.4618 86.1074 35.4315C85.7721 35.4012 85.7112 34.8556 85.6807 34.5828C85.6197 34.0979 85.6502 33.5826 85.6807 33.0977C85.7112 32.7946 85.7416 32.4915 85.7721 32.1884C85.7721 32.0671 85.5587 32.0065 85.5282 32.1581Z" fill="black"></path>
+                                    <path d="M80.6811 11.1538C80.6811 11.1538 81.4433 7.51666 79.8276 7.21356C79.3093 7.21356 80.4373 10.396 79.9495 12.0024" fill="white"></path><path d="M80.8031 11.1841C80.8945 10.7901 80.925 10.3961 80.9555 10.0021C81.0165 9.33527 81.0165 8.57752 80.7726 7.94102C80.6811 7.66824 80.4982 7.42578 80.2544 7.27424C80.1019 7.18331 79.8276 7.03175 79.6752 7.18329C79.5532 7.33484 79.5837 7.60762 79.5837 7.78948C79.6142 8.15319 79.6752 8.54721 79.7361 8.91092C79.8886 9.88082 80.1019 11.0023 79.8276 11.9722C79.7971 12.1237 80.0105 12.1843 80.041 12.0328C80.2544 11.275 80.1629 10.4567 80.0715 9.66866C79.98 8.97154 79.7971 8.27444 79.7971 7.57733C79.7971 7.51671 79.7666 7.36515 79.8276 7.33484C79.8581 7.30453 79.98 7.36515 80.041 7.39546C80.2849 7.5167 80.4373 7.75917 80.5287 8.00165C80.7726 8.57752 80.7726 9.24433 80.7116 9.88083C80.6811 10.3052 80.6507 10.7295 80.5592 11.1235C80.5592 11.275 80.7726 11.3357 80.8031 11.1841Z" fill="#111110"></path>
+                                    <path d="M79.7666 12.8208C79.7666 12.8208 78.852 9.21396 77.2668 9.6686C76.8095 9.88077 79.2178 12.2752 79.4922 13.9119" fill="white"></path>
+                                    <path d="M79.8886 12.7905C79.7971 12.3965 79.6447 12.0025 79.4923 11.6388C79.2484 11.0326 78.9131 10.3658 78.4253 9.91114C78.2119 9.72928 77.968 9.54743 77.6632 9.51712C77.4803 9.48681 77.145 9.48682 77.1145 9.72929C77.084 9.94146 77.2669 10.1536 77.3583 10.3355C77.5717 10.6689 77.7851 10.972 77.9985 11.3054C78.5473 12.0934 79.2179 12.9724 79.3703 13.9726C79.4008 14.1242 79.6142 14.0635 79.5837 13.912C79.4618 13.1239 79.0045 12.4268 78.5777 11.76C78.1814 11.1841 77.7242 10.6386 77.4193 10.0021C77.3888 9.94147 77.3279 9.88084 77.3583 9.78991C77.3583 9.7596 77.3583 9.7596 77.3583 9.78991C77.3888 9.7596 77.5413 9.75959 77.5717 9.75959C77.8461 9.75959 78.09 9.91114 78.3034 10.0627C78.7607 10.487 79.0655 11.0932 79.3094 11.6691C79.4618 12.0631 79.6142 12.4571 79.7057 12.8512C79.7057 13.0027 79.9191 12.9421 79.8886 12.7905Z" fill="#111110"></path>
+                                    <path d="M79.6448 13.7301C79.6448 13.7301 78.8827 8.75933 76.9317 7.15294C76.1391 6.42551 80.6508 5.78901 79.9192 12.7905" fill="white"></path>
+                                    <path d="M79.7668 13.6998C79.6448 12.8511 79.4314 12.0024 79.1875 11.1841C78.7912 9.85048 78.3035 8.42594 77.3585 7.36511C77.2365 7.24387 77.0536 7.12264 76.9927 6.97109C76.9927 6.94078 76.9927 6.94078 76.9927 6.91047C77.0841 6.81954 77.2975 6.78924 77.4499 6.81955C78.1511 6.84986 78.7303 7.36511 79.0961 7.91068C80.0106 9.30491 79.9801 11.1841 79.7972 12.7602C79.7972 12.9117 80.0106 12.9117 80.0411 12.7602C80.1936 11.2144 80.224 9.45646 79.4314 8.03192C79.0656 7.36512 78.4559 6.75892 77.6938 6.60738C77.4195 6.54676 76.6573 6.54675 76.7488 7.0014C76.7793 7.09232 76.8402 7.15295 76.9012 7.21356C77.1756 7.48635 77.4194 7.72883 77.6328 8.03192C78.0901 8.72904 78.4254 9.48676 78.6998 10.2748C79.0961 11.3963 79.401 12.548 79.5839 13.6998C79.5534 13.9119 79.7972 13.8513 79.7668 13.6998Z" fill="#111110"></path>
+                                    <path d="M111.044 13.8209C113.33 13.8209 115.312 15.6394 115.312 17.9126C115.312 20.1858 113.483 22.0044 111.196 22.0044" stroke="black" stroke-miterlimit="10"></path>
+                                    <path d="M116.653 15.5487C116.653 15.5487 116.653 15.5487 116.684 14.791C116.714 14.0333 115.617 14.306 115.617 14.306C115.617 14.306 115.952 14.0029 115.983 13.2755C116.013 12.5481 114.733 13.8514 114.733 13.8514C114.733 13.8514 115.22 13.2149 115.19 11.5479C115.159 9.88086 112.751 13.7302 112.751 13.7302C112.751 13.7302 111.928 15.2153 112.568 15.9124C113.026 16.3671 114.123 16.4883 116.653 15.5487Z" fill="#19AF99"></path>
+                                    <path d="M112.843 13.7603C113.239 13.1238 113.635 12.5176 114.092 11.972C114.245 11.7902 114.367 11.6386 114.55 11.4871C114.641 11.3962 114.794 11.2446 114.946 11.2143C115.068 11.184 115.098 11.2749 115.129 11.3659C115.22 11.7296 115.159 12.1539 115.098 12.5479C115.038 12.9722 114.977 13.4875 114.702 13.8512C114.641 13.9118 114.763 14.0028 114.824 13.9422C115.098 13.6694 115.373 13.3663 115.739 13.2147C115.8 13.1844 115.891 13.1238 115.952 13.1844C115.983 13.2147 115.983 13.2753 115.983 13.3056C115.983 13.4572 115.952 13.5784 115.922 13.73C115.861 13.9422 115.8 14.1543 115.647 14.3059C115.586 14.3665 115.647 14.4271 115.708 14.4271C115.983 14.3665 116.44 14.3059 116.623 14.5786C116.714 14.6999 116.684 14.8514 116.684 14.9727C116.684 15.1242 116.684 15.2758 116.653 15.4273C116.653 15.4879 116.653 15.5486 116.653 15.6092C116.653 15.7001 116.775 15.7001 116.806 15.6092C116.806 15.5182 116.806 15.397 116.806 15.3061C116.806 15.0333 116.897 14.6696 116.684 14.4574C116.44 14.2149 115.983 14.2452 115.678 14.3059C115.708 14.3362 115.708 14.3968 115.739 14.4271C115.952 14.2452 116.044 13.9422 116.074 13.6694C116.104 13.4875 116.196 13.0329 115.891 13.0329C115.647 13.0329 115.373 13.2753 115.22 13.4269C115.068 13.5481 114.916 13.6997 114.763 13.8512C114.794 13.8815 114.824 13.9118 114.885 13.9422C115.129 13.6088 115.22 13.1541 115.281 12.7601C115.342 12.3358 115.403 11.8811 115.342 11.4568C115.312 11.3355 115.281 11.184 115.159 11.1234C114.885 11.0021 114.519 11.4265 114.367 11.578C114.001 11.972 113.696 12.3964 113.391 12.851C113.178 13.1541 112.995 13.4572 112.812 13.7603C112.66 13.7603 112.782 13.8209 112.843 13.7603Z" fill="black"></path>
+                                </svg>
+                                <h4 class="ss-text ss-text__size--h4 ss-text__weight--normal ss-text__color--grey">No questions here yet!</h4>
+                                <div class="row pt-9">
+                                    <div class="ss-dashboard__no-survey col-12 d-flex flex-column align-items-center justify-content-center">
+                                        <div class="position--relative">
+                                            <a href="#" data-url="{{route('survey.questiontype',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Choose Question Type" data-title="Choose Question Type"   class="ss-button ss-button__primary mb--sm" >
+                                                Add a New Question
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 @endif
             </div>
 
@@ -489,10 +751,8 @@ $("body").on("click",".trigger_choice",function(){
     $(this).next(".choice_image").trigger('click');
 });
 $("body").on("change",".choice_image",function(e){
-    console.log($(this));
     var id=$(this).parent();
     const files = e.target.files[0];
-    console.log(id.children('img.current_image'),"id.children().find('img.current_image'")
     if (files) {
        uploadfile(files,id); 
     }
@@ -519,7 +779,6 @@ async function  uploadfile(file,id){
     return img;
 }
 function triggersubmit(qus_type){
-    console.log(qus_type,"dd")
     if(qus_type=='picturechoice'){
         let choice_pic=[];
         $('.img_placeholder').each(function(){
@@ -531,7 +790,6 @@ function triggersubmit(qus_type){
         }else{
             Swal.fire("Warning", 'Add Choices', "warning") ;
         }
-
     }
     else if(qus_type=='single_choice' || qus_type=='multi_choice' || qus_type=='dropdown' || qus_type=='rankorder'){
         let choices=[];
@@ -539,11 +797,26 @@ function triggersubmit(qus_type){
             choices.push($(elem).val());
         });
         $('#choices_list').val(choices);
-        console.log(choices,"choices");
         if(choices.length>0){
             $('#update_qus_final').click();
         }else{
             Swal.fire("Warning", 'Add Choices', "warning") ;
+        }
+    }else if(qus_type=='matrix_qus'){
+        let choices=[];
+        $("input[name=matrix_choice]").each(function(idx, elem) {
+            choices.push($(elem).val());
+        });
+        let qus=[];
+        $("input[name=matrix_qus]").each(function(idx, elem) {
+            qus.push($(elem).val());
+        });
+        $('#choices_list_matrix').val(choices);
+        $('#question_list_matrix').val(qus);
+        if(qus.length>=1 && choices.length>=2){
+            $('#update_qus_final').click();
+        }else{
+            Swal.fire("Warning", 'Add Choice & Question to proceed', "warning") ;
         }
     }else{
         $('#update_qus_final').click();
@@ -574,18 +847,13 @@ function qusdelete(url){
 }
 
 function sectactivequs(id,type,url){
-    console.log(url)
-    // console.log(id,type);
-    // qustype(type)
-    window.location.href=url;
+    let pagetype=$('#pagetype').val();
+    window.location.href=url+"?pagetype="+pagetype;
 }
 function qustype(type){
-    console.log(type,"type")
     let qusset={'welcome_page':'Welcome Page','single_choice':'Single Choice','multi_choice':'Multi Choice','open_qus':'Open Questions','likert':'Likert scale','rankorder':'Rank Order','rating':'Rating','dropdown':'Dropdown','picturechoice':'Picture Choice','email':'Email','matrix_qus':'Matrix Question','thank_you':'Thank You Page'};
-    console.log(qusset[type],"qusset")
 }
 $('input[type=radio][name=open_qus_choice]').change(function() {
-    console.log(this.value)
     if(this.value=='single'){
         $('#single_choice_qus').css('display','block');
         $('#multi_choice_qus').css('display','none');
@@ -605,6 +873,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let icon_type= $('#icon_type').val();
     $('.rating-box.'+icon_type).css('display','flex');
     $('.'+icon_type).addClass("active");
+    if($('#pagetype').val()=='editor'){
+        $('#pagetype').val('editor');
+        $('#preview_content').css('display','none');
+        $('#qus_content').css('display','block');
+    }else if($('#pagetype').val()=='preview'){
+        $('#pagetype').val('preview');
+        $('#preview_content').css('display','block');
+        $('#qus_content').css('display','none');
+    }
+        
 });
 $('#left_label').change(function(){
     $('#left_lable_text').html($(this).val())
@@ -620,9 +898,9 @@ $('#trigger_welcome_image').click(function(){
     $('#welcome_image').click();
 });
 $('#welcome_image').change(function(){
-    getImgData();
+    getImgDataweclome();
 })
-function getImgData() {
+function getImgDataweclome() {
 const chooseFile = document.getElementById("welcome_image");
 const imgPreview = document.getElementById("imgPreview");
   const files = chooseFile.files[0];
@@ -630,8 +908,9 @@ const imgPreview = document.getElementById("imgPreview");
     const fileReader = new FileReader();
     fileReader.readAsDataURL(files);
     fileReader.addEventListener("load", function () {
-      imgPreview.style.display = "block";
-      imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
+      $('.exitingImg').css('display','flex');
+      $('#existing_image').attr('src',this.result);
+      $('#existing_image').css('display',"block");
       $('#trigger_welcome_image').css('display','none');
       $('#ss_draft_remove_image_welcome').css('display','block');
 
@@ -654,14 +933,17 @@ $('#thankyou_image').change(function(){
 })
 function getImgData() {
 const chooseFile = document.getElementById("thankyou_image");
-const imgPreview = document.getElementById("imgPreview");
+const imgPreview = document.getElementById("imgPreviewthanksyou");
   const files = chooseFile.files[0];
   if (files) {
     const fileReader = new FileReader();
     fileReader.readAsDataURL(files);
     fileReader.addEventListener("load", function () {
-      imgPreview.style.display = "block";
-      imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
+    //   imgPreview.style.display = "block";
+    //   imgPreview.innerHTML = '<img id="preview_image" src="' + this.result + '" />';
+      $('.exitingImg').css('display','flex');
+      $('#existing_image_thankyou').attr('src',this.result);
+      $('#existing_image_thankyou').css('display',"block");
       $('#trigger_thankyou_image').css('display','none');
       $('#ss_draft_remove_image_thankyou').css('display','block');
 
@@ -672,10 +954,213 @@ $('#ss_draft_remove_image_thankyou').click(function(){
     $('#existing_image_thankyou').css('display','none');
     $('#trigger_thankyou_image').css('display','inline-block');
     $('#ss_draft_remove_image_thankyou').css('display','none');
-    $('#imgPreview').css('display','none');
+    $('#imgPreviewthanksyou').css('display','none');
 
 });
 // Thank you Image 
+let table = document.querySelectorAll("#matrix_sec tbody");
+const addColumn = () => {
+    [...document.querySelectorAll('#matrix_sec tr')].forEach((row, i) => {
+        const cell = document.createElement("td")
+        const input = document.createElement("input")
+        if(i==0){
+            input.setAttribute("type", "text");
+            input.setAttribute("name", "matrix_choice");
+            input.setAttribute("placeholder", "Enter Choice");
+            input.setAttribute("class", "matrix_head");
+            cell.appendChild(input)
+        }else{
+            input.setAttribute("type", "radio");
+            input.setAttribute("name", "matrix_anstype");
+            cell.appendChild(input)
+        }
+        row.appendChild(cell)
+    });
+ }
+ 
+function insert(type){
+    if(type=='row'){
+        let tr = document.createElement('tr');
+        for (let i = 1; i <= $("#matrix_sec > tbody > tr:first > td").length; i++) {
+            let cell = document.createElement('td');
+            const input = document.createElement("input")
+            if(i==1){
+                input.setAttribute("type", "text");
+                input.setAttribute("name", "matrix_qus");
+                input.setAttribute("placeholder", "Enter Question");
+                input.setAttribute("class", "matrix_head");
+                cell.appendChild(input)
+            }else{
+                input.setAttribute("type", "radio");
+                input.setAttribute("name", "matrix_anstype");
+                cell.appendChild(input)
+            }
+            cell.appendChild(input);
+            tr.appendChild(cell);
+        }
+        table[0].appendChild(tr);
+    }else{
+        addColumn();
+    }
+
+}
+function remove(type){
+    if(type=='row'){
+        if($("#matrix_sec > tbody >tr").length<=2){
+            Swal.fire("Warning", 'Minimum one row required', "warning") ;
+
+        }else{
+            $('#matrix_sec tr:last').remove();
+        }
+    }else{
+        if($("#matrix_sec > tbody > tr:first > td").length<=3){
+            Swal.fire("Warning", 'Minimum two choices required', "warning") ;
+
+        }else{
+            $("#matrix_sec td:last-child").remove();
+        }
+    }
+}
+$('form').bind("keypress", function(e) {
+  if (e.keyCode == 13) {               
+    e.preventDefault();
+    return false;
+  }
+});
+$('#preview_qus').click(function(){
+    $('#pagetype').val('preview');
+    let url=$('#preview_qus').data('url');
+    window.location.href=url+"?pagetype=preview";
+    // $('#preview_content').css('display','block');
+    // $('#qus_content').css('display','none');
+});
+
+$('#back_editor').click(function(){
+    $('#pagetype').val('editor');
+    $('#preview_content').css('display','none');
+    $('#qus_content').css('display','block');
+
+});
+function openLogic(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+$("html body").delegate('.display_qus_choice', "change", function() {    
+    let val=$(this).val();
+    let parentv=$(this).parent().parent().parent();
+    parentv.siblings().remove()
+    let url="{{route('survey.getqus')}}?qus_id="+val;
+    $.ajax({url: url, success: function(result){
+        var optionv=result?.resp_logic_type;
+        let textDiv='<div class="respondant_selection row"><div class="col-md-4"><select class="form-control logic_type_value" name="logic_type_value"><option value="">Choose</option>';
+        Object.entries(optionv).forEach(([key, value]) => {
+            textDiv+='<option value="'+key+'">'+value+'</option>';
+        });
+        textDiv+='</select></div>';
+        if(result?.qus_type=='single_choice' || result?.qus_type=='multi_choice' || result?.qus_type =='dropdown'){
+            let choice_list=JSON.parse(result?.qus?.qus_ans);
+            optionv=choice_list?.choices_list.split(',');
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            Object.entries(optionv).forEach(([key, value]) => {
+                textDiv+='<option value="'+value+'">'+value+'</option>';
+            });
+            textDiv+='</select>';
+        }else if(result?.qus_type=='picturechoice'){
+            let choice_list=JSON.parse(result?.qus?.qus_ans);
+            optionv=JSON.parse(choice_list?.choices_list);
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            Object.entries(optionv).forEach(([key, value]) => {
+                textDiv+='<option value="'+key+'">'+value.text+'</option>';
+            });
+            textDiv+='</select>';
+        }
+        else if(result?.qus_type=='matrix_qus'){
+            let choice_list=JSON.parse(result?.qus?.qus_ans);
+            optionv=choice_list?.matrix_choice.split(',');
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            Object.entries(optionv).forEach(([key, value]) => {
+                textDiv+='<option value="'+value+'">'+value+'</option>';
+            });
+            textDiv+='</select>';
+        }
+
+        else if(result?.qus_type=='likert'){
+            optionv={"1":1,"2":3,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9};
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            Object.entries(optionv).forEach(([key, value]) => {
+                textDiv+='<option value="'+key+'">'+value+'</option>';
+            });
+            textDiv+='</select>';
+        }
+        else if(result?.qus_type=='rankorder'){
+            textDiv+='<div class="col-md-4 choice_list_sec">';
+        }
+        else if(result?.qus_type=='rating'){
+            optionv={"1":1,"2":3,"3":3,"4":4,"5":5};
+            textDiv+='<div class="col-md-4 choice_list_sec"><select class="form-control logic_type_value_option" name="logic_type_value_option"><option value="">Choose</option>';
+            Object.entries(optionv).forEach(([key, value]) => {
+                textDiv+='<option value="'+key+'">'+value+'</option>';
+            });
+            textDiv+='</select>';
+        }
+        else if(result?.qus_type=='open_qus' || result?.qus_type=='email'){
+            textDiv+='<div class="col-md-4 choice_list_sec"><input class="form-control" type="text" name="logic_type_text"/>';
+        }
+        
+        textDiv+='</div><div class="col-md-4"><div class="ss-logic-item-actions mb-3"><button type="button" name="minus" class="removechoicelist">−</button><button type="button" name="add" class="addchoicelist">+</button> </div></div></div>';
+        parentv.after(textDiv);
+
+    }});
+});
+$("html body").delegate('.removechoicelist', "click", function() {  
+    if( document.getElementById("logic_section_display").children.length <=1){
+        $(this).parent().parent().parent().remove();
+    }else{
+        $(this).parent().parent().parent().parent().remove();
+    }
+    
+});
+$("html body").delegate('.addchoicelist', "click", function() {  
+    // $(this).parent().parent().remove();  
+    let appendDiv='<div class="logic_section_display_row"><div class="row"><div class="col-md-4"><select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ..."><option value="">Choose ...</option><option value="and">AND</option><option value="or">OR</option></select></div><div class="col-md-4"><input id="display_type" class="form-control" readonly="" name="display_type" type="text" value="Question"></div><div class="col-md-4"><div class="form-group mb-0"><select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ..."><option value="">Choose ...</option>';
+    let display_qus=$('#display_qus').val();
+    display_qus=JSON.parse(display_qus);
+    Object.entries(display_qus).forEach(([key, value]) => {
+        appendDiv+='<option value="'+key+'">'+value+'</option>';
+    });
+    let display_qus_matrix=$('#display_qus_matrix').val();
+    display_qus_matrix=JSON.parse(display_qus_matrix);
+    Object.entries(display_qus_matrix).forEach(([key, value]) => {
+        appendDiv+='<optgroup label="'+value.question_name+'">';
+        let option1=JSON.parse(value.qus_ans);
+        option1=option1?.matrix_qus.split(',');
+        Object.entries(option1).forEach(([key, value1]) => {
+            appendDiv+='<option value="'+value.id+'">'+value1+'</option>';
+        });
+        appendDiv+='</optgroup>';
+    });
+    appendDiv+='</select></div></div></div></div>';
+    $(this).parent().parent().parent().parent().after(appendDiv);
+
+});
+$("html body").delegate('.logic_type_value', "change", function() {    
+    let val=$(this).val();
+    if(val=='isAnswered' || val=='isNotAnswered'){
+        $(this).parent().siblings().first().css('display','none')
+    }else{
+        $(this).parent().siblings().first().css('display','block')
+    }
+});
+
 </script>
     @yield('adminside-script')
 @include('admin.layout.footer')
