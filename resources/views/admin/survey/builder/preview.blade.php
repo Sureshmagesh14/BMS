@@ -7,6 +7,9 @@
         color:rgb(63, 63, 63);
         background-color:rgb(255, 255, 255)
     }
+    .surveysparrow-survey-container--classic-form .ss-fp-section__frame{
+        scrollbar-width:none !important;
+    }
        select.rankorderkey {
             outline: 0px;
             background: unset !important;

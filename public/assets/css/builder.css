@@ -1765,7 +1765,7 @@ a:hover{color:#106ba3;cursor:pointer;text-decoration:underline;}
 .ss-logic-item-actions.mb-3 {
     display: flex;
 }
-button.removechoicelist {
+button.removechoicelist_skip,button.removechoicelist_display {
     margin-right: 1rem;
 }
 .ss-logic-item-actions.mb-3 button{
