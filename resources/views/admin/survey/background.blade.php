@@ -9,6 +9,9 @@
     display:flex;
     justify-content:center;
 }
+.gradient .color-input .labels{
+    align-items:center;
+}
 .upload-image-placeholder{border-radius:5px;position:relative;display:inline-block;vertical-align:top;min-width:170px;min-height:155px;}
 .upload-image-placeholder__upload-btn{
     width: 50%;
@@ -646,11 +649,13 @@
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
                                         type="text" name='hex' id='hex' value="#ec226c94">
                                 </div>
+                                <div class="label">  
+                                    <div type="button" onclick="setsinglecolor()">
+                                        <i class="fa fa-eye" aria-hidden="true"></i> Preview
+                                    </div>
+                                </div>
                             </div>
                             <div class="actionbutton">
-                                <button class="fade" type="button" onclick="setsinglecolor()" name="sub" value="1">
-                                    <i class="fa fa-eye" aria-hidden="true"></i>Preview
-                                </button>
                                 <button class="fade" type="button" onclick="setbackground()" name="sub" value="1">
                                     <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
                                 </button>
@@ -660,7 +665,6 @@
                         </p>
                     </div>
                     <div class="code-box">
-
                         <p>CSS Code:</p>
                         <code id="selectable">background-color: #ec226c94;</code>
                     </div>
@@ -719,11 +723,14 @@
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
                                         type="text" name='hex2' id='hex1' value="#C2E3B1">
                                 </div>
+                                <div class="label">  
+                                    <div type="button" onclick="setgradient()">
+                                        <i class="fa fa-eye" aria-hidden="true"></i> Preview
+                                    </div>
+                                </div>
                             </div>
                             <div class="actionbutton">
-                                <button class="fade" type="button" onclick="setgradient()" name="sub" value="1">
-                                    <i class="fa fa-eye" aria-hidden="true"></i>Preview
-                                </button>
+                               
                                 <button class="fade" type="button" onclick="setbackground()" name="sub" value="1">
                                     <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
                                 </button>
@@ -758,6 +765,10 @@
             <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
         </div>
         <input style="display:none;" type="file" id="welcome_image" name="welcome_image"  class="course form-control">
+        <div class="code-box">
+            <p>CSS Code:</p>
+            <code id="selectable">background-image: </code>
+        </div>
     </div>
     
 
@@ -774,7 +785,7 @@
             let v1 = $('#hex').val();
             var body = document.getElementById("gradient1");
             body.style.background = v1;
-            $('#selectable').html(body.style.background + ";");
+            $('#selectable').html("background-color:"+body.style.background + ";");
         }
         function setgradient() {
             let v1 = $('#hex').val();
@@ -784,9 +795,9 @@
             body.style.background = "linear-gradient(" + ori + ", " + v1 + ", "
                 + v2 + ")";
             console.log(ori, "ori")
-            $('#selectable').html(body.style.background + ";");
+            $('#selectable').html("background-image:"+body.style.background + ";");
         }
-
+      
         function validateInput(ele) {
 
             var hexInput = ele;
@@ -798,6 +809,7 @@
 
                 hexInput.value = '000000';
             }
+         
         }
 
     </script>
@@ -819,14 +831,17 @@
             const imgPreview = document.getElementById("imgPreview");
             const files = chooseFile.files[0];
         if (files) {
+
+
             const fileReader = new FileReader();
             fileReader.readAsDataURL(files);
             fileReader.addEventListener("load", function () {
-            $('.exitingImg').css('display','flex');
-            $('#existing_image').attr('src',this.result);
-            $('#existing_image').css('display',"block");
-            $('#trigger_welcome_image').css('display','none');
-            $('#ss_draft_remove_image_welcome').css('display','block');
+                $('.exitingImg').css('display','flex');
+                $('#existing_image').attr('src',this.result);
+                $('#existing_image').css('display',"block");
+                $('#trigger_welcome_image').css('display','none');
+                $('#ss_draft_remove_image_welcome').css('display','block');
+                $('#selectable').html("background-image:"+this.result + ";");
 
             });    
         }
@@ -834,9 +849,9 @@
         $('#ss_draft_remove_image_welcome').click(function(){
             $('.exitingImg').css('display','none');
             $('#existing_image').css('display',"none");
-            $('#trigger_welcome_image').css('display','block');
+            $('#trigger_welcome_image').css('display','flex');
             $('#ss_draft_remove_image_welcome').css('display','none');
-
+            $('#selectable').html("");
         });
     </script>
 </body>
