@@ -5,6 +5,30 @@
 <!-- <link href="{{ asset('assets/css/builder.css') }}" rel="stylesheet" type="text/css" /> -->
 
 <style>
+    .actionbutton1 {
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .gradient #Image .code-box p {
+        margin-bottom: 5px;
+        text-align: left;
+        color: black;
+    }
+    .gradient #Image .code-box code{
+        overflow-wrap: break-word;
+        font-family: 'Space Mono', monospace;
+        width: 100%;
+        margin: 0 auto;
+        display: block;
+        line-height: 1.4;
+        letter-spacing: 0.2px;
+        color: black;
+        border-left: 3px solid black;
+        background-color: #d9d3d3d1;
+        padding: 15px 8px 15px 17px;
+        border-radius: 5px;
+    }
 #trigger_welcome_image,.exitingImg{
     display:flex;
     justify-content:center;
@@ -36,7 +60,7 @@
         padding: 7px;
         border-radius: 5px;
         width: 50%;
-        height: 50%;
+        height: 400px;
     }
         button.w3-bar-item.w3-button {
             padding: 10px;
@@ -626,7 +650,9 @@
 </head>
 
 <body class="gradient">
-   
+    
+   <input type="hidden" id="survey_id" value="{{$survey->id}}" name="survey_id">
+   <input type="hidden" id="bg_value" value="" name="bg_value">
     <div class="w3-bar w3-black">
         <button class="w3-bar-item w3-button Single" onclick="openCity('Single')">Single Color</button>
         <button class="w3-bar-item w3-button Gradient" onclick="openCity('Gradient')">Gradient Color</button>
@@ -656,7 +682,7 @@
                                 </div>
                             </div>
                             <div class="actionbutton">
-                                <button class="fade" type="button" onclick="setbackground()" name="sub" value="1">
+                                <button class="fade" type="button" onclick="setbackground('single')" name="sub" value="1">
                                     <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
                                 </button>
                             </div>
@@ -731,7 +757,7 @@
                             </div>
                             <div class="actionbutton">
                                
-                                <button class="fade" type="button" onclick="setbackground()" name="sub" value="1">
+                                <button class="fade" type="button" onclick="setbackground('gradient')" name="sub" value="1">
                                     <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
                                 </button>
                             </div>
@@ -765,14 +791,25 @@
             <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
         </div>
         <input style="display:none;" type="file" id="welcome_image" name="welcome_image"  class="course form-control">
+        <br/>
+        <div class=" box color-input">
+            <div class="actionbutton actionbutton1">
+                <button class="fade" type="button" onclick="setbackground('image')" name="sub" value="1">
+                    <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
+                </button>
+            </div>
+        </div>
         <div class="code-box">
             <p>CSS Code:</p>
-            <code id="selectable">background-image: </code>
+            <code id="selectablebackground">background-image: </code>
         </div>
     </div>
     
 
     <script type="text/javascript">
+        function setbackground(type){
+            console.log(type,'bg_value')
+        }
         function openCity(cityName) {
             var i;
             var x = document.getElementsByClassName("city");
@@ -814,11 +851,7 @@
 
     </script>
     <script src="{{ asset('/assets/js/jquery.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('/assets/js/jqColorPicker.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('/assets/js/scrollreveal.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('/assets/js/colorpicker-main.js')}}"></script>
-    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/colopicker.css')}}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/fontawesome.min.css')}}">
+  
     <script>
         $('#trigger_welcome_image').click(function(){
             $('#welcome_image').click();
@@ -831,8 +864,6 @@
             const imgPreview = document.getElementById("imgPreview");
             const files = chooseFile.files[0];
         if (files) {
-
-
             const fileReader = new FileReader();
             fileReader.readAsDataURL(files);
             fileReader.addEventListener("load", function () {
@@ -841,7 +872,7 @@
                 $('#existing_image').css('display',"block");
                 $('#trigger_welcome_image').css('display','none');
                 $('#ss_draft_remove_image_welcome').css('display','block');
-                $('#selectable').html("background-image:"+this.result + ";");
+                $('#selectablebackground').html("background-image:"+this.result + ";");
 
             });    
         }
@@ -851,9 +882,14 @@
             $('#existing_image').css('display',"none");
             $('#trigger_welcome_image').css('display','flex');
             $('#ss_draft_remove_image_welcome').css('display','none');
-            $('#selectable').html("");
+            $('#selectablebackground').html("");
         });
     </script>
+      <script type="text/javascript" src="{{ asset('/assets/js/jqColorPicker.min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('/assets/js/scrollreveal.min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('/assets/js/colorpicker-main.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/colopicker.css')}}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/fontawesome.min.css')}}">
 </body>
 
 </html>
