@@ -74,7 +74,7 @@ class SurveyController extends Controller
     }
 
     public function storeFolder(Request $request){
-        $user = \Auth::user();
+        $user = Auth::guard('admin')->user();
         $folder=new Folder();
         $folder->folder_name=$request->folder_name;
         $folder->folder_type=$request->folder_type;
@@ -91,7 +91,7 @@ class SurveyController extends Controller
     public function editFolder($id){
 
         $folder=Folder::where(['id'=>$id])->first();
-        $user = \Auth::user();
+        $user = Auth::guard('admin')->user();
         $users=User::where('id', '!=' , $user->id)->pluck('name', 'id')->toArray();
         return view('admin.survey.folder.edit', compact('folder','users'));
 
@@ -99,7 +99,7 @@ class SurveyController extends Controller
     }
 
     public function updateFolder(Request $request,$id){
-        $user = \Auth::user();
+        $user = Auth::guard('admin')->user();
         $folder=Folder::where(['id'=>$id])->first();
         $folder->folder_name=$request->folder_name;
         $folder->folder_type=$request->folder_type;
@@ -168,14 +168,14 @@ class SurveyController extends Controller
     }
 
     public function createSurvey(Request $request){
-        $user = \Auth::user();
+        $user = Auth::guard('admin')->user();
         $folders=Folder::pluck('folder_name', 'id')->toArray();
         return view('admin.survey.survey.create', compact('folders'));
     }
 
     public function storeSurvey(Request $request){
         $uuid = Str::uuid()->toString();
-        $user = \Auth::user();
+        $user = Auth::guard('admin')->user();
         $survey=new Survey();
         $survey->folder_id=$request->folder_id;
         $survey->title=$request->title;
@@ -191,14 +191,14 @@ class SurveyController extends Controller
     public function editSurvey($id){
 
         $survey=Survey::where(['id'=>$id])->first();
-        $user = \Auth::user();
+        $user = Auth::guard('admin')->user();
         $folders=Folder::pluck('folder_name', 'id')->toArray();
         return view('admin.survey.survey.edit', compact('survey','folders'));
 
 
     }
     public function updateSurvey(Request $request,$id){
-        $user = \Auth::user();
+        $user = Auth::guard('admin')->user();
         $survey=Survey::where(['id'=>$id])->first();
         $survey->title=$request->title;
         $survey->folder_id=$request->folder_id;
@@ -271,7 +271,7 @@ class SurveyController extends Controller
    public function questiontypesurvey(Request $request,$survey,$qustype){
     // Create New Question
     // Create New Qus 
-    $user = \Auth::user();
+    $user = Auth::guard('admin')->user();
     $newqus=new Questions();
     $newqus->survey_id=$survey;
     $newqus->qus_type=$qustype;
@@ -300,7 +300,7 @@ class SurveyController extends Controller
         $survey=Survey::where(['id'=>$id])->first();
         $questions=Questions::where(['survey_id'=>$id])->get();
         $uuid = Str::uuid()->toString();
-        $user = \Auth::user();
+        $user = Auth::guard('admin')->user();
         
         // Clone Survey 
         $clonesurvey=new Survey();
