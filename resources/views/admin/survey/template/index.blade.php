@@ -68,7 +68,7 @@
                             <h3 class="ss-text ss-text__size--h3 ss-text__weight--semibold ss-text__color--grey">Folders</h3>
                             <div class="fx-row create-workspace--button">
                             <span class="bp3-popover2-target" tabindex="0">
-                            <a class="mx-3 btn btn-sm align-items-center createfoldericon" data-url="{{route('folder.create')}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Create Folder" data-title="Create Folder">
+                            <a href="#" class="mx-3 btn btn-sm align-items-center createfoldericon" data-url="{{route('folder.create')}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Create Folder" data-title="Create Folder">
                                     <svg width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <g opacity="1">
                                         <line x1="10" y1="1" x2="10" y2="19" stroke="#4A9CA6" stroke-width="2" stroke-linecap="round"></line>
@@ -345,7 +345,114 @@ div#survey-table_wrapper .row {
 }
 
 </style>
+<script>
+$(document).mouseup(function(e) 
+{
+    $('[data-toggle="popover"]').each(function () {
+        //the 'is' for buttons that trigger popups
+        //the 'has' for icons within a button that triggers a popup
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            $(this).popover('hide');
+        }
+    });
+    var container = $(".action_list");
 
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0)
+    {
+        container.hide();
+    }
+});
+$("body").on("click", ".actionfolder", function () {
+    $(".action_list").css('display','none');
+    $(this).children(".action_list").toggle();
+});
+
+$("body").on("click", ".actionsurvey", function () {
+    $(".action_list_survey").css('display','none');
+    $(this).children(".action_list_survey").toggle();
+});
+
+function folderdelete(url,id){
+    Swal.fire({ 
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning", showCancelButton: !0, 
+        confirmButtonColor: "#34c38f", 
+        cancelButtonColor: "#f46a6a", 
+        confirmButtonText: "Yes, delete it!" 
+    }).then(function (t) { 
+        if(t.isConfirmed){
+            $.ajax({url: url, success: function(result){
+                result = JSON.parse(result);
+                if(result.error!=''){
+                    t.value && Swal.fire("Warning!", result.error, "warning") ;
+                }else{
+                    t.value && Swal.fire({
+                        title:"Deleted!", 
+                        text:result.success, 
+                        icon:"success"
+                    }).then(function (t) { 
+                        window.location.reload();
+                    }) ;
+                }
+              
+            }});
+        }
+    })
+    console.log(id)
+}
+$(document).ready(function(){
+    $('.actionsurvey1').popover({
+    html: true,
+    content: function() {
+      let contentID = $(this).data('htmlcontent');
+      return $(contentID).html();
+    }
+  });
+});
+$('.actionsurvey1').on('click', function (e) {
+    $('.actionsurvey1').not(this).popover('hide');
+});
+
+function surveydelete(url,id){
+    Swal.fire({ 
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning", showCancelButton: !0, 
+        confirmButtonColor: "#34c38f", 
+        cancelButtonColor: "#f46a6a", 
+        confirmButtonText: "Yes, delete it!" 
+    }).then(function (t) { 
+        if(t.isConfirmed){
+            $.ajax({url: url, success: function(result){
+                result = JSON.parse(result);
+                if(result.error!=''){
+                    t.value && Swal.fire("Warning!", result.error, "warning") ;
+                }else{
+                    t.value && Swal.fire({
+                        title:"Deleted!", 
+                        text:result.success, 
+                        icon:"success"
+                    }).then(function (t) { 
+                        window.location.reload();
+                    }) ;
+                }
+            }});
+        }
+        
+    })
+    console.log(id)
+}
+// $(document).on('click', '.deletesurvey', function(){
+//       console.log($(this).parent().parent().siblings('#deletelink'))
+// });
+// $('.deletesurvey').on('click', function (e) {
+//     console.log($(this).data('deleteurl'))
+// });
+</script>
+    @yield('adminside-script')
 @include('admin.layout.footer')
     @stack('adminside-js')
 <script>
