@@ -313,23 +313,7 @@
                         orderable: false,
                         searchable: false
                     }
-                ],
-                columnDefs: [{
-                        targets: 0,
-                        width: 75,
-                        className: "text-center"
-                    },
-                    {
-                        targets: 4,
-                        width: 115,
-                        className: "text-center"
-                    },
-                    {
-                        targets: 5,
-                        width: 115,
-                        className: "text-center"
-                    },
-                ],
+                ]
             });
         }
 
@@ -428,22 +412,7 @@
                         orderable: true,
                         searchable: true
                     }
-                ],
-                columnDefs: [{
-                        targets: 0,
-                        width: 75,
-                        className: "text-center"
-                    },
-                    {
-                        targets: 3,
-                        width: 175,
-                    },
-                    {
-                        targets: 10,
-                        width: 115,
-                        className: "text-center"
-                    }
-                ],
+                ]
             });
         }
 

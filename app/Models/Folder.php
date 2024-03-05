@@ -29,7 +29,7 @@ class Folder extends Model
 
     public function surveycount()
     {
-        return $this->hasMany('App\Models\Survey', 'folder_id', 'id');
+        return $this->hasMany('App\Models\Survey', 'folder_id', 'id')->where(['is_deleted'=>0]);
     }
 
 

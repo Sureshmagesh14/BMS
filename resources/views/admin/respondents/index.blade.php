@@ -97,10 +97,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input select_all" id="inlineForm-customCheck">
-                                                <label class="custom-control-label" for="inlineForm-customCheck" style="font-weight: bold;">Select All</label>
-                                            </div>
+                                            <input type="checkbox" class="select_all" id="inlineForm-customCheck">
                                         </th>
                                         <th>#</th>
                                         <th>Name</th>

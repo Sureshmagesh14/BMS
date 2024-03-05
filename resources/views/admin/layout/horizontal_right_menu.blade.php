@@ -7,7 +7,7 @@
                 <div class="dropdown-menu dropdown-menu-right">
                   
                     <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="ru">
-                        <img src="{{ asset('public/assets/images/flags/russia.jpg') }}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Russian</span>
+                        <img src="{{ asset('assets/images/flags/russia.jpg') }}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Russian</span>
                     </a>
                 </div>
             </div>
@@ -22,19 +22,19 @@
                         <div class="row no-gutters">
                             <div class="col">
                                 <a class="dropdown-icon-item" href="#">
-                                    <img src="{{ asset('public/assets/images/brands/github.png') }}" alt="Github">
+                                    <img src="{{ asset('assets/images/brands/github.png') }}" alt="Github">
                                     <span key="t-gitHub">GitHub</span>
                                 </a>
                             </div>
                             <div class="col">
                                 <a class="dropdown-icon-item" href="#">
-                                    <img src="{{ asset('public/assets/images/brands/bitbucket.png') }}" alt="bitbucket">
+                                    <img src="{{ asset('assets/images/brands/bitbucket.png') }}" alt="bitbucket">
                                     <span key="t-bitbucket">Bitbucket</span>
                                 </a>
                             </div>
                             <div class="col">
                                 <a class="dropdown-icon-item" href="#">
-                                    <img src="{{ asset('public/assets/images/brands/dribbble.png') }}" alt="dribbble">
+                                    <img src="{{ asset('assets/images/brands/dribbble.png') }}" alt="dribbble">
                                     <span key="t-dribbble">Dribbble</span>
                                 </a>
                             </div>
@@ -43,19 +43,19 @@
                         <div class="row no-gutters">
                             <div class="col">
                                 <a class="dropdown-icon-item" href="#">
-                                    <img src="{{ asset('public/assets/images/brands/dropbox.png') }}" alt="dropbox">
+                                    <img src="{{ asset('assets/images/brands/dropbox.png') }}" alt="dropbox">
                                     <span key="t-dropbox">Dropbox</span>
                                 </a>
                             </div>
                             <div class="col">
                                 <a class="dropdown-icon-item" href="#">
-                                    <img src="{{ asset('public/assets/images/brands/mail_chimp.png') }}" alt="mail_chimp">
+                                    <img src="{{ asset('assets/images/brands/mail_chimp.png') }}" alt="mail_chimp">
                                     <span key="t-mail-chimp">Mail Chimp</span>
                                 </a>
                             </div>
                             <div class="col">
                                 <a class="dropdown-icon-item" href="#">
-                                    <img src="{{ asset('public/assets/images/brands/slack.png') }}" alt="slack">
+                                    <img src="{{ asset('assets/images/brands/slack.png') }}" alt="slack">
                                     <span key="t-slack">Slack</span>
                                 </a>
                             </div>
@@ -101,7 +101,7 @@
                         </a>
                         <a href="#" class="text-reset notification-item">
                             <div class="media">
-                                <img src="{{ asset('public/assets/images/users/avatar-3.jpg') }}"
+                                <img src="{{ asset('assets/images/users/avatar-3.jpg') }}"
                                     class="mr-3 rounded-circle avatar-xs" alt="user-pic">
                                 <div class="media-body">
                                     <h6 class="mt-0 mb-1" key="t-james-lemire">James Lemire</h6>
@@ -131,7 +131,7 @@
 
                         <a href="#" class="text-reset notification-item">
                             <div class="media">
-                                <img src="{{ asset('public/assets/images/users/avatar-4.jpg') }}"
+                                <img src="{{ asset('assets/images/users/avatar-4.jpg') }}"
                                     class="mr-3 rounded-circle avatar-xs" alt="user-pic">
                                 <div class="media-body">
                                     <h6 class="mt-0 mb-1" key="t-salena-layfield">Salena Layfield</h6>
@@ -160,7 +160,7 @@
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{ asset('public/assets/images/users/avatar-4.jpg') }}"
+                    <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/avatar-4.jpg') }}"
                         alt="Header Avatar">
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">

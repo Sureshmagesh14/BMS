@@ -257,7 +257,7 @@ class TagsController extends Controller
                                         <i class="fa fa-edit"></i> Edit
                                     </a>
                                 </li>';
-                                if(Auth::user()->role_id == 1){
+                                if(Auth::guard('admin')->user()->role_id == 1){
                                     $design .= '<li class="list-group-item">
                                         <a href="#!" id="delete_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
                                             <i class="far fa-trash-alt"></i> Delete

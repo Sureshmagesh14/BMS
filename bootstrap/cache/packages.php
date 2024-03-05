@@ -10,16 +10,11 @@
       'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
     ),
   ),
-  'barryvdh/laravel-dompdf' => 
+  'laravel/breeze' => 
   array (
     'providers' => 
     array (
-      0 => 'Barryvdh\\DomPDF\\ServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'Pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
-      'PDF' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+      0 => 'Laravel\\Breeze\\BreezeServiceProvider',
     ),
   ),
   'laravel/sail' => 
@@ -85,34 +80,6 @@
     'aliases' => 
     array (
       'Flare' => 'Spatie\\LaravelIgnition\\Facades\\Flare',
-    ),
-  ),
-  'yajra/laravel-datatables-buttons' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Yajra\\DataTables\\ButtonsServiceProvider',
-    ),
-  ),
-  'yajra/laravel-datatables-editor' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Yajra\\DataTables\\EditorServiceProvider',
-    ),
-  ),
-  'yajra/laravel-datatables-fractal' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Yajra\\DataTables\\FractalServiceProvider',
-    ),
-  ),
-  'yajra/laravel-datatables-html' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Yajra\\DataTables\\HtmlServiceProvider',
     ),
   ),
   'yajra/laravel-datatables-oracle' => 

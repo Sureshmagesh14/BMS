@@ -67,7 +67,7 @@
 
 @include('admin.layout.footer')
 
-<script src="{{ asset('public/assets//libs/apexcharts/apexcharts.min.js') }}"></script>
+<script src="{{ asset('assets//libs/apexcharts/apexcharts.min.js') }}"></script>
 <script>
   
   var options = {

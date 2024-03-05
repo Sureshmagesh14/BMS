@@ -31,14 +31,15 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="text-right">
-                                <a href="#!" data-url="{{ route('contents.create') }}" data-size="xl" data-ajax-popup="true"
-                                    class="btn btn-primary" data-bs-original-title="{{ __('Create Content') }}" class="btn btn-primary" data-size="xl"
-                                     data-ajax-popup="true" data-bs-toggle="tooltip"
-                                    id="create">
+                                <a href="#!" data-url="{{ route('contents.create') }}" data-size="xl"
+                                    data-ajax-popup="true" class="btn btn-primary"
+                                    data-bs-original-title="{{ __('Create Content') }}" class="btn btn-primary"
+                                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
                                     Create Contents
                                 </a>
 
-                                <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
+                                <a class="btn btn-danger" class="btn btn-primary" id="delete_all"
+                                    style="display: none;">
                                     Delete Selected All
                                 </a>
                             </div>
@@ -50,10 +51,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input select_all" id="inlineForm-customCheck">
-                                                <label class="custom-control-label" for="inlineForm-customCheck" style="font-weight: bold;">Select All</label>
-                                            </div>
+                                            <input type="checkbox" class="select_all" id="inlineForm-customCheck">
                                         </th>
                                         <th>#</th>
                                         <th>Type</th>
@@ -73,27 +71,26 @@
     <!-- End Page-content -->
 
     @include('admin.layout.footer')
-        
-        @stack('adminside-js')
-        @stack('adminside-validataion')
-        @stack('adminside-confirm')
-        @stack('adminside-datatable')
-        
+
+    @stack('adminside-js')
+    @stack('adminside-validataion')
+    @stack('adminside-confirm')
+    @stack('adminside-datatable')
+
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
         $(document).ready(function() {
             datatable();
             $("#content_create_form-data").validate();
         });
-        
+
         $("#content_create_form-data").validate();
 
-        function table_checkbox(get_this){
+        function table_checkbox(get_this) {
             count_checkbox = $(".tabel_checkbox").filter(':checked').length;
-            if(count_checkbox > 1){
+            if (count_checkbox > 1) {
                 $("#delete_all").show();
-            }
-            else{
+            } else {
                 $("#delete_all").hide();
             }
         }
@@ -104,18 +101,18 @@
 
             var values = $("#myTable tbody tr").map(function() {
                 var $this = $(this);
-                if($this.find("[type=checkbox]").is(':checked')){
-                    all_id.push($this.find("[type=checkbox]").attr('id')); 
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
                     // return {
                     //     id: $this.find("[type=checkbox]").attr('id'),
                     // };
                 }
-                
+
             }).get();
-          
+
             $.confirm({
-                title: "{{Config::get('constants.delete')}}",
-                content:  "{{Config::get('constants.delete_confirmation')}}",
+                title: "{{ Config::get('constants.delete') }}",
+                content: "{{ Config::get('constants.delete_confirmation') }}",
                 autoClose: 'cancelAction|8000',
                 buttons: {
                     delete: {
@@ -142,13 +139,13 @@
                         }
                     },
                     cancel: function() {
-                        
+
                     }
                 }
             });
         });
 
-        function datatable(){
+        function datatable() {
             $('#myTable').dataTable().fnDestroy();
             $('#myTable').DataTable({
                 searching: true,
@@ -170,18 +167,31 @@
                     }
                 },
 
-                columns: [
-                    { data: 'select_all', name: 'select_all', orderable: false, searchable: false },
-                    { data: 'id', name: '#', orderable: true, searchable: true },
-                    { data: 'type_id', name: 'type_id', orderable: true, searchable: true },
-                    { data: 'action', name: 'action', orderable: false, searchable: false }
-                ],
-                columnDefs: [
-                    { targets: 0,width: 10,className: "text-center" },
-                    { targets: 1,width: 75,className: "text-center" },
-                    { targets: 2 },
-                    { targets: 3,width: 115,className: "text-center" }
-                ],
+                columns: [{
+                        data: 'select_all',
+                        name: 'select_all',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'id',
+                        name: '#',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'type_id',
+                        name: 'type_id',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
             });
         }
 
@@ -190,10 +200,10 @@
             var id = $(this).data("id");
             var url = "{{ route('contents.destroy', ':id') }}";
             url = url.replace(':id', id);
-          
+
             $.confirm({
-                title: "{{Config::get('constants.delete')}}",
-                content:  "{{Config::get('constants.delete_confirmation')}}",
+                title: "{{ Config::get('constants.delete') }}",
+                content: "{{ Config::get('constants.delete_confirmation') }}",
                 autoClose: 'cancelAction|8000',
                 buttons: {
                     delete: {
@@ -219,10 +229,9 @@
                         }
                     },
                     cancel: function() {
-                        
+
                     }
                 }
             });
         });
     </script>
-    

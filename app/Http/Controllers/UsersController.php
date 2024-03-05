@@ -348,11 +348,11 @@ class UsersController extends Controller
                             </ul>
                         </div>';
 
-                    if(Auth::user()->role_id == 1){
+                    if(Auth::guard('admin')->user()->role_id == 1){
                         return $design;
                     }
                     else{
-                        if(Auth::user()->id == $all_data->id){
+                        if(Auth::guard('admin')->user()->id == $all_data->id){
                             return $design;
                         }
                         else{

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Projects;
+use App\Models\project_respondent;
 use App\Models\Users;
 use DB;
 use Illuminate\Support\Facades\Validator;
@@ -363,11 +364,11 @@ class ProjectsController extends Controller
                             </ul>
                         </div>';
 
-                        if(Auth::user()->role_id == 1){
+                        if(Auth::guard('admin')->user()->role_id == 1){
                             return $design;
                         }
                         else{
-                            if(Auth::user()->id == $all_data->user_id){
+                            if(Auth::guard('admin')->user()->id == $all_data->user_id){
                                 return $design;
                             }
                             else{
@@ -384,42 +385,49 @@ class ProjectsController extends Controller
         }
     }
 
-    public function projects_export($type) {
+    public function projects_export(Request $request) {
+
+        $module_name = $request->module_name;
+        $from = date('Y-m-d',strtotime($request->start));
+        $to = date('Y-m-d',strtotime($request->end));
 
         $type='xlsx';
 
-        $all_datas = Projects::select('projects.*','projects.name as uname')
-        ->join('users', 'users.id', '=', 'projects.user_id') 
-        ->orderby("id","desc")
-        ->limit(10)
-        ->get();
+        if($module_name=='projects_details_export'){
 
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Number/Code');
-        $sheet->setCellValue('B1', 'Client');
-        $sheet->setCellValue('C1', 'Name');
-        $sheet->setCellValue('D1', 'Creator');
-        $sheet->setCellValue('E1', 'Type');
-        $sheet->setCellValue('F1', 'Reward Amount');
-        $sheet->setCellValue('G1', 'Project Link');
-        
-        $rows = 2;
-        $i=1;
-        foreach($all_datas as $all_data){
+
+            $all_datas = Projects::select('projects.*','projects.name as uname')
+            ->join('users', 'users.id', '=', 'projects.user_id') 
+            ->orderby("id","desc")
+            ->whereBetween('projects.created_at', [$from, $to])
+            ->get();
+
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'Number/Code');
+            $sheet->setCellValue('B1', 'Client');
+            $sheet->setCellValue('C1', 'Name');
+            $sheet->setCellValue('D1', 'Creator');
+            $sheet->setCellValue('E1', 'Type');
+            $sheet->setCellValue('F1', 'Reward Amount');
+            $sheet->setCellValue('G1', 'Project Link');
+
+            $rows = 2;
+            $i=1;
+            foreach($all_datas as $all_data){
 
             if($all_data->type_id==1){
-                $type_val = 'Pre-Screener';
+            $type_val = 'Pre-Screener';
             }else if($all_data->type_id==2){
-                $type_val =  'Pre-Task';
+            $type_val =  'Pre-Task';
             }else if($all_data->type_id==3){
-                $type_val =  'Paid  survey';
+            $type_val =  'Paid  survey';
             }else if($all_data->type_id==4){
-                $type_val =  'Unpaid  survey';
+            $type_val =  'Unpaid  survey';
             }else{  
-                $type_val =  '-';
+            $type_val =  '-';
             }
-            
+
             $sheet->setCellValue('A' . $rows, $i);
             $sheet->setCellValue('B' . $rows, $all_data->number);
             $sheet->setCellValue('C' . $rows, $all_data->client);
@@ -428,12 +436,82 @@ class ProjectsController extends Controller
             $sheet->setCellValue('F' . $rows, $all_data->reward);
             $sheet->setCellValue('G' . $rows, $all_data->project_link);
 
-            
+
             $rows++;
             $i++;
-        }
+            }
 
-        $fileName = "project_".date('ymd').".".$type;
+            $fileName = "project_".date('ymd').".".$type;
+            
+
+        }else if($module_name=='projects_summary_export'){
+        
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'Month');
+            $sheet->setCellValue('B1', 'Year');
+            $sheet->setCellValue('C1', 'Average Response Time');
+            $sheet->setCellValue('D1', 'Average Response Rate');
+            $sheet->setCellValue('E1', 'Average Completion Rate');
+            $sheet->setCellValue('F1', 'Average Conversion Rate (Response & Completion)');
+            $sheet->setCellValue('G1', 'Average Drop-Out Rate');
+
+            $fileName = "project_respondent_month_".date('ymd').".".$type;
+
+        }else if($module_name=='projects_summary_resp_export'){
+
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            
+            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('J')->setWidth(25);
+            $spreadsheet->getActiveSheet()->getColumnDimension('K')->setWidth(25);
+            
+            $sheet->setCellValue('A1', 'Respondent Profile ID');
+            $sheet->setCellValue('B1', 'Name');
+            $sheet->setCellValue('C1', 'Surname');
+            $sheet->setCellValue('D1', 'Phone Number');
+            $sheet->setCellValue('E1', 'WhatsApp Number');
+            $sheet->setCellValue('F1', 'Email');
+            $sheet->setCellValue('G1', 'Average Response Time');
+            $sheet->setCellValue('H1', 'Response Rate');
+            $sheet->setCellValue('I1', 'Completion Rate');
+            $sheet->setCellValue('J1', 'Conversion Rate (Response & Completion)');
+            $sheet->setCellValue('K1', 'Drop-Out Rate');
+            
+            $all_datas = DB::table('project_respondent')->select('respondents.name as rname','respondents.surname as rsurname','respondents.email as remail','respondents.mobile as rmobile','respondents.whatsapp as rwhatsapp')
+                ->join('respondents', 'respondents.id', '=', 'project_respondent.respondent_id') 
+                ->join('projects', 'projects.id', '=', 'project_respondent.project_id') 
+                ->whereBetween('project_respondent.created_at', ["'".$from."'", "'".$to."'"])
+                ->orderby("project_respondent.id","desc")
+                ->get();
+
+            $rows = 2;
+            $sno = 1;
+            foreach($all_datas as $all_data){
+
+                $sheet->setCellValue('A' . $rows, $sno);
+                $sheet->setCellValue('B' . $rows, $all_data->rname);
+                $sheet->setCellValue('C' . $rows, $all_data->rsurname);
+                $sheet->setCellValue('D' . $rows, $all_data->rmobile);
+                $sheet->setCellValue('E' . $rows, $all_data->rwhatsapp);
+                $sheet->setCellValue('F' . $rows, $all_data->remail);
+                
+                $sno++;
+                $rows++;
+            }
+            
+            $fileName = "project_respondent_".date('ymd').".".$type;
+        }
+        
         if($type == 'xlsx') {
             $writer = new Xlsx($spreadsheet);
         } else if($type == 'xls') {
@@ -441,8 +519,29 @@ class ProjectsController extends Controller
         }
             $writer->save("export/".$fileName);
             
-        header("Content-Type: application/vnd.ms-excel");
-        return redirect(url('/')."/export/".$fileName);
+            header("Content-Type: application/vnd.ms-excel");
+            return redirect(url('/')."/export/".$fileName);
+    }
+
+     /**
+     * Show the form for creating a new resource.
+     */
+    public function export_projects()
+    {
+        try {
+           
+            $returnHTML = view('admin.projects.export')->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }   
     }
 
     public function projects_multi_delete(Request $request){

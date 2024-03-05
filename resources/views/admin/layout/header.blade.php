@@ -7,20 +7,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesbrand" name="author" />
-        <link rel="shortcut icon" href="{{ asset('public/assets/images/favicon.ico') }}">
+        <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
-        <!-- Bootstrap Css -->
-        <link href="{{ asset('public/assets/css/admin/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
-        <!-- Icons Css -->
-        <link href="{{ asset('public/assets/css/admin/icons.min.css') }}" rel="stylesheet" type="text/css" />
-        <!-- App Css-->
-        <link href="{{ asset('public/assets/css/admin/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
-        <!-- Confirm Css-->
-        <link href="{{ asset('public/assets/css/admin/confirm.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
-        <link href="{{ asset('public/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('public/assets/css/admin/common.css') }}" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <link href="{{ asset('assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/libs/toastr/build/toastr.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/admin/confirm.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
 
+        <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/libs/datatables.net-select-bs4/css/select.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" /> 
+    
         <style>
             .actionsBtn {display: flex;}
             .editSurvey,.editFolder {margin-right: 1rem;}
@@ -29,10 +28,7 @@
             .select2-container{width:100% !important;}
             .privateusers {display:none;}
             .privateusers .form-group.mb-0,.surveyfoldername .form-group.mb-0{display: flex;flex-direction: column-reverse;}
-            .dataTables_paginate {float: left;}
-            .dataTables_filter {float: left;}
-            .dataTables_length {float: right;}
-            .dataTables_info {float:right;}
+            
         </style>
     </head>
 
@@ -49,19 +45,19 @@
                             <div class="navbar-brand-box">
                                 <a href="dashboard" class="logo logo-dark">
                                     <span class="logo-sm">
-                                        <img src="{{ asset('public/assets/images/logo-dark-sm.png') }}" alt="" height="22">
+                                        <img src="{{ asset('assets/images/logo-dark-sm.png') }}" alt="" height="22">
                                     </span>
                                     <span class="logo-lg">
-                                        <img src="{{ asset('public/assets/images/logo-dark.png') }}" alt="" height="18">
+                                        <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="18">
                                     </span>
                                 </a>
                 
                                 <a href="dashboard" class="logo logo-light">
                                     <span class="logo-sm">
-                                        <img src="{{ asset('public/assets/images/logo-light-sm.png') }}" alt="" height="22">
+                                        <img src="{{ asset('assets/images/logo-light-sm.png') }}" alt="" height="22">
                                     </span>
                                     <span class="logo-lg">
-                                        <img src="{{ asset('public/assets/images/logo-light.png') }}" alt="" height="18">
+                                        <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="18">
                                     </span>
                                 </a>
                             </div>

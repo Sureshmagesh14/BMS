@@ -53,10 +53,24 @@ class SurveyController extends Controller
     }
    
     public function createFolder(Request $request){
-        $user = \Auth::user();
+        $user = Auth::guard('admin')->user();
         $users=User::where('id', '!=' , $user->id)->pluck('name', 'id')->toArray();
 
-        return view('admin.survey.folder.create', compact('users'));
+        try {
+            $returnHTML = view('admin.survey.folder.create', compact('users'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        // return view('admin.survey.folder.create', compact('users'));
     }
 
     public function storeFolder(Request $request){
@@ -70,7 +84,7 @@ class SurveyController extends Controller
             $folder->user_ids=implode(',', $request->privateusers);
         }
         $folder->save();
-        return redirect()->back()->with('success', __('Folder Created Successfully.'));
+        return redirect()->route('survey.template',$folder->id)->with('success', __('Folder Created Successfully.'));
 
     }
 
@@ -114,14 +128,14 @@ class SurveyController extends Controller
 
     public function survey()
     {
-        $surveyList=Survey::orderBy("id", "desc")->get();
+        $surveyList=Survey::where(['is_deleted'=>0])->orderBy("id", "desc")->get();
        
         return view('admin.survey.survey.index', compact('surveyList'));
 
     }
 
     public function getSurveyList(){
-        $surveyList=Survey::orderBy("id", "desc")->get();
+        $surveyList=Survey::where(['is_deleted'=>0])->orderBy("id", "desc")->get();
 
         return Datatables::of($surveyList)
             ->addColumn('id', function ($list) {
@@ -168,6 +182,8 @@ class SurveyController extends Controller
         $survey->created_by=$user->id;
         $survey->builderID=$uuid;
         $survey->save();
+        return redirect()->route('survey.template',$request->folder_id)->with('success', __('Survey Created Successfully.'));
+
         return redirect()->back()->with('success', __('Survey Created Successfully.'));
 
     }
@@ -193,16 +209,18 @@ class SurveyController extends Controller
 
     public function deleteSurvey(Request $request,$id){
         $survey=Survey::where(['id'=>$id])->first();
-        if($survey->qus_count==0){
-            $survey->delete();
+        // if($survey->qus_count==0){
+            $survey->is_deleted=1;
+            $survey->save();
+            return redirect()->back()->with('success', __('Survey deleted Successfully.'));
             return json_encode(['success'=>'Survey deleted Successfully',"error"=>""]);
-        }else{
-            return json_encode(['error'=>"Survey mapped with Questions. Can't able to delete it.","success"=>""]);
-        }
+        // }else{
+        //     return json_encode(['error'=>"Survey mapped with Questions. Can't able to delete it.","success"=>""]);
+        // }
         
     }
     public function templateList(Request $request,$id){
-        $survey=Survey::where(['id'=>$id])->first();
+        $survey=Survey::where(['folder_id'=>$id,'is_deleted'=>0])->first();
         $folders=Folder::withCount('surveycount')->get();
         return view('admin.survey.template.index', compact('survey','folders'));
     }
@@ -226,8 +244,18 @@ class SurveyController extends Controller
         if($currentQus){
             $qus_type=$questionTypes[$currentQus->qus_type];
         }
-        
-        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type'));
+        $display_logic=Questions::where('id', '<', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+        $display_logic_matrix=Questions::where('id', '<', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
+        $skip_logic=Questions::where('id', '<=', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page'])->pluck('question_name', 'id')->toArray();;
+
+        $pagetype=$request->pagetype;
+        if($pagetype=='preview'){
+            $question1=Questions::where('id', '>', $currentQus->id)->where('survey_id', $survey->id)->orderBy('id')->first();
+
+            return view('admin.survey.builder.preview',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype','question1'));
+        }else{
+            return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype','skip_logic','display_logic','display_logic_matrix'));
+        }
 
     }
     public function questiontype(Request $request,$survey){
@@ -249,8 +277,13 @@ class SurveyController extends Controller
     $newqus->qus_type=$qustype;
     $newqus->created_by=$user->id;
     $newqus->save();
-    $questions=Questions::where(['survey_id'=>$survey])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+    // Update Qus Count 
     $survey=Survey::where(['id'=>$survey])->first();
+    if($qustype!='welcome_page' && $qustype!='thank_you'){
+        $survey->qus_count=$survey->qus_count+1;
+    }
+    $survey->save();
+    $questions=Questions::where(['survey_id'=>$survey])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
     
     return redirect()->route('survey.builder',[$survey->builderID,$newqus->id])->with('success', __('Question Created Successfully.'));
 
@@ -297,9 +330,19 @@ class SurveyController extends Controller
         $survey=Survey::where(['id'=>$id])->first();
         $surveylink= route('survey.view',$survey->builderID);
         return view('admin.survey.template.share', compact('surveylink','survey'));
-
-
    }
+    public function movesurvey(Request $request,$id){
+        $survey=Survey::where(['id'=>$id])->first();
+        $surveylink= route('survey.movesurveyupdate',$survey->builderID);
+        $folders=Folder::pluck('folder_name', 'id')->toArray();
+        return view('admin.survey.template.move', compact('surveylink','survey','folders'));
+    }
+    public function movesurveyupdate(Request $request,$id){
+        $folder_id=$request->folder_id;
+        $survey_id=$request->survey_id;
+        Survey::where(['id'=>$request->survey_id])->update(['folder_id'=>$request->folder_id]);
+        return redirect()->back()->with('success', __('Folder Moved Successfully.'));
+    }
     public function questionList(Request $request,$id){
         // Generatre builder ID
         $currentQus=Questions::where(['id'=>$id])->first();
@@ -309,11 +352,18 @@ class SurveyController extends Controller
         $thankQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->get();
         $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
         $qus_type=$questionTypes[$currentQus->qus_type];
-        
-        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type'));
+        $pagetype=$request->pagetype;
+
+        return view('admin.survey.builder.index',compact('survey','questions','welcomQus','thankQus','currentQus','qus_type','pagetype'));
     }
     public function updateQus(Request $request,$id){
         $currentQus=Questions::where(['id'=>$id])->first();
+        // Update Qus Count 
+        $survey=Survey::where(['id'=>$currentQus->survey_id])->first();
+        if($request->qus_type!='welcome_page' && $request->qus_type!='thank_you'){
+            $survey->qus_count=$survey->qus_count+1;
+        }
+        $survey->save();
         switch ($request->qus_type) {
             case 'welcome_page':
                 $filename='';
@@ -323,6 +373,8 @@ class SurveyController extends Controller
                     $extenstion = $file->getClientOriginalExtension();
                     $filename = time().'.'.$extenstion;
                     $file->move('uploads/survey/', $filename);
+                }else{
+                    $filename=$request->existing_image_uploaded;
                 }
                 $json=[
                     'welcome_imagesubtitle'=>$request->welcome_imagesubtitle,'welcome_btn'=>$request->welcome_btn,
@@ -341,6 +393,8 @@ class SurveyController extends Controller
                     $extenstion = $file->getClientOriginalExtension();
                     $filename = time().'.'.$extenstion;
                     $file->move('uploads/survey/', $filename);
+                }else{
+                    $filename=$request->existing_image_uploaded_thankyou;
                 }
                 $json=[
                     'thankyou_title'=>$request->thankyou_title,
@@ -416,6 +470,14 @@ class SurveyController extends Controller
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>'email']);
                 break;
             case 'matrix_qus':
+                $json=[
+                    'matrix_choice'=>implode(",",$request->choices_list_matrix),
+                    'matrix_qus'=>implode(",",$request->question_list_matrix),
+                    'qus_type'=>'matrix',
+                    'choices_type'=>'radio',
+                    'question_name'=>$request->question_name
+                ];
+                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             default:
               //code block
@@ -424,11 +486,41 @@ class SurveyController extends Controller
 
     }
     public function viewsurvey(Request $request, $id){
-        echo $id;
-        $survey=Survey::where(['builderID'=>$id])->first();
-        echo "<pre>"; print_r($survey);
+        $survey=Survey::with('questions')->where(['builderID'=>$id])->first();
+        // Update Visited Count 
+        
+        $visited_count=Survey::where(['builderID'=>$id])->update(['visited_count'=>$survey->visited_count+1]);
 
+        $questions=Questions::where(['survey_id'=>$survey->id])->whereIn('qus_type',['welcome_page','thank_you'])->get();
+        $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
+        if($welcomQus){
+            $question=$welcomQus;
+        }else{
+            $question=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+        }
+        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+
+        $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+        if($question1){
+            $question1=$question1;
+        }else{
+            $question1=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
+        }
+        return view('admin.survey.response', compact('survey','question','question1','questionsset'));
     }
+    public function startsurvey(Request $request, $id,$qus){
+        $survey=Survey::with('questions')->where(['id'=>$id])->first();
+        // Update started Count 
+        
+        // $started_count=Survey::where(['id'=>$id])->update(['started_count'=>$survey->started_count+1]);
+        $question=Questions::where(['id'=>$qus])->first();
+
+        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+       
+        $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
+        return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+    }
+
     public function uploadimage(Request $request){
         $filename='';
         if($request->hasfile('image'))
@@ -443,6 +535,70 @@ class SurveyController extends Controller
             echo "no file";
         }
     }
+    public function getqus(Request $request){
+        $qus=Questions::where(['id'=>$request->qus_id])->first();
+        $resp_logic_type=[];
+        $qusvalue = json_decode($qus->qus_ans); 
+        switch ($qus->qus_type) {
+            case 'single_choice':
+                $resp_logic_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'multi_choice':
+                $resp_logic_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'open_qus':
+                $resp_logic_type=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
+                break; 
+            case 'likert':
+                $resp_logic_type=['lessThanForScale'=>'Less than','greaterThanForScale'=>'Greater than','equalToForScale'=>'Equal To','notEqualToForScale'=>'Not Equal To','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'rankorder':
+                $resp_logic_type=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'rating':
+                $resp_logic_type=['lessThanForScale'=>'Less than','greaterThanForScale'=>'Greater than','equalToForScale'=>'Equal To','notEqualToForScale'=>'Not Equal To','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'dropdown':
+                $resp_logic_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'picturechoice':
+                $resp_logic_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'email':
+                $resp_logic_type=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
+                break;
+            case 'matrix_qus':
+                $resp_logic_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+
+        }
+        return ['qus'=>$qus,'resp_logic_type'=>$resp_logic_type,'qus_type'=>$qus->qus_type];
+
+        echo "<pre>"; print_r($qus);
+    }
+    public function background(Request $request,$id){
+        $survey=Survey::where(['id'=>$id])->first();
+        return view('admin.survey.background', compact('survey'));
+    }
+    public function setbackground(Request $request,$id){
+        $survey=Survey::where(['id'=>$id])->first();
+        // {
+        //     type:"single_color",
+        //     color1:"",
+        // }
+        // {
+        //     type:"gradient",
+        //     color1:"",
+        //     color2:"",
+        //     ori:"",
+        // }
+        // {
+        //     type:"image",
+        //     color1:"",
+        // }
+    }
 
    
 }
+
+

@@ -28,7 +28,7 @@ class CustomAuthController extends Controller
             ]);
             $credentials = $request->only('email', 'password');
             if (Auth::attempt($credentials)) {
-                return redirect()->intended('dashboard')
+                return redirect()->intended('bmsAdmin/dashboard')
                     ->withSuccess('Signed in');
             }
             return redirect()->route('login.custom')->withSuccess('Login details are not valid');
@@ -119,7 +119,7 @@ class CustomAuthController extends Controller
         try {
             Session::flush();
             Auth::logout();
-            return Redirect('/');
+            return Redirect('/bmsAdmin');
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

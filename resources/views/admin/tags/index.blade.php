@@ -36,15 +36,9 @@
 
             <div class="row">
                 <div class="col-12">
-
-
-
                     <div class="card">
                         <div class="card-body">
                             <div class="text-right">
-
-
-
                                 <div class="btn-group" role="group">
                                     <button id="btnGroupVerticalDrop1" type="button"
                                         class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
@@ -55,7 +49,7 @@
                                         <a class="dropdown-item" href="{{ url('tags_export/xlsx') }}">Panels</a>
                                     </div>
 
-                                    @if (Auth::user()->role_id == 1)
+                                    @if (Auth::guard('admin')->user()->role_id == 1)
                                         <a class="btn btn-danger" class="btn btn-primary" id="delete_all"
                                             style="display: none;">
                                             Delete Selected All
@@ -65,7 +59,7 @@
 
                                 &nbsp;
 
-                                @if (Auth::user()->role_id == 1)
+                                @if (Auth::guard('admin')->user()->role_id == 1)
                                     <a href="#!" data-url="{{ route('tags.create') }}" data-size="xl"
                                         data-ajax-popup="true" class="btn btn-primary"
                                         data-bs-original-title="{{ __('Create Groups') }}" class="btn btn-primary"
@@ -82,12 +76,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input select_all"
-                                                    id="inlineForm-customCheck">
-                                                <label class="custom-control-label" for="inlineForm-customCheck"
-                                                    style="font-weight: bold;">Select All</label>
-                                            </div>
+                                            <input type="checkbox" class="select_all" id="inlineForm-customCheck">
                                         </th>
                                         <th>#</th>
                                         <th>Name</th>

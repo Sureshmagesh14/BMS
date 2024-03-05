@@ -58,7 +58,8 @@
                                                 <th>ACTION TARGET</th>
                                                 <th>ACTION STATUS</th>
                                                 <th>ACTION HAPPENED AT</th>
-                                                <th></th>
+                                                <th>Action</th>
+                                                
                                             </tr>
                                             </thead>
         
@@ -91,91 +92,142 @@
 @include('admin.layout.footer')
 
 <script>
+     var tempcsrf = '{!! csrf_token() !!}';
 $(document).ready(function() {
-    var tempcsrf = '{!! csrf_token() !!}';
-    
-    $('#myTable').dataTable().fnDestroy();
+   
+    datatable();
+    // $('#myTable').dataTable().fnDestroy();
 
-    $('#myTable').DataTable({
+    // $('#myTable').DataTable({
       
-        searching: true,
-        serverSide: true,
-        deferRender: true,
-        ordering: true,
-        dom : 'lfrtip',
-        info: true,
-        iDisplayLength: 10,
-        lengthMenu: [
-            [ 10, 50, 100, -1],
-            [10, 50, 100, "All"]
-        ],
-        ajax: {
-            url: "{{ route('get_all_actions') }}",
-            data: {
-                _token: tempcsrf,
-            },
-            error: function(xhr, error, thrown) {
-               alert("undefind error")
-            }
-        },
+    //     searching: true,
+    //     serverSide: true,
+    //     deferRender: true,
+    //     ordering: true,
+    //     dom : 'lfrtip',
+    //     info: true,
+    //     iDisplayLength: 10,
+    //     lengthMenu: [
+    //         [ 10, 50, 100, -1],
+    //         [10, 50, 100, "All"]
+    //     ],
+    //     ajax: {
+    //         url: "{{ route('get_all_actions') }}",
+    //         data: {
+    //             _token: tempcsrf,
+    //         },
+    //         error: function(xhr, error, thrown) {
+    //            alert("undefind error")
+    //         }
+    //     },
        
-        columns: [{
-                data: 'id',
-                name: '#',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'name',
-                name: 'name',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'uname',
-                name: 'uname',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'target_id',
-                name: 'target_id',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'status',
-                name: 'status',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'updated_at',
-                name: 'updated_at',
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: true,
-                searchable: true
-            }
-        ],
-        columnDefs: [
-            {
-                targets: 0,
-                width: 75,
-                className: "text-center"
-            },{
-                targets: 1
-            },
-            {
-                targets: 2,
-                width: 115,
-                className: "text-center"
-            }
-        ],
-    });
+    //     columns: [{
+    //             data: 'id',
+    //             name: '#',
+    //             orderable: true,
+    //             searchable: true
+    //         },
+    //         {
+    //             data: 'name',
+    //             name: 'name',
+    //             orderable: true,
+    //             searchable: true
+    //         },
+    //         {
+    //             data: 'uname',
+    //             name: 'uname',
+    //             orderable: true,
+    //             searchable: true
+    //         },
+    //         {
+    //             data: 'target_id',
+    //             name: 'target_id',
+    //             orderable: true,
+    //             searchable: true
+    //         },
+    //         {
+    //             data: 'status',
+    //             name: 'status',
+    //             orderable: true,
+    //             searchable: true
+    //         },
+    //         {
+    //             data: 'updated_at',
+    //             name: 'updated_at',
+    //             orderable: true,
+    //             searchable: true
+    //         },
+    //         {
+    //             data: 'action',
+    //             name: 'action',
+    //             orderable: true,
+    //             searchable: true
+    //         }
+    //     ],
+    //     columnDefs: [
+    //         {
+    //             targets: 0,
+    //             width: 75,
+    //             className: "text-center"
+    //         },{
+    //             targets: 1
+    //         },
+    //         {
+    //             targets: 2,
+    //             width: 115,
+    //             className: "text-center"
+    //         }
+    //     ],
+    // });
 });
+
+function datatable() {
+$('#myTable').dataTable().fnDestroy();
+            var postsTable = $('#myTable').dataTable({
+                "ordering": true,
+                "processing": true,
+                "serverSide": true,
+                "searching":false,
+                dom: 'lfrtip',
+                "ajax": {
+                    "url": "{{ route('get_all_actions') }}",
+                    "data": {
+                        _token: tempcsrf,
+                    },
+                    "dataType": "json",
+                    "type": "POST"
+                },
+                "columns": [
+
+                    {
+                        "data": "id"
+                    },
+                    {
+                        "data": "name"
+                    },
+                    {
+                        "data": "uname"
+                    },
+                    {
+                        "data": "actionable_id"
+                    },
+                    {
+                        "data": "status"
+                    },
+                    {
+                        "data": "created_at"
+                    },
+                    {
+                        "data": "options"
+                    },
+                   
+                ],
+                "order": [
+                    [1, "asc"]
+                ],
+
+                stateSave: false,
+            });
+        }
+
 </script>

@@ -49,10 +49,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input select_all" id="inlineForm-customCheck">
-                                                <label class="custom-control-label" for="inlineForm-customCheck" style="font-weight: bold;">Select All</label>
-                                            </div>
+                                            <input type="checkbox" class="select_all" id="inlineForm-customCheck">
                                         </th>
                                         <th>#</th>
                                         <th>Type</th>
@@ -174,13 +171,7 @@
                     { data: 'id', name: '#', orderable: true, searchable: true },
                     { data: 'name', name: 'name', orderable: true, searchable: true },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
-                ],
-                columnDefs: [
-                    { targets: 0,width: 75,className: "text-center" },
-                    { targets: 1 },
-                    { targets: 2,width: 115,className: "text-center" },
-                    { targets: 3,width: 115,className: "text-center" }
-                ],
+                ]
             });
         }
 

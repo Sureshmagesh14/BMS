@@ -7,56 +7,44 @@
                 <td>{{$data->id}}</td>
             </tr>
             <tr>
-                <th>Type</th>
+                <th>Action Name</th>
                 <td>
-                    @if($data->type_id==1)
-                       @php $type='EFT'; @endphp
-                    @elseif($data->type_id==2)
-                        @php $type='Data';  @endphp
-                    @elseif($data->type_id==3)
-                        @php $type='Airtime';  @endphp
-                    @else
-                        @php $type='-'; @endphp
-                    @endif
-                    {{$type}}
+                  
+                    {{$data->name}}
                 </td>
             </tr>
             <tr>
-                <th>Status</th>
+                <th>Action Initiated By</th>
                 <td>
-                    @if($data->status_id==0)
-                        @php $status='Failed'; @endphp
-                    @elseif($data->status_id==1)
-                        @php $status='Pending';  @endphp
-                    @elseif($data->status_id==2)
-                        @php $status='Processing';  @endphp
-                    @elseif($data->status_id==3)
-                        @php $status='Complete';  @endphp
-                    @elseif($data->status_id==4)
-                        @php $status='Declined';  @endphp
-                    @elseif($data->status_id==5)
-                        @php $status='Approved For Processing';  @endphp
-                    @else
-                        @php $status='-'; @endphp
-                    @endif
-                 
-                    {{$data->amount/10}}
+                    {{$data->uname}}
                 </td>
             </tr>
             <tr>
-                <th>Amount (R)</th>
-                <td>{{$data->amount/10}}</td>
+                <th>Action Target</th>
+                <td>{{$data->actionable_id}}</td>
             </tr>
             <tr>
-                <th>Respondent</th>
-                <td>{{$data->name.' - '.$data->email.' - '.$data->mobile}}</td>
+                <th>Action Status</th>
+                <td>{{$data->status}}</td>
             </tr>
             <tr>
-                <th>Charity</th>
+                <th>Original</th>
                 <td>{{$data->charity_id}}</td>
             </tr>
-           
-           
+            <tr>
+                <th>Changes</th>
+                <td>{{$data->charity_id}}</td>
+            </tr>
+            <tr>
+                <th>Exception</th>
+                <td>{{$data->charity_id}}</td>
+            </tr>
+
+            <tr>
+                <th>Action Happened At</th>
+                <td>{{ date('Y-m-d h:i A', strtotime($data->created_at)) }}</td>
+            </tr>
+            
         </tbody>
     </table>
 </div>

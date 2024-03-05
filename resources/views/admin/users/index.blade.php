@@ -54,7 +54,7 @@
 
                                 </div>
 
-                                @if (Auth::user()->role_id == 1)
+                                @if (Auth::guard('admin')->user()->role_id == 1)
                                     <a href="#!" data-url="{{ route('users.create') }}" data-size="xl"
                                         data-ajax-popup="true" class="btn btn-primary"
                                         data-bs-original-title="{{ __('Create Users') }}" class="btn btn-primary"
@@ -76,10 +76,7 @@
 
                                     <tr>
                                         <th>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input select_all" id="inlineForm-customCheck">
-                                                <label class="custom-control-label" for="inlineForm-customCheck" style="font-weight: bold;">Select All</label>
-                                            </div>
+                                            <input type="checkbox" class="select_all" id="inlineForm-customCheck">
                                         </th>
                                         <th>#</th>
                                         <th>Name</th>
@@ -115,13 +112,14 @@
 
 
 
+    
 
     @include('admin.layout.footer')
-
     @stack('adminside-js')
     @stack('adminside-validataion')
     @stack('adminside-confirm')
     @stack('adminside-datatable')
+    
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
@@ -195,7 +193,7 @@
 
 
         function datatable() {
-            $('#myTable').dataTable().fnDestroy();
+            // $('#myTable').dataTable().fnDestroy();
             $('#myTable').DataTable({
                 searching: true,
                 ordering: true,
@@ -272,45 +270,7 @@
                         orderable: true,
                         searchable: true
                     }
-                ],
-                columnDefs: [
-                    {
-                        targets: 0,
-                        width: 75,
-                        className: "text-center"
-                    }, {
-                        targets: 1
-                    },
-                    {
-                        targets: 2
-                    },
-                    {
-                        targets: 3
-                    },
-                    {
-                        targets: 4
-                    },
-                    {
-                        targets: 5
-                    },
-                    {
-                        targets: 6
-                    },
-                    {
-                        targets: 7,
-                        width: 115,
-                        className: "text-center"
-                    },
-                    {
-                        targets: 8,
-
-                    },
-                      {
-                        targets: 9,
-                        width: 115,
-                        className: "text-center"
-                    }
-                ],
+                ]
             });
         }
 
