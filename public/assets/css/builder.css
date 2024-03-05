@@ -874,7 +874,6 @@ a:hover {
 
 .d-flex.fx-ai--center p {
     margin-left: 10px;
-    font-size: 14px;
 }
 
 div.gallery {
@@ -896,7 +895,7 @@ div.gallery img {
 div.desc {
     padding: 15px;
     text-align: center;
-}
+  }
 .below_space{
     margin-top: 3rem;
 }
