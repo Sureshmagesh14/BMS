@@ -651,29 +651,48 @@
 <?php $bg=json_decode($survey->background); 
 $style="";
 $stylesingle="#EC226C";
+$stylesgradient="background-image:linear-gradient(to right top, #6d327c, #485DA6, #00a1ba, #00BF98, #36C486);";
+$styleimage="";
+$type="single";
+$ori='to right top';
+$c1='#9164B7';
+$c2='#C2E3B1';
 if(isset($bg)){
+    $type=$bg->type;
 
     if($bg->type=='image'){
-
+        $styleimage="";
     }else if($bg->type =='single'){
         if($bg->color!=''){
             $style="background-color:".$bg->color.";";
-            $stylev=$bg->color;
+            $stylesingle=$bg->color;
         }
-       
-        // $style=$bg->value;
+    }else if($bg->type =='gradient'){
+        if($bg->color!=''){
+            $color=json_decode($bg->color);
+            $ori=$color->ori;
+            $c1=$color->hex1;
+            $c2=$color->hex2;
+            $stylesgradient="background-image:linear-gradient(" . $color->ori . ", " . $color->hex1 . ", ". $color->hex2 . ");";
+        }
     }
 } ?>
 <body class="gradient" style="{{$style}}">
 <form id="set_background_form" method="post" enctype="multipart/form-data" action="{{route('survey.background',$survey->id)}}" >
     <input name="_token" type="hidden" value="{{csrf_token()}}">
+   <input type="hidden" id="stylesingle" value="{{$stylesingle}}" name="stylesingle">
+   <input type="hidden" id="stylesgradient" value="{{$stylesgradient}}" name="stylesgradient">
+   <input type="hidden" id="type" value="{{$type}}" name="type">
    <input type="hidden" id="survey_id" value="{{$survey->id}}" name="survey_id">
    <input type="hidden" id="bg_value" value="" name="bg_value">
    <input type="hidden" id="bg_type" value="" name="bg_type">
+   <input type="hidden" id="gradienthex" value="" name="gradienthex">
+   <input type="hidden" id="gradienthex1" value="" name="gradienthex1">
+   <input type="hidden" id="gradientori" value="" name="gradientori">
     <div class="w3-bar w3-black">
-        <button class="w3-bar-item w3-button Single" onclick="openCity('Single')">Single Color</button>
-        <button class="w3-bar-item w3-button Gradient" onclick="openCity('Gradient')">Gradient Color</button>
-        <button class="w3-bar-item w3-button Image" onclick="openCity('Image')">Image</button>
+        <button type="button" class="w3-bar-item w3-button Single" onclick="openCity('Single')">Single Color</button>
+        <button  type="button" class="w3-bar-item w3-button Gradient" onclick="openCity('Gradient')">Gradient Color</button>
+        <button   type="button"  class="w3-bar-item w3-button Image" onclick="openCity('Image')">Image</button>
     </div>
 
     <div id="Single" class="w3-container city">
@@ -690,7 +709,7 @@ if(isset($bg)){
                             <div class="fade labels">
                                 <div class="label">
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
-                                        type="text" name='hex' id='hex' value="{{$stylev}}">
+                                        type="text" name='hex' id='hex' value="{{$stylesingle}}">
                                 </div>
                                 <div class="label">  
                                     <div type="button" onclick="setsinglecolor()">
@@ -717,9 +736,9 @@ if(isset($bg)){
         </div>
     </div>
 
-    <div id="Gradient" class="w3-container city" style="display:none">
+    <div id="Gradient" class="w3-container city" style="display:none;">
         <h2>Gradient</h2>
-        <div class="bgnew" id="gradient" style="background-image: linear-gradient(to right top,#9164b7, #3d94de, #00b7d7, #6dd1bd, #c2e3b1);"></div>
+        <div class="bgnew" id="gradient" style="{{$stylesgradient}}"></div>
         <div class="bg">
             <div class="wrap">
                 <div class="outer">
@@ -727,32 +746,32 @@ if(isset($bg)){
                         <form method="get" id="form1">
                             <div class="choose">
                                 <p>Choose orientation</p>
-                                <input type="radio" name="ori" value="to right top" id="radio1" checked>
+                                <input type="radio" name="ori" value="to right top" id="radio1" @if($ori=='to right top') checked @endif>
                                 <label class="rLab" for="radio1"><i class="fa fa-arrow-right degtop"
                                        ></i></label>
 
-                                <input type="radio" name="ori" value="to right" id="radio2">
+                                <input type="radio" name="ori" value="to right" id="radio2" @if($ori=='to right') checked @endif>
                                 <label class="rLab" for="radio2"><i class="fa fa-arrow-right"></i></label>
 
-                                <input type="radio" name="ori" value="to right bottom" id="radio3">
+                                <input type="radio" name="ori" value="to right bottom" id="radio3" @if($ori=='to right bottom') checked @endif>
                                 <label class="rLab" for="radio3"><i class="fa fa-arrow-right degbot"
                                        ></i></label>
 
-                                <input type="radio" name="ori" value="to bottom" id="radio4">
+                                <input type="radio" name="ori" value="to bottom" id="radio4" @if($ori=='to bottom') checked @endif>
                                 <label class="rLab" for="radio4"><i class="fa fa-arrow-down"></i></label>
 
-                                <input type="radio" name="ori" value="to left bottom" id="radio5">
+                                <input type="radio" name="ori" value="to left bottom" id="radio5" @if($ori=='to left bottom') checked @endif>
                                 <label class="rLab" for="radio5"><i class="fa fa-arrow-left degtop"
                                        ></i></label>
 
-                                <input type="radio" name="ori" value="to left" id="radio6">
+                                <input type="radio" name="ori" value="to left" id="radio6" @if($ori=='to left') checked @endif>
                                 <label class="rLab" for="radio6"><i class="fa fa-arrow-left"></i></label>
 
-                                <input type="radio" name="ori" value="to left top" id="radio7">
+                                <input type="radio" name="ori" value="to left top" id="radio7" @if($ori=='to left top') checked @endif>
                                 <label class="rLab" for="radio7"><i class="fa fa-arrow-left degbot"
                                        ></i></label>
 
-                                <input type="radio" name="ori" value="to top" id="radio8">
+                                <input type="radio" name="ori" value="to top" id="radio8" @if($ori=='to top') checked @endif>
                                 <label class="rLab" for="radio8"><i class="fa fa-arrow-up"></i></label>
 
                             </div>
@@ -760,11 +779,11 @@ if(isset($bg)){
                             <div class="fade labels">
                                 <div class="label">
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
-                                        type="text" name='hex' id='hex' value="#9164B7">
+                                        type="text" name='hex1' id='hex1' value="{{$c1}}">
                                 </div>
                                 <div class="label">
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
-                                        type="text" name='hex2' id='hex1' value="#C2E3B1">
+                                        type="text" name='hex2' id='hex2' value="{{$c2}}">
                                 </div>
                                 <div class="label">  
                                     <div type="button" onclick="setgradient()">
@@ -786,7 +805,7 @@ if(isset($bg)){
 
                         <p>CSS Code:</p>
                         <code id="selectable">
-                            background-image: linear-gradient(to right top,#9164b7, #3d94de, #00b7d7, #6dd1bd, #c2e3b1);</code>
+                            {{$stylesgradient}}</code>
                     </div>
                 </div>
             </div>
@@ -842,6 +861,24 @@ if(isset($bg)){
 
             }
         }
+        document.addEventListener("DOMContentLoaded", (event) => {
+            if($('#type').val()=='sinlge'){
+                openCity('Single');
+                $('#selectable').html($('#stylesingle').val());
+            }
+            if($('#type').val()=='gradient'){
+                openCity('Gradient');
+                
+                $('#selectable').html($('#stylesgradient').val());
+            }
+            if($('#type').val()=='image'){
+                openCity('Image');
+
+                
+            }
+            
+            console.log("DOM fully loaded and parsed");
+        });
         function openCity(cityName) {
             var i;
             var x = document.getElementsByClassName("city");
@@ -857,9 +894,12 @@ if(isset($bg)){
             $('#selectable').html("background-color:"+body.style.background + ";");
         }
         function setgradient() {
-            let v1 = $('#hex').val();
-            let v2 = $('#hex1').val();
+            let v1 = $('#hex1').val();
+            let v2 = $('#hex2').val();
             let ori = $('input[name="ori"]:checked').val();
+            $('#gradienthex').val($('#hex1').val());
+            $('#gradienthex1').val($('#hex2').val());
+            $('#gradientori').val($('input[name="ori"]:checked').val());
             var body = document.getElementById("gradient");
             body.style.background = "linear-gradient(" + ori + ", " + v1 + ", "
                 + v2 + ")";

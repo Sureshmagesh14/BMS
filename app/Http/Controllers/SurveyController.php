@@ -611,9 +611,10 @@ class SurveyController extends Controller
         }else if($request->bg_type=='single'){
             $bg=$request->hex;
         }else{
-            $hex1=$request->hex;
-            $hex2=$request->hex2;
-            $ori=$request->ori;
+            
+            $hex1=$request->gradienthex;
+            $hex2=$request->gradienthex1;
+            $ori=$request->gradientori;
             $bg=json_encode(['hex1'=>$hex1,'hex2'=>$hex2,'ori'=>$ori]);
 
         }
