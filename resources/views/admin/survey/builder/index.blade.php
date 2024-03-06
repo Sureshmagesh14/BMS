@@ -144,7 +144,7 @@
                     <?php $i++;?>
                 @endforeach
                 
-                <a href="#" data-url="{{route('survey.questiontype',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Choose Question Type" data-title="Choose Question Type">
+                <a data-url="{{route('survey.questiontype',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Choose Question Type" data-title="Choose Question Type">
                     <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card ">
                         <div class="d-flex fx-ai--center">
                             <div class="icon-wrapper"> <i data-feather="plus"></i></div>
@@ -1144,6 +1144,9 @@ div#survey-table_wrapper .row {
 }
 
 </style>
+
+@include('admin.layout.footer')
+    @stack('adminside-js')
 <script>
 
 function addchoice_pic(){
@@ -1784,5 +1787,4 @@ $("html body").delegate('.logic_type_value_skip', "change", function() {
 });
 // Skip Logic
 </script>
-    @yield('adminside-script')
-@include('admin.layout.footer')
+
