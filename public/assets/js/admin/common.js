@@ -22,8 +22,16 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
         url: url,
         data: data,
         success: function (data) {
-            $('#commonModal .modal-body').html(data['html_page']);
+            if(data['html_page'] != undefined){
+                $('#commonModal .modal-body').html(data['html_page']);
+            }
+            else{
+                $('#commonModal .modal-body').html(data);
+            }
+            
             $("#commonModal").modal('show');
+            // daterange_set();
+            common_bind("#commonModal");
         },
         error: function (data) {
             data = data.responseJSON;
@@ -32,6 +40,20 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
         }
     });
 });
+
+function common_bind() {
+    select2();
+}
+
+function select2() {
+    console.log($(".select2").length);
+    if ($(".select2").length > 0) {
+        if($('#user_ids').val()!=undefined && $('#user_ids').val()!=''){
+            $('#privateusers').val($('#user_ids').val().split(","));
+        }
+        $('.select2').select2();
+    }
+}
 
 $(document).on('change', '.select_all', function (e) {
     var checkboxes = $(this).closest('table').find(':checkbox');
