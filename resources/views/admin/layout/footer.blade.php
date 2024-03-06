@@ -93,10 +93,13 @@
     </div>
 </div>
 
+    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
     
     @push('adminside-js')
         <!-- JAVASCRIPT -->
-        <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+        {{-- <script src="{{ asset('assets/js/jquery.min.js') }}"></script> --}}
+        <script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>
+
         <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('assets/libs/toastr/build/toastr.min.js') }}"></script>
         <script src="{{ asset('assets/js/pages/toastr.init.js') }}"></script>
@@ -104,13 +107,17 @@
         <script src="{{ asset('assets/libs/metismenu/metisMenu.min.js') }}"></script>
         <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
         <script src="{{ asset('assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
-        <script src="{{ asset('assets/libs/jquery.counterup/jquery.counterup.min.js') }}"></script>
         <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
         <script src="{{ asset('assets/libs/waypoints/lib/jquery.waypoints.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/jquery.counterup/jquery.counterup.min.js') }}"></script>
         <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
-        <script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>
-
         
+        {{-- <script src="{{ asset('assets/js/pages/form-advanced.init.js') }}"></script> --}}
+
+        <!-- apexcharts -->
+        {{-- <script src="{{ asset('/assets/libs/apexcharts/apexcharts.min.js') }}"></script> --}}
+        {{-- <script src="{{ asset('assets/js/pages/dashboard.init.js') }}"></script> --}}
+       
         <script src="{{ asset('assets/js/admin/app.js') }}"></script>
         <script src="{{ asset('assets/js/admin/confirm.min.js') }}"></script>
         <script src="{{ asset('assets/js/admin/common.js') }}"></script>
@@ -145,20 +152,7 @@
         <!-- Datatable init js -->
         <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
     @endpush
-
-    <script>
-        function common_bind() {
-            select2();
-        }
-
-        function select2() {
-            if ($(".select2").length > 0) {
-                if($('#user_ids').val()!=undefined && $('#user_ids').val()!=''){
-                    $('#privateusers').val($('#user_ids').val().split(","));
-                }
-                $('.select2').select2();
-            }
-        }
-    </script>
+    
+    <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
 </body>
 </html>

@@ -1,6 +1,4 @@
 @include('admin.layout.header')
-    @yield('adminside-favicon')
-    @yield('adminside-css')
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 <!-- ========== Left Sidebar Start ========== -->
@@ -338,228 +336,125 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
         <!-- container-fluid -->
     </div>
     <!-- End Page-content -->
-    <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
+    {{-- <script src="{{ asset('/assets/js/jquery.min.js') }}"></script> --}}
 <style>
 div#survey-table_wrapper .row {
     width: 100%;
 }
 
 </style>
-<script>
-$(document).mouseup(function(e) 
-{
-    $('[data-toggle="popover"]').each(function () {
-        //the 'is' for buttons that trigger popups
-        //the 'has' for icons within a button that triggers a popup
-        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-            $(this).popover('hide');
-        }
-    });
-    var container = $(".action_list");
 
-
-    // if the target of the click isn't the container nor a descendant of the container
-    if (!container.is(e.target) && container.has(e.target).length === 0)
-    {
-        container.hide();
-    }
-});
-$("body").on("click", ".actionfolder", function () {
-    $(".action_list").css('display','none');
-    $(this).children(".action_list").toggle();
-});
-
-$("body").on("click", ".actionsurvey", function () {
-    $(".action_list_survey").css('display','none');
-    $(this).children(".action_list_survey").toggle();
-});
-
-function folderdelete(url,id){
-    Swal.fire({ 
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning", showCancelButton: !0, 
-        confirmButtonColor: "#34c38f", 
-        cancelButtonColor: "#f46a6a", 
-        confirmButtonText: "Yes, delete it!" 
-    }).then(function (t) { 
-        if(t.isConfirmed){
-            $.ajax({url: url, success: function(result){
-                result = JSON.parse(result);
-                if(result.error!=''){
-                    t.value && Swal.fire("Warning!", result.error, "warning") ;
-                }else{
-                    t.value && Swal.fire({
-                        title:"Deleted!", 
-                        text:result.success, 
-                        icon:"success"
-                    }).then(function (t) { 
-                        window.location.reload();
-                    }) ;
-                }
-              
-            }});
-        }
-    })
-    console.log(id)
-}
-$(document).ready(function(){
-    $('.actionsurvey1').popover({
-    html: true,
-    content: function() {
-      let contentID = $(this).data('htmlcontent');
-      return $(contentID).html();
-    }
-  });
-});
-$('.actionsurvey1').on('click', function (e) {
-    $('.actionsurvey1').not(this).popover('hide');
-});
-
-function surveydelete(url,id){
-    Swal.fire({ 
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning", showCancelButton: !0, 
-        confirmButtonColor: "#34c38f", 
-        cancelButtonColor: "#f46a6a", 
-        confirmButtonText: "Yes, delete it!" 
-    }).then(function (t) { 
-        if(t.isConfirmed){
-            $.ajax({url: url, success: function(result){
-                result = JSON.parse(result);
-                if(result.error!=''){
-                    t.value && Swal.fire("Warning!", result.error, "warning") ;
-                }else{
-                    t.value && Swal.fire({
-                        title:"Deleted!", 
-                        text:result.success, 
-                        icon:"success"
-                    }).then(function (t) { 
-                        window.location.reload();
-                    }) ;
-                }
-            }});
-        }
-        
-    })
-    console.log(id)
-}
-// $(document).on('click', '.deletesurvey', function(){
-//       console.log($(this).parent().parent().siblings('#deletelink'))
-// });
-// $('.deletesurvey').on('click', function (e) {
-//     console.log($(this).data('deleteurl'))
-// });
-</script>
-    @yield('adminside-script')
+    
 @include('admin.layout.footer')
     @stack('adminside-js')
 <script>
-$(document).mouseup(function(e) 
-{
-    $('[data-toggle="popover"]').each(function () {
-        //the 'is' for buttons that trigger popups
-        //the 'has' for icons within a button that triggers a popup
-        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-            $(this).popover('hide');
+    $(document).mouseup(function(e) 
+    {
+        $('[data-toggle="popover"]').each(function () {
+            //the 'is' for buttons that trigger popups
+            //the 'has' for icons within a button that triggers a popup
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+        var container = $(".action_list");
+
+
+        // if the target of the click isn't the container nor a descendant of the container
+        if (!container.is(e.target) && container.has(e.target).length === 0)
+        {
+            container.hide();
         }
     });
-    var container = $(".action_list");
+    $("body").on("click", ".actionfolder", function () {
+        $(".action_list").css('display','none');
+        $(this).children(".action_list").toggle();
+    });
 
+    $("body").on("click", ".actionsurvey", function () {
+        $(".action_list_survey").css('display','none');
+        $(this).children(".action_list_survey").toggle();
+    });
 
-    // if the target of the click isn't the container nor a descendant of the container
-    if (!container.is(e.target) && container.has(e.target).length === 0)
-    {
-        container.hide();
+    function folderdelete(url,id){
+        Swal.fire({ 
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning", showCancelButton: !0, 
+            confirmButtonColor: "#34c38f", 
+            cancelButtonColor: "#f46a6a", 
+            confirmButtonText: "Yes, delete it!" 
+        }).then(function (t) { 
+            if(t.isConfirmed){
+                $.ajax({url: url, success: function(result){
+                    result = JSON.parse(result);
+                    if(result.error!=''){
+                        t.value && Swal.fire("Warning!", result.error, "warning") ;
+                    }else{
+                        t.value && Swal.fire({
+                            title:"Deleted!", 
+                            text:result.success, 
+                            icon:"success"
+                        }).then(function (t) { 
+                            window.location.reload();
+                        }) ;
+                    }
+                
+                }});
+            }
+        })
+        console.log(id)
     }
-});
-$("body").on("click", ".actionfolder", function () {
-    $(".action_list").css('display','none');
-    $(this).children(".action_list").toggle();
-});
 
-$("body").on("click", ".actionsurvey", function () {
-    $(".action_list_survey").css('display','none');
-    $(this).children(".action_list_survey").toggle();
-});
-
-function folderdelete(url,id){
-    Swal.fire({ 
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning", showCancelButton: !0, 
-        confirmButtonColor: "#34c38f", 
-        cancelButtonColor: "#f46a6a", 
-        confirmButtonText: "Yes, delete it!" 
-    }).then(function (t) { 
-        if(t.isConfirmed){
-            $.ajax({url: url, success: function(result){
-                result = JSON.parse(result);
-                if(result.error!=''){
-                    t.value && Swal.fire("Warning!", result.error, "warning") ;
-                }else{
-                    t.value && Swal.fire({
-                        title:"Deleted!", 
-                        text:result.success, 
-                        icon:"success"
-                    }).then(function (t) { 
-                        window.location.reload();
-                    }) ;
-                }
-              
-            }});
+    $(document).ready(function(){
+        $('.actionsurvey1').popover({
+        html: true,
+        content: function() {
+        let contentID = $(this).data('htmlcontent');
+        return $(contentID).html();
         }
-    })
-    console.log(id)
-}
-$(document).ready(function(){
-    $('.actionsurvey1').popover({
-    html: true,
-    content: function() {
-      let contentID = $(this).data('htmlcontent');
-      return $(contentID).html();
+    });
+    });
+
+    $('.actionsurvey1').on('click', function (e) {
+        $('.actionsurvey1').not(this).popover('hide');
+    });
+
+    function surveydelete(url,id){
+        Swal.fire({ 
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning", showCancelButton: !0, 
+            confirmButtonColor: "#34c38f", 
+            cancelButtonColor: "#f46a6a", 
+            confirmButtonText: "Yes, delete it!" 
+        }).then(function (t) { 
+            if(t.isConfirmed){
+                $.ajax({url: url, success: function(result){
+                    result = JSON.parse(result);
+                    if(result.error!=''){
+                        t.value && Swal.fire("Warning!", result.error, "warning") ;
+                    }else{
+                        t.value && Swal.fire({
+                            title:"Deleted!", 
+                            text:result.success, 
+                            icon:"success"
+                        }).then(function (t) { 
+                            window.location.reload();
+                        }) ;
+                    }
+                }});
+            }
+            
+        })
+        console.log(id)
     }
-  });
-});
-$('.actionsurvey1').on('click', function (e) {
-    $('.actionsurvey1').not(this).popover('hide');
-});
 
-function surveydelete(url,id){
-    Swal.fire({ 
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning", showCancelButton: !0, 
-        confirmButtonColor: "#34c38f", 
-        cancelButtonColor: "#f46a6a", 
-        confirmButtonText: "Yes, delete it!" 
-    }).then(function (t) { 
-        if(t.isConfirmed){
-            $.ajax({url: url, success: function(result){
-                result = JSON.parse(result);
-                if(result.error!=''){
-                    t.value && Swal.fire("Warning!", result.error, "warning") ;
-                }else{
-                    t.value && Swal.fire({
-                        title:"Deleted!", 
-                        text:result.success, 
-                        icon:"success"
-                    }).then(function (t) { 
-                        window.location.reload();
-                    }) ;
-                }
-            }});
-        }
-        
-    })
-    console.log(id)
-}
-// $(document).on('click', '.deletesurvey', function(){
-//       console.log($(this).parent().parent().siblings('#deletelink'))
-// });
-// $('.deletesurvey').on('click', function (e) {
-//     console.log($(this).data('deleteurl'))
-// });
+    // $(document).on('click', '.deletesurvey', function(){
+    //       console.log($(this).parent().parent().siblings('#deletelink'))
+    // });
+    // $('.deletesurvey').on('click', function (e) {
+    //     console.log($(this).data('deleteurl'))
+    // });
 </script>
 
