@@ -159,7 +159,7 @@ Route::group([
     /* Survey Template Routings*/
     Route::get('/survey/template/{id}', ['as' => 'survey.template','uses' => 'SurveyController@templateList']);
     Route::get('/survey/builder/{id}/{qus_id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder']);
-    Route::get('/survey/builder/{id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder']);
+    // Route::get('/survey/builder/{id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder']);
     Route::get('/survey/questiontype/{id}', ['as' => 'survey.questiontype','uses' => 'SurveyController@questiontype']);
     Route::get('/survey/qustype/{survey}/{qustype}', ['as' => 'survey.qustype','uses' => 'SurveyController@questiontypesurvey']);
     Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'SurveyController@deletequs']);
