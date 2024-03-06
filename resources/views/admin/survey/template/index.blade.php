@@ -137,7 +137,7 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
             <!-- start page title -->
             <div class="row">
                 <div class="col-12">
-                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                    <div class="page-title-box d-flex align-items-center   @if($selectedFolder) justify-content-between @else createfolderbtn @endif">
                         @if($selectedFolder)
                         <h4 class="mb-0">{{$selectedFolder->folder_name}}</h4>
                         @endif

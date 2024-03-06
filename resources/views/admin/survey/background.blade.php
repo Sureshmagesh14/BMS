@@ -648,11 +648,28 @@
         }
     </style>
 </head>
+<?php $bg=json_decode($survey->background); 
+$style="";
+$stylesingle="#EC226C";
+if(isset($bg)){
 
-<body class="gradient">
-    
+    if($bg->type=='image'){
+
+    }else if($bg->type =='single'){
+        if($bg->color!=''){
+            $style="background-color:".$bg->color.";";
+            $stylev=$bg->color;
+        }
+       
+        // $style=$bg->value;
+    }
+} ?>
+<body class="gradient" style="{{$style}}">
+<form id="set_background_form" method="post" enctype="multipart/form-data" action="{{route('survey.background',$survey->id)}}" >
+    <input name="_token" type="hidden" value="{{csrf_token()}}">
    <input type="hidden" id="survey_id" value="{{$survey->id}}" name="survey_id">
    <input type="hidden" id="bg_value" value="" name="bg_value">
+   <input type="hidden" id="bg_type" value="" name="bg_type">
     <div class="w3-bar w3-black">
         <button class="w3-bar-item w3-button Single" onclick="openCity('Single')">Single Color</button>
         <button class="w3-bar-item w3-button Gradient" onclick="openCity('Gradient')">Gradient Color</button>
@@ -661,7 +678,7 @@
 
     <div id="Single" class="w3-container city">
         <h2>Single Color</h2>
-        <div class="bgnew2" id="gradient1" style=""></div>
+        <div class="bgnew2" id="gradient1" style="{{$style}}"></div>
         <div class="bg">
             <div class="wrap">
                 <div class="outer">
@@ -673,17 +690,17 @@
                             <div class="fade labels">
                                 <div class="label">
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
-                                        type="text" name='hex' id='hex' value="#ec226c94">
+                                        type="text" name='hex' id='hex' value="{{$stylev}}">
                                 </div>
                                 <div class="label">  
                                     <div type="button" onclick="setsinglecolor()">
-                                        <i class="fa fa-eye" aria-hidden="true"></i> Preview
+                                        <i class="fa fa-eye"></i> Preview
                                     </div>
                                 </div>
                             </div>
                             <div class="actionbutton">
                                 <button class="fade" type="button" onclick="setbackground('single')" name="sub" value="1">
-                                    <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
+                                    <i class="fa fa-rocket"></i>Set Background
                                 </button>
                             </div>
                         </form>
@@ -692,7 +709,7 @@
                     </div>
                     <div class="code-box">
                         <p>CSS Code:</p>
-                        <code id="selectable">background-color: #ec226c94;</code>
+                        <code id="selectable">{{$style}}</code>
                     </div>
                 </div>
             </div>
@@ -712,31 +729,31 @@
                                 <p>Choose orientation</p>
                                 <input type="radio" name="ori" value="to right top" id="radio1" checked>
                                 <label class="rLab" for="radio1"><i class="fa fa-arrow-right degtop"
-                                        aria-hidden="true"></i></label>
+                                       ></i></label>
 
                                 <input type="radio" name="ori" value="to right" id="radio2">
-                                <label class="rLab" for="radio2"><i class="fa fa-arrow-right" aria-hidden="true"></i></label>
+                                <label class="rLab" for="radio2"><i class="fa fa-arrow-right"></i></label>
 
                                 <input type="radio" name="ori" value="to right bottom" id="radio3">
                                 <label class="rLab" for="radio3"><i class="fa fa-arrow-right degbot"
-                                        aria-hidden="true"></i></label>
+                                       ></i></label>
 
                                 <input type="radio" name="ori" value="to bottom" id="radio4">
-                                <label class="rLab" for="radio4"><i class="fa fa-arrow-down" aria-hidden="true"></i></label>
+                                <label class="rLab" for="radio4"><i class="fa fa-arrow-down"></i></label>
 
                                 <input type="radio" name="ori" value="to left bottom" id="radio5">
                                 <label class="rLab" for="radio5"><i class="fa fa-arrow-left degtop"
-                                        aria-hidden="true"></i></label>
+                                       ></i></label>
 
                                 <input type="radio" name="ori" value="to left" id="radio6">
-                                <label class="rLab" for="radio6"><i class="fa fa-arrow-left" aria-hidden="true"></i></label>
+                                <label class="rLab" for="radio6"><i class="fa fa-arrow-left"></i></label>
 
                                 <input type="radio" name="ori" value="to left top" id="radio7">
                                 <label class="rLab" for="radio7"><i class="fa fa-arrow-left degbot"
-                                        aria-hidden="true"></i></label>
+                                       ></i></label>
 
                                 <input type="radio" name="ori" value="to top" id="radio8">
-                                <label class="rLab" for="radio8"><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
+                                <label class="rLab" for="radio8"><i class="fa fa-arrow-up"></i></label>
 
                             </div>
                             <p>Enter colors</p>
@@ -751,14 +768,14 @@
                                 </div>
                                 <div class="label">  
                                     <div type="button" onclick="setgradient()">
-                                        <i class="fa fa-eye" aria-hidden="true"></i> Preview
+                                        <i class="fa fa-eye"></i> Preview
                                     </div>
                                 </div>
                             </div>
                             <div class="actionbutton">
                                
                                 <button class="fade" type="button" onclick="setbackground('gradient')" name="sub" value="1">
-                                    <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
+                                    <i class="fa fa-rocket"></i>Set Background
                                 </button>
                             </div>
                         </form>
@@ -795,7 +812,7 @@
         <div class=" box color-input">
             <div class="actionbutton actionbutton1">
                 <button class="fade" type="button" onclick="setbackground('image')" name="sub" value="1">
-                    <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
+                    <i class="fa fa-rocket"></i>Set Background
                 </button>
             </div>
         </div>
@@ -804,11 +821,26 @@
             <code id="selectablebackground">background-image: </code>
         </div>
     </div>
-    
+    <input type="submit" id="set_background" style="display:none;" value="Create" class="btn  btn-primary">
+</form>
+
 
     <script type="text/javascript">
         function setbackground(type){
-            console.log(type,'bg_value')
+            $('#bg_type').val(type);
+            if(type=='single'){
+                $('#bg_value').val($('#selectable').html());
+                $('#set_background_form').submit();
+
+            }else if(type=='gradient'){
+                $('#bg_value').val($('#selectable').html());
+                $('#set_background_form').submit();
+
+            }else if(type=='image'){
+                $('#bg_value').val($('#selectablebackground').html());
+                $('#set_background_form').submit();
+
+            }
         }
         function openCity(cityName) {
             var i;
