@@ -224,7 +224,7 @@ class SurveyController extends Controller
         $folders=Folder::withCount('surveycount')->get();
         return view('admin.survey.template.index', compact('survey','folders'));
     }
-    public function builder(Request $request,$survey,$qusID){
+    public function builder(Request $request,$survey,$qusID=0){
         // Generatre builder ID
         $survey=Survey::where(['builderID'=>$survey])->first();
         $questions=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();

@@ -2,8 +2,66 @@
 <html>
 
 <head>
+<!-- <link href="{{ asset('assets/css/builder.css') }}" rel="stylesheet" type="text/css" /> -->
 
 <style>
+    .actionbutton1 {
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .gradient #Image .code-box p {
+        margin-bottom: 5px;
+        text-align: left;
+        color: black;
+    }
+    .gradient #Image .code-box code{
+        overflow-wrap: break-word;
+        font-family: 'Space Mono', monospace;
+        width: 100%;
+        margin: 0 auto;
+        display: block;
+        line-height: 1.4;
+        letter-spacing: 0.2px;
+        color: black;
+        border-left: 3px solid black;
+        background-color: #d9d3d3d1;
+        padding: 15px 8px 15px 17px;
+        border-radius: 5px;
+    }
+#trigger_welcome_image,.exitingImg{
+    display:flex;
+    justify-content:center;
+}
+.gradient .color-input .labels{
+    align-items:center;
+}
+.upload-image-placeholder{border-radius:5px;position:relative;display:inline-block;vertical-align:top;min-width:170px;min-height:155px;}
+.upload-image-placeholder__upload-btn{
+    width: 50%;
+    height: 200px;
+    display:-webkit-box;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:-ms-flexbox;
+    display:flex;
+    -webkit-box-direction:normal;
+    -webkit-box-orient:vertical;
+    -webkit-flex-direction:column;
+    -moz-flex-direction:column;
+    -ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-align-content:center;-moz-align-content:center;-ms-flex-line-pack:center;align-content:center;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-color:#f5f5f5;border:1px dashed rgba(98, 104, 111, 0.5);transition:all 0.3s;text-align:center;padding:10px;border-radius:5px;cursor:pointer;}
+.upload-image-placeholder__upload-btn:hover{background-color:#fff;}
+.upload-image-placeholder__upload-btn svg{margin-bottom:22px;}
+.upload-image-placeholder__upload-btn p{font-size:11px;line-height:1.2;margin:0;color:rgba(98, 104, 111, 0.5);}
+    img#existing_image, img#existing_image_thankyou {
+        object-fit: contain;
+        margin: 2px;
+        border: 1px solid #ced4da;
+        padding: 7px;
+        border-radius: 5px;
+        width: 50%;
+        height: 400px;
+    }
         button.w3-bar-item.w3-button {
             padding: 10px;
             width: 17%;
@@ -592,7 +650,9 @@
 </head>
 
 <body class="gradient">
-   
+    
+   <input type="hidden" id="survey_id" value="{{$survey->id}}" name="survey_id">
+   <input type="hidden" id="bg_value" value="" name="bg_value">
     <div class="w3-bar w3-black">
         <button class="w3-bar-item w3-button Single" onclick="openCity('Single')">Single Color</button>
         <button class="w3-bar-item w3-button Gradient" onclick="openCity('Gradient')">Gradient Color</button>
@@ -615,12 +675,14 @@
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
                                         type="text" name='hex' id='hex' value="#ec226c94">
                                 </div>
+                                <div class="label">  
+                                    <div type="button" onclick="setsinglecolor()">
+                                        <i class="fa fa-eye" aria-hidden="true"></i> Preview
+                                    </div>
+                                </div>
                             </div>
                             <div class="actionbutton">
-                                <button class="fade" type="button" onclick="setsinglecolor()" name="sub" value="1">
-                                    <i class="fa fa-eye" aria-hidden="true"></i>Preview
-                                </button>
-                                <button class="fade" type="button" onclick="setbackground()" name="sub" value="1">
+                                <button class="fade" type="button" onclick="setbackground('single')" name="sub" value="1">
                                     <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
                                 </button>
                             </div>
@@ -629,7 +691,6 @@
                         </p>
                     </div>
                     <div class="code-box">
-
                         <p>CSS Code:</p>
                         <code id="selectable">background-color: #ec226c94;</code>
                     </div>
@@ -688,12 +749,15 @@
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
                                         type="text" name='hex2' id='hex1' value="#C2E3B1">
                                 </div>
+                                <div class="label">  
+                                    <div type="button" onclick="setgradient()">
+                                        <i class="fa fa-eye" aria-hidden="true"></i> Preview
+                                    </div>
+                                </div>
                             </div>
                             <div class="actionbutton">
-                                <button class="fade" type="button" onclick="setgradient()" name="sub" value="1">
-                                    <i class="fa fa-eye" aria-hidden="true"></i>Preview
-                                </button>
-                                <button class="fade" type="button" onclick="setbackground()" name="sub" value="1">
+                               
+                                <button class="fade" type="button" onclick="setbackground('gradient')" name="sub" value="1">
                                     <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
                                 </button>
                             </div>
@@ -715,9 +779,37 @@
 
     <div id="Image" class="w3-container city" style="display:none">
         <h2>Image</h2>
+        <div id="imgPreview"></div>
+        <div id="trigger_welcome_image">
+            <div class="upload-image-placeholder__upload-btn">
+                <svg width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
+                <p>Click here to upload a background image</p>
+            </div>
+        </div>
+        <div class="exitingImg" style="display:none;">
+            <image src="" alt="image" width="100" height="100" id="existing_image">
+            <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+        </div>
+        <input style="display:none;" type="file" id="welcome_image" name="welcome_image"  class="course form-control">
+        <br/>
+        <div class=" box color-input">
+            <div class="actionbutton actionbutton1">
+                <button class="fade" type="button" onclick="setbackground('image')" name="sub" value="1">
+                    <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
+                </button>
+            </div>
+        </div>
+        <div class="code-box">
+            <p>CSS Code:</p>
+            <code id="selectablebackground">background-image: </code>
+        </div>
     </div>
+    
 
     <script type="text/javascript">
+        function setbackground(type){
+            console.log(type,'bg_value')
+        }
         function openCity(cityName) {
             var i;
             var x = document.getElementsByClassName("city");
@@ -730,7 +822,7 @@
             let v1 = $('#hex').val();
             var body = document.getElementById("gradient1");
             body.style.background = v1;
-            $('#selectable').html(body.style.background + ";");
+            $('#selectable').html("background-color:"+body.style.background + ";");
         }
         function setgradient() {
             let v1 = $('#hex').val();
@@ -740,9 +832,9 @@
             body.style.background = "linear-gradient(" + ori + ", " + v1 + ", "
                 + v2 + ")";
             console.log(ori, "ori")
-            $('#selectable').html(body.style.background + ";");
+            $('#selectable').html("background-image:"+body.style.background + ";");
         }
-
+      
         function validateInput(ele) {
 
             var hexInput = ele;
@@ -754,11 +846,46 @@
 
                 hexInput.value = '000000';
             }
+         
         }
 
     </script>
     <script src="{{ asset('/assets/js/jquery.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('/assets/js/jqColorPicker.min.js')}}"></script>
+  
+    <script>
+        $('#trigger_welcome_image').click(function(){
+            $('#welcome_image').click();
+        });
+        $('#welcome_image').change(function(){
+            getImgDataweclome();
+        })
+        function getImgDataweclome() {
+            const chooseFile = document.getElementById("welcome_image");
+            const imgPreview = document.getElementById("imgPreview");
+            const files = chooseFile.files[0];
+        if (files) {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(files);
+            fileReader.addEventListener("load", function () {
+                $('.exitingImg').css('display','flex');
+                $('#existing_image').attr('src',this.result);
+                $('#existing_image').css('display',"block");
+                $('#trigger_welcome_image').css('display','none');
+                $('#ss_draft_remove_image_welcome').css('display','block');
+                $('#selectablebackground').html("background-image:"+this.result + ";");
+
+            });    
+        }
+        }
+        $('#ss_draft_remove_image_welcome').click(function(){
+            $('.exitingImg').css('display','none');
+            $('#existing_image').css('display',"none");
+            $('#trigger_welcome_image').css('display','flex');
+            $('#ss_draft_remove_image_welcome').css('display','none');
+            $('#selectablebackground').html("");
+        });
+    </script>
+      <script type="text/javascript" src="{{ asset('/assets/js/jqColorPicker.min.js')}}"></script>
     <script type="text/javascript" src="{{ asset('/assets/js/scrollreveal.min.js')}}"></script>
     <script type="text/javascript" src="{{ asset('/assets/js/colorpicker-main.js')}}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/colopicker.css')}}">

@@ -30,6 +30,9 @@
     .ss-text__color--dark, .ss-text__color--black {
         color: #25292D;
     }
+    .foldermenu.ss-overflow-y--auto.ss-scrollbar--hide.h-100 {
+        height: 82vh !important;
+    }
 </style>
 <div class="vertical-menu  bg-grey-7">
     <!-- LOGO -->
@@ -52,7 +55,7 @@
         </a>
     </div>
     <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn1">
-    <a href="/dashboard">
+    <a href="/admin/dashboard">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
     </a>
     </button>
@@ -61,22 +64,23 @@
         <div id="sidebar-menu1">
             <div class="ss-dashboard--sidebar position--relative fx--fh fx-column pb-7 bg-grey-7">
                 <div class="ss-dashboard--sidebar-container h-100 d-flex flex-column">
-                    <div class="ss-overflow-y--auto ss-scrollbar--hide h-100" style="padding-top: 30px;padding-bottom: 300px;">
-                        <div class="fx-row mb-5 fx-ai--center justify-content-between px-7 folderplus">
-                            <h3 class="ss-text ss-text__size--h3 ss-text__weight--semibold ss-text__color--grey">Folders</h3>
-                            <div class="fx-row create-workspace--button">
-                            <span class="bp3-popover2-target" tabindex="0">
-                            <a href="#" class="mx-3 btn btn-sm align-items-center createfoldericon" data-url="{{route('folder.create')}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Create Folder" data-title="Create Folder">
-                                    <svg width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g opacity="1">
-                                        <line x1="10" y1="1" x2="10" y2="19" stroke="#4A9CA6" stroke-width="2" stroke-linecap="round"></line>
-                                        <line x1="19" y1="10.5" x2="1" y2="10.5" stroke="#4A9CA6" stroke-width="2" stroke-linecap="round"></line>
-                                        </g>
-                                    </svg>
-                                </a>
-                            </span>
-                            </div>
+                    <div class="fx-row mb-5 fx-ai--center justify-content-between px-7 folderplus">
+                        <h3 class="ss-text ss-text__size--h3 ss-text__weight--semibold ss-text__color--grey">Folders</h3>
+                        <div class="fx-row create-workspace--button">
+                        <span class="bp3-popover2-target" tabindex="0">
+                        <a href="#" class="mx-3 btn btn-sm align-items-center createfoldericon" data-url="{{route('folder.create')}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Create Folder" data-title="Create Folder">
+                                <svg width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g opacity="1">
+                                    <line x1="10" y1="1" x2="10" y2="19" stroke="#4A9CA6" stroke-width="2" stroke-linecap="round"></line>
+                                    <line x1="19" y1="10.5" x2="1" y2="10.5" stroke="#4A9CA6" stroke-width="2" stroke-linecap="round"></line>
+                                    </g>
+                                </svg>
+                            </a>
+                        </span>
                         </div>
+                    </div>
+                    <div class="foldermenu ss-overflow-y--auto ss-scrollbar--hide h-100" style="padding-bottom: 100px;">
+                       
                         @foreach($folders as $folder)
                             <div class="ss-dashboard--folder-item fx-row px-7 py-3 position--relative mb-3 @if($page==$folder->id) folder active @endif">
                                 <div class="fx-grow-1 fx-row">
@@ -215,12 +219,13 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
                                 </div>
                                 </div>
                             </div>
+                            <?php $qus_id=0; ?>
                             <div class="col-5">
                                 <div class="row no-gutters">
                                     <div class="col-12 ss-dashboard__list-item-nav d-flex align-items-center justify-content-end flex-shrink-0">
                                         <div class="d-none d-md-flex align-items-center ss-dashboard-list-item__secondary-actions">
                                             <div class="rounded-md me-3">
-                                                <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',[$survey->builderID,0])}}">
+                                                <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',[$survey->builderID,$qus_id])}}">
                                                     <svg width="16" height="16" class="" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M12.728 6.68608L11.314 5.27208L2 14.5861V16.0001H3.414L12.728 6.68608ZM14.142 5.27208L15.556 3.85808L14.142 2.44408L12.728 3.85808L14.142 5.27208ZM4.242 18.0001H0V13.7571L13.435 0.322083C13.6225 0.134612 13.8768 0.0292969 14.142 0.0292969C14.4072 0.0292969 14.6615 0.134612 14.849 0.322083L17.678 3.15108C17.8655 3.33861 17.9708 3.59292 17.9708 3.85808C17.9708 4.12325 17.8655 4.37756 17.678 4.56508L4.243 18.0001H4.242Z" fill="#0D1B1E"></path>
                                                     </svg>
@@ -254,7 +259,7 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
                                             </span>
                                             <ul class="ss-dropdown__main-list action_list action_list_survey" role="menu" id="ss-drop-menu-106" aria-label="Open Menu"
                                                 style="margin-top: 8px;">
-                                                <a href="{{route('survey.builder',[$survey->builderID,0])}}">
+                                                <a href="{{route('survey.builder',[$survey->builderID,$qus_id])}}">
                                                     <li class="d-flex align-items-center py-3 my-2">
                                                         <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Edit Survey</h3>
                                                     </li>
