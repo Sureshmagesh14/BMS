@@ -181,6 +181,11 @@ Route::group([
     Route::post('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@setbackground']); // Survey Background
     
     Route::get('/survey/getqus', ['as' => 'survey.getqus','uses' => 'SurveyController@getqus']); // Get Qus
+
+    // Survey Settings 
+    Route::get('/survey/surveysettings/{id}', ['as' => 'survey.surveysettings','uses' => 'SurveyController@surveysettings']);
+    Route::post('/survey/updatesettings/{id}', ['as' => 'survey.updatesettings','uses' => 'SurveyController@updatesettings']);
+
 });
 
 // NEW

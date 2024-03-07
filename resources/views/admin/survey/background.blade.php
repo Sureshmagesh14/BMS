@@ -5,6 +5,7 @@
 <!-- <link href="{{ asset('assets/css/builder.css') }}" rel="stylesheet" type="text/css" /> -->
 
 <style>
+   
      #Single .box.color-input{
         margin-top:5rem;
      }
@@ -65,13 +66,19 @@
         width: 50%;
         height: 400px;
     }
-        button.w3-bar-item.w3-button {
+    #back_editor{
+        width:100% !important;
+    }
+        button.w3-bar-item.w3-button,#back_editor {
             padding: 10px;
             width: 17%;
             text-align: center;
             color: white;
-            background: #106ba3;
             border-radius: 7px;
+            background: #4A9CA6;
+            border: 1px solid #4A9CA6;
+            box-shadow: none !important;
+            padding: 0.5rem 1rem;
         }
         .w3-bar.w3-black {
             position: fixed;
@@ -665,7 +672,6 @@ $c2='#C2E3B1';
 $stylebackground="";
 if(isset($bg)){
     $type=$bg->type;
-
     if($bg->type=='image'){
         $styleimage= asset('uploads/survey/background/'.$bg->color);
         $stylebackground="background-image:".$styleimage;
@@ -685,6 +691,8 @@ if(isset($bg)){
     }
 } ?>
 <body class="gradient">
+<?php  $qus_url=route('survey.builder',[$survey->builderID,0]); ?>
+
 <form id="set_background_form" method="post" enctype="multipart/form-data" action="{{route('survey.background',$survey->id)}}" >
     <input name="_token" type="hidden" value="{{csrf_token()}}">
    <input type="hidden" id="stylesingle" value="{{$stylesingle}}" name="stylesingle">
@@ -697,12 +705,16 @@ if(isset($bg)){
    <input type="hidden" id="gradienthex1" value="" name="gradienthex1">
    <input type="hidden" id="gradientori" value="" name="gradientori">
    <input style="display:none;" type="file" id="welcome_image" name="welcome_image"  class="course form-control">
+   
     <div class="w3-bar w3-black">
         <button type="button" class="w3-bar-item w3-button Single" onclick="openCity('Single')">Single Color</button>
         <button  type="button" class="w3-bar-item w3-button Gradient" onclick="openCity('Gradient')">Gradient Color</button>
         <button   type="button"  class="w3-bar-item w3-button Image" onclick="openCity('Image')">Image</button>
+        <div class="preview_content">
+            <a href="{{$qus_url}}" ><button type="button" class="btn  btn-primary" data-url="" id="back_editor">Back Editor</button></a>
+        </div>
     </div>
-
+    
     <div id="Single" class="w3-container city">
         <h2>Single Color</h2>
         <div class="bgnew2" id="gradient1" style="{{$style}}"></div>
