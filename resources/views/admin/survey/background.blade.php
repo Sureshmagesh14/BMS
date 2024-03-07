@@ -5,8 +5,11 @@
 <!-- <link href="{{ asset('assets/css/builder.css') }}" rel="stylesheet" type="text/css" /> -->
 
 <style>
+     #Single .box.color-input{
+        margin-top:5rem;
+     }
     .actionbutton1 {
-        width: 50%;
+        width: 20%;
         margin-left: auto;
         margin-right: auto;
     }
@@ -30,7 +33,7 @@
         border-radius: 5px;
     }
 #trigger_welcome_image,.exitingImg{
-    display:flex;
+    
     justify-content:center;
 }
 .gradient .color-input .labels{
@@ -434,7 +437,7 @@
         }
 
         .color-input p {
-            margin-bottom: 50px;
+            /* margin-bottom: 50px; */
             font-size: 1.3em;
         }
 
@@ -443,8 +446,8 @@
             height: 50px;
             text-align: center;
             width: 180px;
-            margin-bottom: 10%;
-            border-radius: 50px;
+            /* margin-bottom: 10%; */
+            border-radius: 5px;
             -webkit-box-shadow: 10px 10px 14px 1px rgba(00, 00, 00, 0.2);
             box-shadow: 10px 10px 14px 1px rgba(00, 00, 00, 0.2);
             letter-spacing: 0.094em;
@@ -470,11 +473,13 @@
         .color-input button,
         a.back-btn,
         a.help-btn {
+            padding-left: 20px;
+            padding-right: 20px;
             display: inline-block;
             position: relative;
-            border-radius: 50px;
+            border-radius: 5px;
             background: #00c9b7;
-            width: 46%;
+            width: 100%;
             height: 50px;
             position: relative;
             color: #fff;
@@ -570,9 +575,6 @@
             flex-direction: column;
         }
 
-        .gradient .color-input button {
-            margin: 0 auto 30px;
-        }
 
         .gradient .color-input form .choose input {
             width: auto;
@@ -594,7 +596,7 @@
         .gradient .color-input p {
             font-weight: 900;
             border-bottom: 1 px solid #00a1ba;
-            margin-bottom: 20px;
+            /* margin-bottom: 20px; */
             paddin-bottom: 5px;
             display: block;
             font-size: 1em;
@@ -602,7 +604,7 @@
         }
 
         .gradient .code-box p {
-            margin-bottom: 5px;
+            /* margin-bottom: 5px; */
             text-align: left;
         }
 
@@ -630,38 +632,80 @@
         .gradient .code-box code::-moz-selection {
             background: #00c9b7;
         }
-
+        .label {
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
         .gradient .color-input .labels {
             display: -webkit-box;
             display: -ms-flexbox;
             display: flex;
             -ms-flex-pack: distribute;
-            justify-content: space-around;
-            margin-bottom: 30px;
+            justify-content: center;
+            /* margin-bottom: 30px; */
         }
 
         .gradient .choose {
-            margin-bottom: 10px;
+            /* margin-bottom: 10px; */
         }
         div.w3-container {
             padding: calc(70px + 24px) calc(24px / 2) 60px calc(24px / 2);
         }
     </style>
 </head>
+<?php $bg=json_decode($survey->background); 
+$style="";
+$stylesingle="#EC226C";
+$stylesgradient="background-image:linear-gradient(to right top, #6d327c, #485DA6, #00a1ba, #00BF98, #36C486);";
+$styleimage="";
+$type="single";
+$ori='to right top';
+$c1='#9164B7';
+$c2='#C2E3B1';
+$stylebackground="";
+if(isset($bg)){
+    $type=$bg->type;
 
+    if($bg->type=='image'){
+        $styleimage= asset('uploads/survey/background/'.$bg->color);
+        $stylebackground="background-image:".$styleimage;
+    }else if($bg->type =='single'){
+        if($bg->color!=''){
+            $style="background-color:".$bg->color.";";
+            $stylesingle=$bg->color;
+        }
+    }else if($bg->type =='gradient'){
+        if($bg->color!=''){
+            $color=json_decode($bg->color);
+            $ori=$color->ori;
+            $c1=$color->hex1;
+            $c2=$color->hex2;
+            $stylesgradient="background-image:linear-gradient(" . $color->ori . ", " . $color->hex1 . ", ". $color->hex2 . ");";
+        }
+    }
+} ?>
 <body class="gradient">
-    
+<form id="set_background_form" method="post" enctype="multipart/form-data" action="{{route('survey.background',$survey->id)}}" >
+    <input name="_token" type="hidden" value="{{csrf_token()}}">
+   <input type="hidden" id="stylesingle" value="{{$stylesingle}}" name="stylesingle">
+   <input type="hidden" id="stylesgradient" value="{{$stylesgradient}}" name="stylesgradient">
+   <input type="hidden" id="type" value="{{$type}}" name="type">
    <input type="hidden" id="survey_id" value="{{$survey->id}}" name="survey_id">
    <input type="hidden" id="bg_value" value="" name="bg_value">
+   <input type="hidden" id="bg_type" value="" name="bg_type">
+   <input type="hidden" id="gradienthex" value="" name="gradienthex">
+   <input type="hidden" id="gradienthex1" value="" name="gradienthex1">
+   <input type="hidden" id="gradientori" value="" name="gradientori">
+   <input style="display:none;" type="file" id="welcome_image" name="welcome_image"  class="course form-control">
     <div class="w3-bar w3-black">
-        <button class="w3-bar-item w3-button Single" onclick="openCity('Single')">Single Color</button>
-        <button class="w3-bar-item w3-button Gradient" onclick="openCity('Gradient')">Gradient Color</button>
-        <button class="w3-bar-item w3-button Image" onclick="openCity('Image')">Image</button>
+        <button type="button" class="w3-bar-item w3-button Single" onclick="openCity('Single')">Single Color</button>
+        <button  type="button" class="w3-bar-item w3-button Gradient" onclick="openCity('Gradient')">Gradient Color</button>
+        <button   type="button"  class="w3-bar-item w3-button Image" onclick="openCity('Image')">Image</button>
     </div>
 
     <div id="Single" class="w3-container city">
         <h2>Single Color</h2>
-        <div class="bgnew2" id="gradient1" style=""></div>
+        <div class="bgnew2" id="gradient1" style="{{$style}}"></div>
         <div class="bg">
             <div class="wrap">
                 <div class="outer">
@@ -673,26 +717,27 @@
                             <div class="fade labels">
                                 <div class="label">
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
-                                        type="text" name='hex' id='hex' value="#ec226c94">
+                                        type="text" name='hex' id='hex' value="{{$stylesingle}}">
                                 </div>
                                 <div class="label">  
-                                    <div type="button" onclick="setsinglecolor()">
-                                        <i class="fa fa-eye" aria-hidden="true"></i> Preview
-                                    </div>
+                                    <button class="fade" type="button" onclick="setsinglecolor()" name="sub" value="1">
+                                    <i class="fa fa-eye"></i> Preview
+                                    </button>
+                                </div>
+                                <div class="actionbutton">
+                                    <button class="fade" type="button" onclick="setbackground('single')" name="sub" value="1">
+                                        <i class="fa fa-rocket"></i>Set Background
+                                    </button>
                                 </div>
                             </div>
-                            <div class="actionbutton">
-                                <button class="fade" type="button" onclick="setbackground('single')" name="sub" value="1">
-                                    <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
-                                </button>
-                            </div>
+                            
                         </form>
                         <p id='return'>
                         </p>
                     </div>
                     <div class="code-box">
                         <p>CSS Code:</p>
-                        <code id="selectable">background-color: #ec226c94;</code>
+                        <code id="selectable">{{$style}}</code>
                     </div>
                 </div>
             </div>
@@ -700,9 +745,9 @@
         </div>
     </div>
 
-    <div id="Gradient" class="w3-container city" style="display:none">
+    <div id="Gradient" class="w3-container city" style="display:none;">
         <h2>Gradient</h2>
-        <div class="bgnew" id="gradient" style="background-image: linear-gradient(to right top,#9164b7, #3d94de, #00b7d7, #6dd1bd, #c2e3b1);"></div>
+        <div class="bgnew" id="gradient" style="{{$stylesgradient}}"></div>
         <div class="bg">
             <div class="wrap">
                 <div class="outer">
@@ -710,57 +755,57 @@
                         <form method="get" id="form1">
                             <div class="choose">
                                 <p>Choose orientation</p>
-                                <input type="radio" name="ori" value="to right top" id="radio1" checked>
+                                <input type="radio" name="ori" value="to right top" id="radio1" @if($ori=='to right top') checked @endif>
                                 <label class="rLab" for="radio1"><i class="fa fa-arrow-right degtop"
-                                        aria-hidden="true"></i></label>
+                                       ></i></label>
 
-                                <input type="radio" name="ori" value="to right" id="radio2">
-                                <label class="rLab" for="radio2"><i class="fa fa-arrow-right" aria-hidden="true"></i></label>
+                                <input type="radio" name="ori" value="to right" id="radio2" @if($ori=='to right') checked @endif>
+                                <label class="rLab" for="radio2"><i class="fa fa-arrow-right"></i></label>
 
-                                <input type="radio" name="ori" value="to right bottom" id="radio3">
+                                <input type="radio" name="ori" value="to right bottom" id="radio3" @if($ori=='to right bottom') checked @endif>
                                 <label class="rLab" for="radio3"><i class="fa fa-arrow-right degbot"
-                                        aria-hidden="true"></i></label>
+                                       ></i></label>
 
-                                <input type="radio" name="ori" value="to bottom" id="radio4">
-                                <label class="rLab" for="radio4"><i class="fa fa-arrow-down" aria-hidden="true"></i></label>
+                                <input type="radio" name="ori" value="to bottom" id="radio4" @if($ori=='to bottom') checked @endif>
+                                <label class="rLab" for="radio4"><i class="fa fa-arrow-down"></i></label>
 
-                                <input type="radio" name="ori" value="to left bottom" id="radio5">
+                                <input type="radio" name="ori" value="to left bottom" id="radio5" @if($ori=='to left bottom') checked @endif>
                                 <label class="rLab" for="radio5"><i class="fa fa-arrow-left degtop"
-                                        aria-hidden="true"></i></label>
+                                       ></i></label>
 
-                                <input type="radio" name="ori" value="to left" id="radio6">
-                                <label class="rLab" for="radio6"><i class="fa fa-arrow-left" aria-hidden="true"></i></label>
+                                <input type="radio" name="ori" value="to left" id="radio6" @if($ori=='to left') checked @endif>
+                                <label class="rLab" for="radio6"><i class="fa fa-arrow-left"></i></label>
 
-                                <input type="radio" name="ori" value="to left top" id="radio7">
+                                <input type="radio" name="ori" value="to left top" id="radio7" @if($ori=='to left top') checked @endif>
                                 <label class="rLab" for="radio7"><i class="fa fa-arrow-left degbot"
-                                        aria-hidden="true"></i></label>
+                                       ></i></label>
 
-                                <input type="radio" name="ori" value="to top" id="radio8">
-                                <label class="rLab" for="radio8"><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
+                                <input type="radio" name="ori" value="to top" id="radio8" @if($ori=='to top') checked @endif>
+                                <label class="rLab" for="radio8"><i class="fa fa-arrow-up"></i></label>
 
                             </div>
                             <p>Enter colors</p>
                             <div class="fade labels">
                                 <div class="label">
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
-                                        type="text" name='hex' id='hex' value="#9164B7">
+                                        type="text" name='hex1' id='hex1' value="{{$c1}}">
                                 </div>
                                 <div class="label">
                                     <input onchange="validateInput(this)" class="color-picker js-color-input selectable"
-                                        type="text" name='hex2' id='hex1' value="#C2E3B1">
+                                        type="text" name='hex2' id='hex2' value="{{$c2}}">
                                 </div>
                                 <div class="label">  
-                                    <div type="button" onclick="setgradient()">
-                                        <i class="fa fa-eye" aria-hidden="true"></i> Preview
-                                    </div>
+                                    <button class="fade" type="button" onclick="setgradient()" name="sub" value="1">    
+                                        <i class="fa fa-eye"></i> Preview
+                                    </button>
+                                </div>
+                                <div class="actionbutton">
+                                    <button class="fade" type="button" onclick="setbackground('gradient')" name="sub" value="1">
+                                        <i class="fa fa-rocket"></i>Set Background
+                                    </button>
                                 </div>
                             </div>
-                            <div class="actionbutton">
-                               
-                                <button class="fade" type="button" onclick="setbackground('gradient')" name="sub" value="1">
-                                    <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
-                                </button>
-                            </div>
+                            
                         </form>
                         <p id='return'>
                         </p>
@@ -768,8 +813,8 @@
                     <div class="code-box">
 
                         <p>CSS Code:</p>
-                        <code id="selectable">
-                            background-image: linear-gradient(to right top,#9164b7, #3d94de, #00b7d7, #6dd1bd, #c2e3b1);</code>
+                        <code id="selectablegradient">
+                            {{$stylesgradient}}</code>
                     </div>
                 </div>
             </div>
@@ -780,36 +825,69 @@
     <div id="Image" class="w3-container city" style="display:none">
         <h2>Image</h2>
         <div id="imgPreview"></div>
-        <div id="trigger_welcome_image">
+        <div id="trigger_welcome_image" style="@if($styleimage!='') display:none; @else display:flex; @endif">
             <div class="upload-image-placeholder__upload-btn">
                 <svg width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
                 <p>Click here to upload a background image</p>
             </div>
         </div>
-        <div class="exitingImg" style="display:none;">
-            <image src="" alt="image" width="100" height="100" id="existing_image">
+        <div class="exitingImg" style="@if($styleimage!='') display:flex; @else display:none; @endif">
+            <image src="{{$styleimage}}" alt="image" width="100" height="100" id="existing_image">
             <a id="ss_draft_remove_image_welcome" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
         </div>
-        <input style="display:none;" type="file" id="welcome_image" name="welcome_image"  class="course form-control">
+       
         <br/>
         <div class=" box color-input">
             <div class="actionbutton actionbutton1">
                 <button class="fade" type="button" onclick="setbackground('image')" name="sub" value="1">
-                    <i class="fa fa-rocket" aria-hidden="true"></i>Set Background
+                    <i class="fa fa-rocket"></i>Set Background
                 </button>
             </div>
         </div>
         <div class="code-box">
             <p>CSS Code:</p>
-            <code id="selectablebackground">background-image: </code>
+            <code id="selectablebackground">{{$stylebackground}} </code>
         </div>
     </div>
-    
+    <input type="submit" id="set_background" style="display:none;" value="Create" class="btn  btn-primary">
+</form>
+
 
     <script type="text/javascript">
         function setbackground(type){
-            console.log(type,'bg_value')
+            $('#bg_type').val(type);
+            if(type=='single'){
+                $('#bg_value').val($('#selectable').html());
+                $('#set_background_form').submit();
+
+            }else if(type=='gradient'){
+                $('#bg_value').val($('#selectablegradient').html());
+                $('#set_background_form').submit();
+
+            }else if(type=='image'){
+                $('#bg_value').val($('#selectablebackground').html());
+                $('#set_background_form').submit();
+
+            }
         }
+        document.addEventListener("DOMContentLoaded", (event) => {
+            if($('#type').val()=='sinlge'){
+                openCity('Single');
+                $('#selectable').html($('#stylesingle').val());
+            }
+            if($('#type').val()=='gradient'){
+                openCity('Gradient');
+                
+                $('#selectablegradient').html($('#stylesgradient').val());
+            }
+            if($('#type').val()=='image'){
+                openCity('Image');
+
+                
+            }
+            
+            console.log("DOM fully loaded and parsed");
+        });
         function openCity(cityName) {
             var i;
             var x = document.getElementsByClassName("city");
@@ -825,14 +903,17 @@
             $('#selectable').html("background-color:"+body.style.background + ";");
         }
         function setgradient() {
-            let v1 = $('#hex').val();
-            let v2 = $('#hex1').val();
+            let v1 = $('#hex1').val();
+            let v2 = $('#hex2').val();
             let ori = $('input[name="ori"]:checked').val();
+            $('#gradienthex').val($('#hex1').val());
+            $('#gradienthex1').val($('#hex2').val());
+            $('#gradientori').val(ori);
             var body = document.getElementById("gradient");
             body.style.background = "linear-gradient(" + ori + ", " + v1 + ", "
                 + v2 + ")";
             console.log(ori, "ori")
-            $('#selectable').html("background-image:"+body.style.background + ";");
+            $('#selectablegradient').html("background-image:"+body.style.background + ";");
         }
       
         function validateInput(ele) {

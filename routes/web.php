@@ -178,6 +178,8 @@ Route::group([
     Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.startsurvey','uses' => 'SurveyController@startsurvey']); // Start Survey
     Route::post('/survey/upload-image', ['as' => 'survey.uploadimage','uses' => 'SurveyController@uploadimage']); // Upload Image
     Route::get('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@background']); // Survey Background
+    Route::post('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@setbackground']); // Survey Background
+    
     Route::get('/survey/getqus', ['as' => 'survey.getqus','uses' => 'SurveyController@getqus']); // Get Qus
 });
 
