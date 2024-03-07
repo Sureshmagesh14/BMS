@@ -50,7 +50,6 @@ function common_bind() {
 }
 
 function select2() {
-    console.log($(".select2").length);
     if ($(".select2").length > 0) {
         if($('#user_ids').val()!=undefined && $('#user_ids').val()!=''){
             $('#privateusers').val($('#user_ids').val().split(","));

@@ -17,14 +17,12 @@
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
                         <h4 class="mb-0">Users</h4>
-
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
+                                <li class="breadcrumb-item"><a href=" {{ route('admin.dashboard') }}">Dashboards</a></li>
                                 <li class="breadcrumb-item active">Users</li>
                             </ol>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -32,9 +30,6 @@
 
             <div class="row">
                 <div class="col-12">
-
-
-
                     <div class="card">
                         <div class="card-body">
                             <div class="text-right">
@@ -64,35 +59,7 @@
                                 @endif
                             </div>
 
-                            <h4 class="card-title"> </h4>
-                            <p class="card-title-desc"></p>
-
-                            <table id="myTable" class="table dt-responsive nowrap w-100">
-                                <thead>
-
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" class="select_all" id="inlineForm-customCheck">
-                                        </th>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Surname</th>
-                                        <th>RSA ID / Passport</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Status</th>
-                                        <th>Share Link</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-
-
-                                <tbody>
-
-
-                                </tbody>
-                            </table>
-
+                            @include('admin.table_components.user_table')
                         </div>
                         <!-- end card-body -->
                     </div>
@@ -106,91 +73,20 @@
     </div>
     <!-- End Page-content -->
 
-
-
-    
-
     @include('admin.layout.footer')
-    @stack('adminside-js')
-    @stack('adminside-validataion')
-    @stack('adminside-confirm')
-    @stack('adminside-datatable')
-    
+        @stack('adminside-js')
+        @stack('adminside-datatable')
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
 
-        function table_checkbox(get_this){
-            count_checkbox = $(".tabel_checkbox").filter(':checked').length;
-            if(count_checkbox >= 1){
-                $("#delete_all_drop").show();
-            }
-            else{
-                $("#delete_all_drop").hide();
-            }
-        }
-
-        $(document).on('click', '#delete_all', function(e) {
-            e.preventDefault();
-            var all_id = [];
-
-            var values = $("#myTable tbody tr").map(function() {
-                var $this = $(this);
-                if($this.find("[type=checkbox]").is(':checked')){
-                    all_id.push($this.find("[type=checkbox]").attr('id')); 
-                    // return {
-                    //     id: $this.find("[type=checkbox]").attr('id'),
-                    // };
-                }
-                
-            }).get();
-          
-            $.confirm({
-                title: "{{Config::get('constants.delete')}}",
-                content:  "{{Config::get('constants.delete_confirmation')}}",
-                autoClose: 'cancelAction|8000',
-                buttons: {
-                    delete: {
-                        text: 'delete',
-                        action: function() {
-                            $.ajax({
-                                type: "POST",
-                                data: {
-                                    _token: tempcsrf,
-                                    all_id: all_id
-                                },
-                                url: "{{ route('users_multi_delete') }}",
-                                dataType: "json",
-                                success: function(response) {
-                                    if (response.status == 404) {
-                                        $('.delete_student').text('');
-                                    } else {
-                                        datatable();
-                                        $.alert('Users Deleted!');
-                                        $("#delete_all_drop").hide();
-                                    }
-                                }
-                            });
-                        }
-                    },
-                    cancel: function() {
-                        
-                    }
-                }
-            });
-        });
-
-
         $(document).ready(function() {
-            datatable();
-
+            user_datatable();
         });
 
-
-
-        function datatable() {
-            // $('#myTable').dataTable().fnDestroy();
-            $('#myTable').DataTable({
+        function user_datatable() {
+            $('#user_table').dataTable().fnDestroy();
+            $('#user_table').DataTable({
                 searching: true,
                 ordering: true,
                 dom: 'lfrtip',
@@ -206,69 +102,42 @@
                         _token: tempcsrf,
                     },
                     error: function(xhr, error, thrown) {
-                        alert("undefind error");
+                        console.log("User Datatabel Error");
+
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
                     }
                 },
                 columns: [
-                    { data: 'select_all', name: 'select_all', orderable: false, searchable: false },
-                    {
-                        data: 'id',
-                        name: '#',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'name',
-                        name: 'name',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'surname',
-                        name: 'surname',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'id_passport',
-                        name: 'id_passport',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'email',
-                        name: 'email',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'role_id',
-                        name: 'role_id',
-                        orderable: true,
-                        searchable: true
-                    },
-
-                    {
-                        data: 'status_id',
-                        name: 'status_id',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'share_link',
-                        name: 'share_link',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: true,
-                        searchable: true
-                    }
+                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
+                    { data: 'id',name: '#',orderable: true,searchable: true },
+                    { data: 'name',name: 'name',orderable: true,searchable: true },
+                    { data: 'surname',name: 'surname',orderable: true,searchable: true },
+                    { data: 'id_passport',name: 'id_passport',orderable: true,searchable: true },
+                    { data: 'email',name: 'email',orderable: true,searchable: true },
+                    { data: 'role_id',name: 'role_id',orderable: true,searchable: true },
+                    { data: 'status_id',name: 'status_id',orderable: true,searchable: true },
+                    { data: 'share_link',name: 'share_link',orderable: true,searchable: true },
+                    { data: 'action',name: 'action',orderable: true,searchable: true }
                 ]
             });
         }
+
+        $(document).on('click', '#delete_all', function(e) {
+            e.preventDefault();
+            var all_id = [];
+
+            var values = $("#user_table tbody tr").map(function() {
+                var $this = $(this);
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
+                    // return {id: $this.find("[type=checkbox]").attr('id')};
+                }
+            }).get();
+
+            multi_delete("POST", all_id, "{{ route('users_multi_delete') }}", "Users Deleted", 'user_datatable');
+        });
 
         $(document).on('click', '#delete_users', function(e) {
             e.preventDefault();
@@ -276,37 +145,6 @@
             var url = "{{ route('users.destroy', ':id') }}";
             url = url.replace(':id', id);
 
-            $.confirm({
-                title: "{{ Config::get('constants.delete') }}",
-                content: "{{ Config::get('constants.delete_confirmation') }}",
-                autoClose: 'cancelAction|8000',
-                buttons: {
-                    delete: {
-                        text: 'delete',
-                        action: function() {
-                            $.ajax({
-                                type: "DELETE",
-                                data: {
-                                    _token: tempcsrf,
-                                },
-                                url: url,
-                                dataType: "json",
-                                success: function(response) {
-                                    if (response.status == 404) {
-                                        $('.delete_student').text('');
-                                    } else {
-                                        datatable();
-                                        $.alert('Users Deleted!');
-                                        $('.delete_student').text('Yes Delete');
-                                    }
-                                }
-                            });
-                        }
-                    },
-                    cancel: function() {
-
-                    }
-                }
-            });
+            single_delete("DELETE", id, url, "User Deleted", 'user_datatable');
         });
     </script>
