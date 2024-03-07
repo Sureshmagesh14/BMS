@@ -270,6 +270,20 @@ class SurveyController extends Controller
         }
 
     }
+    public function surveysettings(Request $request,$survey){
+        $survey=Survey::where(['id'=>$survey])->first();
+        return view('admin.survey.builder.settings', compact('survey'));
+
+    }
+    public function updatesettings(Request $request,$survey){
+        $survey=Survey::where(['id'=>$survey])->first();
+        $survey->avg_completion_time=$request->avg_completion_time;
+        $survey->save();
+        return redirect()->back()->with('success', __('Survey Settings Saved Successfully.'));
+
+
+
+    }
     public function questiontype(Request $request,$survey){
         $checkSurvey= Questions::where(['survey_id'=>$survey,'qus_type'=>'welcome_page'])->first();
         if($checkSurvey){
