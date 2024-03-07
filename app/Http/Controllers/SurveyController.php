@@ -615,6 +615,7 @@ class SurveyController extends Controller
             $hex1=$request->gradienthex;
             $hex2=$request->gradienthex1;
             $ori=$request->gradientori;
+            // echo $ori; exit;
             $bg=json_encode(['hex1'=>$hex1,'hex2'=>$hex2,'ori'=>$ori]);
 
         }
