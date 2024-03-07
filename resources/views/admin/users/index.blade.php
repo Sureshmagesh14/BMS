@@ -39,8 +39,7 @@
                         <div class="card-body">
                             <div class="text-right">
 
-
-                                <div class="btn-group" role="group">
+                                {{-- <div class="btn-group" role="group">
                                     <button id="btnGroupVerticalDrop1" type="button"
                                         class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
@@ -51,8 +50,7 @@
                                             by User</a>
                                         <a class="dropdown-item" href="{{ url('export_referrals') }}">Referrals</a>
                                     </div>
-
-                                </div>
+                                </div> --}}
 
                                 @if (Auth::guard('admin')->user()->role_id == 1)
                                     <a href="#!" data-url="{{ route('users.create') }}" data-size="xl"
@@ -61,11 +59,9 @@
                                         data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
                                         Create Users
                                     </a>
-                                    <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
-                                        Delete Selected All
-                                    </a>
+
+                                    @include('admin.components.mutli_delete')
                                 @endif
-                                
                             </div>
 
                             <h4 class="card-title"> </h4>
@@ -126,11 +122,11 @@
 
         function table_checkbox(get_this){
             count_checkbox = $(".tabel_checkbox").filter(':checked').length;
-            if(count_checkbox > 1){
-                $("#delete_all").show();
+            if(count_checkbox >= 1){
+                $("#delete_all_drop").show();
             }
             else{
-                $("#delete_all").hide();
+                $("#delete_all_drop").hide();
             }
         }
 
@@ -171,7 +167,7 @@
                                     } else {
                                         datatable();
                                         $.alert('Users Deleted!');
-                                        $("#delete_all").hide();
+                                        $("#delete_all_drop").hide();
                                     }
                                 }
                             });

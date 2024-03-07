@@ -41,6 +41,10 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
     });
 });
 
+$(document).on('click', '.dropdown-menu', function (e) {
+    e.stopPropagation();
+});
+
 function common_bind() {
     select2();
 }
@@ -59,10 +63,10 @@ $(document).on('change', '.select_all', function (e) {
     var checkboxes = $(this).closest('table').find(':checkbox');
     checkboxes.prop('checked', $(this).is(':checked'));
     if ($(this).is(':checked')) {
-        $("#delete_all").show();
+        $("#delete_all_drop").show();
     }
     else{
-        $("#delete_all").hide();
+        $("#delete_all_drop").hide();
     }
 });
 
