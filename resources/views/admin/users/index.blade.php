@@ -94,7 +94,7 @@
             });
         }
 
-        $(document).on('click', '#delete_all', function(e) {
+        $(document).on('click', '.user_table.delete_all', function(e) {
             e.preventDefault();
             var all_id = [];
 

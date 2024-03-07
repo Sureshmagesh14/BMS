@@ -60,13 +60,19 @@ function select2() {
 
 $(document).on('change', '.select_all', function (e) {
     var checkboxes = $(this).closest('table').find(':checkbox');
-    checkboxes.prop('checked', $(this).is(':checked'));
-    if ($(this).is(':checked')) {
-        $("#delete_all_drop").show();
+
+    var table_id = $(this).closest('table').attr('id');
+
+    if(table_id != undefined){
+        checkboxes.prop('checked', $(this).is(':checked'));
+        if ($(this).is(':checked')) {
+            $("."+table_id+".hided_option").show();
+        }
+        else{
+            $("."+table_id+".hided_option").hide();
+        }
     }
-    else{
-        $("#delete_all_drop").hide();
-    }
+    
 });
 
 toastr.options = {
