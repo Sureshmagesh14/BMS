@@ -178,7 +178,7 @@
                                 success: function(response) {
                                     $.alert(message);
                                     eval(datatable_function + "()");
-                                    $("#delete_all_drop").hide();
+                                    $(".delete_all_drop").hide();
                                     return 1;
                                 }
                             });
@@ -228,9 +228,9 @@
         function table_checkbox(get_this, table_id) {
             count_checkbox = $("#"+table_id+" .tabel_checkbox").filter(':checked').length;
             if (count_checkbox >= 1) {
-                $("#delete_all_drop").show();
+                $("."+table_id+".hided_option").show();
             } else {
-                $("#delete_all_drop").hide();
+                $("."+table_id+".hided_option").hide();
             }
         }
     </script>
