@@ -21,7 +21,9 @@ class InternalReportController extends Controller
     public function index()
     {
         try {
-            return view('admin.internal_report.index');
+
+            $users = Users::withoutTrashed()->get();
+            return view('admin.internal_report.index',compact('users'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -37,7 +39,6 @@ class InternalReportController extends Controller
     {
         if ($request->ajax()) {
             $columns = array(
-            
                 0 => 'user',
                 1 => 'action',
                 2 => 'type',
@@ -46,9 +47,7 @@ class InternalReportController extends Controller
                 5 => 'count',
             );
 
-        
             $totalData = UserEvents::count();
-
             $totalFiltered = $totalData;
 
             $limit = $request->input('length');
@@ -87,19 +86,16 @@ class InternalReportController extends Controller
                     else{
                         $name='-';
                     }
-                       
-                       
-                   
-                    $view_route = route("user-events-view",$post->id);
-                    $nestedData['id'] = $i;
+                    
+                    $view_route            = route("user-events-view",$post->id);
+                    $nestedData['id']      = $post->id;
                     $nestedData['user_id'] = $name;
-                    $nestedData['action'] = $post->action ?? '-';
-                    $nestedData['type'] = $post->type ?? '-';
-                    $nestedData['month'] = $post->month ?? '-';
-                    $nestedData['year'] = $post->year ?? '-';
-                    $nestedData['count'] = $post->count ?? '-';
+                    $nestedData['action']  = $post->action ?? '-';
+                    $nestedData['type']    = $post->type ?? '-';
+                    $nestedData['month']   = $post->month ?? '-';
+                    $nestedData['year']    = $post->year ?? '-';
+                    $nestedData['count']   = $post->count ?? '-';
                    
-
                     $nestedData['options'] = '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
                             <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
@@ -122,12 +118,10 @@ class InternalReportController extends Controller
 
             echo json_encode($json_data);
         }
-
     }
 
     public function view(string $id)
     {
-        
         try {
             $data = UserEvents::find($id);
             $returnHTML = view('admin.internal_report.view',compact('data'))->render();

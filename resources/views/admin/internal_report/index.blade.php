@@ -34,26 +34,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            
-
-                            <h4 class="card-title"> </h4>
-                            <p class="card-title-desc"></p>
-
-                            <table id="myTable" class="table dt-responsive nowrap w-100">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>User</th>
-                                        <th>Action</th>
-                                        <th>Type</th>
-                                        <th>Month</th>
-                                        <th>Year</th>
-                                        <th>Count</th>
-                                        <th>View</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                            @include('admin.table_components.user_events_table', ['users' => $users])
                         </div>
                         <!-- end card-body -->
                     </div>
@@ -65,23 +46,18 @@
     <!-- End Page-content -->
 
     @include('admin.layout.footer')
-        
         @stack('adminside-js')
-        @stack('adminside-validataion')
-        @stack('adminside-confirm')
         @stack('adminside-datatable')
         
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
         $(document).ready(function() {
-            datatable();
+            user_events();
         });
         
-   
-
-        function datatable(){
-            $('#myTable').dataTable().fnDestroy();
-            var postsTable = $('#myTable').dataTable({
+        function user_events(){
+            $('#user_events').dataTable().fnDestroy();
+            var postsTable = $('#user_events').dataTable({
                 "ordering": true,
                 "processing": true,
                 "serverSide": true,
@@ -95,44 +71,20 @@
                     "type": "POST"
                 },
                 "columns": [
-
-                    {
-                        "data": "id"
-                    },
-                    {
-                        "data": "user_id"
-                    },
-                    {
-                        "data": "action"
-                    },
-                    {
-                        "data": "type"
-                    },
-                    {
-                        "data": "month"
-                    },
-                    {
-                        "data": "year"
-                    },
-                    {
-                        "data": "count"
-                    },
-                    {
-                        "data": "options"
-                    },
-                  
-                    ],
+                    { "data": "id" },
+                    { "data": "user_id" },
+                    { "data": "action" },
+                    { "data": "type" },
+                    { "data": "month" },
+                    { "data": "year" },
+                    { "data": "count" },
+                    { "data": "options" },
+                ],
                 "order": [
                     [1, "asc"]
                 ],
-
                 stateSave: false,
             });
-
-
-
-        
         }
-
     </script>
     
