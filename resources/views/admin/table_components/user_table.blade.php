@@ -14,14 +14,27 @@
     </div> --}}
 
     @if (Auth::guard('admin')->user()->role_id == 1)
-        <a href="#!" data-url="{{ route('users.create') }}" data-size="xl"
-            data-ajax-popup="true" class="btn btn-primary"
-            data-bs-original-title="{{ __('Create Users') }}" class="btn btn-primary"
-            data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-            Create Users
-        </a>
 
-        @include('admin.components.mutli_delete')
+        <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <select name="action" id="action" class="form-control">
+                    <option value="">Select Action</option>
+                    <option value="active">Active</option>
+                    <option value="deactive">De-Active</option>
+                </select>
+            </div>
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <a href="#!" data-url="{{ route('users.create') }}" data-size="xl"
+                    data-ajax-popup="true" class="btn btn-primary"
+                    data-bs-original-title="{{ __('Create Users') }}" class="btn btn-primary"
+                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                    Create Users
+                </a>
+            </div>
+            <div class="btn-group" role="group" aria-label="Third group">
+                @include('admin.components.mutli_delete')
+            </div>
+        </div>
     @endif
 </div>
 
