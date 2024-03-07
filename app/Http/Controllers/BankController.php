@@ -246,11 +246,11 @@ class BankController extends Controller
                     return '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
                             <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="View Content" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="View Banks" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>
                             <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="Edit Content" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="Edit Banks" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
                             <button type="button" id="delete_banks" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
