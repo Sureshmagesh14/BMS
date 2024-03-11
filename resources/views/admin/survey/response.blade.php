@@ -2,6 +2,9 @@
 <head>
     <link href="{{ asset('assets/css/preview.css') }}" rel="stylesheet" type="text/css" />
     <style>
+        .disabled.ss-primary-action-btn {
+            opacity: 0.3 !important;
+        }
         .rankorderkey_option.ss-option--rank-order__select-wrap .ss-option--rank-order-react-select__control{
             color:rgb(63, 63, 63);
             background-color:rgb(255, 255, 255)
@@ -59,6 +62,8 @@ if(isset($qusvalue->left_label)){
  ?>
 <body>
 <?php  $qus_url=route('survey.builder',[$survey->builderID,$question->id]); ?>
+<input type="hidden" value="{{$question->qus_type}}" id="question_type"/>
+<input type="hidden" value="" id="answered"/>
     @if($question->qus_type=='welcome_page')
     <div class="surveysparrow-survey-container--classic-form welcome-page">
         <div class="ss-fp-section surveysparrow-survey-form-wrapper--centered ss-survey-background d-flex fx-column fx-jc--center fx-ai--center">
@@ -240,18 +245,14 @@ if(isset($qusvalue->left_label)){
                             </div>
                             <div class="ss_cl_qstn_action disabled {{$question->qus_type}}_action">
                                     <div class="">
-                                        <a href="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif">
-                                            <button disabled id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                            <button data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif"  id="next_button"  class="disabled ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
                                                 <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
                                                 </svg>
                                             </button>
-                                        </a>
                                     </div>
                                     <div class="ss-skip-container">
-                                        <a href="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif">
-                                            <button class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                        </a>
+                                        <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
                                     </div>
                             </div>
                         </span>
@@ -848,6 +849,12 @@ if(isset($qusvalue->left_label)){
         </div>
     </div>
     @endif
+    <form id="skip_qus" style="display:none;" action="{{route('survey.skipqus')}}" method="POST">
+        @csrf
+        <input type="text" id="question_id" value="{{$question->id}}" name="question_id"/>
+        <input type="text" id="survey_id" value="{{$survey->id}}" name="survey_id"/>
+        <input type="text" id="next_qus" name="next_qus"/>
+    </form>
 </body>
 <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
 
@@ -868,10 +875,12 @@ function enableNextButton(classname,btnname){
     });
     if(enable==1){
         $(btnname).toggleClass('disabled');
-        $('#next_button').attr('disabled',false);
+        $('#next_button').removeClass('disabled');
+        $('#answered').val('yes');
     }else{
         $(btnname).toggleClass('disabled');
-        $('#next_button').attr('disabled',true);
+        $('#next_button').addClass('disabled');
+        $('#answered').val('no');
     }
 }
 $('.likert_choice').click(function(){
@@ -942,5 +951,20 @@ function changepos(val,event){
     document.getElementById('rank_order_container').innerHTML = elem;
 }
 
+$('#next_button').click(function(){
+    // console.log($('#question_type').val(),"next_button");
+    if($('#question_type').val() =='single_choice'){
+        if($('#answered').val() == 'yes'){
+
+        }else{
+            alert('Answer not given')
+        }
+    }
+});
+
+$('#skip_button').click(function(){
+    $('#next_qus').val($(this).data('url'));
+    $('#skip_qus').submit();
+});
 </script>
 </html>

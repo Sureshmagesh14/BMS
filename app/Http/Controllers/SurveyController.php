@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Folder;
 use App\Models\Survey;
 use App\Models\Questions;
+use App\Models\SurveyResponse;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
 
@@ -549,6 +550,7 @@ class SurveyController extends Controller
         $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
        
         $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
+
         return view('admin.survey.response', compact('survey','question','question1','questionsset'));
     }
 
@@ -638,6 +640,146 @@ class SurveyController extends Controller
         $survey->save();
         return redirect()->back()->with('success', __('Survey Background Updated Successfully.'));
 
+    }
+
+    public function skipqus(Request $request){
+        $survey_id = $request->survey_id;
+        $question_id = $request->question_id;
+        $next_qus = $request->next_qus;
+        // $user_ans=$request->user_ans;
+        $user_ans ='SSLC';
+        $skip_ans ='yes';
+        $response_user_id =  Auth::guard('admin')->user()->id;
+        $surveyres = new SurveyResponse();
+        $surveyres->response_user_id=$response_user_id;
+        $surveyres->question_id=$request->question_id;
+        $surveyres->answer='';
+        $surveyres->skip='yes';
+        $surveyres->deleted_at=0;
+        // $surveyres->save();
+
+        // Check Skip Logic 
+
+        // Check Display Logic 
+        $question1=Questions::where('id', '>', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
+
+        $display_logic = json_decode($question1->display_logic);
+        // if($display_logic!=null){
+        //     $display_qus_choice_display=json_decode($display_logic->display_qus_choice_display); 
+        //     $logic_type_value_display=json_decode($display_logic->logic_type_value_display); 
+        //     $logic_type_value_option_display=json_decode($display_logic->logic_type_value_option_display); 
+        //     $display_qus_choice_andor_display=json_decode($display_logic->display_qus_choice_andor_display); 
+    
+    
+        //     echo "<pre>"; print_r($display_qus_choice_display);
+        //     echo "<pre>"; print_r($logic_type_value_display);
+        //     echo "<pre>"; print_r($logic_type_value_option_display);
+        //     echo "<pre>"; print_r($display_qus_choice_andor_display);
+            
+        //     foreach($display_qus_choice_display as $k=>$v){
+        //         $qusresp =  SurveyResponse::where(['question_id'=>$k,'response_user_id'=>$response_user_id])->first();
+        //         $qusv =  Question::where(['id'=>$k])->first();
+        //         if($qusresp){
+        //             $logic_types = ['isSelected','isNotSelected','isAnswered','isNotAnswered','contains','doesNotContain','startsWith','endsWith','equalsString','notEqualTo','lessThanForScale','greaterThanForScale','equalToForScale','notEqualToForScale'];
+    
+                                   
+        //             if($qusresp->skip == 'yes' && ($logic=='isAnswered' || $logic=='isNotAnswered')){
+        //                 echo "test";
+        //             }
+                    
+        //         }else{
+    
+        //         }
+               
+    
+        //         echo "<pre>"; print_r($qusresp);
+        //         $logic=$logic_type_value_display[$k];
+        //         $logicv=$logic_type_value_option_display[$k];
+        //         $cond=$display_qus_choice_andor_display[$k];
+        //         if($logic=='isAnswered' || $logic=='isNotAnswered'){
+    
+        //         }
+    
+        //         echo $v.'-'.$logic.'-'.$logicv.'-'.$cond .'<br>';
+               
+        //     }
+        // }
+
+        // Check Skip Logic 
+        $skip_logic = json_decode($question1->skip_logic);
+        if($skip_logic!=null){
+            $skip_logic_DB1=json_decode($skip_logic->display_qus_choice_skip); 
+            $logic_type_value_skip=json_decode($skip_logic->skiplogic_type_value_skip); 
+            $logic_type_value_option_skip=json_decode($skip_logic->logic_type_value_option_skip); 
+            $skip_qus_choice_andor_skip=json_decode($skip_logic->display_qus_choice_andor_skip); 
+            $jump_type=$skip_logic->jump_type;
+            foreach ($skip_logic_DB1 as $k=>$skip){
+                $logic=$logic_type_value_skip[$k];
+                $logicv=$logic_type_value_option_skip[$k];
+                $cond=$skip_qus_choice_andor_skip[$k];
+                if(count($skip_logic_DB1) == 1){
+                   switch($logic){
+                    case 'isSelected':
+                        if($user_ans == $logicv)
+                            $jump_to = 'yes';
+                        break;
+                    case 'isNotSelected':
+                        if($user_ans == $logicv)
+                            $jump_to = 'yes';
+                        break;
+                    case 'isAnswered':
+                        if($user_ans !='')
+                            $jump_to = 'yes';
+                        break;
+                    case 'isNotAnswered':
+                        if($skip_ans == 'yes')
+                            $jump_to = 'yes';
+                        break;
+                    case 'contains':
+                        break;
+                    case 'doesNotContain':
+                        break;
+                    case 'startsWith':
+                        break;
+                    case 'endsWith':
+                        break;
+                    case 'equalsString':
+                        break;
+                    case 'notEqualTo':
+                        break;
+                    case 'lessThanForScale':
+                        break;
+                    case 'greaterThanForScale':
+                        break;
+                    case 'equalToForScale':
+                        break;
+                    case 'notEqualToForScale':
+                        break;
+                   
+                   }
+
+                    echo $logic.'-';
+                    echo $logicv;
+                    echo $cond;
+
+                }else{
+
+                }
+            }
+            echo $jump_type; 
+            // echo "<pre>"; 
+            // print_r($skip_logic_DB1);
+            // print_r($logic_type_value_skip);
+            // print_r($logic_type_value_option_skip);
+            // print_r($skip_qus_choice_andor_skip);
+
+        }
+       
+
+        exit;
+
+
+        // return redirect()->to($next_qus);
     }
 
    
