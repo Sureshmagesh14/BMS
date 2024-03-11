@@ -603,7 +603,7 @@
                     <input type="hidden" name="qus_id" id="qus_id" value="{{$currentQus->id}}">
                     <input type="hidden" name="qus_type" id="qus_type" value="{{$currentQus->qus_type}}">
                     <!-- Display Logic  -->
-                    <input type="hidden" id="logic_type_value_display" name="logic_type_value_display">   
+                    <input type="hidden" id="display_logic_type_value_display" name="display_logic_type_value_display">   
                     <input type="hidden" id="logic_type_value_option_display" name="logic_type_value_option_display">   
                     <input type="hidden" id="display_qus_choice_andor_display" name="display_qus_choice_andor_display">   
                     <input type="hidden" id="display_qus_choice_display" name="display_qus_choice_display"> 
@@ -637,7 +637,7 @@
                                             $display_logic_DB1=[]; $logic_type_value=[];
                                             $logic_type_value_option_display=[]; $display_qus_choice_andor_display=[];
                                         }
-                                        //echo "<pre>"; print_r($logic_type_value);
+                                        // echo "<pre>"; print_r($logic_type_value);
                                         ?>
                                         @foreach($display_logic_DB1 as $key=>$v1)
                                             <?php 
@@ -649,7 +649,8 @@
                                                 $vlogic= ''; 
                                                 $vlogicoption= ''; 
                                                 $andOrVal=''; 
-                                            }
+                                            } 
+                                            // echo $vlogic.'-vlogic';
                                             ?>
                                             <div class="logic_section_display_row">
                                                 <div class="row">
@@ -748,6 +749,7 @@
                                                         }else{
                                                             $qusvalue_display=[];
                                                         }
+                                                        // echo "<pre>"; print_r($resp_logic_type_display);
                                                          ?>
                                                 @if($qus_display!=null)
                                                 <div class="respondant_selection row">
@@ -1239,7 +1241,7 @@ function triggersubmit(qus_type){
         Swal.fire("Warning", 'Invalid display logic settings', "warning") ;
         return false;
     }
-    $('#logic_type_value_display').val(JSON.stringify(logic_type_value));
+    $('#display_logic_type_value_display').val(JSON.stringify(logic_type_value));
     $('#logic_type_value_option_display').val(JSON.stringify(logic_type_value_option));
     $('#display_qus_choice_andor_display').val(JSON.stringify(display_qus_choice_andor));
     $('#display_qus_choice_display').val(JSON.stringify(display_qus_choice));
