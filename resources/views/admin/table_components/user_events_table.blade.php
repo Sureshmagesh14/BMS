@@ -15,7 +15,7 @@
                     <ul class="dropdown-menu dropdown-menu-right p-2">
                         <li class="mb-3">
                             <h5>User Filter</h5>
-                            <select name="users" id="users" class="form-control">
+                            <select name="users" id="users" class="form-control" onchange="select_users(this)">
                                 <option value="">Select Users</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -24,7 +24,7 @@
                         </li>
                         <li class="mb-3">
                             <h5>Role Filter</h5>
-                            <select name="users" id="users" class="form-control">
+                            <select name="users" id="users" class="form-control" onchange="select_role(this)">
                                 <option value="">Select Role</option>
                                 <option value="1">Administrator</option>
                                 <option value="2">User</option>
@@ -33,7 +33,7 @@
                         </li>
                         <li class="mb-3">
                             <h5>Action Filter</h5>
-                            <select name="users" id="users" class="form-control">
+                            <select name="users" id="users" class="form-control" onchange="select_action(this)">
                                 <option value="">Select Action</option>
                                 <option value="created">Created</option>
                                 <option value="updated">Updated</option>
@@ -45,7 +45,7 @@
                         </li>
                         <li class="mb-3">
                             <h5>Type Filter</h5>
-                            <select name="users" id="users" class="form-control">
+                            <select name="users" id="users" class="form-control" onchange="select_type(this)">
                                 <option value="">Select Type</option>
                                 <option value="project">Project</option>
                                 <option value="respondent">Respondent</option>
