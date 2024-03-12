@@ -229,8 +229,10 @@
             count_checkbox = $("#"+table_id+" .tabel_checkbox").filter(':checked').length;
             if (count_checkbox >= 1) {
                 $("."+table_id+".hided_option").show();
+                $("."+table_id+".show_hided_option").hide();
             } else {
                 $("."+table_id+".hided_option").hide();
+                $("."+table_id+".show_hided_option").show();
             }
         }
     </script>

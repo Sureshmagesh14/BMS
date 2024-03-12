@@ -67,9 +67,11 @@ $(document).on('change', '.select_all', function (e) {
         checkboxes.prop('checked', $(this).is(':checked'));
         if ($(this).is(':checked')) {
             $("."+table_id+".hided_option").show();
+            $("."+table_id+".show_hided_option").hide();
         }
         else{
             $("."+table_id+".hided_option").hide();
+            $("."+table_id+".show_hided_option").show();
         }
     }
     
