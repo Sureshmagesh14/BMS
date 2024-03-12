@@ -658,7 +658,6 @@ class SurveyController extends Controller
         $surveyres->deleted_at=0;
         // $surveyres->save();
 
-        // Check Skip Logic 
 
         // Check Display Logic 
         $question1=Questions::where('id', '>', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
