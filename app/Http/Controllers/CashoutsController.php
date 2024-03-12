@@ -9,13 +9,15 @@ use Yajra\DataTables\DataTables;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
-
+use App\Models\Users;
 class CashoutsController extends Controller
 {   
     public function cashouts()
     {   
         try {
-            return view('admin.cashouts.index');
+            $users = Users::withoutTrashed()->get();
+        
+            return view('admin.cashouts.index',compact('users'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

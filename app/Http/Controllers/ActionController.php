@@ -134,7 +134,54 @@ class ActionController extends Controller
                  $nestedData['id'] = $i;
                  $nestedData['name'] = $post->name  ?? '-';
                  $nestedData['uname'] = $post->uname  ?? '-';
-                 $nestedData['actionable_id'] = $post->actionable_id  ?? '-';
+              
+                 if($post->actionable_type =='App\Models\Respondent'){
+                    $get_name=DB::table('respondents')->where('id',$post->actionable_id)->first();
+                    if(isset($get_name->name)){
+                        $name=$get_name->name;
+                    }else{
+                        $name='';
+                    }
+
+                    if(isset($get_name->surname)){
+                        $surname=$get_name->surname;
+                    }else{
+                        $surname='';
+                    }
+
+                    if(isset($get_name->email)){
+                        $email=$get_name->email;
+                    }else{
+                        $email='';
+                    }
+
+                    if(isset($get_name->mobile)){
+                        $mobile=$get_name->mobile;
+                    }else{
+                        $mobile='';
+                    }
+                    $get_val_name='Respondent: '.$name.'-'.$surname.'-'.$email.'-'.$mobile;
+                 }else if($post->actionable_type =='App\Models\Group'){
+
+                 }else if($post->actionable_type =='App\Models\Content'){
+
+                 }
+                 else{
+                    $get_name=DB::table('users')->where('id',$post->actionable_id)->first();
+                    if(isset($get_name->name)){
+                        $name=$get_name->name;
+                    }else{
+                        $name='';
+                    }
+
+                    if(isset($get_name->surname)){
+                        $surname=$get_name->surname;
+                    }else{
+                        $surname='';
+                    }
+                    $get_val_name='User: '.$name.' '.$surname;
+                 }
+                 $nestedData['actionable_id'] = $get_val_name  ?? '-';
                  $nestedData['status'] = $post->status  ?? '-';
                  $nestedData['created_at'] = $newDateTime = date('Y-m-d h:i A', strtotime($post->created_at))  ?? '-';
                 
