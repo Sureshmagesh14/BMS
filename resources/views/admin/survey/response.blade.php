@@ -292,7 +292,7 @@ if(isset($qusvalue->left_label)){
                                 @if($qusvalue->open_qus_choice == 'multi')
                                 <div class="ss_options_container">
                                     <div class="ss_inline_input_container ss_component_animated ss-form-group ss-form-group--lg-col-6 ss_inline_input_voice-container">
-                                        <textarea class="answer-option--input ss-survey-font-family ss-survey-text-size--2xl sm_ss-survey-text-size--lg ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-border-style--solid ss-survey-border-color--primary  ss-survey-text-color--secondary"
+                                        <textarea class="text-ans-input answer-option--input ss-survey-font-family ss-survey-text-size--2xl sm_ss-survey-text-size--lg ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-border-style--solid ss-survey-border-color--primary  ss-survey-text-color--secondary"
                                             placeholder="Please enter your response" maxlength="10000"
                                             style="resize: none; height: 37px;"></textarea><span
                                             class="ss-form-group__highlight"></span>
@@ -305,25 +305,21 @@ if(isset($qusvalue->left_label)){
                                 @elseif($qusvalue->open_qus_choice == 'single')
                                 <div class="ss_options_container">
                                     <div class="ss_inline_input_container ss_component_animated ss-form-group ss-form-group--lg-col-6 ss_inline_input_voice-container">
-                                        <input type="text" class="answer-option--input ss-survey-font-family ss-survey-text-size--2xl sm_ss-survey-text-size--lg ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-border-style--solid ss-survey-border-color--primary  ss-survey-text-color--secondary" placeholder="Please enter your response" maxlength="1000" style="max-height: 200px; height: 36.8px;"></textarea>
+                                        <input type="text" class="text-ans-input answer-option--input ss-survey-font-family ss-survey-text-size--2xl sm_ss-survey-text-size--lg ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-border-style--solid ss-survey-border-color--primary  ss-survey-text-color--secondary" placeholder="Please enter your response" maxlength="1000" style="max-height: 200px; height: 36.8px;"></textarea>
                                         <span class="ss-form-group__highlight"></span>
                                     </div>
                                 </div>
                                 @endif
-                                <div class="ss_cl_qstn_action ">
+                                <div class="ss_cl_qstn_action disabled {{$question->qus_type}}_action">
                                     <div class="">
-                                        <a href="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif">
-                                            <button id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                            <button data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif"  id="next_button"  class="disabled ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
                                                 <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
                                                 </svg>
                                             </button>
-                                        </a>
                                     </div>
                                     <div class="ss-skip-container">
-                                        <a href="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif">
-                                            <button class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                        </a>
+                                        <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
                                     </div>
                             </div>
                             </span>
@@ -463,25 +459,18 @@ if(isset($qusvalue->left_label)){
                                         @endforeach
                                     </div>
                                 </div>
-                                <div class="ss_cl_qstn_action">
+                                <div class="ss_cl_qstn_action disabled {{$question->qus_type}}_action">
                                     <div class="">
-                                            <div class="">
-                                                <a href="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif">
-                                                    <button id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold">
-                                                        <span class="ss-primary-action-btn__copy">Next</span>
-                                                        <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
-                                                        </svg>
-                                                    </button>
-                                                </a>
-                                            </div>
+                                            <button data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif"  id="next_button"  class="disabled ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                                <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
+                                                </svg>
+                                            </button>
                                     </div>
                                     <div class="ss-skip-container">
-                                        <a href="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif">
-                                            <button class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                        </a>
+                                        <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
                                     </div>
-                                </div>
+                            </div>
                             </span>
                         </div>
                     </div>
@@ -790,7 +779,7 @@ if(isset($qusvalue->left_label)){
                                     <div
                                         class="ss_inline_input_container ss_component_animated ss-form-group ss-form-group--lg-col-6">
                                         <input type="email" inputmode="email"
-                                            class="answer-option--input ss-survey-font-family ss-survey-text-size--2xl sm_ss-survey-text-size--lg ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-border-style--solid ss-survey-border-color--primary  ss-survey-text-color--secondary answer-option--input"
+                                            class="text-ans-input answer-option--input ss-survey-font-family ss-survey-text-size--2xl sm_ss-survey-text-size--lg ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-border-style--solid ss-survey-border-color--primary  ss-survey-text-color--secondary answer-option--input"
                                             placeholder="Please enter an email" autocomplete="new-password"
                                             aria-labelledby="question-title-8966644"
                                             aria-describedby="question-title-8966644 question-description-8966644"
@@ -798,22 +787,18 @@ if(isset($qusvalue->left_label)){
                                     </div>
                                 </div>
                                 
-                                <div class="ss_cl_qstn_action ">
+                                <div class="ss_cl_qstn_action disabled {{$question->qus_type}}_action">
                                     <div class="">
-                                        <a href="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif">
-                                            <button id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                            <button data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif"  id="next_button"  class="disabled ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
                                                 <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
                                                 </svg>
                                             </button>
-                                        </a>
                                     </div>
                                     <div class="ss-skip-container">
-                                        <a href="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif">
-                                            <button class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                        </a>
+                                        <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
                                     </div>
-                                </div>
+                            </div>
                             </span>
                         </div>
                     </div>
@@ -849,7 +834,7 @@ if(isset($qusvalue->left_label)){
         </div>
     </div>
     @endif
-    <form id="skip_qus" style="display:none;" action="{{route('survey.skipqus')}}" method="POST">
+    <form id="skip_qus" style="display:none;" action="{{route('survey.submitans')}}" method="POST">
         @csrf
         <input type="text" id="question_id" value="{{$question->id}}" name="question_id"/>
         <input type="text" id="survey_id" value="{{$survey->id}}" name="survey_id"/>
@@ -861,6 +846,15 @@ if(isset($qusvalue->left_label)){
 <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
 
 <script>
+$('.text-ans-input').change(function(){
+    if($(this).val()!=''){
+        $('#next_button').removeClass('disabled');
+        $('#answered').val('yes');
+    }else{
+        $('#next_button').addClass('disabled');
+        $('#answered').val('no');
+    }
+});
 $('.single_choice_choice').click(function(){
     $(this).toggleClass("active");
     $('.single_choice_choice').not(this).removeClass("active");
@@ -954,13 +948,24 @@ function changepos(val,event){
 }
 
 $('#next_button').click(function(){
+    let submit = 0;
     console.log($('#question_type').val(),"next_button");
     if($('#question_type').val() =='single_choice'){
         if($('#answered').val() == 'yes'){
            $('#user_ans').val($('.single_choice_choice.active .ans_val').text());
-        }else{
-            alert('Answer not given')
+           submit = 1;
         }
+    }else if($('#question_type').val() =='open_qus'){
+        if($('#answered').val() == 'yes'){
+           $('#user_ans').val($('.text-ans-input').val());
+           submit = 1;
+        }
+    }
+    if(submit == 1){
+        $('#next_qus').val($(this).data('url'));
+        $('#skip_qus').submit();
+    }else{
+        alert('Pls choose answ');
     }
 });
 

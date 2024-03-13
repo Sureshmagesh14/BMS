@@ -187,7 +187,7 @@ Route::group([
     Route::post('/survey/updatesettings/{id}', ['as' => 'survey.updatesettings','uses' => 'SurveyController@updatesettings']);
 
     // Respondent Flow 
-    Route::post('/survey/skipqus', ['as' => 'survey.skipqus','uses' => 'SurveyController@skipqus']);
+    Route::post('/survey/submitans', ['as' => 'survey.submitans','uses' => 'SurveyController@submitans']);
 
     
 
