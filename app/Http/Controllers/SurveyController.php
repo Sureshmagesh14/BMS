@@ -645,20 +645,154 @@ class SurveyController extends Controller
     public function skipqus(Request $request){
         $survey_id = $request->survey_id;
         $question_id = $request->question_id;
+        echo $question_id;
         $next_qus = $request->next_qus;
         // $user_ans=$request->user_ans;
         $user_ans ='SSLC';
-        $skip_ans ='yes';
+        $skip_ans =$request->skip_ans;
         $response_user_id =  Auth::guard('admin')->user()->id;
         $surveyres = new SurveyResponse();
         $surveyres->response_user_id=$response_user_id;
         $surveyres->question_id=$request->question_id;
-        $surveyres->answer='';
-        $surveyres->skip='yes';
+        $surveyres->answer=$request->user_ans;
+        $surveyres->skip=$skip_ans;
         $surveyres->deleted_at=0;
         // $surveyres->save();
+        // Skip Current Qus 
+        if($skip_ans == 'yes'){
+            // If redirect jump avail
+            $skip_check=Questions::where('id', '=', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
+            if($skip_check){
+                $skip_logic = json_decode($skip_check->skip_logic);
+                if($skip_logic!=null){
+                    $skip_logic_DB1=json_decode($skip_logic->display_qus_choice_skip); 
+                    $logic_type_value_skip=json_decode($skip_logic->skiplogic_type_value_skip); 
+                    $logic_type_value_option_skip=json_decode($skip_logic->logic_type_value_option_skip); 
+                    $skip_qus_choice_andor_skip=json_decode($skip_logic->display_qus_choice_andor_skip); 
+                    $jump_type=$skip_logic->jump_type;
+                    $jump_to=0;
+                    foreach ($skip_logic_DB1 as $k=>$skip){
+                        $logic=$logic_type_value_skip[$k];
+                        $logicv=$logic_type_value_option_skip[$k];
+                        $cond=$skip_qus_choice_andor_skip[$k];
+                        switch($logic){
+                            case 'isSelected':
+                                if($user_ans == $logicv){
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'isNotSelected':
+                                if($user_ans == $logicv){
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'isAnswered':
+                                if($user_ans !=''){
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'isNotAnswered':
+                                if($skip_ans == 'yes'){
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'contains':
+                                if (str_contains($user_ans, $logicv)) { 
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'doesNotContain':
+                                if (!str_contains($user_ans, $logicv)) { 
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'startsWith':
+                                if (str_starts_with($user_ans, $logicv)) { 
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'endsWith':
+                                if (str_ends_with($user_ans, $logicv)) { 
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'equalsString':
+                                if ($user_ans== $logicv) { 
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'notEqualTo':
+                                if ($user_ans != $logicv) { 
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'lessThanForScale':
+                                if ($user_ans < $logicv) { 
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'greaterThanForScale':
+                                if ($user_ans > $logicv) { 
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'equalToForScale':
+                                if ($user_ans == $logicv) { 
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                            case 'notEqualToForScale':
+                                if ($user_ans != $logicv) { 
+                                    $jump_to++;
+                                }else{
+                                    $jump_to--;
+                                }
+                                break;
+                        }
+                    }
+                    if($jump_to == count($skip_logic_DB1)){
+                       return redirect()->route('survey.startsurvey',[$survey_id,$jump_type]);
+                    }else{
+                        // Check next qus display settings 
+                        echo "esle";
+                    }
+                }
+                else{
+                    // Check next qus display settings 
+                }
+            }
+            // If redirect not avail 
 
+        }else{
 
+        }
+exit;
         // Check Display Logic 
         $question1=Questions::where('id', '>', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
 

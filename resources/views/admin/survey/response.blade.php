@@ -236,7 +236,7 @@ if(isset($qusvalue->left_label)){
                                 <div class="ss_multiple_choice ss_component_animated">
                                     @foreach($exiting_choices as $key=>$choice)
                                         <button class="{{$question->qus_type}}_choice ss-answer-option--choice ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-item--has-key-assist">
-                                            <span class="ss-answer-option--choice__copy">{{$choice}}</span>
+                                            <span class="ss-answer-option--choice__copy ans_val">{{$choice}}</span>
                                             <div class="ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--bold ss-option-no">
                                                 <span class="ss-option-no__index">{{$azRange[$key]}}</span></div>
                                         </button>
@@ -854,6 +854,8 @@ if(isset($qusvalue->left_label)){
         <input type="text" id="question_id" value="{{$question->id}}" name="question_id"/>
         <input type="text" id="survey_id" value="{{$survey->id}}" name="survey_id"/>
         <input type="text" id="next_qus" name="next_qus"/>
+        <input type="text" id="user_ans" name="user_ans"/>
+        <input type="text" id="skip_ans" name="skip_ans"/>
     </form>
 </body>
 <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
@@ -952,10 +954,10 @@ function changepos(val,event){
 }
 
 $('#next_button').click(function(){
-    // console.log($('#question_type').val(),"next_button");
+    console.log($('#question_type').val(),"next_button");
     if($('#question_type').val() =='single_choice'){
         if($('#answered').val() == 'yes'){
-
+           $('#user_ans').val($('.single_choice_choice.active .ans_val').text());
         }else{
             alert('Answer not given')
         }
@@ -964,6 +966,7 @@ $('#next_button').click(function(){
 
 $('#skip_button').click(function(){
     $('#next_qus').val($(this).data('url'));
+    $('#skip_ans').val('yes');
     $('#skip_qus').submit();
 });
 </script>
