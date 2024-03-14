@@ -645,9 +645,9 @@ class SurveyController extends Controller
     public function submitans(Request $request){
         $survey_id = $request->survey_id;
         $question_id = $request->question_id;
+        $qus_check=Questions::where('id', '=', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
         $next_qus = $request->next_qus;
         $user_ans=$request->user_ans;
-        // $user_ans ='SSLC';
         $skip_ans =$request->skip_ans;
         $response_user_id =  Auth::guard('admin')->user()->id;
         $surveyres = new SurveyResponse();
@@ -657,463 +657,460 @@ class SurveyController extends Controller
         $surveyres->skip=$skip_ans;
         $surveyres->deleted_at=0;
         // $surveyres->save();
-        // Skip Current Qus 
-        // If redirect jump avail
-        $qus_check=Questions::where('id', '=', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
         if($qus_check){
+            $next_qus_loop = '';
             $skip_logic = json_decode($qus_check->skip_logic);
             if($skip_logic!=null){
-                $skip_logic_DB1=json_decode($skip_logic->display_qus_choice_skip); 
-                $logic_type_value_skip=json_decode($skip_logic->skiplogic_type_value_skip); 
-                $logic_type_value_option_skip=json_decode($skip_logic->logic_type_value_option_skip); 
-                $skip_qus_choice_andor_skip=json_decode($skip_logic->display_qus_choice_andor_skip); 
-                $jump_type=$skip_logic->jump_type;
-                $jump_to=0;
-                $qusvalue_skip = json_decode($qus_check->qus_ans); 
-                $push_jump = [];
-                
-                foreach ($skip_logic_DB1 as $k=>$skip){
-                    $logic=$logic_type_value_skip[$k];
-                    $logicv=$logic_type_value_option_skip[$k];
-                    $cond=$skip_qus_choice_andor_skip[$k];
-                    $resp_logic_type_skip_value=[];
-                    switch ($qus_check->qus_type) {
-                        case 'single_choice':
-                            $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
-                            break;
-                        case 'multi_choice':
-                            $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
-                            break;
-                        case 'dropdown':
-                            $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
-                            break;
-                        case 'picturechoice':
-                            $resp_logic_type_skip_value=json_decode($qusvalue_skip->choices_list);
-                            break;
-                        case 'likert':
-                            $resp_logic_type_skip_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5,"6"=>6,"7"=>7,"8"=>8,"9"=>9];
-                            break;
-                        case 'rating':
-                            $resp_logic_type_skip_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5];
-                            break;
-                        case 'matrix_qus':
-                            $resp_logic_type_skip_value=explode(",",$qusvalue_skip->matrix_choice);
-                            break;
-                    }
-                    if(count($resp_logic_type_skip_value)>0){
-                        $ans = $resp_logic_type_skip_value[$logicv];
-                    }else{
-                        $ans = $logicv;
-                    }
-                    $get_ans_usr = SurveyResponse::where(['question_id' => $skip ])->first();
-                    if($get_ans_usr){
-                        $user_ans =  $get_ans_usr->answer;
-                        $skip_ans =  $get_ans_usr->skip;
-                    }
-                    
-                    switch($logic){
-                        case 'isSelected':
-                            if($user_ans == $ans){
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'isNotSelected':
-                            if($user_ans != $ans){
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'isAnswered':
-                            if($user_ans !=''){
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'isNotAnswered':
-                            if($skip_ans == 'yes'){
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'contains':
-                            if (str_contains($user_ans, $ans)) { 
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'doesNotContain':
-                            if (!str_contains($user_ans, $ans)) { 
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'startsWith':
-                            if (str_starts_with($user_ans, $ans)) { 
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'endsWith':
-                            if (str_ends_with($user_ans, $ans)) { 
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'equalsString':
-                            if ($user_ans== $ans) { 
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'notEqualTo':
-                            if ($user_ans != $ans) { 
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'lessThanForScale':
-                            if ($user_ans < $ans) { 
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'greaterThanForScale':
-                            if ($user_ans > $ans) { 
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'equalToForScale':
-                            if ($user_ans == $ans) { 
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                        case 'notEqualToForScale':
-                            if ($user_ans != $ans) { 
-                                $jump_to++;
-                                array_push($push_jump,"and");
-                            }else{
-                                $jump_to--;
-                                array_push($push_jump,"or");
-                            }
-                            break;
-                    }
-                }
-                if(count($skip_qus_choice_andor_skip)>0){
-                    if(count($push_jump)>0)
-                    {
-                        $skip_qus_choice_andor_skip[0]=$push_jump[0];
-                    }else{
-                        $skip_qus_choice_andor_skip[0]='and';
-                    }
-                }
-                $arr1 =serialize($skip_qus_choice_andor_skip);
-                $arr2 =serialize($push_jump);
-                if($arr1 == $arr2){
-                    if($skip_ans == 'yes'){
-                        return redirect()->route('survey.startsurvey',[$survey_id,$jump_type]);
-                    }else{
-                        // Check display settings 
-                        echo "display settings";
-                        // Get Next Qus 
+                if($skip_logic->jump_type!=''){
+                    $skip_logic_DB1=json_decode($skip_logic->display_qus_choice_skip); 
+                    $logic_type_value_skip=json_decode($skip_logic->skiplogic_type_value_skip); 
+                    $logic_type_value_option_skip=json_decode($skip_logic->logic_type_value_option_skip); 
+                    $skip_qus_choice_andor_skip=json_decode($skip_logic->display_qus_choice_andor_skip); 
+                    $jump_type=$skip_logic->jump_type;
+                    $jump_to=0;
+                    $qusvalue_skip = json_decode($qus_check->qus_ans); 
+                    $push_jump = [];
+                    foreach ($skip_logic_DB1 as $k=>$skip){
+                        $logic=$logic_type_value_skip[$k];
+                        $logicv=$logic_type_value_option_skip[$k];
+                        $cond=$skip_qus_choice_andor_skip[$k];
+                        $resp_logic_type_skip_value=[];
+                        switch ($qus_check->qus_type) {
+                            case 'single_choice':
+                                $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
+                                break;
+                            case 'multi_choice':
+                                $user_ans = explode(",",$user_ans);
+                                $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
+                                break;
+                            case 'dropdown':
+                                $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
+                                break;
+                            case 'picturechoice':
+                                $resp_logic_type_skip_value=json_decode($qusvalue_skip->choices_list);
+                                break;
+                            case 'likert':
+                                $resp_logic_type_skip_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5,"6"=>6,"7"=>7,"8"=>8,"9"=>9];
+                                break;
+                            case 'rating':
+                                $resp_logic_type_skip_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5];
+                                break;
+                            case 'matrix_qus':
+                                $resp_logic_type_skip_value=explode(",",$qusvalue_skip->matrix_choice);
+                                break;
+                        }
+                        if(count($resp_logic_type_skip_value)>0){
+                            $ans = $resp_logic_type_skip_value[$logicv];
+                        }else{
+                            $ans = $logicv;
+                        }
+                        $get_ans_usr = SurveyResponse::where(['question_id' => $skip ])->first();
+                        if($get_ans_usr){
+                            $user_ans =  $get_ans_usr->answer;
+                            $skip_ans =  $get_ans_usr->skip;
+                        }
                         
-                       $next_qus=Questions::where('id', '>', $question_id)->where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
-                       echo "<pre>"; print_r($next_qus);
-                       if($next_qus){
-                           $display_logic = json_decode($next_qus->display_logic);
-                           if($display_logic!=null){
-                               $display_qus_choice_display=json_decode($display_logic->display_qus_choice_display); 
-                               $logic_type_value_display=json_decode($display_logic->logic_type_value_display); 
-                               $logic_type_value_option_display=json_decode($display_logic->logic_type_value_option_display); 
-                               $display_qus_choice_andor_display=json_decode($display_logic->display_qus_choice_andor_display); 
-                            //    echo "<pre>"; print_r($display_qus_choice_display);
-                            //    echo "<pre>"; print_r($logic_type_value_display);
-                               echo "<pre>"; print_r($logic_type_value_option_display);
-                            //    echo "<pre>"; print_r($display_qus_choice_andor_display); 
-                                $jump_to=0;
-                                $qusvalue_display = json_decode($next_qus->qus_ans); 
-                                $push_jump = [];
-                               
-                               foreach ($display_qus_choice_display as $k=>$display){
-                                    $logic=$logic_type_value_display[$k];
-                                    $logicv=$logic_type_value_option_display[$k];
-                                    $cond=$display_qus_choice_andor_display[$k];
-                                    $resp_logic_type_display_value=[];
-                                    // echo $logic;
-                                    // echo $logicv;
-                                    // echo $cond;
-                                    // exit;
-                                    switch ($next_qus->qus_type) {
-                                        case 'single_choice':
-                                            $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
-                                            break;
-                                        case 'multi_choice':
-                                            $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
-                                            break;
-                                        case 'dropdown':
-                                            $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
-                                            break;
-                                        case 'picturechoice':
-                                            $resp_logic_type_display_value=json_decode($qusvalue_display->choices_list);
-                                            break;
-                                        case 'likert':
-                                            $resp_logic_type_display_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5,"6"=>6,"7"=>7,"8"=>8,"9"=>9];
-                                            break;
-                                        case 'rating':
-                                            $resp_logic_type_display_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5];
-                                            break;
-                                        case 'matrix_qus':
-                                            $resp_logic_type_display_value=explode(",",$qusvalue_display->matrix_choice);
-                                            break;
-                                    }
-                                    // echo $next_qus->qus_type;
-                                    // echo "<pre>"; print_r($resp_logic_type_display_value); 
-                                    // exit;
-                                    if($logicv!=''){
-                                        if(count($resp_logic_type_display_value)>0){
-                                            if(isset($resp_logic_type_display_value[$logicv])){
-                                                $ans = $resp_logic_type_display_value[$logicv];
-                                            }
-                                        }else{
-                                            $ans = $logicv;
-                                        }
-                                    }
-                                   
-                                    $get_ans_usr = SurveyResponse::where(['question_id' => $display ])->first();
-                                    $user_answeredwered = '';
-                                    $user_skipped = '';
-                                    if($get_ans_usr){
-                                        $user_answered =  $get_ans_usr->answer;
-                                        $user_skipped =  $get_ans_usr->skip;
-                                    }else{
-                                        echo "user-ans"."<pre>"; print_r($get_ans_usr); 
-                                    }
-                                    // echo $user_answered;
-                                    // echo $user_skipped;
-                                    
-                                    switch($logic){
-                                        case 'isSelected':
-                                            if($user_answered == $ans){
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'isNotSelected':
-                                            if($user_answered != $ans){
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'isAnswered':
-                                            if($user_answered !=''){
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'isNotAnswered':
-                                            if($user_skipped == 'yes'){
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'contains':
-                                            if (str_contains($user_answered, $ans)) { 
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'doesNotContain':
-                                            if (!str_contains($user_answered, $ans)) { 
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'startsWith':
-                                            if (str_starts_with($user_answered, $ans)) { 
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'endsWith':
-                                            if (str_ends_with($user_answered, $ans)) { 
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'equalsString':
-                                            if ($user_answered== $ans) { 
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'notEqualTo':
-                                            if ($user_answered != $ans) { 
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'lessThanForScale':
-                                            if ($user_answered < $ans) { 
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'greaterThanForScale':
-                                            if ($user_answered > $ans) { 
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'equalToForScale':
-                                            if ($user_answered == $ans) { 
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                        case 'notEqualToForScale':
-                                            if ($user_answered != $ans) { 
-                                                $jump_to++;
-                                                array_push($push_jump,"and");
-                                            }else{
-                                                $jump_to--;
-                                                array_push($push_jump,"or");
-                                            }
-                                            break;
-                                    }
-                                }
-                                if(count($display_qus_choice_andor_display)>0){
-                                    if(count($push_jump)>0)
-                                    {
-                                        $display_qus_choice_andor_display[0]=$push_jump[0];
-                                    }else{
-                                        $display_qus_choice_andor_display[0]='and';
-                                    }
-                                }
-                                $arr1 =serialize($display_qus_choice_andor_display);
-                                $arr2 =serialize($push_jump);
-                                echo "<pre>"; print_r($arr1);
-                                echo "<pre>"; print_r($arr2);
-                                if($arr1 == $arr2){
-                                    echo "redirect"; exit;
+                        switch($logic){
+                            case 'isSelected':
+                                $user_ans =  explode(",",$user_ans);
+                                if (in_array($ans, $user_ans)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
                                 }else{
-                                    $loopagain = 1;
-                                    echo "loopagain"; exit;
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
                                 }
-                           }else{
-                            // if no display logic avail
-                            return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
-
-                           }
-                       }else{
-                           // Redirect to thank you page
-                           $next_qus=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
-                           return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
-                       }
-
+                                break;
+                            case 'isNotSelected':
+                                $user_ans =  explode(",",$user_ans);
+                                if (!in_array($ans, $user_ans)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'isAnswered':
+                                if($user_ans !=''){
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'isNotAnswered':
+                                if($skip_ans == 'yes'){
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'contains':
+                                if (str_contains($user_ans, $ans)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'doesNotContain':
+                                if (!str_contains($user_ans, $ans)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'startsWith':
+                                if (str_starts_with($user_ans, $ans)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'endsWith':
+                                if (str_ends_with($user_ans, $ans)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'equalsString':
+                                if ($user_ans== $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'notEqualTo':
+                                if ($user_ans != $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'lessThanForScale':
+                                if ($user_ans < $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'greaterThanForScale':
+                                if ($user_ans > $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'equalToForScale':
+                                if ($user_ans == $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'notEqualToForScale':
+                                if ($user_ans != $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                        }
                     }
-                }
-                exit;
-
-                
-                if($jump_to == count($skip_logic_DB1)){
+                    if(count($skip_qus_choice_andor_skip)>0){
+                        if(count($push_jump)>0)
+                        {
+                            $skip_qus_choice_andor_skip[0]=$push_jump[0];
+                        }else{
+                            $skip_qus_choice_andor_skip[0]='and';
+                        }
+                    }
+                    $arr1 =serialize($skip_qus_choice_andor_skip);
+                    $arr2 =serialize($push_jump);
+                    if($arr1 == $arr2){
+                        if($skip_ans == 'yes'){
+                            return redirect()->route('survey.startsurvey',[$survey_id,$jump_type]);
+                        }else{
+                            // Check next qus display settings 
+                            $next_qus_loop ='yes';
+                           
+                        }
+                    }else{
+                        // Check next qus display settings 
+                        $next_qus_loop ='yes';
+                    }
                 }else{
-                    // Check next qus display settings 
-                    echo "esle";
+                     // Check next qus display settings 
+                     $next_qus_loop ='yes';
                 }
             }
             else{
                 // Check next qus display settings 
+                $next_qus_loop ='yes';
             }
         }
-        
-
-        exit;
-
-
-        // return redirect()->to($next_qus);
+        if($next_qus_loop == 'yes'){
+           return $this->displaynextQus($question_id,$survey_id);
+        }else{
+            // Redirect to thank you page
+            $next_qus=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
+            return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
+        }
     }
 
-   
+   public static  function displaynextQus($question_id,$survey_id){
+        $next_qus=Questions::where('id', '>', $question_id)->where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+        if($next_qus){
+            $display_logic = json_decode($next_qus->display_logic);
+            if($display_logic!=null){
+                $display_qus_choice_display=json_decode($display_logic->display_qus_choice_display); 
+                $logic_type_value_display=json_decode($display_logic->logic_type_value_display); 
+                $logic_type_value_option_display=json_decode($display_logic->logic_type_value_option_display); 
+                $display_qus_choice_andor_display=json_decode($display_logic->display_qus_choice_andor_display); 
+                $jump_to=0;
+                $qusvalue_display = json_decode($next_qus->qus_ans); 
+                $push_jump = [];
+                if(count($display_qus_choice_display)>0 && count($logic_type_value_display)>0){
+                    foreach ($display_qus_choice_display as $k=>$display){
+                        $logic=$logic_type_value_display[$k];
+                        $logicv=$logic_type_value_option_display[$k];
+                        $cond=$display_qus_choice_andor_display[$k];
+                        $resp_logic_type_display_value=[];
+                        switch ($next_qus->qus_type) {
+                            case 'single_choice':
+                                $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
+                                break;
+                            case 'multi_choice':
+                                $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
+                                break;
+                            case 'dropdown':
+                                $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
+                                break;
+                            case 'picturechoice':
+                                $resp_logic_type_display_value=json_decode($qusvalue_display->choices_list);
+                                break;
+                            case 'likert':
+                                $resp_logic_type_display_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5,"6"=>6,"7"=>7,"8"=>8,"9"=>9];
+                                break;
+                            case 'rating':
+                                $resp_logic_type_display_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5];
+                                break;
+                            case 'matrix_qus':
+                                $resp_logic_type_display_value=explode(",",$qusvalue_display->matrix_choice);
+                                break;
+                        }
+                        if($logicv!=''){
+                            if(count($resp_logic_type_display_value)>0){
+                                if(isset($resp_logic_type_display_value[$logicv])){
+                                    $ans = $resp_logic_type_display_value[$logicv];
+                                }
+                            }else{
+                                $ans = $logicv;
+                            }
+                        }
+                        $get_ans_usr = SurveyResponse::where(['question_id' => $display ])->first();
+                        $user_answered = '';
+                        $user_skipped = '';
+                        if($get_ans_usr){
+                            $user_answered =  $get_ans_usr->answer;
+                            $user_skipped =  $get_ans_usr->skip;
+                        }
+                        
+                        switch($logic){
+                            case 'isSelected':
+                                $user_answered =  explode(",",$user_answered);
+                                if (in_array($ans, $user_answered)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'isNotSelected':
+                                $user_answered =  explode(",",$user_answered);
+                                if (!in_array($ans, $user_answered)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'isAnswered':
+                                if($user_answered !=''){
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'isNotAnswered':
+                                if($user_skipped == 'yes'){
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'contains':
+                                if (str_contains($user_answered, $ans)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'doesNotContain':
+                                if (!str_contains($user_answered, $ans)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'startsWith':
+                                if (str_starts_with($user_answered, $ans)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'endsWith':
+                                if (str_ends_with($user_answered, $ans)) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'equalsString':
+                                if ($user_answered== $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'notEqualTo':
+                                if ($user_answered != $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'lessThanForScale':
+                                if ($user_answered < $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'greaterThanForScale':
+                                if ($user_answered > $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'equalToForScale':
+                                if ($user_answered == $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                            case 'notEqualToForScale':
+                                if ($user_answered != $ans) { 
+                                    $jump_to++;
+                                    array_push($push_jump,"and");
+                                }else{
+                                    $jump_to--;
+                                    array_push($push_jump,"or");
+                                }
+                                break;
+                        }
+                    }
+                    if(count($display_qus_choice_andor_display)>0){
+                        if(count($push_jump)>0)
+                        {
+                            $display_qus_choice_andor_display[0]=$push_jump[0];
+                        }else{
+                            $display_qus_choice_andor_display[0]='and';
+                        }
+                    }
+                    // Update array based on and
+                    foreach($display_qus_choice_andor_display as $k1=>$c1){
+                        if($c1 == $push_jump[$k1]){
+                        }else if ($c1 == 'or' && $push_jump[$k1] =='and'){
+                            $push_jump[$k1]='or';
+                        }else{
+                            $loopagain = 1;
+                        }
+                    } 
+                    $arr1 =serialize($display_qus_choice_andor_display);
+                    $arr2 =serialize($push_jump);
+                    if($arr1 == $arr2){
+                        return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
+                    }else{
+                        $loopagain = 1;
+                        $this->displaynextQus($next_qus->id,$survey_id);
+                    }
+                }else{
+                    return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
+                }
+               
+            }else{
+            // if no display logic avail
+            return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
+
+            }
+        }else{
+            // Redirect to thank you page
+            $next_qus=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
+            return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
+        }
+   }
 }
 
 

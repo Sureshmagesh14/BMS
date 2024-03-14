@@ -960,6 +960,17 @@ $('#next_button').click(function(){
            $('#user_ans').val($('.text-ans-input').val());
            submit = 1;
         }
+        
+
+    }else if ($('#question_type').val() == 'multi_choice'){
+        if($('#answered').val() == 'yes'){
+            let arr = [];
+            $('.multi_choice_choice.active .ans_val').each(function(){ 
+                arr.push($(this).text());
+            });
+           $('#user_ans').val(arr.toString());
+           submit = 1;
+        }
     }
     if(submit == 1){
         $('#next_qus').val($(this).data('url'));
