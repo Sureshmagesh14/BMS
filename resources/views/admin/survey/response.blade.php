@@ -91,7 +91,12 @@ if(isset($qusvalue->left_label)){
                         @endif
                         @if(isset($qusvalue->welcome_btn))
                         <div class="ss_cl_qstn_action">
-                            <a href="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif">
+                            <?php 
+                            if($question1) 
+                                $urlwelcome = route('survey.startsurvey',[$survey->id,$question1->id])."?type=welcome"; 
+                            else $urlwelcome="";
+                            ?>
+                            <a href="{{$urlwelcome}}">
                                 <button class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold ss-primary-action-btn--intro">
                                     <span class="ss-primary-action-btn__copy">{{$qusvalue->welcome_btn}}</span>
                                     <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none"

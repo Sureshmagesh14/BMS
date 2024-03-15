@@ -542,9 +542,11 @@ class SurveyController extends Controller
     }
     public function startsurvey(Request $request, $id,$qus){
         $survey=Survey::with('questions')->where(['id'=>$id])->first();
-        // Update started Count 
+        if($request->type == 'welcome'){
+            // Update started Count 
+            $started_count=Survey::where(['id'=>$id])->update(['started_count'=>$survey->started_count+1]);
+        }
         
-        // $started_count=Survey::where(['id'=>$id])->update(['started_count'=>$survey->started_count+1]);
         $question=Questions::where(['id'=>$qus])->first();
 
         $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
@@ -656,7 +658,7 @@ class SurveyController extends Controller
         $surveyres->answer=$request->user_ans;
         $surveyres->skip=$skip_ans;
         $surveyres->deleted_at=0;
-        // $surveyres->save();
+        $surveyres->save();
         if($qus_check){
             $next_qus_loop = '';
             $skip_logic = json_decode($qus_check->skip_logic);
@@ -876,6 +878,9 @@ class SurveyController extends Controller
         if($next_qus_loop == 'yes'){
            return $this->displaynextQus($question_id,$survey_id);
         }else{
+            // Update Survey Completion 
+            $surveyRec=Survey::where(['id'=>$survey_id])->first();
+            $completed_count=Survey::where(['id'=>$survey_id])->update(['completed_count'=>$surveyRec->completed_count+1]);
             // Redirect to thank you page
             $next_qus=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
             return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
@@ -1106,6 +1111,10 @@ class SurveyController extends Controller
 
             }
         }else{
+            // Update Survey Completion 
+            $surveyRec=Survey::where(['id'=>$survey_id])->first();
+            $completed_count=Survey::where(['id'=>$survey_id])->update(['completed_count'=>$surveyRec->completed_count+1]);
+            
             // Redirect to thank you page
             $next_qus=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
             return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
