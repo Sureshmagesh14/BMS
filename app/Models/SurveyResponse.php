@@ -13,7 +13,7 @@ class SurveyResponse extends Model
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'survey_response';
-    protected $fillable = ['response_user_id','question_id','answer','skip' ];
+    protected $fillable = ['survey_id','response_user_id','question_id','answer','skip' ];
     
    
 }
