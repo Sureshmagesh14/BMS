@@ -16,12 +16,20 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+
 Route::any('terms','WelcomeController@terms')->name('terms');
 Route::any('admin','Auth\AdminLoginController@showLoginForm')->name('admin.showlogin'); //.....Admin Login
 Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.login'); //.....Admin Login
 
 
 Route::any('dashboard','WelcomeController@user_dashboard')->middleware(['auth', 'verified'])->name('user.dashboard');
+Route::any('profile-edit','WelcomeController@user_profile')->middleware(['auth', 'verified'])->name('user.profile');
+Route::any('share','WelcomeController@user_share')->middleware(['auth', 'verified'])->name('user.share');
+Route::any('rewards','WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
+Route::any('surveys','WelcomeController@user_surveys')->middleware(['auth', 'verified'])->name('user.surveys');
+Route::any('viewprofile','WelcomeController@user_viewprofile')->middleware(['auth', 'verified'])->name('user.viewprofile');
+
+
 
 /* USERS */
 Route::middleware('auth')->group(function () {

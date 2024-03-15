@@ -67,7 +67,99 @@ class WelcomeController extends Controller
 
     public function user_dashboard(Request $request){
         try {
-            return view('user.user-dashboard');
+            Session::put('resp_id',  $request->user()->id);
+            Session::put('resp_name', $request->user()->name);
+
+            if($request->user()->profile_completion_id==0){
+                return view('user.update-profile');
+            }else{
+                return view('user.user-dashboard');
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function user_share(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+            
+            if($request->user()->profile_completion_id==0){
+                return view('user.update-profile');
+            }else{
+                return view('user.user-share');
+            }
+           
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function user_rewards(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+            
+            if($request->user()->profile_completion_id==0){
+                return view('user.update-profile');
+            }else{
+                return view('user.user-rewards');
+            }
+           
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function user_surveys(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+            
+            if($request->user()->profile_completion_id==0){
+                return view('user.update-profile');
+            }else{
+                return view('user.user-surveys');
+            }
+           
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function user_viewprofile(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+            
+            return view('user.user-viewprofile');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function user_profile(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+            
+            if($request->user()->profile_completion_id==0){
+                return view('user.update-profile');
+            }else{
+                return view('user.user-profile');
+            }
+           
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
