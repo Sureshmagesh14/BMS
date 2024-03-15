@@ -270,6 +270,20 @@ class SurveyController extends Controller
         }
 
     }
+    public function surveysettings(Request $request,$survey){
+        $survey=Survey::where(['id'=>$survey])->first();
+        return view('admin.survey.builder.settings', compact('survey'));
+
+    }
+    public function updatesettings(Request $request,$survey){
+        $survey=Survey::where(['id'=>$survey])->first();
+        $survey->avg_completion_time=$request->avg_completion_time;
+        $survey->save();
+        return redirect()->back()->with('success', __('Survey Settings Saved Successfully.'));
+
+
+
+    }
     public function questiontype(Request $request,$survey){
         $checkSurvey= Questions::where(['survey_id'=>$survey,'qus_type'=>'welcome_page'])->first();
         if($checkSurvey){
@@ -599,20 +613,31 @@ class SurveyController extends Controller
     }
     public function setbackground(Request $request,$id){
         $survey=Survey::where(['id'=>$id])->first();
-        // {
-        //     type:"single_color",
-        //     color1:"",
-        // }
-        // {
-        //     type:"gradient",
-        //     color1:"",
-        //     color2:"",
-        //     ori:"",
-        // }
-        // {
-        //     type:"image",
-        //     color1:"",
-        // }
+        if($request->bg_type=='image'){
+            if($request->hasfile('welcome_image'))
+            {
+                $file = $request->file('welcome_image');
+                $extenstion = $file->getClientOriginalExtension();
+                $filename = time().'.'.$extenstion;
+                $file->move('uploads/survey/background/', $filename);
+                $bg=$filename;
+            }
+        }else if($request->bg_type=='single'){
+            $bg=$request->hex;
+        }else{
+            
+            $hex1=$request->gradienthex;
+            $hex2=$request->gradienthex1;
+            $ori=$request->gradientori;
+            // echo $ori; exit;
+            $bg=json_encode(['hex1'=>$hex1,'hex2'=>$hex2,'ori'=>$ori]);
+
+        }
+        $bgval=["type"=>$request->bg_type, "color"=>$bg];
+        $survey->background=json_encode($bgval);
+        $survey->save();
+        return redirect()->back()->with('success', __('Survey Background Updated Successfully.'));
+
     }
 
    
