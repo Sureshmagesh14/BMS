@@ -31,7 +31,7 @@
             .select2-container{width:100% !important;}
             .privateusers {display:none;}
             .privateusers .form-group.mb-0,.surveyfoldername .form-group.mb-0{display: flex;flex-direction: column-reverse;}
-            
+            .btn-primary{color: #fff;background-color: #4099de;border-color: #4099de;}
         </style>
     </head>
 
