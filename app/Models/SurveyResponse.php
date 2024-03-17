@@ -15,5 +15,8 @@ class SurveyResponse extends Model
     protected $table = 'survey_response';
     protected $fillable = ['survey_id','response_user_id','question_id','answer','skip' ];
     
-   
+    public function questions()
+    {
+        return $this->hasMany('App\Models\Questions', 'id', 'question_id');
+    }
 }

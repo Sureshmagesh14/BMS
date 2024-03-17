@@ -650,7 +650,6 @@ class SurveyController extends Controller
             $hex1=$request->gradienthex;
             $hex2=$request->gradienthex1;
             $ori=$request->gradientori;
-            // echo $ori; exit;
             $bg=json_encode(['hex1'=>$hex1,'hex2'=>$hex2,'ori'=>$ori]);
 
         }
@@ -724,31 +723,53 @@ class SurveyController extends Controller
                         }else{
                             $ans = $logicv;
                         }
-                        $get_ans_usr = SurveyResponse::where(['question_id' => $skip ])->first();
+                        $qus_type="";
+                        $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $skip ])->first();
                         if($get_ans_usr){
+                            $qus_type = $get_ans_usr->questions[0]->qus_type;
                             $user_ans =  $get_ans_usr->answer;
                             $skip_ans =  $get_ans_usr->skip;
                         }
                         
                         switch($logic){
                             case 'isSelected':
-                                $user_ans =  explode(",",$user_ans);
-                                if (in_array($ans, $user_ans)) { 
-                                    $jump_to++;
-                                    array_push($push_jump,"and");
+                                if($qus_type == 'multi_choice'){
+                                    $user_ans =  explode(",",$user_ans);
+                                    if (in_array($ans, $user_ans)) { 
+                                        $jump_to++;
+                                        array_push($push_jump,"and");
+                                    }else{
+                                        $jump_to--;
+                                        array_push($push_jump,"or");
+                                    }
                                 }else{
-                                    $jump_to--;
-                                    array_push($push_jump,"or");
+                                    if ($user_ans == $ans) { 
+                                        $jump_to++;
+                                        array_push($push_jump,"and");
+                                    }else{
+                                        $jump_to--;
+                                        array_push($push_jump,"or");
+                                    }
                                 }
                                 break;
                             case 'isNotSelected':
-                                $user_ans =  explode(",",$user_ans);
-                                if (!in_array($ans, $user_ans)) { 
-                                    $jump_to++;
-                                    array_push($push_jump,"and");
+                                if($qus_type == 'multi_choice'){
+                                    $user_ans =  explode(",",$user_ans);
+                                    if (!in_array($ans, $user_ans)) { 
+                                        $jump_to++;
+                                        array_push($push_jump,"and");
+                                    }else{
+                                        $jump_to--;
+                                        array_push($push_jump,"or");
+                                    }
                                 }else{
-                                    $jump_to--;
-                                    array_push($push_jump,"or");
+                                    if ($user_ans != $ans) { 
+                                        $jump_to++;
+                                        array_push($push_jump,"and");
+                                    }else{
+                                        $jump_to--;
+                                        array_push($push_jump,"or");
+                                    }
                                 }
                                 break;
                             case 'isAnswered':
@@ -894,7 +915,8 @@ class SurveyController extends Controller
             }
         }
         if($next_qus_loop == 'yes'){
-           return $this->displaynextQus($question_id,$survey_id);
+            $surveyController = new SurveyController;
+           return $surveyController->displaynextQus($question_id,$survey_id);
         }else{
             // Update Survey Completion 
             $surveyRec=Survey::where(['id'=>$survey_id])->first();
@@ -924,15 +946,18 @@ class SurveyController extends Controller
                 $logic_type_value_option_display=json_decode($display_logic->logic_type_value_option_display); 
                 $display_qus_choice_andor_display=json_decode($display_logic->display_qus_choice_andor_display); 
                 $jump_to=0;
-                $qusvalue_display = json_decode($next_qus->qus_ans); 
                 $push_jump = [];
+
                 if(count($display_qus_choice_display)>0 && count($logic_type_value_display)>0){
                     foreach ($display_qus_choice_display as $k=>$display){
                         $logic=$logic_type_value_display[$k];
                         $logicv=$logic_type_value_option_display[$k];
                         $cond=$display_qus_choice_andor_display[$k];
                         $resp_logic_type_display_value=[];
-                        switch ($next_qus->qus_type) {
+                        $qusID=explode("_",$display);
+                        $qus_typeData = Questions::where(['id'=>$qusID[0]])->first();
+                        $qusvalue_display = json_decode($qus_typeData->qus_ans); 
+                        switch ($qus_typeData->qus_type) {
                             case 'single_choice':
                                 $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
                                 break;
@@ -964,33 +989,92 @@ class SurveyController extends Controller
                                 $ans = $logicv;
                             }
                         }
-                        $get_ans_usr = SurveyResponse::where(['question_id' => $display ])->first();
+                        $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0] ])->first();
                         $user_answered = '';
                         $user_skipped = '';
+                        $qus_type = "";
                         if($get_ans_usr){
+                            $qus_type = $get_ans_usr->questions[0]->qus_type;
                             $user_answered =  $get_ans_usr->answer;
                             $user_skipped =  $get_ans_usr->skip;
                         }
-                        
+                        echo "<pre>";
                         switch($logic){
                             case 'isSelected':
-                                $user_answered =  explode(",",$user_answered);
-                                if (in_array($ans, $user_answered)) { 
-                                    $jump_to++;
-                                    array_push($push_jump,"and");
-                                }else{
-                                    $jump_to--;
-                                    array_push($push_jump,"or");
+                                if($qus_type == 'matrix_qus'){
+                                    $user_answered=json_decode($user_answered);
+                                    if($user_answered[$qusID[1]]->key == $qusID[1]){
+                                        if($ans == $user_answered[$qusID[1]]->ans){
+                                            $jump_to++;
+                                                array_push($push_jump,"and");
+                                        }else{
+                                            $jump_to--;
+                                            array_push($push_jump,"or");
+                                        }
+                                    }
+                                  
+                                    // foreach($user_answered as $matans){
+                                    //     if($qusID[1] == (int)$matans->qus){
+                                    //         if($ans == $matans->ans){
+                                    //             $jump_to++;
+                                    //             array_push($push_jump,"and");
+                                    //         }
+                                    //         else{
+                                    //             $jump_to--;
+                                    //             array_push($push_jump,"or");
+                                    //         }
+                                    //     }
+                                    // }
+                                }
+                                else if($qus_type == 'multi_choice'){
+                                    $user_answered =  explode(",",$user_answered);
+                                    if (in_array($ans, $user_answered)) { 
+                                        $jump_to++;
+                                        array_push($push_jump,"and");
+                                    }else{
+                                        $jump_to--;
+                                        array_push($push_jump,"or");
+                                    }
+                                }else if($qus_type != 'matrix_qus' && $qus_type != 'multi_choice'){
+                                    if ($user_answered == $ans) { 
+                                        $jump_to++;
+                                        array_push($push_jump,"and");
+                                    }else{
+                                        $jump_to--;
+                                        array_push($push_jump,"or");
+                                    }
                                 }
                                 break;
                             case 'isNotSelected':
-                                $user_answered =  explode(",",$user_answered);
-                                if (!in_array($ans, $user_answered)) { 
-                                    $jump_to++;
-                                    array_push($push_jump,"and");
-                                }else{
-                                    $jump_to--;
-                                    array_push($push_jump,"or");
+                                if($qus_type == 'matrix_qus'){
+                                    $user_answered=json_decode($user_answered);
+                                    if($user_answered[$qusID[1]]->key == $qusID[1]){
+                                        if($ans != $user_answered[$qusID[1]]->ans){
+                                            $jump_to++;
+                                            array_push($push_jump,"and");
+                                        }else{
+                                            $jump_to--;
+                                            array_push($push_jump,"or");
+                                        }
+                                    }
+                                }
+                                else if($qus_type == 'multi_choice'){
+                                    $user_answered =  explode(",",$user_answered);
+                                    if (!in_array($ans, $user_answered)) { 
+                                        $jump_to++;
+                                        array_push($push_jump,"and");
+                                    }else{
+                                        $jump_to--;
+                                        array_push($push_jump,"or");
+                                    }
+                                }else if($qus_type != 'matrix_qus' && $qus_type != 'multi_choice'){
+                                    if ($user_answered != $ans) { 
+                                        $jump_to++;
+                                        array_push($push_jump,"and");
+                                    }else{
+                                        $jump_to--;
+                                        array_push($push_jump,"or");
+                                    }
                                 }
                                 break;
                             case 'isAnswered':
@@ -1066,6 +1150,8 @@ class SurveyController extends Controller
                                 }
                                 break;
                             case 'lessThanForScale':
+                                $ans = (int)$ans;
+                                $user_answered = (int)$user_answered;
                                 if ($user_answered < $ans) { 
                                     $jump_to++;
                                     array_push($push_jump,"and");
@@ -1075,6 +1161,8 @@ class SurveyController extends Controller
                                 }
                                 break;
                             case 'greaterThanForScale':
+                                $ans = (int)$ans;
+                                $user_answered = (int)$user_answered;
                                 if ($user_answered > $ans) { 
                                     $jump_to++;
                                     array_push($push_jump,"and");
@@ -1082,8 +1170,11 @@ class SurveyController extends Controller
                                     $jump_to--;
                                     array_push($push_jump,"or");
                                 }
+                               
                                 break;
                             case 'equalToForScale':
+                                $ans = (int)$ans;
+                                $user_answered = (int)$user_answered;
                                 if ($user_answered == $ans) { 
                                     $jump_to++;
                                     array_push($push_jump,"and");
@@ -1093,6 +1184,8 @@ class SurveyController extends Controller
                                 }
                                 break;
                             case 'notEqualToForScale':
+                                $ans = (int)$ans;
+                                $user_answered = (int)$user_answered;
                                 if ($user_answered != $ans) { 
                                     $jump_to++;
                                     array_push($push_jump,"and");
@@ -1126,16 +1219,31 @@ class SurveyController extends Controller
                         return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
                     }else{
                         $loopagain = 1;
-                        $this->displaynextQus($next_qus->id,$survey_id);
+                        $surveyController = new SurveyController;
+                        $next_question=Questions::where('id', '>', $next_qus->id)->where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+                        if($next_question){
+                            $surveyController->displaynextQus($next_question->id,$survey_id);
+                        }else{
+                            $next_question=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
+                            $surveyres = new SurveyResponse();
+                            $surveyres->survey_id = $survey_id;
+                            $surveyres->response_user_id = $response_user_id;
+                            $surveyres->question_id = $next_question->id;
+                            $surveyres->answer = 'thankyou_submitted';
+                            $surveyres->skip = '';
+                            $surveyres->deleted_at = 0;
+                            $surveyres->save();
+                            return redirect()->route('survey.startsurvey',[$survey_id,$next_question->id]);
+                        }
+
                     }
                 }else{
                     return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
                 }
                
             }else{
-            // if no display logic avail
-            return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
-
+                // if no display logic avail
+                return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
             }
         }else{
             // Update Survey Completion 
