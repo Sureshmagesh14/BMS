@@ -286,7 +286,7 @@ class RespondentsController extends Controller
                                 <i class="fa fa-eye"></i>
                             </a>
                             <a href="#!" data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="Edit Respondents" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
                             <button type="button" id="delete_respondents" data-id="' . $all_data->id . '" class="btn btn-primary waves-light waves-effect">

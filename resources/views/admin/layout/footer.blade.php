@@ -154,5 +154,85 @@
     @endpush
     
     <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
+
+    <script>
+        function multi_delete(method_type, set_data, route, message, datatable_function){
+            $.confirm({
+                title: "{{ Config::get('constants.delete') }}",
+                content: "{{ Config::get('constants.delete_confirmation') }}",
+                autoClose: 'cancel|8000',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    delete: {
+                        text: 'delete',
+                        action: function() {
+                            $.ajax({
+                                type: method_type,
+                                data: {
+                                    _token: tempcsrf,
+                                    all_id: set_data
+                                },
+                                url: route,
+                                dataType: "json",
+                                success: function(response) {
+                                    $.alert(message);
+                                    eval(datatable_function + "()");
+                                    $(".delete_all_drop").hide();
+                                    return 1;
+                                }
+                            });
+                        }
+                    },
+                    cancel: function() {
+
+                    }
+                }
+            });
+        }
+
+        function single_delete(method_type, set_data, route, message, datatable_function){
+            $.confirm({
+                title: "{{ Config::get('constants.delete') }}",
+                content: "{{ Config::get('constants.delete_confirmation') }}",
+                autoClose: 'cancel|8000',
+                buttons: {
+                    delete: {
+                        text: 'delete',
+                        action: function() {
+                            $.ajax({
+                                type: method_type,
+                                data: {
+                                    _token: tempcsrf,
+                                },
+                                url: route,
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.status == 404) {
+                                        $('.delete_student').text('');
+                                    } else {
+                                        $.alert(message);
+                                        eval(datatable_function + "()");
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    cancel: function() {
+                        
+                    }
+                }
+            });
+        }
+
+        function table_checkbox(get_this, table_id) {
+            count_checkbox = $("#"+table_id+" .tabel_checkbox").filter(':checked').length;
+            if (count_checkbox >= 1) {
+                $("."+table_id+".hided_option").show();
+            } else {
+                $("."+table_id+".hided_option").hide();
+            }
+        }
+    </script>
 </body>
 </html>

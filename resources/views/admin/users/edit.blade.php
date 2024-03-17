@@ -127,16 +127,17 @@
 
     $(function () {
         $('#edit_users_form').validate({
-    rules: {
-        password: {
-            required: true,
-            minlength: 8
-        },
-        cpassword: {
-            required: true,
-            minlength: 8,
-            equalTo: "#password"
-        }
-    }
-}); 
+            rules: {
+                password: {
+                    required: true,
+                    minlength: 8
+                },
+                cpassword: {
+                    required: true,
+                    minlength: 8,
+                    equalTo: "#password"
+                }
+            }
+        });
+    });
 </script>
