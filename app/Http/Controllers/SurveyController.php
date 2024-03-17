@@ -1213,8 +1213,11 @@ class SurveyController extends Controller
                             $loopagain = 1;
                         }
                     } 
+                    // echo "<pre>"; print_r($display_qus_choice_andor_display);
+                    // echo "<pre>"; print_r($push_jump);
                     $arr1 =serialize($display_qus_choice_andor_display);
                     $arr2 =serialize($push_jump);
+                    // exit;
                     if($arr1 == $arr2){
                         return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
                     }else{
