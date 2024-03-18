@@ -31,7 +31,7 @@
                         <a class="nav-link" href="{{ route('user.rewards') }}" id="nav_rewards">Rewards</a>
                     </li>
                     <li class="nav-item px-5">
-                        <a class="nav-link " href="{{ route('user.profile') }}" id="nav_profile">Profile</a>
+                        <a class="nav-link " href="{{ route('user.dashboard') }}" id="nav_profile">Profile</a>
                     </li>
                     <li class="nav-item ps-5">
                         <a class="nav-link" href="{{ route('user.share') }}" id="nav_share">Share</a>

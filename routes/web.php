@@ -28,7 +28,7 @@ Route::any('share','WelcomeController@user_share')->middleware(['auth', 'verifie
 Route::any('rewards','WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
 Route::any('surveys','WelcomeController@user_surveys')->middleware(['auth', 'verified'])->name('user.surveys');
 Route::any('viewprofile','WelcomeController@user_viewprofile')->middleware(['auth', 'verified'])->name('user.viewprofile');
-
+Route::post('user_update','WelcomeController@user_update')->middleware(['auth', 'verified'])->name('user_update');
 
 
 /* USERS */

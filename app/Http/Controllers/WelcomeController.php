@@ -65,16 +65,47 @@ class WelcomeController extends Controller
         }
     }
 
+    public function user_update(Request $request)
+    {
+        try {
+
+            $up_data = array(
+                'name' => $request->name,
+                'surname' => $request->surname,
+                'date_of_birth' => $request->date_of_birth,
+                'id_passport' => $request->id_passport,
+                'mobile' => $request->mobile,
+                'whatsapp' => $request->whatsapp,
+            );
+
+            Respondents::where('id', Session::get('resp_id'))
+                        ->update($up_data);
+             
+            return response()->json([
+                'status' => 200,
+                'last_insert_id' => $request->name,
+                'message' => 'Updated Successfully.',
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function user_dashboard(Request $request){
         try {
             Session::put('resp_id',  $request->user()->id);
             Session::put('resp_name', $request->user()->name);
+            
+            $id =Session::get('resp_id');
+            $data = Respondents::find($id);
+            
 
-            if($request->user()->profile_completion_id==0){
-                return view('user.update-profile');
-            }else{
-                return view('user.user-dashboard');
-            }
+            // if($request->user()->profile_completion_id==0){
+            //     return view('user.update-profile');
+            // }else{
+                return view('user.user-dashboard', compact('data'));
+            //}
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -87,11 +118,11 @@ class WelcomeController extends Controller
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
             
-            if($request->user()->profile_completion_id==0){
-                return view('user.update-profile');
-            }else{
+            // if($request->user()->profile_completion_id==0){
+            //     return view('user.update-profile');
+            // }else{
                 return view('user.user-share');
-            }
+            //}
            
         }
         catch (Exception $e) {
@@ -105,11 +136,11 @@ class WelcomeController extends Controller
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
             
-            if($request->user()->profile_completion_id==0){
-                return view('user.update-profile');
-            }else{
+            // if($request->user()->profile_completion_id==0){
+            //     return view('user.update-profile');
+            // }else{
                 return view('user.user-rewards');
-            }
+            //}
            
         }
         catch (Exception $e) {
@@ -123,11 +154,11 @@ class WelcomeController extends Controller
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
             
-            if($request->user()->profile_completion_id==0){
-                return view('user.update-profile');
-            }else{
+            // if($request->user()->profile_completion_id==0){
+            //     return view('user.update-profile');
+            // }else{
                 return view('user.user-surveys');
-            }
+           // }
            
         }
         catch (Exception $e) {
@@ -141,7 +172,9 @@ class WelcomeController extends Controller
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
             
-            return view('user.user-viewprofile');
+          
+            $data = Respondents::find($resp_id);
+            return view('user.user-viewprofile', compact('data'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -154,11 +187,11 @@ class WelcomeController extends Controller
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
             
-            if($request->user()->profile_completion_id==0){
-                return view('user.update-profile');
-            }else{
+            // if($request->user()->profile_completion_id==0){
+            //     return view('user.update-profile');
+            // }else{
                 return view('user.user-profile');
-            }
+            //}
            
         }
         catch (Exception $e) {
