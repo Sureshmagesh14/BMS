@@ -38,8 +38,14 @@ class InternalReportController extends Controller
     public function show(Request $request)
     {
         if ($request->ajax()) {
+
+            $users = $request->users;
+            $roles = $request->roles;
+            $action = $request->action;
+            $type = $request->type;
+
             $columns = array(
-                0 => 'user',
+                0 => 'id',
                 1 => 'action',
                 2 => 'type',
                 3 => 'month',
@@ -47,7 +53,13 @@ class InternalReportController extends Controller
                 5 => 'count',
             );
 
-            $totalData = UserEvents::count();
+            $totalData = UserEvents::select('user_events.*');
+                if($users != null){ $totalData->where('user_id',$users); }
+                if($roles != null){ $totalData->join('users','user_events.user_id','users.id')->where('role_id',$roles); }
+                if($action != null){ $totalData->where('action',$action); }
+                if($type != null){ $totalData->where('type',$type); }
+
+            $totalData = $totalData->count();
             $totalFiltered = $totalData;
 
             $limit = $request->input('length');
@@ -56,23 +68,51 @@ class InternalReportController extends Controller
             $dir = $request->input('order.0.dir');
 
             if (empty($request->input('search.value'))) {
-                $posts = UserEvents::offset($start)
-                    ->limit($limit)
-                    ->orderBy($order, $dir)
-                    ->get();
+                $posts = UserEvents::select('user_events.*')->offset($start);
+                    if($users != null){ $posts->where('user_id',$users); }
+                    if($roles != null){ $posts->join('users','user_events.user_id','users.id')->where('role_id',$roles); }
+                    if($action != null){ $posts->where('action',$action); }
+                    if($type != null){ $posts->where('type',$type); }
+
+                $posts = $posts->limit($limit)->orderBy($order, $dir)->get();
             } else {
                 $search = $request->input('search.value');
 
-                $posts = UserEvents::where('id', 'LIKE', "%{$search}%")
-                    ->orWhere('name', 'LIKE', "%{$search}%")
-                    ->offset($start)
-                    ->limit($limit)
-                    ->orderBy($order, $dir)
-                    ->cursor();
+                $posts = UserEvents::select('user_events.*')
+                    ->orwhere('user_events.id', 'LIKE', "%{$search}%")
+                    ->orWhere('user_events.action', 'LIKE', "%{$search}%")
+                    ->orWhere('user_events.type', 'LIKE', "%{$search}%")
+                    ->orWhere('user_events.month', 'LIKE', "%{$search}%")
+                    ->orWhere('user_events.year', 'LIKE', "%{$search}%")
+                    ->orWhere('user_events.count', 'LIKE', "%{$search}%")
+                    ->join('users','user_events.user_id','users.id')
+                    ->orWhere('users.name', 'LIKE', "%{$search}%")
+                    ->orWhere('users.surname', 'LIKE', "%{$search}%");
+                    if($users != null){ $posts->where('user_id',$users); }
+                    if($roles != null){ $posts->join('users','user_events.user_id','users.id')->where('role_id',$roles); }
+                    if($action != null){ $posts->where('action',$action); }
+                    if($type != null){ $posts->where('type',$type); }
 
-                $totalFiltered = UserEvents::where('id', 'LIKE', "%{$search}%")
-                    ->orWhere('name', 'LIKE', "%{$search}%")
-                    ->count();
+                    $posts = $posts->offset($start)
+                        ->limit($limit)
+                        ->orderBy($order, $dir)
+                        ->cursor();
+
+                $totalFiltered = UserEvents::where('user_events.id', 'LIKE', "%{$search}%")
+                    ->orWhere('user_events.action', 'LIKE', "%{$search}%")
+                    ->orWhere('user_events.type', 'LIKE', "%{$search}%")
+                    ->orWhere('user_events.month', 'LIKE', "%{$search}%")
+                    ->orWhere('user_events.year', 'LIKE', "%{$search}%")
+                    ->orWhere('user_events.count', 'LIKE', "%{$search}%")
+                    ->join('users','user_events.user_id','users.id')
+                    ->orWhere('users.name', 'LIKE', "%{$search}%")
+                    ->orWhere('users.surname', 'LIKE', "%{$search}%");
+                    
+                    if($users != null){ $totalFiltered->where('user_id',$users); }
+                    if($roles != null){ $totalFiltered->join('users','user_events.user_id','users.id')->where('role_id',$roles); }
+                    if($action != null){ $totalFiltered->where('action',$action); }
+                    if($type != null){ $totalFiltered->where('type',$type); }
+                    $totalFiltered = $totalFiltered->count();
             }
 
             $data = array();

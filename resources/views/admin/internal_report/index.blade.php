@@ -51,11 +51,33 @@
         
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
+
+        users = ''; roles = ''; action = ''; type = '';
         $(document).ready(function() {
-            user_events();
+            user_events(users, roles, action,type);
         });
+
+        function select_users(get_this){
+            users = $(get_this).val();
+            user_events(users, roles, action, type);
+        }
+
+        function select_role(get_this){
+            roles = $(get_this).val();
+            user_events(users, roles, action, type);
+        }
+
+        function select_action(get_this){
+            action = $(get_this).val();
+            user_events(users, roles, action, type);
+        }
+
+        function select_type(get_this){
+            type = $(get_this).val();
+            user_events(users, roles, action, type);
+        }
         
-        function user_events(){
+        function user_events(users, roles, action,type){
             $('#user_events').dataTable().fnDestroy();
             var postsTable = $('#user_events').dataTable({
                 "ordering": true,
@@ -66,6 +88,10 @@
                     "url": "{{ route('user-events-show') }}",
                     "data": {
                         _token: tempcsrf,
+                        users: users,
+                        roles: roles,
+                        action: action,
+                        type: type
                     },
                     "dataType": "json",
                     "type": "POST"

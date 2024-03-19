@@ -382,7 +382,7 @@ class RespondentsController extends Controller
                             ->where('pr.project_id',$request->id);
                         }
                     }
-                $totalFiltered = $totalFiltered->orWhere('name', 'LIKE', "%{$search}%") ->count();
+                $totalFiltered = $totalFiltered->orWhere('name', 'LIKE', "%{$search}%")->count();
             }
 
             $data = array();
@@ -392,7 +392,7 @@ class RespondentsController extends Controller
                     $edit_route = route('respondents.edit', $post->id);
                     $view_route = route('respondents.show', $post->id);
                     $nestedData['select_all'] = '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this)" id="'.$post->id.'">';
-                    $nestedData['id'] = $i;
+                    $nestedData['id'] = $post->id;
                     $nestedData['name'] = $post->name ?? '-';
                     $nestedData['surname'] = $post->surname ?? '-';
                     $nestedData['mobile'] = $post->mobile ?? '-';
