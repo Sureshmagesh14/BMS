@@ -25,16 +25,16 @@
             <div class="collapse navbar-collapse" id="navbarScroll">
                 <ul class="navbar-nav m-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
                     <li class="nav-item pe-5">
-                        <a class="nav-link active" aria-current="page" href="#">Surveys</a>
+                        <a class="nav-link" href="{{ route('user.surveys') }}" id="nav_surveys">Surveys</a>
                     </li>
                     <li class="nav-item px-5">
-                        <a class="nav-link" href="#">Rewards</a>
+                        <a class="nav-link" href="{{ route('user.rewards') }}" id="nav_rewards">Rewards</a>
                     </li>
                     <li class="nav-item px-5">
-                        <a class="nav-link" href="#">Profile</a>
+                        <a class="nav-link " href="{{ route('user.dashboard') }}" id="nav_profile">Profile</a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="nav-link" href="#">Share</a>
+                        <a class="nav-link" href="{{ route('user.share') }}" id="nav_share">Share</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center" style="padding-right: 20px">
@@ -50,7 +50,7 @@
                                 V
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">View Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ route('user.viewprofile') }}">View Profile</a></li>
                                 <li>
                                     <hr class="dropdown-divider" />
                                 </li>
