@@ -463,3 +463,13 @@ div#survey-table_wrapper .row {
     // });
 </script>
 
+<script>
+    toastr.options = { "closeButton" : true, "progressBar" : true }
+</script>
+@if(session()->has('success'))
+<script>toastr.success("{{ session()->get('success') }}");</script>
+@endif
+
+@if(session()->has('error'))
+<script>toastr.error("{{ session()->get('error') }}");</script>
+@endif
