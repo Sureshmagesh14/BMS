@@ -93,7 +93,7 @@
     @stack('adminside-validataion')
     @stack('adminside-confirm')
     @stack('adminside-datatable')
-    @include('admin.layout.footer')
+
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';

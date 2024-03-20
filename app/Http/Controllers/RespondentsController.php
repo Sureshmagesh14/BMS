@@ -286,7 +286,7 @@ class RespondentsController extends Controller
                                 <i class="fa fa-eye"></i>
                             </a>
                             <a href="#!" data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="Edit Network" class="btn btn-primary waves-light waves-effect">
+                                data-bs-original-title="Edit Respondents" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-edit"></i>
                             </a>
                             <button type="button" id="delete_respondents" data-id="' . $all_data->id . '" class="btn btn-primary waves-light waves-effect">
@@ -382,7 +382,7 @@ class RespondentsController extends Controller
                             ->where('pr.project_id',$request->id);
                         }
                     }
-                $totalFiltered = $totalFiltered->orWhere('name', 'LIKE', "%{$search}%") ->count();
+                $totalFiltered = $totalFiltered->orWhere('name', 'LIKE', "%{$search}%")->count();
             }
 
             $data = array();
@@ -392,7 +392,7 @@ class RespondentsController extends Controller
                     $edit_route = route('respondents.edit', $post->id);
                     $view_route = route('respondents.show', $post->id);
                     $nestedData['select_all'] = '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this)" id="'.$post->id.'">';
-                    $nestedData['id'] = $i;
+                    $nestedData['id'] = $post->id;
                     $nestedData['name'] = $post->name ?? '-';
                     $nestedData['surname'] = $post->surname ?? '-';
                     $nestedData['mobile'] = $post->mobile ?? '-';

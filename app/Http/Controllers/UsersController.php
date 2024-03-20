@@ -260,11 +260,10 @@ class UsersController extends Controller
             
                 
                 $all_datas = Users::withoutTrashed()->latest()->get();
-        
                 
                 return Datatables::of($all_datas)
                 ->addColumn('select_all', function ($all_data) {
-                    return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                    return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this,\'user_table\')" id="'.$all_data->id.'">';
                 })
                 ->addColumn('name', function ($all_data) {
                     return $all_data->name;
