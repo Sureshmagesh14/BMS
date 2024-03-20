@@ -2404,7 +2404,9 @@ a:hover {
     outline-offset: 2px;
     -moz-outline-radius: 6px;
 }
-
+.createfolderbtn{
+    justify-content: flex-end;
+}
 .createsurveyBtn {
     display: flex;
     justify-content: flex-end;

@@ -220,57 +220,52 @@ class TagsController extends Controller
 		
         try {
             if ($request->ajax()) {
-
                 $token = csrf_token();
-            
-                
-                $all_datas =Tags::latest()
-                ->get();
-        
+                $all_datas =Tags::latest()->get();
                 
                 return Datatables::of($all_datas)
-                ->addColumn('select_all', function ($all_data) {
-                    return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
-                })
-                ->addColumn('colour', function ($all_data) {
-                    return '<div class=""><button type="button" class="btn waves-effect waves-light" style="background-color:'.$all_data->colour.'"><i class="uil uil-user"></i></button></div>';
-                })  
-                ->addColumn('action', function ($all_data) {
-                    $edit_route = route("tags.edit",$all_data->id);
-                    $view_route = route("tags.show",$all_data->id);
+                    ->addColumn('select_all', function ($all_data) {
+                        return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this,\'tags_table\')" id="'.$all_data->id.'">';
+                    })
+                    ->addColumn('colour', function ($all_data) {
+                        return '<div class=""><button type="button" class="btn waves-effect waves-light" style="background-color:'.$all_data->colour.'"><i class="uil uil-user"></i></button></div>';
+                    })
+                    ->addColumn('action', function ($all_data) {
+                        $edit_route = route("tags.edit",$all_data->id);
+                        $view_route = route("tags.show",$all_data->id);
 
-                    $design = '<div class="col-md-2">
-                            <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
-                                title="Action" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-tasks" aria-hidden="true"></i>
-                                <i class="mdi mdi-chevron-down"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-center">
-                                <li class="list-group-item">
-                                    <a href="'.$view_route.'" data-bs-original-title="View Panel" class="rounded waves-light waves-effect">
-                                        <i class="fa fa-eye"></i> View
-                                    </a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                        data-bs-original-title="Edit Panel" class="rounded waves-light waves-effect">
-                                        <i class="fa fa-edit"></i> Edit
-                                    </a>
-                                </li>';
-                                if(Auth::guard('admin')->user()->role_id == 1){
-                                    $design .= '<li class="list-group-item">
-                                        <a href="#!" id="delete_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
-                                            <i class="far fa-trash-alt"></i> Delete
+                        $design = '<div class="col-md-2">
+                                <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                                    title="Action" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-tasks" aria-hidden="true"></i>
+                                    <i class="mdi mdi-chevron-down"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-center">
+                                    <li class="list-group-item">
+                                        <a href="'.$view_route.'" data-bs-original-title="View Panel" class="rounded waves-light waves-effect">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                            data-bs-original-title="Edit Panel" class="rounded waves-light waves-effect">
+                                            <i class="fa fa-edit"></i> Edit
                                         </a>
                                     </li>';
-                                }
-                            $design .='</ul>
-                        </div>';
+                                    if(Auth::guard('admin')->user()->role_id == 1){
+                                        $design .= '<li class="list-group-item">
+                                            <a href="#!" id="delete_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                                <i class="far fa-trash-alt"></i> Delete
+                                            </a>
+                                        </li>';
+                                    }
+                                $design .='</ul>
+                            </div>';
 
-                    return $design;
-                })
-                ->rawColumns(['select_all','action','name','colour'])      
-                ->make(true);
+                        return $design;
+                    })
+                    ->rawColumns(['select_all','action','name','colour'])      
+                    ->make(true);
             }
         }
         catch (Exception $e) {

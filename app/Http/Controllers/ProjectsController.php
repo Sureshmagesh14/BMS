@@ -285,7 +285,7 @@ class ProjectsController extends Controller
 
                 return Datatables::of($all_datas)
                     ->addColumn('select_all', function ($all_data) {
-                        return '<input class="tabel_checkbox" name="projects[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                        return '<input class="tabel_checkbox" name="projects[]" type="checkbox" onchange="table_checkbox(this,\'projects_table\')" id="'.$all_data->id.'">';
                     })
                     ->addColumn('numbers', function ($all_data) {
                         return $all_data->number;

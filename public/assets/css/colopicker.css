@@ -1067,9 +1067,7 @@ label.rLab::before {
         margin-bottom: 25px;
     }
 
-    .color-input input {
-        margin-bottom: 8%;
-    }
+     
 }
 
 @media only screen and (max-height:700px) {
@@ -1168,10 +1166,6 @@ label.rLab::before {
         font-size: 1.2em;
     }
 
-    .color-input input {
-        margin-bottom: 8%;
-    }
-
     .astro {
         width: 60%;
     }
@@ -1191,9 +1185,6 @@ label.rLab::before {
         margin-bottom: 4%;
     }
 
-    .color-input input {
-        margin-bottom: 5%;
-    }
 }
 form#form1 {
     margin-top: 2rem;
