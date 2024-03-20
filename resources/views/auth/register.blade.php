@@ -1,4 +1,4 @@
-@include('user.layout.header-2')
+@include('user.layout.nomenu-header')
 
 <div class="container-fluid vh-100">
       <div class="row justify-content-center align-items-center d-flex">
