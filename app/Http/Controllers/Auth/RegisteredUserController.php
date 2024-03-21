@@ -42,7 +42,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
         $ref_code = substr(md5(time()), 0, 8); 
-        $ref_code = ('r'.$test);
+        $ref_code = ('r'.$ref_code);
 
         $user = Respondents::create([
             'name' => $request->name,
