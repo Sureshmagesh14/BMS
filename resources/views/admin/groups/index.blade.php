@@ -1,12 +1,7 @@
 @include('admin.layout.header')
-
-@yield('adminside-favicon')
-@yield('adminside-css')
-
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
-
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
@@ -33,38 +28,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="text-right">
-                                <a href="#!" data-url="{{ route('groups.create') }}" data-size="xl"
-                                    data-ajax-popup="true" class="btn btn-primary"
-                                    data-bs-original-title="{{ __('Create Groups') }}" class="btn btn-primary"
-                                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-                                    Create Groups
-                                </a>
-                                <a class="btn btn-danger" class="btn btn-primary" id="delete_all"
-                                    style="display: none;">
-                                    Delete Selected All
-                                </a>
-                            </div>
-
-                            <h4 class="card-title"> </h4>
-                            <p class="card-title-desc"></p>
-
-                            <table id="myTable" class="table dt-responsive nowrap w-100">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" class="select_all" id="inlineForm-customCheck">
-                                        </th>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Type</th>
-                                        <th>Survey URL</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                            @include('admin.table_components.profile_group_table')
                         </div>
                         <!-- end card-body -->
                     </div>
@@ -81,76 +45,13 @@
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
-
-        function table_checkbox(get_this) {
-            count_checkbox = $(".tabel_checkbox").filter(':checked').length;
-            if (count_checkbox > 1) {
-                $("#delete_all").show();
-            } else {
-                $("#delete_all").hide();
-            }
-        }
-
-        $(document).on('click', '#delete_all', function(e) {
-            e.preventDefault();
-            var all_id = [];
-
-            var values = $("#myTable tbody tr").map(function() {
-                var $this = $(this);
-                if ($this.find("[type=checkbox]").is(':checked')) {
-                    all_id.push($this.find("[type=checkbox]").attr('id'));
-                    // return {
-                    //     id: $this.find("[type=checkbox]").attr('id'),
-                    // };
-                }
-
-            }).get();
-
-            $.confirm({
-                title: "{{ Config::get('constants.delete') }}",
-                content: "{{ Config::get('constants.delete_confirmation') }}",
-                autoClose: 'cancelAction|8000',
-                buttons: {
-                    delete: {
-                        text: 'delete',
-                        action: function() {
-                            $.ajax({
-                                type: "POST",
-                                data: {
-                                    _token: tempcsrf,
-                                    all_id: all_id
-                                },
-                                url: "{{ route('groups_multi_delete') }}",
-                                dataType: "json",
-                                success: function(response) {
-                                    if (response.status == 404) {
-                                        $('.delete_student').text('');
-                                    } else {
-                                        datatable();
-                                        $.alert('Groups Deleted!');
-                                        $("#delete_all").hide();
-                                    }
-                                }
-                            });
-                        }
-                    },
-                    cancel: function() {
-
-                    }
-                }
-            });
-        });
-
         $(document).ready(function() {
-            datatable();
-
+            groups_table();
         });
 
-
-
-        function datatable() {
-            $('#myTable').dataTable().fnDestroy();
-            $('#myTable').DataTable({
+        function groups_table() {
+            $('#groups_table').dataTable().fnDestroy();
+            $('#groups_table').DataTable({
                 searching: true,
                 ordering: true,
                 dom: 'lfrtip',
@@ -169,46 +70,30 @@
                         alert("undefind error");
                     }
                 },
-
-                columns: [{
-                        data: 'select_all',
-                        name: 'select_all',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'id',
-                        name: '#',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'name',
-                        name: 'name',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'type_id',
-                        name: 'type_id',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'survey_url',
-                        name: 'survey_url',
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    }
+                columns: [
+                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
+                    { data: 'id',name: '#',orderable: true,searchable: true },
+                    { data: 'name',name: 'name',orderable: true,searchable: true },
+                    { data: 'type_id',name: 'type_id',orderable: true,searchable: true },
+                    { data: 'survey_url',name: 'survey_url',orderable: true,searchable: true },
+                    { data: 'action',name: 'action',orderable: false,searchable: false }
                 ]
             });
         }
+
+        $(document).on('click', '.groups_table.delete_all', function(e) {
+            e.preventDefault();
+            var all_id = [];
+
+            var values = $("#groups_table tbody tr").map(function() {
+                var $this = $(this);
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
+                }
+            }).get();
+
+            multi_delete("POST", all_id, "{{ route('groups_multi_delete') }}", "Profile Groups Deleted", 'groups_table');
+        });
 
         $(document).on('click', '#delete_groups', function(e) {
             e.preventDefault();
@@ -216,37 +101,6 @@
             var url = "{{ route('groups.destroy', ':id') }}";
             url = url.replace(':id', id);
 
-            $.confirm({
-                title: "{{ Config::get('constants.delete') }}",
-                content: "{{ Config::get('constants.delete_confirmation') }}",
-                autoClose: 'cancelAction|8000',
-                buttons: {
-                    delete: {
-                        text: 'delete',
-                        action: function() {
-                            $.ajax({
-                                type: "DELETE",
-                                data: {
-                                    _token: tempcsrf,
-                                },
-                                url: url,
-                                dataType: "json",
-                                success: function(response) {
-                                    if (response.status == 404) {
-                                        $('.delete_student').text('');
-                                    } else {
-                                        datatable();
-                                        $.alert('Profile Groups Deleted!');
-                                        $('.delete_student').text('Yes Delete');
-                                    }
-                                }
-                            });
-                        }
-                    },
-                    cancel: function() {
-
-                    }
-                }
-            });
+            single_delete("DELETE", id, url, "Profile Group Deleted", 'groups_table');
         });
     </script>
