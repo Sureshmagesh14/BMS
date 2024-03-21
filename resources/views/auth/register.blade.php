@@ -1,5 +1,9 @@
 @include('user.layout.nomenu-header')
-
+<style>
+    .email_error{
+        display: none;
+    }
+</style>
 <div class="container-fluid vh-100">
       <div class="row justify-content-center align-items-center d-flex">
         <div class="col-md-6 vi-nav-bg vh-100 text-center hide-mobile" >
@@ -34,7 +38,7 @@
             <div class="text-center">
                 <p>Let's get you started</p>
                 <h3>Join our Database</h3>
-                <form method="POST" action="{{ route('register') }}">
+                <form method="POST" id="reg_table" action="{{ route('register') }}">
                 @csrf
                     <div class="first-row d-md-flex mt-5">
                         <div class="fname text-start w-48 m-auto">
@@ -63,8 +67,8 @@
                     <div class="first-row d-md-flex">
                         <div class="email text-start w-48 m-auto my-3">
                             <label for="email" >Email <span class="text-danger">*</span></label>
-                            <input type="text" name="email" id="email" placeholder="john@example.com" class="form-control vi-border-clr border-radius-0" required>
-                        
+                            <input type="text" name="email" id="email" placeholder="john@example.com" class="form-control vi-border-clr border-radius-0 reg_email" required>
+                            <span class="email_error">Invalid Email Address</span>
                         </div>
                         <div class="lname text-start w-48 m-auto my-3">
                             <label for="id_passport" >ID Number\ Passport <span class="text-danger">*</span></label>
@@ -86,7 +90,7 @@
                         </div>                   
                     </div>
                     <div class="submit-btn text-start">
-                        <button class="btn vi-nav-bg border-radius-0 text-white px-5 py-3">Continue</button>
+                        <button class="btn vi-nav-bg border-radius-0 text-white px-5 py-3" id="save_org">Continue</button>
                     </div>
                 </form>
             </div>
@@ -110,3 +114,28 @@
         </script>
     @endforeach
 @endif
+<script>
+var tempcsrf = '{!! csrf_token() !!}';
+
+$('#reg_table').on('blur', '.reg_email', function() {
+        var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+        var reg_email = $(this).val();
+        var selector = $(this).next('span');
+        if (this.value !== '') {
+            if (testEmail.test(this.value)) {
+                
+                    $('.email_error').hide();
+                
+                $('#save_org').prop('disabled', false);
+
+            } else {
+                $('.email_error').show();
+                $('#save_org').prop('disabled', true);
+            }
+
+
+        } else {
+            $('.email_error').hide();
+        }
+});
+<script>

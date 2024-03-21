@@ -41,6 +41,8 @@ class RegisteredUserController extends Controller
             'id_passport' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+        $ref_code = substr(md5(time()), 0, 8); 
+        $ref_code = ('r'.$test);
 
         $user = Respondents::create([
             'name' => $request->name,
@@ -51,6 +53,7 @@ class RegisteredUserController extends Controller
             'mobile' => $request->mobile,
             'whatsapp' => $request->whatsapp,
             'password' => Hash::make($request->password),
+            'referral_code' => $ref_code,
         ]);
 
         event(new Registered($user));
