@@ -1,22 +1,25 @@
 @include('user.layout.header-2')
 
+@php 
+$first_character = mb_substr($data->name, 0, 1)
+@endphp 
 <section class="">
     <div class="container-fluid">
         <div class="row justify-content-center py-5 m-auto">
             <div class="col-md-2 vi-light-grey mx-0 px-0">
                 <div class="logo bg-white pt-3">
                     <div class="profile text-center m-auto ">
-                        <span class="vi-usr-profile m-auto p-4">J</span>
+                        <span class="vi-usr-profile m-auto p-4" style="text-transform: capitalize;">{{$first_character}}</span>
                     </div>
                     <div class="py-3 mb-5">
-                        <p class="text-center fw-bolder">Jennifer</p>
+                        <p class="text-center fw-bolder">{{$data->name}}</p>
                         <a href="" class="nav-link d-flex align-items-center px-2 small-font"><i
-                                class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> username@gmail.com</a>
+                                class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{$data->email}}</a>
                         <a href="" class="nav-link d-flex align-items-start px-2 small-font my-3"><i
                                 class="fa fa-map-marker yelow-clr pe-2" aria-hidden="true"></i> Suite 835 7664 Jolie
                             Islands, East Ardell, MA 74776</a>
                         <a href="" class="nav-link d-flex align-items-center px-2 small-font"><i
-                                class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> 777 777 777</a>
+                                class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> {{$data->mobile}}</a>
                     </div>
 
                 </div>
@@ -241,3 +244,9 @@
     </div>
 </section>
 @include('user.layout.footer')
+<script>
+$(document).ready(function() {
+
+    $('#nav_profile').addClass('active');
+});
+</script>
