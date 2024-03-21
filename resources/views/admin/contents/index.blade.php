@@ -28,36 +28,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="text-right">
-                                <a href="#!" data-url="{{ route('contents.create') }}" data-size="xl"
-                                    data-ajax-popup="true" class="btn btn-primary"
-                                    data-bs-original-title="{{ __('Create Content') }}" class="btn btn-primary"
-                                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-                                    Create Contents
-                                </a>
-
-                                <a class="btn btn-danger" class="btn btn-primary" id="delete_all"
-                                    style="display: none;">
-                                    Delete Selected All
-                                </a>
-                            </div>
-
-                            <h4 class="card-title"> </h4>
-                            <p class="card-title-desc"></p>
-
-                            <table id="contents_table" class="table dt-responsive nowrap w-100">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" class="select_all" id="inlineForm-customCheck">
-                                        </th>
-                                        <th>#</th>
-                                        <th>Type</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                            @include('admin.table_components.contents_table')
                         </div>
                         <!-- end card-body -->
                     </div>
