@@ -327,7 +327,7 @@ class UsersController extends Controller
                                 <i class="fa fa-tasks" aria-hidden="true"></i>
                                 <i class="mdi mdi-chevron-down"></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-center">
+                            <ul class="dropdown-menu dropdown-menu-right">
                                 <li class="list-group-item">
                                     <a href="'.$view_route.'" class="rounded waves-light waves-effect">
                                         <i class="fa fa-eye"></i> View

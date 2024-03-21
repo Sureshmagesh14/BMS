@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,12 +16,20 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+
 Route::any('terms','WelcomeController@terms')->name('terms');
 Route::any('admin','Auth\AdminLoginController@showLoginForm')->name('admin.showlogin'); //.....Admin Login
 Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.login'); //.....Admin Login
 
 
 Route::any('dashboard','WelcomeController@user_dashboard')->middleware(['auth', 'verified'])->name('user.dashboard');
+Route::any('profile-edit','WelcomeController@user_profile')->middleware(['auth', 'verified'])->name('user.profile');
+Route::any('share','WelcomeController@user_share')->middleware(['auth', 'verified'])->name('user.share');
+Route::any('rewards','WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
+Route::any('surveys','WelcomeController@user_surveys')->middleware(['auth', 'verified'])->name('user.surveys');
+Route::any('viewprofile','WelcomeController@user_viewprofile')->middleware(['auth', 'verified'])->name('user.viewprofile');
+Route::post('user_update','WelcomeController@user_update')->middleware(['auth', 'verified'])->name('user_update');
+
 
 /* USERS */
 Route::middleware('auth')->group(function () {
@@ -75,6 +84,7 @@ Route::group([
         ->name('create', 'projects.create')->name('show', 'projects.show')->name('update', 'projects.update');
     Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');
     Route::any('projects_export','ProjectsController@projects_export')->name('projects_export');
+    Route::any('projects_copy/{id}','ProjectsController@copy')->name('projects_copy');
     Route::any('export_projects', 'ProjectsController@export_projects')->name('export_projects');   
     Route::any('projects_multi_delete', 'ProjectsController@projects_multi_delete')->name('projects_multi_delete');
 

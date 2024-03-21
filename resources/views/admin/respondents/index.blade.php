@@ -43,126 +43,32 @@
 
             <div class="row">
                 <div class="col-12">
-
-
-
                     <div class="card">
                         <div class="card-body">
-
-
-
-                            <div class="text-right">
-
-
-
-                                <a href="#!" data-url="{{ route('export_resp') }}" data-size="xl"
-                                    data-ajax-popup="true" class="btn btn-primary"
-                                    data-bs-original-title="{{ __('export Respondents') }}" class="btn btn-primary"
-                                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="export">
-                                    Export
-                                </a>
-
-
-                                <a href="#!" data-url="{{ route('respondents.create') }}" data-size="xl"
-                                    data-ajax-popup="true" class="btn btn-primary"
-                                    data-bs-original-title="{{ __('Create Respondents') }}" class="btn btn-primary"
-                                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-                                    Create Respondents
-                                </a>
-
-                                <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
-                                    Delete Selected All
-                                </a>
-                                {{-- <div class="btn-group">
-                                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                            Action
-                                            <span class="caret"></span>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Action</a></li>
-                                            </ul>
-                                        </div> --}}
-
-
-                            </div>
-
-
-
-
-                            <h4 class="card-title"> </h4>
-                            <p class="card-title-desc"></p>
-
-                            <table id="myTable" class="table w-full table-responsive" width="100%">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" class="select_all" id="inlineForm-customCheck">
-                                        </th>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Surname</th>
-                                        <th>Mobile</th>
-                                        <th>Whatsapp</th>
-                                        <th>Email</th>
-                                        <th>Date of Birth</th>
-                                        <th>race</th>
-                                        <th>status</th>
-                                        <th>profile_completion</th>
-                                        <th>inactive_until</th>
-                                        <th>opeted_in</th>
-                                        <th>Action</th>
-
-                                    </tr>
-                                </thead>
-
-
-                                <tbody>
-
-
-                                </tbody>
-                            </table>
-
+                            @include('admin.table_components.respondents_table')
                         </div>
                         <!-- end card-body -->
                     </div>
                     <!-- end card -->
                 </div> <!-- end col -->
             </div> <!-- end row -->
-
-
-
         </div> <!-- container-fluid -->
     </div>
     <!-- End Page-content -->
 
-
-
-
     @include('admin.layout.footer')
-
-    @stack('adminside-js')
-    @stack('adminside-validataion')
-    @stack('adminside-confirm')
-    @stack('adminside-datatable')
-
+        @stack('adminside-js')
+        @stack('adminside-datatable')
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
         $(document).ready(function() {
-            datatable();
-
-
+            respondents_datatable();
         });
 
-
-
-        function datatable() {
-
-
-
-            $('#myTable').dataTable().fnDestroy();
-            var postsTable = $('#myTable').dataTable({
+        function respondents_datatable() {
+            $('#respondents_datatable').dataTable().fnDestroy();
+            var postsTable = $('#respondents_datatable').dataTable({
                 "ordering": true,
                 "processing": true,
                 "serverSide": true,
@@ -176,59 +82,24 @@
                     "type": "POST"
                 },
                 "columns": [
-
-                    {
-                        "data": "select_all"
-                    },
-                    {
-                        "data": "id"
-                    },
-                    {
-                        "data": "name"
-                    },
-                    {
-                        "data": "surname"
-                    },
-                    {
-                        "data": "mobile"
-                    },
-                    {
-                        "data": "whatsapp"
-                    },
-                    {
-                        "data": "email"
-                    },
-                    {
-                        "data": "date_of_birth"
-                    },
-                    {
-                        "data": "race"
-                    },
-                    {
-                        "data": "status"
-                    },
-                    {
-                        "data": "profile_completion"
-                    },
-                    {
-                        "data": "inactive_until"
-                    },
-                    {
-                        "data": "opeted_in"
-                    },
-                    {
-                        "data": "options"
-                    }
+                    { "data": "select_all" },
+                    { "data": "id" },
+                    { "data": "name" },
+                    { "data": "surname" },
+                    { "data": "mobile" },
+                    { "data": "whatsapp" },
+                    { "data": "email" },
+                    { "data": "date_of_birth" },
+                    { "data": "race" },
+                    { "data": "status" },
+                    { "data": "profile_completion" },
+                    { "data": "inactive_until" },
+                    { "data": "opeted_in" },
+                    { "data": "options" }
                 ],
-                "order": [
-                    [1, "asc"]
-                ],
-
+                "order": [[1, "asc"]],
                 stateSave: false,
             });
-
-
-
         }
 
         $(document).on('click', '#delete_respondents', function(e) {
@@ -237,97 +108,20 @@
             var url = "{{ route('respondents.destroy', ':id') }}";
             url = url.replace(':id', id);
 
-            $.confirm({
-                title: "{{ Config::get('constants.delete') }}",
-                content: "{{ Config::get('constants.delete_confirmation') }}",
-                autoClose: 'cancelAction|8000',
-                buttons: {
-                    delete: {
-                        text: 'delete',
-                        action: function() {
-                            $.ajax({
-                                type: "DELETE",
-                                data: {
-                                    _token: tempcsrf,
-                                },
-                                url: url,
-                                dataType: "json",
-                                success: function(response) {
-                                    if (response.status == 404) {
-                                        $('.delete_student').text('');
-                                    } else {
-                                        datatable();
-                                        $.alert('Respondents Deleted!');
-                                        $('.delete_student').text('Yes Delete');
-                                    }
-                                }
-                            });
-                        }
-                    },
-                    cancel: function() {
-
-                    }
-                }
-            });
+            single_delete("DELETE", id, url, "Respondents Deleted", 'respondents_datatable');
         });
 
-        function table_checkbox(get_this){
-            count_checkbox = $(".tabel_checkbox").filter(':checked').length;
-            if(count_checkbox > 1){
-                $("#delete_all").show();
-            }
-            else{
-                $("#delete_all").hide();
-            }
-        }
-
-        $(document).on('click', '#delete_all', function(e) {
+        $(document).on('click', '.respondents_datatable.delete_all', function(e) {
             e.preventDefault();
             var all_id = [];
 
-            var values = $("#myTable tbody tr").map(function() {
+            var values = $("#respondents_datatable tbody tr").map(function() {
                 var $this = $(this);
-                if($this.find("[type=checkbox]").is(':checked')){
-                    all_id.push($this.find("[type=checkbox]").attr('id')); 
-                    // return {
-                    //     id: $this.find("[type=checkbox]").attr('id'),
-                    // };
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
                 }
-                
             }).get();
-          
-            $.confirm({
-                title: "{{Config::get('constants.delete')}}",
-                content:  "{{Config::get('constants.delete_confirmation')}}",
-                autoClose: 'cancelAction|8000',
-                buttons: {
-                    delete: {
-                        text: 'delete',
-                        action: function() {
-                            $.ajax({
-                                type: "POST",
-                                data: {
-                                    _token: tempcsrf,
-                                    all_id: all_id
-                                },
-                                url: "{{ route('networks_multi_delete') }}",
-                                dataType: "json",
-                                success: function(response) {
-                                    if (response.status == 404) {
-                                        $('.delete_student').text('');
-                                    } else {
-                                        datatable();
-                                        $.alert('Contents Deleted!');
-                                        $("#delete_all").hide();
-                                    }
-                                }
-                            });
-                        }
-                    },
-                    cancel: function() {
-                        
-                    }
-                }
-            });
+
+            multi_delete("POST", all_id, "{{ route('networks_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
         });
     </script>

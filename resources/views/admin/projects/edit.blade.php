@@ -4,7 +4,7 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Name / Code *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="number" name="number" value="{{ $projects->number }}">
+            <input type="text" class="form-control" id="number" name="number" value="{{ $projects->number }}" required>
         </div>
     </div>
 
@@ -12,7 +12,7 @@
         <label for="example-text-input" class="col-md-2 col-form-label">Client *
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="client" name="client" value="{{ $projects->client }}">
+            <input type="text" class="form-control" id="client" name="client" value="{{ $projects->client }}" required>
         </div>
     </div>
 
@@ -20,7 +20,7 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Name *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name" value="{{ $projects->name }}">
+            <input type="text" class="form-control" id="name" name="name" value="{{ $projects->name }}" required>
         </div>
     </div>
 
@@ -154,7 +154,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Closing Date
         </label>
         <div class="col-md-10">
-            <input type="date" class="form-control" id="closing_date" name="closing_date" value="{{date('Y-m-d', strtotime($projects->closing_date))}}">
+            <input type="date" class="form-control" id="closing_date" name="closing_date" value="{{date('Y-m-d', strtotime($projects->closing_date))}}" required>
         </div>
     </div>
 
