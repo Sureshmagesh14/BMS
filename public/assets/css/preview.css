@@ -150,7 +150,7 @@ h3 {
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-color: rgba(57, 57, 57, 0.2) rgba(121, 121, 121, 0.2);
-    scrollbar-width: thin;
+    scrollbar-width: none;
 }
 
 .surveysparrow-survey-container--classic-form .ss-fp-section__frame::-webkit-scrollbar {
@@ -13213,7 +13213,7 @@ body *::before {
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-color: rgba(57, 57, 57, 0.2) rgba(121, 121, 121, 0.2);
-    scrollbar-width: thin;
+    scrollbar-width: none;
 }
 
 .surveysparrow-survey-container--classic-form .ss-fp-section__frame::-webkit-scrollbar {
