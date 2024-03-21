@@ -123,48 +123,9 @@
                         </div>
                     </div>
                     <!-- rewards end page title -->
-
                     <div class="card">
                         <div class="card-body">
-                            <div class="text-right">
-                                <div class="btn-group" role="group">
-                                    <button id="btnGroupVerticalDrop1" type="button"
-                                        class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        Export <i class="mdi mdi-chevron-down"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
-                                        <a class="dropdown-item" href="#">Rewards Summary by Month & Year</a>
-                                        <a class="dropdown-item" href="#">Rewards Summary by Respondent</a>
-                                    </div>
-                                </div>
-                                <a class="btn btn-danger" class="btn btn-primary" id="rewards_delete_all"
-                                    style="display: none;">
-                                    Delete Selected All
-                                </a>
-                            </div>
-                            <table id="rewards_datatable" class="table dt-responsive nowrap w-100">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input select_all"
-                                                    id="inlineForm-customCheck">
-                                                <label class="custom-control-label" for="inlineForm-customCheck"
-                                                    style="font-weight: bold;">Select All</label>
-                                            </div>
-                                        </th>
-                                        <th>#</th>
-                                        <th>REWARD AMOUNT (R)</th>
-                                        <th>STATUS</th>
-                                        <th>RESPONDENT</th>
-                                        <th>USER</th>
-                                        <th>PROJECT</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                            @include('admin.table_components.rewards_table')
                         </div>
                         <!-- end card-body -->
                     </div>
@@ -178,59 +139,9 @@
                         </div>
                     </div>
                     <!-- Respondent end page title -->
-
                     <div class="card">
                         <div class="card-body">
-                            <div class="text-right">
-                                <a href="#!" data-url="{{ route('export_resp') }}" data-size="xl"
-                                    data-ajax-popup="true" class="btn btn-primary"
-                                    data-bs-original-title="{{ __('export Respondents') }}" class="btn btn-primary"
-                                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="export">
-                                    Export
-                                </a>
-
-                                <a href="#!" data-url="{{ route('respondents.create') }}" data-size="xl"
-                                    data-ajax-popup="true" class="btn btn-primary"
-                                    data-bs-original-title="{{ __('Create Respondents') }}" class="btn btn-primary"
-                                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-                                    Create Respondents
-                                </a>
-
-                                <a class="btn btn-danger" class="btn btn-primary" id="delete_all" style="display: none;">
-                                    Delete Selected All
-                                </a>
-                            </div>
-
-                            <h4 class="card-title"> </h4>
-                            <p class="card-title-desc"></p>
-
-                            <table id="respondent_datatable" class="table w-full table-responsive" width="100%">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input select_all" id="inlineForm-customCheck">
-                                                <label class="custom-control-label" for="inlineForm-customCheck" style="font-weight: bold;">Select All</label>
-                                            </div>
-                                        </th>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Surname</th>
-                                        <th>Mobile</th>
-                                        <th>Whatsapp</th>
-                                        <th>Email</th>
-                                        <th>Date of Birth</th>
-                                        <th>race</th>
-                                        <th>status</th>
-                                        <th>profile_completion</th>
-                                        <th>inactive_until</th>
-                                        <th>opeted_in</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                            @include('admin.table_components.respondents_table')
                         </div>
                         <!-- end card-body -->
                     </div>
@@ -252,13 +163,15 @@
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
-        rewards_datatable();
-        respondent_datatable();
+        rewards_table();
+        respondents_datatable();
     });
 
-    function rewards_datatable() {
-        $('#rewards_datatable').dataTable().fnDestroy();
-        $('#rewards_datatable').DataTable({
+    /* Rewards Inner Page */
+    function rewards_table() {
+        $('#rewards_table').dataTable().fnDestroy();
+        $('#rewards_table').DataTable({
+
             searching: true,
             ordering: true,
             dom: 'lfrtip',
@@ -288,18 +201,34 @@
                 { data: 'user_id',name: 'user_id',orderable: true,searchable: true },
                 { data: 'project_id',name: 'project_id',orderable: true,searchable: true },
                 { data: 'action',name: 'action',orderable: false,searchable: false }
-            ],
-            columnDefs: [
-                { targets: 0,width: 75,className: "text-center" },
-                { targets: 4,width: 115,className: "text-center" },
-                { targets: 5,width: 115,className: "text-center" },
-            ],
+            ]
         });
     }
 
-    function respondent_datatable() {
-        $('#respondent_datatable').dataTable().fnDestroy();
-        var postsTable = $('#respondent_datatable').dataTable({
+    $(document).on('change', '.rewards_select_box', function(e) {
+        var all_id = [];
+        values = $(this).val();
+
+        if(values == 2){
+            var values = $("#user_table tbody tr").map(function() {
+                var $this = $(this);
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
+                }
+            }).get();
+            multi_delete("POST", all_id, "{{ route('rewards_multi_delete') }}", "Rewards Deleted", 'rewards_table');
+        }
+    });
+
+    function view_details(id) {
+        let url = "view_rewards";
+        url = url + '/' + id;
+        document.location.href = url;
+    }
+
+    function respondents_datatable() {
+        $('#respondents_datatable').dataTable().fnDestroy();
+        var postsTable = $('#respondents_datatable').dataTable({
             "ordering": true,
             "processing": true,
             "serverSide": true,
@@ -315,24 +244,22 @@
                 "type": "POST"
             },
             "columns": [
-                {"data": "select_all"},
-                {"data": "id"},
-                {"data": "name"},
-                {"data": "surname"},
-                {"data": "mobile"},
-                {"data": "whatsapp"},
-                {"data": "email"},
-                {"data": "date_of_birth"},
-                {"data": "race"},
-                {"data": "status"},
-                {"data": "profile_completion"},
-                {"data": "inactive_until"},
-                {"data": "opeted_in"},
-                {"data": "options"}
+                { "data": "select_all" },
+                { "data": "id" },
+                { "data": "name" },
+                { "data": "surname" },
+                { "data": "mobile" },
+                { "data": "whatsapp" },
+                { "data": "email" },
+                { "data": "date_of_birth" },
+                { "data": "race" },
+                { "data": "status" },
+                { "data": "profile_completion" },
+                { "data": "inactive_until" },
+                { "data": "opeted_in" },
+                { "data": "options" }
             ],
-            "order": [
-                [1, "asc"]
-            ],
+            "order": [[1, "asc"]],
             stateSave: false,
         });
     }
@@ -343,37 +270,20 @@
         var url = "{{ route('respondents.destroy', ':id') }}";
         url = url.replace(':id', id);
 
-        $.confirm({
-            title: "{{ Config::get('constants.delete') }}",
-            content: "{{ Config::get('constants.delete_confirmation') }}",
-            autoClose: 'cancelAction|8000',
-            buttons: {
-                delete: {
-                    text: 'delete',
-                    action: function() {
-                        $.ajax({
-                            type: "DELETE",
-                            data: {
-                                _token: tempcsrf,
-                            },
-                            url: url,
-                            dataType: "json",
-                            success: function(response) {
-                                if (response.status == 404) {
-                                    $('.delete_student').text('');
-                                } else {
-                                    datatable();
-                                    $.alert('Respondents Deleted!');
-                                    $('.delete_student').text('Yes Delete');
-                                }
-                            }
-                        });
-                    }
-                },
-                cancel: function() {
+        single_delete("DELETE", id, url, "Respondents Deleted", 'respondents_datatable');
+    });
 
-                }
+    $(document).on('click', '.respondents_datatable.delete_all', function(e) {
+        e.preventDefault();
+        var all_id = [];
+
+        var values = $("#respondents_datatable tbody tr").map(function() {
+            var $this = $(this);
+            if ($this.find("[type=checkbox]").is(':checked')) {
+                all_id.push($this.find("[type=checkbox]").attr('id'));
             }
-        });
+        }).get();
+
+        multi_delete("POST", all_id, "{{ route('networks_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
     });
 </script>

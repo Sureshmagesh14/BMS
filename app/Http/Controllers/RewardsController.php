@@ -38,9 +38,15 @@ class RewardsController extends Controller
                 $inside_form = $request->inside_form;
                 
                 $all_datas = Rewards::select('rewards.*','respondents.name as rname','respondents.email as remail','respondents.mobile as rmobile','users.name as uname','projects.name as pname')
-                    ->join('respondents', 'respondents.id', '=', 'rewards.user_id') 
-                    ->join('users', 'users.id', '=', 'rewards.user_id') 
-                    ->join('projects', 'projects.id', '=', 'rewards.project_id');
+                    ->leftjoin('respondents', function ($joins) {
+                        $joins->on('respondents.id','=','rewards.respondent_id');
+                    })
+                    ->leftjoin('users', function ($joins) {
+                        $joins->on('users.id','=','rewards.user_id');
+                    })
+                    ->leftjoin('projects', function ($joins) {
+                        $joins->on('projects.id','=','rewards.project_id');
+                    });
 
                     if(isset($request->id)){
                         if($inside_form == 'users'){
