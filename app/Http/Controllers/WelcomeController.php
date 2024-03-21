@@ -118,10 +118,13 @@ class WelcomeController extends Controller
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
             
+            $data = Respondents::find($resp_id);
+            $ref_code = $data->referral_code;
+            
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-share');
+                return view('user.user-share', compact('data','ref_code'));
             //}
            
         }
