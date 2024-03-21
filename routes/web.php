@@ -189,6 +189,11 @@ Route::group([
     // Respondent Flow 
     Route::post('/survey/submitans', ['as' => 'survey.submitans','uses' => 'SurveyController@submitans']);
 
+    // Survey Response 
+    
+    Route::get('/survey/responses/{id}', ['as' => 'survey.responses','uses' => 'SurveyController@responses']);
+    Route::any('get_all_response/{id}', 'SurveyController@get_all_response')->name('get_all_response');
+
     
 
 });

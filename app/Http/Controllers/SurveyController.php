@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Folder;
 use App\Models\Survey;
 use App\Models\Questions;
+use App\Models\Users;
 use App\Models\SurveyResponse;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
@@ -1266,6 +1267,54 @@ class SurveyController extends Controller
             return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
         }
    }
+   public function responses(Request $request,$survey_id)
+    {
+        try {
+
+            $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+            $responses = SurveyResponse::where(['survey_id'=>$survey_id])->get();
+
+            return view('admin.survey.survey.responses',compact('question','responses','survey_id'));
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function get_all_response(Request $request,$survey_id) {
+		
+        try {
+            if ($request->ajax()) {
+
+                $token = csrf_token();
+                $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+                $cols = [];
+                $colName=[];
+                foreach($question as $qus){
+                    $data = ["data"=>$qus->question_name,"name"=>$qus->question_name];
+                    array_push($cols,$data);
+                    array_push($colName,$qus->question_name);
+                }
+                // return $cols;
+                
+
+                $datatable = Datatables::of($question);
+              
+               foreach($question as $qus){
+                // $datatable->addColumn('$qus->question_name', function ($all_data) {
+                //     return $all_data->question_name;
+                // });
+               }
+               $datatable->rawColumns($colName);
+
+               $datatable->make(true);
+               return $datatable;
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 }
 
 
