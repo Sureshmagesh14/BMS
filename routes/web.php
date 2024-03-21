@@ -75,6 +75,7 @@ Route::group([
         ->name('create', 'projects.create')->name('show', 'projects.show')->name('update', 'projects.update');
     Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');
     Route::any('projects_export','ProjectsController@projects_export')->name('projects_export');
+    Route::any('projects_copy/{id}','ProjectsController@copy')->name('projects_copy');
     Route::any('export_projects', 'ProjectsController@export_projects')->name('export_projects');   
     Route::any('projects_multi_delete', 'ProjectsController@projects_multi_delete')->name('projects_multi_delete');
 

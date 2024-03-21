@@ -1,10 +1,10 @@
-<form id="edit_projects_form" class="validation">
+<form id="copy_projects_form" class="validation">
     <input type="hidden" id="id" name="id" value="{{ $projects->id }}">
     @csrf
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Name / Code *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="number" name="number" value="{{ $projects->number }}" required>
+            <input type="text" class="form-control" id="number" name="number" required>
         </div>
     </div>
 
@@ -137,7 +137,7 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Survey Duration (Minutes) *</label>
         <div class="col-md-10">
-            <input type="number" class="form-control" id="survey_duration" name="survey_duration" value="{{ $projects->survey_duration }}">
+            <input type="number" class="form-control" id="survey_duration" name="survey_duration" value="{{ $projects->survey_duration }}" required>
 
         </div>
     </div>
@@ -154,7 +154,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Closing Date
         </label>
         <div class="col-md-10">
-            <input type="date" class="form-control" id="closing_date" name="closing_date" value="{{date('Y-m-d', strtotime($projects->closing_date))}}" required>
+            <input type="date" class="form-control" id="closing_date" name="closing_date" value="{{date('Y-m-d', strtotime($projects->closing_date))}}">
         </div>
     </div>
 
@@ -183,35 +183,33 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Survey Link *
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="survey_link" name="survey_link" value="{{$projects->survey_link}}">
+            <input type="text" class="form-control" id="survey_link" name="survey_link" value="{{$projects->survey_link}}" required>
         </div>
     </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="edit_create">Create New</button>
+        <button type="button" class="btn btn-primary" id="copy_create">Create New</button>
     </div>
 </form>
 
 
 <script>
-    $("#edit_create").click(function() {
-        if (!$("#edit_projects_form").valid()) { // Not Valid
+    $("#copy_create").click(function() {
+        if (!$("#copy_projects_form").valid()) { // Not Valid
             return false;
         } else {
-            var data = $('#edit_projects_form').serialize();
-            var id = $("#id").val();
-            var url_set = "{{ route('projects.update', ':id') }}";
-            url_set = url_set.replace(':id', id);
+            var data = $('#copy_projects_form').serialize();
+
             $.ajax({
-                type: 'PUT',
-                url: url_set,
+                type: 'POST',
+                url: "{{ route('projects.store') }}",
                 data: data,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 beforeSend: function() {
-                    $('#edit_create').html('....Please wait');
+                    $('#copy_create').html('....Please wait');
                 },
                 success: function(response) {
                     toastr.success(response.message);
@@ -219,7 +217,7 @@
                     datatable();
                 },
                 complete: function(response) {
-                    $('#edit_create').html('Create New');
+                    $('#copy_create').html('Create New');
                 }
             });
         }
