@@ -1,17 +1,32 @@
 @include('admin.auth.layout.header')
 @yield('login-css')
+<style>
+
+    .new_class{
+        background-color: #4099de;
+    }
+    .new_class:hover{
+        background-color: #297ec0;
+    }
+    .text-90 {
+    color: var(--90);
+}
+.st{
+    color:var(--white);
+}
+</style>
 <div class="row align-items-center justify-content-center">
     <div class="col-md-8 col-lg-6 col-xl-5">
         <div class="card">
             
             <div class="card-body p-4"> 
                 <div class="text-center mt-2">
-                    <h5 class="text-primary">Welcome Back !</h5>
+                    <h2 class="text-2xl text-center font-normal mb-6 text-90">Welcome Back!</h2>
                     <p class="text-muted">Sign in to continue to {{Config::get('constants.app_title')}}.</p>
                 </div>
                 <div class="p-2 mt-4">
                     @php $token = md5(now()) @endphp
-                    <form class="form-horizontal" method="POST" action="{{ route('admin.login') }}">
+                    <form class="bg-white shadow rounded-lg p-8 max-w-login mx-auto" method="POST" action="{{ route('admin.login') }}">
                         @csrf
                         <div class="form-group">
                             <label for="email">Email</label>
@@ -33,7 +48,7 @@
                         </div>
                         
                         <div class="mt-3 text-right">
-                            <button class="btn btn-primary btn-block waves-effect waves-light" type="submit"><i class="icon-xs icon mr-1" data-feather="log-in"></i> Log In</button>
+                            <button class="btn btn-primary btn-block waves-effect waves-light new_class" type="submit"><i class="icon-xs icon mr-1" data-feather="log-in"></i> <strong class="st">Login</strong></button>
                         </div>
 
                         <!-- <div class="mt-4 text-center">

@@ -45,14 +45,18 @@
         <div class="col-md-10">
             <select id="role_id" name="role_id" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">
-                Choose an option
-              </option> <option value="1">
-                Admin
-              </option><option value="2">
-                User
-              </option><option value="3">
-                Temp
-              </option></select>
+                    Choose an option
+                </option>
+                <option value="1">
+                    Admin
+                </option>
+                <option value="2">
+                    User
+                </option>
+                <option value="3">
+                    Temp
+                </option>
+            </select>
         </div>
     </div>
 
@@ -61,18 +65,21 @@
         <div class="col-md-10">
             <select id="status_id" name="status_id" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">
-                Choose an option
-              </option> <option value="1">
-                Active
-              </option><option value="2">
-                Inactive
-              </option></select>
-          
+                    Choose an option
+                </option>
+                <option value="1">
+                    Active
+                </option>
+                <option value="2">
+                    Inactive
+                </option>
+            </select>
+
         </div>
     </div>
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Share Link  </label>
+        <label for="example-search-input" class="col-md-2 col-form-label">Share Link </label>
         <div class="col-md-10">
             <input type="text" class="form-control" id="share_link" name="share_link">
         </div>
@@ -114,19 +121,24 @@
         }
     });
 
-    $(function () {
+    $(function() {
         $('#users_form').validate({
-    rules: {
-        password: {
-            required: true,
-            minlength: 8
-        },
-        cpassword: {
-            required: true,
-            minlength: 8,
-            equalTo: "#password"
-        }
-    }
-}); 
-});
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                    validate_email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 8
+                },
+                cpassword: {
+                    required: true,
+                    minlength: 8,
+                    equalTo: "#password"
+                }
+            }
+        });
+    });
 </script>
