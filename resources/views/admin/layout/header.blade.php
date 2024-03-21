@@ -32,6 +32,7 @@
             .privateusers {display:none;}
             .privateusers .form-group.mb-0,.surveyfoldername .form-group.mb-0{display: flex;flex-direction: column-reverse;}
             .btn-primary{color: #fff;background-color: #4099de;border-color: #4099de;}
+            .page-item.active .page-link {background-color: #4099de !important;border-color: #4099de !important;}
         </style>
     </head>
 
