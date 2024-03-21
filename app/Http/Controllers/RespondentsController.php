@@ -369,7 +369,7 @@ class RespondentsController extends Controller
                             ->where('pr.project_id',$request->id);
                         }
                     }
-                $posts = $posts->orWhere('name', 'LIKE', "%{$search}%")
+                $posts = $posts->orWhere('mobile', 'LIKE', "%{$search}%")
                     ->offset($start)
                     ->limit($limit)
                     ->orderBy($order, $dir)
@@ -382,7 +382,7 @@ class RespondentsController extends Controller
                             ->where('pr.project_id',$request->id);
                         }
                     }
-                $totalFiltered = $totalFiltered->orWhere('name', 'LIKE', "%{$search}%")->count();
+                $totalFiltered = $totalFiltered->orWhere('mobile', 'LIKE', "%{$search}%")->count();
             }
 
             $data = array();
