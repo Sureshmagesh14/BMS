@@ -223,7 +223,7 @@ class BankController extends Controller
                 
                 return Datatables::of($all_datas)
                 ->addColumn('select_all', function ($all_data) {
-                    return '<input class="tabel_checkbox" name="banks[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                    return '<input class="tabel_checkbox" name="banks[]" type="checkbox" onchange="table_checkbox(this,\'banks_table\')" id="'.$all_data->id.'">';
                 })
                 ->addColumn('bank_name', function ($all_data) {
                     return $all_data->bank_name;
@@ -243,20 +243,31 @@ class BankController extends Controller
                     $edit_route = route("banks.edit",$all_data->id);
                     $view_route = route("banks.show",$all_data->id);
 
-                    return '<div class="">
-                        <div class="btn-group mr-2 mb-2 mb-sm-0">
-                            <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="View Content" class="btn btn-primary waves-light waves-effect">
-                                <i class="fa fa-eye"></i>
-                            </a>
-                            <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                data-bs-original-title="Edit Content" class="btn btn-primary waves-light waves-effect">
-                                <i class="fa fa-edit"></i>
-                            </a>
-                            <button type="button" id="delete_banks" data-id="'.$all_data->id.'" class="btn btn-primary waves-light waves-effect">
-                                <i class="far fa-trash-alt"></i>
-                            </button>
-                        </div>
+                    return '<div class="col-md-2">
+                        <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                            title="Action" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-tasks" aria-hidden="true"></i>
+                            <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="list-group-item">
+                                <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                    data-bs-original-title="View Banks" class="rounded waves-light waves-effect">
+                                    <i class="fa fa-eye"></i> View
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                    data-bs-original-title="Edit Banks" class="rounded waves-light waves-effect">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#!" id="delete_banks" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                    <i class="far fa-trash-alt"></i> Delete
+                                </a>
+                            </li>
+                        </ul>
                     </div>';
                 })
                 ->rawColumns(['select_all','bank_name','branch_code','active','action'])          

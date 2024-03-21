@@ -260,11 +260,10 @@ class UsersController extends Controller
             
                 
                 $all_datas = Users::withoutTrashed()->latest()->get();
-        
                 
                 return Datatables::of($all_datas)
                 ->addColumn('select_all', function ($all_data) {
-                    return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                    return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this,\'user_table\')" id="'.$all_data->id.'">';
                 })
                 ->addColumn('name', function ($all_data) {
                     return $all_data->name;
@@ -328,7 +327,7 @@ class UsersController extends Controller
                                 <i class="fa fa-tasks" aria-hidden="true"></i>
                                 <i class="mdi mdi-chevron-down"></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-center">
+                            <ul class="dropdown-menu dropdown-menu-right">
                                 <li class="list-group-item">
                                     <a href="'.$view_route.'" class="rounded waves-light waves-effect">
                                         <i class="fa fa-eye"></i> View

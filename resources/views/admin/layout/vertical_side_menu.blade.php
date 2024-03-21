@@ -83,12 +83,12 @@
                     </li>
                 @endif
 
-                <li>
+                {{-- <li>
                     <a href="{{route('actions')}}" class=" waves-effect">
                         <i class="icon nav-icon" data-feather="message-square"></i>
                         <span class="menu-item" key="t-chat">Action Events</span>
                     </a>
-                </li>
+                </li> --}}
 
                 <li class="menu-title" key="t-pages">Database</li>
 

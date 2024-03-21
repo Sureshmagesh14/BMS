@@ -84,6 +84,7 @@ Route::group([
         ->name('create', 'projects.create')->name('show', 'projects.show')->name('update', 'projects.update');
     Route::any('get_all_projects', 'ProjectsController@get_all_projects')->name('get_all_projects');
     Route::any('projects_export','ProjectsController@projects_export')->name('projects_export');
+    Route::any('projects_copy/{id}','ProjectsController@copy')->name('projects_copy');
     Route::any('export_projects', 'ProjectsController@export_projects')->name('export_projects');   
     Route::any('projects_multi_delete', 'ProjectsController@projects_multi_delete')->name('projects_multi_delete');
 
@@ -168,7 +169,6 @@ Route::group([
     /* Survey Template Routings*/
     Route::get('/survey/template/{id}', ['as' => 'survey.template','uses' => 'SurveyController@templateList']);
     Route::get('/survey/builder/{id}/{qus_id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder']);
-    Route::get('/survey/builder/{id}', ['as' => 'survey.builder','uses' => 'SurveyController@builder']);
     Route::get('/survey/questiontype/{id}', ['as' => 'survey.questiontype','uses' => 'SurveyController@questiontype']);
     Route::get('/survey/qustype/{survey}/{qustype}', ['as' => 'survey.qustype','uses' => 'SurveyController@questiontypesurvey']);
     Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs','uses' => 'SurveyController@deletequs']);
@@ -188,7 +188,19 @@ Route::group([
     Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.startsurvey','uses' => 'SurveyController@startsurvey']); // Start Survey
     Route::post('/survey/upload-image', ['as' => 'survey.uploadimage','uses' => 'SurveyController@uploadimage']); // Upload Image
     Route::get('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@background']); // Survey Background
+    Route::post('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@setbackground']); // Survey Background
+    
     Route::get('/survey/getqus', ['as' => 'survey.getqus','uses' => 'SurveyController@getqus']); // Get Qus
+
+    // Survey Settings 
+    Route::get('/survey/surveysettings/{id}', ['as' => 'survey.surveysettings','uses' => 'SurveyController@surveysettings']);
+    Route::post('/survey/updatesettings/{id}', ['as' => 'survey.updatesettings','uses' => 'SurveyController@updatesettings']);
+
+    // Respondent Flow 
+    Route::post('/survey/submitans', ['as' => 'survey.submitans','uses' => 'SurveyController@submitans']);
+
+    
+
 });
 
 // NEW

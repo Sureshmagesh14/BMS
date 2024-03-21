@@ -9,10 +9,10 @@
 <div class="main-content">
     <div class="page-content">
 
-    <!-- starts -->
-    <div class="container-fluid" >
-             <!-- start page title -->
-             <div class="row">
+        <!-- starts -->
+        <div class="container-fluid">
+            <!-- start page title -->
+            <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
                         <h4 class="mb-0">Dashboard</h4>
@@ -28,35 +28,40 @@
             <!-- end page title -->
 
             <div class="row">
-               
-                    <div class="card">
-                        <div class="card-body">
+
+                <div class="card">
+                    <div class="card-body">
 
                         <!-- starts -->
-                       
-                                        <div class="row align-items-center">
-                                            <div class="col-md-6">
-                                              
-                                                <div>
-                                                    <div class="apex-charts" id="chart"></div>
-                                                </div>
-                                            </div>
-            
-                                            
-                                        </div>
-                                 
-                        
-                                        
-                        <!-- ends -->
+
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+
+                                <div>
+                                    <div class="apex-charts" id="chart"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div>
+                                    <div class="apex-charts" id="chart_one"></div>
+                                </div>
+                            </div>
+
                         </div>
+
+
+
+                        <!-- ends -->
                     </div>
-               
+                </div>
+
             </div>
-    </div>   
-    <!-- ends -->
- 
-       
-    
+        </div>
+        <!-- ends -->
+
+
+
     </div>
     <!-- End Page-content -->
 
@@ -65,52 +70,98 @@
     @stack('adminside-js')
 
 
-@include('admin.layout.footer')
+    @include('admin.layout.footer')
 
-<script src="{{ asset('assets//libs/apexcharts/apexcharts.min.js') }}"></script>
-<script>
-  
-  var options = {
-          series: [{{$active_val}}, {{$pending_val}}, {{$deactive_val}}, {{$unsub_val}}, {{$black_val}}],
-          labels: ['Active', 'Pending', 'Deactivated', 'Unsubscribed','Blacklisted'],
-          chart: {
-          width: 380,
-          type: 'donut',
-        },
-        plotOptions: {       
-          pie: {
-            startAngle: -90,
-            endAngle: 270
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        fill: {
-          type: 'gradient',
-        },
-        legend: {
-          formatter: function(val, opts) {
-            return val + " - " + opts.w.globals.series[opts.seriesIndex]
-          }
-        },
-        title: {
-          text: 'Respondent Status  '
-        },
-        responsive: [{
-          breakpoint: 480,
-          options: {
+    <script src="{{ asset('assets//libs/apexcharts/apexcharts.min.js') }}"></script>
+    <script>
+        var options = {
+            series: [{{ $active_val }}, {{ $pending_val }}, {{ $deactive_val }}, {{ $unsub_val }},
+                {{ $black_val }}
+            ],
+            labels: ['Active', 'Pending', 'Deactivated', 'Unsubscribed', 'Blacklisted'],
             chart: {
-              width: 200
+                width: 380,
+                type: 'donut',
+            },
+            plotOptions: {
+                pie: {
+                    startAngle: -90,
+                    endAngle: 270
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            fill: {
+                type: 'gradient',
             },
             legend: {
-              position: 'bottom'
-            }
-          }
-        }]
+                formatter: function(val, opts) {
+                    return val + " - " + opts.w.globals.series[opts.seriesIndex]
+                }
+            },
+            title: {
+                text: 'Respondent Status {{ $tot }} total'
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
         };
 
         var chart = new ApexCharts(document.querySelector("#chart"), options);
         chart.render();
-      
-</script>
+
+        var colors = ["#FF0000", "#008000"];
+        var options = {
+            series: [{{ $incomplete }}, {{ $complete }}],
+            labels: ['Incomplete', 'Complete'],
+            colors: colors,
+            chart: {
+                width: 380,
+                type: 'donut',
+            },
+            plotOptions: {
+                pie: {
+                    startAngle: -90,
+                    endAngle: 270
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            fill: {
+                colors: ['#FF0000', '#008000']
+            },
+
+            legend: {
+                formatter: function(val, opts) {
+                    return val + " - " + opts.w.globals.series[opts.seriesIndex]
+                }
+            },
+            title: {
+                text: 'Respondent Profile Completion {{ $tot }} total'
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart_one"), options);
+        chart.render();
+    </script>

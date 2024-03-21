@@ -137,7 +137,7 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
             <!-- start page title -->
             <div class="row">
                 <div class="col-12">
-                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                    <div class="page-title-box d-flex align-items-center   @if($selectedFolder) justify-content-between @else createfolderbtn @endif">
                         @if($selectedFolder)
                         <h4 class="mb-0">{{$selectedFolder->folder_name}}</h4>
                         @endif
@@ -225,7 +225,7 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
                                     <div class="col-12 ss-dashboard__list-item-nav d-flex align-items-center justify-content-end flex-shrink-0">
                                         <div class="d-none d-md-flex align-items-center ss-dashboard-list-item__secondary-actions">
                                             <div class="rounded-md me-3">
-                                                <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',[$survey->builderID,$qus_id])}}">
+                                                <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',[$survey->builderID,0])}}">
                                                     <svg width="16" height="16" class="" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M12.728 6.68608L11.314 5.27208L2 14.5861V16.0001H3.414L12.728 6.68608ZM14.142 5.27208L15.556 3.85808L14.142 2.44408L12.728 3.85808L14.142 5.27208ZM4.242 18.0001H0V13.7571L13.435 0.322083C13.6225 0.134612 13.8768 0.0292969 14.142 0.0292969C14.4072 0.0292969 14.6615 0.134612 14.849 0.322083L17.678 3.15108C17.8655 3.33861 17.9708 3.59292 17.9708 3.85808C17.9708 4.12325 17.8655 4.37756 17.678 4.56508L4.243 18.0001H4.242Z" fill="#0D1B1E"></path>
                                                     </svg>
@@ -259,7 +259,7 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
                                             </span>
                                             <ul class="ss-dropdown__main-list action_list action_list_survey" role="menu" id="ss-drop-menu-106" aria-label="Open Menu"
                                                 style="margin-top: 8px;">
-                                                <a href="{{route('survey.builder',[$survey->builderID,$qus_id])}}">
+                                                <a href="{{route('survey.builder',[$survey->builderID,0])}}">
                                                     <li class="d-flex align-items-center py-3 my-2">
                                                         <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Edit Survey</h3>
                                                     </li>
@@ -463,3 +463,13 @@ div#survey-table_wrapper .row {
     // });
 </script>
 
+<script>
+    toastr.options = { "closeButton" : true, "progressBar" : true }
+</script>
+@if(session()->has('success'))
+<script>toastr.success("{{ session()->get('success') }}");</script>
+@endif
+
+@if(session()->has('error'))
+<script>toastr.error("{{ session()->get('error') }}");</script>
+@endif

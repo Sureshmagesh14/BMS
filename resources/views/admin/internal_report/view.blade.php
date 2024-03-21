@@ -8,7 +8,7 @@
             </tr>
             <tr>
                 <th>User</th>
-                <td>{{$data->user_id}}</td>
+                <td>{{$data->users_data->name.' '.$data->users_data->surname}}</td>
             </tr>
             <tr>
                 <th>Action</th>
