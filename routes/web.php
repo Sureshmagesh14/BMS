@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::any('/','WelcomeController@home')->name('home');
 
 
 Route::any('terms','WelcomeController@terms')->name('terms');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Respondents;
+use App\Models\Respondent_referrals;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -41,6 +42,8 @@ class RegisteredUserController extends Controller
             'id_passport' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+        $ref_code = substr(md5(time()), 0, 8); 
+        $ref_code = ('r'.$ref_code);
 
         $user = Respondents::create([
             'name' => $request->name,
@@ -51,7 +54,20 @@ class RegisteredUserController extends Controller
             'mobile' => $request->mobile,
             'whatsapp' => $request->whatsapp,
             'password' => Hash::make($request->password),
+            'referral_code' => $ref_code,
         ]);
+ 
+        if (session()->has('refer_id')) {
+
+            $referred_respondent_id=session()->get('refer_id');
+
+            $userInfo = Respondent_referrals::create([
+                'respondent_id' => $user->id,
+                'referred_respondent_id' => $referred_respondent_id,
+            ]);
+            Session::forget('refer_id');
+        }
+
 
         event(new Registered($user));
 

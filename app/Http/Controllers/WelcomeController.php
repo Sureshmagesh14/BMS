@@ -15,10 +15,23 @@ use Illuminate\Support\Facades\Hash;
 
 class WelcomeController extends Controller
 {   
-    public function home()
+    public function home(Request $request)
     {   
         try {
-            return redirect()->route('home');
+            if($request->r!=''){
+                $referral_code = $request->r;
+            
+                $id =Session::get('resp_id');
+                $data = Respondents::find($id);
+    
+                $data =Respondents::where('referral_code', $referral_code)->first();
+                Session::put('refer_id',  $data->id);
+                
+            }else{
+                $data='';
+            }
+
+            return view('welcome', compact('data'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -118,10 +131,13 @@ class WelcomeController extends Controller
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
             
+            $data = Respondents::find($resp_id);
+            $ref_code = $data->referral_code;
+            
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-share');
+                return view('user.user-share', compact('data','ref_code'));
             //}
            
         }
