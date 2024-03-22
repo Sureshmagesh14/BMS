@@ -65,6 +65,7 @@ class RegisteredUserController extends Controller
                 'respondent_id' => $user->id,
                 'referred_respondent_id' => $referred_respondent_id,
             ]);
+            Session::forget('refer_id');
         }
 
 
