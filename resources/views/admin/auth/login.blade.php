@@ -13,6 +13,11 @@
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}">
     <!-- Custom Meta Data -->
     <!-- Theme Styles -->
+    <style>
+        .error{
+            color:red;
+        }
+        </style>
 </head>
 <body class="bg-40 text-black h-full">
     <div class="h-full">
@@ -21,7 +26,7 @@
                 <img class="fill-current" width="200" height="39"
                     src="{{ asset('assets/images/brand_surgen.png') }}" />
             </div>
-            <form class="bg-white shadow rounded-lg p-8 max-w-login mx-auto" method="POST"
+            <form id="users_form" class="bg-white shadow rounded-lg p-8 max-w-login mx-auto" method="POST"
                 action="{{ route('admin.login') }}">
                 @csrf
                 <h2 class="text-2xl text-center font-normal mb-6 text-90">Welcome Back!</h2>
@@ -57,7 +62,7 @@
                     </div>
                 </div>
 
-                <button class="w-full btn btn-default btn-primary hover:bg-primary-dark" type="submit">
+                <button id="users_create" class="w-full btn btn-default btn-primary hover:bg-primary-dark" type="submit">
                     Login
                 </button>
             </form>
@@ -69,15 +74,41 @@
     </div>
 
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+ 
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/toastr/build/toastr.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/toastr.init.js') }}"></script>
-
+ 
+    <script src="{{ asset('assets/js/admin/jquery.validate.js') }}"></script>
     <script>
         toastr.options = {
             "closeButton": true,
             "progressBar": true
         }
+
+        $(function() {
+        $('#users_form').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                    validate_email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 8
+                },
+              
+            }
+        });
+    });
+    $.validator.addMethod("validate_email", function(value, element) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+            return true;
+        } else {
+            return false;
+        }
+    }, "Please enter a valid email address.");
     </script>
 
     @if (count($errors) > 0)
