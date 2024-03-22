@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Config;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
-
+use Illuminate\Support\Facades\Schema;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-
+        Schema::defaultStringLength(191);
          // Override the email notification for verifying email
          VerifyEmail::toMailUsing(function ($notifiable){        
             $verifyUrl = URL::temporarySignedRoute('verification.verify', \Illuminate\Support\Carbon::now()->addMinutes(\Illuminate\Support\Facades\Config::get('auth.verification.expire', 60)),
