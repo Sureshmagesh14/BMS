@@ -56,8 +56,10 @@ class AdminLoginController extends Controller
                 $unsub_val    = DB::table('respondents')->where("active_status_id",3)->count();
                 $pending_val  = DB::table('respondents')->where("active_status_id",5)->count();
                 $black_val    = DB::table('respondents')->where("active_status_id",5)->count();
-
-                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val','black_val','pending_val'));
+                $complete = DB::table('respondents')->where("profile_completion_id",1)->count();
+                $incomplete = DB::table('respondents')->where("profile_completion_id",0)->count();
+                $tot=$complete+$incomplete;
+                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val','black_val','pending_val','complete','incomplete','tot'));
                 
                 return redirect("/")->withSuccess('You are not allowed to access');
             }

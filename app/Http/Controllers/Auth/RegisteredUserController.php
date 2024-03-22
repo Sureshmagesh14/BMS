@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Respondents;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -32,13 +33,23 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'surname' => ['required', 'string', 'max:255'],
+            'mobile' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'whatsapp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Respondents::class],
+            'date_of_birth' => ['required', 'string', 'max:255'],
+            'id_passport' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        $user = Respondents::create([
             'name' => $request->name,
+            'surname' => $request->surname,
+            'date_of_birth' => $request->date_of_birth,
+            'id_passport' => $request->id_passport,
             'email' => $request->email,
+            'mobile' => $request->mobile,
+            'whatsapp' => $request->whatsapp,
             'password' => Hash::make($request->password),
         ]);
 

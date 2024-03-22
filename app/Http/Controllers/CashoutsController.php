@@ -32,21 +32,30 @@ class CashoutsController extends Controller
 
                 $token = csrf_token();
                 $inside_form = $request->inside_form;
+                $type = $request->type;
+                $status = $request->status;
                 
-                $all_datas =Cashout::select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
+                $all_datas = Cashout::select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
                     ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
-
                     if(isset($request->id)){
                         if($inside_form == 'respondents'){
                             $all_datas->where('cashouts.respondent_id',$request->id);
                         }
                     }
 
+                    if($type != null){
+                        $all_datas->where('cashouts.type_id',$type);
+                    }
+
+                    if($status != null){
+                        $all_datas->where('cashouts.status_id',$status);
+                    }
+
                 $all_datas = $all_datas->orderby("id","desc")->withoutTrashed()->get();
         
                 return Datatables::of($all_datas)
                 ->addColumn('select_all', function ($all_data) {
-                    return '<input class="tabel_checkbox" name="cash_out[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                    return '<input class="tabel_checkbox" name="cash_out[]" type="checkbox" onchange="table_checkbox(this,\'cashout_table\')" id="'.$all_data->id.'">';
                 })
                 ->addColumn('type_id', function ($all_data) {
                     if($all_data->type_id==1){
@@ -55,53 +64,46 @@ class CashoutsController extends Controller
                         return 'Data';
                     }else if($all_data->type_id==3){
                         return 'Airtime';
-                    }else{  
+                    }
+                    else if($all_data->type_id==4){
+                        return 'Donation';
+                    }
+                    else{  
                         return '-';
                     }
                 })  
                 ->addColumn('status_id', function ($all_data) {
-                    
-                    if($all_data->status_id==0){
+                    if($all_data->status_id == 0){
                         return 'Failed';
-                    }else if($all_data->status_id==1){
+                    }else if($all_data->status_id == 1){
                         return 'Pending';
-                    }else if($all_data->status_id==2){
+                    }else if($all_data->status_id == 2){
                         return 'Processing';
-                    }else if($all_data->status_id==3){
+                    }else if($all_data->status_id == 3){
                         return 'Complete';
-                    }else if($all_data->status_id==4){
+                    }else if($all_data->status_id == 4){
                         return 'Declined';
                     }else{  
                         return 'Approved For Processing';
                     }
-
-                    
-                })  
+                })
                 ->addColumn('amount', function ($all_data) {
-                    
-                    $amount=$all_data->amount/10;
+                    $amount = $all_data->amount/10;
                     return $amount;
-                    
-                    
-                })  
+                })
                 ->addColumn('respondent_id', function ($all_data) {
-                    
                     return $all_data->name.' - '.$all_data->email.' - '.$all_data->mobile;
-                    
-                    
-                })  
+                })
                 ->addColumn('action', function ($all_data) use($token) {
-                    
                     $view_route = route("cashouts-view",$all_data->id);
                     return '<div class="">
-                    <div class="btn-group mr-2 mb-2 mb-sm-0">
-                        <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                            data-bs-original-title="View Cashouts" class="btn btn-primary waves-light waves-effect">
-                            <i class="fa fa-eye"></i>
-                        </a>
-                    </div>
-                </div>';
-                    
+                        <div class="btn-group mr-2 mb-2 mb-sm-0">
+                            <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                data-bs-original-title="View Cashouts" class="btn btn-primary waves-light waves-effect">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>';
                 })
                 ->rawColumns(['select_all','id','action','type_id','status_id','amount','respondent_id'])      
                 ->make(true);

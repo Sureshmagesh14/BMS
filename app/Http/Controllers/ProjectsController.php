@@ -169,6 +169,37 @@ class ProjectsController extends Controller
        
     }
 
+    public function copy(string $id)
+    {
+        try {
+           
+            $projects = Projects::find($id);
+            if($projects)
+            {
+                $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
+                $returnHTML = view('admin.projects.copy',compact('projects','users'))->render();
+                return response()->json(
+                    [
+                        'success' => true,
+                        'html_page' => $returnHTML,
+                    ]
+                );
+            }
+            else
+            {
+                return response()->json([
+                    'status'=>404,
+                    'message'=>'No Projects Found.'
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        
+       
+    }
+
     /**
      * Update the specified resource in storage.
      */
@@ -285,7 +316,7 @@ class ProjectsController extends Controller
 
                 return Datatables::of($all_datas)
                     ->addColumn('select_all', function ($all_data) {
-                        return '<input class="tabel_checkbox" name="projects[]" type="checkbox" onchange="table_checkbox(this)" id="'.$all_data->id.'">';
+                        return '<input class="tabel_checkbox" name="projects[]" type="checkbox" onchange="table_checkbox(this,\'projects_table\')" id="'.$all_data->id.'">';
                     })
                     ->addColumn('numbers', function ($all_data) {
                         return $all_data->number;
@@ -337,7 +368,7 @@ class ProjectsController extends Controller
                     ->addColumn('action', function ($all_data) {
                         $edit_route = route("projects.edit",$all_data->id);
                         $view_route = route("projects.show",$all_data->id);
-
+                        $copy_route = route("projects_copy",$all_data->id);
                         $design = '<div class="col-md-2">
                             <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
                                 title="Action" aria-haspopup="true" aria-expanded="false">
@@ -356,6 +387,12 @@ class ProjectsController extends Controller
                                         <i class="fa fa-edit"></i> Edit
                                     </a>
                                 </li>
+                                <li class="list-group-item">
+                                <a href="#!" data-url="'.$copy_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                    data-bs-original-title="Copy Project" class="rounded waves-light waves-effect">
+                                    <i class="fa fa-copy"></i> Copy
+                                </a>
+                            </li>
                                 <li class="list-group-item">
                                     <a href="#!" id="delete_projects" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
                                         <i class="far fa-trash-alt"></i> Delete
