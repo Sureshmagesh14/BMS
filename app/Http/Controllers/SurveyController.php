@@ -1273,8 +1273,14 @@ class SurveyController extends Controller
 
             $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
             $responses = SurveyResponse::where(['survey_id'=>$survey_id])->get();
-
-            return view('admin.survey.survey.responses',compact('question','responses','survey_id'));
+            $cols = [ ["data"=>"#","name"=>"#","orderable"=> false,"searchable"=> false], ["data"=>"name","name"=>"Name","orderable"=> true,"searchable"=> true],["data"=>"responseinfo","name"=>"Response Info","orderable"=> true,"searchable"=> true]];
+            
+            foreach($question as $qus){
+                $data = ["data"=>$qus->question_name,"name"=>$qus->question_name,"orderable"=> true,"searchable"=> true];
+                array_push($cols,$data);
+            }
+          
+            return view('admin.survey.survey.responses',compact('question','responses','survey_id','cols'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -1288,27 +1294,31 @@ class SurveyController extends Controller
 
                 $token = csrf_token();
                 $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
-                $cols = [];
-                $colName=[];
-                foreach($question as $qus){
-                    $data = ["data"=>$qus->question_name,"name"=>$qus->question_name];
-                    array_push($cols,$data);
-                    array_push($colName,$qus->question_name);
-                }
-                // return $cols;
                 
+                $surveyResponseUsers =  SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+                $finalResult =[];
 
-                $datatable = Datatables::of($question);
-              
-               foreach($question as $qus){
-                // $datatable->addColumn('$qus->question_name', function ($all_data) {
-                //     return $all_data->question_name;
-                // });
-               }
-               $datatable->rawColumns($colName);
-
-               $datatable->make(true);
-               return $datatable;
+                foreach($surveyResponseUsers as $userID){
+                    $user = User::where('id', '=' , $userID)->first();
+                    $result =['#'=>'','name'=>$user->name,'responseinfo'=>"responseinfo"];
+                    foreach($question as $qus){
+                        $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->first();
+                        if($respone){
+                            if($respone->skip == 'yes'){
+                                $output = 'Skip';
+                            }else{
+                                $output = $respone->answer;
+                            }
+                        }else{
+                            $output = '-';
+                        }
+                        $tempresult = [$qus->question_name =>$output];
+                        $result[$qus->question_name]=$output;
+                    }
+                    array_push($finalResult,$result);
+                }
+      
+            return Datatables::of($finalResult)->make(true);
             }
         }
         catch (Exception $e) {
