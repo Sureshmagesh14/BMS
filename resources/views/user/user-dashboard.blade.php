@@ -5,6 +5,12 @@ $first_character = mb_substr($data->name, 0, 1)
 @endphp 
 <section class="">
     <div class="container-fluid">
+
+    @if($data->profile_completion_id==0)
+    <div class="alert alert-danger bs-alert-old-docs text-center">
+      <strong>Alert</strong> Profile Incomplete <a href="{{ route('user.surveys') }}">Click here</a>
+    </div>
+    @endif
         <div class="row justify-content-center py-5 m-auto">
             <div class="col-md-2 vi-light-grey mx-0 px-0">
                 <div class="logo bg-white pt-3">
@@ -15,9 +21,9 @@ $first_character = mb_substr($data->name, 0, 1)
                         <p class="text-center fw-bolder">{{$data->name}}</p>
                         <a href="" class="nav-link d-flex align-items-center px-2 small-font"><i
                                 class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{$data->email}}</a>
-                        <a href="" class="nav-link d-flex align-items-start px-2 small-font my-3"><i
+                        <!-- <a href="" class="nav-link d-flex align-items-start px-2 small-font my-3"><i
                                 class="fa fa-map-marker yelow-clr pe-2" aria-hidden="true"></i> Suite 835 7664 Jolie
-                            Islands, East Ardell, MA 74776</a>
+                            Islands, East Ardell, MA 74776</a> -->
                         <a href="" class="nav-link d-flex align-items-center px-2 small-font"><i
                                 class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> {{$data->mobile}}</a>
                     </div>
