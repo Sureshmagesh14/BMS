@@ -4,8 +4,12 @@
         display: none;
     }
 
-    .error {
+    #reg_table .error {
         color: red;
+    }
+
+    #login_table .error {
+        color: white;
     }
 </style>
 <div class="container-fluid vh-100">
@@ -50,13 +54,13 @@
                         <div class="fname text-start w-48 m-auto">
                             <label for="name">First Name <span class="text-danger">*</span></label>
                             <input type="text" name="name" id="name" placeholder="John"
-                                class="form-control vi-border-clr border-radius-0" required>
+                                oninput ="alphanum(this);" class="form-control vi-border-clr border-radius-0" required>
 
                         </div>
                         <div class="lname text-start w-48 m-auto">
                             <label for="surname">Last Name <span class="text-danger">*</span></label>
                             <input type="text" name="surname" id="surname" placeholder="Doe"
-                                class="form-control vi-border-clr border-radius-0" required>
+                                oninput ="alphanum(this);" class="form-control vi-border-clr border-radius-0" required>
                         </div>
 
                     </div>
@@ -64,13 +68,15 @@
                         <div class="mobile text-start w-48 m-auto my-3">
                             <label for="mobile">Mobile <span class="text-danger">*</span></label>
                             <input type="text" name="mobile" id="mobile" placeholder="081 966 0786"
-                                class="form-control vi-border-clr border-radius-0" required>
+                                class="form-control vi-border-clr border-radius-0" oninput ="numonly(this);"
+                                maxlength="16" required>
 
                         </div>
                         <div class="lname text-start w-48 m-auto my-3">
                             <label for="whatsapp">Whatsapp <span class="text-danger">*</span></label>
                             <input type="text" name="whatsapp" id="whatsapp" placeholder="081 966 0786"
-                                class="form-control vi-border-clr border-radius-0" required>
+                                class="form-control vi-border-clr border-radius-0" oninput ="numonly(this);"
+                                maxlength="16" required>
                         </div>
 
                     </div>
@@ -82,7 +88,7 @@
                             <span class="email_error">Invalid Email Address</span>
                         </div>
                         <div class="lname text-start w-48 m-auto my-3">
-                            <label for="id_passport">ID Number\ Passport <span class="text-danger">*</span></label>
+                            <label for="id_passport">ID Number\ Passport </label>
                             <input type="text" name="id_passport" id="id_passport"
                                 placeholder="Valid RSA ID number or Passport number"
                                 class="form-control vi-border-clr border-radius-0" id="">
@@ -120,18 +126,17 @@
 
 @include('user.layout.footer')
 
-{{-- @if (count($errors) > 0)
+@if (count($errors) > 0)
     @foreach ($errors->all() as $message)
         <script>
-            toastr.options =
-            {
-                "closeButton" : true,
-                "progressBar" : true
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true
             }
             toastr.error("{{ $message }}");
         </script>
     @endforeach
-@endif --}}
+@endif
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
 
@@ -168,6 +173,11 @@
                     required: true,
                     minlength: 8
                 },
+                password_confirmation: {
+                    required: true,
+                    minlength: 8,
+                    equalTo: "#password"
+                }
 
             }
         });
@@ -184,7 +194,7 @@
                     required: true,
                     minlength: 8
                 },
-              
+
             }
         });
     });
@@ -195,4 +205,16 @@
             return false;
         }
     }, "Please enter a valid email address.");
+
+    function numonly(input) {
+        let value = input.value;
+        let numbers = value.replace(/[^0-9]/g, "");
+        input.value = numbers;
+    }
+
+    function alphanum(input) {
+        let value = input.value;
+        let numbers = value.replace(/[^a-zA-Z0-9 ]/g, "");
+        input.value = numbers;
+    }
 </script>
