@@ -72,7 +72,11 @@
             $('#response_table').DataTable({
                 searching: true,
                 ordering: true,
-                dom: 'lfrtip',
+                // dom: 'lfrtip',
+                dom: 'Bfrtip',
+                buttons: [
+                    'excel'
+                ],
                 info: true,
                 iDisplayLength: 10,
                 lengthMenu: [
