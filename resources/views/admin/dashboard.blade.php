@@ -61,7 +61,9 @@
             series: [{{ $active_val }}, {{ $pending_val }}, {{ $deactive_val }}, {{ $unsub_val }},
                 {{ $black_val }}
             ],
-            labels: ['Active', 'Pending', 'Deactivated', 'Unsubscribed', 'Blacklisted'],
+            labels: ['Active {{ $act_per }}', 'Pending {{ $dec_per }}', 'Deactivated {{ $unsub_pre }}',
+                'Unsubscribed {{ $pen_per }}', 'Blacklisted {{ $bla_per }}'
+            ],
             chart: {
                 width: 380,
                 type: 'donut',
@@ -104,8 +106,8 @@
 
         var colors = ["#FF0000", "#008000"];
         var options = {
-            series: [{{ $incomplete }}, {{ $complete }}],
-            labels: ['Incomplete', 'Complete'],
+            series: [{{ $complete }}, {{ $incomplete }}],
+            labels: ['Incomplete {{ $comp_per }}', 'Complete {{ $incomp_per }}'],
             colors: colors,
             chart: {
                 width: 380,
