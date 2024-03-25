@@ -8,7 +8,6 @@
 <!-- ============================================================== -->
 <div class="main-content">
     <div class="page-content">
-
         <!-- starts -->
         <div class="container-fluid">
             <!-- start page title -->
@@ -28,48 +27,32 @@
             <!-- end page title -->
 
             <div class="row">
-
                 <div class="card">
                     <div class="card-body">
-
                         <!-- starts -->
-
                         <div class="row align-items-center">
                             <div class="col-md-6">
-
                                 <div>
                                     <div class="apex-charts" id="chart"></div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-
                                 <div>
                                     <div class="apex-charts" id="chart_one"></div>
                                 </div>
                             </div>
-
                         </div>
-
-
-
                         <!-- ends -->
                     </div>
                 </div>
-
             </div>
         </div>
         <!-- ends -->
-
-
-
     </div>
     <!-- End Page-content -->
 
     @yield('adminside-script')
-    @include('admin.layout.footer')
     @stack('adminside-js')
-
-
     @include('admin.layout.footer')
 
     <script src="{{ asset('assets//libs/apexcharts/apexcharts.min.js') }}"></script>
