@@ -36,11 +36,8 @@
                             <table id="response_table" class="table dt-responsive nowrap w-100">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Response Info</th>
-                                    @foreach($question as $qus)
-                                    <th>{{$qus->question_name}}</th>
+                                    @foreach($cols as $qus)
+                                    <th>{{$qus['name']}}</th>
                                     @endforeach
                                 </tr>
                             </thead>
