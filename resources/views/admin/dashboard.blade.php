@@ -37,8 +37,10 @@
                     <div class="col card">
                         <div class="apex-charts" id="chart_one"></div>
                     </div>
-                    <div class="col card"<h3 class="flex mb-3 text-base text-80 font-bold"> Shareable URL to join the
-                        database </h3>
+                    <div class="col card">
+                    <h5 class="flex mb-3 text-base text-80 font-bold">
+                        <strong>Shareable URL to join the database</strong> 
+                    </h5>
                         <div class="min-h-90px">
                             <p class="text-xs text-80 leading-normal">Copy below share link to share with friends and
                                 family </p>
