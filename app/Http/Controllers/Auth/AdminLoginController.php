@@ -87,10 +87,13 @@ class AdminLoginController extends Controller
                 $comp_per=number_format( $complete/$tot * 100, 2 ) . ' %';
               
                 $incomp_per=number_format( $incomplete/$tot * 100, 2 ) . ' %';
+
+                $share_link  = DB::table('users')->select('share_link')->where("id",Auth::guard('admin')->user()->id)->first();
+               
               
                 return view('admin.dashboard',compact('active_val','deactive_val','unsub_val',
                 'black_val','pending_val','complete','incomplete','tot','comp_per','incomp_per','act_per',
-                'dec_per','unsub_pre','pen_per','bla_per'));
+                'dec_per','unsub_pre','pen_per','bla_per','share_link'));
                 
                 return redirect("/")->withSuccess('You are not allowed to access');
             }
