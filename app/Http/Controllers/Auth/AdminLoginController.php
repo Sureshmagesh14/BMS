@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use DB;
 use Session;
-
+use Exception;
 class AdminLoginController extends Controller
 {
 
@@ -28,6 +28,15 @@ class AdminLoginController extends Controller
     public function showLoginForm(){
         try {
             return view('admin.auth.login');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function forgot_password(){
+        try {
+            return view('admin.auth.admin-forgot-password');
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
