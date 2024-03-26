@@ -18,7 +18,7 @@ Route::any('/','WelcomeController@home')->name('home');
 Route::any('terms','WelcomeController@terms')->name('terms');
 Route::any('admin','Auth\AdminLoginController@showLoginForm')->name('admin.showlogin'); //.....Admin Login
 Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.login'); //.....Admin Login
-
+Route::any('admin/forgot_password', 'Auth\AdminLoginController@forgot_password')->name('admin.forgot_password'); 
 
 Route::any('dashboard','WelcomeController@user_dashboard')->middleware(['auth', 'verified'])->name('user.dashboard');
 Route::any('profile-edit','WelcomeController@user_profile')->middleware(['auth', 'verified'])->name('user.profile');
@@ -196,6 +196,11 @@ Route::group([
 
     // Respondent Flow 
     Route::post('/survey/submitans', ['as' => 'survey.submitans','uses' => 'SurveyController@submitans']);
+
+    // Survey Response 
+    
+    Route::get('/survey/responses/{id}', ['as' => 'survey.responses','uses' => 'SurveyController@responses']);
+    Route::any('get_all_response/{id}', 'SurveyController@get_all_response')->name('get_all_response');
 
     
 

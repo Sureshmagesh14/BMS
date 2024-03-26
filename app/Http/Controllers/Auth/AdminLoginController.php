@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use DB;
 use Session;
-
+use Exception;
 class AdminLoginController extends Controller
 {
 
@@ -28,6 +28,15 @@ class AdminLoginController extends Controller
     public function showLoginForm(){
         try {
             return view('admin.auth.login');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function forgot_password(){
+        try {
+            return view('admin.auth.admin-forgot-password');
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -59,7 +68,32 @@ class AdminLoginController extends Controller
                 $complete = DB::table('respondents')->where("profile_completion_id",1)->count();
                 $incomplete = DB::table('respondents')->where("profile_completion_id",0)->count();
                 $tot=$complete+$incomplete;
-                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val','black_val','pending_val','complete','incomplete','tot'));
+               
+                $act_per= number_format( $active_val/$tot * 100, 2 ) . ' %';
+              
+
+                $dec_per=number_format( $deactive_val/$tot * 100, 2 ) . ' %';
+            
+
+                $unsub_pre=number_format( $unsub_val/$tot * 100, 2 ) . ' %';
+          
+
+                $pen_per=number_format( $pending_val/$tot * 100, 2 ) . ' %';
+               
+
+                $bla_per=number_format( $black_val/$tot * 100, 2 ) . ' %';
+                
+
+                $comp_per=number_format( $complete/$tot * 100, 2 ) . ' %';
+              
+                $incomp_per=number_format( $incomplete/$tot * 100, 2 ) . ' %';
+
+                $share_link  = DB::table('users')->select('share_link')->where("id",Auth::guard('admin')->user()->id)->first();
+               
+              
+                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val',
+                'black_val','pending_val','complete','incomplete','tot','comp_per','incomp_per','act_per',
+                'dec_per','unsub_pre','pen_per','bla_per','share_link'));
                 
                 return redirect("/")->withSuccess('You are not allowed to access');
             }

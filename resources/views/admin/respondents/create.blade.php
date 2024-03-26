@@ -192,6 +192,15 @@
             }
         });
     });
+
+    $.validator.addMethod("validate_email", function(value, element) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+            return true;
+        } else {
+            return false;
+        }
+    }, "Please enter a valid email address.");
+    
     $("#respondents_create").click(function() {
         if (!$("#respondents_form").valid()) { // Not Valid
             return false;

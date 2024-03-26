@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Folder;
 use App\Models\Survey;
 use App\Models\Questions;
+use App\Models\Users;
 use App\Models\SurveyResponse;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
@@ -1266,6 +1267,64 @@ class SurveyController extends Controller
             return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
         }
    }
+   public function responses(Request $request,$survey_id)
+    {
+        try {
+
+            $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+            $responses = SurveyResponse::where(['survey_id'=>$survey_id])->get();
+            $cols = [ ["data"=>"#","name"=>"#","orderable"=> false,"searchable"=> false], ["data"=>"name","name"=>"Name","orderable"=> true,"searchable"=> true],["data"=>"responseinfo","name"=>"Response Info","orderable"=> true,"searchable"=> true]];
+            
+            foreach($question as $qus){
+                $data = ["data"=>$qus->question_name,"name"=>$qus->question_name,"orderable"=> true,"searchable"=> true];
+                array_push($cols,$data);
+            }
+          
+            return view('admin.survey.survey.responses',compact('question','responses','survey_id','cols'));
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function get_all_response(Request $request,$survey_id) {
+		
+        try {
+            if ($request->ajax()) {
+
+                $token = csrf_token();
+                $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+                
+                $surveyResponseUsers =  SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+                $finalResult =[];
+
+                foreach($surveyResponseUsers as $userID){
+                    $user = User::where('id', '=' , $userID)->first();
+                    $result =['#'=>'','name'=>$user->name,'responseinfo'=>"responseinfo"];
+                    foreach($question as $qus){
+                        $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->first();
+                        if($respone){
+                            if($respone->skip == 'yes'){
+                                $output = 'Skip';
+                            }else{
+                                $output = $respone->answer;
+                            }
+                        }else{
+                            $output = '-';
+                        }
+                        $tempresult = [$qus->question_name =>$output];
+                        $result[$qus->question_name]=$output;
+                    }
+                    array_push($finalResult,$result);
+                }
+      
+            return Datatables::of($finalResult)->make(true);
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 }
 
 
