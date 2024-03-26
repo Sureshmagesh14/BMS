@@ -18,7 +18,7 @@ $first_character = mb_substr($data->name, 0, 1)
                         <span class="vi-usr-profile m-auto p-4" style="text-transform: capitalize;">{{$first_character}}</span>
                     </div>
                     <div class="py-3 mb-5">
-                        <p class="text-center fw-bolder">{{$data->name}}</p>
+                        <p class="text-center fw-bolder" style="text-transform: capitalize;">{{$data->name}}</p>
                         <a href="" class="nav-link d-flex align-items-center px-2 small-font"><i
                                 class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{$data->email}}</a>
                         <!-- <a href="" class="nav-link d-flex align-items-start px-2 small-font my-3"><i
@@ -115,14 +115,13 @@ $first_character = mb_substr($data->name, 0, 1)
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle me-2" href="#" role="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        Jennifer<i class="fa fa-angle-down" aria-hidden="true"></i>
+                                        <span style="text-transform: capitalize;">{{$data->name}}</span><i class="fa fa-angle-down" aria-hidden="true"></i>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Profile</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('updaterofile') }}">View Profile</a></li>
                                         <li>
                                             <hr class="dropdown-divider" />
                                         </li>
-                                        <li><a class="dropdown-item" href="#">Sign Out</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -134,11 +133,10 @@ $first_character = mb_substr($data->name, 0, 1)
                                             ...
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">View Profile</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('updaterofile') }}">View Profile</a></li>
                                             <li>
                                                 <hr class="dropdown-divider" />
                                             </li>
-                                            <li><a class="dropdown-item" href="#">Sign Out</a></li>
                                         </ul>
                                     </li>
                                 </ul>

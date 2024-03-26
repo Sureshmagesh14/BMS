@@ -14,6 +14,7 @@
               <h3 class="fw-bold mb-4">Profile</h3>
               <p>Account</p>
               <div class="accordion" id="accordionExample">
+              <a href="{{ route('user.viewprofile') }}">
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -29,10 +30,9 @@
                       
                     </button>
                   </h2>
-                 
-               
-              </div>
-             
+                </div>
+              </a>
+
             </div>
             <div class="section my-3 py-3">
           @php 
@@ -51,7 +51,7 @@
             
               <div class="accordion accordion-flush" id="accordionFlushExample">
             
-              <a href="{{ route('user.surveys',['up'=>1]) }}">
+              <a href="{{ route('user.surveys',['up'=>$pro->id]) }}">
                 <div class="accordion-item">
                  
                     <h2 class="accordion-header" id="flush-headingTwo">
