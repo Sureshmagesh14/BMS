@@ -7,6 +7,7 @@ use DB;
 use Yajra\DataTables\DataTables;
 use App\Models\Respondents;
 use App\Models\Contents;
+use App\Models\Groups;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -176,6 +177,24 @@ class WelcomeController extends Controller
                 return view('user.user-surveys');
            // }
            
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    
+    public function user_editprofile(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+            
+          
+            $data = Respondents::find($resp_id);
+            
+            $profil = Groups::where('deleted_at', NULL)->get();
+
+            return view('user.user-editprofile', compact('data','profil'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
