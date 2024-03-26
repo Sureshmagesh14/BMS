@@ -20,9 +20,9 @@
                         <button type="submit"
                             class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2">REQUEST
                             RESET</button>
-                        <a href="{{ route('login') }}" class="btn vi-white-bg border-radius-0 text-white px-5 py-3 m-auto w-100">BACK TO
+                        <a href="{{ route('login') }}"
+                            class="btn vi-white-bg border-radius-0 text-white px-5 py-3 m-auto w-100">BACK TO
                             LOGIN</a>
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
                 </form>
                 <div class="text-center m-auto d-flex flex-column">
@@ -56,3 +56,16 @@
         }
     }, "Please enter a valid email address.");
 </script>
+@if (count($errors) > 0)
+    @foreach ($errors->all() as $message)
+        <script>
+            toastr.error("{{ $message }}");
+        </script>
+    @endforeach
+@endif
+
+@if (Session::has('error'))
+    <script>
+        toastr.error("{{ session('error') }}");
+    </script>
+@endif
