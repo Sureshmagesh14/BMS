@@ -30,7 +30,9 @@
              
             </div>
             <div class="section my-3 py-3">
-            @foreach($profil as val)
+          @foreach ($profil as $pro)
+            
+        
             <!-- starts -->
               <p>Basic</p>
               
@@ -52,7 +54,7 @@
                   </div>
                 </div>
             </div>
-             @endforeach
+            @endforeach
             <!-- ends -->
           </div>
         </div>
