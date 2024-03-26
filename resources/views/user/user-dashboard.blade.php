@@ -8,7 +8,7 @@ $first_character = mb_substr($data->name, 0, 1)
 
     @if($data->profile_completion_id==0)
     <div class="alert alert-danger bs-alert-old-docs text-center">
-      <strong>Alert</strong> Profile Incomplete <a href="{{ route('user.surveys') }}">Click here</a>
+      <strong>Alert</strong> Profile Incomplete <a href="{{ route('updaterofile') }}">Update Profile</a>
     </div>
     @endif
         <div class="row justify-content-center py-5 m-auto">
