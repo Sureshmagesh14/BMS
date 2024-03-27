@@ -154,6 +154,17 @@
             });
         }
 
+        $(document).on('change', '.cashout_select_box', function(e) {
+            value = $(this).val();
+            form = 'cashout';
+            texthead = 'Export - Airtime Cash Outs';
+            value_array = [];
+
+            if(value == 6){
+                excel_report(value, form, "{{ route('cashout_export') }}", texthead, value_array);
+            }
+        });
+
         function cashout_type(get_this){
             type = $(get_this).val();
             cashout_table(type, status);

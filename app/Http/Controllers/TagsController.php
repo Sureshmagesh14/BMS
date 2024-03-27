@@ -272,53 +272,6 @@ class TagsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-        
-    public function tags_export($arg) {
-        
-        $type='xlsx';
-
-       
-        $all_datas = DB::table('tags')
-            ->orderby("id","desc")
-            ->get();
-
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'ID');
-        $sheet->setCellValue('B1', 'Name');
-        $sheet->setCellValue('C1', 'Description');
-        $sheet->setCellValue('D1', 'Colour');
-        $sheet->setCellValue('E1', 'Settings');
-        $sheet->setCellValue('F1', 'Size');
-  
-        $rows = 2;
-        $i=1;
-        foreach($all_datas as $all_data){
-            
-            $sheet->setCellValue('A' . $rows, $i);
-            $sheet->setCellValue('B' . $rows, $all_data->name);
-            $sheet->setCellValue('C' . $rows, '');
-            $sheet->setCellValue('D' . $rows, $all_data->colour);
-            //$sheet->getActiveSheet()->getStyle('D' . $rows)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b');
-            $sheet->setCellValue('E' . $rows, '');
-            $sheet->setCellValue('F' . $rows, '');
-
-            
-            $rows++;
-            $i++;
-        }
-
-        $fileName = "panel_details_".date('ymd').".".$type;
-        if($type == 'xlsx') {
-            $writer = new Xlsx($spreadsheet);
-        } else if($type == 'xls') {
-            $writer = new Xls($spreadsheet);
-        }
-            $writer->save("export/".$fileName);
-            
-        header("Content-Type: application/vnd.ms-excel");
-        return redirect(url('/')."/export/".$fileName);
-    }
 
     public function tags_multi_delete(Request $request){
         try {
@@ -333,6 +286,19 @@ class TagsController extends Controller
                 'success' => true,
                 'message'=>'Tags Deleted'
             ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function tags_export(Request $request){
+        try {
+            $id_value = $request->id_value;
+            $form     = $request->form;
+            $checkbox_value = $request->checkbox_value;
+
+            return view('admin.report.tags')->with('form',$form)->with('id_value',$id_value)->with('checkbox_value',$checkbox_value);
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

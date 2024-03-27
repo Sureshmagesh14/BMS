@@ -225,6 +225,38 @@
             });
         }
 
+        function excel_report(value, form, route, texthead, checkbox_value){
+            $.confirm({
+                title: texthead,
+                content: "Are You Sure You Want To Run This Action",
+                autoClose: 'cancel|8000',
+                buttons: {
+                    run: {
+                        text: 'run',
+                        action: function() {
+                            $.post(route, {
+                                _token: tempcsrf,
+                                id_value: value,
+                                form: form,
+                                checkbox_value: checkbox_value
+                            },
+                            function(resp, textStatus, jqXHR) {
+                                if(resp=='Error'){
+                                    console.log("Error");
+                                }
+                                else{
+                                    window.location.assign("../"+resp);
+                                }
+                            });
+                        }
+                    },
+                    cancel: function() {
+                        
+                    }
+                }
+            });
+        }
+
         function table_checkbox(get_this, table_id) {
             count_checkbox = $("#"+table_id+" .tabel_checkbox").filter(':checked').length;
             if (count_checkbox >= 1) {

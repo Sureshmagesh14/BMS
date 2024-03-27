@@ -89,6 +89,25 @@
             });
         }
 
+        $(document).on('change', '.tags_select_box', function(e) {
+            value = $(this).val();
+            form = 'tags';
+            
+            value_array = [];
+
+            if(value == 'respondents'){
+                texthead = 'Export - Respondents';
+                $("#tags_table .tabel_checkbox:checked").each(function(){
+                    value_array.push($(this).attr('id'));
+                });
+                excel_report(value, form, "{{ route('tags_export') }}", texthead, value_array);
+            }
+            else if(value == 'panels'){
+                texthead = 'Export - Panels';
+                excel_report(value, form, "{{ route('tags_export') }}", texthead, value_array);
+            }
+        });
+
         $(document).on('click', '.tags_table.delete_all', function(e) {
             e.preventDefault();
             var all_id = [];

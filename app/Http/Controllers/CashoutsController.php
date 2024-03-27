@@ -284,4 +284,16 @@ class CashoutsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+
+    public function cashout_export(Request $request){
+        try {
+            $id_value = $request->id_value;
+            $form     = $request->form;
+
+            return view('admin.report.cashout')->with('form',$form)->with('id_value',$id_value);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 }
