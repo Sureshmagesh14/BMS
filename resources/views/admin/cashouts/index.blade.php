@@ -113,63 +113,8 @@
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
-
         type = ''; status = '';
-        function cashout_type(get_this){
-            type = $(get_this).val();
-            cashout_table(type, status);
-        }
-
-        function cashout_status(get_this){
-            status = $(get_this).val();
-            cashout_table(type, status);
-        }
-
-        $(document).on('click', '#delete_all', function(e) {
-            e.preventDefault();
-            var all_id = [];
-            var values = $("#cashouts tbody tr").map(function() {
-                var $this = $(this);
-                if ($this.find("[type=checkbox]").is(':checked')) {
-                    all_id.push($this.find("[type=checkbox]").attr('id'));
-                }
-            }).get();
-
-            $.confirm({
-                title: "{{ Config::get('constants.delete') }}",
-                content: "{{ Config::get('constants.delete_confirmation') }}",
-                autoClose: 'cancelAction|8000',
-                buttons: {
-                    delete: {
-                        text: 'delete',
-                        action: function() {
-                            $.ajax({
-                                type: "POST",
-                                data: {
-                                    _token: tempcsrf,
-                                    all_id: all_id
-                                },
-                                url: "{{ route('cash_multi_delete') }}",
-                                dataType: "json",
-                                success: function(response) {
-                                    if (response.status == 404) {
-                                        $('.delete_student').text('');
-                                    } else {
-                                        cashout_table(type, status);
-                                        $.alert('Cashouts Deleted!');
-                                        $("#delete_all").hide();
-                                    }
-                                }
-                            });
-                        }
-                    },
-                    cancel: function() {
-
-                    }
-                }
-            });
-        });
-
+    
         $(document).ready(function() {
             cashout_table(type, status);
         });
@@ -208,4 +153,31 @@
                 ]
             });
         }
+
+        function cashout_type(get_this){
+            type = $(get_this).val();
+            cashout_table(type, status);
+        }
+
+        function cashout_status(get_this){
+            status = $(get_this).val();
+            cashout_table(type, status);
+        }
+
+        $(document).on('click', '.cashout_select_box', function(e) {
+            values = $(this).val();
+
+            if(values == 5){
+                var all_id = [];
+
+                var values = $("#cashout_table tbody tr").map(function() {
+                    var $this = $(this);
+                    if ($this.find("[type=checkbox]").is(':checked')) {
+                        all_id.push($this.find("[type=checkbox]").attr('id'));
+                    }
+                }).get();
+
+                multi_delete("POST", all_id, "{{ route('cash_multi_delete') }}", "Cashout Deleted", 'cashout_table');
+            }
+        });
     </script>

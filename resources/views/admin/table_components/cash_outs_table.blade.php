@@ -1,6 +1,6 @@
 <div class="text-right">
     <div class="btn-group mr-2" role="group" aria-label="First group" >
-        <select name="action_2" id="action_2" class="form-control cashout_table hided_option" style="display:none;">
+        <select name="action_2" id="action_2" class="form-control cashout_table hided_option cashout_select_box" style="display:none;">
             <option value="">Select Action</option>
             <optgroup label="Cash Out">
                 <option value="1">EFT > Approve & Process</option>
@@ -10,18 +10,17 @@
                 <option value="5">Delete Cash Outs</option>
             </optgroup>
             <optgroup label="Standalone Actions">
-                <option value="1">Export - Airtime Cash Outs</option>
-                <option value="2">Airtime - Status > Complete by Import</option>
+                <option value="6">Export - Airtime Cash Outs</option>
+                <option value="7">Airtime - Status > Complete by Import</option>
             </optgroup>
         </select>
 
-        <select name="action_1" id="action_1" class="form-control cashout_table show_hided_option">
+        <select name="action_1" id="action_1" class="form-control cashout_table show_hided_option cashout_select_box">
             <option value="">Select Action</option>
-            <option value="1">Export - Airtime Cash Outs</option>
-            <option value="2">Airtime - Status > Complete by Import</option>
+            <option value="6">Export - Airtime Cash Outs</option>
+            <option value="7">Airtime - Status > Complete by Import</option>
         </select>
     </div>
-
   
     <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="First group">

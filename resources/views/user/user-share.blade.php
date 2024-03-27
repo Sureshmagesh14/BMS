@@ -19,8 +19,8 @@
                 </div>
             </div>
             <div class="bg-light text-center">
-                <span> https://brandsurgeon-app.test-preview.co/?r=r65cb6efd</span>
-                <p class="text-secondary">Tap to copy link</p>
+                <span id="demo"> {{URL::to('/')}}?r={{$ref_code}}</span>
+                <p class="text-secondary btn" onclick="copy('#demo')">Tap to copy link</p>
             </div>
         </div>
         </div>
@@ -31,9 +31,26 @@
 
 
 @include('user.layout.footer')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
 $(document).ready(function() {
 
     $('#nav_share').addClass('active');
 });
+
+
+function copy(selector){
+
+        var $temp = $("<div>");
+        $("body").append($temp);
+        $temp.attr("contenteditable", true).html($(selector).html()).select().on("focus", function() { document.execCommand('selectAll',false,null); }).focus();
+        document.execCommand("copy");
+        $temp.remove();
+        toastr.options =
+        {
+            "closeButton" : true,
+            "progressBar" : true
+        }
+        toastr.success("Link copied");
+    }
 </script>

@@ -35,7 +35,7 @@
                 <p>Let's get you started</p>
                 <h3>Join our Database</h3>
 
-                <form id="reg_form" class="validation">
+                <form id="users_form" class="validation">
                 @csrf
                     <div class="first-row d-md-flex mt-5">
                         <div class="fname text-start w-48 m-auto">
@@ -93,7 +93,7 @@
                         </div>                   
                     </div>
                     <div class="submit-btn text-center m-auto d-flex flex-column">
-                        <button type="button" class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto" id="respondents_create">Continue</button>
+                        <button type="button" id="users_create" class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto" id="respondents_create">Continue</button>
                         <a class="nav-link mt-2" href="{{route('userlogin')}}" >Already have Account? Login Here</a>
                     </div>
                 </form>
@@ -138,4 +138,14 @@ $("#respondents_create").click(function () {
         });
     }
 });
+$(function() {
+        $('#users_form').validate({
+           
+        });
+    });
+$("#users_create").click(function() {
+        if (!$("#users_form").valid()) { // Not Valid
+            return false;
+        } 
+    });
 </script>

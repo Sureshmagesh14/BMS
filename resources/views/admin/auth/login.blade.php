@@ -1,74 +1,100 @@
-@include('admin.auth.layout.header')
-@yield('login-css')
-<div class="row align-items-center justify-content-center">
-    <div class="col-md-8 col-lg-6 col-xl-5">
-        <div class="card">
-            
-            <div class="card-body p-4"> 
-                <div class="text-center mt-2">
-                    <h5 class="text-primary">Welcome Back !</h5>
-                    <p class="text-muted">Sign in to continue to {{Config::get('constants.app_title')}}.</p>
-                </div>
-                <div class="p-2 mt-4">
-                    @php $token = md5(now()) @endphp
-                    <form class="form-horizontal" method="POST" action="{{ route('admin.login') }}">
-                        @csrf
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="hidden" name="guard" value="admin">
-                            <input name="email" type="text" class="form-control" id="email" placeholder="Enter email" required>
-                        </div>
+@include('admin.auth.admin-header')
+<div class="h-full">
+    <div class="px-view py-view mx-auto">
+        <div class="mx-auto py-8 max-w-sm text-center text-90">
+            <img class="fill-current" width="200" height="39" src="{{ asset('assets/images/brand_surgen.png') }}" />
+        </div>
+        <form id="users_form" class="bg-white shadow rounded-lg p-8 max-w-login mx-auto" method="POST"
+            action="{{ route('admin.login') }}">
+            @csrf
+            <h2 class="text-2xl text-center font-normal mb-6 text-90">Welcome Back!</h2>
+            <svg class="block mx-auto mb-6" xmlns="http://www.w3.org/2000/svg" width="100" height="2"
+                viewBox="0 0 100 2">
+                <path fill="#D8E3EC" d="M0 0h100v2H0z" />
+            </svg>
 
-                        <div class="form-group">
-                            <!-- <div class="float-right">
-                                <a href="auth-recoverpw.html" class="text-muted">Forgot password?</a>
-                            </div> -->
-                            <label for="password">Password</label>
-                            <input name="password" type="password" class="form-control" id="password" placeholder="Enter password" required>
-                        </div>
+            <div class="mb-6 ">
+                <label class="block font-bold mb-2" for="email">Email Address</label>
+                <input class="form-control form-input form-input-bordered w-full" id="email" type="email"
+                    name="email" value="" required autofocus>
+            </div>
 
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="auth-remember-check">
-                            <label class="custom-control-label" for="auth-remember-check">Remember me</label>
-                        </div>
-                        
-                        <div class="mt-3 text-right">
-                            <button class="btn btn-primary btn-block waves-effect waves-light" type="submit"><i class="icon-xs icon mr-1" data-feather="log-in"></i> Log In</button>
-                        </div>
+            <div class="mb-6 ">
+                <label class="block font-bold mb-2" for="password">Password</label>
+                <input class="form-control form-input form-input-bordered w-full" id="password" type="password"
+                    name="password" required>
+            </div>
 
-                        <!-- <div class="mt-4 text-center">
-                            <p class="mb-0">Don't have an account ? <a href="{{ route('register') }}" class="font-weight-medium text-primary"> Signup now </a> </p>
-                        </div> -->
+            <div class="flex mb-6">
+                <label class="flex items-center text-xl font-bold">
+                    <input class="" type="checkbox" name="remember">
+                    <span class="text-base ml-2">Remember Me</span>
+                </label>
 
-                        {{-- @yield('social') --}}
-                    </form>
+
+                <div class="ml-auto">
+                    <a class="text-primary dim font-bold no-underline" href="{{ route('admin.forgot_password') }}">
+                        Forgot Your Password?
+                    </a>
                 </div>
             </div>
-        </div>
 
-        <div class="mt-5 text-center">
-            <p>© {{ date('Y') }} {{Config::get('constants.app_title')}}.</p>
-        </div>
+            <button id="users_create" class="w-full btn btn-default btn-primary hover:bg-primary-dark" type="submit">
+                Login
+            </button>
+        </form>
+
     </div>
-</div>
+    @include('admin.auth.admin-footer')
 
-@include('admin.auth.layout.footer')
-@yield('login-script')
+    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
 
-<script>
-    toastr.options = { "closeButton" : true, "progressBar" : true }
-</script>
+    <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/toastr/build/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/toastr.init.js') }}"></script>
 
-@if(count($errors) > 0)
-    @foreach( $errors->all() as $message )
-        <script>
-            toastr.error("{{ $message }}");
-        </script>
-    @endforeach
-@endif
-
-@if(Session::has('error'))
+    <script src="{{ asset('assets/js/admin/jquery.validate.js') }}"></script>
     <script>
-        toastr.error("{{ session('error') }}");
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true
+        }
+
+        $(function() {
+            $('#users_form').validate({
+                rules: {
+                    email: {
+                        required: true,
+                        email: true,
+                        validate_email: true
+                    },
+                    password: {
+                        required: true,
+                        minlength: 8
+                    },
+
+                }
+            });
+        });
+        $.validator.addMethod("validate_email", function(value, element) {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+                return true;
+            } else {
+                return false;
+            }
+        }, "Please enter a valid email address.");
     </script>
-@endif
+
+    @if (count($errors) > 0)
+        @foreach ($errors->all() as $message)
+            <script>
+                toastr.error("{{ $message }}");
+            </script>
+        @endforeach
+    @endif
+
+    @if (Session::has('error'))
+        <script>
+            toastr.error("{{ session('error') }}");
+        </script>
+    @endif

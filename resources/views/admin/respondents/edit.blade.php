@@ -39,7 +39,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Mobile Number
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="mobile" name="mobile" value="{{ $respondents->mobile }}">
+            <input type="text" class="form-control" id="mobile" name="mobile" value="{{ $respondents->mobile }}" maxlength="16">
         </div>
     </div>
 
@@ -49,7 +49,7 @@
         </label>
         <div class="col-md-10">
             <input type="text" class="form-control" id="whatsapp" name="whatsapp"
-                value="{{ $respondents->whatsapp }}">
+                value="{{ $respondents->whatsapp }}" maxlength="16">
         </div>
     </div>
 
@@ -178,6 +178,28 @@
 
 
 <script>
+
+    $(function() {
+        $('#edit_respondents_form').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                    validate_email: true
+                },
+               
+            }
+        });
+    });
+
+    $.validator.addMethod("validate_email", function(value, element) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+            return true;
+        } else {
+            return false;
+        }
+    }, "Please enter a valid email address.");
+
     $("#respondents_edit").click(function() {
         if (!$("#edit_respondents_form").valid()) { // Not Valid
             return false;
