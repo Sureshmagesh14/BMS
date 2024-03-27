@@ -434,7 +434,7 @@ input::-ms-input-placeholder { /* Edge 12-18 */
     color: #ccc !important;
   }
 
- button:hover{
+ button:hover, a.btn:hover{
 border:  1px solid #6396b1 !important;
 color:#6396b1 !important;
   }
