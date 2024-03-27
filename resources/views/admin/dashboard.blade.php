@@ -6,6 +6,13 @@
     #demo {
         display: none;
     }
+
+    .card {
+        min-height: 231px !important;
+    }
+    .apexcharts-legend.apexcharts-align-center.position-right{
+        top: 38px !important;
+    }
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
@@ -28,45 +35,53 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-xl-4">
+                    <div class="card tasks-box">
+                        <div class="card-body">
 
-            <div class="container">
-                <div class="row">
-                    <div class="col card">
-                        <div class="apex-charts" id="chart"></div>
+                            <h4 class="card-title mb-4">Respondent Status</h4>
+                            <div class="apex-charts" id="chart"></div>
+                        </div>
                     </div>
-                    <div class="col card">
-                        <div class="apex-charts" id="chart_one"></div>
+                </div>
+                <!-- end col-->
+                <div class="col-xl-4">
+                    <div class="card tasks-box">
+                        <div class="card-body">
+
+                            <h4 class="card-title mb-4">Respondent Profile Completion</h4>
+                            <div class="apex-charts" id="chart_one"></div>
+                        </div>
                     </div>
-                    <div class="col card">
-                    <h5 class="flex mb-3 text-base text-80 font-bold">
-                        <strong>Shareable URL to join the database</strong> 
-                    </h5>
-                        <div class="min-h-90px">
-                            <p class="text-xs text-80 leading-normal">Copy below share link to share with friends and
+                </div>
+
+                <div class="col-xl-4">
+                    <div class="card tasks-box">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Shareable URL to join the database</h4>
+                            <p class="">Copy below share link to share with friends and
                                 family </p>
-                            <div class="overflow-visible max-h-90px flex relative">
-                                <input id="" class="form-control"
-                                    value="{{ URL::to('/') }}?r={{ $share_link->share_link }}" disabled>
-                                <span id="demo"> {{ URL::to('/') }}?r={{ $share_link->share_link }}</span>
-                                <br>
-                                <button class="btn btn-primary btn-block text-center rounded w-4/12 ml-2 p-3"
-                                    style="width: 96%;" onclick="copy('#demo')">Copy</button>
-                                <div id="copiedMessage" class="cmessage">
-                                    <p class="text-white">Copied to clipboard</p>
-                                </div>
+                            <div class="col-sm-12 d-flex">
+                                <input class="form-control mr-1"
+                                    value="{{ URL::to('/') }}?r={{ $share_link->share_link }}" disabled type="text"
+                                    name="SearchString" placeholder="Search">
+                                <button type="submit" class="btn btn-default btn-info"
+                                    onclick="copy('#demo')">Copy</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                
+                <!-- end col-->
             </div>
+
 
             <!-- End Page-content -->
             @include('admin.layout.footer')
             @yield('adminside-script')
             @stack('adminside-js')
-
-
             <script src="{{ asset('assets//libs/apexcharts/apexcharts.min.js') }}"></script>
             <script>
                 var options = {
@@ -163,19 +178,19 @@
                 chart.render();
 
 
-    function copy(selector) {
+                function copy(selector) {
 
-        var $temp = $("<div>");
-        $("body").append($temp);
-        $temp.attr("contenteditable", true).html($(selector).html()).select().on("focus", function() {
-            document.execCommand('selectAll', false, null);
-        }).focus();
-        document.execCommand("copy");
-        $temp.remove();
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true
-        }
-        toastr.success("Link copied");
-    }
-</script>
+                    var $temp = $("<div>");
+                    $("body").append($temp);
+                    $temp.attr("contenteditable", true).html($(selector).html()).select().on("focus", function() {
+                        document.execCommand('selectAll', false, null);
+                    }).focus();
+                    document.execCommand("copy");
+                    $temp.remove();
+                    toastr.options = {
+                        "closeButton": true,
+                        "progressBar": true
+                    }
+                    toastr.success("Link copied");
+                }
+            </script>
