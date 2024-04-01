@@ -82,7 +82,7 @@
                     <div class="foldermenu ss-overflow-y--auto ss-scrollbar--hide h-100" style="padding-bottom: 100px;">
                        
                         @foreach($folders as $folder)
-                            <div class="ss-dashboard--folder-item fx-row px-7 py-3 position--relative mb-3 @if($page==$folder->id) folder active @endif">
+                            <div class="ss-dashboard--folder-item fx-row px-7 py-3 position--relative mb-3 @if($survey->folder_id==$folder->id) folder active @endif">
                                 <div class="fx-grow-1 fx-row">
                                     <a href="{{$folder->id}}" class="waves-effect">
                                         <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--grey ss-text__line-height--medium">
@@ -129,7 +129,7 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<?php $selectedFolder = \App\Models\Folder::where(['id'=>$page])->first(); 
+<?php $selectedFolder = \App\Models\Folder::where(['id'=>$survey->folder_id])->first(); 
 $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->get();?>
 <div class="main-content1">
     <div class="page-content">
@@ -205,7 +205,7 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
                                 <div class="row no-gutters align-items-center h-100">
                                 <div class="col-6 d-none d-md-flex flex-column align-items-center justify-content-center">
                                     <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">{{$survey->questions->count()}}</h3>
-                                    <a class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Questions</a>
+                                    <a href="{{route('survey.builder',[$survey->builderID,0])}}" class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Questions</a>
                                 </div>
                                 <?php 
                                 $query="SELECT * FROM `survey_response` WHERE (`survey_id` = $survey->id) GROUP BY `response_user_id`, `survey_id`";
@@ -215,12 +215,7 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
                                     <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">{{count($responsCount)}}</h3>
                                     <a href="{{route('survey.responses',$survey->id)}}" class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Responses</a>
                                 </div>
-                                <!-- <div class="col-4 d-none d-md-flex flex-column align-items-center justify-content-center">
-                                    <div>
-                                        <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black">--</h3>
-                                    </div>
-                                    <a class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Completion Rate</a>
-                                </div> -->
+                               
                                 </div>
                             </div>
                             <?php $qus_id=0; ?>
@@ -263,7 +258,7 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
                                             </span>
                                             <ul class="ss-dropdown__main-list action_list action_list_survey" role="menu" id="ss-drop-menu-106" aria-label="Open Menu"
                                                 style="margin-top: 8px;">
-                                                <a href="{{route('survey.builder',[$survey->builderID,0])}}">
+                                                <a href="#"  data-url="{{route('survey.edit',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Edit Survey" data-title="Edit Survey" >
                                                     <li class="d-flex align-items-center py-3 my-2">
                                                         <h3 class="ss-text ss-text__size--h3 ss-text__color--black ms-4">Edit Survey</h3>
                                                     </li>

@@ -222,8 +222,29 @@ class SurveyController extends Controller
         
     }
     public function templateList(Request $request,$id){
-        $survey=Survey::where(['folder_id'=>$id,'is_deleted'=>0])->first();
-        $folders=Folder::withCount('surveycount')->get();
+        $user = Auth::guard('admin')->user();
+
+        // public folders 
+        $folderspublic=Folder::where(['folder_type'=>'public'])->withCount('surveycount')->pluck('id')->toArray();
+        $foldersprivate=Folder::where(['folder_type'=>'private'])->withCount('surveycount')->get();
+        $privateFoldres =[];
+        foreach($foldersprivate as $private){
+            $user_ids = explode(',',$private->user_ids);
+            if (in_array($user->id, $user_ids)){
+                array_push($privateFoldres,$private->id);
+            }else if($private->created_by == $user->id){
+                array_push($privateFoldres,$private->id);
+            }
+        }
+        $folders1=Folder::whereIn('id',$privateFoldres)->withCount('surveycount')->pluck('id')->toArray();
+        $folder = array_merge($folderspublic,$folders1);
+        $folders=Folder::whereIn('id',$folder)->withCount('surveycount')->get();
+        if(count($folder)>0){
+            $survey=Survey::where(['folder_id'=>$folder[0],'is_deleted'=>0])->first();
+        }else{
+            $survey=Survey::where(['folder_id'=>$id,'is_deleted'=>0])->first();
+        }
+        // Private folders 
         return view('admin.survey.template.index', compact('survey','folders'));
     }
     public function builder(Request $request,$survey,$qusID=0){
