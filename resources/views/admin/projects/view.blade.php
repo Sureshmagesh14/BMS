@@ -141,7 +141,7 @@
                     <!-- Respondent end page title -->
                     <div class="card">
                         <div class="card-body">
-                            @include('admin.table_components.respondents_table')
+                            @include('admin.table_components.respondents_table', ['project_id' => $data->id])
                         </div>
                         <!-- end card-body -->
                     </div>
@@ -194,7 +194,7 @@
             },
             columns: [
                 { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                { data: 'id',name: '#',orderable: true,searchable: true },
+                { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
                 { data: 'points',name: 'points',orderable: true,searchable: true },
                 { data: 'status_id',name: 'status_id',orderable: true,searchable: true },
                 { data: 'respondent_id',name: 'respondent_id',orderable: true,searchable: true },
@@ -245,7 +245,7 @@
             },
             "columns": [
                 { "data": "select_all" },
-                { "data": "id" },
+                { "data": "id_show" },
                 { "data": "name" },
                 { "data": "surname" },
                 { "data": "mobile" },

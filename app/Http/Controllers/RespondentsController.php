@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Respondents;
+use App\Models\Projects;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -673,6 +674,27 @@ class RespondentsController extends Controller
             $type     = 'xlsx';
 
             return view('admin.report.respondents')->with('form',$form)->with('id_value',$id_value);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function attach_respondents(Request $request){
+        try {
+            $project_id = $request->project_id;
+            $respondents = Respondents::select('respondents.id','respondents.name','respondents.surname')->whereNull('deleted_at')->take(10)->get();
+            $projects = Projects::select('projects.id','projects.name')->where('projects.id',$project_id)->first();
+            $returnHTML = view('admin.respondents.attach', compact('respondents','projects'))->render();
+
+            
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
