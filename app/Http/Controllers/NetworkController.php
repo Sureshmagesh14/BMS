@@ -228,6 +228,13 @@ class NetworkController extends Controller
                 ->addColumn('select_all', function ($all_data) {
                     return '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this,\'network_table\')" id="'.$all_data->id.'">';
                 })
+                ->addColumn('id_show', function ($all_data) {
+                    $view_route = route("networks.show",$all_data->id);
+                    return '<a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                        data-bs-original-title="View Network" class="waves-light waves-effect">
+                        '.$all_data->id.'
+                    </a>';
+                })
                 ->addColumn('name', function ($all_data) {
                     return $all_data->name;
                 })     
@@ -262,7 +269,7 @@ class NetworkController extends Controller
                         </ul>
                     </div>';
                 })
-                ->rawColumns(['select_all','action','name'])      
+                ->rawColumns(['id_show','select_all','action','name'])      
                 ->make(true);
             }
         }

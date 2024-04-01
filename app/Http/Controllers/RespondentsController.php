@@ -417,6 +417,10 @@ class RespondentsController extends Controller
                     $nestedData['inactive_until'] = $post->inactive_until ?? '-';
                     $nestedData['opeted_in'] = $post->opeted_in ?? '-';
 
+                    $nestedData['id_show'] = '<a href="'.$view_route.'" class="rounded waves-light waves-effect">
+                        '.$post->id.'
+                    </a>';
+
                     $nestedData['options'] = '<div class="col-md-2">
                         <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
                             title="Action" aria-haspopup="true" aria-expanded="false">

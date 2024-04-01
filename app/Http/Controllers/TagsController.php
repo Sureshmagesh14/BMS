@@ -227,6 +227,12 @@ class TagsController extends Controller
                     ->addColumn('select_all', function ($all_data) {
                         return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this,\'tags_table\')" id="'.$all_data->id.'">';
                     })
+                    ->addColumn('id_show', function ($all_data) {
+                        $view_route = route("tags.show",$all_data->id);
+                        return '<a href="'.$view_route.'" data-bs-original-title="View Panel" class="rounded waves-light waves-effect">
+                            '.$all_data->id.'
+                        </a>';
+                    })
                     ->addColumn('colour', function ($all_data) {
                         return '<div class=""><button type="button" class="btn waves-effect waves-light" style="background-color:'.$all_data->colour.'"><i class="uil uil-user"></i></button></div>';
                     })
@@ -264,7 +270,7 @@ class TagsController extends Controller
 
                         return $design;
                     })
-                    ->rawColumns(['select_all','action','name','colour'])      
+                    ->rawColumns(['id_show','select_all','action','name','colour'])      
                     ->make(true);
             }
         }

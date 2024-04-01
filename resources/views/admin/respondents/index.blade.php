@@ -83,7 +83,7 @@
                 },
                 "columns": [
                     { "data": "select_all" },
-                    { "data": "id" },
+                    { "data": "id_show" },
                     { "data": "name" },
                     { "data": "surname" },
                     { "data": "mobile" },

@@ -135,6 +135,12 @@ class InternalReportController extends Controller
                     $nestedData['month']   = $post->month ?? '-';
                     $nestedData['year']    = $post->year ?? '-';
                     $nestedData['count']   = $post->count ?? '-';
+
+                    $nestedData['id_show'] = '
+                            <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                data-bs-original-title="View Internal Reports" class="waves-light waves-effect">
+                                '.$post->id.'
+                            </a>';
                    
                     $nestedData['options'] = '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">

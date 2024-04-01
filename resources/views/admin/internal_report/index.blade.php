@@ -97,7 +97,7 @@
                     "type": "POST"
                 },
                 "columns": [
-                    { "data": "id" },
+                    { "data": "id_show" },
                     { "data": "user_id" },
                     { "data": "action" },
                     { "data": "type" },

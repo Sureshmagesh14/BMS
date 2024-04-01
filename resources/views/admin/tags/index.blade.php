@@ -81,7 +81,7 @@
                 },
                 columns: [
                     { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                    { data: 'id',name: '#',orderable: true,searchable: true },
+                    { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
                     { data: 'name',name: 'name',orderable: true,searchable: true },
                     { data: 'colour',name: 'colour',orderable: true,searchable: true },
                     { data: 'action',name: 'action',orderable: false,searchable: false }

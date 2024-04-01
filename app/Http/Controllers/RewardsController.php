@@ -66,6 +66,13 @@ class RewardsController extends Controller
                     ->addColumn('select_all', function ($all_data) {
                         return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this,\'rewards_table\')" id="'.$all_data->id.'">';
                     })
+                    ->addColumn('id_show', function ($all_data) {
+                        $view_route = route("view_rewards",$all_data->id);
+                        return '<a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                            data-bs-original-title="View Internal Reports" class="waves-light waves-effect">
+                            '.$all_data->id.'
+                        </a>';
+                    })
                     ->addColumn('status_id', function ($all_data) {
                         if($all_data->status_id==1){
                             return 'Pending';
@@ -100,7 +107,7 @@ class RewardsController extends Controller
                         </div>';
                         
                     })
-                    ->rawColumns(['select_all','action','status_id','respondent_id','user_id','project_id'])      
+                    ->rawColumns(['id_show','select_all','action','status_id','respondent_id','user_id','project_id'])      
                     ->make(true);
             }
         }

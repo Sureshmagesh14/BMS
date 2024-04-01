@@ -225,6 +225,13 @@ class BankController extends Controller
                 ->addColumn('select_all', function ($all_data) {
                     return '<input class="tabel_checkbox" name="banks[]" type="checkbox" onchange="table_checkbox(this,\'banks_table\')" id="'.$all_data->id.'">';
                 })
+                ->addColumn('id_show', function ($all_data) {
+                    $view_route = route("banks.show",$all_data->id);
+                    return '<a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                        data-bs-original-title="View Banks" class="rounded waves-light waves-effect">
+                        '.$all_data->id.'
+                    </a>';
+                })
                 ->addColumn('bank_name', function ($all_data) {
                     return $all_data->bank_name;
                 }) 
@@ -270,7 +277,7 @@ class BankController extends Controller
                         </ul>
                     </div>';
                 })
-                ->rawColumns(['select_all','bank_name','branch_code','active','action'])          
+                ->rawColumns(['id_show','select_all','bank_name','branch_code','active','action'])          
                 ->make(true);
             }
         }
