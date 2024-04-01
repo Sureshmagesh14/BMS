@@ -520,8 +520,7 @@ class SurveyController extends Controller
     }
     public function viewsurvey(Request $request, $id){
         $survey=Survey::with('questions')->where(['builderID'=>$id])->first();
-        $response_user_id =  Auth::guard('admin')->user()->id;
-
+        $response_user_id =  Auth::user()->id;
         $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
         if($checkresponse){
             return view('admin.survey.responseerror', compact('survey'));
@@ -551,9 +550,10 @@ class SurveyController extends Controller
     }
     public function startsurvey(Request $request, $id,$qus){
         // Check User already taken the survey 
-        $response_user_id =  Auth::guard('admin')->user()->id;
+        $response_user_id =  Auth::user()->id;
         $survey=Survey::with('questions')->where(['id'=>$id])->first();
         $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
+      
         if($checkresponse){
             return view('admin.survey.responseerror', compact('survey'));
 
@@ -571,6 +571,26 @@ class SurveyController extends Controller
     
             return view('admin.survey.response', compact('survey','question','question1','questionsset'));
         }
+        
+    }
+    public function endsurvey(Request $request, $id,$qus){
+        // Check User already taken the survey 
+        $response_user_id =  Auth::user()->id;
+        $survey=Survey::with('questions')->where(['id'=>$id])->first();
+        $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
+       
+        if($request->type == 'welcome'){
+            // Update started Count 
+            $started_count=Survey::where(['id'=>$id])->update(['started_count'=>$survey->started_count+1]);
+        }
+        
+        $question=Questions::where(['id'=>$qus])->first();
+
+        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+        
+        $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
+
+        return view('admin.survey.response', compact('survey','question','question1','questionsset'));
         
     }
 
@@ -668,7 +688,7 @@ class SurveyController extends Controller
         $next_qus = $request->next_qus;
         $user_ans=$request->user_ans;
         $skip_ans =$request->skip_ans;
-        $response_user_id =  Auth::guard('admin')->user()->id;
+        $response_user_id =  Auth::user()->id;
         $surveyres = new SurveyResponse();
         $surveyres->survey_id = $survey_id;
         $surveyres->response_user_id=$response_user_id;
@@ -932,12 +952,12 @@ class SurveyController extends Controller
             $surveyres->skip = '';
             $surveyres->deleted_at = 0;
             $surveyres->save();
-            return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
+            return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
         }
     }
 
    public static  function displaynextQus($question_id,$survey_id){
-        $response_user_id =  Auth::guard('admin')->user()->id;
+        $response_user_id =  Auth::user()->id;
         $next_qus=Questions::where('id', '>', $question_id)->where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
         if($next_qus){
             $display_logic = json_decode($next_qus->display_logic);
@@ -1226,7 +1246,7 @@ class SurveyController extends Controller
                             $surveyres->skip = '';
                             $surveyres->deleted_at = 0;
                             $surveyres->save();
-                            return redirect()->route('survey.startsurvey',[$survey_id,$next_question->id]);
+                            return redirect()->route('survey.endsurvey',[$survey_id,$next_question->id]);
                         }
 
                     }
@@ -1253,7 +1273,7 @@ class SurveyController extends Controller
             $surveyres->skip = '';
             $surveyres->deleted_at = 0;
             $surveyres->save();
-            return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
+            return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
         }
    }
    public function responses(Request $request,$survey_id)
