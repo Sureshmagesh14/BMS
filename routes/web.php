@@ -220,7 +220,7 @@ Route::post('custom-registration','CustomAuthController@customRegistration')->na
 Route::controller(SettingsController::class)->group(function(){
     Route::get('getrecentcontentid', 'getrecentcontentid')->name('getrecentcontentid');
 });
-
+Route::any('check_email_name','CommonAdminController@check_email_name')->name('check_email_name');
 
 
 require __DIR__.'/auth.php';

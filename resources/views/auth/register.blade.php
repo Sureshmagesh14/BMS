@@ -162,24 +162,39 @@
         }
     });
     $(function() {
+        var mess ='This email is already registered. Want to <a href="{{ route('login') }}">login</a> or <a href="{{ url('forgot-password') }}">recover your password?</a>';
         $('form#reg_table').validate({
             rules: {
                 email: {
                     required: true,
                     email: true,
-                    validate_email: true
+                    validate_email: true,
+                    remote: {
+                        url: '{{ route('check_email_name') }}',
+                        data: {
+                            'form_name': "regsiter"
+                        },
+                        type: "GET"
+                    }
                 },
+
                 password: {
                     required: true,
-                    minlength: 8
+                    minlength: 6
                 },
                 password_confirmation: {
                     required: true,
-                    minlength: 8,
+                    minlength: 6,
                     equalTo: "#password"
-                }
+                },
 
-            }
+
+            },
+            messages: {
+                email: {
+                    remote: mess
+                }
+            },
         });
     });
     $(function() {
@@ -192,7 +207,7 @@
                 },
                 password: {
                     required: true,
-                    minlength: 8
+                    minlength: 6
                 },
 
             }
