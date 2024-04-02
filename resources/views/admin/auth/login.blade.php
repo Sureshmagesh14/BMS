@@ -1,4 +1,11 @@
 @include('admin.auth.admin-header')
+
+<style>
+    .w-full {
+        width: 92%;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="h-full">
     <div class="px-view py-view mx-auto">
         <div class="mx-auto py-8 max-w-sm text-center text-90">
@@ -13,16 +20,18 @@
                 <path fill="#D8E3EC" d="M0 0h100v2H0z" />
             </svg>
 
-            <div class="mb-6 ">
+            <div class="mb-6">
                 <label class="block font-bold mb-2" for="email">Email Address</label>
                 <input class="form-control form-input form-input-bordered w-full" id="email" type="email"
                     name="email" value="" required autofocus>
             </div>
 
-            <div class="mb-6 ">
+            <div class="mb-6">
                 <label class="block font-bold mb-2" for="password">Password</label>
                 <input class="form-control form-input form-input-bordered w-full" id="password" type="password"
                     name="password" required>
+                <i class="toggle-hide-show fa fa-fw fa-eye-slash"></i>
+
             </div>
 
             <div class="flex mb-6">
@@ -83,6 +92,16 @@
                 return false;
             }
         }, "Please enter a valid email address.");
+
+        $(".toggle-hide-show").click(function() {
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            input = $(this).parent().find("input");
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
     </script>
 
     @if (count($errors) > 0)
