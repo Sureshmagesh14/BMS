@@ -116,15 +116,21 @@ class RewardsController extends Controller
         }
     }
 
-    public function view_rewards(Request $request){
+    public function view_rewards(string $id){
         try {
             
-            $data = Rewards::select('rewards.*','respondents.name as rname','respondents.email as remail','respondents.mobile as rmobile','users.name as uname','projects.name as pname')
-                ->join('respondents', 'respondents.id', '=', 'rewards.user_id') 
-                ->join('users', 'users.id', '=', 'rewards.user_id') 
-                ->join('projects', 'projects.id', '=', 'rewards.project_id') 
-                ->where('rewards.id',$request->id)
-                ->first();
+            $data= Rewards::select('rewards.*','respondents.name as rname','respondents.email as remail','respondents.mobile as rmobile','users.name as uname','projects.name as pname')
+            ->leftjoin('respondents', function ($joins) {
+                $joins->on('respondents.id','=','rewards.respondent_id');
+            })
+            ->leftjoin('users', function ($joins) {
+                $joins->on('users.id','=','rewards.user_id');
+            })
+            ->leftjoin('projects', function ($joins) {
+                $joins->on('projects.id','=','rewards.project_id');
+            });
+
+            $data = $data->where('rewards.id',$id)->first();
 
                 $returnHTML = view('admin.rewards.view',compact('data'))->render();
 

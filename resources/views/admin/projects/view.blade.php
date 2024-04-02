@@ -28,7 +28,25 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="mb-0" >
+                            <div class="mb-0">
+                                <div class="text-right">
+
+                                    <div class="btn-group mr-2" role="group" aria-label="First group" >
+                                      
+                                
+                                        <select name="action_1" id="action_1" class="form-control projects_table show_hided_option select_box">
+                                            <option value="">Select Action</option>
+                                            <option value="6">Update</option>
+                                            <option value="6">Deleted</option>
+                                            <option value="6">Deactivated</option>
+                                            <option value="6">Activated</option>
+                                            <option value="6">Share URL</option>
+                                        </select>
+                                    </div>
+                                
+                               
+                                   
+                                </div>
                                 <table class="table">
                                     <tbody>
                                         <tr>

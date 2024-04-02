@@ -222,8 +222,29 @@ class SurveyController extends Controller
         
     }
     public function templateList(Request $request,$id){
-        $survey=Survey::where(['folder_id'=>$id,'is_deleted'=>0])->first();
-        $folders=Folder::withCount('surveycount')->get();
+        $user = Auth::guard('admin')->user();
+
+        // public folders 
+        $folderspublic=Folder::where(['folder_type'=>'public'])->withCount('surveycount')->pluck('id')->toArray();
+        $foldersprivate=Folder::where(['folder_type'=>'private'])->withCount('surveycount')->get();
+        $privateFoldres =[];
+        foreach($foldersprivate as $private){
+            $user_ids = explode(',',$private->user_ids);
+            if (in_array($user->id, $user_ids)){
+                array_push($privateFoldres,$private->id);
+            }else if($private->created_by == $user->id){
+                array_push($privateFoldres,$private->id);
+            }
+        }
+        $folders1=Folder::whereIn('id',$privateFoldres)->withCount('surveycount')->pluck('id')->toArray();
+        $folder = array_merge($folderspublic,$folders1);
+        $folders=Folder::whereIn('id',$folder)->withCount('surveycount')->get();
+        if(count($folder)>0){
+            $survey=Survey::where(['folder_id'=>$folder[0],'is_deleted'=>0])->first();
+        }else{
+            $survey=Survey::where(['folder_id'=>$id,'is_deleted'=>0])->first();
+        }
+        // Private folders 
         return view('admin.survey.template.index', compact('survey','folders'));
     }
     public function builder(Request $request,$survey,$qusID=0){
@@ -520,8 +541,7 @@ class SurveyController extends Controller
     }
     public function viewsurvey(Request $request, $id){
         $survey=Survey::with('questions')->where(['builderID'=>$id])->first();
-        $response_user_id =  Auth::guard('admin')->user()->id;
-
+        $response_user_id =  Auth::user()->id;
         $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
         if($checkresponse){
             return view('admin.survey.responseerror', compact('survey'));
@@ -551,9 +571,10 @@ class SurveyController extends Controller
     }
     public function startsurvey(Request $request, $id,$qus){
         // Check User already taken the survey 
-        $response_user_id =  Auth::guard('admin')->user()->id;
+        $response_user_id =  Auth::user()->id;
         $survey=Survey::with('questions')->where(['id'=>$id])->first();
         $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
+      
         if($checkresponse){
             return view('admin.survey.responseerror', compact('survey'));
 
@@ -571,6 +592,26 @@ class SurveyController extends Controller
     
             return view('admin.survey.response', compact('survey','question','question1','questionsset'));
         }
+        
+    }
+    public function endsurvey(Request $request, $id,$qus){
+        // Check User already taken the survey 
+        $response_user_id =  Auth::user()->id;
+        $survey=Survey::with('questions')->where(['id'=>$id])->first();
+        $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
+       
+        if($request->type == 'welcome'){
+            // Update started Count 
+            $started_count=Survey::where(['id'=>$id])->update(['started_count'=>$survey->started_count+1]);
+        }
+        
+        $question=Questions::where(['id'=>$qus])->first();
+
+        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+        
+        $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
+
+        return view('admin.survey.response', compact('survey','question','question1','questionsset'));
         
     }
 
@@ -668,7 +709,7 @@ class SurveyController extends Controller
         $next_qus = $request->next_qus;
         $user_ans=$request->user_ans;
         $skip_ans =$request->skip_ans;
-        $response_user_id =  Auth::guard('admin')->user()->id;
+        $response_user_id =  Auth::user()->id;
         $surveyres = new SurveyResponse();
         $surveyres->survey_id = $survey_id;
         $surveyres->response_user_id=$response_user_id;
@@ -924,20 +965,25 @@ class SurveyController extends Controller
             $completed_count=Survey::where(['id'=>$survey_id])->update(['completed_count'=>$surveyRec->completed_count+1]);
             // Redirect to thank you page
             $next_qus=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
-            $surveyres = new SurveyResponse();
-            $surveyres->survey_id = $survey_id;
-            $surveyres->response_user_id = $response_user_id;
-            $surveyres->question_id = $next_qus->id;
-            $surveyres->answer = 'thankyou_submitted';
-            $surveyres->skip = '';
-            $surveyres->deleted_at = 0;
-            $surveyres->save();
-            return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
+            if($next_qus){
+                $surveyres = new SurveyResponse();
+                $surveyres->survey_id = $survey_id;
+                $surveyres->response_user_id = $response_user_id;
+                $surveyres->question_id = $next_qus->id;
+                $surveyres->answer = 'thankyou_submitted';
+                $surveyres->skip = '';
+                $surveyres->deleted_at = 0;
+                $surveyres->save();
+                return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
+            }else{
+                return redirect()->route('survey.endsurvey',[$survey_id,0]);
+            }
+           
         }
     }
 
    public static  function displaynextQus($question_id,$survey_id){
-        $response_user_id =  Auth::guard('admin')->user()->id;
+        $response_user_id =  Auth::user()->id;
         $next_qus=Questions::where('id', '>', $question_id)->where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
         if($next_qus){
             $display_logic = json_decode($next_qus->display_logic);
@@ -1218,15 +1264,22 @@ class SurveyController extends Controller
                             $surveyController->displaynextQus($next_question->id,$survey_id);
                         }else{
                             $next_question=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
-                            $surveyres = new SurveyResponse();
-                            $surveyres->survey_id = $survey_id;
-                            $surveyres->response_user_id = $response_user_id;
-                            $surveyres->question_id = $next_question->id;
-                            $surveyres->answer = 'thankyou_submitted';
-                            $surveyres->skip = '';
-                            $surveyres->deleted_at = 0;
-                            $surveyres->save();
-                            return redirect()->route('survey.startsurvey',[$survey_id,$next_question->id]);
+                            if($next_question){
+                                $surveyres = new SurveyResponse();
+                                $surveyres->survey_id = $survey_id;
+                                $surveyres->response_user_id = $response_user_id;
+                                $surveyres->question_id = $next_question->id;
+                                $surveyres->answer = 'thankyou_submitted';
+                                $surveyres->skip = '';
+                                $surveyres->deleted_at = 0;
+                                $surveyres->save();
+                                return redirect()->route('survey.endsurvey',[$survey_id,$next_question->id]);
+                            }else{
+                                
+                                    return redirect()->route('survey.endsurvey',[$survey_id,0]);
+                                
+                            }
+                            
                         }
 
                     }
@@ -1245,15 +1298,20 @@ class SurveyController extends Controller
             
             // Redirect to thank you page
             $next_qus=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
-            $surveyres = new SurveyResponse();
-            $surveyres->survey_id = $survey_id;
-            $surveyres->response_user_id = $response_user_id;
-            $surveyres->question_id = $next_qus->id;
-            $surveyres->answer = 'thankyou_submitted';
-            $surveyres->skip = '';
-            $surveyres->deleted_at = 0;
-            $surveyres->save();
-            return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
+            if($next_qus){
+                $surveyres = new SurveyResponse();
+                $surveyres->survey_id = $survey_id;
+                $surveyres->response_user_id = $response_user_id;
+                $surveyres->question_id = $next_qus->id;
+                $surveyres->answer = 'thankyou_submitted';
+                $surveyres->skip = '';
+                $surveyres->deleted_at = 0;
+                $surveyres->save();
+                return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
+            }else{
+                return redirect()->route('survey.endsurvey',[$survey_id,0]);
+            }
+         
         }
    }
    public function responses(Request $request,$survey_id)
