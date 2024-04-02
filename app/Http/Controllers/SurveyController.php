@@ -965,15 +965,20 @@ class SurveyController extends Controller
             $completed_count=Survey::where(['id'=>$survey_id])->update(['completed_count'=>$surveyRec->completed_count+1]);
             // Redirect to thank you page
             $next_qus=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
-            $surveyres = new SurveyResponse();
-            $surveyres->survey_id = $survey_id;
-            $surveyres->response_user_id = $response_user_id;
-            $surveyres->question_id = $next_qus->id;
-            $surveyres->answer = 'thankyou_submitted';
-            $surveyres->skip = '';
-            $surveyres->deleted_at = 0;
-            $surveyres->save();
-            return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
+            if($next_qus){
+                $surveyres = new SurveyResponse();
+                $surveyres->survey_id = $survey_id;
+                $surveyres->response_user_id = $response_user_id;
+                $surveyres->question_id = $next_qus->id;
+                $surveyres->answer = 'thankyou_submitted';
+                $surveyres->skip = '';
+                $surveyres->deleted_at = 0;
+                $surveyres->save();
+                return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
+            }else{
+                return redirect()->route('survey.endsurvey',[$survey_id,0]);
+            }
+           
         }
     }
 
@@ -1259,15 +1264,22 @@ class SurveyController extends Controller
                             $surveyController->displaynextQus($next_question->id,$survey_id);
                         }else{
                             $next_question=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
-                            $surveyres = new SurveyResponse();
-                            $surveyres->survey_id = $survey_id;
-                            $surveyres->response_user_id = $response_user_id;
-                            $surveyres->question_id = $next_question->id;
-                            $surveyres->answer = 'thankyou_submitted';
-                            $surveyres->skip = '';
-                            $surveyres->deleted_at = 0;
-                            $surveyres->save();
-                            return redirect()->route('survey.endsurvey',[$survey_id,$next_question->id]);
+                            if($next_question){
+                                $surveyres = new SurveyResponse();
+                                $surveyres->survey_id = $survey_id;
+                                $surveyres->response_user_id = $response_user_id;
+                                $surveyres->question_id = $next_question->id;
+                                $surveyres->answer = 'thankyou_submitted';
+                                $surveyres->skip = '';
+                                $surveyres->deleted_at = 0;
+                                $surveyres->save();
+                                return redirect()->route('survey.endsurvey',[$survey_id,$next_question->id]);
+                            }else{
+                                
+                                    return redirect()->route('survey.endsurvey',[$survey_id,0]);
+                                
+                            }
+                            
                         }
 
                     }
@@ -1286,15 +1298,20 @@ class SurveyController extends Controller
             
             // Redirect to thank you page
             $next_qus=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
-            $surveyres = new SurveyResponse();
-            $surveyres->survey_id = $survey_id;
-            $surveyres->response_user_id = $response_user_id;
-            $surveyres->question_id = $next_qus->id;
-            $surveyres->answer = 'thankyou_submitted';
-            $surveyres->skip = '';
-            $surveyres->deleted_at = 0;
-            $surveyres->save();
-            return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
+            if($next_qus){
+                $surveyres = new SurveyResponse();
+                $surveyres->survey_id = $survey_id;
+                $surveyres->response_user_id = $response_user_id;
+                $surveyres->question_id = $next_qus->id;
+                $surveyres->answer = 'thankyou_submitted';
+                $surveyres->skip = '';
+                $surveyres->deleted_at = 0;
+                $surveyres->save();
+                return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
+            }else{
+                return redirect()->route('survey.endsurvey',[$survey_id,0]);
+            }
+         
         }
    }
    public function responses(Request $request,$survey_id)
