@@ -18,7 +18,7 @@
     <input type="hidden" name="user_ids" id="user_ids" value="{{$folder->user_ids}}"/>
     <input type="hidden" name="id" id="id" value="{{$folder->id}}"/>
    
-    <div class="privateusers" style=" @if($folder->folder_type=='private') display:block; @endif;"> 
+    <div class="privateusers" style=" @if($folder->folder_type=='private') display:block @endif;"> 
     <label class="control-label">Select Users</label><span class="text-danger pl-1">*</span>
         <div class="form-group mb-0">
             <select class="select2 form-control select2-multiple" id="privateusers" name="privateusers[]" multiple="multiple" data-placeholder="Choose ...">

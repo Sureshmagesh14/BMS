@@ -42,8 +42,31 @@
                         <span class="menu-item" key="t-calendar">Users</span>
                     </a>
                 </li>
-                <?php $getfirstSurvey=\App\Models\Survey::where(['is_deleted'=>0])->orderBy("id", "asc")->first();
-                if(isset($getfirstSurvey)) $templateRoute=route('survey.template',$getfirstSurvey->folder_id); 
+                <?php 
+                $user = Auth::guard('admin')->user();
+                // public folders 
+                $folderspublic=\App\Models\Folder::where(['folder_type'=>'public'])->withCount('surveycount')->pluck('id')->toArray();
+                $foldersprivate=\App\Models\Folder::where(['folder_type'=>'private'])->withCount('surveycount')->get();
+                $privateFoldres =[];
+                foreach($foldersprivate as $private){
+                    $user_ids = explode(',',$private->user_ids);
+                    if (in_array($user->id, $user_ids)){
+                        array_push($privateFoldres,$private->id);
+                    }else if($private->created_by == $user->id){
+                        array_push($privateFoldres,$private->id);
+                    }
+                }
+                $folders1=\App\Models\Folder::whereIn('id',$privateFoldres)->withCount('surveycount')->pluck('id')->toArray();
+                $folder = array_merge($folderspublic,$folders1);
+                $folders=\App\Models\Folder::whereIn('id',$folder)->withCount('surveycount')->get();
+                if(count($folder)>0){
+                    $survey=\App\Models\Survey::where(['folder_id'=>$folder[0],'is_deleted'=>0])->first();
+                }else{
+                    $survey=\App\Models\Survey::where(['is_deleted'=>0])->orderBy("id", "asc")->first();
+                }
+
+                
+                if(isset($survey)) $templateRoute=route('survey.template',$survey->folder_id); 
                 else $templateRoute=route('survey.template',0); 
                 
                 ?>

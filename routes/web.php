@@ -182,10 +182,8 @@ Route::group([
     Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey']);
     Route::get('/survey/movesurvey/{id}', ['as' => 'survey.movesurvey','uses' => 'SurveyController@movesurvey']);
     Route::post('/survey/movesurveyupdate/{id}', ['as' => 'survey.movesurveyupdate','uses' => 'SurveyController@movesurveyupdate']);
-    Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@viewsurvey']);
 
     /* Survey Upload Image*/
-    Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.startsurvey','uses' => 'SurveyController@startsurvey']); // Start Survey
     Route::post('/survey/upload-image', ['as' => 'survey.uploadimage','uses' => 'SurveyController@uploadimage']); // Upload Image
     Route::get('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@background']); // Survey Background
     Route::post('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@setbackground']); // Survey Background
@@ -196,9 +194,7 @@ Route::group([
     Route::get('/survey/surveysettings/{id}', ['as' => 'survey.surveysettings','uses' => 'SurveyController@surveysettings']);
     Route::post('/survey/updatesettings/{id}', ['as' => 'survey.updatesettings','uses' => 'SurveyController@updatesettings']);
 
-    // Respondent Flow 
-    Route::post('/survey/submitans', ['as' => 'survey.submitans','uses' => 'SurveyController@submitans']);
-
+    
     // Survey Response 
     
     Route::get('/survey/responses/{id}', ['as' => 'survey.responses','uses' => 'SurveyController@responses']);
@@ -207,6 +203,15 @@ Route::group([
     
 
 });
+// View Survey
+Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@viewsurvey']);
+// Start Survey
+Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.startsurvey','uses' => 'SurveyController@startsurvey']); 
+// Thank you page Survey 
+Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.endsurvey','uses' => 'SurveyController@endsurvey']); 
+// Respondent Flow 
+Route::post('/survey/submitans', ['as' => 'survey.submitans','uses' => 'SurveyController@submitans']);
+
 
 // NEW
 Route::post('custom-registration','CustomAuthController@customRegistration')->name('register.custom');
