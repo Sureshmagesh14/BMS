@@ -38,7 +38,10 @@
         }
     </style>
 </head>
-<?php $qusvalue = json_decode($question->qus_ans);
+<?php 
+if(isset($question))
+$qusvalue = json_decode($question->qus_ans);
+else $qusvalue;
 $azRange = range('A', 'Z');
 $qusNo=1;
 $icon_type='';
@@ -1095,6 +1098,7 @@ $('#next_button').click(function(){
                 resp.push(res);
                 submit =1;
             }else{
+                submit = 0;
                 alert('Pls choose answ');
                 return false;
             }

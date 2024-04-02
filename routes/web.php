@@ -16,6 +16,14 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// View Survey
+Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@viewsurvey']);
+// Start Survey
+Route::any('/survey/view/{id}/{qus}', ['as' => 'survey.startsurvey','uses' => 'SurveyController@startsurvey']); 
+// Thank you page Survey 
+Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.endsurvey','uses' => 'SurveyController@endsurvey']); 
+// Respondent Flow 
+Route::post('/survey/submitans', ['as' => 'survey.submitans','uses' => 'SurveyController@submitans']);
 
 Route::any('terms','WelcomeController@terms')->name('terms');
 Route::any('admin','Auth\AdminLoginController@showLoginForm')->name('admin.showlogin'); //.....Admin Login
@@ -203,15 +211,8 @@ Route::group([
     
 
 });
-// View Survey
-Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@viewsurvey']);
-// Start Survey
-Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.startsurvey','uses' => 'SurveyController@startsurvey']); 
-// Thank you page Survey 
-Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.endsurvey','uses' => 'SurveyController@endsurvey']); 
-// Respondent Flow 
-Route::post('/survey/submitans', ['as' => 'survey.submitans','uses' => 'SurveyController@submitans']);
 
+    
 
 // NEW
 Route::post('custom-registration','CustomAuthController@customRegistration')->name('register.custom');
