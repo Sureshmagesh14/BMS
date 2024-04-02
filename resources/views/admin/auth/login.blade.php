@@ -1,9 +1,20 @@
 @include('admin.auth.admin-header')
-
 <style>
-    .w-full {
-        width: 92%;
+    .main-password {
+        position: relative;
     }
+
+    .icon-view {
+        position: absolute;
+        right: 12px;
+        top: 9px;
+    }
+
+    i.fa.fa-eye {
+        color: black;
+    }
+
+    /*Footer End*/
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="h-full">
@@ -28,9 +39,14 @@
 
             <div class="mb-6">
                 <label class="block font-bold mb-2" for="password">Password</label>
-                <input class="form-control form-input form-input-bordered w-full" id="password" type="password"
-                    name="password" required>
-                <i class="toggle-hide-show fa fa-fw fa-eye-slash"></i>
+                <div class="main-password">
+                    <input type="password" class="form-control form-input form-input-bordered w-full input-password"
+                        aria-label="password">
+                    <a href="JavaScript:void(0);" class="icon-view">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                </div>
+
 
             </div>
 
@@ -92,15 +108,30 @@
                 return false;
             }
         }, "Please enter a valid email address.");
-
-        $(".toggle-hide-show").click(function() {
-            $(this).toggleClass("fa-eye fa-eye-slash");
-            input = $(this).parent().find("input");
-            if (input.attr("type") == "password") {
-                input.attr("type", "text");
-            } else {
-                input.attr("type", "password");
-            }
+        $(document).ready(function() {
+            $('.main-password').find('.input-password').each(function(index, input) {
+                var $input = $(input);
+                $input.parent().find('.icon-view').click(function() {
+                    var change = "";
+                    if ($(this).find('i').hasClass('fa-eye')) {
+                        $(this).find('i').removeClass('fa-eye')
+                        $(this).find('i').addClass('fa-eye-slash')
+                        change = "text";
+                    } else {
+                        $(this).find('i').removeClass('fa-eye-slash')
+                        $(this).find('i').addClass('fa-eye')
+                        change = "password";
+                    }
+                    var rep = $("<input type='" + change + "' />")
+                        .attr('id', $input.attr('id'))
+                        .attr('name', $input.attr('name'))
+                        .attr('class', $input.attr('class'))
+                        .val($input.val())
+                        .insertBefore($input);
+                    $input.remove();
+                    $input = rep;
+                }).insertAfter($input);
+            });
         });
     </script>
 

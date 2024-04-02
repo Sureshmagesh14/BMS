@@ -11,6 +11,20 @@
     #login_table .error {
         color: white;
     }
+
+    .main-password {
+        position: relative;
+    }
+
+    .icon-view {
+        position: absolute;
+        right: 12px;
+        top: 9px;
+    }
+
+    i.fa.fa-eye {
+        color: black;
+    }
 </style>
 <div class="container-fluid vh-100">
     <div class="row justify-content-center align-items-center d-flex">
@@ -105,11 +119,25 @@
                     <div class="first-row">
                         <div class="date text-start w-48 my-3">
                             <label for="date">Password<span class="text-danger">*</span></label>
-                            <input type="password" name="password" id="password" placeholder="Create Password"
-                                class="form-control vi-border-clr border-radius-0" required>
-                            <input type="password" name="password_confirmation" id="password_confirmation"
-                                placeholder="Confirm/Retype Password"
-                                class="form-control vi-border-clr border-radius-0 my-2" required>
+                            <div class="main-password">
+                                <input type="password" name="password" id="password"
+                                    class="form-control vi-border-clr border-radius-0 input-password"
+                                    aria-label="password" placeholder="Create Password" required>
+                                <a href="JavaScript:void(0);" class="icon-view">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            </div>
+                            <br>
+                            <div class="main-password">
+                                <input type="password" name="password_confirmation" id="password_confirmation"
+                                    class="form-control vi-border-clr border-radius-0 input-password"
+                                    aria-label="password" placeholder="Confirm/Retype Password" required>
+                                <a href="JavaScript:void(0);" class="icon-view">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            </div>
+
+
                         </div>
                     </div>
                     <div class="submit-btn text-start">
@@ -162,7 +190,8 @@
         }
     });
     $(function() {
-        var mess ='This email is already registered. Want to <a href="{{ route('login') }}">login</a> or <a href="{{ url('forgot-password') }}">recover your password?</a>';
+        var mess =
+            'This email is already registered. Want to <a href="{{ route('login') }}">login</a> or <a href="{{ url('forgot-password') }}">recover your password?</a>';
         $('form#reg_table').validate({
             rules: {
                 email: {
@@ -232,4 +261,29 @@
         let numbers = value.replace(/[^a-zA-Z0-9 ]/g, "");
         input.value = numbers;
     }
+    $(document).ready(function() {
+        $('.main-password').find('.input-password').each(function(index, input) {
+            var $input = $(input);
+            $input.parent().find('.icon-view').click(function() {
+                var change = "";
+                if ($(this).find('i').hasClass('fa-eye')) {
+                    $(this).find('i').removeClass('fa-eye')
+                    $(this).find('i').addClass('fa-eye-slash')
+                    change = "text";
+                } else {
+                    $(this).find('i').removeClass('fa-eye-slash')
+                    $(this).find('i').addClass('fa-eye')
+                    change = "password";
+                }
+                var rep = $("<input type='" + change + "' />")
+                    .attr('id', $input.attr('id'))
+                    .attr('name', $input.attr('name'))
+                    .attr('class', $input.attr('class'))
+                    .val($input.val())
+                    .insertBefore($input);
+                $input.remove();
+                $input = rep;
+            }).insertAfter($input);
+        });
+    });
 </script>
