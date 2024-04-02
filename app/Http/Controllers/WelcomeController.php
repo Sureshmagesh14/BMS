@@ -168,13 +168,16 @@ class WelcomeController extends Controller
     public function user_surveys(Request $request){
         try {
             
+            $up_id = $request->up;
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
             
+            $data = Groups::where('id', $up_id)->first();
+
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-surveys');
+                return view('user.user-surveys',compact('data'));
            // }
            
         }
@@ -192,7 +195,7 @@ class WelcomeController extends Controller
           
             $data = Respondents::find($resp_id);
             
-            $profil = Groups::where('deleted_at', NULL)->get();
+            $profil = Groups::where('deleted_at', NULL)->orderBy('sort_order', 'ASC')->get();
 
             return view('user.user-editprofile', compact('data','profil'));
         }
