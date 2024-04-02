@@ -22,6 +22,12 @@
         top: 9px;
     }
 
+    .icon-view-login {
+        position: absolute;
+        right: 12px;
+        top: 25px;
+    }
+
     i.fa.fa-eye {
         color: black;
     }
@@ -43,8 +49,15 @@
                 <div class="my-3 w-50 m-auto text-start">
                     <label class="text-white" for="email">Password</label>
 
-                    <input type="password" placeholder="" class="form-control vi-border-clr vi-cs-textbox"
-                        name="password" required />
+                    <div class="main-password">
+                        <input type="password" name="password" id="password"
+                            class="form-control vi-border-clr vi-cs-textbox input-password" aria-label="password"
+                            required>
+                        <a href="JavaScript:void(0);" class="icon-view-login">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                    </div>
+
                 </div>
                 <div class="text-center w-50 m-auto">
                     <input type="submit" value="Login" class="btn vi-light-bg text-white py-3 px-5 w-100" />
@@ -265,6 +278,30 @@
         $('.main-password').find('.input-password').each(function(index, input) {
             var $input = $(input);
             $input.parent().find('.icon-view').click(function() {
+                var change = "";
+                if ($(this).find('i').hasClass('fa-eye')) {
+                    $(this).find('i').removeClass('fa-eye')
+                    $(this).find('i').addClass('fa-eye-slash')
+                    change = "text";
+                } else {
+                    $(this).find('i').removeClass('fa-eye-slash')
+                    $(this).find('i').addClass('fa-eye')
+                    change = "password";
+                }
+                var rep = $("<input type='" + change + "' />")
+                    .attr('id', $input.attr('id'))
+                    .attr('name', $input.attr('name'))
+                    .attr('class', $input.attr('class'))
+                    .val($input.val())
+                    .insertBefore($input);
+                $input.remove();
+                $input = rep;
+            }).insertAfter($input);
+        });
+
+        $('.main-password').find('.input-password').each(function(index, input) {
+            var $input = $(input);
+            $input.parent().find('.icon-view-login').click(function() {
                 var change = "";
                 if ($(this).find('i').hasClass('fa-eye')) {
                     $(this).find('i').removeClass('fa-eye')
