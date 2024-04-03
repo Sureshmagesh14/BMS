@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::any('/','WelcomeController@home')->name('home');
 
+// View Survey
+Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@viewsurvey']);
+// Start Survey
+Route::any('/survey/view/{id}/{qus}', ['as' => 'survey.startsurvey','uses' => 'SurveyController@startsurvey']); 
+// Thank you page Survey 
+Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.endsurvey','uses' => 'SurveyController@endsurvey']); 
+// Respondent Flow 
+Route::post('/survey/submitans', ['as' => 'survey.submitans','uses' => 'SurveyController@submitans']);
 
 Route::any('terms','WelcomeController@terms')->name('terms');
 Route::any('admin','Auth\AdminLoginController@showLoginForm')->name('admin.showlogin'); //.....Admin Login
@@ -69,6 +77,7 @@ Route::group([
         Route::get('cash_export','cash_export')->name('cash_export');     
         Route::get('export_cash','export_cash')->name('export_cash');
         Route::any('cash_multi_delete', 'CashoutsController@cash_multi_delete')->name('cash_multi_delete');
+        Route::any('cashout_export','cashout_export')->name('cashout_export'); /* Cashout_export Export */
     });
 
     /* Action Events MENU*/
@@ -96,12 +105,13 @@ Route::group([
     Route::get('gen_respondent_res_export','RespondentsController@gen_respondent_res_export')->name('gen_respondent_res_export');   
     Route::get('gen_respondent_mon_export','RespondentsController@gen_respondent_mon_export')->name('gen_respondent_mon_export');    
     Route::get('export_resp','RespondentsController@export_resp')->name('export_resp');
+    Route::any('respondents_export', 'RespondentsController@respondents_export')->name('respondents_export'); /* Respondents Export */
 
     /* Tags (or) Pannels MENU*/
     Route::resource('tags','TagsController')->name('index', 'tags.index')->name('destroy', 'tags.destroy')
         ->name('create', 'tags.create')->name('show', 'tags.show')->name('update', 'tags.update');
     Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
-    Route::get('tags_export/{id}','TagsController@tags_export')->name('tags_export'); 
+    Route::any('tags_export','TagsController@tags_export')->name('tags_export'); 
     Route::any('tags_multi_delete', 'TagsController@tags_multi_delete')->name('tags_multi_delete');
 
     /* Rewards MENU*/
@@ -181,10 +191,8 @@ Route::group([
     Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey']);
     Route::get('/survey/movesurvey/{id}', ['as' => 'survey.movesurvey','uses' => 'SurveyController@movesurvey']);
     Route::post('/survey/movesurveyupdate/{id}', ['as' => 'survey.movesurveyupdate','uses' => 'SurveyController@movesurveyupdate']);
-    Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@viewsurvey']);
 
     /* Survey Upload Image*/
-    Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.startsurvey','uses' => 'SurveyController@startsurvey']); // Start Survey
     Route::post('/survey/upload-image', ['as' => 'survey.uploadimage','uses' => 'SurveyController@uploadimage']); // Upload Image
     Route::get('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@background']); // Survey Background
     Route::post('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@setbackground']); // Survey Background
@@ -195,9 +203,7 @@ Route::group([
     Route::get('/survey/surveysettings/{id}', ['as' => 'survey.surveysettings','uses' => 'SurveyController@surveysettings']);
     Route::post('/survey/updatesettings/{id}', ['as' => 'survey.updatesettings','uses' => 'SurveyController@updatesettings']);
 
-    // Respondent Flow 
-    Route::post('/survey/submitans', ['as' => 'survey.submitans','uses' => 'SurveyController@submitans']);
-
+    
     // Survey Response 
     
     Route::get('/survey/responses/{id}', ['as' => 'survey.responses','uses' => 'SurveyController@responses']);
@@ -207,13 +213,15 @@ Route::group([
 
 });
 
+    
+
 // NEW
 Route::post('custom-registration','CustomAuthController@customRegistration')->name('register.custom');
 
 Route::controller(SettingsController::class)->group(function(){
     Route::get('getrecentcontentid', 'getrecentcontentid')->name('getrecentcontentid');
 });
-
+Route::any('check_email_name','CommonAdminController@check_email_name')->name('check_email_name');
 
 
 require __DIR__.'/auth.php';

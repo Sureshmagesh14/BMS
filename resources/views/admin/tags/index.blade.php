@@ -81,13 +81,32 @@
                 },
                 columns: [
                     { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                    { data: 'id',name: '#',orderable: true,searchable: true },
+                    { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
                     { data: 'name',name: 'name',orderable: true,searchable: true },
                     { data: 'colour',name: 'colour',orderable: true,searchable: true },
                     { data: 'action',name: 'action',orderable: false,searchable: false }
                 ]
             });
         }
+
+        $(document).on('change', '.tags_select_box', function(e) {
+            value = $(this).val();
+            form = 'tags';
+            
+            value_array = [];
+
+            if(value == 'respondents'){
+                texthead = 'Export - Respondents';
+                $("#tags_table .tabel_checkbox:checked").each(function(){
+                    value_array.push($(this).attr('id'));
+                });
+                excel_report(value, form, "{{ route('tags_export') }}", texthead, value_array);
+            }
+            else if(value == 'panels'){
+                texthead = 'Export - Panels';
+                excel_report(value, form, "{{ route('tags_export') }}", texthead, value_array);
+            }
+        });
 
         $(document).on('click', '.tags_table.delete_all', function(e) {
             e.preventDefault();
