@@ -39,6 +39,18 @@
         .surveysparrow-survey-container--classic-form{
             background:unset !important;
         }
+        a.back_to_profile {
+            display: flex;
+            justify-content: end;
+            text-decoration: none;
+        }
+        button#back_to_profile {
+            color: white;
+            background: blue;
+            border: 0px;
+            padding: 10px;
+            border-radius: 6px;
+        }
     </style>
 </head>
 <?php 
@@ -97,6 +109,11 @@ if(isset($bg)){
     <?php  $qus_url=route('survey.builder',[$survey->builderID,$question->id]); ?>
     <input type="hidden" value="{{$question->qus_type}}" id="question_type"/>
     <input type="hidden" value="" id="answered"/>
+    <a class="back_to_profile" href="{{ route('user.dashboard') }}">
+        <button id="back_to_profile">
+            <span class="ss-primary-action-btn__copy">Back to Profile</span>
+        </button>
+    </a>
         @if($question->qus_type=='welcome_page')
         <div class="surveysparrow-survey-container--classic-form welcome-page">
             <div class="ss-fp-section surveysparrow-survey-form-wrapper--centered ss-survey-background d-flex fx-column fx-jc--center fx-ai--center">
