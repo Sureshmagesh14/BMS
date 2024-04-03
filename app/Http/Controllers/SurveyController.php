@@ -586,6 +586,7 @@ class SurveyController extends Controller
     public function startsurvey(Request $request, $id,$qus){
         // Check User already taken the survey 
         $response_user_id =  Auth::user()->id;
+       
         $survey=Survey::with('questions')->where(['id'=>$id])->first();
         $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
       
@@ -606,7 +607,6 @@ class SurveyController extends Controller
     
             // Check Survey has question or not 
             $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
-            
             if(count($surveyQus)<=0){
                 return view('admin.survey.noquserror', compact('survey'));
 

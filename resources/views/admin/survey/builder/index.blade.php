@@ -869,10 +869,16 @@
                                     $skip_logic_DB = json_decode($currentQus->skip_logic); 
                                     if($skip_logic_DB!=null){
                                         $skip_logic_DB1=json_decode($skip_logic_DB->display_qus_choice_skip); 
-                                        $logic_type_value_skip=json_decode($skip_logic_DB->skiplogic_type_value_skip); 
-                                        $logic_type_value_option_skip=json_decode($skip_logic_DB->logic_type_value_option_skip); 
-                                        $skip_qus_choice_andor_skip=json_decode($skip_logic_DB->display_qus_choice_andor_skip); 
-                                        $jump_type=$skip_logic_DB->jump_type;
+                                        if($skip_logic_DB1!=null){
+                                            $logic_type_value_skip=json_decode($skip_logic_DB->skiplogic_type_value_skip); 
+                                            $logic_type_value_option_skip=json_decode($skip_logic_DB->logic_type_value_option_skip); 
+                                            $skip_qus_choice_andor_skip=json_decode($skip_logic_DB->display_qus_choice_andor_skip); 
+                                            $jump_type=$skip_logic_DB->jump_type;
+                                        }else{
+                                            $skip_logic_DB1=[]; $logic_type_value_skip=[];
+                                            $logic_type_value_option_skip=[]; $skip_qus_choice_andor_skip=[];
+                                            $jump_type='';
+                                        }
                                     }else{
                                         $skip_logic_DB1=[]; $logic_type_value_skip=[];
                                         $logic_type_value_option_skip=[]; $skip_qus_choice_andor_skip=[];
@@ -1052,34 +1058,36 @@
                                         </div>
                                     @endforeach
                                 @endif
-                                    @if($skip_logic_DB1!=null && count($skip_logic_DB1)<=0)
-                                        <div class="logic_section_skip_row">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    {{ Form::text('skip_type',"Question" , array('id'=>'skip_type','class' => 'form-control','readonly'=>true)) }}
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <div class="form-group mb-0">
-                                                        <select class="skip_qus_choice form-control" name="skip_qus_choice" data-placeholder="Choose ...">
-                                                            <option value="">Choose ...</option>
-                                                            @foreach($skip_logic as $key=>$value)
-                                                                <option value="{{$key}}">{{$value}}</option>
-                                                            @endforeach
-                                                            @foreach($skip_logic_matrix as $key=>$value) 
-                                                                <optgroup label="{{$value->question_name}}">
-                                                                    <?php $qusvalue1 = json_decode($value->qus_ans); 
-                                                                    $exiting_qus_matrix=$qusvalue1!=null ? explode(",",$qusvalue1->matrix_qus): []; $i=0; ?>
-                                                                    @foreach($exiting_qus_matrix as $key1=>$qus) 
-                                                                        <option value="{{$value->id}}_{{$key1}}">{{$qus}}</option>
-                                                                    @endforeach
-                                                                </optgroup>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
+                                @if(is_countable($skip_logic_DB1) && count($skip_logic_DB1)<=0)
+                                    <div class="logic_section_skip_row">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                {{ Form::text('skip_type',"Question" , array('id'=>'skip_type','class' => 'form-control','readonly'=>true)) }}
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group mb-0">
+                                                    <select class="skip_qus_choice form-control" name="skip_qus_choice" data-placeholder="Choose ...">
+                                                        <option value="">Choose ...</option>
+                                                        @foreach($skip_logic as $key=>$value)
+                                                            <option value="{{$key}}">{{$value}}</option>
+                                                        @endforeach
+                                                        @foreach($skip_logic_matrix as $key=>$value) 
+                                                            <optgroup label="{{$value->question_name}}">
+                                                                <?php $qusvalue1 = json_decode($value->qus_ans); 
+                                                                $exiting_qus_matrix=$qusvalue1!=null ? explode(",",$qusvalue1->matrix_qus): []; $i=0; ?>
+                                                                @foreach($exiting_qus_matrix as $key1=>$qus) 
+                                                                    <option value="{{$value->id}}_{{$key1}}">{{$qus}}</option>
+                                                                @endforeach
+                                                            </optgroup>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endif
+                                    </div>
+                                @else
+                                <p>else d</p>
+                                @endif
                                 <div class="ss-logic-row c_jump_to">
                                     <p style="margin-top: 6px;">Then Jump to</p>
                                     <select class="form-control jump_type" name="jump_type">
@@ -1648,7 +1656,7 @@ $("html body").delegate('.display_qus_choice', "change", function() {
             });
             textDiv+='</select>';
         }
-        else if(result?.qus_type=='rankorder'){
+        else if(result?.qus_type=='rankorder' || result?.qus_type=='photo_capture'){
             textDiv+='<div class="col-md-4 choice_list_sec"><input style="display:none;" class="form-control logic_type_value_option" type="text" name="logic_type_value_option"/>';
         }
         else if(result?.qus_type=='rating'){
@@ -1758,7 +1766,7 @@ $("html body").delegate('.skip_qus_choice', "change", function() {
             });
             textDiv+='</select>';
         }
-        else if(result?.qus_type=='rankorder'){
+        else if(result?.qus_type=='rankorder' || result?.qus_type=='photo_capture'){
             textDiv+='<div class="col-md-4 choice_list_sec"><input style="display:none;" class="form-control skip_logic_type_value_option" type="text" name="skip_logic_type_value_option"/>';
         }
         else if(result?.qus_type=='rating'){
