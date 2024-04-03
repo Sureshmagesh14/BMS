@@ -174,11 +174,11 @@ class WelcomeController extends Controller
             
             $data = Groups::where('id', $up_id)->first();
 
-            // if($request->user()->profile_completion_id==0){
-            //     return view('user.update-profile');
-            // }else{
+            if($request->user()->profile_completion_id==0){
+                 return view('user.update-profile');
+            }else{
                 return view('user.user-surveys',compact('data'));
-           // }
+            }
            
         }
         catch (Exception $e) {
