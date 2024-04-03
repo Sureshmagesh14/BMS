@@ -13,7 +13,7 @@ a.back_to_profile {
 }
 button#back_to_profile {
     color: white;
-    background: blue;
+    background: #4A9CA6;
     border: 0px;
     padding: 10px;
     border-radius: 6px;

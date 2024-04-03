@@ -639,7 +639,11 @@ class SurveyController extends Controller
             return view('admin.survey.noquserror', compact('survey'));
 
         }else{
-            return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+            if($qus == 0){
+                return view('admin.survey.thankyoudefault', compact('survey'));
+            }else{
+                return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+            }
         }
 
         
@@ -738,11 +742,32 @@ class SurveyController extends Controller
     public function submitans(Request $request){
         $survey_id = $request->survey_id;
         $question_id = $request->question_id;
+        $response_user_id =  Auth::user()->id;
+
         $qus_check=Questions::where('id', '=', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
+        // if($qus_check->qus_type == 'photo_capture'){
+        //     // echo $request->user_ans;
+        //     // exit;
+        //     $upload_dir = 'uploads/survey/photo_capture'; 
+        //     $img = $request->user_ans;
+        //     $img = str_replace('data:image/png;base64,', '', $img);
+        //     $img = str_replace(' ', '+', $img);
+        //     $data = base64_decode($img);
+        //     $imgname=date('Ymd_His', time()).'-user'.$response_user_id;
+        //     $file = $upload_dir.$imgname.'.png';
+        //     move_uploaded_file($temp_name,$_SERVER['DOCUMENT_ROOT']."/"."gripOffers/Store_Brand/store_admin/images/".$image);
+
+        //     echo $file;
+        //     $success = file_put_contents($file, $data);
+        //     echo $success;
+        //     exit;
+        //     $user_ans=$request->user_ans;
+        // }else{
+        //     $user_ans=$request->user_ans;
+        // }
         $next_qus = $request->next_qus;
         $user_ans=$request->user_ans;
         $skip_ans =$request->skip_ans;
-        $response_user_id =  Auth::user()->id;
         $surveyres = new SurveyResponse();
         $surveyres->survey_id = $survey_id;
         $surveyres->response_user_id=$response_user_id;
