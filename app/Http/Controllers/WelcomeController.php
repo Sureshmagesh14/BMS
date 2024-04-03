@@ -7,6 +7,7 @@ use DB;
 use Yajra\DataTables\DataTables;
 use App\Models\Respondents;
 use App\Models\Contents;
+use App\Models\Groups;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -15,10 +16,23 @@ use Illuminate\Support\Facades\Hash;
 
 class WelcomeController extends Controller
 {   
-    public function home()
+    public function home(Request $request)
     {   
         try {
-            return redirect()->route('home');
+            if($request->r!=''){
+                $referral_code = $request->r;
+            
+                $id =Session::get('resp_id');
+                $data = Respondents::find($id);
+    
+                $data =Respondents::where('referral_code', $referral_code)->first();
+                Session::put('refer_id',  $data->id);
+                
+            }else{
+                $data='';
+            }
+
+            return view('welcome', compact('data'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -118,10 +132,13 @@ class WelcomeController extends Controller
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
             
+            $data = Respondents::find($resp_id);
+            $ref_code = $data->referral_code;
+            
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-share');
+                return view('user.user-share', compact('data','ref_code'));
             //}
            
         }
@@ -151,15 +168,36 @@ class WelcomeController extends Controller
     public function user_surveys(Request $request){
         try {
             
+            $up_id = $request->up;
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
             
-            // if($request->user()->profile_completion_id==0){
-            //     return view('user.update-profile');
-            // }else{
-                return view('user.user-surveys');
-           // }
+            $data = Groups::where('id', $up_id)->first();
+
+            if($request->user()->profile_completion_id==0){
+                 return view('user.update-profile');
+            }else{
+                return view('user.user-surveys',compact('data'));
+            }
            
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    
+    public function user_editprofile(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+            
+          
+            $data = Respondents::find($resp_id);
+            
+            $profil = Groups::where('deleted_at', NULL)->orderBy('sort_order', 'ASC')->get();
+
+            return view('user.user-editprofile', compact('data','profil'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

@@ -565,7 +565,14 @@ class SurveyController extends Controller
             }else{
                 $question1=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
             }
-            return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+            // Check Survey has question or not 
+            $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
+            if(count($surveyQus)<=0){
+                return view('admin.survey.noquserror', compact('survey'));
+
+            }else{
+                return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+            }
         }
         
     }
@@ -590,7 +597,15 @@ class SurveyController extends Controller
            
             $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
     
-            return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+            // Check Survey has question or not 
+            $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
+            
+            if(count($surveyQus)<=0){
+                return view('admin.survey.noquserror', compact('survey'));
+
+            }else{
+                return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+            }
         }
         
     }
@@ -610,8 +625,16 @@ class SurveyController extends Controller
         $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
         
         $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
+        // Check Survey has question or not 
+        $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
+        
+        if(count($surveyQus)<=0){
+            return view('admin.survey.noquserror', compact('survey'));
 
-        return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+        }else{
+            return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+        }
+
         
     }
 

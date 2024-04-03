@@ -417,6 +417,10 @@ class RespondentsController extends Controller
                     $nestedData['inactive_until'] = $post->inactive_until ?? '-';
                     $nestedData['opeted_in'] = $post->opeted_in ?? '-';
 
+                    $nestedData['id_show'] = '<a href="'.$view_route.'" class="rounded waves-light waves-effect">
+                        '.$post->id.'
+                    </a>';
+
                     $nestedData['options'] = '<div class="col-md-2">
                         <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
                             title="Action" aria-haspopup="true" aria-expanded="false">
@@ -658,5 +662,20 @@ class RespondentsController extends Controller
             throw new Exception($e->getMessage());
         }
 
+    }
+
+    public function respondents_export(Request $request){
+        try {
+            $id_value = $request->id_value;
+            $form     = $request->form;
+            $from     = date('Y-m-d', strtotime($request->start));
+            $to       = date('Y-m-d', strtotime($request->end));
+            $type     = 'xlsx';
+
+            return view('admin.report.respondents')->with('form',$form)->with('id_value',$id_value);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }

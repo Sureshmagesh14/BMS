@@ -83,7 +83,7 @@
                 },
                 "columns": [
                     { "data": "select_all" },
-                    { "data": "id" },
+                    { "data": "id_show" },
                     { "data": "name" },
                     { "data": "surname" },
                     { "data": "mobile" },
@@ -101,6 +101,25 @@
                 stateSave: false,
             });
         }
+
+        $(document).on('change', '.respondents_select_box', function(e) {
+            value = $(this).val();
+            $.post("{{ route('respondents_export') }}", {
+                _token: tempcsrf,
+                id_value: value,
+                form: 'respondents'
+            },
+            function(resp, textStatus, jqXHR) {
+
+                if(resp=='Error'){
+                   console.log("Error");
+                }
+                else{
+                    console.log("resps",resp);
+                    window.location.assign("../"+resp);
+                }
+            });
+        });
 
         $(document).on('click', '#delete_respondents', function(e) {
             e.preventDefault();

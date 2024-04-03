@@ -38,9 +38,15 @@ class RewardsController extends Controller
                 $inside_form = $request->inside_form;
                 
                 $all_datas = Rewards::select('rewards.*','respondents.name as rname','respondents.email as remail','respondents.mobile as rmobile','users.name as uname','projects.name as pname')
-                    ->join('respondents', 'respondents.id', '=', 'rewards.user_id') 
-                    ->join('users', 'users.id', '=', 'rewards.user_id') 
-                    ->join('projects', 'projects.id', '=', 'rewards.project_id');
+                    ->leftjoin('respondents', function ($joins) {
+                        $joins->on('respondents.id','=','rewards.respondent_id');
+                    })
+                    ->leftjoin('users', function ($joins) {
+                        $joins->on('users.id','=','rewards.user_id');
+                    })
+                    ->leftjoin('projects', function ($joins) {
+                        $joins->on('projects.id','=','rewards.project_id');
+                    });
 
                     if(isset($request->id)){
                         if($inside_form == 'users'){
@@ -59,6 +65,13 @@ class RewardsController extends Controller
                 return Datatables::of($all_datas)
                     ->addColumn('select_all', function ($all_data) {
                         return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this,\'rewards_table\')" id="'.$all_data->id.'">';
+                    })
+                    ->addColumn('id_show', function ($all_data) {
+                        $view_route = route("view_rewards",$all_data->id);
+                        return '<a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                            data-bs-original-title="View Internal Reports" class="waves-light waves-effect">
+                            '.$all_data->id.'
+                        </a>';
                     })
                     ->addColumn('status_id', function ($all_data) {
                         if($all_data->status_id==1){
@@ -94,7 +107,7 @@ class RewardsController extends Controller
                         </div>';
                         
                     })
-                    ->rawColumns(['select_all','action','status_id','respondent_id','user_id','project_id'])      
+                    ->rawColumns(['id_show','select_all','action','status_id','respondent_id','user_id','project_id'])      
                     ->make(true);
             }
         }
@@ -103,15 +116,21 @@ class RewardsController extends Controller
         }
     }
 
-    public function view_rewards(Request $request){
+    public function view_rewards(string $id){
         try {
             
-            $data = Rewards::select('rewards.*','respondents.name as rname','respondents.email as remail','respondents.mobile as rmobile','users.name as uname','projects.name as pname')
-                ->join('respondents', 'respondents.id', '=', 'rewards.user_id') 
-                ->join('users', 'users.id', '=', 'rewards.user_id') 
-                ->join('projects', 'projects.id', '=', 'rewards.project_id') 
-                ->where('rewards.id',$request->id)
-                ->first();
+            $data= Rewards::select('rewards.*','respondents.name as rname','respondents.email as remail','respondents.mobile as rmobile','users.name as uname','projects.name as pname')
+            ->leftjoin('respondents', function ($joins) {
+                $joins->on('respondents.id','=','rewards.respondent_id');
+            })
+            ->leftjoin('users', function ($joins) {
+                $joins->on('users.id','=','rewards.user_id');
+            })
+            ->leftjoin('projects', function ($joins) {
+                $joins->on('projects.id','=','rewards.project_id');
+            });
+
+            $data = $data->where('rewards.id',$id)->first();
 
                 $returnHTML = view('admin.rewards.view',compact('data'))->render();
 

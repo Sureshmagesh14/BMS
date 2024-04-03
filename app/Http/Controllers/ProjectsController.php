@@ -318,6 +318,12 @@ class ProjectsController extends Controller
                     ->addColumn('select_all', function ($all_data) {
                         return '<input class="tabel_checkbox" name="projects[]" type="checkbox" onchange="table_checkbox(this,\'projects_table\')" id="'.$all_data->id.'">';
                     })
+                    ->addColumn('id_show', function ($all_data) {
+                        $view_route = route("projects.show",$all_data->id);
+                        return '<a href="'.$view_route.'" data-bs-original-title="View Project" class="rounded waves-light waves-effect">
+                            '.$all_data->id.'
+                        </a>';
+                    })
                     ->addColumn('numbers', function ($all_data) {
                         return $all_data->number;
                     })  
@@ -413,7 +419,7 @@ class ProjectsController extends Controller
                             }
                         }
                     })
-                    ->rawColumns(['select_all','action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
+                    ->rawColumns(['id_show','select_all','action','numbers','client','name','creator','type','reward_amount','project_link','created','status'])      
                     ->make(true);
             }
         }

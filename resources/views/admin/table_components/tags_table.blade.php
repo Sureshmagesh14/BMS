@@ -2,13 +2,26 @@
 
     {{-- <a class="dropdown-item" href="{{ url('tags_export/xlsx') }}">Panels</a> --}}
     <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group mr-2 tags_table hided_option" role="group" aria-label="First group" style="display: none;">
-            <select name="tags_filter" id="tags_filter" class="form-control">
+        <div class="btn-group mr-2" role="group" aria-label="First group" >
+            <select name="action_2" id="action_2" class="form-control tags_table hided_option tags_select_box" style="display:none;">
                 <option value="">Select Action</option>
-                <option value="1">Import - Respondents</option>
-                <option value="2">Export - Respondents</option>
+                <optgroup label="Respondents">
+                    <option value="respondents">Export - Respondents</option>
+                </optgroup>
+                <optgroup label="Standalone Actions">
+                    {{-- <option value="2">Import - Respondents</option> --}}
+                    <option value="panels">Export - Pannels</option>
+                </optgroup>
+            </select>
+
+            <select name="action_1" id="action_1" class="form-control tags_table show_hided_option tags_select_box">
+                <option value="">Select Action</option>
+                {{-- <option value="2">Import - Respondents</option> --}}
+                <option value="panels">Export - Pannels</option>
             </select>
         </div>
+
+        
         
         @if (Auth::guard('admin')->user()->role_id == 1)
             <div class="btn-group mr-2" role="group" aria-label="Second group">
