@@ -2,6 +2,9 @@
 <head>
     <link href="{{ asset('assets/css/preview.css') }}" rel="stylesheet" type="text/css" />
     <style>
+        ul#sortable {
+            list-style: none;
+        }
         .disabled.ss-primary-action-btn {
             opacity: 0.3 !important;
         }
@@ -457,40 +460,44 @@ if(isset($bg)){
                                         <input type="hidden" id="rank_order_value" value="{{implode(',',$exiting_choices)}}"/>
                                         <input type="hidden" id="dropdowncount" value="{{$dropdowncount}}"/>
                                         <div class="rank-order-container rank_option_container" id="rank_order_container">
-                                            @foreach($exiting_choices as $key=>$choice)
-                                                <div data-id="{{$key+1}}" id="rank_option_{{$key+1}}" class="rank_option ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;">
-                                                    <div class="ss-option--rank-order__data">
-                                                        <span class="ss-option--rank-order__drag-handle-icon">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16">
-                                                                <circle cx="2" cy="2" r="2" fill="currentColor"></circle>
-                                                                <circle cx="2" cy="8" r="2" fill="currentColor"></circle>
-                                                                <circle cx="2" cy="14" r="2" fill="currentColor"></circle>
-                                                                <circle cx="8" cy="2" r="2" fill="currentColor"></circle>
-                                                                <circle cx="8" cy="8" r="2" fill="currentColor"></circle>
-                                                                <circle cx="8" cy="14" r="2" fill="currentColor"></circle>
-                                                            </svg>
-                                                        </span>
-                                                        <p class="choice_text">{{$choice}}</p>
-                                                    </div>
-                                                    <span class="rankorderkey_option ss-option--rank-order__select-wrap">
-                                                        <div class="css-1pcexqc-container">
-                                                            <div class="css-bg1rzq-control ss-option--rank-order-react-select__control">
-                                                                <div class="css-1hwfws3 ss-option--rank-order-react-select__value-container ss-option--rank-order-react-select__value-container--has-value">
-                                                                    <select class="rankorderkey" data-value="{{$key+1}}" name="rankorderkey" id="rankorderkey{{$key+1}}">
-                                                                        @for($i=1; $i<=$dropdowncount; $i++)
-                                                                            @if($key+1==$i)
-                                                                            <option value="{{$i}}" selected>{{$i}}</option>
-                                                                            @else
-                                                                            <option value="{{$i}}">{{$i}}</option>
-                                                                            @endif
-                                                                        @endfor
-                                                                    </select>
-                                                                </div>
+                                            <!-- <ul id="sortable"> -->
+                                                @foreach($exiting_choices as $key=>$choice)
+                                                    <!-- <li draggable="true"> -->
+                                                        <div  draggable="true" data-id="{{$key+1}}" id="rank_option_{{$key+1}}" class="rank_option ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;">
+                                                            <div class="ss-option--rank-order__data">
+                                                                <span class="ss-option--rank-order__drag-handle-icon">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16">
+                                                                        <circle cx="2" cy="2" r="2" fill="currentColor"></circle>
+                                                                        <circle cx="2" cy="8" r="2" fill="currentColor"></circle>
+                                                                        <circle cx="2" cy="14" r="2" fill="currentColor"></circle>
+                                                                        <circle cx="8" cy="2" r="2" fill="currentColor"></circle>
+                                                                        <circle cx="8" cy="8" r="2" fill="currentColor"></circle>
+                                                                        <circle cx="8" cy="14" r="2" fill="currentColor"></circle>
+                                                                    </svg>
+                                                                </span>
+                                                                <p class="choice_text">{{$choice}}</p>
                                                             </div>
+                                                            <span class="rankorderkey_option ss-option--rank-order__select-wrap">
+                                                                <div class="css-1pcexqc-container">
+                                                                    <div class="css-bg1rzq-control ss-option--rank-order-react-select__control">
+                                                                        <div class="css-1hwfws3 ss-option--rank-order-react-select__value-container ss-option--rank-order-react-select__value-container--has-value">
+                                                                            <select class="rankorderkey" data-value="{{$key+1}}" name="rankorderkey" id="rankorderkey{{$key+1}}">
+                                                                                @for($i=1; $i<=$dropdowncount; $i++)
+                                                                                    @if($key+1==$i)
+                                                                                    <option value="{{$i}}" selected>{{$i}}</option>
+                                                                                    @else
+                                                                                    <option value="{{$i}}">{{$i}}</option>
+                                                                                    @endif
+                                                                                @endfor
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </span>
                                                         </div>
-                                                    </span>
-                                                </div>
-                                            @endforeach
+                                                    <!-- </li> -->
+                                                @endforeach
+                                            <!-- </ul> -->
                                         </div>
                                     </div>
                                     <div class="ss_cl_qstn_action disabled {{$question->qus_type}}_action">
@@ -979,6 +986,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }else{
         array=[];
     }
+    // var elem='<ul id="sortable">';
     var elem='';
     array.forEach((value,key)=>{
         let val1=key+1;
@@ -992,17 +1000,24 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 optionval+='<option value='+v+'>'+v+'</option>';
             } 
         }
-        elem+='<div class="rank_option ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;"><div class="ss-option--rank-order__data"><span class="ss-option--rank-order__drag-handle-icon"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16"><circle cx="2" cy="2" r="2" fill="currentColor"></circle><circle cx="2" cy="8" r="2" fill="currentColor"></circle><circle cx="2" cy="14" r="2" fill="currentColor"></circle><circle cx="8" cy="2" r="2" fill="currentColor"></circle><circle cx="8" cy="8" r="2" fill="currentColor"></circle><circle cx="8" cy="14" r="2" fill="currentColor"></circle></svg></span><p class="choice_text">'+value+'</p></div><span class="rankorderkey_option ss-option--rank-order__select-wrap"><div class="css-1pcexqc-container"><div class="css-bg1rzq-control ss-option--rank-order-react-select__control"><div class="css-1hwfws3 ss-option--rank-order-react-select__value-container ss-option--rank-order-react-select__value-container--has-value"><select onchange="changepos(`'+value+'`,event)"  class="rankorderkey" name="rankorderkey">'+optionval+'</select></div></div></div></span></div>';
+        elem+='<div  draggable="true" class="rank_option ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;"><div class="ss-option--rank-order__data"><span class="ss-option--rank-order__drag-handle-icon"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16"><circle cx="2" cy="2" r="2" fill="currentColor"></circle><circle cx="2" cy="8" r="2" fill="currentColor"></circle><circle cx="2" cy="14" r="2" fill="currentColor"></circle><circle cx="8" cy="2" r="2" fill="currentColor"></circle><circle cx="8" cy="8" r="2" fill="currentColor"></circle><circle cx="8" cy="14" r="2" fill="currentColor"></circle></svg></span><p class="choice_text">'+value+'</p></div><span class="rankorderkey_option ss-option--rank-order__select-wrap"><div class="css-1pcexqc-container"><div class="css-bg1rzq-control ss-option--rank-order-react-select__control"><div class="css-1hwfws3 ss-option--rank-order-react-select__value-container ss-option--rank-order-react-select__value-container--has-value"><select onchange="changepos(`'+value+'`,event)"  class="rankorderkey" name="rankorderkey">'+optionval+'</select></div></div></div></span></div>';
     });
+    elem+='';
     if(elem!='')
     document.getElementById('rank_order_container').innerHTML = elem;
 });
 function changepos(val,event){
     const index = array.indexOf(val);
     if (index > -1) { 
-    array.splice(index, 1); 
+        array.splice(index, 1); 
     }
-    array.splice(event.target.value-1, 0, val);
+    let eventValue;
+    if(event.target!=undefined){
+        eventValue = event.target.value;
+    }else{
+       eventValue = event;
+    }
+    array.splice(eventValue-1, 0, val);
     var elem='';
     array.forEach((value,key)=>{
         let val1=key+1;
@@ -1015,8 +1030,9 @@ function changepos(val,event){
                 optionval+='<option value='+v+'>'+v+'</option>';
             } 
         }
-        elem+='<div class="rank_option ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;"><div class="ss-option--rank-order__data"><span class="ss-option--rank-order__drag-handle-icon"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16"><circle cx="2" cy="2" r="2" fill="currentColor"></circle><circle cx="2" cy="8" r="2" fill="currentColor"></circle><circle cx="2" cy="14" r="2" fill="currentColor"></circle><circle cx="8" cy="2" r="2" fill="currentColor"></circle><circle cx="8" cy="8" r="2" fill="currentColor"></circle><circle cx="8" cy="14" r="2" fill="currentColor"></circle></svg></span><p class="choice_text">'+value+'</p></div><span class="rankorderkey_option ss-option--rank-order__select-wrap"><div class="css-1pcexqc-container"><div class="css-bg1rzq-control ss-option--rank-order-react-select__control"><div class="css-1hwfws3 ss-option--rank-order-react-select__value-container ss-option--rank-order-react-select__value-container--has-value"><select onchange="changepos(`'+value+'`,event)"  class="rankorderkey" name="rankorderkey">'+optionval+'</select></div></div></div></span></div>';
+        elem+='<div  draggable="true" class="rank_option ss-option--rank-order ss-answer-option--bg-only ss-answer-option--border ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-option--rank-order--ios" style="opacity: 1;"><div class="ss-option--rank-order__data"><span class="ss-option--rank-order__drag-handle-icon"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="none" viewBox="0 0 10 16"><circle cx="2" cy="2" r="2" fill="currentColor"></circle><circle cx="2" cy="8" r="2" fill="currentColor"></circle><circle cx="2" cy="14" r="2" fill="currentColor"></circle><circle cx="8" cy="2" r="2" fill="currentColor"></circle><circle cx="8" cy="8" r="2" fill="currentColor"></circle><circle cx="8" cy="14" r="2" fill="currentColor"></circle></svg></span><p class="choice_text">'+value+'</p></div><span class="rankorderkey_option ss-option--rank-order__select-wrap"><div class="css-1pcexqc-container"><div class="css-bg1rzq-control ss-option--rank-order-react-select__control"><div class="css-1hwfws3 ss-option--rank-order-react-select__value-container ss-option--rank-order-react-select__value-container--has-value"><select onchange="changepos(`'+value+'`,event)"  class="rankorderkey" name="rankorderkey">'+optionval+'</select></div></div></div></span></div>';
     });
+    elem+='';
     document.getElementById('rank_order_container').innerHTML = elem;
 }
 
@@ -1119,5 +1135,68 @@ $('#skip_button').click(function(){
     $('#skip_ans').val('yes');
     $('#skip_qus').submit();
 });
+</script>
+<script>
+    // Script.js
+    const sortableList = document.getElementById("rank_order_container");
+    let draggedItem = null;
+
+    sortableList.addEventListener(
+        "dragstart",
+        (e) => {
+            draggedItem = e.target;
+            setTimeout(() => {
+                e.target.style.display =
+                    "none";
+            }, 0);
+        });
+
+    sortableList.addEventListener(
+        "dragend",
+        (e) => {
+            setTimeout(() => {
+                let text = draggedItem.querySelectorAll('.choice_text');
+                changepos(text[0].innerHTML,$(draggedItem).index()+1);
+                console.log($(draggedItem).index(),'draggedItem')
+                e.target.style.display = "";
+                draggedItem = null;
+            }, 0);
+        });
+
+    sortableList.addEventListener(
+        "dragover",
+        (e) => {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(sortableList, e.clientY);
+            const currentElement = document.querySelector(".dragging");
+            if (afterElement == null) {
+                sortableList.appendChild(draggedItem);
+            }
+            else {
+                sortableList.insertBefore(draggedItem,afterElement);
+            }
+        });
+
+    const getDragAfterElement = (container, y) => {
+        const draggableElements = [...container.querySelectorAll("div:not(.dragging)"),];
+        return draggableElements.reduce(
+            (closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if ( offset < 0 && offset > closest.offset) {
+                    return {
+                        offset: offset,
+                        element: child,
+                    };
+                }
+                else {
+                    return closest;
+                }
+            },
+            {
+                offset: Number.NEGATIVE_INFINITY,
+            }
+        ).element;
+    };
 </script>
 </html>
