@@ -122,6 +122,8 @@
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="3" fill="transparent"></rect><rect x="7.5" y="7.5" width="17" height="7" stroke="#63686F"></rect><path d="M18 10L20 11.5L22 10" stroke="#63686F"></path><line x1="11" y1="17.5" x2="25" y2="17.5" stroke="#63686F"></line><line x1="11" y1="20.5" x2="25" y2="20.5" stroke="#63686F"></line><line x1="11" y1="23.5" x2="25" y2="23.5" stroke="#63686F"></line></svg>
                             @elseif($qus->qus_type=='picturechoice')
                             <svg height="32" width="32" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect height="32" width="32" fill="transparent" rx="3"></rect><rect height="17" width="17" stroke="#63686F" x="7.5" y="7.5"></rect><circle cx="13" cy="13" r="2.5" stroke="#63686F"></circle><path d="M8 24L14 20L16.5 22.5M17 20.5L20 18L24.5 22" stroke="#63686F"></path></svg>
+                            @elseif($qus->qus_type=='photo_capture')
+                            <svg width="32" height="32" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.32344 3.07344L9.98604 3.73604C10.0969 3.84686 10.2472 3.90911 10.4039 3.90911H11.9318C12.2453 3.90911 12.5459 4.03363 12.7675 4.25526C12.9891 4.47689 13.1137 4.77749 13.1137 5.09093V10.4091C13.1137 10.7226 12.9891 11.0232 12.7675 11.2448C12.5459 11.4664 12.2453 11.5909 11.9318 11.5909H3.65911C3.34568 11.5909 3.04508 11.4664 2.82344 11.2448C2.60181 11.0232 2.47729 10.7226 2.47729 10.4091V5.09093C2.47729 4.77749 2.60181 4.47689 2.82344 4.25526C3.04508 4.03363 3.34568 3.90911 3.65911 3.90911H5.18708C5.3438 3.90911 5.4941 3.84686 5.60491 3.73604L6.26751 3.07344C6.37725 2.9637 6.50753 2.87665 6.65092 2.81726C6.79431 2.75786 6.94799 2.72729 7.10319 2.72729H8.48777C8.64297 2.72729 8.79665 2.75786 8.94003 2.81726C9.08342 2.87665 9.2137 2.9637 9.32344 3.07344Z" stroke="#63686F" stroke-width="0.886364" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.79552 9.81821C9.10092 9.81821 10.1592 8.75998 10.1592 7.45458C10.1592 6.14918 9.10092 5.09094 7.79552 5.09094C6.49012 5.09094 5.43188 6.14918 5.43188 7.45458C5.43188 8.75998 6.49012 9.81821 7.79552 9.81821Z" stroke="#63686F" stroke-width="0.886364" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.3705 5.68181C11.3705 5.68765 11.3687 5.69336 11.3655 5.69821C11.3622 5.70306 11.3576 5.70684 11.3522 5.70907C11.3468 5.7113 11.3409 5.71188 11.3352 5.71074C11.3294 5.7096 11.3242 5.70679 11.3201 5.70266C11.3159 5.69853 11.3131 5.69327 11.312 5.68754C11.3108 5.68181 11.3114 5.67587 11.3136 5.67048C11.3159 5.66508 11.3197 5.66046 11.3245 5.65722C11.3294 5.65397 11.3351 5.65223 11.3409 5.65222C11.3448 5.65222 11.3486 5.65298 11.3522 5.65446C11.3558 5.65595 11.3591 5.65813 11.3618 5.66088C11.3646 5.66363 11.3668 5.66689 11.3683 5.67048C11.3697 5.67407 11.3705 5.67792 11.3705 5.68181" stroke="#63686F" stroke-width="0.886364" stroke-linecap="round" stroke-linejoin="round"></path></svg>        
                             @elseif($qus->qus_type=='email')
                             <svg height="32" width="32" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect height="32" width="32" fill="transparent" rx="3"></rect><path d="M24.0001 8L13.2827 18.7174" stroke="#63686F" stroke-linecap="round"></path><path d="M16.6087 25L13.2826 18.7174L7 15.3913L24 8L16.6087 25Z" stroke="#63686F" stroke-linecap="round"></path></svg>
                             @elseif($qus->qus_type=='matrix_qus')
@@ -376,6 +378,7 @@
                             
                         </div>
                     @endif
+                   
                     @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
                         <div class="modal-body">
                                 <div>
@@ -426,6 +429,20 @@
                                     </div>
                                 </div>
                                 <div class="ss_row--builder ss-paddding--top-bottom"><div class="opinion-scale-container ss-paddding--top-bottom"><div class="opinion-scale-box"><div class="label label--start"><p id="left_lable_text">{{$left_label}}</p></div><div class="label label--middle"><p id="middle_lable_text">{{$middle_label}}</p></div><div class="label label--end"><p id="right_lable_text">{{$right_label}}</p></div><div class="scale-element"><span>1</span></div><div class="scale-element"><span>2</span></div><div class="scale-element"><span>3</span></div><div class="scale-element"><span>4</span></div><div class="scale-element"><span>5</span></div><div class="scale-element"><span>6</span></div><div class="scale-element"><span>7</span></div><div class="scale-element"><span>8</span></div><div class="scale-element"><span>9</span></div></div></div></div>
+                                @endif
+                                @if($currentQus->qus_type=='photo_capture')
+                                    <div class="ss-camera-input upload_wrapper">
+                                            <button class="answer-option--file-input ss-answer-option--bg-only ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--primary ss-survey-border-width--thin ss-survey-border-style--dashed ss-survey-border-color--primary-02" type="button" id="camera_btn">
+                                                <input type="file" accept="image/*" capture="camera" style="display: none;">
+                                                <svg stroke="#0D1B1E" class="" width="84" height="84" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M15.0858 4.58579L16.2071 5.70711C16.3946 5.89464 16.649 6 16.9142 6H19.5C20.0304 6 20.5391 6.21071 20.9142 6.58579C21.2893 6.96086 21.5 7.46957 21.5 8V17C21.5 17.5304 21.2893 18.0391 20.9142 18.4142C20.5391 18.7893 20.0304 19 19.5 19H5.5C4.96957 19 4.46086 18.7893 4.08579 18.4142C3.71071 18.0391 3.5 17.5304 3.5 17V8C3.5 7.46957 3.71071 6.96086 4.08579 6.58579C4.46086 6.21071 4.96957 6 5.5 6H8.08579C8.351 6 8.60535 5.89464 8.79289 5.70711L9.91421 4.58579C10.0999 4.40007 10.3204 4.25275 10.5631 4.15224C10.8057 4.05173 11.0658 4 11.3284 4H13.6716C13.9342 4 14.1943 4.05173 14.4369 4.15224C14.6796 4.25275 14.9001 4.40007 15.0858 4.58579Z" stroke="#63686F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M12.5 16C14.7091 16 16.5 14.2091 16.5 12C16.5 9.79086 14.7091 8 12.5 8C10.2909 8 8.5 9.79086 8.5 12C8.5 14.2091 10.2909 16 12.5 16Z" stroke="#63686F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M18.5501 9.00008C18.5501 9.00997 18.5471 9.01962 18.5416 9.02784C18.5361 9.03605 18.5283 9.04245 18.5192 9.04622C18.51 9.05 18.5 9.05098 18.4903 9.04905C18.4806 9.04712 18.4717 9.04235 18.4647 9.03536C18.4577 9.02837 18.453 9.01947 18.451 9.00978C18.4491 9.00008 18.4501 8.99004 18.4539 8.9809C18.4576 8.97177 18.464 8.96396 18.4723 8.95846C18.4805 8.95297 18.4901 8.95002 18.5 8.95001C18.5066 8.95 18.5131 8.95129 18.5192 8.95381C18.5253 8.95632 18.5308 8.96001 18.5354 8.96466C18.5401 8.96931 18.5438 8.97483 18.5463 8.98091C18.5488 8.98699 18.5501 8.99351 18.5501 9.00008" stroke="#63686F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                                <p>Camera</p>
+                                            </button>
+                                        </div>
+                                    </div>
                                 @endif
                                 @if($currentQus->qus_type=='rating')
                                 <input type="hidden" value="{{$icon_type}}" id="icon_type" name="icon_type"/>
@@ -600,6 +617,7 @@
                                 <?php //echo $currentQus->qus_type; ?>
                         </div>
                     @endif
+                    
                     <input type="hidden" name="qus_id" id="qus_id" value="{{$currentQus->id}}">
                     <input type="hidden" name="qus_type" id="qus_type" value="{{$currentQus->qus_type}}">
                     <!-- Display Logic  -->
@@ -724,6 +742,9 @@
                                                                     case 'picturechoice':
                                                                         $resp_logic_type_display_value=json_decode($qusvalue_display->choices_list);
                                                                         $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                        break;
+                                                                    case 'photo_capture':
+                                                                        $resp_logic_type_display=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                         break;
                                                                     case 'open_qus':
                                                                         $resp_logic_type_display=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
@@ -859,6 +880,7 @@
 
                                     }
                                 ?>
+                                @if($skip_logic_DB1!=null)
                                     @foreach($skip_logic_DB1 as $key=>$v1)
                                         <?php 
                                         // echo $key;
@@ -946,6 +968,9 @@
                                                                 $resp_logic_type_skip_value=json_decode($qusvalue_skip->choices_list);
                                                                 $resp_logic_type_skip=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                 break;
+                                                            case 'photo_capture':
+                                                                $resp_logic_type_skip=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                break;
                                                             case 'open_qus':
                                                                 $resp_logic_type_skip=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
                                                                 break; 
@@ -1026,7 +1051,8 @@
                                             @endif
                                         </div>
                                     @endforeach
-                                    @if(count($skip_logic_DB1)<=0)
+                                @endif
+                                    @if($skip_logic_DB1!=null && count($skip_logic_DB1)<=0)
                                         <div class="logic_section_skip_row">
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -1369,7 +1395,7 @@ function sectactivequs(id,type,url){
     window.location.href=url+"?pagetype="+pagetype;
 }
 function qustype(type){
-    let qusset={'welcome_page':'Welcome Page','single_choice':'Single Choice','multi_choice':'Multi Choice','open_qus':'Open Questions','likert':'Likert scale','rankorder':'Rank Order','rating':'Rating','dropdown':'Dropdown','picturechoice':'Picture Choice','email':'Email','matrix_qus':'Matrix Question','thank_you':'Thank You Page'};
+    let qusset={'welcome_page':'Welcome Page','single_choice':'Single Choice','multi_choice':'Multi Choice','open_qus':'Open Questions','likert':'Likert scale','rankorder':'Rank Order','rating':'Rating','dropdown':'Dropdown','picturechoice':'Picture Choice','photo_capture':'Photo Capture','email':'Email','matrix_qus':'Matrix Question','thank_you':'Thank You Page'};
 }
 $('input[type=radio][name=open_qus_choice]').change(function() {
     if(this.value=='single'){
