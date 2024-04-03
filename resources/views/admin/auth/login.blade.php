@@ -40,8 +40,8 @@
             <div class="mb-6">
                 <label class="block font-bold mb-2" for="password">Password</label>
                 <div class="main-password">
-                    <input type="password" class="form-control form-input form-input-bordered w-full input-password"
-                        aria-label="password">
+                    <input type="password" id="password" name="password" class="form-control form-input form-input-bordered w-full input-password"
+                    aria-label="password">
                     <a href="JavaScript:void(0);" class="icon-view">
                         <i class="fa fa-eye"></i>
                     </a>
