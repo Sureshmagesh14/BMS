@@ -223,6 +223,7 @@ class SurveyController extends Controller
         
     }
     public function templateList(Request $request,$id){
+       
         $user = Auth::guard('admin')->user();
 
         // public folders 
@@ -240,13 +241,14 @@ class SurveyController extends Controller
         $folders1=Folder::whereIn('id',$privateFoldres)->withCount('surveycount')->pluck('id')->toArray();
         $folder = array_merge($folderspublic,$folders1);
         $folders=Folder::whereIn('id',$folder)->withCount('surveycount')->get();
-        if(count($folder)>0){
-            $survey=Survey::where(['folder_id'=>$folder[0],'is_deleted'=>0])->first();
-        }else{
+        // if(count($folder)>0){
+        //     $survey=Survey::where(['folder_id'=>$folder[0],'is_deleted'=>0])->first();
+        // }else{
             $survey=Survey::where(['folder_id'=>$id,'is_deleted'=>0])->first();
-        }
+        // }
         // Private folders 
-        return view('admin.survey.template.index', compact('survey','folders'));
+        $folderActive = Folder::where(['id'=>$id])->first();
+        return view('admin.survey.template.index', compact('survey','folders','folderActive'));
     }
     public function builder(Request $request,$survey,$qusID=0){
         // Generatre builder ID
@@ -486,6 +488,7 @@ class SurveyController extends Controller
                     'left_label'=>$request->left_label,
                     'middle_label'=>$request->middle_label,
                     'right_label'=>$request->right_label,
+                    'likert_range'=>$request->likert_range,
                     'question_name'=>$request->question_name
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
@@ -549,39 +552,44 @@ class SurveyController extends Controller
     }
     public function viewsurvey(Request $request, $id){
         $survey=Survey::with('questions')->where(['builderID'=>$id])->first();
-        $response_user_id =  Auth::user()->id;
-        $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
-        if($checkresponse){
-            return view('admin.survey.responseerror', compact('survey'));
-
+        if (Auth::check()) {
+            $response_user_id =  Auth::user()->id;
+            $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
+            if($checkresponse){
+                return view('admin.survey.responseerror', compact('survey'));
+            }else{
+                // Update Visited Count 
+                $visited_count=Survey::where(['builderID'=>$id])->update(['visited_count'=>$survey->visited_count+1]);
+    
+                $questions=Questions::where(['survey_id'=>$survey->id])->whereIn('qus_type',['welcome_page','thank_you'])->get();
+                $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
+                if($welcomQus){
+                    $question=$welcomQus;
+                }else{
+                    $question=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+                }
+                $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+    
+                $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+                if($question1){
+                    $question1=$question1;
+                }else{
+                    $question1=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
+                }
+                // Check Survey has question or not 
+                $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
+                if(count($surveyQus)<=0){
+                    return view('admin.survey.noquserror', compact('survey'));
+    
+                }else{
+                    return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+                }
+            }
         }else{
-            // Update Visited Count 
-            $visited_count=Survey::where(['builderID'=>$id])->update(['visited_count'=>$survey->visited_count+1]);
+            return view('admin.survey.autherror', compact('survey'));
 
-            $questions=Questions::where(['survey_id'=>$survey->id])->whereIn('qus_type',['welcome_page','thank_you'])->get();
-            $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
-            if($welcomQus){
-                $question=$welcomQus;
-            }else{
-                $question=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
-            }
-            $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
-
-            $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
-            if($question1){
-                $question1=$question1;
-            }else{
-                $question1=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
-            }
-            // Check Survey has question or not 
-            $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
-            if(count($surveyQus)<=0){
-                return view('admin.survey.noquserror', compact('survey'));
-
-            }else{
-                return view('admin.survey.response', compact('survey','question','question1','questionsset'));
-            }
         }
+      
         
     }
     public function startsurvey(Request $request, $id,$qus){
@@ -1433,7 +1441,88 @@ class SurveyController extends Controller
                         }else{
                             $output = '-';
                         }
-                        if($qus->qus_type == 'matrix_qus'){
+                        if($qus->qus_type == 'likert'){
+                            $qusvalue = json_decode($qus->qus_ans);
+                            $left_label='Least Likely';
+                            $middle_label='Netural';
+                            $right_label='Most Likely';
+                            $likert_range = 10;
+                            if(isset($qusvalue->right_label)){
+                                $right_label=$qusvalue->right_label;
+                            }
+                            if(isset($qusvalue->middle_label)){
+                                $middle_label=$qusvalue->middle_label;
+                            }
+                            if(isset($qusvalue->likert_range)){
+                                $likert_range=$qusvalue->likert_range;
+                            }
+                            if(isset($qusvalue->left_label)){
+                                $left_label=$qusvalue->left_label;
+                            }
+                            $output = intval($output);
+                            $likert_label = $output;
+                            if($likert_range <= 4 && $output <= 4){
+                                if($output == 1 || $output == 2){
+                                    $likert_label = $left_label;
+                                }else{
+                                    $likert_label = $right_label;
+                                }
+                            }else if($likert_range >= 5 && $output >=5){
+                                if($likert_range == 5){
+                                    if($output == 1 || $output == 2){
+                                        $likert_label = $left_label;
+                                    }else if($output == 3){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 4 || $output == 5){
+                                        $likert_label = $right_label;
+                                    }
+                                }else if($likert_range == 6){
+                                    if($output == 1 || $output == 2){
+                                        $likert_label = $left_label;
+                                    }else if($output == 3 || $output == 4){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 5 || $output == 6){
+                                        $likert_label = $right_label;
+                                    }
+                                }else if($likert_range == 7){
+                                    if($output == 1 || $output == 2){
+                                        $likert_label = $left_label;
+                                    }else if($output == 3 || $output == 4 || $output == 5){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 6 || $output == 7){
+                                        $likert_label = $right_label;
+                                    }
+                                }else if($likert_range == 8){
+                                    if($output == 1 || $output == 2 || $output == 3){
+                                        $likert_label = $left_label;
+                                    }else if($output == 4 || $output == 5){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 6 || $output == 7 || $output == 8){
+                                        $likert_label = $right_label;
+                                    }
+                                }else if($likert_range == 9){
+                                    if($output == 1 || $output == 2 || $output == 3){
+                                        $likert_label = $left_label;
+                                    }else if($output == 4 || $output == 5 || $output == 6){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 7 || $output == 8 || $output == 9){
+                                        $likert_label = $right_label;
+                                    }
+                                }else if($likert_range == 10){
+                                    if($output == 1 || $output == 2 || $output == 3){
+                                        $likert_label = $left_label;
+                                    }else if($output == 4 || $output == 5 || $output == 6 || $output == 7){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 8 || $output == 9 || $output == 10){
+                                        $likert_label = $right_label;
+                                    }
+                                }
+                            }
+                            $tempresult = [$qus->question_name => $likert_label];
+                            $result[$qus->question_name]= $likert_label;
+
+                        }
+                        else if($qus->qus_type == 'matrix_qus'){
                             $output = json_decode($output);
                             foreach($output as $op){
                                 $tempresult = [$op->qus =>$op->ans];

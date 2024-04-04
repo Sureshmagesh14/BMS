@@ -216,6 +216,8 @@
                     $left_label='Least Likely';
                     $middle_label='Netural';
                     $right_label='Most Likely';
+                    $likert_range = 10;
+                    $likert_scale = [4,5,6,7,8,9,10];
                     if(isset($qusvalue->question_name)){
                         $qus_name=$qusvalue->question_name; 
                     } else if(isset($currentQus->question_name)){
@@ -229,6 +231,9 @@
                     }
                     if(isset($qusvalue->middle_label)){
                         $middle_label=$qusvalue->middle_label;
+                    }
+                    if(isset($qusvalue->likert_range)){
+                        $likert_range=$qusvalue->likert_range;
                     }
                     if(isset($qusvalue->left_label)){
                         $left_label=$qusvalue->left_label;
@@ -415,6 +420,7 @@
                                 @endif
                                 @if($currentQus->qus_type=='likert')
                                 <div class="row">
+                                    
                                     <div class="col-md-4">
                                         {{ Form::label('left_label','Left label',['class'=>'form-label']) }}
                                         {{ Form::text('left_label', $left_label , array('id'=>'left_label','class' => 'form-control','placeholder'=>'Left Label')) }}
@@ -428,7 +434,43 @@
                                         {{ Form::text('right_label', $right_label , array('id'=>'right_label','class' => 'form-control','placeholder'=>'Right Label')) }}
                                     </div>
                                 </div>
-                                <div class="ss_row--builder ss-paddding--top-bottom"><div class="opinion-scale-container ss-paddding--top-bottom"><div class="opinion-scale-box"><div class="label label--start"><p id="left_lable_text">{{$left_label}}</p></div><div class="label label--middle"><p id="middle_lable_text">{{$middle_label}}</p></div><div class="label label--end"><p id="right_lable_text">{{$right_label}}</p></div><div class="scale-element"><span>1</span></div><div class="scale-element"><span>2</span></div><div class="scale-element"><span>3</span></div><div class="scale-element"><span>4</span></div><div class="scale-element"><span>5</span></div><div class="scale-element"><span>6</span></div><div class="scale-element"><span>7</span></div><div class="scale-element"><span>8</span></div><div class="scale-element"><span>9</span></div></div></div></div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {{ Form::label('likert_range','Likert Range',['class'=>'form-label']) }}
+                                        <select id="likert_range" class="likert_range form-control" name="likert_range" data-placeholder="Choose ...">
+                                            @foreach($likert_scale as $scale)
+                                                <option value="{{$scale}}" @if($scale==$likert_range) selected @endif>{{$scale}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="ss_row--builder ss-paddding--top-bottom">
+                                    <div class="opinion-scale-container ss-paddding--top-bottom">
+                                        <div class="opinion-scale-box" id="likert_scale_option">
+                                            <div class="label label--start">
+                                                <p id="left_lable_text">{{$left_label}}</p>
+                                            </div>
+                                            @if($likert_range != 4)
+                                            <div class="label label--middle">
+                                                <p id="middle_lable_text">{{$middle_label}}</p>
+                                            </div>
+                                            @endif
+                                            <div class="label label--end">
+                                                <p id="right_lable_text">{{$right_label}}</p>
+                                            </div>
+                                            <div class="scale-element"><span>1</span></div>
+                                            <div class="scale-element"><span>2</span></div>
+                                            <div class="scale-element"><span>3</span></div>
+                                            <div class="scale-element"><span>4</span></div>
+                                            @if($likert_range >=5)<div class="scale-element"><span>5</span></div>@endif
+                                            @if($likert_range >=6)<div class="scale-element"><span>6</span></div>@endif
+                                            @if($likert_range >=7)<div class="scale-element"><span>7</span></div>@endif
+                                            @if($likert_range >=8)<div class="scale-element"><span>8</span></div>@endif
+                                            @if($likert_range >=9)<div class="scale-element"><span>9</span></div>@endif
+                                            @if($likert_range >=10)<div class="scale-element"><span>10</span></div>@endif
+                                        </div>
+                                    </div>
+                                </div>
                                 @endif
                                 @if($currentQus->qus_type=='photo_capture')
                                     <div class="ss-camera-input upload_wrapper">
@@ -1824,6 +1866,35 @@ $("html body").delegate('.logic_type_value_skip', "change", function() {
     }else{
         $(this).parent().siblings().first().css('display','block')
     }
+});
+$('#likert_range').change(function(e){
+    let output_start ='<div class="label label--start"><p id="left_lable_text">'+$('#left_label').val()+'</p></div>';
+    let output_mid ='<div class="label label--middle"><p id="middle_lable_text">'+$('#middle_label').val()+'</p></div>';
+    let output_end= '<div class="label label--end"><p id="right_lable_text">'+$('#right_label').val()+'</p></div>';
+    let output='';
+    if($(this).val() == 4){
+    output=output_start+output_end+'<div class="scale-element"><span>1</span></div><div class="scale-element"><span>2</span></div><div class="scale-element"><span>3</span></div><div class="scale-element"><span>4</span></div>';
+    }else{
+        output=output_start+output_mid+output_end+'<div class="scale-element"><span>1</span></div><div class="scale-element"><span>2</span></div><div class="scale-element"><span>3</span></div><div class="scale-element"><span>4</span></div><div class="scale-element"><span>5</span></div>';
+        if($(this).val() >= 6){
+            output+='<div class="scale-element"><span>6</span></div>';
+        }
+        if($(this).val() >= 7){
+            output+='<div class="scale-element"><span>7</span></div>';
+        }
+        if($(this).val() >= 8){
+            output+='<div class="scale-element"><span>8</span></div>';
+        }
+        if($(this).val() >= 9){
+            output+='<div class="scale-element"><span>9</span></div>';
+        }
+        if($(this).val() >= 10){
+            output+='<div class="scale-element"><span>10</span></div>';
+        }
+    }
+    $('#likert_scale_option').html(output);
+
+console.log($(this).val(),'likert_scale_option')
 });
 // Skip Logic
 </script>

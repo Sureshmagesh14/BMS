@@ -2,6 +2,15 @@
 <head>
     <link href="{{ asset('assets/css/preview.css') }}" rel="stylesheet" type="text/css" />
     <style>
+        .likert_scale_label {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+        }
+        .likert_scale_container{
+            display: flex;
+            flex-direction: column !important;
+        }
         .capture-photo {
             display: flex;
             gap: 10px;
@@ -74,6 +83,8 @@ $icon_type='';
 $left_label='Least Likely';
 $middle_label='Netural';
 $right_label='Most Likely';
+$likert_range = 10;
+
 if(isset($qusvalue->icon_type)){
     $icon_type=$qusvalue->icon_type;
 }
@@ -90,6 +101,10 @@ if(isset($qusvalue->middle_label)){
 }
 if(isset($qusvalue->left_label)){
     $left_label=$qusvalue->left_label;
+}
+
+if(isset($qusvalue->likert_range)){
+    $likert_range=$qusvalue->likert_range;
 }
 // Survey Background 
 $bg=json_decode($survey->background); 
@@ -488,21 +503,34 @@ if(isset($bg)){
                                     </div>
                                 </div><span class="ss_span_wrapper">
                                     <div class="ss_options_container">
-                                        <div class="ss_rating_container ss_component_animated">
+                                        <div class="ss_rating_container ss_component_animated likert_scale_container">
                                             <div class="ss_rating_input--classic">
                                                 <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">1</button>
-                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--min-label">{{$left_label}}</label>
                                                 <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >2</button>
                                                 <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >3</button>
                                                 <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">4</button>
-                                                <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >5</button>
-                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--middle-label">{{$middle_label}}</label>
-                                                <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">6</button>
-                                                <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">7</button>
-                                                <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">8</button>
-                                                <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >9</button>
-                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--max-label">{{$right_label}}</label>
+                                                @if($likert_range>=5)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >5</button>@endif
+                                                @if($likert_range>=6)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">6</button>@endif
+                                                @if($likert_range>=7)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">7</button>@endif
+                                                @if($likert_range>=8)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">8</button>@endif
+                                                @if($likert_range>=9)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >9</button>@endif
+                                                @if($likert_range>=10)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >10</button>@endif
 
+                                            </div>
+                                            <div class="likert_scale_label">
+                                                @if($likert_range<=4)
+                                                <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--middle-label">{{$middle_label}}</label></div>
+
+                                                <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--max-label">{{$right_label}}</label></div>
+                                                    
+                                                @elseif($likert_range>=5)
+                                                <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--middle-label">{{$middle_label}}</label></div>
+
+                                                <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--min-label">{{$left_label}}</label></div>
+                                                                                            
+                                                <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--max-label">{{$right_label}}</label></div>
+                                                    
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
