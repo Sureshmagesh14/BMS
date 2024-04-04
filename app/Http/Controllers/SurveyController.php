@@ -8,6 +8,7 @@ use App\Models\Folder;
 use App\Models\Survey;
 use App\Models\Questions;
 use App\Models\Users;
+use App\Models\Respondents;
 use App\Models\SurveyResponse;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
@@ -1413,7 +1414,7 @@ class SurveyController extends Controller
                 $finalResult =[];
 
                 foreach($surveyResponseUsers as $userID){
-                    $user = User::where('id', '=' , $userID)->first();
+                    $user = Respondents::where('id', '=' , $userID)->first();
                     $starttime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "asc")->first();
                     $endtime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
                     $startedAt = $starttime->created_at;
@@ -1446,6 +1447,10 @@ class SurveyController extends Controller
                             }
                             $tempresult = [$qus->question_name =>implode(',',$ordering)];
                             $result[$qus->question_name]=implode(',',$ordering);
+                        }else if($qus->qus_type == 'photo_capture'){
+                            $img = "<a target='_blank' href='$output'><img class='photo_capture' src='$output'/></a>";
+                            $tempresult = [$qus->question_name =>$img];
+                            $result[$qus->question_name]=$img;
                         }else{
                             $tempresult = [$qus->question_name =>$output];
                             $result[$qus->question_name]=$output;
@@ -1456,7 +1461,8 @@ class SurveyController extends Controller
                 }
 
       
-            return Datatables::of($finalResult)->make(true);
+            return Datatables::of($finalResult)->escapeColumns([])
+            ->make(true);
             }
         }
         catch (Exception $e) {

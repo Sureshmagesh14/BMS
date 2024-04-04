@@ -2,7 +2,12 @@
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
-<style>.card-body{overflow:auto}</style>
+<style>.card-body{overflow:auto}
+img.photo_capture {
+    width: 60px;
+    height: 50px;
+    object-fit: contain;
+}</style>
 
 <!-- ============================================================== -->
 <!-- Start right Content here -->
