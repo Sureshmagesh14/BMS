@@ -8,6 +8,7 @@ use App\Models\Folder;
 use App\Models\Survey;
 use App\Models\Questions;
 use App\Models\Users;
+use App\Models\Respondents;
 use App\Models\SurveyResponse;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
@@ -262,7 +263,7 @@ class SurveyController extends Controller
         }else{
             $currentQus=Questions::where(['id'=>$qusID])->first();
         }
-        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
         $qus_type='';
         if($currentQus){
             $qus_type=$questionTypes[$currentQus->qus_type];
@@ -310,9 +311,9 @@ class SurveyController extends Controller
     public function questiontype(Request $request,$survey){
         $checkSurvey= Questions::where(['survey_id'=>$survey,'qus_type'=>'welcome_page'])->first();
         if($checkSurvey){
-            $questionTypes=['single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+            $questionTypes=['single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page'];
         }else{
-            $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+            $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
         }
         return view('admin.survey.builder.create', compact('questionTypes','survey'));
 
@@ -399,7 +400,7 @@ class SurveyController extends Controller
         $questions=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
         $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
         $thankQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->get();
-        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
         $qus_type=$questionTypes[$currentQus->qus_type];
         $pagetype=$request->pagetype;
 
@@ -520,6 +521,13 @@ class SurveyController extends Controller
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
+            case 'photo_capture':
+                $json=[
+                    'choices_type'=>'photo_capture',
+                    'question_name'=>$request->question_name
+                ];
+                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                break;
             case 'email':
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>'email']);
                 break;
@@ -579,6 +587,7 @@ class SurveyController extends Controller
     public function startsurvey(Request $request, $id,$qus){
         // Check User already taken the survey 
         $response_user_id =  Auth::user()->id;
+       
         $survey=Survey::with('questions')->where(['id'=>$id])->first();
         $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
       
@@ -599,7 +608,6 @@ class SurveyController extends Controller
     
             // Check Survey has question or not 
             $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
-            
             if(count($surveyQus)<=0){
                 return view('admin.survey.noquserror', compact('survey'));
 
@@ -632,7 +640,11 @@ class SurveyController extends Controller
             return view('admin.survey.noquserror', compact('survey'));
 
         }else{
-            return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+            if($qus == 0){
+                return view('admin.survey.thankyoudefault', compact('survey'));
+            }else{
+                return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+            }
         }
 
         
@@ -681,6 +693,9 @@ class SurveyController extends Controller
             case 'picturechoice':
                 $resp_logic_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
+            case 'photo_capture':
+                $resp_logic_type=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
             case 'email':
                 $resp_logic_type=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
                 break;
@@ -728,11 +743,32 @@ class SurveyController extends Controller
     public function submitans(Request $request){
         $survey_id = $request->survey_id;
         $question_id = $request->question_id;
+        $response_user_id =  Auth::user()->id;
+
         $qus_check=Questions::where('id', '=', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
+        // if($qus_check->qus_type == 'photo_capture'){
+        //     // echo $request->user_ans;
+        //     // exit;
+        //     $upload_dir = 'uploads/survey/photo_capture'; 
+        //     $img = $request->user_ans;
+        //     $img = str_replace('data:image/png;base64,', '', $img);
+        //     $img = str_replace(' ', '+', $img);
+        //     $data = base64_decode($img);
+        //     $imgname=date('Ymd_His', time()).'-user'.$response_user_id;
+        //     $file = $upload_dir.$imgname.'.png';
+        //     move_uploaded_file($temp_name,$_SERVER['DOCUMENT_ROOT']."/"."gripOffers/Store_Brand/store_admin/images/".$image);
+
+        //     echo $file;
+        //     $success = file_put_contents($file, $data);
+        //     echo $success;
+        //     exit;
+        //     $user_ans=$request->user_ans;
+        // }else{
+        //     $user_ans=$request->user_ans;
+        // }
         $next_qus = $request->next_qus;
         $user_ans=$request->user_ans;
         $skip_ans =$request->skip_ans;
-        $response_user_id =  Auth::user()->id;
         $surveyres = new SurveyResponse();
         $surveyres->survey_id = $survey_id;
         $surveyres->response_user_id=$response_user_id;
@@ -1340,7 +1376,7 @@ class SurveyController extends Controller
    public function responses(Request $request,$survey_id)
     {
         try {
-
+            $survey = Survey::with('folder')->where(['id'=>$survey_id])->first();
             $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you','matrix_qus'])->get();
             $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
 
@@ -1359,7 +1395,7 @@ class SurveyController extends Controller
                     array_push($cols,$data);
                 }
             }
-            return view('admin.survey.survey.responses',compact('question','responses','survey_id','cols'));
+            return view('admin.survey.survey.responses',compact('survey','question','responses','survey_id','cols'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -1378,7 +1414,7 @@ class SurveyController extends Controller
                 $finalResult =[];
 
                 foreach($surveyResponseUsers as $userID){
-                    $user = User::where('id', '=' , $userID)->first();
+                    $user = Respondents::where('id', '=' , $userID)->first();
                     $starttime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "asc")->first();
                     $endtime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
                     $startedAt = $starttime->created_at;
@@ -1411,6 +1447,10 @@ class SurveyController extends Controller
                             }
                             $tempresult = [$qus->question_name =>implode(',',$ordering)];
                             $result[$qus->question_name]=implode(',',$ordering);
+                        }else if($qus->qus_type == 'photo_capture'){
+                            $img = "<a target='_blank' href='$output'><img class='photo_capture' src='$output'/></a>";
+                            $tempresult = [$qus->question_name =>$img];
+                            $result[$qus->question_name]=$img;
                         }else{
                             $tempresult = [$qus->question_name =>$output];
                             $result[$qus->question_name]=$output;
@@ -1421,7 +1461,8 @@ class SurveyController extends Controller
                 }
 
       
-            return Datatables::of($finalResult)->make(true);
+            return Datatables::of($finalResult)->escapeColumns([])
+            ->make(true);
             }
         }
         catch (Exception $e) {
