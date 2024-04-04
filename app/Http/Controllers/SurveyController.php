@@ -240,11 +240,11 @@ class SurveyController extends Controller
         $folders1=Folder::whereIn('id',$privateFoldres)->withCount('surveycount')->pluck('id')->toArray();
         $folder = array_merge($folderspublic,$folders1);
         $folders=Folder::whereIn('id',$folder)->withCount('surveycount')->get();
-        if(count($folder)>0){
-            $survey=Survey::where(['folder_id'=>$folder[0],'is_deleted'=>0])->first();
-        }else{
+        // if(count($folder)>0){
+        //     $survey=Survey::where(['folder_id'=>$folder[0],'is_deleted'=>0])->first();
+        // }else{
             $survey=Survey::where(['folder_id'=>$id,'is_deleted'=>0])->first();
-        }
+        // }
         // Private folders 
         return view('admin.survey.template.index', compact('survey','folders'));
     }
