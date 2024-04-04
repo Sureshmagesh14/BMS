@@ -77,6 +77,7 @@ Route::group([
         Route::get('cash_export','cash_export')->name('cash_export');     
         Route::get('export_cash','export_cash')->name('export_cash');
         Route::any('cash_multi_delete', 'CashoutsController@cash_multi_delete')->name('cash_multi_delete');
+        Route::any('cashout_export','cashout_export')->name('cashout_export'); /* Cashout_export Export */
     });
 
     /* Action Events MENU*/
@@ -104,12 +105,13 @@ Route::group([
     Route::get('gen_respondent_res_export','RespondentsController@gen_respondent_res_export')->name('gen_respondent_res_export');   
     Route::get('gen_respondent_mon_export','RespondentsController@gen_respondent_mon_export')->name('gen_respondent_mon_export');    
     Route::get('export_resp','RespondentsController@export_resp')->name('export_resp');
+    Route::any('respondents_export', 'RespondentsController@respondents_export')->name('respondents_export'); /* Respondents Export */
 
     /* Tags (or) Pannels MENU*/
     Route::resource('tags','TagsController')->name('index', 'tags.index')->name('destroy', 'tags.destroy')
         ->name('create', 'tags.create')->name('show', 'tags.show')->name('update', 'tags.update');
     Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
-    Route::get('tags_export/{id}','TagsController@tags_export')->name('tags_export'); 
+    Route::any('tags_export','TagsController@tags_export')->name('tags_export'); 
     Route::any('tags_multi_delete', 'TagsController@tags_multi_delete')->name('tags_multi_delete');
 
     /* Rewards MENU*/
@@ -219,7 +221,7 @@ Route::post('custom-registration','CustomAuthController@customRegistration')->na
 Route::controller(SettingsController::class)->group(function(){
     Route::get('getrecentcontentid', 'getrecentcontentid')->name('getrecentcontentid');
 });
-
+Route::any('check_email_name','CommonAdminController@check_email_name')->name('check_email_name');
 
 
 require __DIR__.'/auth.php';

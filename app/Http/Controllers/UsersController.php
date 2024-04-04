@@ -265,6 +265,11 @@ class UsersController extends Controller
                 ->addColumn('select_all', function ($all_data) {
                     return '<input class="tabel_checkbox" name="rewards[]" type="checkbox" onchange="table_checkbox(this,\'user_table\')" id="'.$all_data->id.'">';
                 })
+                ->addColumn('id_show', function ($all_data) {
+                    $view_route = route("users.show",$all_data->id);
+                    return '<a href="'.$view_route.'" class="rounded waves-light waves-effect">'.$all_data->id.'
+                    </a>';
+                })
                 ->addColumn('name', function ($all_data) {
                     return $all_data->name;
                 })  
@@ -359,7 +364,7 @@ class UsersController extends Controller
                         }
                     }
                 })
-                ->rawColumns(['select_all','action','name','surname','id_passport','email','role_id','share_link','status_id'])      
+                ->rawColumns(['id_show','select_all','action','name','surname','id_passport','email','role_id','share_link','status_id'])      
                 ->make(true);
             }
         }

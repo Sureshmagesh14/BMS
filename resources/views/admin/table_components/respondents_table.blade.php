@@ -14,23 +14,23 @@
             <optgroup label="Respondent">
                 <option value="1">Status > Activate</option>
                 <option value="2">Status > Deactivate</option>
-                <option value="2">Status > Opt-Out</option>
-                <option value="3">Export - Simple Database</option>
-                <option value="3">Export - Normal Database</option>
-                <option value="3">Export - Extended Database</option>
+                <option value="3">Status > Opt-Out</option>
+                <option value="4">Export - Simple Database</option>
+                <option value="5">Export - Normal Database</option>
+                <option value="6">Export - Extended Database</option>
             </optgroup>
             <optgroup label="Standalone Actions">
-                <option value="6">Export - Deactivated Respondents</option>
-                <option value="6">Import - Old Respondents</option>
-                <option value="6">Updates imports with file</option>
+                <option value="7">Export - Deactivated Respondents</option>
+                {{-- <option value="8">Import - Old Respondents</option> --}}
+                {{-- <option value="9">Updates imports with file</option> --}}
             </optgroup>
         </select>
 
         <select name="action_1" id="action_1" class="form-control respondents_datatable show_hided_option respondents_select_box">
             <option value="">Select Action</option>
-            <option value="6">Export - Deactivated Respondents</option>
-            <option value="6">Import - Old Respondents</option>
-            <option value="6">Updates imports with file</option>
+            <option value="7">Export - Deactivated Respondents</option>
+            {{-- <option value="8">Import - Old Respondents</option> --}}
+            {{-- <option value="9">Updates imports with file</option> --}}
         </select>
     </div>
 

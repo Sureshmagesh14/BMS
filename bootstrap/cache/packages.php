@@ -71,6 +71,13 @@
       0 => 'Termwind\\Laravel\\TermwindServiceProvider',
     ),
   ),
+  's-ichikawa/laravel-sendgrid-driver' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Sichikawa\\LaravelSendgridDriver\\SendgridTransportServiceProvider',
+    ),
+  ),
   'spatie/laravel-ignition' => 
   array (
     'providers' => 
