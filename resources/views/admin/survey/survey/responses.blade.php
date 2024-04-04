@@ -21,11 +21,13 @@ img.photo_capture {
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h4 class="mb-0">Responses</h4>
+                        <h4 class="mb-0">{{$survey->title}} - Responses</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href=" {{ route('admin.dashboard') }}">Dashboards</a></li>
-                                <li class="breadcrumb-item active">Responses</li>
+                                <li class="breadcrumb-item"><a href=" {{ route('survey.template',$survey->folder->id) }}">{{$survey->folder->folder_name}}</a></li>
+                                <li class="breadcrumb-item"><a href=" {{ route('survey.builder',[$survey->builderID,0]) }}">{{$survey->title}}</a></li>
+                                <li class="breadcrumb-item">Responses</li>
                             </ol>
                         </div>
                     </div>

@@ -1376,7 +1376,7 @@ class SurveyController extends Controller
    public function responses(Request $request,$survey_id)
     {
         try {
-
+            $survey = Survey::with('folder')->where(['id'=>$survey_id])->first();
             $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you','matrix_qus'])->get();
             $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
 
@@ -1395,7 +1395,7 @@ class SurveyController extends Controller
                     array_push($cols,$data);
                 }
             }
-            return view('admin.survey.survey.responses',compact('question','responses','survey_id','cols'));
+            return view('admin.survey.survey.responses',compact('survey','question','responses','survey_id','cols'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
