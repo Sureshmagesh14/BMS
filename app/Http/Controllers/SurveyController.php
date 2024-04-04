@@ -223,6 +223,7 @@ class SurveyController extends Controller
         
     }
     public function templateList(Request $request,$id){
+       
         $user = Auth::guard('admin')->user();
 
         // public folders 
@@ -246,7 +247,8 @@ class SurveyController extends Controller
             $survey=Survey::where(['folder_id'=>$id,'is_deleted'=>0])->first();
         // }
         // Private folders 
-        return view('admin.survey.template.index', compact('survey','folders'));
+        $folderActive = Folder::where(['id'=>$id])->first();
+        return view('admin.survey.template.index', compact('survey','folders','folderActive'));
     }
     public function builder(Request $request,$survey,$qusID=0){
         // Generatre builder ID
