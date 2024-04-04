@@ -488,6 +488,7 @@ class SurveyController extends Controller
                     'left_label'=>$request->left_label,
                     'middle_label'=>$request->middle_label,
                     'right_label'=>$request->right_label,
+                    'likert_range'=>$request->likert_range,
                     'question_name'=>$request->question_name
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
@@ -1440,7 +1441,88 @@ class SurveyController extends Controller
                         }else{
                             $output = '-';
                         }
-                        if($qus->qus_type == 'matrix_qus'){
+                        if($qus->qus_type == 'likert'){
+                            $qusvalue = json_decode($qus->qus_ans);
+                            $left_label='Least Likely';
+                            $middle_label='Netural';
+                            $right_label='Most Likely';
+                            $likert_range = 10;
+                            if(isset($qusvalue->right_label)){
+                                $right_label=$qusvalue->right_label;
+                            }
+                            if(isset($qusvalue->middle_label)){
+                                $middle_label=$qusvalue->middle_label;
+                            }
+                            if(isset($qusvalue->likert_range)){
+                                $likert_range=$qusvalue->likert_range;
+                            }
+                            if(isset($qusvalue->left_label)){
+                                $left_label=$qusvalue->left_label;
+                            }
+                            $output = intval($output);
+                            $likert_label = $output;
+                            if($likert_range <= 4 && $output <= 4){
+                                if($output == 1 || $output == 2){
+                                    $likert_label = $left_label;
+                                }else{
+                                    $likert_label = $right_label;
+                                }
+                            }else if($likert_range >= 5 && $output >=5){
+                                if($likert_range == 5){
+                                    if($output == 1 || $output == 2){
+                                        $likert_label = $left_label;
+                                    }else if($output == 3){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 4 || $output == 5){
+                                        $likert_label = $right_label;
+                                    }
+                                }else if($likert_range == 6){
+                                    if($output == 1 || $output == 2){
+                                        $likert_label = $left_label;
+                                    }else if($output == 3 || $output == 4){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 5 || $output == 6){
+                                        $likert_label = $right_label;
+                                    }
+                                }else if($likert_range == 7){
+                                    if($output == 1 || $output == 2){
+                                        $likert_label = $left_label;
+                                    }else if($output == 3 || $output == 4 || $output == 5){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 6 || $output == 7){
+                                        $likert_label = $right_label;
+                                    }
+                                }else if($likert_range == 8){
+                                    if($output == 1 || $output == 2 || $output == 3){
+                                        $likert_label = $left_label;
+                                    }else if($output == 4 || $output == 5){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 6 || $output == 7 || $output == 8){
+                                        $likert_label = $right_label;
+                                    }
+                                }else if($likert_range == 9){
+                                    if($output == 1 || $output == 2 || $output == 3){
+                                        $likert_label = $left_label;
+                                    }else if($output == 4 || $output == 5 || $output == 6){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 7 || $output == 8 || $output == 9){
+                                        $likert_label = $right_label;
+                                    }
+                                }else if($likert_range == 10){
+                                    if($output == 1 || $output == 2 || $output == 3){
+                                        $likert_label = $left_label;
+                                    }else if($output == 4 || $output == 5 || $output == 6 || $output == 7){
+                                        $likert_label = $middle_label;
+                                    }else if($output == 8 || $output == 9 || $output == 10){
+                                        $likert_label = $right_label;
+                                    }
+                                }
+                            }
+                            $tempresult = [$qus->question_name => $likert_label];
+                            $result[$qus->question_name]= $likert_label;
+
+                        }
+                        else if($qus->qus_type == 'matrix_qus'){
                             $output = json_decode($output);
                             foreach($output as $op){
                                 $tempresult = [$op->qus =>$op->ans];
