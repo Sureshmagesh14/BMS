@@ -83,11 +83,10 @@
                        
                         @foreach($folders as $folder)
                         <?php $className =""; 
-                        if(isset($survey)){
-                            if($survey->folder_id == $folder->id){
-                                $className =" folder active";
-                            }
-                        } ?>
+                        if($folderActive->id == $folder->id){
+                            $className =" folder active";
+                        }
+                        ?>
                             <div class="ss-dashboard--folder-item fx-row px-7 py-3 position--relative mb-3 {{$className}}">
                                 <div class="fx-grow-1 fx-row">
                                     <a href="{{$folder->id}}" class="waves-effect">
@@ -136,11 +135,8 @@
 <!-- Start right Content here -->
 <!-- ============================================================== -->
 <?php 
-if($survey){
-    $selectedFolder = \App\Models\Folder::where(['id'=>$survey->folder_id])->first(); 
-}else{
-    $selectedFolder = \App\Models\Folder::first(); 
-}
+$selectedFolder = \App\Models\Folder::where(['id'=>$folderActive->id])->first(); 
+
 $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->get();?>
 <div class="main-content1">
     <div class="page-content">

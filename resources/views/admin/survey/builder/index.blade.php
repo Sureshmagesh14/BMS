@@ -216,8 +216,8 @@
                     $left_label='Least Likely';
                     $middle_label='Netural';
                     $right_label='Most Likely';
-                    $likert_range = 9;
-                    $likert_scale = [4,5,6,7,8,9];
+                    $likert_range = 10;
+                    $likert_scale = [4,5,6,7,8,9,10];
                     if(isset($qusvalue->question_name)){
                         $qus_name=$qusvalue->question_name; 
                     } else if(isset($currentQus->question_name)){
@@ -462,11 +462,12 @@
                                             <div class="scale-element"><span>2</span></div>
                                             <div class="scale-element"><span>3</span></div>
                                             <div class="scale-element"><span>4</span></div>
-                                            @if($likert_range >=5)<div class="scale-element"><span>6</span></div>@endif
-                                            @if($likert_range >=6)<div class="scale-element"><span>7</span></div>@endif
-                                            @if($likert_range >=7)<div class="scale-element"><span>8</span></div>@endif
-                                            @if($likert_range >=8)<div class="scale-element"><span>9</span></div>@endif
-                                            @if($likert_range >=9)<div class="scale-element"><span>10</span></div>@endif
+                                            @if($likert_range >=5)<div class="scale-element"><span>5</span></div>@endif
+                                            @if($likert_range >=6)<div class="scale-element"><span>6</span></div>@endif
+                                            @if($likert_range >=7)<div class="scale-element"><span>7</span></div>@endif
+                                            @if($likert_range >=8)<div class="scale-element"><span>8</span></div>@endif
+                                            @if($likert_range >=9)<div class="scale-element"><span>9</span></div>@endif
+                                            @if($likert_range >=10)<div class="scale-element"><span>10</span></div>@endif
                                         </div>
                                     </div>
                                 </div>
@@ -1867,6 +1868,32 @@ $("html body").delegate('.logic_type_value_skip', "change", function() {
     }
 });
 $('#likert_range').change(function(e){
+    let output_start ='<div class="label label--start"><p id="left_lable_text">'+$('#left_label').val()+'</p></div>';
+    let output_mid ='<div class="label label--middle"><p id="middle_lable_text">'+$('#middle_label').val()+'</p></div>';
+    let output_end= '<div class="label label--end"><p id="right_lable_text">'+$('#right_label').val()+'</p></div>';
+    let output='';
+    if($(this).val() == 4){
+    output=output_start+output_end+'<div class="scale-element"><span>1</span></div><div class="scale-element"><span>2</span></div><div class="scale-element"><span>3</span></div><div class="scale-element"><span>4</span></div>';
+    }else{
+        output=output_start+output_mid+output_end+'<div class="scale-element"><span>1</span></div><div class="scale-element"><span>2</span></div><div class="scale-element"><span>3</span></div><div class="scale-element"><span>4</span></div><div class="scale-element"><span>5</span></div>';
+        if($(this).val() >= 6){
+            output+='<div class="scale-element"><span>6</span></div>';
+        }
+        if($(this).val() >= 7){
+            output+='<div class="scale-element"><span>7</span></div>';
+        }
+        if($(this).val() >= 8){
+            output+='<div class="scale-element"><span>8</span></div>';
+        }
+        if($(this).val() >= 9){
+            output+='<div class="scale-element"><span>9</span></div>';
+        }
+        if($(this).val() >= 10){
+            output+='<div class="scale-element"><span>10</span></div>';
+        }
+    }
+    $('#likert_scale_option').html(output);
+
 console.log($(this).val(),'likert_scale_option')
 });
 // Skip Logic
