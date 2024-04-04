@@ -57,6 +57,13 @@ class CashoutsController extends Controller
                 ->addColumn('select_all', function ($all_data) {
                     return '<input class="tabel_checkbox" name="cash_out[]" type="checkbox" onchange="table_checkbox(this,\'cashout_table\')" id="'.$all_data->id.'">';
                 })
+                ->addColumn('id_show', function ($all_data) {
+                    $view_route = route("cashouts-view",$all_data->id);
+                    return ' <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                        data-bs-original-title="View Cashouts" class="waves-light waves-effect">
+                        '.$all_data->id.'
+                    </a>';
+                })
                 ->addColumn('type_id', function ($all_data) {
                     if($all_data->type_id==1){
                         return 'EFT';
@@ -105,7 +112,7 @@ class CashoutsController extends Controller
                         </div>
                     </div>';
                 })
-                ->rawColumns(['select_all','id','action','type_id','status_id','amount','respondent_id'])      
+                ->rawColumns(['id_show','select_all','id','action','type_id','status_id','amount','respondent_id'])      
                 ->make(true);
             }
         }
@@ -279,6 +286,18 @@ class CashoutsController extends Controller
                 'success' => true,
                 'message'=>'Tags Deleted'
             ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function cashout_export(Request $request){
+        try {
+            $id_value = $request->id_value;
+            $form     = $request->form;
+
+            return view('admin.report.cashout')->with('form',$form)->with('id_value',$id_value);
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

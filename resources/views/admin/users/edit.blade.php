@@ -1,31 +1,35 @@
 <form id="edit_users_form" class="validation">
-    <input type="hidden" id="id" name="id" value="{{$users->id}}">
+    <input type="hidden" id="id" name="id" value="{{ $users->id }}">
     @csrf
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Name *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name" value="{{$users->name}}" required>
+            <input type="text" class="form-control" id="name" name="name" value="{{ $users->name }}"
+                required>
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Surname *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="surname" name="surname" value="{{$users->surname}}" required>
+            <input type="text" class="form-control" id="surname" name="surname" value="{{ $users->surname }}"
+                required>
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">RSA ID / Passport *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="id_passport" name="id_passport" value="{{$users->id_passport}}" required>
+            <input type="text" class="form-control" id="id_passport" name="id_passport"
+                value="{{ $users->id_passport }}" required>
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Email *</label>
         <div class="col-md-10">
-            <input type="email" class="form-control" id="email" name="email" value="{{$users->email}}" required>
+            <input type="email" class="form-control" id="email" name="email" value="{{ $users->email }}"
+                required>
         </div>
     </div>
     <div class="form-group row">
@@ -46,17 +50,17 @@
         <div class="col-md-10">
             <select id="role_id" name="role_id" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">
-                Choose an option
-              </option> 
-              <option  @if($users->role_id==1) selected @endif value="1">
-                Admin
-              </option>
-              <option @if($users->role_id==2) selected @endif value="2">
-                User
-              </option>
-              <option @if($users->role_id==3) selected @endif value="3">
-                Temp
-              </option>
+                    Choose an option
+                </option>
+                <option @if ($users->role_id == 1) selected @endif value="1">
+                    Admin
+                </option>
+                <option @if ($users->role_id == 2) selected @endif value="2">
+                    User
+                </option>
+                <option @if ($users->role_id == 3) selected @endif value="3">
+                    Temp
+                </option>
             </select>
         </div>
     </div>
@@ -66,23 +70,24 @@
         <div class="col-md-10">
             <select id="status_id" name="status_id" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">
-                Choose an option
-              </option> 
-              <option @if($users->status_id==1) selected @endif  value="1">
-                Active
-              </option>
-              <option @if($users->status_id==2) selected @endif value="2">
-                Inactive
-              </option>
+                    Choose an option
+                </option>
+                <option @if ($users->status_id == 1) selected @endif value="1">
+                    Active
+                </option>
+                <option @if ($users->status_id == 2) selected @endif value="2">
+                    Inactive
+                </option>
             </select>
-          
+
         </div>
     </div>
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Share Link  </label>
+        <label for="example-search-input" class="col-md-2 col-form-label">Share Link </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="share_link" value="{{$users->share_link}}" name="share_link">
+            <input type="text" class="form-control" id="share_link" value="{{ $users->share_link }}"
+                name="share_link">
         </div>
     </div>
 
@@ -100,9 +105,9 @@
             return false;
         } else {
             var data = $('#edit_users_form').serialize();
-            var id      = $("#id").val();
+            var id = $("#id").val();
             var url_set = "{{ route('users.update', ':id') }}";
-            url_set     = url_set.replace(':id', id);
+            url_set = url_set.replace(':id', id);
             $.ajax({
                 type: 'PUT',
                 url: url_set,
@@ -125,9 +130,14 @@
         }
     });
 
-    $(function () {
+    $(function() {
         $('#edit_users_form').validate({
             rules: {
+                email: {
+                    required: true,
+                    email: true,
+                    validate_email: true
+                },
                 password: {
                     required: true,
                     minlength: 8
@@ -140,4 +150,11 @@
             }
         });
     });
+       $.validator.addMethod("validate_email", function(value, element) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+            return true;
+        } else {
+            return false;
+        }
+    }, "Please enter a valid email address.");
 </script>

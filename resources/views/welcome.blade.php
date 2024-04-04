@@ -2,6 +2,13 @@
 
 <div class="container-fluid p-md-5 text-white text-center vi-full-height vi-background-index"
     style="background-size: cover; height:auto;">
+
+    @if(isset($data->name) && ($data->name!=''))
+    <div class="alert alert-info bs-alert-old-docs text-center">
+      <strong>Referred</strong> by <span style="text-transform: capitalize;">{{$data->name}}</span>
+    </div>
+    @endif
+    
     <div class="row">
         <div class="col-md-6 col-sm-12">
             <div class="d-flex align-items-center flex-column justify-content-between">

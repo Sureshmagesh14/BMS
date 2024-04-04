@@ -237,6 +237,13 @@ class ContentsController extends Controller
                 ->addColumn('select_all', function ($all_data) {
                     return '<input class="tabel_checkbox" name="contents[]" type="checkbox" onchange="table_checkbox(this,\'contents_table\')" id="'.$all_data->id.'">';
                 })
+                ->addColumn('id_show', function ($all_data) {
+                    $view_route = route("contents.show",$all_data->id);
+                    return '<a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                        data-bs-original-title="View Content" class="waves-light waves-effect">
+                        '.$all_data->id.'
+                    </a>';
+                })
                 ->addColumn('action', function ($all_data) {
                     $edit_route = route("contents.edit",$all_data->id);
                     $view_route = route("contents.show",$all_data->id);
@@ -268,7 +275,7 @@ class ContentsController extends Controller
                         </ul>
                     </div>';
                 })
-                ->rawColumns(['select_all','action','active','data'])      
+                ->rawColumns(['id_show','select_all','action','active','data'])      
                 ->make(true);
             }
         }

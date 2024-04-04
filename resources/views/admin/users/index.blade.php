@@ -75,13 +75,13 @@
                         console.log("User Datatabel Error");
 
                         setTimeout(function() {
-                            location.reload();
+                            // location.reload();
                         }, 2000);
                     }
                 },
                 columns: [
                     { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                    { data: 'id',name: '#',orderable: true,searchable: true },
+                    { data: 'id_show',name: '#id_show',orderable: true,searchable: true },
                     { data: 'name',name: 'name',orderable: true,searchable: true },
                     { data: 'surname',name: 'surname',orderable: true,searchable: true },
                     { data: 'id_passport',name: 'id_passport',orderable: true,searchable: true },

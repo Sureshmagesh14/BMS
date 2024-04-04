@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::any('/','WelcomeController@home')->name('home');
 
 // View Survey
 Route::get('/survey/view/{id}', ['as' => 'survey.view','uses' => 'SurveyController@viewsurvey']);
@@ -28,7 +26,7 @@ Route::post('/survey/submitans', ['as' => 'survey.submitans','uses' => 'SurveyCo
 Route::any('terms','WelcomeController@terms')->name('terms');
 Route::any('admin','Auth\AdminLoginController@showLoginForm')->name('admin.showlogin'); //.....Admin Login
 Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.login'); //.....Admin Login
-
+Route::any('admin/forgot_password', 'Auth\AdminLoginController@forgot_password')->name('admin.forgot_password'); 
 
 Route::any('dashboard','WelcomeController@user_dashboard')->middleware(['auth', 'verified'])->name('user.dashboard');
 Route::any('profile-edit','WelcomeController@user_profile')->middleware(['auth', 'verified'])->name('user.profile');
@@ -36,6 +34,7 @@ Route::any('share','WelcomeController@user_share')->middleware(['auth', 'verifie
 Route::any('rewards','WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
 Route::any('surveys','WelcomeController@user_surveys')->middleware(['auth', 'verified'])->name('user.surveys');
 Route::any('viewprofile','WelcomeController@user_viewprofile')->middleware(['auth', 'verified'])->name('user.viewprofile');
+Route::any('updaterofile','WelcomeController@user_editprofile')->middleware(['auth', 'verified'])->name('updaterofile');
 Route::post('user_update','WelcomeController@user_update')->middleware(['auth', 'verified'])->name('user_update');
 
 
@@ -78,6 +77,7 @@ Route::group([
         Route::get('cash_export','cash_export')->name('cash_export');     
         Route::get('export_cash','export_cash')->name('export_cash');
         Route::any('cash_multi_delete', 'CashoutsController@cash_multi_delete')->name('cash_multi_delete');
+        Route::any('cashout_export','cashout_export')->name('cashout_export'); /* Cashout_export Export */
     });
 
     /* Action Events MENU*/
@@ -105,12 +105,13 @@ Route::group([
     Route::get('gen_respondent_res_export','RespondentsController@gen_respondent_res_export')->name('gen_respondent_res_export');   
     Route::get('gen_respondent_mon_export','RespondentsController@gen_respondent_mon_export')->name('gen_respondent_mon_export');    
     Route::get('export_resp','RespondentsController@export_resp')->name('export_resp');
+    Route::any('respondents_export', 'RespondentsController@respondents_export')->name('respondents_export'); /* Respondents Export */
 
     /* Tags (or) Pannels MENU*/
     Route::resource('tags','TagsController')->name('index', 'tags.index')->name('destroy', 'tags.destroy')
         ->name('create', 'tags.create')->name('show', 'tags.show')->name('update', 'tags.update');
     Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
-    Route::get('tags_export/{id}','TagsController@tags_export')->name('tags_export'); 
+    Route::any('tags_export','TagsController@tags_export')->name('tags_export'); 
     Route::any('tags_multi_delete', 'TagsController@tags_multi_delete')->name('tags_multi_delete');
 
     /* Rewards MENU*/
@@ -220,7 +221,7 @@ Route::post('custom-registration','CustomAuthController@customRegistration')->na
 Route::controller(SettingsController::class)->group(function(){
     Route::get('getrecentcontentid', 'getrecentcontentid')->name('getrecentcontentid');
 });
-
+Route::any('check_email_name','CommonAdminController@check_email_name')->name('check_email_name');
 
 
 require __DIR__.'/auth.php';

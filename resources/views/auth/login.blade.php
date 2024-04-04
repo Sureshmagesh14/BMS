@@ -1,9 +1,14 @@
 @include('user.layout.nomenu-header')
-
+<style>
+    .error {
+        color: red;
+    }
+</style>
 <div class="container-fluid vh-100">
     <div class="row">
         <div class="col-md-6 d-none-mobile">
-            <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}" class="img-fluid vh-100" alt="" />
+            <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}" class="img-fluid vh-100"
+                alt="" />
         </div>
         <div class="col-md-6 col-sm-12">
             <div class="rightside text-center">
@@ -12,14 +17,14 @@
 
                 <p>Login with Username or Mobile</p>
 
-                
 
-                <form method="POST" action="{{ route('login') }}">
+
+                <form method="POST" id="login_table" action="{{ route('login') }}">
                     @csrf
 
                     {{-- <div class="my-3  w-75 m-auto">
-                        @if(count($errors) > 0)
-                            @foreach( $errors->all() as $message )
+                        @if (count($errors) > 0)
+                            @foreach ($errors->all() as $message)
                                 <div class="alert alert-danger display-hide">
                                     <button class="close" data-close="alert"></button>
                                     <span>{{ $message }}</span>
@@ -27,18 +32,21 @@
                             @endforeach
                         @endif
                     </div> --}}
-                    
+
                     <div class="my-3  w-75 m-auto">
                         <label class="email-start vi-common-clr" for="email">Username</label>
-                        <input type="email" class="form-control vi-border-clr vi-cs-textbox" name="email" id="email" required/>
+                        <input type="email" class="form-control vi-border-clr vi-cs-textbox" name="email"
+                            id="email" required />
                     </div>
                     <div class="my-3 w-75 m-auto">
                         <label class="pass-start vi-common-clr" for="email text-start">Password</label>
-                        <input type="password" placeholder="" class="form-control vi-border-clr vi-cs-textbox" name="password" required/>
+                        <input type="password" placeholder="" class="form-control vi-border-clr vi-cs-textbox"
+                            name="password" required />
                     </div>
                     @if (Route::has('password.request'))
                         <div class="forgetpass me-5">
-                            <a href="{{ route('password.request') }}" class="nav-link text-end me-5 my-2">Forgot your Username/Password?</a>
+                            <a href="{{ route('password.request') }}" class="nav-link text-end me-5 my-2">Forgot your
+                                Username/Password?</a>
                         </div>
                     @endif
                     <div class="mobile-space">
@@ -61,15 +69,41 @@
 
 @include('user.layout.footer')
 
-@if(count($errors) > 0)
-    @foreach( $errors->all() as $message )
+@if (count($errors) > 0)
+    @foreach ($errors->all() as $message)
         <script>
-            toastr.options =
-            {
-                "closeButton" : true,
-                "progressBar" : true
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true
             }
             toastr.error("{{ $message }}");
         </script>
     @endforeach
 @endif
+
+<script>
+    $(function() {
+        $('#login_table').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                    validate_email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+
+            }
+        });
+    });
+
+    $.validator.addMethod("validate_email", function(value, element) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+            return true;
+        } else {
+            return false;
+        }
+    }, "Please enter a valid email address.");
+</script>

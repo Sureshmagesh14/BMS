@@ -8,6 +8,15 @@
     src: url('../fonts/Quicksand_Bold.ttf');
  }
 
+
+ .text-limit-one{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+  
   /* @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap'); */
 
  * {
@@ -123,14 +132,14 @@ label.email-start,.pass-start {
     width: 48%;
 }
 .border-height{
-    height: 80vh;
+    /* height: 80vh;
     background: #797c83;
     width: 2px;
-    margin: 50px 11px;
+    margin: 50px 11px; */
 }
 .timeline{
     width: 20%;
-    margin-left: auto;
+    margin-left: auto;margin-top: 20px
 }
 
 
@@ -165,7 +174,7 @@ label.email-start,.pass-start {
     color: #edbf1b !important; 
 }
 .vi-timeline-design{
-    height: 80vh;
+    /* height: 80vh; */
 }
 .desktop-one,.desktop-two,.desktop-three{
  
@@ -176,12 +185,13 @@ label.email-start,.pass-start {
     justify-content: center;
     border-radius: 50%;
     color: white;
-    padding: 16px;
+    padding: 16px; z-index: 1;
+    cursor: pointer;
 }
 .desktop-two,.desktop-three{
     background: #797c83;
 }
-.desktop-one{
+.timeline-active{
     background: #edbf1b;
 }
 
@@ -230,6 +240,7 @@ label.email-start,.pass-start {
         background-color:#edbf1b;color: white;
     }
     /* dashboard css ends  */
+
 
 @media(max-width:767px){
 
@@ -324,7 +335,7 @@ label.email-start,.pass-start {
     }
     .desktop-one, .desktop-two, .desktop-three{
         top: -12px;
-        left: -3px;position: relative;
+        left: -3px;position: relative;    z-index: 1;
     }
 
     /* basic page stars */
@@ -426,7 +437,7 @@ input::-ms-input-placeholder { /* Edge 12-18 */
     color: #ccc !important;
   }
 
- button:hover{
+ button:hover, a.btn:hover{
 border:  1px solid #6396b1 !important;
 color:#6396b1 !important;
   }
@@ -452,7 +463,7 @@ color:#6396b1 !important;
   }
   .basic-overflow{
 overflow: hidden;
-width: 100%;
+width: 100%;height: 80vh;
   }
   .vi-mob-add-p{
     display: flex;
@@ -476,10 +487,58 @@ width: 100%;
     border-radius: 20px;
   }
   .percentage-size{
-    font-size: 45px;
+    font-size: 30px;
     color: grey !important;
   }
-  @media only screen and (min-width:768px) {
+
+ .forgot-pass .vi-nav-bg { 
+    border-radius: 8px;
+}
+.border-radius-6px{
+    border-radius: 6px;
+    height: 50px;   
+}
+.vi-white-bg{
+    background-color: #ccc; border-radius: 6px;
+}
+.set-postion-fixed{
+    position: fixed;
+    width: 100%;
+    bottom: 0;    z-index: 99999;
+}
+button:focus:not(:focus-visible){
+    box-shadow:unset !important;
+}
+.accordion-button:not(.collapsed){
+    box-shadow:unset !important;
+    background-color:  #f1f1f1 !important
+}
+.fs-16{
+    font-size: 16px !important;
+    color: #6396b1;
+}
+.fs-12{
+    font-size: 12px !important;
+}
+.accordion-item {
+    margin: 10px auto; border-radius: 12px !important;
+    
+}
+.accordion-item button{
+    border-radius: 12px !important;
+}
+.box-border-grey{
+    cursor: pointer;
+}
+
+  @media only screen and (min-width:768px) { 
+    .firstline,.secondline{
+        height: 200px;border-right: 1px solid #ccc;position: absolute;left: 14px;
+    }
+    .set-timeline-height{
+        height: 200px;display: flex;position: relative;
+    }
+
   .logo,.heading,.btn-class-bnr{
     margin: 30px 0;
 }
@@ -495,6 +554,9 @@ width: 100%;
  .w-md-20{
     width: 20% !important;
  }
+ .iframesection{
+    height:400px;
+  }
   }
 
   @media only screen and (min-width: 1700px) {
@@ -506,10 +568,30 @@ width: 100%;
         width: 17%;
         left: 10%;
     }
+  
+
   }
   @media only screen and (min-width: 1890px) {
     .vi-background-index{
         height: 100vh !important;
+    }
+  }
+  
+  .vi-nav-bg:hover{
+    color:#6396b1 !important;
+    border:1px solid #6396b1;
+  }
+
+
+  .dashboard-section .mt-4{
+    width: 50%;
+    margin: auto;
+  }
+ 
+
+  @media(min-width:767px){
+    .w-md-50{
+        width:50% !important;
     }
   }
   

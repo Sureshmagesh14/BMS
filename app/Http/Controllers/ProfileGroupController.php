@@ -225,6 +225,12 @@ class ProfileGroupController extends Controller
                 ->addColumn('select_all', function ($all_data) {
                     return '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this,\'groups_table\')" id="'.$all_data->id.'">';
                 })
+                ->addColumn('id_show', function ($all_data) {
+                    $view_route = route("groups.show",$all_data->id);
+                    return '<a href="'.$view_route.'" class="rounded waves-light waves-effect">
+                        '.$all_data->id.'
+                    </a>';
+                })
                 ->addColumn('name', function ($all_data) {
                     return $all_data->name;
                 }) 
@@ -272,7 +278,7 @@ class ProfileGroupController extends Controller
                         </ul>
                     </div>';
                 })
-                ->rawColumns(['select_all','name','survey_url','type_id','action'])          
+                ->rawColumns(['id_show','select_all','name','survey_url','type_id','action'])          
                 ->make(true);
             }
         }
