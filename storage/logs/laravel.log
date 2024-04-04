@@ -586,3 +586,17 @@
 #48 C:\\Users\\gomathy\\Desktop\\Gomathy\\Notes\\G\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\Users\\\\gomath...')
 #49 {main}
 "} 
+[2024-04-04 14:02:11] local.ERROR: Class "Sichikawa\LaravelSendgridDriver\SendgridTransportServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Sichikawa\\LaravelSendgridDriver\\SendgridTransportServiceProvider\" not found at /Users/gomathy/Desktop/BMS/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:851)
+[stacktrace]
+#0 /Users/gomathy/Desktop/BMS/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(785): Illuminate\\Foundation\\Application->resolveProvider('Sichikawa\\\\Larav...')
+#1 /Users/gomathy/Desktop/BMS/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(75): Illuminate\\Foundation\\Application->register('Sichikawa\\\\Larav...')
+#2 /Users/gomathy/Desktop/BMS/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(765): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 /Users/gomathy/Desktop/BMS/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 /Users/gomathy/Desktop/BMS/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(263): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 /Users/gomathy/Desktop/BMS/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(186): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 /Users/gomathy/Desktop/BMS/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(170): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#7 /Users/gomathy/Desktop/BMS/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#8 /Users/gomathy/Desktop/BMS/public/index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#9 /Users/gomathy/Desktop/BMS/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(16): require_once('/Users/gomathy/...')
+#10 {main}
+"} 

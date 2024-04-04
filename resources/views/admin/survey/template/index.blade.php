@@ -135,9 +135,9 @@
 <!-- Start right Content here -->
 <!-- ============================================================== -->
 <?php 
-$selectedFolder = \App\Models\Folder::where(['id'=>$folderActive->id])->first(); 
-
-$getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->get();?>
+$selectedFolder = \App\Models\Folder::where(['id'=>$page])->first(); 
+$getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->get();
+?>
 <div class="main-content1">
     <div class="page-content">
         <div class="container-fluid">
