@@ -730,4 +730,8 @@ class RespondentsController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function respondent_attach_store(Request $request){
+        dd($request->all());
+    }
 }

@@ -69,7 +69,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: "{{ route('respondents.store') }}",
+                url: "{{ route('respondent_attach_store') }}",
                 data: data,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
