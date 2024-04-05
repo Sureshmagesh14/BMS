@@ -434,19 +434,29 @@ class RespondentsController extends Controller
                                 <a href="'.$view_route.'" class="rounded waves-light waves-effect">
                                     <i class="fa fa-eye"></i> View
                                 </a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                    data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#!" id="delete_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
-                                    <i class="far fa-trash-alt"></i> Delete
-                                </a>
-                            </li>
-                        </ul>
+                            </li>';
+                            if (str_contains(url()->previous(), '/admin/projects')){
+
+                                $nestedData['options'] .= '<li class="list-group-item">
+                                    <a id="deattach_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
+                                        <i class="far fa-trash-alt"></i> Delete
+                                    </a>
+                                </li>';
+                            }
+                            else{
+                                $nestedData['options'] .= '<li class="list-group-item">
+                                    <a data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                        data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" id="delete_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
+                                        <i class="far fa-trash-alt"></i> Delete
+                                    </a>
+                                </li>';
+                            }
+                        $nestedData['options'] .= '</ul>
                     </div>';
                     $data[] = $nestedData;
                     $i++;
@@ -737,15 +747,29 @@ class RespondentsController extends Controller
             $project_id  = $request->project_id;
             $respondents = $request->respondents;
 
-            Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $respondents]);
+            if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $respondents)->exists()){
+                return response()->json([
+                    'text_status' => false,
+                    'status' => 200,
+                    'message' => 'Respondents Already Attached.',
+                ]);
+            }
+            else{
+                Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $respondents]);
 
-            return response()->json([
-                'status' => 200,
-                'message' => 'Respondents Attached Successfully.',
-            ]);
+                return response()->json([
+                    'text_status' => true,
+                    'status' => 200,
+                    'message' => 'Respondents Attached Successfully.',
+                ]);
+            }
         }
         catch (Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    public function deattach_respondent(Request $request){
+        dd($request->all());
     }
 }

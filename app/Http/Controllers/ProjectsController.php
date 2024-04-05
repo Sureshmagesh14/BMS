@@ -143,12 +143,12 @@ class ProjectsController extends Controller
     {
         try {
            
-            $projects = Projects::find($id);
             if($projects)
             {
                 $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
                 $survey_title=DB::table('survey')->select('title','id')->get();
                 $returnHTML = view('admin.projects.edit',compact('projects','users','survey_title'))->render();
+                
                 return response()->json(
                     [
                         'success' => true,

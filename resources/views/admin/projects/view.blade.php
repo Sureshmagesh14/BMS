@@ -304,4 +304,18 @@
 
         multi_delete("POST", all_id, "{{ route('networks_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
     });
+
+    $(document).on('click', '#deattach_respondents', function(e) {
+        e.preventDefault();
+        project_id     = $("#project_id").val();
+        var respondent = $(this).data("id");
+
+        var url = "{{ route('deattach_respondent', ['respondent_id' => ':respondent_id', 'project_id' => ':project_id']) }}";
+        url = url.replace(':respondent_id', respondent);
+        url = url.replace(':project_id', project_id);
+
+        console.log("url",url);
+
+        single_delete("POST", respondent, url, "Deattach Respondent", 'respondents_datatable');
+    });
 </script>

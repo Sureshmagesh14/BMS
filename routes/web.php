@@ -109,6 +109,7 @@ Route::group([
     Route::any('attach_respondents/{project_id}', 'RespondentsController@attach_respondents')->name('attach_respondents');
     Route::any('respondent_seach_result', 'RespondentsController@respondent_seach_result')->name('respondent_seach_result');
     Route::any('respondent_attach_store', 'RespondentsController@respondent_attach_store')->name('respondent_attach_store');
+    Route::any('deattach_respondent/{respondent_id}/{project_id}', 'RespondentsController@deattach_respondent')->name('deattach_respondent');
 
     /* Tags (or) Pannels MENU*/
     Route::resource('tags','TagsController')->name('index', 'tags.index')->name('destroy', 'tags.destroy')
