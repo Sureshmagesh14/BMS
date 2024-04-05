@@ -11,12 +11,7 @@
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Respondents *</label>
         <div class="col-md-10">
-            <select id="accept_terms" name="accept_terms" class="w-full form-control form-select" required>
-                <option value="" selected="selected" disabled="disabled">Select Respondents</option>
-                @foreach ($respondents as $resp)
-                    <option value="{{$resp->id}}">{{$resp->name}} {{$resp->surname}}</option>
-                @endforeach
-            </select>
+            <input class="form-control" type="text" id="respondents" name="respondents" value="{{ request()->get('q') }}" required>
         </div>
     </div>
 
@@ -27,8 +22,22 @@
 </form>
 
 <script>
-    $(function() {
-        
+    $("#respondents").tokenInput("{{ route('respondent_seach_result') }}", {
+        propertyToSearch: "name",
+        tokenValue: "id",
+        tokenDelimiter: ",",
+        hintText: "{{ __('Search Respondent... By(ID, Name, Surname, Mobile)') }}",
+        noResultsText: "{{ __('Respondent not found.') }}",
+        searchingText: "{{ __('Searching...') }}",
+        deleteText: "&#215;",
+        minChars: 2,
+        tokenLimit: 1,
+        zindex: 9999,
+        animateDropdown: false,
+        resultsLimit: 20,
+        deleteText: "&times;",
+        preventDuplicates: true,
+        theme: "bootstrap"
     });
 
     $("#respondents_edit").click(function() {
@@ -38,4 +47,6 @@
            
         }
     });
+
+
 </script>
