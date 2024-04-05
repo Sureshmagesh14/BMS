@@ -1,8 +1,51 @@
 @include('admin.auth.admin-header')
+<style>
+    .main-password {
+        position: relative;
+    }
+
+    .icon-view {
+        position: absolute;
+        right: 12px;
+        top: 9px;
+    }
+
+    i.fa.fa-eye {
+        color: black;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-dismissible {
+        padding-right: 4rem;
+    }
+
+    .alert {
+        position: relative;
+        padding: .75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+    }
+
+    /*Footer End*/
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="h-full">
+    @if (Session::has('pass_error'))
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <div class="text-center"><strong>{{ session('pass_error') }}</strong> Please try again or you can <a
+                    href="{{ route('admin.forgot_password') }}">reset your password.</a></div>
+        </div>
+    @endif
     <div class="px-view py-view mx-auto">
         <div class="mx-auto py-8 max-w-sm text-center text-90">
-            <img class="fill-current" width="200" height="39" src="{{ asset('assets/images/brand_surgen.png') }}" />
+            <img class="fill-current" width="200" height="39"
+                src="{{ asset('assets/images/brand_surgen.png') }}" />
         </div>
         <form id="users_form" class="bg-white shadow rounded-lg p-8 max-w-login mx-auto" method="POST"
             action="{{ route('admin.login') }}">
@@ -13,16 +56,23 @@
                 <path fill="#D8E3EC" d="M0 0h100v2H0z" />
             </svg>
 
-            <div class="mb-6 ">
+            <div class="mb-6">
                 <label class="block font-bold mb-2" for="email">Email Address</label>
                 <input class="form-control form-input form-input-bordered w-full" id="email" type="email"
                     name="email" value="" required autofocus>
             </div>
 
-            <div class="mb-6 ">
+            <div class="mb-6">
                 <label class="block font-bold mb-2" for="password">Password</label>
-                <input class="form-control form-input form-input-bordered w-full" id="password" type="password"
-                    name="password" required>
+                <div class="main-password">
+                    <input type="password" id="password" name="password"
+                        class="form-control form-input form-input-bordered w-full input-password" aria-label="password">
+                    <a href="JavaScript:void(0);" class="icon-view">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                </div>
+
+
             </div>
 
             <div class="flex mb-6">
@@ -83,6 +133,31 @@
                 return false;
             }
         }, "Please enter a valid email address.");
+        $(document).ready(function() {
+            $('.main-password').find('.input-password').each(function(index, input) {
+                var $input = $(input);
+                $input.parent().find('.icon-view').click(function() {
+                    var change = "";
+                    if ($(this).find('i').hasClass('fa-eye')) {
+                        $(this).find('i').removeClass('fa-eye')
+                        $(this).find('i').addClass('fa-eye-slash')
+                        change = "text";
+                    } else {
+                        $(this).find('i').removeClass('fa-eye-slash')
+                        $(this).find('i').addClass('fa-eye')
+                        change = "password";
+                    }
+                    var rep = $("<input type='" + change + "' />")
+                        .attr('id', $input.attr('id'))
+                        .attr('name', $input.attr('name'))
+                        .attr('class', $input.attr('class'))
+                        .val($input.val())
+                        .insertBefore($input);
+                    $input.remove();
+                    $input = rep;
+                }).insertAfter($input);
+            });
+        });
     </script>
 
     @if (count($errors) > 0)

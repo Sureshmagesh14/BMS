@@ -82,7 +82,13 @@
                     <div class="foldermenu ss-overflow-y--auto ss-scrollbar--hide h-100" style="padding-bottom: 100px;">
                        
                         @foreach($folders as $folder)
-                            <div class="ss-dashboard--folder-item fx-row px-7 py-3 position--relative mb-3 @if($survey->folder_id==$folder->id) folder active @endif">
+                        <?php $className =""; 
+                        if(isset($survey)){
+                            if($survey->folder_id == $folder->id){
+                                $className =" folder active";
+                            }
+                        } ?>
+                            <div class="ss-dashboard--folder-item fx-row px-7 py-3 position--relative mb-3 {{$className}}">
                                 <div class="fx-grow-1 fx-row">
                                     <a href="{{$folder->id}}" class="waves-effect">
                                         <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--grey ss-text__line-height--medium">
@@ -129,7 +135,12 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<?php $selectedFolder = \App\Models\Folder::where(['id'=>$survey->folder_id])->first(); 
+<?php 
+if($survey){
+    $selectedFolder = \App\Models\Folder::where(['id'=>$survey->folder_id])->first(); 
+}else{
+    $selectedFolder = \App\Models\Folder::first(); 
+}
 $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->get();?>
 <div class="main-content1">
     <div class="page-content">
