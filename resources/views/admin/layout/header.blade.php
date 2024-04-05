@@ -22,6 +22,7 @@
 
         <link href="{{ asset('assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/tokeninput/tokeninput.css') }}" rel="stylesheet" type="text/css" />
     
         <style>
             .actionsBtn {display: flex;}
@@ -33,6 +34,10 @@
             .privateusers .form-group.mb-0,.surveyfoldername .form-group.mb-0{display: flex;flex-direction: column-reverse;}
             .btn-primary{color: #fff;background-color: #4099de;border-color: #4099de;}
             .page-item.active .page-link {background-color: #4099de !important;border-color: #4099de !important;}
+
+            ul.token-input-list-bootstrap {
+                border: 1px solid #ced4da !important;
+            }
         </style>
     </head>
 

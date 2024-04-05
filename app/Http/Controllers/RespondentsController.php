@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Respondents;
+use App\Models\Projects;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -677,5 +678,60 @@ class RespondentsController extends Controller
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    public function attach_respondents(Request $request){
+        try {
+            $project_id = $request->project_id;
+            // $respondents = Respondents::select('respondents.id','respondents.name','respondents.surname')->whereNull('deleted_at')->take(10)->get();
+            $projects = Projects::select('projects.id','projects.name')->where('projects.id',$project_id)->first();
+
+            $returnHTML = view('admin.respondents.attach', compact('projects'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function respondent_seach_result(Request $request){
+        try {
+            $searchValue = $request['q'];
+            
+            if($request->filled('q')){
+                $respondents_data = Respondents::search($searchValue)
+                ->query(function ($query) {
+                    $query->where('deleted_at', '=', NULL);
+                })
+                ->orderBy('id','ASC')
+                ->get();
+            }
+
+            $respondents = array();
+            if(count($respondents_data) > 0){
+                foreach($respondents_data as $resp){
+                    $setUser = [
+                        'id' => $resp->id,
+                        'name' => $resp->name . ' - ' . $resp->surname,
+                    ];
+                    $respondents[] = $setUser;
+                }
+            }
+
+            echo json_encode($respondents);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function respondent_attach_store(Request $request){
+        dd($request->all());
     }
 }
