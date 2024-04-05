@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Respondents;
 use App\Models\Projects;
+use App\Models\Project_respondent;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -732,6 +733,19 @@ class RespondentsController extends Controller
     }
 
     public function respondent_attach_store(Request $request){
-        dd($request->all());
+        try {
+            $project_id  = $request->project_id;
+            $respondents = $request->respondents;
+
+            Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $respondents]);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Respondents Attached Successfully.',
+            ]);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 }
