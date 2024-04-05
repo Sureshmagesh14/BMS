@@ -40,26 +40,9 @@
         theme: "bootstrap"
     });
 
-    $(function() {
-        $('#attach_respondents_form').validate({
-            rules: {
-                email: {
-                    required: true,
-                    email: true,
-                    validate_email: true
-                },
-
-            }
-        });
+    $('#attach_respondents_form').validate({
+        ignore: ':hidden:not("#respondents")'
     });
-
-    $.validator.addMethod("validate_email", function(value, element) {
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
-            return true;
-        } else {
-            return false;
-        }
-    }, "Please enter a valid email address.");
     
     $("#attach_respondents_button").click(function() {
         if (!$("#attach_respondents_form").valid()) { // Not Valid
@@ -78,9 +61,14 @@
                     $('#attach_respondents_button').html('....Please wait');
                 },
                 success: function(response) {
-                    toastr.success(response.message);
+                    if(response.text_status == true){
+                        toastr.success(response.message);
+                    }else{
+                        toastr.warning(response.message);
+                    }
+
                     $("#commonModal").modal('hide');
-                    datatable();
+                    respondents_datatable();
                 },
                 complete: function(response) {
                     $('#attach_respondents_button').html('Attach');
@@ -89,5 +77,5 @@
         }
     });
 
-
+    
 </script>
