@@ -74,13 +74,13 @@
             <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
                 <a class="setbackground"  href="{{route('survey.surveytemplate',[$survey->id,'welcome'])}}">
                 <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 21H0V19H5V21ZM8.424 15.282L12.826 19.681L7 21L8.424 15.282ZM24 8.534L14.311 18.338L9.775 13.802L19.464 4L24 8.534Z" fill="#63686F"></path></svg>
-                    <p>Welcome Template</p>
+                    <p>Welcome Templates</p>
                 </a>
             </div>
             <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
                 <a class="setbackground"  href="{{route('survey.surveytemplate',[$survey->id,'thankyou'])}}">
                 <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 21H0V19H5V21ZM8.424 15.282L12.826 19.681L7 21L8.424 15.282ZM24 8.534L14.311 18.338L9.775 13.802L19.464 4L24 8.534Z" fill="#63686F"></path></svg>
-                    <p>Thank you Template</p>
+                    <p>Thankyou Templates</p>
                 </a>
             </div>
             <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
