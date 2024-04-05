@@ -82,11 +82,16 @@
                     <div class="foldermenu ss-overflow-y--auto ss-scrollbar--hide h-100" style="padding-bottom: 100px;">
                        
                         @foreach($folders as $folder)
-                        <?php $className =""; 
-                        if($folderActive->id == $folder->id){
-                            $className =" folder active";
-                        }
-                        ?>
+                        <?php $className =""; ?>
+                        @if(isset($selectedFolder))
+                            @if($selectedFolder->id == $folder->id)
+                            <?php $className =" folder active"; ?>
+                            @endif
+                        @elseif(isset($folderActive))
+                            @if($folderActive->id == $folder->id)
+                                <?php $className =" folder active"; ?>
+                            @endif
+                        @endif
                             <div class="ss-dashboard--folder-item fx-row px-7 py-3 position--relative mb-3 {{$className}}">
                                 <div class="fx-grow-1 fx-row">
                                     <a href="{{$folder->id}}" class="waves-effect">
