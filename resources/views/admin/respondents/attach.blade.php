@@ -17,7 +17,7 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="respondents_edit">Attach Respondent</button>
+        <button type="button" class="btn btn-primary" id="attach_respondents_button">Attach Respondent</button>
     </div>
 </form>
 
@@ -40,11 +40,52 @@
         theme: "bootstrap"
     });
 
-    $("#respondents_edit").click(function() {
-        if (!$("#edit_respondents_form").valid()) { // Not Valid
+    $(function() {
+        $('#attach_respondents_form').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                    validate_email: true
+                },
+
+            }
+        });
+    });
+
+    $.validator.addMethod("validate_email", function(value, element) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+            return true;
+        } else {
+            return false;
+        }
+    }, "Please enter a valid email address.");
+    
+    $("#attach_respondents_button").click(function() {
+        if (!$("#attach_respondents_form").valid()) { // Not Valid
             return false;
         } else {
-           
+            var data = $('#attach_respondents_form').serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('respondents.store') }}",
+                data: data,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    $('#attach_respondents_button').html('....Please wait');
+                },
+                success: function(response) {
+                    toastr.success(response.message);
+                    $("#commonModal").modal('hide');
+                    datatable();
+                },
+                complete: function(response) {
+                    $('#attach_respondents_button').html('Attach');
+                }
+            });
         }
     });
 
