@@ -1569,6 +1569,7 @@ class SurveyController extends Controller
         $user = Auth::guard('admin')->user();
         return view('admin.survey.survey.createtemplate',compact('type'));
     }
+
     public function storeSurveyTemplate(Request $request){
         $user = Auth::guard('admin')->user();
         $survey = new SurveyTemplate();
@@ -1595,6 +1596,23 @@ class SurveyController extends Controller
 
     }
 
+    public function editSurveyTemplate($id){
+        $surveytemplate=SurveyTemplate::where(['id'=>$id])->first();
+        $user = Auth::guard('admin')->user();
+        return view('admin.survey.survey.edittemplate', compact('surveytemplate'));
+
+    }
+
+    public function updateSurveyTemplate(Request $request){
+        
+    }
+
+    public function deleteSurveyTemplate($id){
+        echo $id;    
+        $surveytemplate=SurveyTemplate::where(['id'=>$id])->first();
+        $surveytemplate->delete();
+        return redirect()->back()->with('success', __('Survey template deleted Successfully.'));
+    }
     
     public function get_all_templates(Request $request,$survey_id,$type) {
 		
@@ -1611,8 +1629,13 @@ class SurveyController extends Controller
                     }else{
                         $img='';
                     }
+                    $editLink=route('survey.edittemplate',$template->id);
+                    $deletedLink=route('survey.deletetemplate',$template->id);
+                    $action = '<div class="actionsBtn"><a href="#" class="btn btn-primary waves-effect waves-light editFolder" data-url="'.$editLink.'" data-ajax-popup="true" data-bs-toggle="tooltip" title="Edit Template" data-title="Edit Folder">Edit</a>
+                    <a href="'.$deletedLink.'" class="btn btn-danger  waves-effect waves-light">Delete</a>';
+               
 
-                    $result =['title'=>$template->title,'sub_title'=>$template->sub_title,'description'=>$template->description,'button_label'=>$template->button_label,'image'=>$img];
+                    $result =['title'=>$template->title,'sub_title'=>$template->sub_title,'description'=>$template->description,'button_label'=>$template->button_label,'image'=>$img,'action'=>$action];
                     array_push($finalResult,$result);
 
 

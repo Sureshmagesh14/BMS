@@ -60,6 +60,7 @@ img.photo_capture {
                                     <th>Sub title</th>
                                     <th>Image</th>
                                     @endif
+                                    <th>Actions</th>
                                     
                                 </tr>
                             </thead>
@@ -91,9 +92,9 @@ img.photo_capture {
             let page_type = $('#page_type').val();
             let cols;
             if(page_type == 'welcome'){
-                cols = [{"data":"title","name":"Title","orderable":true,"searchable":true},{"data":"sub_title","name":"Sub title","orderable":true,"searchable":true},{"data":"description","name":"Description","orderable":true,"searchable":true},{"data":"button_label","name":"Button Label","orderable":true,"searchable":true},{"data":"image","name":"Image","orderable":true,"searchable":true},];
+                cols = [{"data":"title","name":"Title","orderable":true,"searchable":true},{"data":"sub_title","name":"Sub title","orderable":true,"searchable":true},{"data":"description","name":"Description","orderable":true,"searchable":true},{"data":"button_label","name":"Button Label","orderable":true,"searchable":true},{"data":"image","name":"Image","orderable":true,"searchable":true},{"data":"action","name":"Actions","orderable":true,"searchable":true},];
             }else{
-                cols = [{"data":"title","name":"Title","orderable":true,"searchable":true},{"data":"sub_title","name":"Sub title","orderable":true,"searchable":true},{"data":"image","name":"Image","orderable":true,"searchable":true},];
+                cols = [{"data":"title","name":"Title","orderable":true,"searchable":true},{"data":"sub_title","name":"Sub title","orderable":true,"searchable":true},{"data":"image","name":"Image","orderable":true,"searchable":true},{"data":"action","name":"Actions","orderable":true,"searchable":true},];
             }
             $('#template_table').dataTable().fnDestroy();
             $('#template_table').DataTable({

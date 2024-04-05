@@ -215,9 +215,9 @@ Route::group([
 
     Route::get('/survey/createtemplate/{type}', ['as' => 'survey.createtemplate','uses' => 'SurveyController@createSurveyTemplate']);
     Route::post('/survey/storetemplate', ['as' => 'survey.storetemplate','uses' => 'SurveyController@storeSurveyTemplate']);
-    
-
-    
+    Route::get('/survey/edittemplate/{id}', ['as' => 'survey.edittemplate','uses' => 'SurveyController@editSurveyTemplate']);
+    Route::post('/survey/updatetemplate/{id}', ['as' => 'survey.updatetemplate','uses' => 'SurveyController@updateSurveyTemplate']);
+    Route::get('/survey/deletetemplate/{id}', ['as' => 'survey.deletetemplate','uses' => 'SurveyController@deleteSurveyTemplate']);
 
 });
 
