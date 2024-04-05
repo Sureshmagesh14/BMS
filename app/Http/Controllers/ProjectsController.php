@@ -336,7 +336,7 @@ class ProjectsController extends Controller
                         }
                        $string_count=strlen($all_data->number."-".$all_data->client."-".$all_data->name."-".$type_id);
                        
-                        return '<a href="'.$view_route.'" data-bs-original-title="View Project" class="rounded waves-light waves-effect">
+                        return '<a title="'.$all_data->number."-".$all_data->client."-".$all_data->name."-".$type_id.'" href="'.$view_route.'" data-bs-original-title="View Project" class="rounded waves-light waves-effect">
                             '.$all_data->number."-".$all_data->client."-".$all_data->name."-".$type_id.'
                         </a>';
                     })
