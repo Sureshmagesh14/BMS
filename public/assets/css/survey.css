@@ -2414,7 +2414,11 @@ a:hover {
 }
 
 .folderplus {
-    padding-bottom: 2rem;
+    /* padding-bottom: 2rem; */
+}
+.template-header {
+    padding-left: 2rem;
+    padding-right: 1rem;
 }
 .main-content1{
     margin-left: 250px;

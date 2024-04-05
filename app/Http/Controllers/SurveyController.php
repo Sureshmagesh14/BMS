@@ -9,6 +9,7 @@ use App\Models\Survey;
 use App\Models\Questions;
 use App\Models\Users;
 use App\Models\Respondents;
+use App\Models\SurveyTemplate;
 use App\Models\SurveyResponse;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
@@ -1552,6 +1553,71 @@ class SurveyController extends Controller
       
             return Datatables::of($finalResult)->escapeColumns([])
             ->make(true);
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    public function surveytemplate(Request $request,$id,$type){
+        $survey = Survey::where(['id'=>$id])->first();
+        $surveyTemplate = SurveyTemplate::where(['type'=>$type])->get();
+        return view('admin.survey.survey.surveytemplate',compact('survey','surveyTemplate','type'));
+
+    }
+    public function createSurveyTemplate(Request $request,$type){
+        $user = Auth::guard('admin')->user();
+        return view('admin.survey.survey.createtemplate',compact('type'));
+    }
+    public function storeSurveyTemplate(Request $request){
+        $user = Auth::guard('admin')->user();
+        $survey = new SurveyTemplate();
+        $survey->title = $request->title;
+        $survey->type = $request->template_type;
+        $survey->sub_title = $request->sub_title;
+        if($request->template_type == 'welcome'){
+            $survey->description = $request->description;
+            $survey->button_label = $request->button_label;
+            $survey->created_by = $user->id;
+        }
+        $filename='';
+        if($request->hasfile('image'))
+        {
+            $file = $request->file('image');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/survey/', $filename);
+            $survey->image = $filename;
+
+        }
+        $survey->save();
+        return redirect()->back()->with('success', __('Template Created Successfully.'));
+
+    }
+
+    
+    public function get_all_templates(Request $request,$survey_id,$type) {
+		
+        try {
+            if ($request->ajax()) {
+                $token = csrf_token();
+                $surveytemplate=SurveyTemplate::where(['type'=>$type])->get();
+                $finalResult=[];
+                foreach($surveytemplate as $template){
+                    $output=asset('uploads/survey/'.$template->image);
+                    if($template->image!=null && $template->image!='')
+                    {
+                        $img = "<a target='_blank' href='$output'><img class='photo_capture' src='$output'/></a>";
+                    }else{
+                        $img='';
+                    }
+
+                    $result =['title'=>$template->title,'sub_title'=>$template->sub_title,'description'=>$template->description,'button_label'=>$template->button_label,'image'=>$img];
+                    array_push($finalResult,$result);
+
+
+                }
+                return Datatables::of($finalResult)->escapeColumns([])->make(true);
             }
         }
         catch (Exception $e) {

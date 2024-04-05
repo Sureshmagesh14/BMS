@@ -64,7 +64,7 @@
         <div id="sidebar-menu1">
             <div class="ss-dashboard--sidebar position--relative fx--fh fx-column pb-7 bg-grey-7">
                 <div class="ss-dashboard--sidebar-container h-100 d-flex flex-column">
-                    <div class="fx-row mb-5 fx-ai--center justify-content-between px-7 folderplus">
+                    <div class="fx-row mb-5 fx-ai--center justify-content-between folderplus template-header">
                         <h3 class="ss-text ss-text__size--h3 ss-text__weight--semibold ss-text__color--grey">Folders</h3>
                         <div class="fx-row create-workspace--button">
                         <span class="bp3-popover2-target" tabindex="0">
