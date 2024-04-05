@@ -322,8 +322,22 @@ class ProjectsController extends Controller
                     })
                     ->addColumn('id_show', function ($all_data) {
                         $view_route = route("projects.show",$all_data->id);
+                        $type_id='';
+                        if($all_data->type_id==1){
+                            $type_id= 'Pre-Screener';
+                        }else if($all_data->type_id==2){
+                            $type_id= 'Pre-Task';
+                        }else if($all_data->type_id==3){
+                            $type_id= 'Paid  survey';
+                        }else if($all_data->type_id==4){
+                            $type_id= 'Unpaid  survey';
+                        }else{  
+                            $type_id='-';
+                        }
+                       $string_count=strlen($all_data->number."-".$all_data->client."-".$all_data->name."-".$type_id);
+                       
                         return '<a href="'.$view_route.'" data-bs-original-title="View Project" class="rounded waves-light waves-effect">
-                            '.$all_data->id.'
+                            '.$all_data->number."-".$all_data->client."-".$all_data->name."-".$type_id.'
                         </a>';
                     })
                     ->addColumn('numbers', function ($all_data) {
