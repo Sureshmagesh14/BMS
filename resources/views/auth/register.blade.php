@@ -153,6 +153,11 @@
 
                         </div>
                     </div>
+                    <div class="lname text-start w-48 m-auto my-3">
+                        <input type="checkbox" id="terms" name="terms" class="form-check-input" readonly>
+                        <span class="form-check-label">Agree the <a href="https://dev.mustbuildapp.com/terms-of-service" tabindex="-1">terms and policy</a>.</span>
+                    </div>
+                  
                     <div class="submit-btn text-start">
                         <button class="btn vi-nav-bg border-radius-0 text-white px-5 py-3"
                             id="save_org">Continue</button>
@@ -166,7 +171,8 @@
 
 
 @include('user.layout.footer')
-
+<script src="{{ asset('assets/js/inputmask.js') }}"></script>
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 @if (count($errors) > 0)
     @foreach ($errors->all() as $message)
         <script>
@@ -180,7 +186,8 @@
 @endif
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
-
+    $('#mobile').inputmask("999 999-9999");
+    $('#whatsapp').inputmask("999 999-9999");
     $('form#reg_table').on('blur', '.reg_email', function() {
         var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
         var reg_email = $(this).val();
@@ -212,14 +219,14 @@
                     email: true,
                     validate_email: true,
                     remote: {
-                        url: '{{ route('check_email_name') }}',
+                        url: "{{ route('check_email_name') }}",
                         data: {
                             'form_name': "regsiter"
                         },
                         type: "GET"
                     }
                 },
-
+                
                 password: {
                     required: true,
                     minlength: 6
