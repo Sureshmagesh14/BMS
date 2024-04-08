@@ -9,6 +9,7 @@ use App\Models\Survey;
 use App\Models\Questions;
 use App\Models\Users;
 use App\Models\Respondents;
+use App\Models\SurveyTemplate;
 use App\Models\SurveyResponse;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
@@ -431,12 +432,19 @@ class SurveyController extends Controller
                     $filename = time().'.'.$extenstion;
                     $file->move('uploads/survey/', $filename);
                 }else{
-                    $filename=$request->existing_image_uploaded;
+                    if(isset($request->existing_image_uploaded)){
+                        $filename=$request->existing_image_uploaded;
+                    }else{
+                        $surveyTemplate = SurveyTemplate::where(['id'=>$request->welcome_template])->first();
+                        $filename=$surveyTemplate->image;
+                    }
+                    
                 }
                 $json=[
                     'welcome_imagesubtitle'=>$request->welcome_imagesubtitle,'welcome_btn'=>$request->welcome_btn,
                     'welcome_imagetitle'=>$request->welcome_imagetitle,
                     'welcome_title'=>$request->welcome_title,
+                    'welcome_template'=>$request->welcome_template,
                     'welcome_image'=>$filename
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['qus_ans'=>json_encode($json)]);
@@ -451,12 +459,18 @@ class SurveyController extends Controller
                     $filename = time().'.'.$extenstion;
                     $file->move('uploads/survey/', $filename);
                 }else{
-                    $filename=$request->existing_image_uploaded_thankyou;
+                    if(isset($request->existing_image_uploaded_thankyou)){
+                        $filename=$request->existing_image_uploaded_thankyou;
+                    }else{
+                        $surveyTemplate = SurveyTemplate::where(['id'=>$request->thankyou_template])->first();
+                        $filename=$surveyTemplate->image;
+                    }
                 }
                 $json=[
                     'thankyou_title'=>$request->thankyou_title,
                     'thankyou_imagetitle'=>$request->thankyou_imagetitle,
                     'thankyou_image'=>$filename,
+                    'thankyou_template'=>$request->thankyou_template,
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->thankyou_title,'qus_ans'=>json_encode($json)]);
               break;
@@ -1552,6 +1566,121 @@ class SurveyController extends Controller
       
             return Datatables::of($finalResult)->escapeColumns([])
             ->make(true);
+            }
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    public function surveytemplate(Request $request,$id,$type){
+        $survey = Survey::where(['id'=>$id])->first();
+        $surveyTemplate = SurveyTemplate::where(['type'=>$type])->get();
+        return view('admin.survey.survey.surveytemplate',compact('survey','surveyTemplate','type'));
+
+    }
+    public function createSurveyTemplate(Request $request,$type){
+        $user = Auth::guard('admin')->user();
+        return view('admin.survey.survey.createtemplate',compact('type'));
+    }
+
+    public function storeSurveyTemplate(Request $request){
+        $user = Auth::guard('admin')->user();
+        $survey = new SurveyTemplate();
+        $survey->template_name = $request->template_name;
+        $survey->title = $request->title;
+        $survey->type = $request->template_type;
+        $survey->sub_title = $request->sub_title;
+        if($request->template_type == 'welcome'){
+            $survey->description = $request->description;
+            $survey->button_label = $request->button_label;
+            $survey->created_by = $user->id;
+        }
+        $filename='';
+        if($request->hasfile('image'))
+        {
+            $file = $request->file('image');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/survey/', $filename);
+            $survey->image = $filename;
+
+        }
+        $survey->save();
+        return redirect()->back()->with('success', __('Template Created Successfully.'));
+
+    }
+
+    public function editSurveyTemplate($id){
+        $surveytemplate=SurveyTemplate::where(['id'=>$id])->first();
+        $user = Auth::guard('admin')->user();
+        return view('admin.survey.survey.edittemplate', compact('surveytemplate'));
+
+    }
+
+    public function updateSurveyTemplate(Request $request,$id){
+        $user = Auth::guard('admin')->user();
+        $survey=SurveyTemplate::where(['id'=>$id])->first();
+        $survey->title = $request->title;        
+        $survey->template_name = $request->template_name;
+
+        $survey->type = $request->template_type;
+        $survey->sub_title = $request->sub_title;
+        if($request->template_type == 'welcome'){
+            $survey->description = $request->description;
+            $survey->button_label = $request->button_label;
+            $survey->created_by = $user->id;
+        }
+        $filename='';
+        if($request->hasfile('image'))
+        {
+            $file = $request->file('image');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/survey/', $filename);
+            $survey->image = $filename;
+        }
+        $survey->save();
+        return redirect()->back()->with('success', __('Template Updated Successfully.'));
+        
+    }
+
+    public function deleteSurveyTemplate($id){
+        $surveytemplate=SurveyTemplate::where(['id'=>$id])->first();
+        $surveytemplate->delete();
+        return redirect()->back()->with('success', __('Survey template deleted Successfully.'));
+    }
+    
+    public function templatedetails(Request $request){
+        $surveytemplate=SurveyTemplate::where(['id'=>$request->id])->first();
+        return $surveytemplate;
+    }
+    public function get_all_templates(Request $request,$survey_id,$type) {
+		
+        try {
+            if ($request->ajax()) {
+                $token = csrf_token();
+                $surveytemplate=SurveyTemplate::where(['type'=>$type])->get();
+                $finalResult=[];
+                foreach($surveytemplate as $template){
+                    $output=asset('uploads/survey/'.$template->image);
+                    if($template->image!=null && $template->image!='')
+                    {
+                        $img = "<a target='_blank' href='$output'><img class='photo_capture' src='$output'/></a>";
+                    }else{
+                        $img='';
+                    }
+                    $editLink=route('survey.edittemplate',$template->id);
+                    $deletedLink=route('survey.deletetemplate',$template->id);
+                    $action = '<div class="actionsBtn"><a href="#" class="btn btn-primary waves-effect waves-light editFolder" data-url="'.$editLink.'" data-ajax-popup="true" data-bs-toggle="tooltip" title="Edit Template" data-title="Edit Template">Edit</a>
+                    <a href="'.$deletedLink.'" class="btn btn-danger  waves-effect waves-light">Delete</a>';
+               
+
+                    $result =['template_name'=>$template->template_name,'title'=>$template->title,'sub_title'=>$template->sub_title,'description'=>$template->description,'button_label'=>$template->button_label,'image'=>$img,'action'=>$action];
+                    array_push($finalResult,$result);
+
+
+                }
+                return Datatables::of($finalResult)->escapeColumns([])->make(true);
             }
         }
         catch (Exception $e) {
