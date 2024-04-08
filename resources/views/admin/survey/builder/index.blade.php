@@ -366,14 +366,31 @@
                     @endif
                     @if($currentQus->qus_type=='thank_you')
                         <div class="modal-body">
+                        <div>
+                                <?php $templatesWel = \App\Models\SurveyTemplate::where(['type'=>'thankyou'])->pluck('template_name', 'id')->toArray();
+                                 $template_id_thankyou = '';
+                                 if(isset($qusvalue->thankyou_template)){
+                                    $template_id_thankyou = $qusvalue->thankyou_template;
+                                 }
+                                  ?>
+                               
+                                {{ Form::label('thankyou_template', __('Thankyou Template'),['class'=>'form-label']) }}
+                                <select id="thankyou_template" class="thankyou_template form-control" name="thankyou_template" data-placeholder="Choose ...">
+                                    <option value="">Choose Template</option>
+                                    @foreach($templatesWel as $key=>$value)
+                                        <option value="{{$key}}" @if($key==$template_id_thankyou) selected @endif>{{$value}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <br>
                             <div>
                                 {{ Form::label('thankyou_title', __('Title'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->thankyou_title))
                                     {{ Form::text('thankyou_title', $qusvalue->thankyou_title , array('class' => 'form-control',
-                                'placeholder'=>'Enter thank you page title')) }}
+                                'placeholder'=>'Enter thank you page title','id'=>'thankyou_title')) }}
                                 @else 
                                     {{ Form::text('thankyou_title', null , array('class' => 'form-control',
-                                'placeholder'=>'Enter thank you page title')) }}
+                                'placeholder'=>'Enter thank you page title','id'=>'thankyou_title')) }}
                                 @endif
                             </div>
                             <br>
@@ -381,10 +398,10 @@
                                 {{ Form::label('thankyou_imagetitle', __('Sub Title'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->thankyou_imagetitle))
                                     {{ Form::text('thankyou_imagetitle', $qusvalue->thankyou_imagetitle , array('class' => 'form-control',
-                                'placeholder'=>'Sub title')) }}
+                                'placeholder'=>'Sub title','id'=>'thankyou_imagetitle')) }}
                                 @else 
                                     {{ Form::text('thankyou_imagetitle', null , array('class' => 'form-control',
-                                'placeholder'=>'Sub title')) }}
+                                'placeholder'=>'Sub title','id'=>'thankyou_imagetitle')) }}
                                 @endif
                             </div>
                             <br>
@@ -1923,6 +1940,8 @@ $('#likert_range').change(function(e){
     $('#likert_scale_option').html(output);
 
 });
+// Skip Logic
+
 $('#welcome_template').on("change",function(){
     let id = $(this).val();
     let url="{{route('survey.templatedetails')}}?id="+id;
@@ -1935,12 +1954,32 @@ $('#welcome_template').on("change",function(){
             $('#welcome_imagesubtitle').val(result?.description);
             $('#welcome_btn').val(result?.button_label);
             $('#existing_image').attr("src","http://127.0.0.1:8000/uploads/survey/"+result?.image);
-
-            console.log(result);
+            $('#existing_image_uploaded').val(result?.image);
+            $('.exitingImg').css('display','flex');
+            $('#existing_image').css('display',"block");
+            $('#trigger_welcome_image').css('display','none');
+            $('#ss_draft_remove_image_welcome').css('display','block');
         }
     });
 
 });
-// Skip Logic
+$('#thankyou_template').on("change",function(){
+    let id = $(this).val();
+    let url="{{route('survey.templatedetails')}}?id="+id;
+    $.ajax({
+        url: url, 
+        success: function(result){
+            $('.exitingImg').css('display','flex');
+            $('#existing_image_thankyou').css('display',"block");
+            $('#trigger_thankyou_image').css('display','none');
+            $('#ss_draft_remove_image_thankyou').css('display','block');
+            $('#thankyou_title').val(result?.title);
+            $('#thankyou_imagetitle').val(result?.sub_title);
+            $('#existing_image_uploaded').val(result?.image);
+            $('#existing_image_thankyou').attr("src","http://127.0.0.1:8000/uploads/survey/"+result?.image);
+        }
+    });
+
+});
 </script>
 

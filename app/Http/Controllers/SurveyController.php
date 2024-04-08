@@ -432,7 +432,13 @@ class SurveyController extends Controller
                     $filename = time().'.'.$extenstion;
                     $file->move('uploads/survey/', $filename);
                 }else{
-                    $filename=$request->existing_image_uploaded;
+                    if(isset($request->existing_image_uploaded)){
+                        $filename=$request->existing_image_uploaded;
+                    }else{
+                        $surveyTemplate = SurveyTemplate::where(['id'=>$request->welcome_template])->first();
+                        $filename=$surveyTemplate->image;
+                    }
+                    
                 }
                 $json=[
                     'welcome_imagesubtitle'=>$request->welcome_imagesubtitle,'welcome_btn'=>$request->welcome_btn,
@@ -453,12 +459,18 @@ class SurveyController extends Controller
                     $filename = time().'.'.$extenstion;
                     $file->move('uploads/survey/', $filename);
                 }else{
-                    $filename=$request->existing_image_uploaded_thankyou;
+                    if(isset($request->existing_image_uploaded_thankyou)){
+                        $filename=$request->existing_image_uploaded_thankyou;
+                    }else{
+                        $surveyTemplate = SurveyTemplate::where(['id'=>$request->thankyou_template])->first();
+                        $filename=$surveyTemplate->image;
+                    }
                 }
                 $json=[
                     'thankyou_title'=>$request->thankyou_title,
                     'thankyou_imagetitle'=>$request->thankyou_imagetitle,
                     'thankyou_image'=>$filename,
+                    'thankyou_template'=>$request->thankyou_template,
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->thankyou_title,'qus_ans'=>json_encode($json)]);
               break;
