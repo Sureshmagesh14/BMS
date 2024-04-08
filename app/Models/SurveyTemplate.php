@@ -20,6 +20,7 @@ class SurveyTemplate extends Model
     protected $table = 'survey_template';
 
     protected $fillable = [
+        'template_name',
         'title',
         'sub_title',
         'description',

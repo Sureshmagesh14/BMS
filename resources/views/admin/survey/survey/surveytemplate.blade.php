@@ -49,17 +49,15 @@ img.photo_capture {
                             <table id="template_table" class="table dt-responsive nowrap w-100">
                             <thead>
                                 <tr>
-                                    @if($type == 'welcome')
+                                    
+                                    <th>Template Name</th>
                                     <th>Title</th>
                                     <th>Sub title</th>
+                                    @if($type == 'welcome')
                                     <th>Description</th>
                                     <th>Button Label</th>
-                                    <th>Image</th>
-                                    @elseif($type == 'thankyou')
-                                    <th>Title</th>
-                                    <th>Sub title</th>
-                                    <th>Image</th>
                                     @endif
+                                    <th>Image</th>
                                     <th>Actions</th>
                                     
                                 </tr>
@@ -92,9 +90,9 @@ img.photo_capture {
             let page_type = $('#page_type').val();
             let cols;
             if(page_type == 'welcome'){
-                cols = [{"data":"title","name":"Title","orderable":true,"searchable":true},{"data":"sub_title","name":"Sub title","orderable":true,"searchable":true},{"data":"description","name":"Description","orderable":true,"searchable":true},{"data":"button_label","name":"Button Label","orderable":true,"searchable":true},{"data":"image","name":"Image","orderable":true,"searchable":true},{"data":"action","name":"Actions","orderable":true,"searchable":true},];
+                cols = [{"data":"template_name","name":"Template Name","orderable":true,"searchable":true},{"data":"title","name":"Title","orderable":true,"searchable":true},{"data":"sub_title","name":"Sub title","orderable":true,"searchable":true},{"data":"description","name":"Description","orderable":true,"searchable":true},{"data":"button_label","name":"Button Label","orderable":true,"searchable":true},{"data":"image","name":"Image","orderable":true,"searchable":true},{"data":"action","name":"Actions","orderable":true,"searchable":true},];
             }else{
-                cols = [{"data":"title","name":"Title","orderable":true,"searchable":true},{"data":"sub_title","name":"Sub title","orderable":true,"searchable":true},{"data":"image","name":"Image","orderable":true,"searchable":true},{"data":"action","name":"Actions","orderable":true,"searchable":true},];
+                cols = [{"data":"template_name","name":"Template Name","orderable":true,"searchable":true},{"data":"title","name":"Title","orderable":true,"searchable":true},{"data":"sub_title","name":"Sub title","orderable":true,"searchable":true},{"data":"image","name":"Image","orderable":true,"searchable":true},{"data":"action","name":"Actions","orderable":true,"searchable":true},];
             }
             $('#template_table').dataTable().fnDestroy();
             $('#template_table').DataTable({

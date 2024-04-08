@@ -270,13 +270,30 @@
                     @if($currentQus->qus_type=='welcome_page')
                         <div class="modal-body">
                             <div>
+                                <?php $templatesWel = \App\Models\SurveyTemplate::where(['type'=>'welcome'])->pluck('template_name', 'id')->toArray();
+                                 $template_id_welcome = '';
+                                 if(isset($qusvalue->welcome_template)){
+                                    $template_id_welcome = $qusvalue->welcome_template;
+                                 }
+                                  ?>
+                               
+                                {{ Form::label('welcome_template', __('Welcome Template'),['class'=>'form-label']) }}
+                                <select id="welcome_template" class="welcome_template form-control" name="welcome_template" data-placeholder="Choose ...">
+                                    <option value="">Choose Template</option>
+                                    @foreach($templatesWel as $key=>$value)
+                                        <option value="{{$key}}" @if($key==$template_id_welcome) selected @endif>{{$value}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <br>
+                            <div>
                                 {{ Form::label('welcome_title', __('Title'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->welcome_title))
                                     {{ Form::text('welcome_title', $qusvalue->welcome_title , array('class' => 'form-control',
-                                'placeholder'=>'Enter Welcome Page title')) }}
+                                'placeholder'=>'Enter Welcome Page title','id'=>'welcome_title')) }}
                                 @else 
                                     {{ Form::text('welcome_title', null , array('class' => 'form-control',
-                                'placeholder'=>'Enter Welcome Page title')) }}
+                                'placeholder'=>'Enter Welcome Page title','id'=>'welcome_title')) }}
                                 @endif
                             </div>
                             <br>
@@ -284,10 +301,10 @@
                                 {{ Form::label('welcome_imagetitle', __('Sub Title'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->welcome_imagetitle))
                                     {{ Form::text('welcome_imagetitle', $qusvalue->welcome_imagetitle , array('class' => 'form-control',
-                                'placeholder'=>'Sub title')) }}
+                                'placeholder'=>'Sub title','id'=>'welcome_imagetitle')) }}
                                 @else 
                                     {{ Form::text('welcome_imagetitle', null , array('class' => 'form-control',
-                                'placeholder'=>'Sub title')) }}
+                                'placeholder'=>'Sub title','id'=>'welcome_imagetitle')) }}
                                 @endif
                             </div>
                             <br>
@@ -295,10 +312,10 @@
                                 {{ Form::label('welcome_imagesubtitle', __('Description'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->welcome_imagetitle))
                                     {{ Form::text('welcome_imagesubtitle', $qusvalue->welcome_imagesubtitle , array('class' => 'form-control',
-                                'placeholder'=>'Description')) }}
+                                'placeholder'=>'Description','id'=>'welcome_imagesubtitle')) }}
                                 @else 
                                     {{ Form::text('welcome_imagesubtitle', null , array('class' => 'form-control',
-                                'placeholder'=>'Description')) }}
+                                'placeholder'=>'Description','id'=>'welcome_imagesubtitle')) }}
                                 @endif
                             
                             </div>
@@ -331,10 +348,10 @@
                                 {{ Form::label('welcome_btn', __('Button Label'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->welcome_imagetitle))
                                     {{ Form::text('welcome_btn', $qusvalue->welcome_btn , array('class' => 'form-control',
-                                'placeholder'=>'Enter Button Label')) }}
+                                'placeholder'=>'Enter Button Label','id'=>'welcome_btn')) }}
                                 @else 
                                     {{ Form::text('welcome_btn', null , array('class' => 'form-control',
-                                'placeholder'=>'Enter Button Label')) }}
+                                'placeholder'=>'Enter Button Label','id'=>'welcome_btn')) }}
                                 @endif
                             </div>
                             <br>
@@ -1905,7 +1922,24 @@ $('#likert_range').change(function(e){
     }
     $('#likert_scale_option').html(output);
 
-console.log($(this).val(),'likert_scale_option')
+});
+$('#welcome_template').on("change",function(){
+    let id = $(this).val();
+    let url="{{route('survey.templatedetails')}}?id="+id;
+
+    $.ajax({
+        url: url, 
+        success: function(result){
+            $('#welcome_title').val(result?.title);
+            $('#welcome_imagetitle').val(result?.sub_title);
+            $('#welcome_imagesubtitle').val(result?.description);
+            $('#welcome_btn').val(result?.button_label);
+            $('#existing_image').attr("src","http://127.0.0.1:8000/uploads/survey/"+result?.image);
+
+            console.log(result);
+        }
+    });
+
 });
 // Skip Logic
 </script>

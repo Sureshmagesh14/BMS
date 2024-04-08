@@ -438,6 +438,7 @@ class SurveyController extends Controller
                     'welcome_imagesubtitle'=>$request->welcome_imagesubtitle,'welcome_btn'=>$request->welcome_btn,
                     'welcome_imagetitle'=>$request->welcome_imagetitle,
                     'welcome_title'=>$request->welcome_title,
+                    'welcome_template'=>$request->welcome_template,
                     'welcome_image'=>$filename
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['qus_ans'=>json_encode($json)]);
@@ -1573,6 +1574,7 @@ class SurveyController extends Controller
     public function storeSurveyTemplate(Request $request){
         $user = Auth::guard('admin')->user();
         $survey = new SurveyTemplate();
+        $survey->template_name = $request->template_name;
         $survey->title = $request->title;
         $survey->type = $request->template_type;
         $survey->sub_title = $request->sub_title;
@@ -1603,17 +1605,43 @@ class SurveyController extends Controller
 
     }
 
-    public function updateSurveyTemplate(Request $request){
+    public function updateSurveyTemplate(Request $request,$id){
+        $user = Auth::guard('admin')->user();
+        $survey=SurveyTemplate::where(['id'=>$id])->first();
+        $survey->title = $request->title;        
+        $survey->template_name = $request->template_name;
+
+        $survey->type = $request->template_type;
+        $survey->sub_title = $request->sub_title;
+        if($request->template_type == 'welcome'){
+            $survey->description = $request->description;
+            $survey->button_label = $request->button_label;
+            $survey->created_by = $user->id;
+        }
+        $filename='';
+        if($request->hasfile('image'))
+        {
+            $file = $request->file('image');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/survey/', $filename);
+            $survey->image = $filename;
+        }
+        $survey->save();
+        return redirect()->back()->with('success', __('Template Updated Successfully.'));
         
     }
 
     public function deleteSurveyTemplate($id){
-        echo $id;    
         $surveytemplate=SurveyTemplate::where(['id'=>$id])->first();
         $surveytemplate->delete();
         return redirect()->back()->with('success', __('Survey template deleted Successfully.'));
     }
     
+    public function templatedetails(Request $request){
+        $surveytemplate=SurveyTemplate::where(['id'=>$request->id])->first();
+        return $surveytemplate;
+    }
     public function get_all_templates(Request $request,$survey_id,$type) {
 		
         try {
@@ -1631,11 +1659,11 @@ class SurveyController extends Controller
                     }
                     $editLink=route('survey.edittemplate',$template->id);
                     $deletedLink=route('survey.deletetemplate',$template->id);
-                    $action = '<div class="actionsBtn"><a href="#" class="btn btn-primary waves-effect waves-light editFolder" data-url="'.$editLink.'" data-ajax-popup="true" data-bs-toggle="tooltip" title="Edit Template" data-title="Edit Folder">Edit</a>
+                    $action = '<div class="actionsBtn"><a href="#" class="btn btn-primary waves-effect waves-light editFolder" data-url="'.$editLink.'" data-ajax-popup="true" data-bs-toggle="tooltip" title="Edit Template" data-title="Edit Template">Edit</a>
                     <a href="'.$deletedLink.'" class="btn btn-danger  waves-effect waves-light">Delete</a>';
                
 
-                    $result =['title'=>$template->title,'sub_title'=>$template->sub_title,'description'=>$template->description,'button_label'=>$template->button_label,'image'=>$img,'action'=>$action];
+                    $result =['template_name'=>$template->template_name,'title'=>$template->title,'sub_title'=>$template->sub_title,'description'=>$template->description,'button_label'=>$template->button_label,'image'=>$img,'action'=>$action];
                     array_push($finalResult,$result);
 
 
