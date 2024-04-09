@@ -209,8 +209,17 @@ Route::group([
     Route::get('/survey/responses/{id}', ['as' => 'survey.responses','uses' => 'SurveyController@responses']);
     Route::any('get_all_response/{id}', 'SurveyController@get_all_response')->name('get_all_response');
 
-    
+    // Survey Template 
+    Route::get('/survey/default-template/{id}/{type}', ['as' => 'survey.surveytemplate','uses' => 'SurveyController@surveytemplate']);
+    Route::any('get_all_templates/{id}/{type}', 'SurveyController@get_all_templates')->name('get_all_templates');
 
+    Route::get('/survey/createtemplate/{type}', ['as' => 'survey.createtemplate','uses' => 'SurveyController@createSurveyTemplate']);
+    Route::post('/survey/storetemplate', ['as' => 'survey.storetemplate','uses' => 'SurveyController@storeSurveyTemplate']);
+    Route::get('/survey/edittemplate/{id}', ['as' => 'survey.edittemplate','uses' => 'SurveyController@editSurveyTemplate']);
+    Route::post('/survey/updatetemplate/{id}', ['as' => 'survey.updatetemplate','uses' => 'SurveyController@updateSurveyTemplate']);
+    Route::get('/survey/deletetemplate/{id}', ['as' => 'survey.deletetemplate','uses' => 'SurveyController@deleteSurveyTemplate']);
+    Route::get('/survey/templatedetails', ['as' => 'survey.templatedetails','uses' => 'SurveyController@templatedetails']);
+    
 });
 
     
