@@ -70,7 +70,7 @@
                     $templateRoute=route('survey.template',$survey->folder_id); 
                 }
                 else{
-                    $initialFolder = Folder::orderBy("id", "desc")->first();
+                    $initialFolder = \App\Models\Folder::orderBy("id", "desc")->first();
                     $templateRoute=route('survey.template',$initialFolder->id); 
                 }
                 
