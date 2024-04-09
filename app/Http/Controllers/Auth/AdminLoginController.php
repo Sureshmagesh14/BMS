@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\User;
+use App\Models\Users;
 use DB;
 use Session;
 use Exception;
+use Hash;
 class AdminLoginController extends Controller
 {
 
@@ -54,7 +55,16 @@ class AdminLoginController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return back()->with('error','Invalid Email Or Password');
+        if (!Users::where('email', $request->email)->first()) {
+            return back()->with('error','Invalid Username or Password');
+        }
+        
+        if (!Users::where('email', $request->email)->where('password', bcrypt($request->password))->first()) {
+            $mess= strip_tags("<strong>Incorrect Password.</strong>");
+            return back()->with('pass_error',$mess);
+        }
+
+       
     }
 
     public function admin_dashboard(Request $request){
