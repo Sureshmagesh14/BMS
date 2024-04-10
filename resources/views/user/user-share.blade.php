@@ -10,7 +10,9 @@
             <div class="col-md-4 bg-white p-5">
             <div class="qr-code text-center">
                 <h4 class="text-center">GET PAID FOR YOUR OPINION</h4>
-                <img src="{{ asset('assets/images/qr-code.png') }}" class="img-fluid" alt="">
+                <div class="visible-print text-center">
+                    {!! QrCode::size(250)->generate(URL::to('/').$ref_code); !!}
+                </div>
                 <div class="social-icons-color d-flex justify-content-center my-3">
                     <img src="{{ asset('assets/images/SM icons-01.png') }}" class="img-fluid w-10" alt="">
                     <img src="{{ asset('assets/images/SM icons-02.png') }}" class="img-fluid w-10" alt="">
@@ -22,6 +24,8 @@
                 <span id="demo"> {{URL::to('/')}}?r={{$ref_code}}</span>
                 <p class="text-secondary btn" onclick="copy('#demo')">Tap to copy link</p>
             </div>
+           
+              
         </div>
         </div>
     </div>
