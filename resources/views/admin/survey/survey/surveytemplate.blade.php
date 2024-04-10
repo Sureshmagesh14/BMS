@@ -21,31 +21,45 @@ img.photo_capture {
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h4 class="mb-0">{{$survey->title}} - Responses</h4>
+                        <h4 class="mb-0">{{$survey->title}} - @if($type =='welcome') Welcome @else Thank you @endif Templates</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href=" {{ route('admin.dashboard') }}">Dashboards</a></li>
                                 <li class="breadcrumb-item"><a href=" {{ route('survey.template',$survey->folder->id) }}">{{$survey->folder->folder_name}}</a></li>
                                 <li class="breadcrumb-item"><a href=" {{ route('survey.builder',[$survey->builderID,0]) }}">{{$survey->title}}</a></li>
-                                <li class="breadcrumb-item">Responses</li>
+                                <li class="breadcrumb-item">Template</li>
                             </ol>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- end page title -->
-
+            <input type="hidden" value="{{$type}}" id="page_type"/>
             <div class="row">
+                
                 <div class="col-12">
+                     
                     <div class="card">
                         <div class="card-body">
-
-                            <table id="response_table" class="table dt-responsive nowrap w-100">
+                            <div class="createBtn">
+                                <a href="#" class="mx-3 btn btn-sm align-items-center" data-url="{{route('survey.createtemplate',$type)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Create @if($type =='welcome') Welcome @elseif($type =='thankyou') Thankyou @endif Template" data-title="Create @if($type =='welcome') Welcome @elseif($type =='thankyou') Thankyou @endif Template">
+                                    <button type="button" class="btn btn-primary waves-effect waves-light">Create Template</button>
+                                </a>
+                            </div>
+                            <table id="template_table" class="table dt-responsive nowrap w-100">
                             <thead>
                                 <tr>
-                                    @foreach($cols as $qus)
-                                    <th>{{$qus['name']}}</th>
-                                    @endforeach
+                                    
+                                    <th>Template Name</th>
+                                    <th>Title</th>
+                                    <th>Sub title</th>
+                                    @if($type == 'welcome')
+                                    <th>Description</th>
+                                    <th>Button Label</th>
+                                    @endif
+                                    <th>Image</th>
+                                    <th>Actions</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,7 +73,6 @@ img.photo_capture {
             </div> <!-- end row -->
         </div> <!-- container-fluid -->
     </div>
-    <input type="hidden" id="cols" value="{{json_encode($cols)}}"/>
     <!-- End Page-content -->
 
     @include('admin.layout.footer')
@@ -74,16 +87,22 @@ img.photo_capture {
         });
 
         function response_datatable() {
-            let cols = $('#cols').val();
-            $('#response_table').dataTable().fnDestroy();
-            $('#response_table').DataTable({
+            let page_type = $('#page_type').val();
+            let cols;
+            if(page_type == 'welcome'){
+                cols = [{"data":"template_name","name":"Template Name","orderable":true,"searchable":true},{"data":"title","name":"Title","orderable":true,"searchable":true},{"data":"sub_title","name":"Sub title","orderable":true,"searchable":true},{"data":"description","name":"Description","orderable":true,"searchable":true},{"data":"button_label","name":"Button Label","orderable":true,"searchable":true},{"data":"image","name":"Image","orderable":true,"searchable":true},{"data":"action","name":"Actions","orderable":true,"searchable":true},];
+            }else{
+                cols = [{"data":"template_name","name":"Template Name","orderable":true,"searchable":true},{"data":"title","name":"Title","orderable":true,"searchable":true},{"data":"sub_title","name":"Sub title","orderable":true,"searchable":true},{"data":"image","name":"Image","orderable":true,"searchable":true},{"data":"action","name":"Actions","orderable":true,"searchable":true},];
+            }
+            $('#template_table').dataTable().fnDestroy();
+            $('#template_table').DataTable({
                 searching: true,
                 ordering: true,
-                // dom: 'lfrtip',
-                dom: 'Bfrtip',
-                buttons: [
-                    'excel'
-                ],
+                dom: 'lfrtip',
+                // dom: 'Bfrtip',
+                // buttons: [
+                //     'excel'
+                // ],
                 info: true,
                 iDisplayLength: 10,
                 lengthMenu: [
@@ -91,7 +110,7 @@ img.photo_capture {
                     [10, 50, 100, "All"]
                 ],
                 ajax: {
-                    url: "{{ route('get_all_response',$survey_id) }}",
+                    url: "{{ route('get_all_templates',[$survey->id,$type]) }}",
                     data: {
                         _token: tempcsrf,
                     },
@@ -112,7 +131,7 @@ img.photo_capture {
                     console.log(settings,json)
                     
                 },
-                columns: JSON.parse(cols)
+                columns: cols
             });
         }
 

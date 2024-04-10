@@ -1774,3 +1774,17 @@ button.removechoicelist_skip,button.removechoicelist_display {
     border: 1px solid #4A9CA6;
     box-shadow: none !important;
 }
+.answer-option--file-input{width:100%;display:-webkit-box;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:flex;-webkit-box-direction:normal;-webkit-box-orient:vertical;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;-webkit-align-items:center;-moz-align-items:center;align-items:center;border-radius:10px;margin:0 0 .25em;height:240px;position:relative;cursor:pointer;overflow:hidden;transition:all 0.3s;}
+.answer-option--file-input svg{margin:0 0 .5em;}
+.answer-option--file-input p{margin:0;padding:0;}
+.answer-option--file-input-text{display:block;text-align:center;}
+.answer-option--file-input-text.error{color:#F86060!important;}
+.ss-survey-border-style--dashed {
+    border-style: dashed;
+}
+.ss-camera-input.upload_wrapper {
+    width: 30%;
+}
+button#camera_btn {
+    pointer-events: none;
+}
