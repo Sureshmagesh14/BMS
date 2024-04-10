@@ -21,7 +21,7 @@
                    
 
 <form name="form" id="x1" method="POST" action="https://paynow.netcash.co.za/site/paynow.aspx" target="_top"> <!---Form POST **--->
-<input type="hidden" name="M1" value="7XXX34c4-XXX-40X8-9f1d-7fbXXXX830d3"> <!--- YOUR PAY NOW SERVICE KEY GOES IN HERE --->
+<input type="hidden" name="M1" value="d5b32568-2a7e-4a5d-9de4-5d27ca8b39c8"> <!--- YOUR PAY NOW SERVICE KEY GOES IN HERE --->
 <input type="hidden" name="M2" value="24ade73c-98cf-47b3-99be-cc7b867b3080"> <!--- SOFTWARE VENDOR KEY GOES IN HERE --->
 <input type="hidden" name="p2" value="ID:123"> <!---Unique ID for this / each transaction--->
 <input type="hidden" name="p3" value="Test / Demo goods"> <!---Description of goods being purchased--->
