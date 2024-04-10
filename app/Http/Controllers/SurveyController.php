@@ -472,14 +472,14 @@ class SurveyController extends Controller
                     'thankyou_image'=>$filename,
                     'thankyou_template'=>$request->thankyou_template,
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->thankyou_title,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->thankyou_title,'qus_ans'=>json_encode($json)]);
               break;
             case 'open_qus':
                 $json=[
                     'open_qus_choice'=>$request->open_qus_choice,
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             case 'single_choice':
                 $json=[
@@ -487,7 +487,7 @@ class SurveyController extends Controller
                     'choices_type'=>'single',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             case 'multi_choice':
                 $json=[
@@ -495,7 +495,7 @@ class SurveyController extends Controller
                     'choices_type'=>'mulitple',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             case 'likert':
                 $json=[
@@ -505,7 +505,7 @@ class SurveyController extends Controller
                     'likert_range'=>$request->likert_range,
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'rankorder':
                 $json=[
@@ -513,14 +513,14 @@ class SurveyController extends Controller
                     'choices_type'=>'rankorder',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'rating':
                 $json=[
                     'icon_type'=>$request->icon_type,
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'dropdown':
                 $json=[
@@ -528,7 +528,7 @@ class SurveyController extends Controller
                     'choices_type'=>'dropdown',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'picturechoice':
                 $json=[
@@ -536,17 +536,17 @@ class SurveyController extends Controller
                     'choices_type'=>'picturechoice',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'photo_capture':
                 $json=[
                     'choices_type'=>'photo_capture',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'email':
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>'email']);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>'email']);
                 break;
             case 'matrix_qus':
                 $json=[
@@ -556,7 +556,7 @@ class SurveyController extends Controller
                     'choices_type'=>'radio',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             default:
               //code block

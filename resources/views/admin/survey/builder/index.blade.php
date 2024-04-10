@@ -432,9 +432,15 @@
                     @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
                         <div class="modal-body">
                                 <div>
-                                    {{ Form::label('question_name', __('Add description to your question'),['class'=>'form-label']) }}
+                                    {{ Form::label('question_name', __('Question Title'),['class'=>'form-label']) }}
                                         {{ Form::text('question_name', $qus_name , array('class' => 'form-control',
-                                    'placeholder'=>'Enter Question Description')) }}
+                                    'placeholder'=>'Enter Question title','required'=>true)) }}
+                                </div>
+                                <br>
+                                <div>
+                                    {{ Form::label('question_description', __('Add description to your question'),['class'=>'form-label']) }}
+                                        {{ Form::text('question_description', $qus_name , array('class' => 'form-control',
+                                    'placeholder'=>'Enter Question description')) }}
                                 </div>
                                 <br>
                                 @if($currentQus->qus_type=='open_qus')

@@ -208,11 +208,8 @@ if(isset($bg)){
                                             <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                                 <span class="d-block ss-survey-heading--text__span">{{$question->question_name}} </span>
                                             </h1>
-                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">
-                                                <p>
-                                                    <br>
-                                                </p>
-                                            </p>
+                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$question->question_description}}</p>
+
                                         </div>
                                     </div>
                                 </div>
@@ -293,10 +290,8 @@ if(isset($bg)){
                                     <div class="ss_cl_survey_qstn">
                                     <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text" id="question-title-8966626">
                                         <span class="d-block ss-survey-heading--text__span">{{$question->question_name}}</span></h1>
-                                    <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                        id="question-description-8966626">
-                                    <p><br></p>
-                                    </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$question->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div>
@@ -358,10 +353,8 @@ if(isset($bg)){
                                             <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                                 <span class="d-block ss-survey-heading--text__span">{{$question->question_name}} </span>
                                             </h1>
-                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                                id="question-description-8982683">
-                                            <p><br></p>
-                                            </p>
+                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$question->question_description}}</p>
+
                                         </div>
                                     </div>
                                 </div>
@@ -425,10 +418,8 @@ if(isset($bg)){
                                             <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                                 <span class="d-block ss-survey-heading--text__span">{{$question->question_name}} </span>
                                             </h1>
-                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                                id="question-description-8982683">
-                                            <p><br></p>
-                                            </p>
+                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$question->question_description}}</p>
+
                                         </div>
                                     </div>
                                 </div>
@@ -497,8 +488,8 @@ if(isset($bg)){
                                                 <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                                     <span class="d-block ss-survey-heading--text__span">{{$question->question_name}} </span>
                                                 </h1>
-                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                                id="question-description-8962778"> </p>
+                                                <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$question->question_description}}</p>
+
                                         </div>
                                     </div>
                                 </div><span class="ss_span_wrapper">
@@ -574,12 +565,8 @@ if(isset($bg)){
                                             <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text"
                                                 id="question-title-8966750"><span
                                                     class="d-block ss-survey-heading--text__span">{{$question->question_name}}</span></h1>
-                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                                id="question-description-8966750">
-                                            <p>
-                                                <br>
-                                            </p>
-                                            </p>
+                                                    <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$question->question_description}}</p>
+
                                         </div>
                                     </div>
                                 </div><span class="ss_span_wrapper">
@@ -666,9 +653,8 @@ if(isset($bg)){
                                             <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                                 <span class="d-block ss-survey-heading--text__span">{{$question->question_name}} </span>
                                             </h1>
-                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07" id="question-description-8966749">
-                                            <p><br> </p>
-                                            </p>
+                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$question->question_description}}</p>
+
                                         </div>
                                     </div>
                                 </div> <span class="ss_span_wrapper">
@@ -809,12 +795,8 @@ if(isset($bg)){
                                             <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                                 <span class="d-block ss-survey-heading--text__span">{{$question->question_name}} </span>
                                             </h1>
-                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                                id="question-description-8966664">
-                                            <p>
-                                                <br>
-                                            </p>
-                                            </p>
+                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$question->question_description}}</p>
+
                                         </div>
                                     </div>
                                 </div><span class="ss_span_wrapper">
@@ -870,12 +852,8 @@ if(isset($bg)){
                                             <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                                 <span class="d-block ss-survey-heading--text__span">{{$question->question_name}} </span>
                                             </h1>
-                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                                id="question-description-8972084">
-                                            <p>
-                                                <br>
-                                            </p>
-                                            </p>
+                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$question->question_description}}</p>
+
                                         </div>
                                     </div>
                                 </div><span class="ss_span_wrapper">
@@ -950,12 +928,8 @@ if(isset($bg)){
                                             <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                                 <span class="d-block ss-survey-heading--text__span">{{$question->question_name}} </span>
                                             </h1>
-                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                                id="question-description-8966644">
-                                            <p>
-                                                <br>
-                                            </p>
-                                            </p>
+                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$question->question_description}}</p>
+
                                         </div>
                                     </div>
                                 </div><span class="ss_span_wrapper">
