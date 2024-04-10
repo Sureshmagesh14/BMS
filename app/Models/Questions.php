@@ -22,6 +22,7 @@ class Questions extends Model
     protected $fillable = [
         'survey_id',
         'question_name',
+        'question_description',
         'qus_template',
         'qus_type',
         'qus_ans', 'created_by'
