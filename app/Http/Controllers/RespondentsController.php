@@ -439,7 +439,7 @@ class RespondentsController extends Controller
 
                                 $nestedData['options'] .= '<li class="list-group-item">
                                     <a id="deattach_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
-                                        <i class="far fa-trash-alt"></i> Delete
+                                        <i class="far fa-trash-alt"></i> De-attach
                                     </a>
                                 </li>';
                             }
@@ -769,7 +769,26 @@ class RespondentsController extends Controller
         }
     }
 
-    public function deattach_respondent(Request $request){
-        dd($request->all());
+    public function deattach_respondent($resp_id, $project_id){
+        try {
+            if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->exists()){
+                Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->delete();
+                return response()->json([
+                    'text_status' => true,
+                    'status' => 200,
+                    'message' => 'Deattach Respondents Successfully.',
+                ]);
+            }
+            else{
+                return response()->json([
+                    'text_status' => false,
+                    'status' => 200,
+                    'message' => 'Cant find respondents or projects',
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 }

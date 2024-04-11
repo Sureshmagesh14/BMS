@@ -33,7 +33,7 @@
 
                                     <div class="btn-group mr-2" role="group" aria-label="First group" >
                                       
-                                
+                                        <input type="hidden" name="project_id" id="project_id" value="{{$data->id}}">
                                         <select name="action_1" id="action_1" class="form-control projects_table show_hided_option select_box">
                                             <option value="">Select Action</option>
                                             <option value="6">Update</option>
@@ -313,8 +313,6 @@
         var url = "{{ route('deattach_respondent', ['respondent_id' => ':respondent_id', 'project_id' => ':project_id']) }}";
         url = url.replace(':respondent_id', respondent);
         url = url.replace(':project_id', project_id);
-
-        console.log("url",url);
 
         single_delete("POST", respondent, url, "Deattach Respondent", 'respondents_datatable');
     });
