@@ -95,6 +95,10 @@ Route::group([
     Route::any('projects_copy/{id}','ProjectsController@copy')->name('projects_copy');
     Route::any('export_projects', 'ProjectsController@export_projects')->name('export_projects');   
     Route::any('projects_multi_delete', 'ProjectsController@projects_multi_delete')->name('projects_multi_delete');
+    Route::any('attach_projects/{respondent_id}', 'ProjectsController@attach_projects')->name('attach_projects');
+    Route::any('project_seach_result', 'ProjectsController@project_seach_result')->name('project_seach_result');
+    Route::any('project_attach_store', 'ProjectsController@project_attach_store')->name('project_attach_store');
+    Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
 
     /* Respondents MENU*/
     Route::resource('respondents','RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
