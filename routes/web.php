@@ -95,6 +95,10 @@ Route::group([
     Route::any('projects_copy/{id}','ProjectsController@copy')->name('projects_copy');
     Route::any('export_projects', 'ProjectsController@export_projects')->name('export_projects');   
     Route::any('projects_multi_delete', 'ProjectsController@projects_multi_delete')->name('projects_multi_delete');
+    Route::any('attach_projects/{respondent_id}', 'ProjectsController@attach_projects')->name('attach_projects');
+    Route::any('project_seach_result', 'ProjectsController@project_seach_result')->name('project_seach_result');
+    Route::any('project_attach_store', 'ProjectsController@project_attach_store')->name('project_attach_store');
+    Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
 
     /* Respondents MENU*/
     Route::resource('respondents','RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
@@ -106,6 +110,10 @@ Route::group([
     Route::get('gen_respondent_mon_export','RespondentsController@gen_respondent_mon_export')->name('gen_respondent_mon_export');    
     Route::get('export_resp','RespondentsController@export_resp')->name('export_resp');
     Route::any('respondents_export', 'RespondentsController@respondents_export')->name('respondents_export'); /* Respondents Export */
+    Route::any('attach_respondents/{project_id}', 'RespondentsController@attach_respondents')->name('attach_respondents');
+    Route::any('respondent_seach_result', 'RespondentsController@respondent_seach_result')->name('respondent_seach_result');
+    Route::any('respondent_attach_store', 'RespondentsController@respondent_attach_store')->name('respondent_attach_store');
+    Route::any('deattach_respondent/{respondent_id}/{project_id}', 'RespondentsController@deattach_respondent')->name('deattach_respondent');
 
     /* Tags (or) Pannels MENU*/
     Route::resource('tags','TagsController')->name('index', 'tags.index')->name('destroy', 'tags.destroy')

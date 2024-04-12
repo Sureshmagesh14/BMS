@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Respondents;
+use App\Models\Projects;
+use App\Models\Project_respondent;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -432,19 +434,29 @@ class RespondentsController extends Controller
                                 <a href="'.$view_route.'" class="rounded waves-light waves-effect">
                                     <i class="fa fa-eye"></i> View
                                 </a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                    data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#!" id="delete_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
-                                    <i class="far fa-trash-alt"></i> Delete
-                                </a>
-                            </li>
-                        </ul>
+                            </li>';
+                            if (str_contains(url()->previous(), '/admin/projects')){
+
+                                $nestedData['options'] .= '<li class="list-group-item">
+                                    <a id="deattach_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
+                                        <i class="far fa-trash-alt"></i> De-attach
+                                    </a>
+                                </li>';
+                            }
+                            else{
+                                $nestedData['options'] .= '<li class="list-group-item">
+                                    <a data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                        data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" id="delete_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
+                                        <i class="far fa-trash-alt"></i> Delete
+                                    </a>
+                                </li>';
+                            }
+                        $nestedData['options'] .= '</ul>
                     </div>';
                     $data[] = $nestedData;
                     $i++;
@@ -676,6 +688,107 @@ class RespondentsController extends Controller
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
+        }
+    }
+
+    public function attach_respondents(Request $request){
+        try {
+            $project_id = $request->project_id;
+            // $respondents = Respondents::select('respondents.id','respondents.name','respondents.surname')->whereNull('deleted_at')->take(10)->get();
+            $projects = Projects::select('projects.id','projects.name')->where('projects.id',$project_id)->first();
+
+            $returnHTML = view('admin.respondents.attach', compact('projects'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function respondent_seach_result(Request $request){
+        try {
+            $searchValue = $request['q'];
+            
+            if($request->filled('q')){
+                $respondents_data = Respondents::search($searchValue)
+                ->query(function ($query) {
+                    $query->where('deleted_at', '=', NULL);
+                })
+                ->orderBy('id','ASC')
+                ->get();
+            }
+
+            $respondents = array();
+            if(count($respondents_data) > 0){
+                foreach($respondents_data as $resp){
+                    $setUser = [
+                        'id' => $resp->id,
+                        'name' => $resp->name . ' - ' . $resp->surname,
+                    ];
+                    $respondents[] = $setUser;
+                }
+            }
+
+            echo json_encode($respondents);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function respondent_attach_store(Request $request){
+        try {
+            $project_id  = $request->project_id;
+            $respondents = $request->respondents;
+
+            if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $respondents)->exists()){
+                return response()->json([
+                    'text_status' => false,
+                    'status' => 200,
+                    'message' => 'Respondents Already Attached.',
+                ]);
+            }
+            else{
+                Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $respondents]);
+
+                return response()->json([
+                    'text_status' => true,
+                    'status' => 200,
+                    'message' => 'Respondents Attached Successfully.',
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function deattach_respondent($resp_id, $project_id){
+        try {
+            if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->exists()){
+                Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->delete();
+                return response()->json([
+                    'text_status' => true,
+                    'status' => 200,
+                    'message' => 'Deattach Respondents Successfully.',
+                ]);
+            }
+            else{
+                return response()->json([
+                    'text_status' => false,
+                    'status' => 200,
+                    'message' => 'Cant find respondents or projects',
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
         }
     }
 }

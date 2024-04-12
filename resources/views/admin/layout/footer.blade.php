@@ -128,6 +128,7 @@
         <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
         <!-- Sweet alert init js-->
         <script src="{{ asset('assets/js/pages/sweet-alerts.init.js') }}"></script>
+        <script src="{{ asset('assets/tokeninput/jquery.tokeninput.js') }}"></script>
     @endpush
 
     @push('adminside-datatable')
@@ -192,13 +193,24 @@
         }
 
         function single_delete(method_type, set_data, route, message, datatable_function){
+            if(message.indexOf("Deattach") != -1){
+                titles = "De-attach Resource";
+                contents = "Are you sure you want to deattach the selected resources?";
+                texts = "Deattach";
+            }
+            else{
+                titles = "{{ Config::get('constants.delete') }}";
+                contents = "{{ Config::get('constants.delete_confirmation') }}";
+                texts = "Delete";
+            }
+
             $.confirm({
-                title: "{{ Config::get('constants.delete') }}",
-                content: "{{ Config::get('constants.delete_confirmation') }}",
+                title: titles,
+                content: contents,
                 autoClose: 'cancel|8000',
                 buttons: {
                     delete: {
-                        text: 'delete',
+                        text: texts,
                         action: function() {
                             $.ajax({
                                 type: method_type,
