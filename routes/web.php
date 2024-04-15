@@ -186,7 +186,7 @@ Route::group([
     Route::get('/survey/questions/{id}', ['as' => 'survey.quesbuilder','uses' => 'SurveyController@questionList']);
     Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'SurveyController@updateQus']);
 
-    /* Clone Survey*/
+    /* Survey Clone Routings*/
     Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication','uses' => 'SurveyController@surveyduplication']);
     Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey']);
     Route::get('/survey/movesurvey/{id}', ['as' => 'survey.movesurvey','uses' => 'SurveyController@movesurvey']);
@@ -197,6 +197,7 @@ Route::group([
     Route::get('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@background']); // Survey Background
     Route::post('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@setbackground']); // Survey Background
     
+    // Survey Get Qus
     Route::get('/survey/getqus', ['as' => 'survey.getqus','uses' => 'SurveyController@getqus']); // Get Qus
 
     // Survey Settings 
