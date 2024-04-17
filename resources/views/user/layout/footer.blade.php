@@ -14,9 +14,9 @@
                 </div>
                 <div class="col-md-6">
                     <div class="social-icons text-end">
-                        <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                        <a href="https://www.instagram.com/thebrandsurgeon/?igshid=YmMyMTA2M2Y%3D"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                        <a href="https://www.facebook.com/thebrandsurgeonsa"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        <a href="https://www.linkedin.com/company/the-brand-surgeon-company/"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>

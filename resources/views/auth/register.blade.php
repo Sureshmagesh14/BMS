@@ -133,7 +133,7 @@
                         <div class="date text-start w-48 my-3">
                             <label for="date">Password<span class="text-danger">*</span></label>
                             <div class="main-password">
-                                <input type="password" name="password" id="password"
+                                <input type="password" name="password_register" id="password_register"
                                     class="form-control vi-border-clr border-radius-0 input-password"
                                     aria-label="password" placeholder="Create Password" required>
                                 <a href="JavaScript:void(0);" class="icon-view">
@@ -154,12 +154,14 @@
                         </div>
                     </div>
                     <div class="lname text-start w-48 m-auto my-3">
-                        <input type="checkbox" id="terms" name="terms" class="form-check-input" readonly>
-                        <span class="form-check-label">Agree the <a href="https://dev.mustbuildapp.com/terms-of-service" tabindex="-1">terms and policy</a>.</span>
+                        <input type="checkbox" id="terms" name="terms" class="form-check-input" required>
+                        <span class="form-check-label">Agree the <a
+                            data-bs-toggle="modal" data-bs-target="#exampleModal">terms and
+                                policy</a>.</span>
                     </div>
-                  
+
                     <div class="submit-btn text-start">
-                        <button class="btn vi-nav-bg border-radius-0 text-white px-5 py-3"
+                        <button type="submit" class="btn vi-nav-bg border-radius-0 text-white px-5 py-3"
                             id="save_org">Continue</button>
                     </div>
                 </form>
@@ -168,6 +170,22 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+       
+      </div>
+    </div>
+  </div>
 
 
 @include('user.layout.footer')
@@ -226,24 +244,36 @@
                         type: "GET"
                     }
                 },
-                
-                password: {
+
+                password_register: {
                     required: true,
                     minlength: 6
                 },
                 password_confirmation: {
                     required: true,
                     minlength: 6,
-                    equalTo: "#password"
+                    equalTo: "#password_register"
                 },
+                terms: {
+                    required: true,
 
+                },
 
             },
             messages: {
                 email: {
                     remote: mess
-                }
+                },
+                "terms": {
+                    required: function() {
+                        toastr.error('Please accept terms and policy field is required')
+                    },
+                },
             },
+        //     submitHandler: function(form) { // for demo
+         
+        //     return false; // for demo
+        // }
         });
     });
     $(function() {
