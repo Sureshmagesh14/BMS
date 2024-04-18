@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Projects;
 use App\Models\project_respondent;
 use App\Models\Users;
+use App\Models\Respondents;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -309,12 +310,13 @@ class ProjectsController extends Controller
         try {
             if ($request->ajax()) {
                 $all_datas = Projects::select('projects.*','projects.name as uname')
-                    ->join('users', 'users.id', '=', 'projects.user_id') 
-                    ->orderby("id","desc");
+                    ->join('users', 'users.id', '=', 'projects.user_id');
                     if(isset($request->id)){
-                        $all_datas->where('user_id',$request->id);
+                        if($request->inside_form == 'respondents'){
+                            $all_datas->join('project_respondent','project_respondent.project_id', 'projects.id')->where('project_respondent.respondent_id',$request->id);
+                        }
                     }
-                $all_datas = $all_datas->get();
+                $all_datas = $all_datas->orderby("id","desc")->get();
 
                 return Datatables::of($all_datas)
                     ->addColumn('select_all', function ($all_data) {
@@ -402,25 +404,34 @@ class ProjectsController extends Controller
                                     <a href="'.$view_route.'" data-bs-original-title="View Project" class="rounded waves-light waves-effect">
                                         <i class="fa fa-eye"></i> View
                                     </a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                        data-bs-original-title="Edit Project" class="rounded waves-light waves-effect">
-                                        <i class="fa fa-edit"></i> Edit
-                                    </a>
-                                </li>
-                                <li class="list-group-item">
-                                <a href="#!" data-url="'.$copy_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                    data-bs-original-title="Copy Project" class="rounded waves-light waves-effect">
-                                    <i class="fa fa-copy"></i> Copy
-                                </a>
-                            </li>
-                                <li class="list-group-item">
-                                    <a href="#!" id="delete_projects" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
-                                        <i class="far fa-trash-alt"></i> Delete
-                                    </a>
-                                </li>
-                            </ul>
+                                </li>';
+                                if (str_contains(url()->previous(), '/admin/respondents')){
+                                    $design .= '<li class="list-group-item">
+                                        <a href="#!" id="deattach_projects" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                            <i class="far fa-trash-alt"></i> Deattach
+                                        </a>
+                                    </li>';
+                                }
+                                else{
+                                    $design .= '<li class="list-group-item">
+                                        <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                            data-bs-original-title="Edit Project" class="rounded waves-light waves-effect">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="#!" data-url="'.$copy_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                            data-bs-original-title="Copy Project" class="rounded waves-light waves-effect">
+                                            <i class="fa fa-copy"></i> Copy
+                                        </a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="#!" id="delete_projects" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                            <i class="far fa-trash-alt"></i> Delete
+                                        </a>
+                                    </li>';
+                                }
+                            $design .= '</ul>
                         </div>';
 
                         if(Auth::guard('admin')->user()->role_id == 1){
@@ -619,6 +630,107 @@ class ProjectsController extends Controller
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
+        }
+    }
+
+    public function deattach_project($resp_id, $project_id){
+        try {
+            if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->exists()){
+                Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->delete();
+                return response()->json([
+                    'text_status' => true,
+                    'status' => 200,
+                    'message' => 'Deattach Project Successfully.',
+                ]);
+            }
+            else{
+                return response()->json([
+                    'text_status' => false,
+                    'status' => 200,
+                    'message' => 'Cant find respondents or projects',
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function attach_projects(Request $request){
+        try {
+            $respondent_id = $request->respondent_id;
+
+            $respondents = Respondents::select('respondents.id','respondents.name','respondents.surname')->where('respondents.id',$respondent_id)->first();
+           
+            $returnHTML = view('admin.projects.attach', compact('respondents'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function project_seach_result(Request $request){
+        try {
+            $searchValue = $request['q'];
+            
+            if($request->filled('q')){
+                $projects_data = Projects::search($searchValue)
+                ->query(function ($query) {
+                    $query->where('deleted_at', '=', NULL);
+                })
+                ->orderBy('id','ASC')
+                ->get();
+            }
+
+            $projects = array();
+            if(count($projects_data) > 0){
+                foreach($projects_data as $resp){
+                    $setUser = [
+                        'id' => $resp->id,
+                        'name' => $resp->name . ' - ' . $resp->surname,
+                    ];
+                    $projects[] = $setUser;
+                }
+            }
+
+            echo json_encode($projects);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function project_attach_store(Request $request){
+        try {
+            $project_id  = $request->project_id;
+            $respondents = $request->respondents;
+
+            if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $respondents)->exists()){
+                return response()->json([
+                    'text_status' => false,
+                    'status' => 200,
+                    'message' => 'Project Already Attached.',
+                ]);
+            }
+            else{
+                Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $respondents]);
+
+                return response()->json([
+                    'text_status' => true,
+                    'status' => 200,
+                    'message' => 'Project Attached Successfully.',
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
         }
     }
 }

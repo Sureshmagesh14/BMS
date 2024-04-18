@@ -95,6 +95,10 @@ Route::group([
     Route::any('projects_copy/{id}','ProjectsController@copy')->name('projects_copy');
     Route::any('export_projects', 'ProjectsController@export_projects')->name('export_projects');   
     Route::any('projects_multi_delete', 'ProjectsController@projects_multi_delete')->name('projects_multi_delete');
+    Route::any('attach_projects/{respondent_id}', 'ProjectsController@attach_projects')->name('attach_projects');
+    Route::any('project_seach_result', 'ProjectsController@project_seach_result')->name('project_seach_result');
+    Route::any('project_attach_store', 'ProjectsController@project_attach_store')->name('project_attach_store');
+    Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
 
     /* Respondents MENU*/
     Route::resource('respondents','RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
@@ -190,7 +194,7 @@ Route::group([
     Route::get('/survey/questions/{id}', ['as' => 'survey.quesbuilder','uses' => 'SurveyController@questionList']);
     Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'SurveyController@updateQus']);
 
-    /* Clone Survey*/
+    /* Survey Clone Routings*/
     Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication','uses' => 'SurveyController@surveyduplication']);
     Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey']);
     Route::get('/survey/movesurvey/{id}', ['as' => 'survey.movesurvey','uses' => 'SurveyController@movesurvey']);
@@ -201,6 +205,7 @@ Route::group([
     Route::get('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@background']); // Survey Background
     Route::post('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@setbackground']); // Survey Background
     
+    // Survey Get Qus
     Route::get('/survey/getqus', ['as' => 'survey.getqus','uses' => 'SurveyController@getqus']); // Get Qus
 
     // Survey Settings 
@@ -213,8 +218,17 @@ Route::group([
     Route::get('/survey/responses/{id}', ['as' => 'survey.responses','uses' => 'SurveyController@responses']);
     Route::any('get_all_response/{id}', 'SurveyController@get_all_response')->name('get_all_response');
 
-    
+    // Survey Template 
+    Route::get('/survey/default-template/{id}/{type}', ['as' => 'survey.surveytemplate','uses' => 'SurveyController@surveytemplate']);
+    Route::any('get_all_templates/{id}/{type}', 'SurveyController@get_all_templates')->name('get_all_templates');
 
+    Route::get('/survey/createtemplate/{type}', ['as' => 'survey.createtemplate','uses' => 'SurveyController@createSurveyTemplate']);
+    Route::post('/survey/storetemplate', ['as' => 'survey.storetemplate','uses' => 'SurveyController@storeSurveyTemplate']);
+    Route::get('/survey/edittemplate/{id}', ['as' => 'survey.edittemplate','uses' => 'SurveyController@editSurveyTemplate']);
+    Route::post('/survey/updatetemplate/{id}', ['as' => 'survey.updatetemplate','uses' => 'SurveyController@updateSurveyTemplate']);
+    Route::get('/survey/deletetemplate/{id}', ['as' => 'survey.deletetemplate','uses' => 'SurveyController@deleteSurveyTemplate']);
+    Route::get('/survey/templatedetails', ['as' => 'survey.templatedetails','uses' => 'SurveyController@templatedetails']);
+    
 });
 
     

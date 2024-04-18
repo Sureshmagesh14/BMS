@@ -195,8 +195,13 @@ class WelcomeController extends Controller
             
           
             $data = Respondents::find($resp_id);
-            
-            $profil = Groups::where('deleted_at', NULL)->orderBy('sort_order', 'ASC')->get();
+
+            $profil   = DB::table('groups as gr')
+                        ->leftjoin('survey as sr','gr.survey_id','=','sr.id') 
+                        ->select('gr.name', 'sr.builderID','gr.type_id')
+                        ->where('deleted_at', NULL)
+                        ->orderBy('sort_order', 'ASC')
+                        ->get();
 
             return view('user.user-editprofile', compact('data','profil'));
         }

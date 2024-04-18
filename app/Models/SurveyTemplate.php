@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Questions extends Model
+class SurveyTemplate extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -17,15 +17,17 @@ class Questions extends Model
      *
      * @var array<int, string>
      */
-    protected $table = 'questions';
+    protected $table = 'survey_template';
 
     protected $fillable = [
-        'survey_id',
-        'question_name',
-        'question_description',
-        'qus_template',
-        'qus_type',
-        'qus_ans', 'created_by'
+        'template_name',
+        'title',
+        'sub_title',
+        'description',
+        'button_label',
+        'image',
+        'type',
+        'created_by'
     ];
 
 }

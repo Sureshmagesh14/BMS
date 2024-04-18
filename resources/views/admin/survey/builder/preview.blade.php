@@ -3,6 +3,15 @@
 <head>
     <link href="{{ asset('assets/css/preview.css') }}" rel="stylesheet" type="text/css" />
     <style>
+        .likert_scale_label {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+        }
+        .likert_scale_container{
+            display: flex;
+            flex-direction: column !important;
+        }
     .rankorderkey_option.ss-option--rank-order__select-wrap .ss-option--rank-order-react-select__control{
         color:rgb(63, 63, 63);
         background-color:rgb(255, 255, 255)
@@ -49,6 +58,7 @@ $icon_type='';
 $left_label='Least Likely';
 $middle_label='Netural';
 $right_label='Most Likely';
+$likert_range = 10;
 if(isset($qusvalue->icon_type)){
     $icon_type=$qusvalue->icon_type;
 }
@@ -62,6 +72,9 @@ if(isset($qusvalue->right_label)){
 }
 if(isset($qusvalue->middle_label)){
     $middle_label=$qusvalue->middle_label;
+}
+if(isset($qusvalue->likert_range)){
+    $likert_range=$qusvalue->likert_range;
 }
 if(isset($qusvalue->left_label)){
     $left_label=$qusvalue->left_label;
@@ -135,11 +148,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">
-                                            <p>
-                                                <br>
-                                            </p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div>
@@ -219,11 +229,9 @@ if(isset($qusvalue->left_label)){
                             <div class="ss_cl_survey_qstn_right">
                                 <div class="ss_cl_survey_qstn">
                                 <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text" id="question-title-8966626">
-                                    <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}}</span></h1>
-                                <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                    id="question-description-8966626">
-                                <p><br></p>
-                                </p>
+                                    <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}}</span>
+                                </h1>
+                                <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
                                 </div>
                             </div>
                         </div>
@@ -285,10 +293,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8982683">
-                                        <p><br></p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div>
@@ -352,29 +358,40 @@ if(isset($qusvalue->left_label)){
                                             <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                                 <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                             </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8962778"> </p>
+                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div><span class="ss_span_wrapper">
                                 <div class="ss_options_container">
-                                    <div class="ss_rating_container ss_component_animated">
+                                    <div class="ss_rating_container ss_component_animated likert_scale_container">
                                         <div class="ss_rating_input--classic">
-                                            <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">1
-                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--min-label">{{$left_label}}</label>
-                                            </button>
+                                            <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">1</button>
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >2</button>
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >3</button>
                                             <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">4</button>
-                                            <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >5
-                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--middle-label">{{$middle_label}}</label>
-                                            </button>
-                                            <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">6</button>
-                                            <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">7</button>
-                                            <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">8</button>
-                                            <button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >9
-                                                <label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--max-label">{{$right_label}}</label>
-                                            </button>
+                                            @if($likert_range>=5)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >5</button>@endif
+                                            @if($likert_range>=6)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">6</button>@endif
+                                            @if($likert_range>=7)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">7</button>@endif
+                                            @if($likert_range>=8)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic">8</button>@endif
+                                            @if($likert_range>=9)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >9</button>@endif
+                                            @if($likert_range>=10)<button class="likert_choice ss-answer-option--rating ss-answer-option--bg ss-answer-option--border ss-answer-option--text-light  ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--secondary ss-answer-option--classic" >10</button>@endif
+
+                                        </div>
+                                        <div class="likert_scale_label">
+                                        @if($likert_range<=4)
+                                        <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--middle-label">{{$middle_label}}</label></div>
+
+                                        <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--max-label">{{$right_label}}</label></div>
+                                            
+                                        @elseif($likert_range>=5)
+                                        <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--middle-label">{{$middle_label}}</label></div>
+
+                                        <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--min-label">{{$left_label}}</label></div>
+                                                                                    
+                                        <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--max-label">{{$right_label}}</label></div>
+                                            
+                                        @endif
                                         </div>
                                     </div>
                                 </div>
@@ -411,12 +428,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text"
                                             id="question-title-8966750"><span
                                                 class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}}</span></h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8966750">
-                                        <p>
-                                            <br>
-                                        </p>
-                                        </p>
+                                                <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div><span class="ss_span_wrapper">
@@ -502,9 +515,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07" id="question-description-8966749">
-                                        <p><br> </p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div> <span class="ss_span_wrapper">
@@ -639,12 +651,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8966664">
-                                        <p>
-                                            <br>
-                                        </p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div><span class="ss_span_wrapper">
@@ -694,12 +702,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8972084">
-                                        <p>
-                                            <br>
-                                        </p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div><span class="ss_span_wrapper">
@@ -745,6 +749,68 @@ if(isset($qusvalue->left_label)){
             </div>
         </div>
     </div>
+    @elseif($currentQus->qus_type=='photo_capture')
+    <div class="surveysparrow-survey-container--classic-form" data-current-item-id="8972084" data-section-id="4791226">
+        <div class="ss_classic_top_bar d-flex fx-row fx-jc--between fx-ai--center" role="banner">
+            <div class="d-flex fx-column fx-jc--center fx-ai--start ss_classic_top_bar_section_details"></div>
+        </div>
+        <div class="surveysparrow-survey-form-wrapper ss-survey-background" aria-live="polite">
+            <div id="fake-scroll-container" class="ss-fp-scroll ss-fake-scroll--center ">
+                <div class="ss-fp-scroll__item d-flex fx-column fx-jc--center ss-fp-scroll__item--content-overflow">
+                    <div class="ss-fp-scroll__item-data-wrap" style="display: block;">
+                        <div id="question_8972084" data-qa-question-id="8972084" data-qa-question-type="MultiChoicePicture"
+                            data-qa="question_normal" class="ss_cl_survey_qstn_item active" style="width: 100%;">
+                            <div class="ss_cl_survey_qstn_wrapper">
+                                <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
+                                    <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                        Question {{$qusNo}}
+                                    </p>
+                                </div>
+                                <div class="ss_cl_survey_qstn_right">
+                                    <div class="ss_cl_survey_qstn">
+                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                            <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
+                                        </h1>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ss_span_wrapper">
+                                <div class="ss_options_container">
+                                   <div class="ss_inline_input_container ss_component_animated">
+                                        <div class="ss-camera-input upload_wrapper">
+                                        <button class="answer-option--file-input ss-answer-option--bg-only ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--primary ss-survey-border-width--thin ss-survey-border-style--dashed ss-survey-border-color--primary-02" type="button" id="camera_btn">
+                                                <input type="file" accept="image/*" capture="camera" style="display: none;">
+                                                <svg stroke="#0D1B1E" class="" width="84" height="84" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M15.0858 4.58579L16.2071 5.70711C16.3946 5.89464 16.649 6 16.9142 6H19.5C20.0304 6 20.5391 6.21071 20.9142 6.58579C21.2893 6.96086 21.5 7.46957 21.5 8V17C21.5 17.5304 21.2893 18.0391 20.9142 18.4142C20.5391 18.7893 20.0304 19 19.5 19H5.5C4.96957 19 4.46086 18.7893 4.08579 18.4142C3.71071 18.0391 3.5 17.5304 3.5 17V8C3.5 7.46957 3.71071 6.96086 4.08579 6.58579C4.46086 6.21071 4.96957 6 5.5 6H8.08579C8.351 6 8.60535 5.89464 8.79289 5.70711L9.91421 4.58579C10.0999 4.40007 10.3204 4.25275 10.5631 4.15224C10.8057 4.05173 11.0658 4 11.3284 4H13.6716C13.9342 4 14.1943 4.05173 14.4369 4.15224C14.6796 4.25275 14.9001 4.40007 15.0858 4.58579Z" stroke="#63686F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M12.5 16C14.7091 16 16.5 14.2091 16.5 12C16.5 9.79086 14.7091 8 12.5 8C10.2909 8 8.5 9.79086 8.5 12C8.5 14.2091 10.2909 16 12.5 16Z" stroke="#63686F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M18.5501 9.00008C18.5501 9.00997 18.5471 9.01962 18.5416 9.02784C18.5361 9.03605 18.5283 9.04245 18.5192 9.04622C18.51 9.05 18.5 9.05098 18.4903 9.04905C18.4806 9.04712 18.4717 9.04235 18.4647 9.03536C18.4577 9.02837 18.453 9.01947 18.451 9.00978C18.4491 9.00008 18.4501 8.99004 18.4539 8.9809C18.4576 8.97177 18.464 8.96396 18.4723 8.95846C18.4805 8.95297 18.4901 8.95002 18.5 8.95001C18.5066 8.95 18.5131 8.95129 18.5192 8.95381C18.5253 8.95632 18.5308 8.96001 18.5354 8.96466C18.5401 8.96931 18.5438 8.97483 18.5463 8.98091C18.5488 8.98699 18.5501 8.99351 18.5501 9.00008" stroke="#63686F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                                <p>Camera</p>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ss_cl_qstn_action ">
+                                    <div class="">
+                                        <button id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                            <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="ss-skip-container">
+                                        <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     @elseif($currentQus->qus_type=='email')
     <div class="surveysparrow-survey-container--classic-form" data-current-item-id="8966644" data-section-id="4788547">
         <div class="ss_classic_top_bar d-flex fx-row fx-jc--between fx-ai--center" role="banner">
@@ -767,12 +833,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8966644">
-                                        <p>
-                                            <br>
-                                        </p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div><span class="ss_span_wrapper">
