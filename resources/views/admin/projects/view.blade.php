@@ -33,7 +33,7 @@
 
                                     <div class="btn-group mr-2" role="group" aria-label="First group" >
                                       
-                                
+                                        <input type="hidden" name="project_id" id="project_id" value="{{$data->id}}">
                                         <select name="action_1" id="action_1" class="form-control projects_table show_hided_option select_box">
                                             <option value="">Select Action</option>
                                             <option value="6">Update</option>
@@ -159,7 +159,7 @@
                     <!-- Respondent end page title -->
                     <div class="card">
                         <div class="card-body">
-                            @include('admin.table_components.respondents_table')
+                            @include('admin.table_components.respondents_table', ['project_id' => $data->id])
                         </div>
                         <!-- end card-body -->
                     </div>
@@ -212,7 +212,7 @@
             },
             columns: [
                 { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                { data: 'id',name: '#',orderable: true,searchable: true },
+                { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
                 { data: 'points',name: 'points',orderable: true,searchable: true },
                 { data: 'status_id',name: 'status_id',orderable: true,searchable: true },
                 { data: 'respondent_id',name: 'respondent_id',orderable: true,searchable: true },
@@ -263,7 +263,7 @@
             },
             "columns": [
                 { "data": "select_all" },
-                { "data": "id" },
+                { "data": "id_show" },
                 { "data": "name" },
                 { "data": "surname" },
                 { "data": "mobile" },
@@ -303,5 +303,17 @@
         }).get();
 
         multi_delete("POST", all_id, "{{ route('networks_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
+    });
+
+    $(document).on('click', '#deattach_respondents', function(e) {
+        e.preventDefault();
+        project_id     = $("#project_id").val();
+        var respondent = $(this).data("id");
+
+        var url = "{{ route('deattach_respondent', ['respondent_id' => ':respondent_id', 'project_id' => ':project_id']) }}";
+        url = url.replace(':respondent_id', respondent);
+        url = url.replace(':project_id', project_id);
+
+        single_delete("POST", respondent, url, "Deattach Respondent", 'respondents_datatable');
     });
 </script>

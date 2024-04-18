@@ -131,6 +131,7 @@ class WelcomeController extends Controller
             
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
+            $get_res_phone=Respondents::select('whatsapp')->where('id', Session::get('resp_id'))->first();
             
             $data = Respondents::find($resp_id);
             $ref_code = $data->referral_code;
@@ -138,7 +139,7 @@ class WelcomeController extends Controller
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-share', compact('data','ref_code'));
+                return view('user.user-share', compact('data','ref_code','get_res_phone'));
             //}
            
         }
@@ -194,8 +195,13 @@ class WelcomeController extends Controller
             
           
             $data = Respondents::find($resp_id);
-            
-            $profil = Groups::where('deleted_at', NULL)->orderBy('sort_order', 'ASC')->get();
+
+            $profil   = DB::table('groups as gr')
+                        ->leftjoin('survey as sr','gr.survey_id','=','sr.id') 
+                        ->select('gr.name', 'sr.builderID','gr.type_id')
+                        ->where('deleted_at', NULL)
+                        ->orderBy('sort_order', 'ASC')
+                        ->get();
 
             return view('user.user-editprofile', compact('data','profil'));
         }

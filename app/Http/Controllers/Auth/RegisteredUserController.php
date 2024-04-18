@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Respondents::class],
             'date_of_birth' => ['required', 'string', 'max:255'],
             'id_passport' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password_register' => ['required', Rules\Password::defaults()->min(6)],
         ]);
         $ref_code = substr(md5(time()), 0, 8); 
         $ref_code = ('r'.$ref_code);
@@ -53,7 +53,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'mobile' => $request->mobile,
             'whatsapp' => $request->whatsapp,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->password_register),
             'referral_code' => $ref_code,
         ]);
  
