@@ -178,20 +178,37 @@
 
 
 <script>
-
-    $(function() {
+ $(function() {
         $('#edit_respondents_form').validate({
             rules: {
                 email: {
                     required: true,
                     email: true,
-                    validate_email: true
+                    validate_email: true,
+                    remote: {
+                        url: '{{ route("user_respondent_id_check") }}',
+                        data: { 'form_name' : "useredit" ,'id':'{{ $respondents->id }}'},
+                        type: "GET"
+                    }
                 },
-               
+                password: {
+                  
+                    minlength: 8
+                },
+                cpassword: {
+                   
+                    minlength: 8,
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                email: {
+                    remote: "{{__('Email Name already exists!')}}"
+                }
             }
         });
     });
-
+   
     $.validator.addMethod("validate_email", function(value, element) {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
             return true;

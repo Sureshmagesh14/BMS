@@ -127,7 +127,12 @@
                 email: {
                     required: true,
                     email: true,
-                    validate_email: true
+                    validate_email: true,
+                    remote: {
+                        url: '{{ route("user_email_id_check") }}',
+                        data: { 'form_name' : "usercreate" },
+                        type: "GET"
+                    }
                 },
                 password: {
                     required: true,
@@ -137,6 +142,11 @@
                     required: true,
                     minlength: 8,
                     equalTo: "#password"
+                }
+            },
+            messages: {
+                email: {
+                    remote: "{{__('email Name already exists!')}}"
                 }
             }
         });
