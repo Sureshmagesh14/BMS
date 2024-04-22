@@ -4,9 +4,18 @@
 <!-- ========== Left Sidebar Start ========== -->
 <link href="{{ asset('assets/css/survey.css') }}" rel="stylesheet" type="text/css" />
 <?php
-    $link = $_SERVER['PHP_SELF'];
+   // $link = $_SERVER['PHP_SELF'];
+    $link=Request::url();
     $link_array = explode('/',$link);
+    //echo $link;
     $page = end($link_array);
+//echo $page;
+$selectedFolder = \App\Models\Folder::where(['id'=>$page])->first(); 
+
+$getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->get();
+//echo "<pre>"; print_r($selectedFolder);
+  //  print_r($getSurveys);
+    //exit;
 ?>
 <style>
     a.waves-effect.active span.menu-item {
@@ -142,10 +151,7 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<?php 
-$selectedFolder = \App\Models\Folder::where(['id'=>$page])->first(); 
-$getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->get();
-?>
+
 <div class="main-content1">
     <div class="page-content">
         <div class="container-fluid">

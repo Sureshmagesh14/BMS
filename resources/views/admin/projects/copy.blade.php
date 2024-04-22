@@ -214,7 +214,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    projects_table();
                 },
                 complete: function(response) {
                     $('#copy_create').html('Create New');

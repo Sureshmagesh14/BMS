@@ -51,7 +51,7 @@
             
               <div class="accordion accordion-flush" id="accordionFlushExample">
             
-              <a href="{{ route('user.surveys',['up'=>$pro->id]) }}">
+              <a href="{{ route('user.surveys',['up'=>2]) }}">
                 <div class="accordion-item">
                  
                     <h2 class="accordion-header" id="flush-headingTwo">

@@ -29,8 +29,9 @@
             <select id="user" name="user" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">Choose an option</option>
                 @foreach ($users as $user)
-                    <option @if(Session::has('user_to_project_id')) @if(Session::get('user_to_project_id') == $user->id) selected @endif @endif
-                    value="{{$user->id}}">{{$user->name}} {{$user->surname}}</option>
+                    <option @if (Session::has('user_to_project_id')) @if (Session::get('user_to_project_id') == $user->id) selected @endif
+                        @endif
+                        value="{{ $user->id }}">{{ $user->name }} {{ $user->surname }}</option>
                 @endforeach
             </select>
         </div>
@@ -181,7 +182,16 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Survey Link *
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="survey_link" name="survey_link">
+            <select id="survey_link" name="survey_link" class="w-full form-control form-select" required>
+                <option value="" selected="selected" disabled="disabled">
+                    Choose an option
+                </option>
+                @foreach ($survey_title as $title)
+                    <option value="{{ $title->id }}">
+                        {{ $title->title }}
+                    </option>
+                @endforeach
+            </select>
         </div>
     </div>
 

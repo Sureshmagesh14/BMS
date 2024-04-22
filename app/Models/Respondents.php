@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable;
 
 class Respondents extends Authenticatable 
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Searchable;
 
     protected $table = 'respondents';
     protected $guarded = ['id'];
@@ -36,5 +37,16 @@ class Respondents extends Authenticatable
         }
 
         return implode($pass); //turn the array into a string
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'id'      => $this->id,
+            'name'    => $this->name,
+            'surname' => $this->surname,
+            'email'   => $this->email,
+            'mobile'  => $this->mobile
+        ];
     }
 }
