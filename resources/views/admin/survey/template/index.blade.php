@@ -81,7 +81,9 @@
                         </div>
                     </div>
                     <div class="foldermenu ss-overflow-y--auto ss-scrollbar--hide h-100" style="padding-bottom: 100px;">
-                       
+                        @php 
+                        //dd($folders);
+                        @endphp
                         @foreach($folders as $folder)
                         <?php $className =""; ?>
                         @if(isset($selectedFolder))
