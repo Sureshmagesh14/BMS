@@ -48,10 +48,12 @@
               @if($cat!=$pro->type_id)
               <p>{{ $catname[$pro->type_id] }}</p>
               @endif
-            
+              
+          
               <div class="accordion accordion-flush" id="accordionFlushExample">
             
-              <a href="{{ route('user.surveys',['up'=>2]) }}">
+              <a href="{{ url('survey/view',$pro->builderID) }}">
+                
                 <div class="accordion-item">
                  
                     <h2 class="accordion-header" id="flush-headingTwo">
