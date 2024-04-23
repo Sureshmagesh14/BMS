@@ -25,7 +25,16 @@
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Survey URL *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="survey_url" name="survey_url" value="{{$groups->survey_url}}"  required>
+            <select id="survey_url" name="survey_url" class="w-full form-control form-select" required>
+                <option value="" selected="selected" disabled="disabled">
+                    Choose an option
+                </option>
+                @foreach ($survey_title as $title)
+                    <option @if ($groups->survey_link == $title->id) selected @endif value="{{ $title->id }}">
+                        {{ $title->title }}
+                    </option>
+                @endforeach
+            </select>
         </div>
     </div>
     </div>
