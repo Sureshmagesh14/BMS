@@ -28,7 +28,8 @@ class ProfileGroupController extends Controller
     public function create()
     {
         try {
-            $returnHTML = view('admin.groups.create')->render();
+            $survey_title=DB::table('survey')->select('title','id')->get();
+            $returnHTML = view('admin.groups.create',compact('survey_title'))->render();
 
             return response()->json(
                 [
@@ -112,7 +113,8 @@ class ProfileGroupController extends Controller
             $groups = Groups::find($id);
             if($groups)
             {
-                $returnHTML = view('admin.groups.edit',compact('groups'))->render();
+                $survey_title=DB::table('survey')->select('title','id')->get();
+                $returnHTML = view('admin.groups.edit',compact('groups','survey_title'))->render();
 
                 return response()->json(
                     [
