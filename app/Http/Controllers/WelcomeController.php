@@ -13,7 +13,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Illuminate\Support\Facades\Hash;
-
+use Exception;
 class WelcomeController extends Controller
 {   
     public function home(Request $request)
