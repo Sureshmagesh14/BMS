@@ -149,6 +149,8 @@
           @php 
           $cat = '';
           $catname = array(1=>'Basic',2=>'Essential',3=>'Extended');
+
+          //dd($prof_response);
           @endphp
           
           @foreach ($profil as $pro)
@@ -164,8 +166,11 @@
               
           
               <div class="accordion accordion-flush" id="accordionFlushExample">
-            
+              @if($pro->totq==$pro->tota)
+              <a>
+              @else 
               <a href="{{ url('survey/view',$pro->builderID) }}">
+              @endif
                 
                 <div class="accordion-item">
                  
@@ -173,10 +178,24 @@
                    
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
                         <div class="d-flex flex-column">
-                          <p class="fs-16 fw-bold">{{$pro->name}}</p>
-                          <span class="fs-12">
-                            <!-- Last update March 26, 2024 -->
-                          </span>
+                          <p class="fs-16 fw-bold">{{$pro->name}} </p>
+                          @if($pro->totq==$pro->tota)
+                              <span class="fs-12 text-success">
+                                Completed
+                              </span>
+                          @else 
+
+                              @if($pro->updated_at!='')
+                              <span class="fs-12">
+                                Last update {{ date('M d,Y', strtotime($pro->updated_at)) }}  
+                              </span>
+                              @else
+                              <span class="fs-12 text-danger">
+                                Incomplete
+                              </span>
+                              @endif 
+
+                        @endif    
                         </div>
                       </button>
                       
