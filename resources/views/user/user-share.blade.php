@@ -19,7 +19,7 @@
                         <img id="whatsap" src="{{ asset('assets/images/SM icons-01.png') }}" class="img-fluid w-10"
                             alt=""/>
                         <img  src="{{ asset('assets/images/SM icons-02.png') }}" onclick="fbs_click(this);" class="img-fluid w-10" alt=""/>
-                        <img id="twitter" src="{{ asset('assets/images/SM icons-03.png') }}" class="img-fluid w-10" alt="" >
+                        <img id="twitter" src="{{ asset('assets/images/SM icons-03.png') }}" class="img-fluid w-10" alt="" />
                         <img id="mail" src="{{ asset('assets/images/SM icons-04.png') }}" class="img-fluid w-10" onclick="fbs_click(this);" alt=""/>
                     </div>
                 </div>

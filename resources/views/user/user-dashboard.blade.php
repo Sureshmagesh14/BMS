@@ -1,5 +1,10 @@
 @include('user.layout.header-2')
-
+<style>
+    #about_brand{
+        text-decoration: none;
+        color: unset;
+    }
+</style>
 @php 
 $first_character = mb_substr($data->name, 0, 1)
 @endphp 
@@ -19,18 +24,19 @@ $first_character = mb_substr($data->name, 0, 1)
                     </div>
                     <div class="py-3 mb-5">
                         <p class="text-center fw-bolder" style="text-transform: capitalize;">{{$data->name}}</p>
-                        <a href="" class="nav-link d-flex align-items-center px-2 small-font"><i
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $data->email }}"
+                            target="_blank" class="nav-link d-flex align-items-center px-2 small-font"><i
                                 class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{$data->email}}</a>
                         <!-- <a href="" class="nav-link d-flex align-items-start px-2 small-font my-3"><i
                                 class="fa fa-map-marker yelow-clr pe-2" aria-hidden="true"></i> Suite 835 7664 Jolie
                             Islands, East Ardell, MA 74776</a> -->
-                        <a href="" class="nav-link d-flex align-items-center px-2 small-font"><i
+                        <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center px-2 small-font"><i
                                 class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> {{$data->mobile}}</a>
                     </div>
 
                 </div>
                 <div class="text-section bg-white text-center mx-2 px-2">
-                    <p class="py-3 ">About the brand Surgeon</p>
+                    <p class="py-3"><a id="about_brand" href="https://thebrandsurgeon.co.za/?utm_source=app&utm_medium=link&utm_campaign=AppLinks&utm_content=About" target="_blank">About the brand Surgeon</a></p>
                 </div>
                 <div class="text-section-one bg-white text-center  mx-2 px-2">
                     <p class="py-3">Chat Support</p>
