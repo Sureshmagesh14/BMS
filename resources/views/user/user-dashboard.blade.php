@@ -94,13 +94,15 @@ $first_character = mb_substr($data->name, 0, 1)
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- <tr>
-                                <td>JOHN DOE</td>
-                                <td>12.03.2020</td>
-                                <td>COMPANY</td>
-                                <td>1290</td>
-                                <td><button class="btn btn-yellow">DETAIL</button></td> --}}
-                            </tr>
+                            @foreach ($get_respondent as $res)
+                            <tr>
+                                <td>{{$res->name}}</td>
+                                <td>{{$res->closing_date}}</td>
+                                <td>{{$res->description}}</td>
+                                <td>{{$res->reward}}</td>
+                                <td><button class="btn btn-yellow">DETAIL</button></td>
+                            </tr> 
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -235,13 +237,15 @@ $first_character = mb_substr($data->name, 0, 1)
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($get_respondent as $res)
                             <tr>
-                                <td>JOHN DOE</td>
-                                <td>12.03.2020</td>
-                                <td>COMPANY</td>
-                                <td>1290</td>
+                                <td>{{$res->name}}</td>
+                                <td>{{$res->closing_date}}</td>
+                                <td>{{$res->description}}</td>
+                                <td>{{$res->reward}}</td>
                                 <td><button class="btn btn-yellow">DETAIL</button></td>
-                            </tr>
+                            </tr> 
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -276,39 +280,4 @@ $(document).ready(function() {
 
     $('#nav_profile').addClass('active');
 });
-
-var tempcsrf = '{!! csrf_token() !!}';
-        $(document).ready(function() {
-            respondents_datatable();
-        });
-
-        function respondents_datatable() {
-            $('#respondents_datatable').dataTable().fnDestroy();
-            var postsTable = $('#respondents_datatable').dataTable({
-                "ordering": true,
-                "processing": true,
-                "serverSide": true,
-                "searching": false,
-                "info": false,
-                dom: 'lfrtip',
-                "ajax": {
-                    "url": "{{ route('get_all_respond') }}",
-                    "data": {
-                        _token: tempcsrf,
-                    },
-                    "dataType": "json",
-                    "type": "POST"
-                },
-                "columns": [
-                 
-                    { "data": "id_show" },
-                    { "data": "name" },
-                    { "data": "surname" },
-                    { "data": "mobile" },
-                  
-                ],
-                "order": [[1, "asc"]],
-                stateSave: false,
-            });
-        }
 </script>

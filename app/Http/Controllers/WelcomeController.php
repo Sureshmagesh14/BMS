@@ -8,6 +8,7 @@ use Yajra\DataTables\DataTables;
 use App\Models\Respondents;
 use App\Models\Contents;
 use App\Models\Groups;
+use App\Models\Projects;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -114,11 +115,13 @@ class WelcomeController extends Controller
             $id =Session::get('resp_id');
             $data = Respondents::find($id);
             
+            $get_respondent=DB::table('projects')->where('user_id','=',$id)->get();
+           
 
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-dashboard', compact('data'));
+                return view('user.user-dashboard', compact('data','get_respondent'));
             //}
         }
         catch (Exception $e) {
@@ -198,12 +201,21 @@ class WelcomeController extends Controller
 
             $profil   = DB::table('groups as gr')
                         ->leftjoin('survey as sr','gr.survey_id','=','sr.id') 
-                        ->select('gr.name', 'sr.builderID','gr.type_id')
-                        ->where('deleted_at', NULL)
-                        ->orderBy('sort_order', 'ASC')
+                        ->leftjoin('survey_response as resp','gr.survey_id','=','resp.survey_id') 
+                        ->select('gr.name', 'sr.builderID','gr.type_id','resp.updated_at',DB::raw('(SELECT COUNT(*) FROM questions WHERE gr.survey_id = questions.survey_id) AS totq'),DB::raw('(SELECT COUNT(*) FROM survey_response WHERE survey_response.response_user_id='.$resp_id.' AND gr.survey_id = survey_response.survey_id) AS tota'))
+                        ->where('gr.deleted_at', NULL)
+                        ->orderBy('gr.sort_order', 'ASC')
+                        ->orderByDesc('resp.updated_at')
+                        ->groupBy('gr.id')
                         ->get();
-
-            return view('user.user-editprofile', compact('data','profil'));
+            
+            //dd($profil);
+                        
+            $prof_response   = DB::table('survey_response')
+                                ->where('response_user_id', $resp_id)
+                                ->get();
+            
+            return view('user.user-editprofile', compact('data','profil','prof_response'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
