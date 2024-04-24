@@ -33,8 +33,8 @@
                     @csrf
                     <div class="my-3  w-75 m-auto">
                         <label class="email-start vi-common-clr" for="email">Username</label>
-                        <input type="email" class="form-control vi-border-clr vi-cs-textbox" name="email"
-                            id="email" required />
+                        <input type="text" class="form-control vi-border-clr vi-cs-textbox" name="email"
+                            id="email" />
                     </div>
                     <div class="my-3 w-75 m-auto">
                         <label class="pass-start vi-common-clr" for="email text-start">Password</label>
@@ -62,24 +62,19 @@
                             href="{{ route('register') }}">Don't have an account? Register now</a></p>
                 </div>
                 @if (count($errors) > 0)
-                    <div class="alert alert-danger">
-                        @foreach ($errors->all() as $message)
-                            <strong>{{ $message }}</strong> Please try again or you can <a
-                                href="{{ url('forgot-password') }}">reset your password.</a>
-                    </div>
-                @endforeach
+                    @if(!str_contains($errors->all()[0], "Incorrect Email") && !str_contains($errors->all()[0], "Incorrect Phone No"))
+                        <div class="alert alert-danger">
+                            @foreach ($errors->all() as $message)
+                                <strong>{{ $message }}</strong> Please try again or you can <a
+                                    href="{{ url('forgot-password') }}">reset your password.</a>
+                            @endforeach
+                        </div>
+                    @endif
+                @endif
             </div>
-            @endif
         </div>
     </div>
 </div>
-</div>
-@if (Session::has('Warning'))
-    <div class="alert alert-danger alert-dismissible" role="alert">
-        <div class="text-center"><strong>{{ session('Warning') }}</strong> Please try again or you can <a
-                href="{{ route('admin.forgot_password') }}">reset your password.</a></div>
-    </div>
-@endif
 
 @include('user.layout.footer')
 
@@ -100,9 +95,7 @@
         $('#login_table').validate({
             rules: {
                 email: {
-                    required: true,
-                    email: true,
-                    validate_email: true
+                    required: true
                 },
                 password: {
                     required: true,
