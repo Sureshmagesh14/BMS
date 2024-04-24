@@ -8,6 +8,7 @@ use Yajra\DataTables\DataTables;
 use App\Models\Respondents;
 use App\Models\Contents;
 use App\Models\Groups;
+use App\Models\Projects;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -114,11 +115,13 @@ class WelcomeController extends Controller
             $id =Session::get('resp_id');
             $data = Respondents::find($id);
             
+            $get_respondent=DB::table('projects')->where('user_id','=',$id)->get();
+           
 
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-dashboard', compact('data'));
+                return view('user.user-dashboard', compact('data','get_respondent'));
             //}
         }
         catch (Exception $e) {
