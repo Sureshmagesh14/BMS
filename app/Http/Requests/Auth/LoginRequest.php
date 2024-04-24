@@ -28,7 +28,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -45,14 +45,27 @@ class LoginRequest extends FormRequest
         if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
 
             $credentials = $this->only('email', 'password');
-
-            if (!Respondents::where('email', $credentials['email'])->where('password', bcrypt($credentials['password']))->first()) {
-
-                $mess = strip_tags("<strong>Incorrect Password.</strong>");
-                throw ValidationException::withMessages([
-                    'email' => $mess,
-                ]);
+            if (Auth::attempt(['mobile' => $credentials['email'], 'password' => $credentials['password']]))
+            {     
+                RateLimiter::clear($this->throttleKey());
             }
+
+            if (Respondents::where('email', $credentials['email'])->first() || Respondents::where('mobile', $credentials['email'])->first()) {
+                $mess = strip_tags("<strong>Incorrect Password.</strong>");
+            }
+            else{
+                if(filter_var($credentials['email'], FILTER_VALIDATE_INT) === false){
+                    $mess = strip_tags("<strong>Incorrect Email.</strong>");
+                }
+                else{
+                    $mess = strip_tags("<strong>Incorrect Phone No.</strong>");
+                }
+            }
+
+            throw ValidationException::withMessages([
+                'email' => $mess,
+            ]);
+            
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
