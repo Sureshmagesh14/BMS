@@ -30,7 +30,7 @@
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Survey URL *</label>
         <div class="col-md-10">
-            <select id="survey_url" name="survey_url" class="w-full form-control form-select" required>
+            <select id="survey_id" name="survey_id" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>

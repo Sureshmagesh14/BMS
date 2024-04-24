@@ -77,7 +77,7 @@ $first_character = mb_substr($data->name, 0, 1)
                             </ul>
                         </div>
                     </h4>
-                    <table class="table text-center">
+                    <table class="table text-center" id="respondents_datatable">
                         <thead>
                             <tr>
                                 <th>NAME </th>
@@ -88,12 +88,12 @@ $first_character = mb_substr($data->name, 0, 1)
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            {{-- <tr>
                                 <td>JOHN DOE</td>
                                 <td>12.03.2020</td>
                                 <td>COMPANY</td>
                                 <td>1290</td>
-                                <td><button class="btn btn-yellow">DETAIL</button></td>
+                                <td><button class="btn btn-yellow">DETAIL</button></td> --}}
                             </tr>
                         </tbody>
                     </table>
@@ -248,9 +248,61 @@ $first_character = mb_substr($data->name, 0, 1)
     </div>
 </section>
 @include('user.layout.footer')
+<script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+
+        <!-- Buttons examples -->
+        <script src="{{ asset('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/jszip/jszip.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/pdfmake/build/pdfmake.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/pdfmake/build/vfs_fonts.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-select/js/dataTables.select.min.js') }}"></script>
+
+        <!-- Responsive examples -->
+        <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
 <script>
 $(document).ready(function() {
 
     $('#nav_profile').addClass('active');
 });
+
+var tempcsrf = '{!! csrf_token() !!}';
+        $(document).ready(function() {
+            respondents_datatable();
+        });
+
+        function respondents_datatable() {
+            $('#respondents_datatable').dataTable().fnDestroy();
+            var postsTable = $('#respondents_datatable').dataTable({
+                "ordering": true,
+                "processing": true,
+                "serverSide": true,
+                "searching": false,
+                "info": false,
+                dom: 'lfrtip',
+                "ajax": {
+                    "url": "{{ route('get_all_respond') }}",
+                    "data": {
+                        _token: tempcsrf,
+                    },
+                    "dataType": "json",
+                    "type": "POST"
+                },
+                "columns": [
+                 
+                    { "data": "id_show" },
+                    { "data": "name" },
+                    { "data": "surname" },
+                    { "data": "mobile" },
+                  
+                ],
+                "order": [[1, "asc"]],
+                stateSave: false,
+            });
+        }
 </script>

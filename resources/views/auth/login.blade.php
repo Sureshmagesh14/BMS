@@ -3,6 +3,19 @@
     .error {
         color: red;
     }
+
+    .field-icon {
+        float: right;
+        margin-right: 12px;
+        margin-top: -37px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .container {
+        padding-top: 50px;
+        margin: auto;
+    }
 </style>
 <div class="container-fluid vh-100">
     <div class="row">
@@ -25,8 +38,10 @@
                     </div>
                     <div class="my-3 w-75 m-auto">
                         <label class="pass-start vi-common-clr" for="email text-start">Password</label>
-                        <input type="password" placeholder="" class="form-control vi-border-clr vi-cs-textbox"
-                            name="password" required />
+                        <input id="password-field" type="password" placeholder=""
+                            class="form-control vi-border-clr vi-cs-textbox" name="password" required />
+
+                        <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                     </div>
                     @if (Route::has('password.request'))
                         <div class="forgetpass me-5">
@@ -105,4 +120,14 @@
             return false;
         }
     }, "Please enter a valid email address.");
+    $(".toggle-password").click(function() {
+
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
 </script>

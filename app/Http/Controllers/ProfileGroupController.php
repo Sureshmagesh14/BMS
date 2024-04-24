@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Groups;
+use App\Models\Survey;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Yajra\DataTables\DataTables;
@@ -50,12 +51,12 @@ class ProfileGroupController extends Controller
      */
     public function store(Request $request)
     {
-  
+
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
                 'type_id'    => 'required',
-                'survey_url'    => 'required',
+                'survey_id'    => 'required',
             ]);
     
             if($validator->fails())
@@ -70,7 +71,9 @@ class ProfileGroupController extends Controller
                 $groups          = new Groups;
                 $groups->name = $request->input('name');
                 $groups->type_id    = $request->input('type_id');
-                $groups->survey_url    = $request->input('survey_url');
+                $groups->survey_id    = $request->input('survey_id');
+                $get_survey_url=Survey::where('id',$request->survey_id)->pluck('builderID')->first();
+                $groups->survey_url    = $get_survey_url;
                 $groups->save();
                 $groups->sort_order=$groups->id;
 
@@ -145,7 +148,7 @@ class ProfileGroupController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
                 'type_id'    => 'required',
-                'survey_url'    => 'required',
+                'survey_id'    => 'required',
             ]);
     
             if($validator->fails())
@@ -157,12 +160,16 @@ class ProfileGroupController extends Controller
             }
             else
             {
-                $groups = Groups::find($request->id);
+                $groups = Groups::find($id);
                 if($groups)
                 {
                 $groups->name = $request->input('name');
                 $groups->type_id    = $request->input('type_id');
-                $groups->survey_url    = $request->input('survey_url');
+                $groups->survey_id    = $request->input('survey_id');
+                if(isset($groups->survey_id)){
+                    $get_survey_url=Survey::where('id',$request->survey_id)->pluck('builderID')->first();
+                    $groups->survey_url    = $get_survey_url;
+                }
                 $groups->update();
                 $groups->id;
                     return response()->json([

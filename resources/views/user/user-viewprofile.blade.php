@@ -101,10 +101,10 @@ $(document).ready(function() {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 beforeSend: function() {
-                    //$('#respondents_create').html('....Please wait');
+                    $('#respondents_create').html('....Please wait');
                 },
                 success: function(response) {
-                    alert("succsess");
+                    toastr.success(response.message);
                     // toastr.success(response.message);
                     // $("#commonModal").modal('hide');
                     // datatable();

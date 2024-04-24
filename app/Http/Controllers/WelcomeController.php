@@ -242,4 +242,156 @@ class WelcomeController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+
+    public function view_client_survey_list(Request $request)
+    {
+        if ($request->ajax()) {
+            $columns = array(
+            
+                0 => 'id',
+                1 => 'name',
+                2 => 'surname',
+                3 => 'mobile',
+                4 => 'action',
+            );
+
+            $inside_form = $request->inside_form;
+        
+            if(isset($request->id)){
+                if($inside_form == 'projects'){
+                    $totalData = Respondents::Join('project_respondent as pr','respondents.id','pr.respondent_id')->where('pr.project_id',$request->id)->count();
+                }
+                else{
+
+                    $totalData = Respondents::count();
+                }
+            }
+            else{
+                $totalData = Respondents::count();
+            }
+
+            $totalFiltered = $totalData;
+
+            $limit = $request->input('length');
+            $start = $request->input('start');
+            $order = $columns[$request->input('order.0.column')];
+            $dir = $request->input('order.0.dir');
+            
+
+            if (empty($request->input('search.value'))) {
+                $posts = Respondents::select('respondents.*')->offset($start);
+                    if(isset($request->id)){
+                        if($inside_form == 'projects'){
+                            $posts->Join('project_respondent as pr','respondents.id','pr.respondent_id')
+                            ->where('pr.project_id',$request->id);
+                        }
+                    }
+                $posts = $posts->limit($limit)
+                    ->orderBy($order, $dir)
+                    ->get();
+            }
+            else {
+                $search = $request->input('search.value');
+
+                $posts = Respondents::select('respondents.*')->where('id', 'LIKE', "%{$search}%");
+                    if(isset($request->id)){
+                        if($inside_form == 'projects'){
+                            $posts->Join('project_respondent as pr','respondents.id','pr.respondent_id')
+                            ->where('pr.project_id',$request->id);
+                        }
+                    }
+                $posts = $posts->orWhere('mobile', 'LIKE', "%{$search}%")
+                    ->offset($start)
+                    ->limit($limit)
+                    ->orderBy($order, $dir)
+                    ->cursor();
+
+                $totalFiltered = Respondents::where('id', 'LIKE', "%{$search}%");
+                    if(isset($request->id)){
+                        if($inside_form == 'projects'){
+                            $totalFiltered->Join('project_respondent as pr','respondents.id','pr.respondent_id')
+                            ->where('pr.project_id',$request->id);
+                        }
+                    }
+                $totalFiltered = $totalFiltered->orWhere('mobile', 'LIKE', "%{$search}%")->count();
+            }
+
+            $data = array();
+            if (!empty($posts)) {
+                $i = 1;
+                foreach ($posts as $key => $post) {
+                    $edit_route = route('respondents.edit', $post->id);
+                    $view_route = route('respondents.show', $post->id);
+                    $nestedData['select_all'] = '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this,\'respondents_datatable\')" id="'.$post->id.'">';
+                    $nestedData['id'] = $post->id;
+                    $nestedData['name'] = $post->name ?? '-';
+                    $nestedData['surname'] = $post->surname ?? '-';
+                    $nestedData['mobile'] = $post->mobile ?? '-';
+                    $nestedData['whatsapp'] = $post->whatsapp ?? '-';
+                    $nestedData['email'] = $post->email ?? '-';
+                    $dob = $post->date_of_birth;
+                    $diff = (date('Y') - date('Y', strtotime($dob)));
+                    $nestedData['date_of_birth'] = $diff ?? '-';
+                    $nestedData['race'] = $post->race ?? '-';
+                    $nestedData['status'] = $post->status ?? '-';
+                    $nestedData['profile_completion'] = $post->profile_completion ?? '-';
+                    $nestedData['inactive_until'] = $post->inactive_until ?? '-';
+                    $nestedData['opeted_in'] = $post->opeted_in ?? '-';
+
+                    $nestedData['id_show'] = '<a href="'.$view_route.'" class="rounded waves-light waves-effect">
+                        '.$post->id.'
+                    </a>';
+
+                    $nestedData['options'] = '<div class="col-md-2">
+                        <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                            title="Action" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-tasks" aria-hidden="true"></i>
+                            <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-center">
+                            <li class="list-group-item">
+                                <a href="'.$view_route.'" class="rounded waves-light waves-effect">
+                                    <i class="fa fa-eye"></i> View
+                                </a>
+                            </li>';
+                            if (str_contains(url()->previous(), '/admin/projects')){
+
+                                $nestedData['options'] .= '<li class="list-group-item">
+                                    <a id="deattach_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
+                                        <i class="far fa-trash-alt"></i> De-attach
+                                    </a>
+                                </li>';
+                            }
+                            else{
+                                $nestedData['options'] .= '<li class="list-group-item">
+                                    <a data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                        data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" id="delete_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
+                                        <i class="far fa-trash-alt"></i> Delete
+                                    </a>
+                                </li>';
+                            }
+                        $nestedData['options'] .= '</ul>
+                    </div>';
+                    $data[] = $nestedData;
+                    $i++;
+                }
+            }
+
+            $json_data = array(
+                "draw" => intval($request->input('draw')),
+                "recordsTotal" => intval($totalData),
+                "recordsFiltered" => intval($totalFiltered),
+                "data" => $data,
+            );
+
+            echo json_encode($json_data);
+        }
+
+    }
+
 }
