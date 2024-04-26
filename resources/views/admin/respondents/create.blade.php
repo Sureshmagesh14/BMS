@@ -186,9 +186,23 @@
                 email: {
                     required: true,
                     email: true,
-                    validate_email: true
+                    validate_email: true,
+                    remote: {
+                        url: '{{ route("user_respondent_id_check") }}',
+                        data: { 'form_name' : "usercreate" },
+                        type: "GET"
+                    }
                 },
-
+                password: {
+                    required: true,
+                    minlength: 8
+                },
+                
+            },
+            messages: {
+                email: {
+                    remote: "{{__('email Name already exists!')}}"
+                }
             }
         });
     });

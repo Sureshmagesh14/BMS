@@ -143,7 +143,7 @@ class ProjectsController extends Controller
     public function edit(string $id)
     {
         try {
-           
+            $projects = Projects::find($id);
             if($projects)
             {
                 $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
@@ -336,7 +336,7 @@ class ProjectsController extends Controller
                         }else{  
                             $type_id='-';
                         }
-                       $string_count=strlen($all_data->number."-".$all_data->client."-".$all_data->name."-".$type_id);
+                  
                        
                         return '<a title="'.$all_data->number."-".$all_data->client."-".$all_data->name."-".$type_id.'" href="'.$view_route.'" data-bs-original-title="View Project" class="rounded waves-light waves-effect">
                             '.$all_data->number."-".$all_data->client."-".$all_data->name."-".$type_id.'

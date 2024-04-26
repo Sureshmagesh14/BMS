@@ -1,5 +1,10 @@
 @include('user.layout.header-2')
-
+<style>
+    #about_brand{
+        text-decoration: none;
+        color: unset;
+    }
+</style>
 @php 
 $first_character = mb_substr($data->name, 0, 1)
 @endphp 
@@ -19,18 +24,19 @@ $first_character = mb_substr($data->name, 0, 1)
                     </div>
                     <div class="py-3 mb-5">
                         <p class="text-center fw-bolder" style="text-transform: capitalize;">{{$data->name}}</p>
-                        <a href="" class="nav-link d-flex align-items-center px-2 small-font"><i
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $data->email }}"
+                            target="_blank" class="nav-link d-flex align-items-center px-2 small-font"><i
                                 class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{$data->email}}</a>
                         <!-- <a href="" class="nav-link d-flex align-items-start px-2 small-font my-3"><i
                                 class="fa fa-map-marker yelow-clr pe-2" aria-hidden="true"></i> Suite 835 7664 Jolie
                             Islands, East Ardell, MA 74776</a> -->
-                        <a href="" class="nav-link d-flex align-items-center px-2 small-font"><i
+                        <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center px-2 small-font"><i
                                 class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> {{$data->mobile}}</a>
                     </div>
 
                 </div>
                 <div class="text-section bg-white text-center mx-2 px-2">
-                    <p class="py-3 ">About the brand Surgeon</p>
+                    <p class="py-3"><a id="about_brand" href="https://thebrandsurgeon.co.za/?utm_source=app&utm_medium=link&utm_campaign=AppLinks&utm_content=About" target="_blank">About the brand Surgeon</a></p>
                 </div>
                 <div class="text-section-one bg-white text-center  mx-2 px-2">
                     <p class="py-3">Chat Support</p>
@@ -77,7 +83,7 @@ $first_character = mb_substr($data->name, 0, 1)
                             </ul>
                         </div>
                     </h4>
-                    <table class="table text-center">
+                    <table class="table text-center" id="respondents_datatable">
                         <thead>
                             <tr>
                                 <th>NAME </th>
@@ -88,13 +94,15 @@ $first_character = mb_substr($data->name, 0, 1)
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($get_respondent as $res)
                             <tr>
-                                <td>JOHN DOE</td>
-                                <td>12.03.2020</td>
-                                <td>COMPANY</td>
-                                <td>1290</td>
+                                <td>{{$res->name}}</td>
+                                <td>{{$res->closing_date}}</td>
+                                <td>{{$res->description}}</td>
+                                <td>{{$res->reward}}</td>
                                 <td><button class="btn btn-yellow">DETAIL</button></td>
-                            </tr>
+                            </tr> 
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -229,13 +237,15 @@ $first_character = mb_substr($data->name, 0, 1)
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($get_respondent as $res)
                             <tr>
-                                <td>JOHN DOE</td>
-                                <td>12.03.2020</td>
-                                <td>COMPANY</td>
-                                <td>1290</td>
+                                <td>{{$res->name}}</td>
+                                <td>{{$res->closing_date}}</td>
+                                <td>{{$res->description}}</td>
+                                <td>{{$res->reward}}</td>
                                 <td><button class="btn btn-yellow">DETAIL</button></td>
-                            </tr>
+                            </tr> 
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -248,6 +258,23 @@ $first_character = mb_substr($data->name, 0, 1)
     </div>
 </section>
 @include('user.layout.footer')
+<script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+
+        <!-- Buttons examples -->
+        <script src="{{ asset('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/jszip/jszip.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/pdfmake/build/pdfmake.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/pdfmake/build/vfs_fonts.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-select/js/dataTables.select.min.js') }}"></script>
+
+        <!-- Responsive examples -->
+        <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
 <script>
 $(document).ready(function() {
 

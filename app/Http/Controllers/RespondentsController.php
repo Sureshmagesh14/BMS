@@ -791,4 +791,124 @@ class RespondentsController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function user_respondent_id_check(Request $request){
+        $form_name = $request->form_name;
+        $email = $request->email;
+        if($request->id==null){
+            if($form_name == "usercreate"){
+                $getCheckVal = DB::table('respondents')
+                    ->whereRaw('TRIM(LOWER(`email`)) LIKE ? ', [trim(strtolower($email)) . '%'])
+                    ->first();
+            }
+            else {
+                $getCheckVal = "Not Empty";
+            }
+          
+        }else{
+            $getCheckVal = DB::table('respondents')
+            ->whereRaw('TRIM(LOWER(`email`)) LIKE ? ', [trim(strtolower($email)) . '%'])
+            ->whereNot('id', $request->id)
+            ->first();
+           
+        }
+        
+
+        if ($getCheckVal == null) {
+            echo "true";
+            // return 1; //Success
+        } else {
+            echo "false";
+            // return 0; //Error
+        }
+    }
+
+    public function get_user_survey(Request $request)
+    {
+
+        try {
+            if ($request->ajax()) {
+
+                $token = csrf_token();
+
+                $all_datas = Respondents::latest()->get();
+
+                return Datatables::of($all_datas)
+                    ->addColumn('name', function ($all_data) {
+                        return $all_data->name;
+                    })
+                    ->addColumn('surname', function ($all_data) {
+                        return $all_data->surname;
+                    })
+                    ->addColumn('mobile', function ($all_data) {
+                        return $all_data->mobile;
+                    })
+                    ->addColumn('whatsapp', function ($all_data) {
+                        return $all_data->whatsapp;
+                    })
+                    ->addColumn('email', function ($all_data) {
+                        return $all_data->email;
+                    })
+                    ->addColumn('age', function ($all_data) {
+
+                        $dob = $all_data->date_of_birth;
+                        $diff = (date('Y') - date('Y', strtotime($dob)));
+                        return $diff;
+                    })
+                    ->addColumn('gender', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('race', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('status', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('profile_completion', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('inactive_until', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('opeted_in', function ($all_data) {
+                        return '-';
+                    })
+                    ->addColumn('action', function ($all_data) {
+                        $edit_route = route("respondents.edit", $all_data->id);
+                        $view_route = route("respondents.show", $all_data->id);
+
+                        return'<div class="col-md-2">
+                            <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                                title="Action" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-tasks" aria-hidden="true"></i>
+                                <i class="mdi mdi-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-center">
+                                <li class="list-group-item">
+                                    <a href="'.$view_route.'" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-eye"></i> View
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                        data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" id="delete_respondents" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                        <i class="far fa-trash-alt"></i> Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>';
+                    })
+                    ->rawColumns(['action', 'name', 'surname', 'mobile', 'whatsapp', 'email', 'age', 'gender', 'race', 'status', 'profile_completion', 'inactive_until', 'opeted_in'])
+                    ->make(true);
+            }
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 }

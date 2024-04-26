@@ -165,7 +165,6 @@ class UsersController extends Controller
                 'surname'=> 'required',
                 'id_passport'=> 'required',
                 'email'=> 'required',
-                'password'=> 'required',
                 'role_id'=> 'required',
                 'status_id'=> 'required',
                 'share_link'=> 'required',
@@ -609,6 +608,37 @@ class UsersController extends Controller
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
+        }
+    }
+
+    public function user_email_id_check(Request $request){
+        $form_name = $request->form_name;
+        $email = $request->email;
+        if($request->id==null){
+            if($form_name == "usercreate"){
+                $getCheckVal = DB::table('users')
+                    ->whereRaw('TRIM(LOWER(`email`)) LIKE ? ', [trim(strtolower($email)) . '%'])
+                    ->first();
+            }
+            else {
+                $getCheckVal = "Not Empty";
+            }
+          
+        }else{
+            $getCheckVal = DB::table('users')
+            ->whereRaw('TRIM(LOWER(`email`)) LIKE ? ', [trim(strtolower($email)) . '%'])
+            ->whereNot('id', $request->id)
+            ->first();
+           
+        }
+        
+
+        if ($getCheckVal == null) {
+            echo "true";
+            // return 1; //Success
+        } else {
+            echo "false";
+            // return 0; //Error
         }
     }
 }

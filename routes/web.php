@@ -29,6 +29,7 @@ Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.l
 Route::any('admin/forgot_password', 'Auth\AdminLoginController@forgot_password')->name('admin.forgot_password'); 
 
 Route::any('dashboard','WelcomeController@user_dashboard')->middleware(['auth', 'verified'])->name('user.dashboard');
+Route::any('view_client_survey_list','WelcomeController@view_client_survey_list')->middleware(['auth', 'verified'])->name('client.survey');
 Route::any('profile-edit','WelcomeController@user_profile')->middleware(['auth', 'verified'])->name('user.profile');
 Route::any('share','WelcomeController@user_share')->middleware(['auth', 'verified'])->name('user.share');
 Route::any('rewards','WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
@@ -61,6 +62,7 @@ Route::group([
     Route::get('export_user_activity','UsersController@export_user_activity')->name('export_user_activity');
     Route::get('export_referrals','UsersController@export_referrals')->name('export_referrals');
     Route::any('users_multi_delete', 'UsersController@users_multi_delete')->name('users_multi_delete');
+    Route::any('user_email_id_check', 'UsersController@user_email_id_check')->name('user_email_id_check');
 
     /* Internal Reports MENU*/
     Route::controller(InternalReportController::class)->group(function(){
@@ -114,6 +116,8 @@ Route::group([
     Route::any('respondent_seach_result', 'RespondentsController@respondent_seach_result')->name('respondent_seach_result');
     Route::any('respondent_attach_store', 'RespondentsController@respondent_attach_store')->name('respondent_attach_store');
     Route::any('deattach_respondent/{respondent_id}/{project_id}', 'RespondentsController@deattach_respondent')->name('deattach_respondent');
+    Route::any('user_respondent_id_check', 'RespondentsController@user_respondent_id_check')->name('user_respondent_id_check');
+    Route::any('get_user_survey', 'RespondentsController@get_user_survey')->name('get_user_survey');
 
     /* Tags (or) Pannels MENU*/
     Route::resource('tags','TagsController')->name('index', 'tags.index')->name('destroy', 'tags.destroy')
