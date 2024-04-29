@@ -13,13 +13,18 @@ use App\Models\SurveyTemplate;
 use App\Models\SurveyResponse;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-
+// PPT Report 
+use PhpOffice\PhpPresentation\PhpPresentation;
+use PhpOffice\PhpPresentation\Style\Alignment;
+use PhpOffice\PhpPresentation\Style\Color;
+use PhpOffice\PhpPresentation\Style\Font;
 // Word Cloud 
 use Artesaos\SEOTools\Facades\SEOTools;
 // PDF Report
 use Dompdf\Dompdf;
 use Dompdf\Options;
+
+use Illuminate\Support\Facades\Auth;
 class SurveyController extends Controller
 {
     public function folder()
@@ -1692,67 +1697,128 @@ class SurveyController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-     // Generate Word Cloud
-     public function generateWordCloud()
-     {
-         // Given text
-         $text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+    // PPTX Report
+    public function generatePPTReport()
+    {
+        
+        // Save the presentation to a file
+        try{
+            $phpPresentation = new PhpPresentation();
+
+            // Create slide
+            $slide = $phpPresentation->getActiveSlide();
+
+            // Add text to the slide
+            $shape = $slide->createRichTextShape()
+                ->setHeight(300)
+                ->setWidth(600)
+                ->setOffsetX(10)
+                ->setOffsetY(10);
+            $shape->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $textRun = $shape->createTextRun('Hello, this is a PowerPoint report!');
+            $textRun->getFont()->setBold(true)
+                ->setSize(36)
+                ->setColor(new Color('FF0000'));
+            
+            $folderPath = 'uploads/ppt_folder';
+            $filename = 'report_' . date('YmdHis') . '.pptx';
+            $writer = \PhpOffice\PhpPresentation\IOFactory::createWriter($phpPresentation, 'PowerPoint2007');
+            $writer->save(public_path($folderPath . '/' . $filename));
+
+            // Return the public path URL
+            $publicUrl = asset($folderPath . '/' . $filename);
+            return "PowerPoint report generated and saved successfully. Access it at: $publicUrl";
+
+        }catch (\Exception $exception){
+            echo $exception->getMessage();
+        }
+    }
+    public function generateRandomColor()
+    {
+        // Generate random RGB values
+        $red = mt_rand(0, 255);
+        $green = mt_rand(0, 255);
+        $blue = mt_rand(0, 255);
+
+        // Convert RGB values to hexadecimal color code
+        $hexColor = sprintf("#%02x%02x%02x", $red, $green, $blue);
+        return $hexColor;
+    }
+    // Generate Word Cloud
+    public function generateWordCloud()
+    {
+        // Given text
+        $text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+
+        // Generate word cloud HTML
+        $wordCloud = '';
+        $words = explode(' ', $text);
+        foreach ($words as $word) {
+            $wordCloud .= '<span style="font-size: ' . rand(10, 30) . 'px;color:'.$this->generateRandomColor().'">' . $word . '</span> ';
+        }
+
+        // Set the HTML content
+        SEOTools::setTitle('Word Cloud');
+        SEOTools::setDescription('Word cloud generated from given text.');
+
+        // Generate the HTML with SEO metadata
+        $html = SEOTools::generate();
+
+        // Append the word cloud HTML
+        $html .= '<div style="display: flex; flex-wrap: wrap; width:500px">' . $wordCloud . '</div>';
+
+        // Return the HTML
+        return $html;
+    }
+    // Generate PDF Report
+    public function generatePDF()
+    {
+        // HTML content to be converted to PDF
+        $html = $this->generateWordCloud();
+
+        // Create an instance of Dompdf
+        $dompdf = new Dompdf();
+
+        // Load HTML content
+        $dompdf->loadHtml($html);
+
+        // (Optional) Set options (e.g., paper size, orientation)
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf->setOptions($options);
+
+        // Render PDF (parse HTML and convert to PDF)
+        $dompdf->render();
+        
+
+        // Output PDF (force download or display in browser)
+        return $dompdf->stream('document.pdf');
+    }
+    // Bar Chart 
+    public function generateBarChart()
+    {
+        // Sample data for the bar chart
+        $chartData = [
+            'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            'datasets' => [
+                [
+                    'label' => 'Sales',
+                    'backgroundColor' => [$this->generateRandomColor(),$this->generateRandomColor(),$this->generateRandomColor(),$this->generateRandomColor(),$this->generateRandomColor(),$this->generateRandomColor(),$this->generateRandomColor()],
+                    'data' => [65, 59, 80, 81, 56, 55, 40],
+                ],
+            ],
+        ];
+        return view('admin.survey.bar_chart', compact('chartData'));
+    }
+
  
-         // Generate word cloud HTML
-         $wordCloud = '';
-         $words = explode(' ', $text);
-         foreach ($words as $word) {
-             $wordCloud .= '<span style="font-size: ' . rand(10, 30) . 'px;color:'.$this->generateRandomColor().'">' . $word . '</span> ';
-         }
- 
-         // Set the HTML content
-         SEOTools::setTitle('Word Cloud');
-         SEOTools::setDescription('Word cloud generated from given text.');
- 
-         // Generate the HTML with SEO metadata
-         $html = SEOTools::generate();
- 
-         // Append the word cloud HTML
-         $html .= '<div style="display: flex; flex-wrap: wrap; width:500px">' . $wordCloud . '</div>';
- 
-         // Return the HTML
-         return $html;
-     }
-     // Generate PDF Report
-     public function generatePDF()
-     {
-         // HTML content to be converted to PDF
-         $html = $this->generateWordCloud();
- 
-         // Create an instance of Dompdf
-         $dompdf = new Dompdf();
- 
-         // Load HTML content
-         $dompdf->loadHtml($html);
- 
-         // (Optional) Set options (e.g., paper size, orientation)
-         $options = new Options();
-         $options->set('defaultFont', 'Arial');
-         $dompdf->setOptions($options);
- 
-         // Render PDF (parse HTML and convert to PDF)
-         $dompdf->render();
-         
- 
-         // Output PDF (force download or display in browser)
-         return $dompdf->stream('document.pdf');
-     }
-     public function generateRandomColor()
-     {
-         // Generate random RGB values
-         $red = mt_rand(0, 255);
-         $green = mt_rand(0, 255);
-         $blue = mt_rand(0, 255);
- 
-         // Convert RGB values to hexadecimal color code
-         $hexColor = sprintf("#%02x%02x%02x", $red, $green, $blue);
-         return $hexColor;
-     }
 }
 
 
+// Reports
+Route::get('/generate-ppt-report', ['as' => 'survey.pptreport','uses' => 'SurveyController@generatePPTReport']);
+Route::get('/generate-wordcloud-report', ['as' => 'survey.wordcloudreport','uses' => 'SurveyController@generateWordCloud']);
+Route::get('/generate-pdf', ['as' => 'survey.pdfreport','uses' => 'SurveyController@generatePDF']);
+Route::get('/generate-barchart', ['as' => 'survey.barchart','uses' => 'SurveyController@generateBarChart']);
+
+Route::get('/wordcloud', 'WordCloudController@generateAndDownload');
