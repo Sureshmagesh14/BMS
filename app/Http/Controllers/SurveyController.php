@@ -822,6 +822,7 @@ class SurveyController extends Controller
                         $logicv=$logic_type_value_option_skip[$k];
                         $cond=$skip_qus_choice_andor_skip[$k];
                         $resp_logic_type_skip_value=[];
+                        // echo $qus_check->qus_type;
                         switch ($qus_check->qus_type) {
                             case 'single_choice':
                                 $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
@@ -847,7 +848,15 @@ class SurveyController extends Controller
                                 break;
                         }
                         if(count($resp_logic_type_skip_value)>0){
-                            $ans = $resp_logic_type_skip_value[$logicv];
+                            // echo "<pre>";
+                            // print_r($resp_logic_type_skip_value);
+                            // echo $logicv;
+                            // exit;
+                            if(isset( $resp_logic_type_skip_value[$logicv])){
+                                $ans = $resp_logic_type_skip_value[$logicv];
+                            }else{
+                                $ans = $logicv;
+                            }
                         }else{
                             $ans = $logicv;
                         }
