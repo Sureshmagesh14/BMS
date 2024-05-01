@@ -3,6 +3,9 @@
 <head>
     <link href="{{ asset('assets/css/preview.css') }}" rel="stylesheet" type="text/css" />
     <style>
+    img#tbs_logo {
+        width: 200px;
+    }
         .likert_scale_label {
             display: flex;
             width: 100%;
@@ -93,6 +96,17 @@ if(isset($qusvalue->left_label)){
             <div class="ss-fp-section__frame ss_classic_survey_intro_contents">
                 <div class="ss-fp-section__inner-frame">
                         <h3 class="ss-header-text--fluid ss-survey-heading--text ss-survey-font-family ss-survey-line-height--normal ss-survey-text-weight--semibold ss-survey-text-color--primary ss-survey-text-align--center ss-survey-text-question-text main-header-font-size--md">
+                            @if(isset($qusvalue->tbs_logo))
+                                @if($qusvalue->tbs_logo== 1 && isset($qusvalue->tbs_logo_url))
+                                    <figure>
+                                        <span>
+                                            <div class="ss_image_wrapper">
+                                                <img id="tbs_logo" src="{{ asset('uploads/survey/'.$qusvalue->tbs_logo_url) }}" alt="TBS Logo">
+                                            </div>
+                                        </span>
+                                    </figure>
+                                @endif
+                            @endif
                             @if(isset($qusvalue->welcome_title))
                                 <p>{{$qusvalue->welcome_title}}</p>
                             @endif
@@ -874,7 +888,17 @@ if(isset($qusvalue->left_label)){
         <div class="ss-fp-section surveysparrow-survey-form-wrapper--centered ss-survey-background d-flex fx-column fx-jc--center fx-ai--center">
             <div class="ss-fp-section__frame ss_classic_survey_intro_contents">
                 <div class="ss-fp-section__inner-frame">
-                    
+                        @if(isset($qusvalue->tbs_logo))
+                            @if($qusvalue->tbs_logo== 1 && isset($qusvalue->tbs_logo_url))
+                                <figure>
+                                    <span>
+                                        <div class="ss_image_wrapper">
+                                            <img id="tbs_logo" src="{{ asset('uploads/survey/'.$qusvalue->tbs_logo_url) }}" alt="TBS Logo">
+                                        </div>
+                                    </span>
+                                </figure>
+                            @endif
+                        @endif
                         <h3 class="ss-header-text--fluid ss-survey-heading--text ss-survey-font-family ss-survey-line-height--normal ss-survey-text-weight--semibold ss-survey-text-color--primary ss-survey-text-align--center ss-survey-text-question-text main-header-font-size--md">
                             @if(isset($qusvalue->thankyou_title))
                                 <p>{{$qusvalue->thankyou_title}}</p>

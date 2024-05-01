@@ -445,11 +445,19 @@ class SurveyController extends Controller
                     }
                     
                 }
+                $TBSfilename='small-logo.png';
+                $surveyTemplate = SurveyTemplate::where(['id'=>$request->welcome_template])->first();
+                if(isset($surveyTemplate)){
+                    $TBSfilename = $surveyTemplate->logo_url;
+                }
+              
                 $json=[
                     'welcome_imagesubtitle'=>$request->welcome_imagesubtitle,'welcome_btn'=>$request->welcome_btn,
                     'welcome_imagetitle'=>$request->welcome_imagetitle,
                     'welcome_title'=>$request->welcome_title,
                     'welcome_template'=>$request->welcome_template,
+                    'tbs_logo'=>$request->tbs_logo,
+                    'tbs_logo_url'=>$TBSfilename,
                     'welcome_image'=>$filename
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['qus_ans'=>json_encode($json)]);
@@ -471,20 +479,28 @@ class SurveyController extends Controller
                         $filename=$surveyTemplate->image;
                     }
                 }
+                $TBSfilename='small-logo.png';
+                $surveyTemplate = SurveyTemplate::where(['id'=>$request->welcome_template])->first();
+                if(isset($surveyTemplate)){
+                    $TBSfilename = $surveyTemplate->logo_url;
+                }
+              
                 $json=[
                     'thankyou_title'=>$request->thankyou_title,
                     'thankyou_imagetitle'=>$request->thankyou_imagetitle,
                     'thankyou_image'=>$filename,
                     'thankyou_template'=>$request->thankyou_template,
+                    'tbs_logo'=>$request->tbs_logo,
+                    'tbs_logo_url'=>$TBSfilename
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->thankyou_title,'qus_ans'=>json_encode($json)]);
               break;
             case 'open_qus':
                 $json=[
                     'open_qus_choice'=>$request->open_qus_choice,
-                    'question_name'=>$request->question_name
+                    'question_name'=>$request->question_name,
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             case 'single_choice':
                 $json=[
@@ -492,7 +508,7 @@ class SurveyController extends Controller
                     'choices_type'=>'single',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             case 'multi_choice':
                 $json=[
@@ -500,7 +516,7 @@ class SurveyController extends Controller
                     'choices_type'=>'mulitple',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             case 'likert':
                 $json=[
@@ -510,7 +526,7 @@ class SurveyController extends Controller
                     'likert_range'=>$request->likert_range,
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'rankorder':
                 $json=[
@@ -518,14 +534,14 @@ class SurveyController extends Controller
                     'choices_type'=>'rankorder',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'rating':
                 $json=[
                     'icon_type'=>$request->icon_type,
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'dropdown':
                 $json=[
@@ -533,7 +549,7 @@ class SurveyController extends Controller
                     'choices_type'=>'dropdown',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'picturechoice':
                 $json=[
@@ -541,17 +557,17 @@ class SurveyController extends Controller
                     'choices_type'=>'picturechoice',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'photo_capture':
                 $json=[
                     'choices_type'=>'photo_capture',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'email':
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>'email']);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>'email']);
                 break;
             case 'matrix_qus':
                 $json=[
@@ -561,7 +577,7 @@ class SurveyController extends Controller
                     'choices_type'=>'radio',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             default:
               //code block
@@ -1609,6 +1625,11 @@ class SurveyController extends Controller
             $survey->button_label = $request->button_label;
             $survey->created_by = $user->id;
         }
+        if($request->tbs_logo == 'on'){
+            $survey->tbs_logo = 1;
+        }else{
+            $survey->tbs_logo = 0;
+        }
         $filename='';
         if($request->hasfile('image'))
         {
@@ -1618,6 +1639,19 @@ class SurveyController extends Controller
             $file->move('uploads/survey/', $filename);
             $survey->image = $filename;
 
+        }
+        // TBS Logo 
+        $filename='small-logo.png';
+        if($request->hasfile('image_TBS'))
+        {
+            $file = $request->file('image_TBS');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/survey/', $filename);
+            $survey->logo_url = $filename;
+
+        }else{
+            $survey->logo_url = $filename;
         }
         $survey->save();
         return redirect()->back()->with('success', __('Template Created Successfully.'));
@@ -1653,6 +1687,23 @@ class SurveyController extends Controller
             $file->move('uploads/survey/', $filename);
             $survey->image = $filename;
         }
+       
+        if($request->tbs_logo == 'on'){
+            $survey->tbs_logo = 1;
+        }else{
+            $survey->tbs_logo = 0;
+        }
+         // TBS Logo 
+         $filename='';
+         if($request->hasfile('image_TBS'))
+         {
+             $file = $request->file('image_TBS');
+             $extenstion = $file->getClientOriginalExtension();
+             $filename = time().'.'.$extenstion;
+             $file->move('uploads/survey/', $filename);
+             $survey->logo_url = $filename;
+ 
+         }
         $survey->save();
         return redirect()->back()->with('success', __('Template Updated Successfully.'));
         

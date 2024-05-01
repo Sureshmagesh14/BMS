@@ -5,6 +5,14 @@
 @include('admin.layout.horizontal_left_menu')
 </div>
 <style>
+    #qus_required{
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+}
+.tbs_logo {
+    display: flex;
+    align-items: center;
+}
 .horizontal_left_menu {
     display: none;
 }
@@ -275,6 +283,10 @@
                                  if(isset($qusvalue->welcome_template)){
                                     $template_id_welcome = $qusvalue->welcome_template;
                                  }
+                                 $tbs_logo=0;
+                                 if(isset($qusvalue->tbs_logo)){
+                                    $tbs_logo=1;
+                                 }
                                   ?>
                                
                                 {{ Form::label('welcome_template', __('Welcome Template'),['class'=>'form-label']) }}
@@ -286,6 +298,10 @@
                                 </select>
                             </div>
                             <br>
+                            <div class="tbs_logo">
+                                {{ Form::label('tbs_logo', __('Enable TBS Logo'),['class'=>'form-label']) }}
+                                <input type="checkbox" @if($tbs_logo==1) checked @endif name="tbs_logo" id="tbs_logo" value="{{$tbs_logo}}"> 
+                            </div>
                             <div>
                                 {{ Form::label('welcome_title', __('Title'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->welcome_title))
@@ -371,6 +387,10 @@
                                  $template_id_thankyou = '';
                                  if(isset($qusvalue->thankyou_template)){
                                     $template_id_thankyou = $qusvalue->thankyou_template;
+                                 } 
+                                 $tbs_logo=0;
+                                 if(isset($qusvalue->tbs_logo)){
+                                    $tbs_logo=1;
                                  }
                                   ?>
                                
@@ -383,6 +403,11 @@
                                 </select>
                             </div>
                             <br>
+                            <div class="tbs_logo">
+                                {{ Form::label('tbs_logo', __('Enable TBS Logo'),['class'=>'form-label']) }}
+                                <input type="checkbox" @if($tbs_logo==1) checked @endif name="tbs_logo" id="tbs_logo" value="{{$tbs_logo}}"> 
+                            </div>
+
                             <div>
                                 {{ Form::label('thankyou_title', __('Title'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->thankyou_title))
@@ -430,6 +455,7 @@
                     @endif
                    
                     @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
+                            <?php $qus_required=$currentQus->qus_required; ?>
                         <div class="modal-body">
                                 <div>
                                     {{ Form::label('question_name', __('Question Title'),['class'=>'form-label']) }}
@@ -437,12 +463,18 @@
                                     'placeholder'=>'Enter Question title','required'=>true)) }}
                                 </div>
                                 <br>
+                                
                                 <div>
                                     {{ Form::label('question_description', __('Add description to your question'),['class'=>'form-label']) }}
                                         {{ Form::text('question_description', $qus_name , array('class' => 'form-control',
                                     'placeholder'=>'Enter Question description')) }}
                                 </div>
                                 <br>
+                                <div class="tbs_logo">
+                                    {{ Form::label('qus_required', __('Required'),['class'=>'form-label']) }}
+                                    <input type="checkbox" @if($qus_required==1) checked @endif name="qus_required" id="qus_required" value="{{$qus_required}}"> 
+                                </div>
+                                
                                 @if($currentQus->qus_type=='open_qus')
                                         <div class="open_qus">
                                             {{ Form::label('open_qus_choice', __('Type'),['class'=>'form-label']) }}<br>
@@ -1955,6 +1987,11 @@ $('#welcome_template').on("change",function(){
     $.ajax({
         url: url, 
         success: function(result){
+            if(result?.tbs_logo ==1){
+                $('#tbs_logo').prop('checked',true)
+            }else{
+                $('#tbs_logo').prop('checked',false)
+            }
             $('#welcome_title').val(result?.title);
             $('#welcome_imagetitle').val(result?.sub_title);
             $('#welcome_imagesubtitle').val(result?.description);
@@ -1987,5 +2024,22 @@ $('#thankyou_template').on("change",function(){
     });
 
 });
+$('#tbs_logo').change(function () {
+    if($('#tbs_logo').prop('checked')){
+        $('#tbs_logo').val(1)
+    }else{
+        $('#tbs_logo').val(0);
+    }
+    
+  });
+  $('#qus_required').change(function () {
+    if($('#qus_required').prop('checked')){
+        $('#qus_required').val(1)
+    }else{
+        $('#qus_required').val(0);
+    }
+    
+  });
+  
 </script>
 
