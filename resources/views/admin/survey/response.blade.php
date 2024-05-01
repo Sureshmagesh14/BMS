@@ -201,7 +201,7 @@ if(isset($bg)){
                             <div id="question_{{$question->id}}" class="ss_cl_survey_qstn_item active" style="width: 100%;">
                                 <div class="ss_cl_survey_qstn_wrapper">
                                     <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                        <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">Question {{$qusNo}}</p>
+                                        <!-- <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">Question {{$qusNo}}</p> -->
                                     </div>
                                     <div class="ss_cl_survey_qstn_right">
                                         <div class="ss_cl_survey_qstn">
@@ -284,7 +284,7 @@ if(isset($bg)){
                         <div id="question_8966626" class="ss_cl_survey_qstn_item active" style="width: 100%;">
                             <div class="ss_cl_survey_qstn_wrapper">
                                 <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">Question {{$qusNo}}</p>
+                                <!-- <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">Question {{$qusNo}}</p> -->
                                 </div>
                                 <div class="ss_cl_survey_qstn_right">
                                     <div class="ss_cl_survey_qstn">
@@ -346,7 +346,7 @@ if(isset($bg)){
                             <div id="question_8982683" class="ss_cl_survey_qstn_item active" style="width: 100%;">
                                 <div class="ss_cl_survey_qstn_wrapper">
                                     <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                    <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">Question {{$qusNo}}</p>
+                                    <!-- <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">Question {{$qusNo}}</p> -->
                                     </div>
                                     <div class="ss_cl_survey_qstn_right">
                                         <div class="ss_cl_survey_qstn">
@@ -411,7 +411,7 @@ if(isset($bg)){
                             <div id="question_8982683" class="ss_cl_survey_qstn_item active" style="width: 100%;">
                                 <div class="ss_cl_survey_qstn_wrapper">
                                     <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                    <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">Question {{$qusNo}}</p>
+                                    <!-- <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">Question {{$qusNo}}</p> -->
                                     </div>
                                     <div class="ss_cl_survey_qstn_right">
                                         <div class="ss_cl_survey_qstn">
@@ -481,7 +481,7 @@ if(isset($bg)){
                             <div id="question_8962778" class="ss_cl_survey_qstn_item active" style="width: 100%;">
                                 <div class="ss_cl_survey_qstn_wrapper">
                                     <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                    <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">Question {{$qusNo}}</p>
+                                    <!-- <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">Question {{$qusNo}}</p> -->
                                     </div>
                                     <div class="ss_cl_survey_qstn_right">
                                         <div class="ss_cl_survey_qstn">
@@ -556,9 +556,9 @@ if(isset($bg)){
                             <div id="question_8966750" class="ss_cl_survey_qstn_item active" style="width: 100%;">
                                 <div class="ss_cl_survey_qstn_wrapper">
                                     <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                        <p
+                                        <!-- <p
                                             class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
-                                            Question {{$qusNo}}</p>
+                                            Question {{$qusNo}}</p> -->
                                     </div>
                                     <div class="ss_cl_survey_qstn_right">
                                         <div class="ss_cl_survey_qstn">
@@ -646,7 +646,7 @@ if(isset($bg)){
                             <div class="ss_cl_survey_qstn_item active" style="width: 100%;">
                                 <div class="ss_cl_survey_qstn_wrapper">
                                     <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                        <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text"> Question {{$qusNo}} </p>
+                                        <!-- <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text"> Question {{$qusNo}} </p> -->
                                     </div>
                                     <div class="ss_cl_survey_qstn_right">
                                         <div class="ss_cl_survey_qstn">
@@ -786,9 +786,9 @@ if(isset($bg)){
                                 class="ss_cl_survey_qstn_item active ss_cl_survey_qstn_item--has-dropdown" style="width: 100%;">
                                 <div class="ss_cl_survey_qstn_wrapper">
                                     <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                        <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                        <!-- <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             Question {{$qusNo}}
-                                        </p>
+                                        </p> -->
                                     </div>
                                     <div class="ss_cl_survey_qstn_right">
                                         <div class="ss_cl_survey_qstn">
@@ -843,9 +843,9 @@ if(isset($bg)){
                                 data-qa="question_normal" class="ss_cl_survey_qstn_item active" style="width: 100%;">
                                 <div class="ss_cl_survey_qstn_wrapper">
                                     <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                        <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                        <!-- <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             Question {{$qusNo}}
-                                        </p>
+                                        </p> -->
                                     </div>
                                     <div class="ss_cl_survey_qstn_right">
                                         <div class="ss_cl_survey_qstn">
@@ -919,9 +919,9 @@ if(isset($bg)){
                                 data-qa="question_normal" class="ss_cl_survey_qstn_item active" style="width: 100%;">
                                 <div class="ss_cl_survey_qstn_wrapper">
                                     <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
-                                        <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                        <!-- <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             Question {{$qusNo}}
-                                        </p>
+                                        </p> -->
                                     </div>
                                     <div class="ss_cl_survey_qstn_right">
                                         <div class="ss_cl_survey_qstn">

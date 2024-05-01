@@ -628,10 +628,10 @@
                                 <input type="hidden" id="question_list_matrix" name="question_list_matrix[]">                           
 
                                 <div class="matrix_action">
-                                <input type="button"  onclick="insert('coloumn')" value="Insert Column" class="btn matrixbtn">
-                                <input type="button" onclick="insert('row')" value="Insert Row" class="btn   matrixbtn">
-                                <input type="button" onclick="remove('coloumn')" value="Remove Column" class="btn   matrixbtn">
-                                <input type="button" onclick="remove('row')" value="Remove Row" class="btn  matrixbtn">
+                                <input type="button"  onclick="insert('coloumn')" value="Add Choice" class="btn matrixbtn">
+                                <input type="button" onclick="remove('coloumn')" value="Remove Choice" class="btn   matrixbtn">
+                                <input type="button" onclick="insert('row')" value="Add Question" class="btn   matrixbtn">
+                                <input type="button" onclick="remove('row')" value="Remove Question" class="btn  matrixbtn">
 
                                 </div>
                                 <div id="matrix_table">
@@ -1179,7 +1179,7 @@
                                         </div>
                                     </div>
                                 @else
-                                <p>else d</p>
+                                <p></p>
                                 @endif
                                 <div class="ss-logic-row c_jump_to">
                                     <p style="margin-top: 6px;">Then Jump to</p>
