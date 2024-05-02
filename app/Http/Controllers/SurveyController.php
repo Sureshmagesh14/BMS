@@ -271,7 +271,7 @@ class SurveyController extends Controller
         }else{
             $currentQus=Questions::where(['id'=>$qusID])->first();
         }
-        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','upload'=>'Upload','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
         $qus_type='';
         if($currentQus){
             $qus_type=$questionTypes[$currentQus->qus_type];
@@ -319,9 +319,9 @@ class SurveyController extends Controller
     public function questiontype(Request $request,$survey){
         $checkSurvey= Questions::where(['survey_id'=>$survey,'qus_type'=>'welcome_page'])->first();
         if($checkSurvey){
-            $questionTypes=['single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page'];
+            $questionTypes=['single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','upload'=>'Upload','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page'];
         }else{
-            $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+            $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','upload'=>'Upload','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
         }
         return view('admin.survey.builder.create', compact('questionTypes','survey'));
 
@@ -504,6 +504,16 @@ class SurveyController extends Controller
                     'tbs_logo_url'=>$TBSfilename
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->thankyou_title,'qus_ans'=>json_encode($json)]);
+              break;
+            case 'upload':
+                $json=[
+                    'upload_image'=>$request->upload_image,
+                    'upload_video'=>$request->upload_video,
+                    'upload_audio'=>$request->upload_audio,
+                    'upload_doc'=>$request->upload_doc,
+                    'question_name'=>$request->question_name,
+                ];
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             case 'open_qus':
                 $json=[
