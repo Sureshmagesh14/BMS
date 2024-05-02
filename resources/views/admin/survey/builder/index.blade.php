@@ -9,6 +9,10 @@
     margin-bottom: 0.5rem;
     margin-left: 0.5rem;
 }
+#tbs_logo{
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+}
 .tbs_logo {
     display: flex;
     align-items: center;

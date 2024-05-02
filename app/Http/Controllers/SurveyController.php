@@ -450,6 +450,11 @@ class SurveyController extends Controller
                 if(isset($surveyTemplate)){
                     $TBSfilename = $surveyTemplate->logo_url;
                 }
+                if($TBSfilename==''){
+                    if($request->tbs_logo==1){
+                        $TBSfilename='small-logo.png';
+                    }
+                }
               
                 $json=[
                     'welcome_imagesubtitle'=>$request->welcome_imagesubtitle,'welcome_btn'=>$request->welcome_btn,
@@ -483,6 +488,11 @@ class SurveyController extends Controller
                 $surveyTemplate = SurveyTemplate::where(['id'=>$request->welcome_template])->first();
                 if(isset($surveyTemplate)){
                     $TBSfilename = $surveyTemplate->logo_url;
+                }
+                if($TBSfilename==''){
+                    if($request->tbs_logo==1){
+                        $TBSfilename='small-logo.png';
+                    }
                 }
               
                 $json=[
@@ -1567,11 +1577,20 @@ class SurveyController extends Controller
 
                         }
                         else if($qus->qus_type == 'matrix_qus'){
-                            $output = json_decode($output);
-                            foreach($output as $op){
-                                $tempresult = [$op->qus =>$op->ans];
-                                $result[$op->qus]=$op->ans; 
+                            if($output=='Skip'){
+                                $qusvalue = json_decode($qus->qus_ans); 
+                                $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
+                                foreach($exiting_qus_matrix as $op){
+                                    $result[$op]='Skip'; 
+                                }
+                            }else{
+                                $output = json_decode($output);
+                                foreach($output as $op){
+                                    $tempresult = [$op->qus =>$op->ans];
+                                    $result[$op->qus]=$op->ans; 
+                                }
                             }
+                            
                         }else if($qus->qus_type == 'rankorder'){
                             $output = json_decode($output,true);
                             $ordering = [];

@@ -2,6 +2,9 @@
 <head>
     <link href="{{ asset('assets/css/preview.css') }}" rel="stylesheet" type="text/css" />
     <style>
+        img#tbs_logo {
+            width: 200px;
+        }
         .likert_scale_label {
             display: flex;
             width: 100%;
@@ -145,6 +148,17 @@ if(isset($bg)){
             <div class="ss-fp-section surveysparrow-survey-form-wrapper--centered ss-survey-background d-flex fx-column fx-jc--center fx-ai--center">
                 <div class="ss-fp-section__frame ss_classic_survey_intro_contents">
                     <div class="ss-fp-section__inner-frame">
+                            @if(isset($qusvalue->tbs_logo))
+                                @if($qusvalue->tbs_logo== 1 && isset($qusvalue->tbs_logo_url))
+                                    <figure>
+                                        <span>
+                                            <div class="ss_image_wrapper">
+                                                <img id="tbs_logo" src="{{ asset('uploads/survey/'.$qusvalue->tbs_logo_url) }}" alt="TBS Logo">
+                                            </div>
+                                        </span>
+                                    </figure>
+                                @endif
+                            @endif
                             <h3 class="ss-header-text--fluid ss-survey-heading--text ss-survey-font-family ss-survey-line-height--normal ss-survey-text-weight--semibold ss-survey-text-color--primary ss-survey-text-align--center ss-survey-text-question-text main-header-font-size--md">
                                 @if(isset($qusvalue->welcome_title))
                                     <p>{{$qusvalue->welcome_title}}</p>
@@ -258,9 +272,11 @@ if(isset($bg)){
                                                             </svg>
                                                         </button>
                                                     </div>
-                                                    <div class="ss-skip-container">
-                                                        <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                                    </div>
+                                                    @if($question->qus_required!=1)
+                                                        <div class="ss-skip-container">
+                                                            <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -323,9 +339,11 @@ if(isset($bg)){
                                             </svg>
                                         </button>
                                     </div>
-                                    <div class="ss-skip-container">
-                                        <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                    </div>
+                                    @if($question->qus_required!=1)
+                                        <div class="ss-skip-container">
+                                            <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </span>
                         </div>
@@ -388,9 +406,11 @@ if(isset($bg)){
                                                 </svg>
                                             </button>
                                         </div>
-                                        <div class="ss-skip-container">
-                                            <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                        </div>
+                                        @if($question->qus_required!=1)
+                                            <div class="ss-skip-container">
+                                                <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                            </div>
+                                        @endif
                                     </div>
                                 </span>
                             </div>
@@ -459,9 +479,11 @@ if(isset($bg)){
                                             </svg>
                                         </button>
                                     </div>
-                                    <div class="ss-skip-container">
-                                        <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                    </div>
+                                    @if($question->qus_required!=1)
+                                        <div class="ss-skip-container">
+                                            <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -533,9 +555,11 @@ if(isset($bg)){
                                                 </svg>
                                             </button>
                                         </div>
-                                        <div class="ss-skip-container">
-                                            <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                        </div>
+                                        @if($question->qus_required!=1)
+                                            <div class="ss-skip-container">
+                                                <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                            </div>
+                                        @endif
                                     </div>
                                 </span>
                             </div>
@@ -623,9 +647,11 @@ if(isset($bg)){
                                                 </svg>
                                             </button>
                                         </div>
-                                        <div class="ss-skip-container">
-                                            <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                        </div>
+                                        @if($question->qus_required!=1)
+                                            <div class="ss-skip-container">
+                                                <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                            </div>
+                                        @endif
                                     </div>
                                 </span>
                             </div>
@@ -762,9 +788,11 @@ if(isset($bg)){
                                                 </svg>
                                             </button>
                                         </div>
-                                        <div class="ss-skip-container">
-                                            <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                        </div>
+                                        @if($question->qus_required!=1)
+                                            <div class="ss-skip-container">
+                                                <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                            </div>
+                                        @endif
                                     </div>
                                 </span> </div>
                         </div>
@@ -819,9 +847,11 @@ if(isset($bg)){
                                                 </svg>
                                             </button>
                                         </div>
-                                        <div class="ss-skip-container">
-                                            <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                        </div>
+                                        @if($question->qus_required!=1)
+                                            <div class="ss-skip-container">
+                                                <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                            </div>
+                                        @endif
                                     </div>
                                 </span>
                             </div>
@@ -895,9 +925,11 @@ if(isset($bg)){
                                                 </svg>
                                             </button>
                                         </div>
-                                        <div class="ss-skip-container">
-                                            <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                        </div>
+                                        @if($question->qus_required!=1)
+                                            <div class="ss-skip-container">
+                                                <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                            </div>
+                                        @endif
                                     </div>
                                 </span>
                             </div>
@@ -953,9 +985,11 @@ if(isset($bg)){
                                                 </svg>
                                             </button>
                                         </div>
-                                        <div class="ss-skip-container">
-                                            <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                        </div>
+                                        @if($question->qus_required!=1)
+                                            <div class="ss-skip-container">
+                                                <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                            </div>
+                                        @endif
                                     </div>
                                 </span>
                             </div>
@@ -969,7 +1003,17 @@ if(isset($bg)){
             <div class="ss-fp-section surveysparrow-survey-form-wrapper--centered ss-survey-background d-flex fx-column fx-jc--center fx-ai--center">
                 <div class="ss-fp-section__frame ss_classic_survey_intro_contents">
                     <div class="ss-fp-section__inner-frame">
-                        
+                            @if(isset($qusvalue->tbs_logo))
+                                @if($qusvalue->tbs_logo== 1 && isset($qusvalue->tbs_logo_url))
+                                    <figure>
+                                        <span>
+                                            <div class="ss_image_wrapper">
+                                                <img id="tbs_logo" src="{{ asset('uploads/survey/'.$qusvalue->tbs_logo_url) }}" alt="TBS Logo">
+                                            </div>
+                                        </span>
+                                    </figure>
+                                @endif
+                            @endif
                             <h3 class="ss-header-text--fluid ss-survey-heading--text ss-survey-font-family ss-survey-line-height--normal ss-survey-text-weight--semibold ss-survey-text-color--primary ss-survey-text-align--center ss-survey-text-question-text main-header-font-size--md">
                                 @if(isset($qusvalue->thankyou_title))
                                     <p>{{$qusvalue->thankyou_title}}</p>
