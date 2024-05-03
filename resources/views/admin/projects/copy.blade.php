@@ -4,7 +4,7 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Name / Code *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="number" name="number" required>
+            <input type="text" class="form-control" id="number" name="number" value="{{ $projects->number }}" required>
         </div>
     </div>
 
