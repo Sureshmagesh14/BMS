@@ -115,13 +115,21 @@ class WelcomeController extends Controller
             $id =Session::get('resp_id');
             $data = Respondents::find($id);
             
-            $get_respondent=DB::table('projects')->where('user_id','=',$id)->get();
+            $get_respondent = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
+                ->join('project_respondent as resp','projects.id','resp.project_id')
+                ->where('resp.respondent_id','=',$id)
+                ->where('resp.is_frontend_complete',0)->get();
+
+            $get_completed_survey = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
+                ->join('project_respondent as resp','projects.id','resp.project_id')
+                ->where('resp.respondent_id',$id)
+                ->where('resp.is_frontend_complete',1)->get();
            
 
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-dashboard', compact('data','get_respondent'));
+                return view('user.user-dashboard', compact('data','get_respondent','get_completed_survey'));
             //}
         }
         catch (Exception $e) {
@@ -404,6 +412,16 @@ class WelcomeController extends Controller
             echo json_encode($json_data);
         }
 
+    }
+
+    public function opt_out(Request $request){
+        $resp_id = Session::get('resp_id');
+        Respondents::where('id',$resp_id)->update(['active_status_id' => 3]);
+        return response()->json([
+            'status'=>200,
+            'success' => true,
+            'message'=> "We were bummed to hear that you're leaving us. We totally respect your decision to cancel, and we've started processing your request."
+        ]);
     }
 
 }
