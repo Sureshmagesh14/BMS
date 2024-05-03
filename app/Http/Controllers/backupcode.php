@@ -13,13 +13,18 @@ use App\Models\SurveyTemplate;
 use App\Models\SurveyResponse;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-
+// PPT Report 
+use PhpOffice\PhpPresentation\PhpPresentation;
+use PhpOffice\PhpPresentation\Style\Alignment;
+use PhpOffice\PhpPresentation\Style\Color;
+use PhpOffice\PhpPresentation\Style\Font;
 // Word Cloud 
 use Artesaos\SEOTools\Facades\SEOTools;
 // PDF Report
 use Dompdf\Dompdf;
 use Dompdf\Options;
+
+use Illuminate\Support\Facades\Auth;
 class SurveyController extends Controller
 {
     public function folder()
@@ -271,7 +276,7 @@ class SurveyController extends Controller
         }else{
             $currentQus=Questions::where(['id'=>$qusID])->first();
         }
-        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','upload'=>'Upload','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
         $qus_type='';
         if($currentQus){
             $qus_type=$questionTypes[$currentQus->qus_type];
@@ -319,9 +324,9 @@ class SurveyController extends Controller
     public function questiontype(Request $request,$survey){
         $checkSurvey= Questions::where(['survey_id'=>$survey,'qus_type'=>'welcome_page'])->first();
         if($checkSurvey){
-            $questionTypes=['single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','upload'=>'Upload','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page'];
+            $questionTypes=['single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page'];
         }else{
-            $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','upload'=>'Upload','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+            $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
         }
         return view('admin.survey.builder.create', compact('questionTypes','survey'));
 
@@ -408,7 +413,7 @@ class SurveyController extends Controller
         $questions=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
         $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
         $thankQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->get();
-        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','upload'=>'Upload','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
         $qus_type=$questionTypes[$currentQus->qus_type];
         $pagetype=$request->pagetype;
 
@@ -445,24 +450,11 @@ class SurveyController extends Controller
                     }
                     
                 }
-                $TBSfilename='small-logo.png';
-                $surveyTemplate = SurveyTemplate::where(['id'=>$request->welcome_template])->first();
-                if(isset($surveyTemplate)){
-                    $TBSfilename = $surveyTemplate->logo_url;
-                }
-                if($TBSfilename==''){
-                    if($request->tbs_logo==1){
-                        $TBSfilename='small-logo.png';
-                    }
-                }
-              
                 $json=[
                     'welcome_imagesubtitle'=>$request->welcome_imagesubtitle,'welcome_btn'=>$request->welcome_btn,
                     'welcome_imagetitle'=>$request->welcome_imagetitle,
                     'welcome_title'=>$request->welcome_title,
                     'welcome_template'=>$request->welcome_template,
-                    'tbs_logo'=>$request->tbs_logo,
-                    'tbs_logo_url'=>$TBSfilename,
                     'welcome_image'=>$filename
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['qus_ans'=>json_encode($json)]);
@@ -484,43 +476,20 @@ class SurveyController extends Controller
                         $filename=$surveyTemplate->image;
                     }
                 }
-                $TBSfilename='small-logo.png';
-                $surveyTemplate = SurveyTemplate::where(['id'=>$request->welcome_template])->first();
-                if(isset($surveyTemplate)){
-                    $TBSfilename = $surveyTemplate->logo_url;
-                }
-                if($TBSfilename==''){
-                    if($request->tbs_logo==1){
-                        $TBSfilename='small-logo.png';
-                    }
-                }
-              
                 $json=[
                     'thankyou_title'=>$request->thankyou_title,
                     'thankyou_imagetitle'=>$request->thankyou_imagetitle,
                     'thankyou_image'=>$filename,
                     'thankyou_template'=>$request->thankyou_template,
-                    'tbs_logo'=>$request->tbs_logo,
-                    'tbs_logo_url'=>$TBSfilename
                 ];
                 $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->thankyou_title,'qus_ans'=>json_encode($json)]);
-              break;
-            case 'upload':
-                $json=[
-                    'upload_image'=>$request->upload_image,
-                    'upload_video'=>$request->upload_video,
-                    'upload_audio'=>$request->upload_audio,
-                    'upload_doc'=>$request->upload_doc,
-                    'question_name'=>$request->question_name,
-                ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             case 'open_qus':
                 $json=[
                     'open_qus_choice'=>$request->open_qus_choice,
-                    'question_name'=>$request->question_name,
+                    'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             case 'single_choice':
                 $json=[
@@ -528,7 +497,7 @@ class SurveyController extends Controller
                     'choices_type'=>'single',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             case 'multi_choice':
                 $json=[
@@ -536,7 +505,7 @@ class SurveyController extends Controller
                     'choices_type'=>'mulitple',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
               break;
             case 'likert':
                 $json=[
@@ -546,7 +515,7 @@ class SurveyController extends Controller
                     'likert_range'=>$request->likert_range,
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'rankorder':
                 $json=[
@@ -554,14 +523,14 @@ class SurveyController extends Controller
                     'choices_type'=>'rankorder',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'rating':
                 $json=[
                     'icon_type'=>$request->icon_type,
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'dropdown':
                 $json=[
@@ -569,7 +538,7 @@ class SurveyController extends Controller
                     'choices_type'=>'dropdown',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'picturechoice':
                 $json=[
@@ -577,17 +546,17 @@ class SurveyController extends Controller
                     'choices_type'=>'picturechoice',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'photo_capture':
                 $json=[
                     'choices_type'=>'photo_capture',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             case 'email':
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>'email']);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>'email']);
                 break;
             case 'matrix_qus':
                 $json=[
@@ -597,7 +566,7 @@ class SurveyController extends Controller
                     'choices_type'=>'radio',
                     'question_name'=>$request->question_name
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'qus_required'=>$request->qus_required,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->question_name,'qus_ans'=>json_encode($json)]);
                 break;
             default:
               //code block
@@ -759,9 +728,6 @@ class SurveyController extends Controller
             case 'photo_capture':
                 $resp_logic_type=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
-            case 'upload':
-                $resp_logic_type=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
-                break;
             case 'email':
                 $resp_logic_type=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
                 break;
@@ -812,23 +778,34 @@ class SurveyController extends Controller
         $response_user_id =  Auth::user()->id;
 
         $qus_check=Questions::where('id', '=', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
-        $user_ans =$request->user_ans;
-        if($request->hasfile('uploadfile'))
-        {
-            $file = $request->file('uploadfile');
-            $extenstion = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extenstion;
-            $file->move('uploads/survey/', $filename);
-            $user_ans = $filename;
+        // if($qus_check->qus_type == 'photo_capture'){
+        //     // echo $request->user_ans;
+        //     // exit;
+        //     $upload_dir = 'uploads/survey/photo_capture'; 
+        //     $img = $request->user_ans;
+        //     $img = str_replace('data:image/png;base64,', '', $img);
+        //     $img = str_replace(' ', '+', $img);
+        //     $data = base64_decode($img);
+        //     $imgname=date('Ymd_His', time()).'-user'.$response_user_id;
+        //     $file = $upload_dir.$imgname.'.png';
+        //     move_uploaded_file($temp_name,$_SERVER['DOCUMENT_ROOT']."/"."gripOffers/Store_Brand/store_admin/images/".$image);
 
-        }
+        //     echo $file;
+        //     $success = file_put_contents($file, $data);
+        //     echo $success;
+        //     exit;
+        //     $user_ans=$request->user_ans;
+        // }else{
+        //     $user_ans=$request->user_ans;
+        // }
         $next_qus = $request->next_qus;
+        $user_ans=$request->user_ans;
         $skip_ans =$request->skip_ans;
         $surveyres = new SurveyResponse();
         $surveyres->survey_id = $survey_id;
         $surveyres->response_user_id=$response_user_id;
         $surveyres->question_id=$request->question_id;
-        $surveyres->answer=$user_ans;
+        $surveyres->answer=$request->user_ans;
         $surveyres->skip=$skip_ans;
         $surveyres->deleted_at=0;
         $surveyres->save();
@@ -850,7 +827,6 @@ class SurveyController extends Controller
                         $logicv=$logic_type_value_option_skip[$k];
                         $cond=$skip_qus_choice_andor_skip[$k];
                         $resp_logic_type_skip_value=[];
-                        // echo $qus_check->qus_type;
                         switch ($qus_check->qus_type) {
                             case 'single_choice':
                                 $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
@@ -876,15 +852,7 @@ class SurveyController extends Controller
                                 break;
                         }
                         if(count($resp_logic_type_skip_value)>0){
-                            // echo "<pre>";
-                            // print_r($resp_logic_type_skip_value);
-                            // echo $logicv;
-                            // exit;
-                            if(isset( $resp_logic_type_skip_value[$logicv])){
-                                $ans = $resp_logic_type_skip_value[$logicv];
-                            }else{
-                                $ans = $logicv;
-                            }
+                            $ans = $resp_logic_type_skip_value[$logicv];
                         }else{
                             $ans = $logicv;
                         }
@@ -1579,20 +1547,11 @@ class SurveyController extends Controller
 
                         }
                         else if($qus->qus_type == 'matrix_qus'){
-                            if($output=='Skip'){
-                                $qusvalue = json_decode($qus->qus_ans); 
-                                $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
-                                foreach($exiting_qus_matrix as $op){
-                                    $result[$op]='Skip'; 
-                                }
-                            }else{
-                                $output = json_decode($output);
-                                foreach($output as $op){
-                                    $tempresult = [$op->qus =>$op->ans];
-                                    $result[$op->qus]=$op->ans; 
-                                }
+                            $output = json_decode($output);
+                            foreach($output as $op){
+                                $tempresult = [$op->qus =>$op->ans];
+                                $result[$op->qus]=$op->ans; 
                             }
-                            
                         }else if($qus->qus_type == 'rankorder'){
                             $output = json_decode($output,true);
                             $ordering = [];
@@ -1603,11 +1562,6 @@ class SurveyController extends Controller
                             $result[$qus->question_name]=implode(',',$ordering);
                         }else if($qus->qus_type == 'photo_capture'){
                             $img = "<a target='_blank' href='$output'><img class='photo_capture' src='$output'/></a>";
-                            $tempresult = [$qus->question_name =>$img];
-                            $result[$qus->question_name]=$img;
-                        }else if($qus->qus_type=='upload'){
-                            $output1=asset('uploads/survey/'.$output);
-                            $img = "<a target='_blank' href='$output1'>".$output."</a>";
                             $tempresult = [$qus->question_name =>$img];
                             $result[$qus->question_name]=$img;
                         }else{
@@ -1651,11 +1605,6 @@ class SurveyController extends Controller
             $survey->button_label = $request->button_label;
             $survey->created_by = $user->id;
         }
-        if($request->tbs_logo == 'on'){
-            $survey->tbs_logo = 1;
-        }else{
-            $survey->tbs_logo = 0;
-        }
         $filename='';
         if($request->hasfile('image'))
         {
@@ -1665,19 +1614,6 @@ class SurveyController extends Controller
             $file->move('uploads/survey/', $filename);
             $survey->image = $filename;
 
-        }
-        // TBS Logo 
-        $filename='small-logo.png';
-        if($request->hasfile('image_TBS'))
-        {
-            $file = $request->file('image_TBS');
-            $extenstion = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extenstion;
-            $file->move('uploads/survey/', $filename);
-            $survey->logo_url = $filename;
-
-        }else{
-            $survey->logo_url = $filename;
         }
         $survey->save();
         return redirect()->back()->with('success', __('Template Created Successfully.'));
@@ -1713,23 +1649,6 @@ class SurveyController extends Controller
             $file->move('uploads/survey/', $filename);
             $survey->image = $filename;
         }
-       
-        if($request->tbs_logo == 'on'){
-            $survey->tbs_logo = 1;
-        }else{
-            $survey->tbs_logo = 0;
-        }
-         // TBS Logo 
-         $filename='';
-         if($request->hasfile('image_TBS'))
-         {
-             $file = $request->file('image_TBS');
-             $extenstion = $file->getClientOriginalExtension();
-             $filename = time().'.'.$extenstion;
-             $file->move('uploads/survey/', $filename);
-             $survey->logo_url = $filename;
- 
-         }
         $survey->save();
         return redirect()->back()->with('success', __('Template Updated Successfully.'));
         
@@ -1778,67 +1697,128 @@ class SurveyController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-     // Generate Word Cloud
-     public function generateWordCloud()
-     {
-         // Given text
-         $text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+    // PPTX Report
+    public function generatePPTReport()
+    {
+        
+        // Save the presentation to a file
+        try{
+            $phpPresentation = new PhpPresentation();
+
+            // Create slide
+            $slide = $phpPresentation->getActiveSlide();
+
+            // Add text to the slide
+            $shape = $slide->createRichTextShape()
+                ->setHeight(300)
+                ->setWidth(600)
+                ->setOffsetX(10)
+                ->setOffsetY(10);
+            $shape->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $textRun = $shape->createTextRun('Hello, this is a PowerPoint report!');
+            $textRun->getFont()->setBold(true)
+                ->setSize(36)
+                ->setColor(new Color('FF0000'));
+            
+            $folderPath = 'uploads/ppt_folder';
+            $filename = 'report_' . date('YmdHis') . '.pptx';
+            $writer = \PhpOffice\PhpPresentation\IOFactory::createWriter($phpPresentation, 'PowerPoint2007');
+            $writer->save(public_path($folderPath . '/' . $filename));
+
+            // Return the public path URL
+            $publicUrl = asset($folderPath . '/' . $filename);
+            return "PowerPoint report generated and saved successfully. Access it at: $publicUrl";
+
+        }catch (\Exception $exception){
+            echo $exception->getMessage();
+        }
+    }
+    public function generateRandomColor()
+    {
+        // Generate random RGB values
+        $red = mt_rand(0, 255);
+        $green = mt_rand(0, 255);
+        $blue = mt_rand(0, 255);
+
+        // Convert RGB values to hexadecimal color code
+        $hexColor = sprintf("#%02x%02x%02x", $red, $green, $blue);
+        return $hexColor;
+    }
+    // Generate Word Cloud
+    public function generateWordCloud()
+    {
+        // Given text
+        $text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+
+        // Generate word cloud HTML
+        $wordCloud = '';
+        $words = explode(' ', $text);
+        foreach ($words as $word) {
+            $wordCloud .= '<span style="font-size: ' . rand(10, 30) . 'px;color:'.$this->generateRandomColor().'">' . $word . '</span> ';
+        }
+
+        // Set the HTML content
+        SEOTools::setTitle('Word Cloud');
+        SEOTools::setDescription('Word cloud generated from given text.');
+
+        // Generate the HTML with SEO metadata
+        $html = SEOTools::generate();
+
+        // Append the word cloud HTML
+        $html .= '<div style="display: flex; flex-wrap: wrap; width:500px">' . $wordCloud . '</div>';
+
+        // Return the HTML
+        return $html;
+    }
+    // Generate PDF Report
+    public function generatePDF()
+    {
+        // HTML content to be converted to PDF
+        $html = $this->generateWordCloud();
+
+        // Create an instance of Dompdf
+        $dompdf = new Dompdf();
+
+        // Load HTML content
+        $dompdf->loadHtml($html);
+
+        // (Optional) Set options (e.g., paper size, orientation)
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf->setOptions($options);
+
+        // Render PDF (parse HTML and convert to PDF)
+        $dompdf->render();
+        
+
+        // Output PDF (force download or display in browser)
+        return $dompdf->stream('document.pdf');
+    }
+    // Bar Chart 
+    public function generateBarChart()
+    {
+        // Sample data for the bar chart
+        $chartData = [
+            'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            'datasets' => [
+                [
+                    'label' => 'Sales',
+                    'backgroundColor' => [$this->generateRandomColor(),$this->generateRandomColor(),$this->generateRandomColor(),$this->generateRandomColor(),$this->generateRandomColor(),$this->generateRandomColor(),$this->generateRandomColor()],
+                    'data' => [65, 59, 80, 81, 56, 55, 40],
+                ],
+            ],
+        ];
+        return view('admin.survey.bar_chart', compact('chartData'));
+    }
+
  
-         // Generate word cloud HTML
-         $wordCloud = '';
-         $words = explode(' ', $text);
-         foreach ($words as $word) {
-             $wordCloud .= '<span style="font-size: ' . rand(10, 30) . 'px;color:'.$this->generateRandomColor().'">' . $word . '</span> ';
-         }
- 
-         // Set the HTML content
-         SEOTools::setTitle('Word Cloud');
-         SEOTools::setDescription('Word cloud generated from given text.');
- 
-         // Generate the HTML with SEO metadata
-         $html = SEOTools::generate();
- 
-         // Append the word cloud HTML
-         $html .= '<div style="display: flex; flex-wrap: wrap; width:500px">' . $wordCloud . '</div>';
- 
-         // Return the HTML
-         return $html;
-     }
-     // Generate PDF Report
-     public function generatePDF()
-     {
-         // HTML content to be converted to PDF
-         $html = $this->generateWordCloud();
- 
-         // Create an instance of Dompdf
-         $dompdf = new Dompdf();
- 
-         // Load HTML content
-         $dompdf->loadHtml($html);
- 
-         // (Optional) Set options (e.g., paper size, orientation)
-         $options = new Options();
-         $options->set('defaultFont', 'Arial');
-         $dompdf->setOptions($options);
- 
-         // Render PDF (parse HTML and convert to PDF)
-         $dompdf->render();
-         
- 
-         // Output PDF (force download or display in browser)
-         return $dompdf->stream('document.pdf');
-     }
-     public function generateRandomColor()
-     {
-         // Generate random RGB values
-         $red = mt_rand(0, 255);
-         $green = mt_rand(0, 255);
-         $blue = mt_rand(0, 255);
- 
-         // Convert RGB values to hexadecimal color code
-         $hexColor = sprintf("#%02x%02x%02x", $red, $green, $blue);
-         return $hexColor;
-     }
 }
 
 
+// Reports
+Route::get('/generate-ppt-report', ['as' => 'survey.pptreport','uses' => 'SurveyController@generatePPTReport']);
+Route::get('/generate-wordcloud-report', ['as' => 'survey.wordcloudreport','uses' => 'SurveyController@generateWordCloud']);
+Route::get('/generate-pdf', ['as' => 'survey.pdfreport','uses' => 'SurveyController@generatePDF']);
+Route::get('/generate-barchart', ['as' => 'survey.barchart','uses' => 'SurveyController@generateBarChart']);
+
+Route::get('/wordcloud', 'WordCloudController@generateAndDownload');

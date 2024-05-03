@@ -8,10 +8,14 @@
 'method' => 'POST' ,'id'=>"$idname",'class'=>'needs-validation','enctype'=>"multipart/form-data")) }}
 
 <style>
+
 .exitingImg {
     display: flex;
 }
-a#ss_draft_remove_image,a#ss_draft_remove_image_uploaded{
+.exitingImgTBS {
+    display: flex;
+}
+a#ss_draft_remove_image,a#ss_draft_remove_image_uploaded,a#ss_draft_remove_image_TBS{
     text-align: center;
     position: relative;
     right: 35px;
@@ -20,7 +24,7 @@ a#ss_draft_remove_image,a#ss_draft_remove_image_uploaded{
     width: 30px;
     height: 30px;
 }
-img#existing_image {
+img#existing_image,img#existing_image_TBS  {
     object-fit: contain;
     margin: 2px;
     border: 1px solid #ced4da;
@@ -38,7 +42,14 @@ img#existing_image {
     min-width: 170px;
     min-height: 155px;
 }
-
+#tbs_logo{
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+}
+.tbs_logo {
+    display: flex;
+    align-items: center;
+}
 .upload-image-placeholder__upload-btn {
     position: absolute;
     left: 0;
@@ -130,8 +141,48 @@ img#existing_image {
     </div>
     <br>
     @endif
-
-    <div>
+    <div class="tbs_logo">
+        {{ Form::label('tbs_logo', __('Enable TBS Logo'),['class'=>'form-label']) }}
+        {{ Form::checkbox('tbs_logo',null,null, array('id'=>'tbs_logo')) }}
+    </div>
+    <br>
+    
+       
+    <div class="row">
+    <!-- For TBS Logo -->
+    <div class="col-md-6">
+        <label>TBS Logo</label>
+        <?php  $output=asset('uploads/survey/small-logo.png'); ?>
+        <div>
+        @if(isset($output))
+            <div class="exitingImgTBS">
+                <image src="{{ $output }}" alt="image" width="100" height="100" id="existing_image_TBS">
+                <a id="ss_draft_remove_image_TBS" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+            </div>
+        @else
+            <div class="exitingImgTBS" style="display:none;">
+                <image src="" alt="image" width="100" height="100" id="existing_image_TBS">
+                <a id="ss_draft_remove_image_TBS" class="ss_draft_remove_image pointer--cursor"><svg xmlns="http://www.w3.org/2000/svg" class="" width="30" height="30" viewBox="0 0 21 25" fill="none"><path d="M13.209 20.2187H7.30662C6.83423 20.2187 6.37926 20.0404 6.03265 19.7195C5.68605 19.3985 5.47338 18.9586 5.43715 18.4876L4.63281 8.03125H15.8828L15.0785 18.4876C15.0422 18.9586 14.8296 19.3985 14.483 19.7195C14.1364 20.0404 13.6814 20.2187 13.209 20.2187V20.2187Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.9271 8.03125H3.59375" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.91406 5.21875H12.6016C12.8502 5.21875 13.0887 5.31752 13.2645 5.49334C13.4403 5.66915 13.5391 5.90761 13.5391 6.15625V8.03125H6.97656V6.15625C6.97656 5.90761 7.07533 5.66915 7.25115 5.49334C7.42697 5.31752 7.66542 5.21875 7.91406 5.21875V5.21875Z" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.8984 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.61719 11.7812V16.4687" stroke="#616161" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+            </div>
+        @endif
+            <div id="imgPreviewTBS"></div>
+            <div class="upload-image-placeholder" id="trigger_imageTBS" style="@if(isset($output)) display:none @endif">
+                <div class="upload-image-placeholder__upload-btn">
+                    <svg width="40" height="40" viewBox="0 0 36 27">
+                        <path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path>
+                    </svg>
+                    <p>Click here to upload a TBS logo</p>
+                </div>
+            </div>
+        </div>
+        <input style="display:none;" type="file" id="image_TBS" name="image_TBS"  class="course form-control">
+    </div>
+    <!-- For TBS Logo -->
+    <!-- Welcome Img -->
+        <div class="col-md-6">
+            
+        <label><?php if($surveytemplate->type=='welcome'){ echo "Welcome Image"; }else{ echo "Thank you Image"; } ?></label>
+        <div>
         @if(isset($surveytemplate->image))
             <div class="exitingImg">
                 <image src="{{ asset('uploads/survey/'.$surveytemplate->image) }}" alt="image" width="100" height="100" id="existing_image">
@@ -154,6 +205,9 @@ img#existing_image {
         </div>
     </div>
     <input style="display:none;" type="file" id="image" name="image"  class="course form-control">
+    </div>
+    <!-- Welcome Img -->
+    </div>
 
 </div>
 
@@ -165,6 +219,38 @@ img#existing_image {
 {{Form::close()}}
 
 <script>
+      // TBS Images 
+$('#trigger_imageTBS').click(function(){
+    $('#image_TBS').click();
+});
+
+$('#image_TBS').change(function(){
+    getImgDataTBS();
+})
+function getImgDataTBS() {
+    const chooseFile = document.getElementById("image_TBS");
+    const imgPreview = document.getElementById("imgPreviewTBS");
+    const files = chooseFile.files[0];
+  if (files) {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(files);
+    fileReader.addEventListener("load", function () {
+      $('.exitingImgTBS').css('display','flex');
+      $('#existing_image_TBS').attr('src',this.result);
+      $('#existing_image_TBS').css('display',"block");
+      $('#trigger_imageTBS').css('display','none');
+      $('#ss_draft_remove_image_TBS').css('display','block');
+
+    });    
+  }
+}
+$('#ss_draft_remove_image_TBS').click(function(){
+    $('#imgPreviewTBS').css('display','none');
+    $('#existing_image_TBS').css('display','none');
+    $('#trigger_imageTBS').css('display','inline-block');
+    $('#ss_draft_remove_image_TBS').css('display','none');
+});
+
 $('#trigger_image').click(function(){
     $('#image').click();
 });
