@@ -16,6 +16,8 @@
                 <strong>Alert</strong> Profile Incomplete <a href="{{ route('updaterofile') }}">Update Profile</a>
             </div>
         @endif
+
+        <div class="alert alert-danger bs-alert-old-docs text-center alert_message" style="display: none;"></div>
         <div class="row justify-content-center py-5 m-auto">
             <div class="col-md-2 vi-light-grey mx-0 px-0">
                 <div class="logo bg-white pt-3">
@@ -45,7 +47,7 @@
                     <p class="py-3">Chat Support</p>
                 </div>
                 <div class="text-section-one bg-white text-center mx-2 px-2 py-2 mb-3">
-                    <h5>OPT OUT</h5>
+                    <button class="btn w-100 vi-nav-bg text-black border-radius-0" id="opt_out" @if($data->active_status_id != 1) disabled @endif>OPT OUT</button>
                     <p class="small-font">Stop receiving any research request</p>
                 </div>
                 <div class="button text-center">
@@ -97,19 +99,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($get_respondent as $res)
+                            @forelse ($get_respondent as $res)
                                 <tr>
                                     <td>{{ $res->name }}</td>
                                     <td>{{ $res->closing_date }}</td>
                                     <td>{{ $res->description }}</td>
                                     <td>{{ $res->reward }}</td>
-                                    @php
-                                        $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
-                                    @endphp
-                                    <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
-                                            class="btn btn-yellow">DETAIL</a></td>
+                                    @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
+                                    @if($get_link != null)
+                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" class="btn btn-yellow">DETAIL</a></td>
+                                    @else
+                                        <td>No Survey</td>
+                                    @endif
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="5">No Survey Assigned</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -247,7 +254,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($get_respondent as $res)
+                            @forelse ($get_completed_survey as $res)
                                 <tr>
                                     <td>{{ $res->name }}</td>
                                     <td>{{ $res->closing_date }}</td>
@@ -256,10 +263,17 @@
                                     @php
                                         $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
                                     @endphp
-                                    <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
-                                            class="btn btn-yellow">DETAIL</a></td>
+                                    @if($get_link != null)
+                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" class="btn btn-yellow">DETAIL</a></td>
+                                    @else
+                                        <td>No Survey</td>
+                                    @endif
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="5">No Completed Survey</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -290,8 +304,49 @@
 <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
 <script>
+    var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
-
         $('#nav_profile').addClass('active');
     });
+
+    $("#opt_out").click(function(){
+        $.confirm({
+            title: "Alert!",
+            content: "Are you sure you want to Unsubscribe?",
+            autoClose: 'cancel|8000',
+            type: 'red',
+            icon: 'fa fa-warning',
+            typeAnimated: true,
+            draggable: false,
+            animationBounce: 2,
+            buttons: {
+                confirm: {
+                    text: "Confirm",
+                    btnClass: 'btn-red',
+                    action: function() {
+                        $.ajax({
+                            url: "{{ route('opt_out') }}",
+                            data: {
+                                _token: tempcsrf,
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                if(response.success == true){
+                                    $(".alert_message").html("We were bummed to hear that you're leaving us. We totally respect your decision to cancel, and we've started processing your request.")
+                                    $(".alert_message").show();
+                                    setTimeout(function() {
+                                        $("#click_signout").click();
+                                    }, 2000);
+                                }
+                            }
+                        });
+                    }
+                },
+                cancel: function() {
+                    
+                }
+            }
+        });
+    });
+    
 </script>
