@@ -18,7 +18,7 @@
                     <div class="social-icons-color d-flex justify-content-center my-3">
                         <img id="whatsap" src="{{ asset('assets/images/SM icons-01.png') }}" class="img-fluid w-10"
                             alt=""/>
-                        <img  src="{{ asset('assets/images/SM icons-02.png') }}" onclick="fbs_click(this);" class="img-fluid w-10" alt=""/>
+                        <img  src="{{ asset('assets/images/SM icons-02.png') }}" id="facebook" class="img-fluid w-10" alt=""/>
                         <img id="twitter" src="{{ asset('assets/images/SM icons-03.png') }}" class="img-fluid w-10" alt="" />
                         <img id="mail" src="{{ asset('assets/images/SM icons-04.png') }}" class="img-fluid w-10" onclick="fbs_click(this);" alt=""/>
                     </div>
@@ -43,19 +43,24 @@
     $(document).ready(function() {
 
         $('#nav_share').addClass('active');
-
+   
         $("#whatsap").click(function() {
-            var whatsapurl ='whatsapp://send?abid={{ $get_res_phone->whatsapp }}&text={{ URL::to('/') }}?r={{ $ref_code }}';
+            var whatsapurl ='https://wa.me/?text=I think you should join The Brand Surgeon and get paid for your opinion - {{ URL::to('/') }}?r={{ $ref_code }}';
             window.location.href = whatsapurl;
         });
 
+        $("#facebook").click(function() {
+            var facebook ='https://www.facebook.com/sharer/sharer.php?u=https://app.thebrandsurgeon.co.za/?r={{ URL::to('/') }}?r={{ $ref_code }}';
+            window.location.href = facebook;
+        });
+     
         $("#twitter").click(function() {
-            var twitter ='  http://twitter.com/share?text=text goes here&url={{ URL::to('/') }}?r={{ $ref_code }} goes here&hashtags=hashtag1,hashtag2,hashtag3';
+            var twitter ='https://twitter.com/intent/tweet?url=https://app.thebrandsurgeon.co.za/?r={{ URL::to('/') }}?r={{ $ref_code }}&amp;text=I think you should join The Brand Surgeon and get paid for your opinion';
             window.location.href = twitter;
         });
-
+        
         $("#mail").click(function() {
-            var whatsapurl ='mailto:address@dmail.com?subject=Hello there&body={{ URL::to('/') }}?r={{ $ref_code }}';
+            var whatsapurl ='mailto:info@example.com?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ URL::to('/') }}?r={{ $ref_code }}';
             window.location.href = whatsapurl;
         });
 
@@ -63,12 +68,7 @@
        
     });
 
-    function fbs_click(TheImg) {
-     u=TheImg.src;
-     // t=document.title;
-    t=TheImg.getAttribute('alt');
-    window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;
-}
+   
     function copy(selector) {
 
         var $temp = $("<div>");

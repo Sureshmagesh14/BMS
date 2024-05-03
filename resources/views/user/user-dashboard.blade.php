@@ -1,42 +1,45 @@
 @include('user.layout.header-2')
 <style>
-    #about_brand{
+    #about_brand {
         text-decoration: none;
         color: unset;
     }
 </style>
-@php 
-$first_character = mb_substr($data->name, 0, 1)
-@endphp 
+@php
+    $first_character = mb_substr($data->name, 0, 1);
+@endphp
 <section class="">
     <div class="container-fluid">
 
-    @if($data->profile_completion_id==0)
-    <div class="alert alert-danger bs-alert-old-docs text-center">
-      <strong>Alert</strong> Profile Incomplete <a href="{{ route('updaterofile') }}">Update Profile</a>
-    </div>
-    @endif
+        @if ($data->profile_completion_id == 0)
+            <div class="alert alert-danger bs-alert-old-docs text-center">
+                <strong>Alert</strong> Profile Incomplete <a href="{{ route('updaterofile') }}">Update Profile</a>
+            </div>
+        @endif
         <div class="row justify-content-center py-5 m-auto">
             <div class="col-md-2 vi-light-grey mx-0 px-0">
                 <div class="logo bg-white pt-3">
                     <div class="profile text-center m-auto ">
-                        <span class="vi-usr-profile m-auto p-4" style="text-transform: capitalize;">{{$first_character}}</span>
+                        <span class="vi-usr-profile m-auto p-4"
+                            style="text-transform: capitalize;">{{ $first_character }}</span>
                     </div>
                     <div class="py-3 mb-5">
-                        <p class="text-center fw-bolder" style="text-transform: capitalize;">{{$data->name}}</p>
-                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $data->email }}"
-                            target="_blank" class="nav-link d-flex align-items-center px-2 small-font"><i
-                                class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{$data->email}}</a>
+                        <p class="text-center fw-bolder" style="text-transform: capitalize;">{{ $data->name }}</p>
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $data->email }}" target="_blank"
+                            class="nav-link d-flex align-items-center px-2 small-font"><i
+                                class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{ $data->email }}</a>
                         <!-- <a href="" class="nav-link d-flex align-items-start px-2 small-font my-3"><i
                                 class="fa fa-map-marker yelow-clr pe-2" aria-hidden="true"></i> Suite 835 7664 Jolie
                             Islands, East Ardell, MA 74776</a> -->
                         <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center px-2 small-font"><i
-                                class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> {{$data->mobile}}</a>
+                                class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> {{ $data->mobile }}</a>
                     </div>
 
                 </div>
                 <div class="text-section bg-white text-center mx-2 px-2">
-                    <p class="py-3"><a id="about_brand" href="https://thebrandsurgeon.co.za/?utm_source=app&utm_medium=link&utm_campaign=AppLinks&utm_content=About" target="_blank">About the brand Surgeon</a></p>
+                    <p class="py-3"><a id="about_brand"
+                            href="https://thebrandsurgeon.co.za/?utm_source=app&utm_medium=link&utm_campaign=AppLinks&utm_content=About"
+                            target="_blank">About the brand Surgeon</a></p>
                 </div>
                 <div class="text-section-one bg-white text-center  mx-2 px-2">
                     <p class="py-3">Chat Support</p>
@@ -95,13 +98,17 @@ $first_character = mb_substr($data->name, 0, 1)
                         </thead>
                         <tbody>
                             @foreach ($get_respondent as $res)
-                            <tr>
-                                <td>{{$res->name}}</td>
-                                <td>{{$res->closing_date}}</td>
-                                <td>{{$res->description}}</td>
-                                <td>{{$res->reward}}</td>
-                                <td><button class="btn btn-yellow">DETAIL</button></td>
-                            </tr> 
+                                <tr>
+                                    <td>{{ $res->name }}</td>
+                                    <td>{{ $res->closing_date }}</td>
+                                    <td>{{ $res->description }}</td>
+                                    <td>{{ $res->reward }}</td>
+                                    @php
+                                        $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
+                                    @endphp
+                                    <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
+                                            class="btn btn-yellow">DETAIL</a></td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -123,10 +130,12 @@ $first_character = mb_substr($data->name, 0, 1)
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle me-2" href="#" role="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span style="text-transform: capitalize;">{{$data->name}}</span><i class="fa fa-angle-down" aria-hidden="true"></i>
+                                        <span style="text-transform: capitalize;">{{ $data->name }}</span><i
+                                            class="fa fa-angle-down" aria-hidden="true"></i>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('updaterofile') }}">View Profile</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('updaterofile') }}">View
+                                                Profile</a></li>
                                         <li>
                                             <hr class="dropdown-divider" />
                                         </li>
@@ -141,7 +150,8 @@ $first_character = mb_substr($data->name, 0, 1)
                                             ...
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="{{ route('updaterofile') }}">View Profile</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('updaterofile') }}">View
+                                                    Profile</a></li>
                                             <li>
                                                 <hr class="dropdown-divider" />
                                             </li>
@@ -238,13 +248,17 @@ $first_character = mb_substr($data->name, 0, 1)
                         </thead>
                         <tbody>
                             @foreach ($get_respondent as $res)
-                            <tr>
-                                <td>{{$res->name}}</td>
-                                <td>{{$res->closing_date}}</td>
-                                <td>{{$res->description}}</td>
-                                <td>{{$res->reward}}</td>
-                                <td><button class="btn btn-yellow">DETAIL</button></td>
-                            </tr> 
+                                <tr>
+                                    <td>{{ $res->name }}</td>
+                                    <td>{{ $res->closing_date }}</td>
+                                    <td>{{ $res->description }}</td>
+                                    <td>{{ $res->reward }}</td>
+                                    @php
+                                        $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
+                                    @endphp
+                                    <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
+                                            class="btn btn-yellow">DETAIL</a></td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -259,25 +273,25 @@ $first_character = mb_substr($data->name, 0, 1)
 </section>
 @include('user.layout.footer')
 <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-        <script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 
-        <!-- Buttons examples -->
-        <script src="{{ asset('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-        <script src="{{ asset('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
-        <script src="{{ asset('assets/libs/jszip/jszip.min.js') }}"></script>
-        <script src="{{ asset('assets/libs/pdfmake/build/pdfmake.min.js') }}"></script>
-        <script src="{{ asset('assets/libs/pdfmake/build/vfs_fonts.js') }}"></script>
-        <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-        <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-        <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
-        <script src="{{ asset('assets/libs/datatables.net-select/js/dataTables.select.min.js') }}"></script>
+<!-- Buttons examples -->
+<script src="{{ asset('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('assets/libs/jszip/jszip.min.js') }}"></script>
+<script src="{{ asset('assets/libs/pdfmake/build/pdfmake.min.js') }}"></script>
+<script src="{{ asset('assets/libs/pdfmake/build/vfs_fonts.js') }}"></script>
+<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('assets/libs/datatables.net-select/js/dataTables.select.min.js') }}"></script>
 
-        <!-- Responsive examples -->
-        <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-        <script src="{{ asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
+<!-- Responsive examples -->
+<script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
 <script>
-$(document).ready(function() {
+    $(document).ready(function() {
 
-    $('#nav_profile').addClass('active');
-});
+        $('#nav_profile').addClass('active');
+    });
 </script>
