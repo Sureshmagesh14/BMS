@@ -998,6 +998,69 @@ if(isset($bg)){
                 </div>
             </div>
         </div>
+        @elseif($question->qus_type=='upload')
+        <div class="surveysparrow-survey-container--classic-form">
+            <div class="ss_classic_top_bar d-flex fx-row fx-jc--between fx-ai--center" role="banner">
+                <div class="d-flex fx-column fx-jc--center fx-ai--start ss_classic_top_bar_section_details"></div>
+            </div>
+            <div class="surveysparrow-survey-form-wrapper ss-survey-background" aria-live="polite">
+                <div id="fake-scroll-container" class="ss-fp-scroll ss-fake-scroll--center ">
+                    <div class="ss-fp-scroll__item d-flex fx-column fx-jc--center">
+                        <div class="ss-fp-scroll__item-data-wrap" style="display: block;">
+                            <div id="question_8966644" data-qa-question-id="8966644" data-qa-question-type="EmailInput"
+                                data-qa="question_normal" class="ss_cl_survey_qstn_item active" style="width: 100%;">
+                                <div class="ss_cl_survey_qstn_wrapper">
+                                    <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
+                                        <!-- <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                            Question {{$qusNo}}
+                                        </p> -->
+                                    </div>
+                                    <div class="ss_cl_survey_qstn_right">
+                                        <div class="ss_cl_survey_qstn">
+                                            <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                                <span class="d-block ss-survey-heading--text__span">{{$question->question_name}} </span>
+                                            </h1>
+                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$question->question_description}}</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="ss_span_wrapper">
+                                <div class="ss_options_container">
+                                
+
+                                   <div class="ss_inline_input_container ss_component_animated">
+                                        <div class="ss-camera-input upload_wrapper" id="dragdropfile" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" >
+                                            <button class="answer-option--file-input ss-answer-option--bg-only ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--primary ss-survey-border-width--thin ss-survey-border-style--dashed ss-survey-border-color--primary-02" type="button" id="upload_file">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="85" height="74" viewBox="0 0 85 74"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M58.723 52.091h9.054S84 49.987 84 34.155a17.847 17.847 0 0 0-5.515-12.904 18.068 18.068 0 0 0-13.179-4.995C60.391 5.887 49.026.152 37.704 2.328c-11.322 2.175-19.718 11.707-20.39 23.15a13.59 13.59 0 0 0-11.306 2.714A13.417 13.417 0 0 0 1 38.625C1 52.294 15.434 52.08 15.434 52.08h10.802M42.5 31.466v41.25"></path><path d="M53.818 42.716L42.5 31.466l-11.318 11.25"></path></g></svg>
+                                                <p id="file-upload-description">Drag and drop to upload<span class="answer-option--file-input-text ss-survey-font-family ss-survey-text-size--xs sm_ss-survey-text-size--xs ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--primary">or <a href="#!" tabindex="-1">browse</a> to choose a file </span></p>
+                                            </button>
+                                        </div>
+                                    </div>
+                                <span id="helper" class="answer-option--file-input-text ss-survey-font-family ss-survey-text-size--xs sm_ss-survey-text-size--xs ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--primary-06">Maximum number of files is 1. Maximum upload size per file is 10 MB.</span>
+                                </div>
+                                    
+                                    <div class="ss_cl_qstn_action disabled {{$question->qus_type}}_action">
+                                        <div class="">
+                                            <button data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif"  id="next_button"  class="disabled ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                                <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        @if($question->qus_required!=1)
+                                            <div class="ss-skip-container">
+                                                <button id="skip_button" data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         @elseif($question->qus_type=='thank_you')
         <div class="surveysparrow-survey-container--classic-form welcome-page">
             <div class="ss-fp-section surveysparrow-survey-form-wrapper--centered ss-survey-background d-flex fx-column fx-jc--center fx-ai--center">
@@ -1036,8 +1099,36 @@ if(isset($bg)){
             </div>
         </div>
         @endif
-        <form id="skip_qus" style="display:none;" action="{{route('survey.submitans')}}" method="POST">
+        <form id="skip_qus" style="display:none;" enctype="multipart/form-data" action="{{route('survey.submitans')}}" method="POST">
             @csrf
+            @if($question->qus_type=='upload')
+            <?php $qus_ans= json_decode($question->qus_ans);
+                $upload_video=0;$upload_image=0;$upload_doc=0;$upload_audio=0;
+                if(isset($qus_ans)){
+                    $upload_video = $qus_ans->upload_video;
+                    $upload_image = $qus_ans->upload_image;
+                    $upload_doc = $qus_ans->upload_doc;
+                    $upload_audio = $qus_ans->upload_audio;
+                }
+                $accept=[];
+                if($upload_audio==1){
+                    array_push($accept,".mp3","audio/*");
+                }
+                if($upload_video==1){
+                    array_push($accept,"video/*");
+                }
+                if($upload_doc==1){
+                    array_push($accept,"application/msword", "application/vnd.ms-excel", "application/vnd.ms-powerpoint",
+                    "text/plain", "application/pdf");
+                }
+                if($upload_image==1){
+                    array_push($accept,"image/*");
+                }
+                $string_version = implode(',', $accept); 
+                    ?>
+            <input id="uploadfile" accet="{{$string_version}}" name="uploadfile" type="file" style="display: none;">
+
+            @endif
             <input type="text" id="question_id" value="{{$question->id}}" name="question_id"/>
             <input type="text" id="survey_id" value="{{$survey->id}}" name="survey_id"/>
             <input type="text" id="next_qus" name="next_qus"/>
@@ -1271,6 +1362,11 @@ $('#next_button').click(function(){
             $('#user_ans').val($('#dataurl').val());
             submit=1;
         }
+    }else if(qusVal == 'upload'){
+        if($('#uploadurl').val()!=''){
+            $('#user_ans').val($('#uploadurl').val());
+            submit=1;
+        }
     }
     if(submit == 1){
         $('#next_qus').val($(this).data('url'));
@@ -1356,14 +1452,35 @@ $('#skip_button').click(function(){
 </script>
 <!-- Capture Photo -->
 <script>
+let dragdropfile= document.querySelector("#dragdropfile");
+dragdropfile.addEventListener('click', async function() {
+    $('#uploadfile').click();
+});
 
+function handleDrop(event) {
+    event.preventDefault();
+    const files = event.dataTransfer.files;
+    if (files) {
+        console.log(files,'filesfiles')
+      const validFiles = Array.from(files).filter(file => {
+        const allowedFormats = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","text/csv",'application/vnd.openxmlformats-officedocument.presentationml.presentation','application/pdf',"audio/mpeg","audio/mp3","audio/wav","audio/aac", 'image/png', 'image/jpeg','image/jpg','audio/mp3','audio/*'];
+        conso
+        return allowedFormats.includes(file.type);
+      });
+      console.log(validFiles,'validFilesvalidFiles');
+    }
+}
+
+function handleDragOver(event) {
+event.preventDefault();
+}
 let camera_button = document.querySelector("#start-camera");
 let video = document.querySelector("#video");
 let click_button = document.querySelector("#click-photo");
 let canvas = document.querySelector("#canvas");
 let dataurl = document.querySelector("#dataurl");
 let dataurl_container = document.querySelector("#dataurl-container");
-
+if(camera_button!=null)
 camera_button.addEventListener('click', async function() {
    	let stream = null;
 
@@ -1381,7 +1498,7 @@ camera_button.addEventListener('click', async function() {
     camera_button.style.display = 'none';
     click_button.style.display = 'block';
 });
-
+if(click_button!=null)
 click_button.addEventListener('click', function() {
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
    	let image_data_url = canvas.toDataURL('image/jpeg');
