@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Searchable;
+use DB;
 
 class Respondents extends Authenticatable 
 {
@@ -48,5 +49,10 @@ class Respondents extends Authenticatable
             'email'   => $this->email,
             'mobile'  => $this->mobile
         ];
+    }
+
+    public static function get_respondend_survey($survey_id)
+    {
+        return DB::table('survey')->where('id', '=', $survey_id)->first();
     }
 }

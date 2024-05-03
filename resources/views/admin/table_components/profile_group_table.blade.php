@@ -2,7 +2,7 @@
     <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="Second group">
             <a href="#!" data-url="{{ route('groups.create') }}" data-size="xl"
-                data-ajax-popup="true" data-bs-original-title="{{ __('Create Users') }}"
+                data-ajax-popup="true" data-bs-original-title="{{ __('Create Profile Group') }}"
                 data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create" class="btn btn-primary">
                 Create Groups
             </a>
