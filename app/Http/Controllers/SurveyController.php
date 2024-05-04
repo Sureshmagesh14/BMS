@@ -190,6 +190,7 @@ class SurveyController extends Controller
         $survey->title=$request->title;
         $survey->created_by=$user->id;
         $survey->builderID=$uuid;
+        $survey->survey_type=$request->survey_type;
         $survey->save();
         return redirect()->route('survey.template',$request->folder_id)->with('success', __('Survey Created Successfully.'));
 
@@ -211,6 +212,7 @@ class SurveyController extends Controller
         $survey=Survey::where(['id'=>$id])->first();
         $survey->title=$request->title;
         $survey->folder_id=$request->folder_id;
+        $survey->survey_type=$request->survey_type;
         $survey->save();
         return redirect()->back()->with('success', __('Survey Updated Successfully.'));
 
