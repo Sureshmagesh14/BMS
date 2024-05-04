@@ -190,6 +190,7 @@ class SurveyController extends Controller
         $survey->title=$request->title;
         $survey->created_by=$user->id;
         $survey->builderID=$uuid;
+        $survey->survey_type=$request->survey_type;
         $survey->save();
         return redirect()->route('survey.template',$request->folder_id)->with('success', __('Survey Created Successfully.'));
 
@@ -211,6 +212,7 @@ class SurveyController extends Controller
         $survey=Survey::where(['id'=>$id])->first();
         $survey->title=$request->title;
         $survey->folder_id=$request->folder_id;
+        $survey->survey_type=$request->survey_type;
         $survey->save();
         return redirect()->back()->with('success', __('Survey Updated Successfully.'));
 
@@ -611,7 +613,8 @@ class SurveyController extends Controller
             $response_user_id =  Auth::user()->id;
             $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
             if($checkresponse){
-                return view('admin.survey.responseerror', compact('survey'));
+                $status = 'alreadycompleted';
+                return view('admin.survey.responsecompleted', compact('survey','status'));
             }else{
                 // Update Visited Count 
                 $visited_count=Survey::where(['builderID'=>$id])->update(['visited_count'=>$survey->visited_count+1]);
@@ -655,7 +658,8 @@ class SurveyController extends Controller
         $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
       
         if($checkresponse){
-            return view('admin.survey.responseerror', compact('survey'));
+            $status = 'alreadycompleted';
+                return view('admin.survey.responsecompleted', compact('survey','status'));
 
         }else{
             if($request->type == 'welcome'){

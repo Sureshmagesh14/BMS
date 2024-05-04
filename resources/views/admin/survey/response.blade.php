@@ -74,7 +74,37 @@
             padding: 10px;
             border-radius: 6px;
         }
-    </style>
+        /* Pagination Css */
+.pagination {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.pagination a.current {
+  background-color: #ddd;
+  color: white;
+}
+
+.pagination a.red {
+  background-color: red;
+  color: white;
+}
+
+</style>
 </head>
 <?php 
 if(isset($question))
@@ -135,14 +165,26 @@ if(isset($bg)){
  ?>
 <body style="{{$stylebackground}}">
     <div class="surveybackground">
-    <?php  $qus_url=route('survey.builder',[$survey->builderID,$question->id]); ?>
-    <input type="hidden" value="{{$question->qus_type}}" id="question_type"/>
-    <input type="hidden" value="" id="answered"/>
-    <a class="back_to_profile" href="{{ route('user.dashboard') }}">
-        <button id="back_to_profile">
-            <span class="ss-primary-action-btn__copy">Back to Profile</span>
-        </button>
-    </a>
+        <?php  $qus_url=route('survey.builder',[$survey->builderID,$question->id]); ?>
+        <input type="hidden" value="{{$question->qus_type}}" id="question_type"/>
+        <input type="hidden" value="" id="answered"/>
+        <a class="back_to_profile" href="{{ route('user.dashboard') }}">
+            <button id="back_to_profile">
+                <span class="ss-primary-action-btn__copy">Back to Profile</span>
+            </button>
+        </a>
+        <?php //echo "<pre>";  print_r($survey); ?>
+@if($survey->survey_type == 'profile')
+<div class="pagination">
+    <p>Go to Question &raquo;</p>
+    @foreach($questionsset as $key=>$value)
+    <?php $surveyResponse = \App\Models\SurveyResponse::where(['survey_id'=>$survey->id,'response_user_id'=>\Auth::user()->id,'question_id'=>$value->id])->first();
+    
+    ?>
+    <a class="@if($surveyResponse) active @elseif($question->id == $value->id) current @else red @endif" href="{{route('survey.startsurvey',[$survey->id,$value->id])}}">{{$key+1}}</a>
+    @endforeach
+</div>
+@endif
         @if($question->qus_type=='welcome_page')
         <div class="surveysparrow-survey-container--classic-form welcome-page">
             <div class="ss-fp-section surveysparrow-survey-form-wrapper--centered ss-survey-background d-flex fx-column fx-jc--center fx-ai--center">
@@ -1099,6 +1141,8 @@ if(isset($bg)){
             </div>
         </div>
         @endif
+        
+
         <form id="skip_qus" style="display:none;" enctype="multipart/form-data" action="{{route('survey.submitans')}}" method="POST">
             @csrf
             @if($question->qus_type=='upload')

@@ -7,6 +7,14 @@
             'placeholder'=>__('Enter Survey Name'),'required'=>'required')) }}
     </div>
     <br>
+        <div>
+            {!! Form::label('survey_type', 'Folder Type') !!}<span class="text-danger pl-1">*</span>
+            <br>
+            <div class="options">
+                {{ Form::radio('survey_type', 'survey' , true,['class'=>'survey_type']) }}&nbsp;&nbsp;&nbsp;{{ __('Survey') }} &nbsp;&nbsp;&nbsp;
+                {{ Form::radio('survey_type', 'profile' , false,['class'=>'survey_type']) }}&nbsp;&nbsp;&nbsp;{{ __('Profile') }}</div>
+        </div>
+    <br>
    
     <div class="surveyfoldername"> 
         <label class="control-label">Select Folder</label><span class="text-danger pl-1">*</span>
@@ -56,4 +64,8 @@
 .select2-container--default .select2-results__option[aria-selected=true]:hover,.select2-container--default .select2-results__option--highlighted[aria-selected]{
     background-color:#448E97 !important;
 }
+input.survey_type{
+    accent-color: #448E97;
+}
+
 </style>
