@@ -9,6 +9,8 @@ use App\Models\Survey;
 use App\Models\Questions;
 use App\Models\Users;
 use App\Models\Respondents;
+use App\Models\Project_respondent;
+use App\Models\Projects;
 use App\Models\SurveyTemplate;
 use App\Models\SurveyResponse;
 use Yajra\DataTables\DataTables;
@@ -1101,6 +1103,19 @@ class SurveyController extends Controller
                 $surveyres->skip = '';
                 $surveyres->deleted_at = 0;
                 $surveyres->save();
+                // Update Profile Completed or Survey Complete
+
+                if($surveyRec->survey_type == 'profile'){
+                    Respondents::where('id', '=' , $response_user_id)->update(['profile_completion_id'=>1]);
+                }
+                if($surveyRec->survey_type == 'survey'){
+                    // Get Project ID 
+                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                    if($project){
+                        Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
+                    }
+                }
+
                 return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
             }else{
                 return redirect()->route('survey.endsurvey',[$survey_id,0]);
