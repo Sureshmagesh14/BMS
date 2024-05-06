@@ -247,3 +247,10 @@ Route::any('check_email_name','CommonAdminController@check_email_name')->name('c
 
 
 require __DIR__.'/auth.php';
+
+// Reports
+Route::get('/generate-ppt-report', ['as' => 'survey.pptreport','uses' => 'SurveyController@generatePPTReport']);
+Route::get('/generate-wordcloud-report', ['as' => 'survey.wordcloudreport','uses' => 'SurveyController@generateWordCloud']);
+Route::get('/generate-pdf', ['as' => 'survey.pdfreport','uses' => 'SurveyController@generatePDF']);
+Route::get('/generate-barchart', ['as' => 'survey.barchart','uses' => 'SurveyController@generateBarChart']);
+Route::get('/wordcloud', 'WordCloudController@generateAndDownload');
