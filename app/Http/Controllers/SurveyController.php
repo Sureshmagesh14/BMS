@@ -13,6 +13,7 @@ use App\Models\Project_respondent;
 use App\Models\Projects;
 use App\Models\SurveyTemplate;
 use App\Models\SurveyResponse;
+use App\Models\SurveyQuotas;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -1858,6 +1859,29 @@ class SurveyController extends Controller
          $hexColor = sprintf("#%02x%02x%02x", $red, $green, $blue);
          return $hexColor;
      }
+
+    //  Set Quota
+    public function setquota(Request $request,$survey_id){
+        $questions=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+        $redirection=Questions::where(['survey_id'=>$survey_id])->whereIn('qus_type',['thank_you'])->get();
+        $quotas = SurveyQuotas::where(['survey_id'=>$survey_id])->get();
+        $survey = Survey::where(['id'=>$survey_id])->first();
+        return view('admin.survey.quota.index', compact('questions','redirection','quotas','survey'));
+    }
+
+    public function createquota(Request $request,$survey_id){
+        $user = Auth::guard('admin')->user();
+        
+        $questions=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+        $redirection=Questions::where(['survey_id'=>$survey_id])->whereIn('qus_type',['thank_you'])->get();
+        $quotas = SurveyQuotas::where(['survey_id'=>$survey_id])->get();
+        $survey = Survey::where(['id'=>$survey_id])->first();
+
+        $display_logic=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+        $display_logic_matrix=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
+
+        return view('admin.survey.quota.create', compact('questions','display_logic_matrix','display_logic'));
+    }
 }
 
 
