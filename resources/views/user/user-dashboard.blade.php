@@ -14,6 +14,8 @@
         @if ($data->profile_completion_id == 0)
             <div class="alert alert-danger bs-alert-old-docs text-center">
                 <strong>Alert</strong> Profile Incomplete <a href="{{ route('updaterofile') }}">Update Profile</a>
+                <br>
+                <small class="leading-none mt-1 text-danger">Cash outs are only available if your profile is up to date. Please update your profile.</small>
             </div>
         @endif
 
@@ -50,10 +52,10 @@
                     <button class="btn w-100 vi-nav-bg text-black border-radius-0" id="opt_out" @if($data->active_status_id != 1) disabled @endif>OPT OUT</button>
                     <p class="small-font">Stop receiving any research request</p>
                 </div>
-                <div class="button text-center">
+                <!-- <div class="button text-center">
                     <button class="btn w-100 vi-nav-bg text-white border-radius-0"><img class="w-10 me-3"
                             src="{{ asset('user/images/sent.png') }}" alt="">Contact Us</button>
-                </div>
+                </div> -->
 
             </div>
             <div class="col-md-5 my-sm-5-mob">
