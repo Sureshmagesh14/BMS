@@ -37,6 +37,7 @@ Route::any('surveys','WelcomeController@user_surveys')->middleware(['auth', 'ver
 Route::any('viewprofile','WelcomeController@user_viewprofile')->middleware(['auth', 'verified'])->name('user.viewprofile');
 Route::any('updaterofile','WelcomeController@user_editprofile')->middleware(['auth', 'verified'])->name('updaterofile');
 Route::post('user_update','WelcomeController@user_update')->middleware(['auth', 'verified'])->name('user_update');
+Route::any('opt_out','WelcomeController@opt_out')->middleware(['auth', 'verified'])->name('opt_out');
 
 
 /* USERS */
