@@ -179,9 +179,17 @@ if(isset($bg)){
     <p>Go to Question &raquo;</p>
     @foreach($questionsset as $key=>$value)
     <?php $surveyResponse = \App\Models\SurveyResponse::where(['survey_id'=>$survey->id,'response_user_id'=>\Auth::user()->id,'question_id'=>$value->id])->first();
+    $classname = '';
+    if($surveyResponse){
+        if($surveyResponse->skip == 'yes'){
+            $classname = '';
+        }else{
+            $classname ='active';
+        }
+    }
     
     ?>
-    <a class="@if($surveyResponse) active @elseif($question->id == $value->id) current @else red @endif" href="{{route('survey.startsurvey',[$survey->id,$value->id])}}">{{$key+1}}</a>
+    <a class="@if($surveyResponse) {{$classname}} @elseif($question->id == $value->id) current @else red @endif" href="{{route('survey.startsurvey',[$survey->id,$value->id])}}">{{$key+1}}</a>
     @endforeach
 </div>
 @endif
