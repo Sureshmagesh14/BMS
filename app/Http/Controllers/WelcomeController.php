@@ -186,11 +186,21 @@ class WelcomeController extends Controller
             
             $data = Groups::where('id', $up_id)->first();
 
-            if($request->user()->profile_completion_id==0){
-                 return view('user.update-profile');
-            }else{
-                return view('user.user-surveys',compact('data'));
-            }
+            $get_respondent = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
+                ->join('project_respondent as resp','projects.id','resp.project_id')
+                ->where('resp.respondent_id','=',$resp_id)
+                ->where('resp.is_frontend_complete',0)->get();
+
+            $get_completed_survey = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
+                ->join('project_respondent as resp','projects.id','resp.project_id')
+                ->where('resp.respondent_id',$resp_id)
+                ->where('resp.is_frontend_complete',1)->get();
+
+            // if($request->user()->profile_completion_id==0){
+            //      return view('user.update-profile');
+            // }else{
+                return view('user.user-surveys',compact('data','get_respondent','get_completed_survey'));
+            //}
            
         }
         catch (Exception $e) {
