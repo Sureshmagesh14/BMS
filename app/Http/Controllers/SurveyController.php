@@ -1890,7 +1890,12 @@ class SurveyController extends Controller
         $surveyquota->quota_limit = $request->quota_limit;
         $surveyquota->question_id = $request->question_id;
         $surveyquota->option_type = $request->option_type;
-        $surveyquota->option_value = implode(',', $request->option_value);
+        if(is_array($request->option_value)){
+            $surveyquota->option_value = implode(',', $request->option_value);
+        }
+        else {
+            $surveyquota->option_value = $request->option_value;
+        }
         $surveyquota->redirection_qus = $request->redirection_qus;
         $surveyquota->created_by = $user->id;
         $surveyquota->save();
@@ -1919,7 +1924,12 @@ class SurveyController extends Controller
         $surveyquota->quota_limit = $request->quota_limit;
         $surveyquota->question_id = $request->question_id;
         $surveyquota->option_type = $request->option_type;
-        $surveyquota->option_value = implode(',', $request->option_value);
+        if(is_array($request->option_value)){
+            $surveyquota->option_value = implode(',', $request->option_value);
+        }
+        else {
+            $surveyquota->option_value = $request->option_value;
+        }
         $surveyquota->redirection_qus = $request->redirection_qus;
         $surveyquota->created_by = $user->id;
         $surveyquota->save();

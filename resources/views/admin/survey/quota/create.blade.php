@@ -50,7 +50,7 @@
         </div>
     </div>
     <br/>
-    <p class="control-label choicesdropdown1" style="display:none;margin-bottom:0.5rem;">Choices<span class="text-danger pl-1">*</span></p>
+    <p class="control-label choicesdropdown1" style="display:none;margin-bottom:0.5rem;">Answer<span class="text-danger pl-1">*</span></p>
     <div class="choicesdropdown" style="display:none;margin-bottom:1rem;"> 
         <div class="form-group mb-0" id="choiceslist">
            

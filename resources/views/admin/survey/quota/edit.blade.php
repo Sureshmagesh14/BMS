@@ -22,7 +22,6 @@
             <select class="select2 form-control qus_choice" id="qus_choice" name="question_id"  data-placeholder="Choose ..." required>
                 <option value="">Choose Questions</option>
                 @foreach($display_logic as $key=>$value)
-                    
                     <option @if($quota->question_id == $key) selected @endif value="{{$key}}">{{$value}}</option>
                 @endforeach
                 @foreach($display_logic_matrix as $key=>$value) 
@@ -49,45 +48,57 @@
     $option_type=[];
     $option_value=[];
     if($qus!=null){
+        $viewtype='';
         $qusvalue = json_decode($qus->qus_ans); 
         switch ($qus->qus_type) {
             case 'single_choice':
-                $option_value=explode(",",$qusvalue->choices_list);
-                $option_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                $viewtype = 'dropdown';
+                $option_value = explode(",",$qusvalue->choices_list);
+                $option_type =[ 'isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
             case 'multi_choice':
+                $viewtype = 'dropdown';
                 $option_value=explode(",",$qusvalue->choices_list);
                 $option_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
             case 'dropdown':
+                $viewtype = 'dropdown';
                 $option_value=explode(",",$qusvalue->choices_list);
                 $option_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
             case 'picturechoice':
+                $viewtype = '';
                 $option_value=json_decode($qusvalue->choices_list);
                 $option_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
             case 'photo_capture':
+                $viewtype = '';
                 $option_type=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
             case 'open_qus':
+                $viewtype = 'text';
                 $option_type=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
                 break; 
             case 'likert':
+                $viewtype = 'dropdown';
                 $option_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5,"6"=>6,"7"=>7,"8"=>8,"9"=>9];
                 $option_type=['lessThanForScale'=>'Less than','greaterThanForScale'=>'Greater than','equalToForScale'=>'Equal To','notEqualToForScale'=>'Not Equal To','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
             case 'rankorder':
+                $viewtype = '';
                 $option_type=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
             case 'rating':
+                $viewtype = 'dropdown';
                 $option_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5];
                 $option_type=['lessThanForScale'=>'Less than','greaterThanForScale'=>'Greater than','equalToForScale'=>'Equal To','notEqualToForScale'=>'Not Equal To','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
             case 'email':
+                $viewtype = 'text';
                 $option_type=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
                 break;
             case 'matrix_qus':
+                $viewtype = 'dropdown';
                 $option_value=explode(",",$qusvalue->matrix_choice);
                 $option_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
@@ -97,8 +108,8 @@
     }
     // echo "<pre>"; print_r($option_type);
     // echo "<pre>"; print_r($option_value);
-    echo $quota->option_type;
-    echo $quota->option_value;
+    // echo $quota->option_type;
+    // echo $quota->option_value;
     ?>
     <div class="optionsdropdown" style=""> 
     <br/>
@@ -108,17 +119,20 @@
             <select required class="form-control option_type" name="option_type">
                 <option value="">Choose</option>
                 @foreach($option_type as $key=>$value)
-                <option @if($quota->option_value == $key) selected @endif value="{{$key}}">{{$value}}</option>
+                <option @if($quota->option_type == $key) selected @endif value="{{$key}}">{{$value}}</option>
                 @endforeach
             </select>
             @endif
         </div>
     </div>
     <br/>
-    <p class="control-label choicesdropdown1" style="margin-bottom:0.5rem;">Choices<span class="text-danger pl-1">*</span></p>
+    <p class="control-label choicesdropdown1" style="@if($quota->option_value=='') display:none; @endif margin-bottom:0.5rem;">Answer<span class="text-danger pl-1">*</span></p>
     <div class="choicesdropdown" style="margin-bottom:1rem;"> 
         <div class="form-group mb-0" id="choiceslist">
         @if($quota->option_value!='')
+            @if($viewtype == 'text')
+                <input required value="{{$quota->option_value}}" class="select2 form-control option_value select2-multiple" type="text" name="option_value"/>
+            @else
             <select required class="form-control option_value" id="option_value" name="option_value">
                 <option value="">Choose</option>
                 @foreach($option_value as $key=>$value)
@@ -126,6 +140,7 @@
                 @endforeach
             </select>
             @endif
+        @endif
         </div>
     </div>
     <div class="surveyfoldername"> 
@@ -145,7 +160,7 @@
 
 <div class="modal-footer">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light"  data-dismiss="modal">
-    <input type="submit" id="create_folder" value="{{__('Create')}}" class="btn  btn-primary">
+    <input type="submit" id="create_folder" value="{{__('Update')}}" class="btn  btn-primary">
 </div>
 
 {{Form::close()}}
