@@ -219,7 +219,11 @@ Route::group([
     // Survey Quota 
     Route::get('/survey/set-quota/{id}', ['as' => 'survey.setquota','uses' => 'SurveyController@setquota']);
     Route::get('/survey/quota/create/{id}', ['as' => 'survey.createquota','uses' => 'SurveyController@createquota']);
-    Route::get('/survey/quota/store', ['as' => 'survey.storequota','uses' => 'SurveyController@storequota']);
+    Route::post('/survey/quota/store', ['as' => 'survey.storequota','uses' => 'SurveyController@storequota']);
+    Route::get('/survey/quota/edit/{id}', ['as' => 'survey.editquota','uses' => 'SurveyController@editquota']);
+    Route::post('/survey/quota/update/{id}', ['as' => 'survey.updatequota','uses' => 'SurveyController@updatequota']);
+    Route::get('/survey/quota/delete/{id}', ['as' => 'survey.deletequota','uses' => 'SurveyController@deletequota']);
+
 
 
     

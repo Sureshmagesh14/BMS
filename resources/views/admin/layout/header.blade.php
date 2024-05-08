@@ -26,7 +26,11 @@
     
         <style>
             .actionsBtn {display: flex;}
-            .editSurvey,.editFolder {margin-right: 1rem;}
+            .editSurvey,.editFolder,.editQuota {margin-right: 1rem;}
+            .editSurvey:hover,.editFolder:hover,.editQuota:hover {
+                background: #4099de;
+                border-color: #4099de;
+            }
             .createBtn {display: flex;justify-content: flex-end;margin-right: 3rem;margin-bottom: 3rem;}
             .createBtn a {color: white;}
             .select2-container{width:100% !important;}

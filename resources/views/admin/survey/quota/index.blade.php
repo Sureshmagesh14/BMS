@@ -54,6 +54,19 @@ img.photo_capture {
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($quotas as $quota)
+                                <tr>
+                                    <td>{{$quota->quota_name}}</td>
+                                    <td>{{$quota->quota_limit}}</td>
+                                    <td>
+                                        <div class="actionsBtn">
+                                            <?php $deletedLink = route('survey.deletequota',$quota->id); ?>
+                                            <a href="#" class="btn btn-primary waves-effect waves-light editQuota" data-url="{{route('survey.editquota',$quota->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Edit Quota" data-title="Edit Quota">Edit</a>
+                                            <button type="button" class="btn btn-danger" data-url="{{$deletedLink}}" onclick="quotadelete(`{{$deletedLink}}`,{{$quota->id}})">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
                             </tbody>
                             </table>
                         </div>
@@ -72,5 +85,25 @@ img.photo_capture {
 
     <script>
         
-       
+        function quotadelete(url,id){
+            console.log(url,id)
+            $.ajax({url: url,error:function(error){
+                console.log(error)
+            }, success: function(result){
+                result = JSON.parse(result);
+                if(result.error!=''){
+                    Swal.fire("Warning!", result.error, "warning") ;
+                }else{
+                    Swal.fire({
+                        title:"Deleted!", 
+                        text:result.success, 
+                        icon:"success"
+                    }).then(function (t) { 
+                        window.location.reload();
+                    }) ;
+                }
+            
+            }});
+    }
+
     </script>

@@ -1873,15 +1873,66 @@ class SurveyController extends Controller
         $user = Auth::guard('admin')->user();
         
         $questions=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
-        $redirection=Questions::where(['survey_id'=>$survey_id])->whereIn('qus_type',['thank_you'])->get();
+        $redirection=Questions::where(['survey_id'=>$survey_id])->whereIn('qus_type',['thank_you'])->pluck('question_name', 'id')->toArray();
         $quotas = SurveyQuotas::where(['survey_id'=>$survey_id])->get();
         $survey = Survey::where(['id'=>$survey_id])->first();
 
         $display_logic=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
         $display_logic_matrix=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
 
-        return view('admin.survey.quota.create', compact('questions','display_logic_matrix','display_logic'));
+        return view('admin.survey.quota.create', compact('quotas','survey','questions','display_logic_matrix','display_logic','redirection'));
     }
+    public function storequota(Request $request){
+        $user = Auth::guard('admin')->user();
+        $surveyquota = new SurveyQuotas();
+        $surveyquota->survey_id = $request->survey_id;
+        $surveyquota->quota_name = $request->quota_name;
+        $surveyquota->quota_limit = $request->quota_limit;
+        $surveyquota->question_id = $request->question_id;
+        $surveyquota->option_type = $request->option_type;
+        $surveyquota->option_value = implode(',', $request->option_value);
+        $surveyquota->redirection_qus = $request->redirection_qus;
+        $surveyquota->created_by = $user->id;
+        $surveyquota->save();
+        return redirect()->back()->with('success', __('Quota Created Successfully.'));
+    }
+
+    public function editquota($id){
+
+        $quota=SurveyQuotas::where(['id'=>$id])->first();
+        $user = Auth::guard('admin')->user();
+        $survey_id = $quota->survey_id;
+        $questions=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+        $redirection=Questions::where(['survey_id'=>$survey_id])->whereIn('qus_type',['thank_you'])->pluck('question_name', 'id')->toArray();
+        $quotas = SurveyQuotas::where(['survey_id'=>$survey_id])->get();
+        $survey = Survey::where(['id'=>$survey_id])->first();
+        $display_logic=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+        $display_logic_matrix=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
+        return view('admin.survey.quota.edit', compact('quota','survey','questions','display_logic_matrix','display_logic','redirection'));
+    }
+
+    public function updatequota(Request $request,$id){
+        $user = Auth::guard('admin')->user();
+        $surveyquota=SurveyQuotas::where(['id'=>$id])->first();
+        $surveyquota->survey_id = $request->survey_id;
+        $surveyquota->quota_name = $request->quota_name;
+        $surveyquota->quota_limit = $request->quota_limit;
+        $surveyquota->question_id = $request->question_id;
+        $surveyquota->option_type = $request->option_type;
+        $surveyquota->option_value = implode(',', $request->option_value);
+        $surveyquota->redirection_qus = $request->redirection_qus;
+        $surveyquota->created_by = $user->id;
+        $surveyquota->save();
+        return redirect()->back()->with('success', __('Quota Updated Successfully.'));
+    }
+
+    public function deletequota(Request $request,$id){
+        $surveyquota=SurveyQuotas::where(['id'=>$id])->first();
+        $surveyquota->delete();
+        return json_encode(['success'=>'Quota deleted Successfully',"error"=>""]);
+    }
+
+
 }
 
 
