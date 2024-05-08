@@ -45,18 +45,87 @@
             </select>
         </div>
     </div>
-    <div class="optionsdropdown" style="display:none;"> 
+    <?php $qus=\App\Models\Questions::where(['id'=>$quota->question_id])->first();
+    $option_type=[];
+    $option_value=[];
+    if($qus!=null){
+        $qusvalue = json_decode($qus->qus_ans); 
+        switch ($qus->qus_type) {
+            case 'single_choice':
+                $option_value=explode(",",$qusvalue->choices_list);
+                $option_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'multi_choice':
+                $option_value=explode(",",$qusvalue->choices_list);
+                $option_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'dropdown':
+                $option_value=explode(",",$qusvalue->choices_list);
+                $option_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'picturechoice':
+                $option_value=json_decode($qusvalue->choices_list);
+                $option_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'photo_capture':
+                $option_type=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'open_qus':
+                $option_type=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
+                break; 
+            case 'likert':
+                $option_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5,"6"=>6,"7"=>7,"8"=>8,"9"=>9];
+                $option_type=['lessThanForScale'=>'Less than','greaterThanForScale'=>'Greater than','equalToForScale'=>'Equal To','notEqualToForScale'=>'Not Equal To','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'rankorder':
+                $option_type=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'rating':
+                $option_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5];
+                $option_type=['lessThanForScale'=>'Less than','greaterThanForScale'=>'Greater than','equalToForScale'=>'Equal To','notEqualToForScale'=>'Not Equal To','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+            case 'email':
+                $option_type=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
+                break;
+            case 'matrix_qus':
+                $option_value=explode(",",$qusvalue->matrix_choice);
+                $option_type=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
+        }
+    }else{
+        $qusvalue=[];
+    }
+    // echo "<pre>"; print_r($option_type);
+    // echo "<pre>"; print_r($option_value);
+    echo $quota->option_type;
+    echo $quota->option_value;
+    ?>
+    <div class="optionsdropdown" style=""> 
     <br/>
         <label class="control-label">Condition</label><span class="text-danger pl-1">*</span>
         <div class="form-group mb-0" id="choiceslistans">
-           
+            @if($quota->option_type!='')
+            <select required class="form-control option_type" name="option_type">
+                <option value="">Choose</option>
+                @foreach($option_type as $key=>$value)
+                <option @if($quota->option_value == $key) selected @endif value="{{$key}}">{{$value}}</option>
+                @endforeach
+            </select>
+            @endif
         </div>
     </div>
     <br/>
-    <p class="control-label choicesdropdown1" style="display:none;margin-bottom:0.5rem;">Choices<span class="text-danger pl-1">*</span></p>
-    <div class="choicesdropdown" style="display:none;margin-bottom:1rem;"> 
+    <p class="control-label choicesdropdown1" style="margin-bottom:0.5rem;">Choices<span class="text-danger pl-1">*</span></p>
+    <div class="choicesdropdown" style="margin-bottom:1rem;"> 
         <div class="form-group mb-0" id="choiceslist">
-           
+        @if($quota->option_value!='')
+            <select required class="form-control option_value" id="option_value" name="option_value">
+                <option value="">Choose</option>
+                @foreach($option_value as $key=>$value)
+                <option value="{{$key}}">{{$value}}</option>
+                @endforeach
+            </select>
+            @endif
         </div>
     </div>
     <div class="surveyfoldername"> 
@@ -66,7 +135,7 @@
             <select class="select2 form-control redirection_qus" id="redirection_qus" name="redirection_qus"  data-placeholder="Choose ..." required>
                 <option value="">Choose Questions</option>
                 @foreach($redirection as $key=>$value)
-                    <option value="{{$key}}">{{$value}}</option>
+                    <option  @if($quota->redirection_qus == $key) selected @endif  value="{{$key}}">{{$value}}</option>
                 @endforeach
             </select>
         </div>
