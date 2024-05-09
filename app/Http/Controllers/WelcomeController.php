@@ -9,6 +9,7 @@ use App\Models\Respondents;
 use App\Models\Contents;
 use App\Models\Groups;
 use App\Models\Projects;
+use App\Models\Banks;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -129,6 +130,28 @@ class WelcomeController extends Controller
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
+
+                $get_resp = DB::table('project_respondent as resp')->select('resp.*','projects.reward')
+                    ->join('projects','resp.project_id','projects.id')
+                    ->where('resp.respondent_id',$id)
+                    ->where('resp.is_frontend_complete',1)->get();
+                
+                if(!empty($get_resp)){
+                    foreach($get_resp as $resp){
+                        if(DB::table('rewards')->where('project_id',$get_resp->project_id)->where('respondent_id',$get_resp->respondent_id)->doesntExist()){
+                            $insert_array = array(
+                                'respondent_id' => $get_resp->respondent_id,
+                                'project_id' => $get_resp->project_id,
+                                'points' => $get_resp->reward,
+                                'status_id' => 1,
+                            );
+
+                            DB::table('rewards')->insert($insert_array);
+                        }
+                    }
+                }
+                
+                
                 return view('user.user-dashboard', compact('data','get_respondent','get_completed_survey'));
             //}
         }
@@ -164,11 +187,14 @@ class WelcomeController extends Controller
             
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
+
+            $get_reward = DB::table('rewards')->where('respondent_id',$resp_id)->where('status_id',2)->sum('points');
+            $banks = Banks::get();
             
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-rewards');
+                return view('user.user-rewards')->with('get_reward',$get_reward)->with('banks',$banks);
             //}
            
         }
@@ -422,6 +448,33 @@ class WelcomeController extends Controller
             'success' => true,
             'message'=> "We were bummed to hear that you're leaving us. We totally respect your decision to cancel, and we've started processing your request."
         ]);
+    }
+
+    public function cashout_form(Request $request){
+        try {
+            $points = $request->value;
+            $banks = Banks::get();
+            $returnHTML = view('user.cashout_request',compact('points','banks'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function cashout_sent(Request $request){
+        $banks          = $request->bank_value;
+        $account_number = $request->account_number;
+        $reward         = $request->reward;
+        $branch_name    = $request->branch_name;
+        $holder_name    = $request->holder_name;
+
     }
 
 }

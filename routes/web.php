@@ -38,6 +38,8 @@ Route::any('viewprofile','WelcomeController@user_viewprofile')->middleware(['aut
 Route::any('updaterofile','WelcomeController@user_editprofile')->middleware(['auth', 'verified'])->name('updaterofile');
 Route::post('user_update','WelcomeController@user_update')->middleware(['auth', 'verified'])->name('user_update');
 Route::any('opt_out','WelcomeController@opt_out')->middleware(['auth', 'verified'])->name('opt_out');
+Route::any('cashout_sent','WelcomeController@cashout_sent')->middleware(['auth', 'verified'])->name('cashout_sent');
+Route::any('cashout_form','WelcomeController@cashout_form')->middleware(['auth', 'verified'])->name('cashout_form');
 
 
 /* USERS */
