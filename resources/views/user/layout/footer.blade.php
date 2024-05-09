@@ -24,9 +24,69 @@
     </div>
 </footer>
 
+<!-- Common modal -->
+<div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0" id="exampleModalScrollableTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="{{ asset('assets/js/admin/jquery.validate.js') }}"></script>
     <script src="{{ asset('assets/js/admin/confirm.min.js') }}"></script>
+
+    <script>
+        $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true"], div[data-ajax-popup="true"]', function () {
+            var data = {};
+            var title1 = $(this).data("title");
+            var title2 = $(this).data("bs-original-title");
+            var title = (title1 != undefined) ? title1 : title2;
+            var size = ($(this).data('size') == '') ? 'md' : $(this).data('size');
+            var url = $(this).data('url');
+            let color = $(this).data("color");
+            let value = $(this).data("value");
+
+            $("#colortype").val(color);
+            $("#commonModal .modal-title").html(title);
+            $("#commonModal .modal-dialog").addClass('modal-' + size);
+
+            if ($('#vc_name_hidden').length > 0) {
+                data['vc_name'] = $('#vc_name_hidden').val();
+            }
+            if ($('#warehouse_name_hidden').length > 0) {
+                data['warehouse_name'] = $('#warehouse_name_hidden').val();
+            }
+
+            $.ajax({
+                url: url,
+                data: {value},
+                success: function (data) {
+                    if(data['html_page'] != undefined){
+                        $('#commonModal .modal-body').html(data['html_page']);
+                    }
+                    else{
+                        $('#commonModal .modal-body').html(data);
+                    }
+                    
+                    $("#commonModal").modal('show');
+                },
+                error: function (data) {
+                    data = data.responseJSON;
+                    toastr.error("Something Went Wrong");
+                }
+            });
+        });
+    </script>
 </html>
