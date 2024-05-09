@@ -341,7 +341,7 @@ else if($qus->qus_type == 'matrix_qus'){
                                         @if($csurvey->skip == 'yes')
                                             Answer : Skipped
                                         @else
-                                            Answer : {{$result}}
+                                            Answer : {!! $result !!}
                                         @endif
                                     </div>
                                   

@@ -220,6 +220,16 @@ Route::group([
     Route::get('/survey/surveysettings/{id}', ['as' => 'survey.surveysettings','uses' => 'SurveyController@surveysettings']);
     Route::post('/survey/updatesettings/{id}', ['as' => 'survey.updatesettings','uses' => 'SurveyController@updatesettings']);
 
+    // Survey Quota 
+    Route::get('/survey/set-quota/{id}', ['as' => 'survey.setquota','uses' => 'SurveyController@setquota']);
+    Route::get('/survey/quota/create/{id}', ['as' => 'survey.createquota','uses' => 'SurveyController@createquota']);
+    Route::post('/survey/quota/store', ['as' => 'survey.storequota','uses' => 'SurveyController@storequota']);
+    Route::get('/survey/quota/edit/{id}', ['as' => 'survey.editquota','uses' => 'SurveyController@editquota']);
+    Route::post('/survey/quota/update/{id}', ['as' => 'survey.updatequota','uses' => 'SurveyController@updatequota']);
+    Route::get('/survey/quota/delete/{id}', ['as' => 'survey.deletequota','uses' => 'SurveyController@deletequota']);
+
+
+
     
     // Survey Response 
     
@@ -258,3 +268,4 @@ Route::get('/generate-wordcloud-report', ['as' => 'survey.wordcloudreport','uses
 Route::get('/generate-pdf', ['as' => 'survey.pdfreport','uses' => 'SurveyController@generatePDF']);
 Route::get('/generate-barchart', ['as' => 'survey.barchart','uses' => 'SurveyController@generateBarChart']);
 Route::get('/wordcloud', 'WordCloudController@generateAndDownload');
+Route::get('/checkquota/{id}','SurveyController@checkquota');
