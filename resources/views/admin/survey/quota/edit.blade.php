@@ -75,6 +75,10 @@
                 $viewtype = '';
                 $option_type=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                 break;
+            case 'upload':
+                $viewtype = '';
+                $option_type=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                break;
             case 'open_qus':
                 $viewtype = 'text';
                 $option_type=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
@@ -111,6 +115,7 @@
     // echo $quota->option_type;
     // echo $quota->option_value;
     ?>
+    <input type="hidden" id="existing_option_value" value ="{{$quota->option_value}}"/>
     <div class="optionsdropdown" style=""> 
     <br/>
         <label class="control-label">Condition</label><span class="text-danger pl-1">*</span>
@@ -131,12 +136,12 @@
         <div class="form-group mb-0" id="choiceslist">
         @if($quota->option_value!='')
             @if($viewtype == 'text')
-                <input required value="{{$quota->option_value}}" class="select2 form-control option_value select2-multiple" type="text" name="option_value"/>
-            @else
-            <select required class="form-control option_value" id="option_value" name="option_value">
+                <input required value="{{$quota->option_value}}" class=" form-control option_value" type="text" name="option_value"/>
+            @elseif($viewtype == 'dropdown')
+            <select required class="select2 form-control option_value @if($quota->option_type == 'isSelected' || $quota->option_type == 'isNotSelected') select2 select2-multiple @endif" id="option_value" name="option_value" @if($quota->option_type == 'isSelected' || $quota->option_type == 'isNotSelected') multiple="multiple" @endif>
                 <option value="">Choose</option>
                 @foreach($option_value as $key=>$value)
-                <option value="{{$key}}">{{$value}}</option>
+                <option value="{{$value}}">{{$value}}</option>
                 @endforeach
             </select>
             @endif
@@ -187,7 +192,7 @@ $("html body").delegate('.qus_choice', "change", function() {
         if(result?.qus_type=='single_choice' || result?.qus_type=='multi_choice' || result?.qus_type =='dropdown'){
             let choice_list=JSON.parse(result?.qus?.qus_ans);
             optionv=choice_list?.choices_list.split(',');
-            textDiv+='<select required class="select2 form-control option_value select2-multiple" name="option_value[]" multiple="multiple">';
+            textDiv+='<select required class="form-control option_value" name="option_value[]">';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+value+'">'+value+'</option>';
             });
@@ -195,7 +200,7 @@ $("html body").delegate('.qus_choice', "change", function() {
         }else if(result?.qus_type=='picturechoice'){
             let choice_list=JSON.parse(result?.qus?.qus_ans);
             optionv=JSON.parse(choice_list?.choices_list);
-            textDiv+='<select required class="select2 form-control option_value select2-multiple" name="option_value[]" multiple="multiple">';
+            textDiv+='<select required class="form-control option_value" name="option_value[]">';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+key+'">'+value.text+'</option>';
             });
@@ -204,7 +209,7 @@ $("html body").delegate('.qus_choice', "change", function() {
         else if(result?.qus_type=='matrix_qus'){
             let choice_list=JSON.parse(result?.qus?.qus_ans);
             optionv=choice_list?.matrix_choice.split(',');
-            textDiv+='<select required class="select2 form-control option_value select2-multiple" name="option_value[]" multiple="multiple">';
+            textDiv+='<select required class="form-control option_value" name="option_value[]">';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+value+'">'+value+'</option>';
             });
@@ -213,27 +218,26 @@ $("html body").delegate('.qus_choice', "change", function() {
 
         else if(result?.qus_type=='likert'){
             optionv={"1":1,"2":3,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9};
-            textDiv+='<select required class="select2 form-control option_value select2-multiple" name="option_value[]" multiple="multiple">';
+            textDiv+='<select required class="form-control option_value" name="option_value[]">';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+key+'">'+value+'</option>';
             });
             textDiv+='</select>';
         }
         else if(result?.qus_type=='rankorder' || result?.qus_type=='photo_capture'){
-            textDiv+='<input required style="display:none;" class="select2 form-control option_value select2-multiple" type="text" name="option_value"/>';
+            textDiv+='<input required style="display:none;" class="form-control option_value" type="text" name="option_value"/>';
         }
         else if(result?.qus_type=='rating'){
             optionv={"1":1,"2":3,"3":3,"4":4,"5":5};
-            textDiv+='<select required class="select2 form-control option_value select2-multiple" name="option_value[]" multiple="multiple">';
+            textDiv+='<select required class="form-control option_value" name="option_value[]">';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+key+'">'+value+'</option>';
             });
             textDiv+='</select>';
         }
         else if(result?.qus_type=='open_qus' || result?.qus_type=='email'){
-            textDiv+='<input required  class="select2 form-control option_value select2-multiple" type="text" name="option_value"/>';
+            textDiv+='<input required  class="form-control option_value" type="text" name="option_value"/>';
         }
-        console.log('textDiv',textDiv)
         if(textDiv!=''){
             $('.choicesdropdown').css('display','block');
             $('.choicesdropdown1').css('display','block');
@@ -245,6 +249,12 @@ $("html body").delegate('.qus_choice', "change", function() {
 
 $("html body").delegate('.option_type', "change", function() {    
     let val=$(this).val();
+    if(val == 'isSelected' ||  val == 'isNotSelected'){
+        $('#choiceslist select').addClass('select2 select2-multiple');
+        $('#choiceslist select').attr('multiple','multiple');
+        $('.select2-multiple').select2();
+
+    }
     if(val=='isAnswered' || val=='isNotAnswered'){
         $('.choicesdropdown').css('display','none');
         $('.choicesdropdown1').css('display','none');

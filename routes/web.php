@@ -264,3 +264,4 @@ Route::get('/generate-wordcloud-report', ['as' => 'survey.wordcloudreport','uses
 Route::get('/generate-pdf', ['as' => 'survey.pdfreport','uses' => 'SurveyController@generatePDF']);
 Route::get('/generate-barchart', ['as' => 'survey.barchart','uses' => 'SurveyController@generateBarChart']);
 Route::get('/wordcloud', 'WordCloudController@generateAndDownload');
+Route::get('/checkquota/{id}','SurveyController@checkquota');

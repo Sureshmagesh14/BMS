@@ -168,7 +168,12 @@ if(isset($bg)){
         <?php  $qus_url=route('survey.builder',[$survey->builderID,$question->id]); ?>
         <input type="hidden" value="{{$question->qus_type}}" id="question_type"/>
         <input type="hidden" value="" id="answered"/>
-        <a class="back_to_profile" href="{{ route('user.dashboard') }}">
+        <?php if($survey->survey_type == 'profile'){
+            $urlRedirect = route('updaterofile');
+        }else{
+            $urlRedirect = route('user.dashboard');
+        } ?>
+        <a class="back_to_profile" href="{{ $urlRedirect }} ">
             <button id="back_to_profile">
                 <span class="ss-primary-action-btn__copy">Back to Profile</span>
             </button>
@@ -518,7 +523,7 @@ if(isset($bg)){
 
 
                                 <div class="ss_cl_qstn_action disabled {{$question->qus_type}}_action">
-                                    <button  id="click-photo" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Click Photo</span>
+                                    <button onclick="click_button_camera()"  id="click-photo" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Click Photo</span>
                                         
                                         </button>
                                     <div class="">
@@ -1505,6 +1510,7 @@ $('#skip_button').click(function(){
 <!-- Capture Photo -->
 <script>
 let dragdropfile= document.querySelector("#dragdropfile");
+if(dragdropfile!=undefined)
 dragdropfile.addEventListener('click', async function() {
     $('#uploadfile').click();
 });
@@ -1532,8 +1538,8 @@ let click_button = document.querySelector("#click-photo");
 let canvas = document.querySelector("#canvas");
 let dataurl = document.querySelector("#dataurl");
 let dataurl_container = document.querySelector("#dataurl-container");
-if(camera_button!=null)
-camera_button.addEventListener('click', async function() {
+if(camera_button!=null){
+    camera_button.addEventListener('click', async function() {
    	let stream = null;
 
     try {
@@ -1550,14 +1556,27 @@ camera_button.addEventListener('click', async function() {
     camera_button.style.display = 'none';
     click_button.style.display = 'block';
 });
+}
+
 if(click_button!=null)
-click_button.addEventListener('click', function() {
+{
+    click_button.addEventListener('click', function() {
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
    	let image_data_url = canvas.toDataURL('image/jpeg');
     
     dataurl.value = image_data_url;
     dataurl_container.style.display = 'block';
 });
+
+}
+function click_button_camera(){
+    console.log('click_button_camera')
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+   	let image_data_url = canvas.toDataURL('image/jpeg');
+    
+    dataurl.value = image_data_url;
+    dataurl_container.style.display = 'block';
+}
 
 </script>
 </html>

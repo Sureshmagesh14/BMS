@@ -100,7 +100,7 @@ $("html body").delegate('.qus_choice', "change", function() {
         if(result?.qus_type=='single_choice' || result?.qus_type=='multi_choice' || result?.qus_type =='dropdown'){
             let choice_list=JSON.parse(result?.qus?.qus_ans);
             optionv=choice_list?.choices_list.split(',');
-            textDiv+='<select required class="select2 form-control option_value select2-multiple" name="option_value[]" multiple="multiple">';
+            textDiv+='<select required class="form-control option_value" name="option_value[]">';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+value+'">'+value+'</option>';
             });
@@ -108,7 +108,7 @@ $("html body").delegate('.qus_choice', "change", function() {
         }else if(result?.qus_type=='picturechoice'){
             let choice_list=JSON.parse(result?.qus?.qus_ans);
             optionv=JSON.parse(choice_list?.choices_list);
-            textDiv+='<select required class="select2 form-control option_value select2-multiple" name="option_value[]" multiple="multiple">';
+            textDiv+='<select required class="form-control option_value" name="option_value[]">';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+key+'">'+value.text+'</option>';
             });
@@ -117,7 +117,7 @@ $("html body").delegate('.qus_choice', "change", function() {
         else if(result?.qus_type=='matrix_qus'){
             let choice_list=JSON.parse(result?.qus?.qus_ans);
             optionv=choice_list?.matrix_choice.split(',');
-            textDiv+='<select required class="select2 form-control option_value select2-multiple" name="option_value[]" multiple="multiple">';
+            textDiv+='<select required class="form-control option_value" name="option_value[]">';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+value+'">'+value+'</option>';
             });
@@ -126,27 +126,26 @@ $("html body").delegate('.qus_choice', "change", function() {
 
         else if(result?.qus_type=='likert'){
             optionv={"1":1,"2":3,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9};
-            textDiv+='<select required class="select2 form-control option_value select2-multiple" name="option_value[]" multiple="multiple">';
+            textDiv+='<select required class="form-control option_value" name="option_value[]">';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+key+'">'+value+'</option>';
             });
             textDiv+='</select>';
         }
         else if(result?.qus_type=='rankorder' || result?.qus_type=='photo_capture'){
-            textDiv+='<input required style="display:none;" class="select2 form-control option_value select2-multiple" type="text" name="option_value"/>';
+            textDiv+='<input required style="display:none;" class="form-control option_value" type="text" name="option_value"/>';
         }
         else if(result?.qus_type=='rating'){
             optionv={"1":1,"2":3,"3":3,"4":4,"5":5};
-            textDiv+='<select required class="select2 form-control option_value select2-multiple" name="option_value[]" multiple="multiple">';
+            textDiv+='<select required class="form-control option_value" name="option_value[]">';
             Object.entries(optionv).forEach(([key, value]) => {
                 textDiv+='<option value="'+key+'">'+value+'</option>';
             });
             textDiv+='</select>';
         }
         else if(result?.qus_type=='open_qus' || result?.qus_type=='email'){
-            textDiv+='<input required  class="select2 form-control option_value select2-multiple" type="text" name="option_value"/>';
+            textDiv+='<input required  class="form-control option_value" type="text" name="option_value"/>';
         }
-        console.log('textDiv',textDiv)
         if(textDiv!=''){
             $('.choicesdropdown').css('display','block');
             $('.choicesdropdown1').css('display','block');
@@ -158,6 +157,12 @@ $("html body").delegate('.qus_choice', "change", function() {
 
 $("html body").delegate('.option_type', "change", function() {    
     let val=$(this).val();
+    if(val == 'isSelected' ||  val == 'isNotSelected'){
+        $('#choiceslist select').addClass('select2 select2-multiple');
+        $('#choiceslist select').attr('multiple','multiple');
+        $('.select2-multiple').select2();
+
+    }
     if(val=='isAnswered' || val=='isNotAnswered'){
         $('.choicesdropdown').css('display','none');
         $('.choicesdropdown1').css('display','none');
