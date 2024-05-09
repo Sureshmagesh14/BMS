@@ -15,6 +15,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Illuminate\Support\Facades\Hash;
 use Exception;
+use Carbon\Carbon;
+
 class WelcomeController extends Controller
 {   
     public function home(Request $request)
@@ -118,12 +120,13 @@ class WelcomeController extends Controller
             $get_respondent = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
                 ->join('project_respondent as resp','projects.id','resp.project_id')
                 ->where('resp.respondent_id','=',$id)
+                ->where('projects.closing_date', '>=', Carbon::now())
                 ->where('resp.is_frontend_complete',0)->get();
 
             $get_completed_survey = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
                 ->join('project_respondent as resp','projects.id','resp.project_id')
                 ->where('resp.respondent_id',$id)
-                ->where('resp.is_frontend_complete',1)->get();
+                ->where('projects.closing_date', '<', Carbon::now())->get();
            
 
             // if($request->user()->profile_completion_id==0){
