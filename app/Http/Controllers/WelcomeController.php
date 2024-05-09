@@ -121,21 +121,22 @@ class WelcomeController extends Controller
             $pdata = DB::select("SELECT t1.id,t1.qus_count,sum(if(t2.id is not null,1,0)) as ans_count FROM survey t1 LEFT JOIN survey_response t2 ON t1.id = t2.survey_id WHERE t1.survey_type='profile' AND t2.skip IS NULL GROUP BY t1.id;");
             
             $tot_rows= count($pdata);
-            $ans = 0;
+            $ans_c = 0;
             foreach ($pdata as $key => $value) {
                 $qus_count = $value->qus_count;
                 $ans_count = $value->ans_count;
 
                 if($qus_count==$ans_count){
-                    $ans ++;
+                    $ans_c ++;
                 }
             }
             //dd($pdata);
-            if($tot_rows==$ans){
+            if($tot_rows==$ans_c){
                 Respondents::where('id',$id)->update(['profile_completion_id' => 1]);
             }
             
-           
+            $percentage = ($ans_c / $tot_rows) * 100; // 20
+            $percentage = round($percentage);
 
             $get_respondent = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
                 ->join('project_respondent as resp','projects.id','resp.project_id')
@@ -193,7 +194,7 @@ class WelcomeController extends Controller
                 }
                 
                 
-                return view('user.user-dashboard', compact('data','get_respondent','get_completed_survey'));
+                return view('user.user-dashboard', compact('data','get_respondent','get_completed_survey','percentage'));
             //}
         }
         catch (Exception $e) {

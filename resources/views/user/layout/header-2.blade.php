@@ -41,16 +41,19 @@
                     </li>
                 </ul>
                 <div class="d-flex align-items-center" style="padding-right: 20px">
-                    <a href="#" class="px-2"><img class="img-fluid" style="max-height: 21px"
+                    <!-- <a href="#" class="px-2"><img class="img-fluid" style="max-height: 21px"
                             src="{{ asset('user/images/icons/1c-04.png') }}" alt="" /></a>
                     <a href="#" class="pe-4">
                         <img class="img-fluid" style="max-height: 21px" src="{{ asset('user/images/icons/1c-05.png') }}"
-                            alt="" /></a>
+                            alt="" /></a> -->
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle vi-usr-profile p-3 me-3" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                V
+                                @php
+                                    $first_char = mb_substr(Session::get('resp_name'), 0, 1);
+                                @endphp
+                                {{ $first_char }}
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('user.viewprofile') }}">View Profile</a></li>

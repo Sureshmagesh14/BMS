@@ -174,9 +174,10 @@
 
 
                     <div class="mt-4">
-                        <h4 class="text-center fw-bolder percentage-size">35%</h4>
+                        <br><br>
+                        <h4 class="text-center fw-bolder percentage-size">{{$percentage}}%</h4>
                         <div class="percent-border mx-5">
-                            <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:35%"></div>
+                            <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:{{$percentage}}%"></div>
 
                         </div>
                         <h5 class="text-center my-3">Profile Percentage</h5>
@@ -210,14 +211,14 @@
                     <p  class="mt-2">Reward Amount</p>
                   </div> -->
                     </div>
-                    <div class="mt-4">
+                    <!-- <div class="mt-4">
                         <h4 class="text-center fw-bolder percentage-size">100%</h4>
                         <div class="percent-border mx-5">
                             <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:100%"></div>
 
                         </div>
                         <h5 class="text-center my-3">Reward Point</h5>
-                    </div>
+                    </div> -->
 
 
 
