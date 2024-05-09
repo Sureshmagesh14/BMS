@@ -49,7 +49,7 @@ $cat = '';
                                     {{$res->points}}
                                 </td>
                                 <td>
-                                    {{$res->amount}}
+                                    {{$res->amount/10}}
                                 </td>
                                 <td>
                                     @php 
