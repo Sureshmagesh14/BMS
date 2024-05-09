@@ -118,6 +118,25 @@ class WelcomeController extends Controller
             $id =Session::get('resp_id');
             $data = Respondents::find($id);
             
+            $pdata = DB::select("SELECT t1.id,t1.qus_count,sum(if(t2.id is not null,1,0)) as ans_count FROM survey t1 LEFT JOIN survey_response t2 ON t1.id = t2.survey_id WHERE t1.survey_type='profile' AND t2.skip IS NULL GROUP BY t1.id;");
+            
+            $tot_rows= count($pdata);
+            $ans = 0;
+            foreach ($pdata as $key => $value) {
+                $qus_count = $value->qus_count;
+                $ans_count = $value->ans_count;
+
+                if($qus_count==$ans_count){
+                    $ans ++;
+                }
+            }
+            //dd($pdata);
+            if($tot_rows==$ans){
+                Respondents::where('id',$id)->update(['profile_completion_id' => 1]);
+            }
+            
+           
+
             $get_respondent = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
                 ->join('project_respondent as resp','projects.id','resp.project_id')
                 ->where('resp.respondent_id','=',$id)
@@ -141,14 +160,33 @@ class WelcomeController extends Controller
                 
                 if(!empty($get_resp)){
                     foreach($get_resp as $resp){
-                        if(DB::table('rewards')->where('project_id',$get_resp->project_id)->where('respondent_id',$get_resp->respondent_id)->doesntExist()){
+                        
+                        if(isset($get_resp->project_id)){
+                            $proj_id = $get_resp->project_id ?? 0;
+                        }else{
+                            $proj_id = 0;
+                        }
+                        if(isset($get_resp->respondent_id)){
+                            $resp_id = $get_resp->respondent_id ?? 0;
+                        }else{
+                            $resp_id = 0;
+                        }
+                        if(isset($get_resp->reward)){
+                            $rew_id = $get_resp->reward ?? 0;
+                        }else{
+                            $rew_id = 0;
+                        }
+                        
+                        
+                        if(DB::table('rewards')->where('project_id',$proj_id)->where('respondent_id',$resp_id)->doesntExist()){
+                            
                             $insert_array = array(
-                                'respondent_id' => $get_resp->respondent_id,
-                                'project_id' => $get_resp->project_id,
-                                'points' => $get_resp->reward,
+                                'respondent_id' => $resp_id,
+                                'project_id' => $proj_id,
+                                'points' => $rew_id,
                                 'status_id' => 1,
                             );
-
+                            if($resp_id>0)
                             DB::table('rewards')->insert($insert_array);
                         }
                     }
@@ -177,6 +215,31 @@ class WelcomeController extends Controller
             //     return view('user.update-profile');
             // }else{
                 return view('user.user-share', compact('data','ref_code','get_res_phone'));
+            //}
+           
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function user_cashout(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+
+            $get_res = DB::table('rewards')->where('respondent_id',$resp_id)->where('respondent_id',$resp_id)->get();
+            
+            $get_res = DB::table('rewards')->select('rewards.points','cashouts.type_id','cashouts.status_id','cashouts.amount','projects.name','cashouts.updated_at')
+                ->join('cashouts','rewards.cashout_id','cashouts.id')
+                ->join('projects','rewards.project_id','projects.id')
+                ->where('rewards.respondent_id','=',$resp_id)->get();
+
+            // if($request->user()->profile_completion_id==0){
+            //     return view('user.update-profile');
+            // }else{
+                return view('user.user-cashout')->with('get_res',$get_res);
             //}
            
         }
@@ -249,10 +312,9 @@ class WelcomeController extends Controller
             $profil   = DB::table('groups as gr')
                         ->leftjoin('survey as sr','gr.survey_id','=','sr.id') 
                         ->leftjoin('survey_response as resp','gr.survey_id','=','resp.survey_id') 
-                        ->select('gr.name', 'sr.builderID','gr.type_id','resp.updated_at',DB::raw('(SELECT COUNT(*) FROM questions WHERE gr.survey_id = questions.survey_id) AS totq'),DB::raw('(SELECT COUNT(*) FROM survey_response WHERE survey_response.response_user_id='.$resp_id.' AND gr.survey_id = survey_response.survey_id) AS tota'))
+                        ->select('gr.name', 'sr.builderID','gr.type_id','resp.updated_at',DB::raw('(SELECT COUNT(*) FROM questions WHERE gr.survey_id = questions.survey_id) AS totq'),DB::raw('(SELECT COUNT(*) FROM survey_response WHERE survey_response.response_user_id='.$resp_id.' AND gr.survey_id = survey_response.survey_id AND survey_response.skip IS NULL) AS tota'))
                         ->where('gr.deleted_at', NULL)
                         ->orderBy('gr.sort_order', 'ASC')
-                        ->orderByDesc('resp.updated_at')
                         ->groupBy('gr.id')
                         ->get();
             

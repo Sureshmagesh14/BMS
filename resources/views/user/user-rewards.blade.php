@@ -20,7 +20,9 @@
                         Request Cash Out
                     </button>
 
-                    <p class="very-sm-text mt-3">* Point value subject to change without notice</p>
+                    <p class="very-sm-text mt-3" style="text-align: left;">* Point value subject to change without notice</p>
+
+                    <p class="very-sm-text mt-3" style="text-align: left;">* Cash Outs not made expire at the end of the year and will not be re-rewarded!</p>
                 </div>
             </div>
         </div>

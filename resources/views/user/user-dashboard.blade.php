@@ -13,7 +13,7 @@
 
         @if ($data->profile_completion_id == 0)
             <div class="alert alert-danger bs-alert-old-docs text-center">
-                <strong>Alert</strong> Profile Incomplete <a href="{{ route('updaterofile') }}">Update Profile</a>
+                <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile') }}">Update Profile</a>
                 <br>
                 <small class="leading-none mt-1 text-danger">Cash outs are only available if your profile is up to date. Please update your profile.</small>
             </div>
@@ -74,7 +74,7 @@
                             
                         </div>
                         <div class="px-3">
-                            <ul class="navbar-nav">
+                            <!-- <ul class="navbar-nav">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle p-3 me-2" href="#" role="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -88,7 +88,7 @@
                                         <li><a class="dropdown-item" href="#">Sign Out</a></li>
                                     </ul>
                                 </li>
-                            </ul>
+                            </ul> -->
                         </div>
                     </h4>
                     <table class="table text-center" id="respondents_datatable">
@@ -144,7 +144,7 @@
                                             class="fa fa-angle-down" aria-hidden="true"></i>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('updaterofile') }}">View
+                                        <li><a class="dropdown-item" href="{{ route('updateprofile') }}">View
                                                 Profile</a></li>
                                         <li>
                                             <hr class="dropdown-divider" />
@@ -160,7 +160,7 @@
                                             ...
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="{{ route('updaterofile') }}">View
+                                            <li><a class="dropdown-item" href="{{ route('updateprofile') }}">View
                                                     Profile</a></li>
                                             <li>
                                                 <hr class="dropdown-divider" />
@@ -236,11 +236,11 @@
                                         ...
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Profile</a></li>
-                                        <li>
+                                        <li><a class="dropdown-item" href="{{ route('user.cashouts') }}">Cashout History</a></li>
+                                        <!-- <li>
                                             <hr class="dropdown-divider" />
                                         </li>
-                                        <li><a class="dropdown-item" href="#">Sign Out</a></li>
+                                        <li><a class="dropdown-item" href="#">Unclaimed Rewards</a></li> -->
                                     </ul>
                                 </li>
                             </ul>

@@ -35,11 +35,12 @@ Route::any('share','WelcomeController@user_share')->middleware(['auth', 'verifie
 Route::any('rewards','WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
 Route::any('surveys','WelcomeController@user_surveys')->middleware(['auth', 'verified'])->name('user.surveys');
 Route::any('viewprofile','WelcomeController@user_viewprofile')->middleware(['auth', 'verified'])->name('user.viewprofile');
-Route::any('updaterofile','WelcomeController@user_editprofile')->middleware(['auth', 'verified'])->name('updaterofile');
+Route::any('updateprofile','WelcomeController@user_editprofile')->middleware(['auth', 'verified'])->name('updateprofile');
 Route::post('user_update','WelcomeController@user_update')->middleware(['auth', 'verified'])->name('user_update');
 Route::any('opt_out','WelcomeController@opt_out')->middleware(['auth', 'verified'])->name('opt_out');
 Route::any('cashout_sent','WelcomeController@cashout_sent')->middleware(['auth', 'verified'])->name('cashout_sent');
 Route::any('cashout_form','WelcomeController@cashout_form')->middleware(['auth', 'verified'])->name('cashout_form');
+Route::any('cashouts','WelcomeController@user_cashout')->middleware(['auth', 'verified'])->name('user.cashouts');
 
 
 /* USERS */

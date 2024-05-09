@@ -175,10 +175,10 @@
                 <div class="accordion-item">
                  
                     <h2 class="accordion-header" id="flush-headingTwo">
-                   
+                    
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
                         <div class="d-flex flex-column">
-                          <p class="fs-16 fw-bold">{{$pro->name}} </p>
+                          <p class="fs-16 fw-bold">{{$pro->name}}  - {{$pro->totq}} = {{$pro->tota}}</p>
                           @if($pro->totq==$pro->tota)
                               <span class="fs-12 text-success">
                                 Completed
