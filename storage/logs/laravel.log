@@ -1,9 +1,0 @@
-[2024-05-10 11:01:59] production.ERROR: Class "Artesaos\SEOTools\Providers\SEOToolsServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Artesaos\\SEOTools\\Providers\\SEOToolsServiceProvider\" not found at C:\\wamp64\\www\\newui\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php:922)
-[stacktrace]
-#0 C:\\wamp64\\www\\newui\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(902): Illuminate\\Foundation\\Application->registerDeferredProvider('Artesaos\\\\SEOToo...', 'Artesaos\\\\SEOToo...')
-#1 C:\\wamp64\\www\\newui\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(878): Illuminate\\Foundation\\Application->loadDeferredProvider('Artesaos\\\\SEOToo...')
-#2 C:\\wamp64\\www\\newui\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(450): Illuminate\\Foundation\\Application->loadDeferredProviders()
-#3 C:\\wamp64\\www\\newui\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
-#4 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#5 {main}
-"} 
