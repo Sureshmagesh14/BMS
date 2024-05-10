@@ -135,9 +135,15 @@ class WelcomeController extends Controller
             if($tot_rows==$ans_c){
                 Respondents::where('id',$id)->update(['profile_completion_id' => 1]);
             }
-            
-            $percentage = ($ans_c / $tot_rows) * 100; // 20
-            $percentage = round($percentage);
+       
+         
+            if($tot_rows==0){
+                $percentage = 0;
+            }else{
+                $percentage = ($ans_c / $tot_rows) * 100; // 20
+                $percentage = round($percentage);
+            }
+          
 
             $get_respondent = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
                 ->join('project_respondent as resp','projects.id','resp.project_id')

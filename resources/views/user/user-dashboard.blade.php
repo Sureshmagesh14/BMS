@@ -8,6 +8,8 @@
 @php
     $first_character = mb_substr($data->name, 0, 1);
 @endphp
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap4.css">
 <section class="">
     <div class="container-fluid">
 
@@ -15,7 +17,8 @@
             <div class="alert alert-danger bs-alert-old-docs text-center">
                 <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile') }}">Update Profile</a>
                 <br>
-                <small class="leading-none mt-1 text-danger">Cash outs are only available if your profile is up to date. Please update your profile.</small>
+                <small class="leading-none mt-1 text-danger">Cash outs are only available if your profile is up to date.
+                    Please update your profile.</small>
             </div>
         @endif
 
@@ -49,7 +52,8 @@
                     <p class="py-3">Chat Support</p>
                 </div>
                 <div class="text-section-one bg-white text-center mx-2 px-2 py-2 mb-3">
-                    <button class="btn w-100 vi-nav-bg text-black border-radius-0" id="opt_out" @if($data->active_status_id != 1) disabled @endif>OPT OUT</button>
+                    <button class="btn w-100 vi-nav-bg text-black border-radius-0" id="opt_out"
+                        @if ($data->active_status_id != 1) disabled @endif>OPT OUT</button>
                     <p class="small-font">Stop receiving any research request</p>
                 </div>
                 <!-- <div class="button text-center">
@@ -71,7 +75,7 @@
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('public/inc/images/icons/1c-07.png') }}"
                                 alt="">
                             <span class="small-font-sm">Current Survey</span>
-                            
+
                         </div>
                         <div class="px-3">
                             <!-- <ul class="navbar-nav">
@@ -91,7 +95,7 @@
                             </ul> -->
                         </div>
                     </h4>
-                    <table class="table text-center" id="respondents_datatable">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>NAME </th>
@@ -102,24 +106,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($get_respondent as $res)
+                            @foreach ($get_respondent as $res)
                                 <tr>
                                     <td>{{ $res->name }}</td>
                                     <td>{{ $res->closing_date }}</td>
                                     <td>{{ $res->description }}</td>
                                     <td>{{ $res->reward }}</td>
                                     @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
-                                    @if($get_link != null)
-                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" class="btn btn-yellow">DETAIL</a></td>
+                                    @if ($get_link != null)
+                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
+                                                class="btn btn-yellow">DETAIL</a></td>
                                     @else
                                         <td>No Survey</td>
                                     @endif
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5">No Survey Assigned</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -175,9 +176,10 @@
 
                     <div class="mt-4">
                         <br><br>
-                        <h4 class="text-center fw-bolder percentage-size">{{$percentage}}%</h4>
+                        <h4 class="text-center fw-bolder percentage-size">{{ $percentage }}%</h4>
                         <div class="percent-border mx-5">
-                            <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:{{$percentage}}%"></div>
+                            <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:{{ $percentage }}%">
+                            </div>
 
                         </div>
                         <h5 class="text-center my-3">Profile Percentage</h5>
@@ -237,7 +239,8 @@
                                         ...
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('user.cashouts') }}">Cashout History</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('user.cashouts') }}">Cashout
+                                                History</a></li>
                                         <!-- <li>
                                             <hr class="dropdown-divider" />
                                         </li>
@@ -247,7 +250,7 @@
                             </ul>
                         </div>
                     </h4>
-                    <table class="table text-center vitable">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>NAME </th>
@@ -258,7 +261,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($get_completed_survey as $res)
+                            @foreach ($get_completed_survey as $res)
                                 <tr>
                                     <td>{{ $res->name }}</td>
                                     <td>{{ $res->closing_date }}</td>
@@ -267,17 +270,14 @@
                                     @php
                                         $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
                                     @endphp
-                                    @if($get_link != null)
-                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" class="btn btn-yellow">DETAIL</a></td>
+                                    @if ($get_link != null)
+                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
+                                                class="btn btn-yellow">DETAIL</a></td>
                                     @else
                                         <td>No Survey</td>
                                     @endif
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5">No Completed Survey</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -290,30 +290,20 @@
     </div>
 </section>
 @include('user.layout.footer')
-<script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 
-<!-- Buttons examples -->
-<script src="{{ asset('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('assets/libs/jszip/jszip.min.js') }}"></script>
-<script src="{{ asset('assets/libs/pdfmake/build/pdfmake.min.js') }}"></script>
-<script src="{{ asset('assets/libs/pdfmake/build/vfs_fonts.js') }}"></script>
-<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
-<script src="{{ asset('assets/libs/datatables.net-select/js/dataTables.select.min.js') }}"></script>
-
-<!-- Responsive examples -->
-<script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap4.js"></script>
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
         $('#nav_profile').addClass('active');
+        $('table.table.table-striped').dataTable().fnDestroy();
+        $('table.table.table-striped').DataTable();
     });
 
-    $("#opt_out").click(function(){
+    $("#opt_out").click(function() {
         $.confirm({
             title: "Alert!",
             content: "Are you sure you want to Unsubscribe?",
@@ -335,8 +325,10 @@
                             },
                             dataType: "json",
                             success: function(response) {
-                                if(response.success == true){
-                                    $(".alert_message").html("We were bummed to hear that you're leaving us. We totally respect your decision to cancel, and we've started processing your request.")
+                                if (response.success == true) {
+                                    $(".alert_message").html(
+                                        "We were bummed to hear that you're leaving us. We totally respect your decision to cancel, and we've started processing your request."
+                                    )
                                     $(".alert_message").show();
                                     setTimeout(function() {
                                         $("#click_signout").click();
@@ -347,10 +339,9 @@
                     }
                 },
                 cancel: function() {
-                    
+
                 }
             }
         });
     });
-    
 </script>
