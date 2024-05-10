@@ -13,7 +13,9 @@
 
         @if ($data->profile_completion_id == 0)
             <div class="alert alert-danger bs-alert-old-docs text-center">
-                <strong>Alert</strong> Profile Incomplete <a href="{{ route('updaterofile') }}">Update Profile</a>
+                <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile') }}">Update Profile</a>
+                <br>
+                <small class="leading-none mt-1 text-danger">Cash outs are only available if your profile is up to date. Please update your profile.</small>
             </div>
         @endif
 
@@ -50,10 +52,10 @@
                     <button class="btn w-100 vi-nav-bg text-black border-radius-0" id="opt_out" @if($data->active_status_id != 1) disabled @endif>OPT OUT</button>
                     <p class="small-font">Stop receiving any research request</p>
                 </div>
-                <div class="button text-center">
+                <!-- <div class="button text-center">
                     <button class="btn w-100 vi-nav-bg text-white border-radius-0"><img class="w-10 me-3"
                             src="{{ asset('user/images/sent.png') }}" alt="">Contact Us</button>
-                </div>
+                </div> -->
 
             </div>
             <div class="col-md-5 my-sm-5-mob">
@@ -68,10 +70,11 @@
                     <h4 class="d-flex align-items-center justify-content-around">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('public/inc/images/icons/1c-07.png') }}"
                                 alt="">
-                            <span class="small-font-sm">Client Survey</span>
+                            <span class="small-font-sm">Current Survey</span>
+                            
                         </div>
                         <div class="px-3">
-                            <ul class="navbar-nav">
+                            <!-- <ul class="navbar-nav">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle p-3 me-2" href="#" role="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -85,7 +88,7 @@
                                         <li><a class="dropdown-item" href="#">Sign Out</a></li>
                                     </ul>
                                 </li>
-                            </ul>
+                            </ul> -->
                         </div>
                     </h4>
                     <table class="table text-center" id="respondents_datatable">
@@ -141,7 +144,7 @@
                                             class="fa fa-angle-down" aria-hidden="true"></i>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('updaterofile') }}">View
+                                        <li><a class="dropdown-item" href="{{ route('updateprofile') }}">View
                                                 Profile</a></li>
                                         <li>
                                             <hr class="dropdown-divider" />
@@ -157,7 +160,7 @@
                                             ...
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="{{ route('updaterofile') }}">View
+                                            <li><a class="dropdown-item" href="{{ route('updateprofile') }}">View
                                                     Profile</a></li>
                                             <li>
                                                 <hr class="dropdown-divider" />
@@ -171,9 +174,10 @@
 
 
                     <div class="mt-4">
-                        <h4 class="text-center fw-bolder percentage-size">35%</h4>
+                        <br><br>
+                        <h4 class="text-center fw-bolder percentage-size">{{$percentage}}%</h4>
                         <div class="percent-border mx-5">
-                            <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:35%"></div>
+                            <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:{{$percentage}}%"></div>
 
                         </div>
                         <h5 class="text-center my-3">Profile Percentage</h5>
@@ -207,14 +211,14 @@
                     <p  class="mt-2">Reward Amount</p>
                   </div> -->
                     </div>
-                    <div class="mt-4">
+                    <!-- <div class="mt-4">
                         <h4 class="text-center fw-bolder percentage-size">100%</h4>
                         <div class="percent-border mx-5">
                             <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:100%"></div>
 
                         </div>
                         <h5 class="text-center my-3">Reward Point</h5>
-                    </div>
+                    </div> -->
 
 
 
@@ -233,11 +237,11 @@
                                         ...
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Profile</a></li>
-                                        <li>
+                                        <li><a class="dropdown-item" href="{{ route('user.cashouts') }}">Cashout History</a></li>
+                                        <!-- <li>
                                             <hr class="dropdown-divider" />
                                         </li>
-                                        <li><a class="dropdown-item" href="#">Sign Out</a></li>
+                                        <li><a class="dropdown-item" href="#">Unclaimed Rewards</a></li> -->
                                     </ul>
                                 </li>
                             </ul>

@@ -9,12 +9,15 @@ use App\Models\Respondents;
 use App\Models\Contents;
 use App\Models\Groups;
 use App\Models\Projects;
+use App\Models\Banks;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Illuminate\Support\Facades\Hash;
 use Exception;
+use Carbon\Carbon;
+
 class WelcomeController extends Controller
 {   
     public function home(Request $request)
@@ -115,21 +118,83 @@ class WelcomeController extends Controller
             $id =Session::get('resp_id');
             $data = Respondents::find($id);
             
+            $pdata = DB::select("SELECT t1.id,t1.qus_count,sum(if(t2.id is not null,1,0)) as ans_count FROM survey t1 LEFT JOIN survey_response t2 ON t1.id = t2.survey_id WHERE t1.survey_type='profile' AND t2.skip IS NULL GROUP BY t1.id;");
+            
+            $tot_rows= count($pdata);
+            $ans_c = 0;
+            foreach ($pdata as $key => $value) {
+                $qus_count = $value->qus_count;
+                $ans_count = $value->ans_count;
+
+                if($qus_count==$ans_count){
+                    $ans_c ++;
+                }
+            }
+            //dd($pdata);
+            if($tot_rows==$ans_c){
+                Respondents::where('id',$id)->update(['profile_completion_id' => 1]);
+            }
+            
+            $percentage = ($ans_c / $tot_rows) * 100; // 20
+            $percentage = round($percentage);
+
             $get_respondent = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
                 ->join('project_respondent as resp','projects.id','resp.project_id')
                 ->where('resp.respondent_id','=',$id)
+                ->where('projects.closing_date', '>=', Carbon::now())
                 ->where('resp.is_frontend_complete',0)->get();
 
             $get_completed_survey = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
                 ->join('project_respondent as resp','projects.id','resp.project_id')
                 ->where('resp.respondent_id',$id)
-                ->where('resp.is_frontend_complete',1)->get();
+                ->where('projects.closing_date', '<', Carbon::now())->get();
            
 
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-dashboard', compact('data','get_respondent','get_completed_survey'));
+
+                $get_resp = DB::table('project_respondent as resp')->select('resp.*','projects.reward')
+                    ->join('projects','resp.project_id','projects.id')
+                    ->where('resp.respondent_id',$id)
+                    ->where('resp.is_frontend_complete',1)->get();
+                
+                if(!empty($get_resp)){
+                    foreach($get_resp as $resp){
+                        
+                        if(isset($get_resp->project_id)){
+                            $proj_id = $get_resp->project_id ?? 0;
+                        }else{
+                            $proj_id = 0;
+                        }
+                        if(isset($get_resp->respondent_id)){
+                            $resp_id = $get_resp->respondent_id ?? 0;
+                        }else{
+                            $resp_id = 0;
+                        }
+                        if(isset($get_resp->reward)){
+                            $rew_id = $get_resp->reward ?? 0;
+                        }else{
+                            $rew_id = 0;
+                        }
+                        
+                        
+                        if(DB::table('rewards')->where('project_id',$proj_id)->where('respondent_id',$resp_id)->doesntExist()){
+                            
+                            $insert_array = array(
+                                'respondent_id' => $resp_id,
+                                'project_id' => $proj_id,
+                                'points' => $rew_id,
+                                'status_id' => 1,
+                            );
+                            if($resp_id>0)
+                            DB::table('rewards')->insert($insert_array);
+                        }
+                    }
+                }
+                
+                
+                return view('user.user-dashboard', compact('data','get_respondent','get_completed_survey','percentage'));
             //}
         }
         catch (Exception $e) {
@@ -159,16 +224,44 @@ class WelcomeController extends Controller
         }
     }
 
+    public function user_cashout(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+
+            $get_res = DB::table('rewards')->where('respondent_id',$resp_id)->where('respondent_id',$resp_id)->get();
+            
+            $get_res = DB::table('rewards')->select('rewards.points','cashouts.type_id','cashouts.status_id','cashouts.amount','projects.name','cashouts.updated_at')
+                ->join('cashouts','rewards.cashout_id','cashouts.id')
+                ->join('projects','rewards.project_id','projects.id')
+                ->where('rewards.respondent_id','=',$resp_id)->get();
+
+            // if($request->user()->profile_completion_id==0){
+            //     return view('user.update-profile');
+            // }else{
+                return view('user.user-cashout')->with('get_res',$get_res);
+            //}
+           
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function user_rewards(Request $request){
         try {
             
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
+
+            $get_reward = DB::table('rewards')->where('respondent_id',$resp_id)->where('status_id',2)->sum('points');
+            $banks = Banks::get();
             
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-rewards');
+                return view('user.user-rewards')->with('get_reward',$get_reward)->with('banks',$banks);
             //}
            
         }
@@ -186,11 +279,21 @@ class WelcomeController extends Controller
             
             $data = Groups::where('id', $up_id)->first();
 
-            if($request->user()->profile_completion_id==0){
-                 return view('user.update-profile');
-            }else{
-                return view('user.user-surveys',compact('data'));
-            }
+            $get_respondent = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
+                ->join('project_respondent as resp','projects.id','resp.project_id')
+                ->where('resp.respondent_id','=',$resp_id)
+                ->where('resp.is_frontend_complete',0)->get();
+
+            $get_completed_survey = DB::table('projects')->select('projects.*','resp.is_complete','resp.is_frontend_complete')
+                ->join('project_respondent as resp','projects.id','resp.project_id')
+                ->where('resp.respondent_id',$resp_id)
+                ->where('resp.is_frontend_complete',1)->get();
+
+            // if($request->user()->profile_completion_id==0){
+            //      return view('user.update-profile');
+            // }else{
+                return view('user.user-surveys',compact('data','get_respondent','get_completed_survey'));
+            //}
            
         }
         catch (Exception $e) {
@@ -210,10 +313,9 @@ class WelcomeController extends Controller
             $profil   = DB::table('groups as gr')
                         ->leftjoin('survey as sr','gr.survey_id','=','sr.id') 
                         ->leftjoin('survey_response as resp','gr.survey_id','=','resp.survey_id') 
-                        ->select('gr.name', 'sr.builderID','gr.type_id','resp.updated_at',DB::raw('(SELECT COUNT(*) FROM questions WHERE gr.survey_id = questions.survey_id) AS totq'),DB::raw('(SELECT COUNT(*) FROM survey_response WHERE survey_response.response_user_id='.$resp_id.' AND gr.survey_id = survey_response.survey_id) AS tota'))
+                        ->select('gr.name', 'sr.builderID','gr.type_id','resp.updated_at',DB::raw('(SELECT COUNT(*) FROM questions WHERE gr.survey_id = questions.survey_id) AS totq'),DB::raw('(SELECT COUNT(*) FROM survey_response WHERE survey_response.response_user_id='.$resp_id.' AND gr.survey_id = survey_response.survey_id AND survey_response.skip IS NULL) AS tota'))
                         ->where('gr.deleted_at', NULL)
                         ->orderBy('gr.sort_order', 'ASC')
-                        ->orderByDesc('resp.updated_at')
                         ->groupBy('gr.id')
                         ->get();
             
@@ -422,6 +524,33 @@ class WelcomeController extends Controller
             'success' => true,
             'message'=> "We were bummed to hear that you're leaving us. We totally respect your decision to cancel, and we've started processing your request."
         ]);
+    }
+
+    public function cashout_form(Request $request){
+        try {
+            $points = $request->value;
+            $banks = Banks::get();
+            $returnHTML = view('user.cashout_request',compact('points','banks'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function cashout_sent(Request $request){
+        $banks          = $request->bank_value;
+        $account_number = $request->account_number;
+        $reward         = $request->reward;
+        $branch_name    = $request->branch_name;
+        $holder_name    = $request->holder_name;
+
     }
 
 }

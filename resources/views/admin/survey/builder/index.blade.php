@@ -5,6 +5,22 @@
 @include('admin.layout.horizontal_left_menu')
 </div>
 <style>
+.uploadfile_type span {
+    margin-left: 5px;
+    margin-right: 12px;
+}
+#qus_required{
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+}
+#tbs_logo{
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+}
+.tbs_logo,.uploadfile_type {
+    display: flex;
+    align-items: center;
+}
 .horizontal_left_menu {
     display: none;
 }
@@ -89,9 +105,11 @@
                 </a>
             </div>
             <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
-            <a class="setbackground"  data-url="{{route('survey.surveysettings',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Survey Settings" data-title="Survey Settings">
-
+            <!-- <a class="setbackground"  data-url="{{route('survey.surveysettings',$survey->id)}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="Survey Settings" data-title="Survey Settings">
                 <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 13.616V10.384C22.349 9.797 21.306 9.632 20.781 8.365V8.364C20.254 7.093 20.881 6.23 21.628 4.657L19.343 2.372C17.782 3.114 16.91 3.747 15.636 3.219H15.635C14.366 2.693 14.2 1.643 13.616 0H10.384C9.802 1.635 9.635 2.692 8.365 3.219H8.364C7.093 3.747 6.232 3.121 4.657 2.372L2.372 4.657C3.117 6.225 3.747 7.091 3.219 8.364C2.692 9.635 1.635 9.802 0 10.384V13.616C1.632 14.196 2.692 14.365 3.219 15.635C3.749 16.917 3.105 17.801 2.372 19.342L4.657 21.628C6.219 20.885 7.091 20.253 8.364 20.781H8.365C9.635 21.307 9.801 22.36 10.384 24H13.616C14.198 22.364 14.366 21.31 15.643 20.778H15.644C16.906 20.254 17.764 20.879 19.342 21.629L21.627 19.343C20.883 17.78 20.252 16.91 20.779 15.637C21.306 14.366 22.367 14.197 24 13.616ZM12 16C9.791 16 8 14.209 8 12C8 9.791 9.791 8 12 8C14.209 8 16 9.791 16 12C16 14.209 14.209 16 12 16Z" fill="#63686F"></path></svg><p>Settings</p>
+                </a> -->
+                <a class="setbackground"  href="{{route('survey.setquota',$survey->id)}}" title="Survey Settings">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 13.616V10.384C22.349 9.797 21.306 9.632 20.781 8.365V8.364C20.254 7.093 20.881 6.23 21.628 4.657L19.343 2.372C17.782 3.114 16.91 3.747 15.636 3.219H15.635C14.366 2.693 14.2 1.643 13.616 0H10.384C9.802 1.635 9.635 2.692 8.365 3.219H8.364C7.093 3.747 6.232 3.121 4.657 2.372L2.372 4.657C3.117 6.225 3.747 7.091 3.219 8.364C2.692 9.635 1.635 9.802 0 10.384V13.616C1.632 14.196 2.692 14.365 3.219 15.635C3.749 16.917 3.105 17.801 2.372 19.342L4.657 21.628C6.219 20.885 7.091 20.253 8.364 20.781H8.365C9.635 21.307 9.801 22.36 10.384 24H13.616C14.198 22.364 14.366 21.31 15.643 20.778H15.644C16.906 20.254 17.764 20.879 19.342 21.629L21.627 19.343C20.883 17.78 20.252 16.91 20.779 15.637C21.306 14.366 22.367 14.197 24 13.616ZM12 16C9.791 16 8 14.209 8 12C8 9.791 9.791 8 12 8C14.209 8 16 9.791 16 12C16 14.209 14.209 16 12 16Z" fill="#63686F"></path></svg><p>Set Quotas</p>
                 </a>
             </div>
        
@@ -137,6 +155,8 @@
                             <svg width="32" height="32" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.32344 3.07344L9.98604 3.73604C10.0969 3.84686 10.2472 3.90911 10.4039 3.90911H11.9318C12.2453 3.90911 12.5459 4.03363 12.7675 4.25526C12.9891 4.47689 13.1137 4.77749 13.1137 5.09093V10.4091C13.1137 10.7226 12.9891 11.0232 12.7675 11.2448C12.5459 11.4664 12.2453 11.5909 11.9318 11.5909H3.65911C3.34568 11.5909 3.04508 11.4664 2.82344 11.2448C2.60181 11.0232 2.47729 10.7226 2.47729 10.4091V5.09093C2.47729 4.77749 2.60181 4.47689 2.82344 4.25526C3.04508 4.03363 3.34568 3.90911 3.65911 3.90911H5.18708C5.3438 3.90911 5.4941 3.84686 5.60491 3.73604L6.26751 3.07344C6.37725 2.9637 6.50753 2.87665 6.65092 2.81726C6.79431 2.75786 6.94799 2.72729 7.10319 2.72729H8.48777C8.64297 2.72729 8.79665 2.75786 8.94003 2.81726C9.08342 2.87665 9.2137 2.9637 9.32344 3.07344Z" stroke="#63686F" stroke-width="0.886364" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.79552 9.81821C9.10092 9.81821 10.1592 8.75998 10.1592 7.45458C10.1592 6.14918 9.10092 5.09094 7.79552 5.09094C6.49012 5.09094 5.43188 6.14918 5.43188 7.45458C5.43188 8.75998 6.49012 9.81821 7.79552 9.81821Z" stroke="#63686F" stroke-width="0.886364" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.3705 5.68181C11.3705 5.68765 11.3687 5.69336 11.3655 5.69821C11.3622 5.70306 11.3576 5.70684 11.3522 5.70907C11.3468 5.7113 11.3409 5.71188 11.3352 5.71074C11.3294 5.7096 11.3242 5.70679 11.3201 5.70266C11.3159 5.69853 11.3131 5.69327 11.312 5.68754C11.3108 5.68181 11.3114 5.67587 11.3136 5.67048C11.3159 5.66508 11.3197 5.66046 11.3245 5.65722C11.3294 5.65397 11.3351 5.65223 11.3409 5.65222C11.3448 5.65222 11.3486 5.65298 11.3522 5.65446C11.3558 5.65595 11.3591 5.65813 11.3618 5.66088C11.3646 5.66363 11.3668 5.66689 11.3683 5.67048C11.3697 5.67407 11.3705 5.67792 11.3705 5.68181" stroke="#63686F" stroke-width="0.886364" stroke-linecap="round" stroke-linejoin="round"></path></svg>        
                             @elseif($qus->qus_type=='email')
                             <svg height="32" width="32" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect height="32" width="32" fill="transparent" rx="3"></rect><path d="M24.0001 8L13.2827 18.7174" stroke="#63686F" stroke-linecap="round"></path><path d="M16.6087 25L13.2826 18.7174L7 15.3913L24 8L16.6087 25Z" stroke="#63686F" stroke-linecap="round"></path></svg>
+                            @elseif($qus->qus_type=='upload')
+                            <svg height="32" width="32" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect height="32" width="32" fill="transparent" rx="3"></rect><path d="M13.5 21H10.4307C9.39106 21 8.40093 20.6358 7.63358 19.9802C6.17315 18.742 4.68796 16.4597 7.98013 13.5218C7.98013 13.5218 7.53457 12.4292 8.00488 11.4094C8.45044 10.4868 9.83661 9.27279 11.6931 9.95263C15.2081 5.07236 20.7528 6.65055 22.1142 11.7008C24.7628 11.7008 27.6094 15.9012 24.9113 18.9848C23.7726 20.2959 22.0647 21 20.2825 21H19.5" stroke="#63686F"></path><path d="M14 18L16.5 16L19 18" stroke="#63686F"></path><line stroke="#63686F" x1="16.5" x2="16.5" y1="16" y2="25"></line></svg>
                             @elseif($qus->qus_type=='matrix_qus')
                             <svg height="32" width="32" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect height="32" width="32" fill="transparent" rx="3"></rect><circle cx="9" cy="9" fill="#63686F" r="2.5" stroke="#63686F"></circle><circle cx="16" cy="9" fill="#63686F" r="2.5" stroke="#63686F"></circle><circle cx="23" cy="9" fill="#63686F" r="2.5" stroke="#63686F"></circle><circle cx="9" cy="16" r="2.5" stroke="#63686F"></circle><circle cx="16" cy="16" fill="#63686F" r="2.5" stroke="#63686F"></circle><circle cx="23" cy="16" r="2.5" stroke="#63686F"></circle><circle cx="9" cy="23" r="2.5" stroke="#63686F"></circle><circle cx="16" cy="23" r="2.5" stroke="#63686F"></circle><circle cx="23" cy="23" r="2.5" stroke="#63686F"></circle></svg>
                             @endif
@@ -234,6 +254,10 @@
                     } else if(isset($currentQus->question_name)){
                         $qus_name=$currentQus->question_name; 
                     } 
+                    $qus_desc='';
+                    if(isset($currentQus->question_description)){
+                        $qus_desc=$currentQus->question_description; 
+                    } 
                     if(isset($qusvalue->icon_type)){
                         $icon_type=$qusvalue->icon_type;
                     }
@@ -275,6 +299,10 @@
                                  if(isset($qusvalue->welcome_template)){
                                     $template_id_welcome = $qusvalue->welcome_template;
                                  }
+                                 $tbs_logo=0;
+                                 if(isset($qusvalue->tbs_logo)){
+                                    $tbs_logo=1;
+                                 }
                                   ?>
                                
                                 {{ Form::label('welcome_template', __('Welcome Template'),['class'=>'form-label']) }}
@@ -286,6 +314,10 @@
                                 </select>
                             </div>
                             <br>
+                            <div class="tbs_logo">
+                                {{ Form::label('tbs_logo', __('Enable TBS Logo'),['class'=>'form-label']) }}
+                                <input type="checkbox" @if($tbs_logo==1) checked @endif name="tbs_logo" id="tbs_logo" value="{{$tbs_logo}}"> 
+                            </div>
                             <div>
                                 {{ Form::label('welcome_title', __('Title'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->welcome_title))
@@ -371,6 +403,10 @@
                                  $template_id_thankyou = '';
                                  if(isset($qusvalue->thankyou_template)){
                                     $template_id_thankyou = $qusvalue->thankyou_template;
+                                 } 
+                                 $tbs_logo=0;
+                                 if(isset($qusvalue->tbs_logo)){
+                                    $tbs_logo=1;
                                  }
                                   ?>
                                
@@ -383,6 +419,11 @@
                                 </select>
                             </div>
                             <br>
+                            <div class="tbs_logo">
+                                {{ Form::label('tbs_logo', __('Enable TBS Logo'),['class'=>'form-label']) }}
+                                <input type="checkbox" @if($tbs_logo==1) checked @endif name="tbs_logo" id="tbs_logo" value="{{$tbs_logo}}"> 
+                            </div>
+
                             <div>
                                 {{ Form::label('thankyou_title', __('Title'),['class'=>'form-label']) }}
                                 @if(isset($qusvalue->thankyou_title))
@@ -430,6 +471,7 @@
                     @endif
                    
                     @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
+                            <?php $qus_required=$currentQus->qus_required; ?>
                         <div class="modal-body">
                                 <div>
                                     {{ Form::label('question_name', __('Question Title'),['class'=>'form-label']) }}
@@ -437,12 +479,18 @@
                                     'placeholder'=>'Enter Question title','required'=>true)) }}
                                 </div>
                                 <br>
+                                
                                 <div>
                                     {{ Form::label('question_description', __('Add description to your question'),['class'=>'form-label']) }}
-                                        {{ Form::text('question_description', $qus_name , array('class' => 'form-control',
+                                        {{ Form::text('question_description', $qus_desc , array('class' => 'form-control',
                                     'placeholder'=>'Enter Question description')) }}
                                 </div>
                                 <br>
+                                <div class="tbs_logo">
+                                    {{ Form::label('qus_required', __('Required'),['class'=>'form-label']) }}
+                                    <input type="checkbox" @if($qus_required==1) checked @endif name="qus_required" id="qus_required" value="{{$qus_required}}"> 
+                                </div>
+                                
                                 @if($currentQus->qus_type=='open_qus')
                                         <div class="open_qus">
                                             {{ Form::label('open_qus_choice', __('Type'),['class'=>'form-label']) }}<br>
@@ -628,10 +676,10 @@
                                 <input type="hidden" id="question_list_matrix" name="question_list_matrix[]">                           
 
                                 <div class="matrix_action">
-                                <input type="button"  onclick="insert('coloumn')" value="Insert Column" class="btn matrixbtn">
-                                <input type="button" onclick="insert('row')" value="Insert Row" class="btn   matrixbtn">
-                                <input type="button" onclick="remove('coloumn')" value="Remove Column" class="btn   matrixbtn">
-                                <input type="button" onclick="remove('row')" value="Remove Row" class="btn  matrixbtn">
+                                <input type="button"  onclick="insert('coloumn')" value="Add Choice" class="btn matrixbtn">
+                                <input type="button" onclick="remove('coloumn')" value="Remove Choice" class="btn   matrixbtn">
+                                <input type="button" onclick="insert('row')" value="Add Question" class="btn   matrixbtn">
+                                <input type="button" onclick="remove('row')" value="Remove Question" class="btn  matrixbtn">
 
                                 </div>
                                 <div id="matrix_table">
@@ -706,6 +754,24 @@
                                 {{ Form::label('email', __('Email Box Sample'),['class'=>'form-label']) }}
                                 {{ Form::text('email', 'info@bms.com' , array('class' => 'form-control',
                                     'readonly'=>'true')) }}
+                                @endif
+                                @if($currentQus->qus_type=='upload')
+                                <div class="ss_row--builder"><div class="fileupload-container"><div class="fileupload-box"><i class="ss-icon-upload  " aria-hidden="true"></i><p>Upload</p></div><p>Maximum file size 10 MB</p></div></div>
+                                {{ Form::label('upload_file_type', __('Upload file type'),['class'=>'form-label']) }}
+                                <div class="uploadfile_type">
+                                    <?php 
+                                        $upload_image =0; $upload_video =0; $upload_doc =0; $upload_audio =0; 
+                                        if(isset($qusvalue->upload_image)){ $upload_image =$qusvalue->upload_image;  } 
+                                        if(isset($qusvalue->upload_video)){ $upload_video =$qusvalue->upload_video;  } 
+                                        if(isset($qusvalue->upload_doc)){ $upload_doc =$qusvalue->upload_doc;  } 
+                                        if(isset($qusvalue->upload_audio)){ $upload_audio =$qusvalue->upload_audio;  } 
+                                    ?>
+                                    <input type="checkbox" @if($upload_image == 1) checked @endif name="upload_image" id="upload_image" value="{{$upload_image}}"><span>Image</span>
+                                    <input type="checkbox" @if($upload_video == 1) checked @endif name="upload_video" id="upload_video" value="{{$upload_video}}"><span>Video</span>
+                                    <input type="checkbox" @if($upload_doc == 1) checked @endif name="upload_doc" id="upload_doc" value="{{$upload_doc}}"><span>Doc</span>
+                                    <input type="checkbox" @if($upload_audio == 1) checked @endif name="upload_audio" id="upload_audio" value="{{$upload_audio}}"><span>Audio</span>
+                                </div>
+                                
                                 @endif
                                 <?php //echo $currentQus->qus_type; ?>
                         </div>
@@ -1179,7 +1245,7 @@
                                         </div>
                                     </div>
                                 @else
-                                <p>else d</p>
+                                <p></p>
                                 @endif
                                 <div class="ss-logic-row c_jump_to">
                                     <p style="margin-top: 6px;">Then Jump to</p>
@@ -1955,6 +2021,11 @@ $('#welcome_template').on("change",function(){
     $.ajax({
         url: url, 
         success: function(result){
+            if(result?.tbs_logo ==1){
+                $('#tbs_logo').prop('checked',true)
+            }else{
+                $('#tbs_logo').prop('checked',false)
+            }
             $('#welcome_title').val(result?.title);
             $('#welcome_imagetitle').val(result?.sub_title);
             $('#welcome_imagesubtitle').val(result?.description);
@@ -1987,5 +2058,50 @@ $('#thankyou_template').on("change",function(){
     });
 
 });
+$('#tbs_logo').change(function () {
+    if($('#tbs_logo').prop('checked')){
+        $('#tbs_logo').val(1)
+    }else{
+        $('#tbs_logo').val(0);
+    }
+    
+  });
+  $('#qus_required').change(function () {
+    if($('#qus_required').prop('checked')){
+        $('#qus_required').val(1)
+    }else{
+        $('#qus_required').val(0);
+    }
+  });
+  $('#upload_audio').change(function () {
+    if($('#upload_audio').prop('checked')){
+        $('#upload_audio').val(1)
+    }else{
+        $('#upload_audio').val(0);
+    }
+  });
+  $('#upload_video').change(function () {
+    if($('#upload_video').prop('checked')){
+        $('#upload_video').val(1)
+    }else{
+        $('#upload_video').val(0);
+    }
+  });
+  $('#upload_doc').change(function () {
+    if($('#upload_doc').prop('checked')){
+        $('#upload_doc').val(1)
+    }else{
+        $('#upload_doc').val(0);
+    }
+  });
+  $('#upload_image').change(function () {
+    if($('#upload_image').prop('checked')){
+        $('#upload_image').val(1)
+    }else{
+        $('#upload_image').val(0);
+    }
+  });
+  
+  
 </script>
 

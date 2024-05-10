@@ -35,9 +35,12 @@ Route::any('share','WelcomeController@user_share')->middleware(['auth', 'verifie
 Route::any('rewards','WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
 Route::any('surveys','WelcomeController@user_surveys')->middleware(['auth', 'verified'])->name('user.surveys');
 Route::any('viewprofile','WelcomeController@user_viewprofile')->middleware(['auth', 'verified'])->name('user.viewprofile');
-Route::any('updaterofile','WelcomeController@user_editprofile')->middleware(['auth', 'verified'])->name('updaterofile');
+Route::any('updateprofile','WelcomeController@user_editprofile')->middleware(['auth', 'verified'])->name('updateprofile');
 Route::post('user_update','WelcomeController@user_update')->middleware(['auth', 'verified'])->name('user_update');
 Route::any('opt_out','WelcomeController@opt_out')->middleware(['auth', 'verified'])->name('opt_out');
+Route::any('cashout_sent','WelcomeController@cashout_sent')->middleware(['auth', 'verified'])->name('cashout_sent');
+Route::any('cashout_form','WelcomeController@cashout_form')->middleware(['auth', 'verified'])->name('cashout_form');
+Route::any('cashouts','WelcomeController@user_cashout')->middleware(['auth', 'verified'])->name('user.cashouts');
 
 
 /* USERS */
@@ -217,6 +220,16 @@ Route::group([
     Route::get('/survey/surveysettings/{id}', ['as' => 'survey.surveysettings','uses' => 'SurveyController@surveysettings']);
     Route::post('/survey/updatesettings/{id}', ['as' => 'survey.updatesettings','uses' => 'SurveyController@updatesettings']);
 
+    // Survey Quota 
+    Route::get('/survey/set-quota/{id}', ['as' => 'survey.setquota','uses' => 'SurveyController@setquota']);
+    Route::get('/survey/quota/create/{id}', ['as' => 'survey.createquota','uses' => 'SurveyController@createquota']);
+    Route::post('/survey/quota/store', ['as' => 'survey.storequota','uses' => 'SurveyController@storequota']);
+    Route::get('/survey/quota/edit/{id}', ['as' => 'survey.editquota','uses' => 'SurveyController@editquota']);
+    Route::post('/survey/quota/update/{id}', ['as' => 'survey.updatequota','uses' => 'SurveyController@updatequota']);
+    Route::get('/survey/quota/delete/{id}', ['as' => 'survey.deletequota','uses' => 'SurveyController@deletequota']);
+
+
+
     
     // Survey Response 
     
@@ -248,3 +261,11 @@ Route::any('check_email_name','CommonAdminController@check_email_name')->name('c
 
 
 require __DIR__.'/auth.php';
+
+// Reports
+Route::get('/generate-ppt-report', ['as' => 'survey.pptreport','uses' => 'SurveyController@generatePPTReport']);
+Route::get('/generate-wordcloud-report', ['as' => 'survey.wordcloudreport','uses' => 'SurveyController@generateWordCloud']);
+Route::get('/generate-pdf', ['as' => 'survey.pdfreport','uses' => 'SurveyController@generatePDF']);
+Route::get('/generate-barchart', ['as' => 'survey.barchart','uses' => 'SurveyController@generateBarChart']);
+Route::get('/wordcloud', 'WordCloudController@generateAndDownload');
+Route::get('/checkquota/{id}','SurveyController@checkquota');
