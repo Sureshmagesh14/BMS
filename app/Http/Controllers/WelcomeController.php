@@ -10,6 +10,7 @@ use App\Models\Contents;
 use App\Models\Groups;
 use App\Models\Projects;
 use App\Models\Banks;
+use App\Models\Rewards;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -255,13 +256,24 @@ class WelcomeController extends Controller
             $resp_id =Session::get('resp_id');
             $resp_name =Session::get('resp_name');
 
-            $get_reward = DB::table('rewards')->where('respondent_id',$resp_id)->where('status_id',2)->sum('points');
-            $banks = Banks::get();
+            $get_reward = Rewards::where('respondent_id',$resp_id)->where('status_id',2)->sum('points');
+
+            $get_cashout = DB::table('respondents as resp')->select('resp.account_number','resp.account_holder','cashouts.*')
+                ->join('cashouts','resp.id','cashouts.respondent_id')
+                ->where('cashouts.type_id','!=',3)
+                ->where('resp.id',$resp_id)->orderBy('cashouts.id','DESC')->first();
+
+            if($get_cashout != null){
+                $get_bank = DB::table('banks')->where('id',$get_cashout->bank_id)->first();;
+            }
+            else{
+                $get_bank = null;
+            }
             
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-                return view('user.user-rewards')->with('get_reward',$get_reward)->with('banks',$banks);
+                return view('user.user-rewards')->with('get_reward',$get_reward)->with('get_cashout',$get_cashout)->with('get_bank',$get_bank);
             //}
            
         }
@@ -545,12 +557,30 @@ class WelcomeController extends Controller
     }
 
     public function cashout_sent(Request $request){
+        $resp_id        = Session::get('resp_id');
         $banks          = $request->bank_value;
         $account_number = $request->account_number;
         $reward         = $request->reward;
         $branch_name    = $request->branch_name;
         $holder_name    = $request->holder_name;
 
+        if($reward != 0){
+            // $amount = ($reward / 10);
+            $insert_array = array(
+                'respondent_id' => $resp_id,
+                'bank_id' => $banks,
+                'type_id' => 1,
+                'account_number' => $account_number,
+                'amount' => $reward
+            );
+    
+            DB::table('cashouts')->insert($insert_array);
+
+            DB::table('respondents')->where('id',$resp_id)
+                ->update(['account_number' => $account_number, 'account_holder' => $holder_name]);
+        }
+
+        return redirect()->back()->withsuccess('Request Send Successfully');
     }
 
 }

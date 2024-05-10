@@ -11,18 +11,23 @@
                 </div>
 
                 <div class="m-auto text-center bg-white py-5 px-3 vi-full-rounded">
-                    <h2 class="yelow-clr h1 fw-bolder mt-5">{{ $get_reward }}<sup>*</sup></h2>
-                    <h5>Points Rewards</h5>
-                    <p>10 points = 1 ZAR*</p>
-                    <button type="button" class="btn vi-border-clr text-white vi-dark-blue-bg vi-full-rounded" id="request_press"
-                        data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
-                        data-bs-original-title="{{ __('Create Banks') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
-                        Request Cash Out
-                    </button>
+                    @if($get_cashout == null)
+                        <h2 class="yelow-clr h1 fw-bolder mt-5">{{ $get_reward }}<sup>*</sup></h2>
+                        <h5>Points Rewards</h5>
+                        <p>10 points = 1 ZAR*</p>
+                    
+                        <button type="button" class="btn vi-border-clr text-white vi-dark-blue-bg vi-full-rounded" id="request_press"
+                            data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
+                            data-bs-original-title="{{ __('Create Banks') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
+                            Request Cash Out
+                        </button>
 
-                    <p class="very-sm-text mt-3" style="text-align: left;">* Point value subject to change without notice</p>
-
-                    <p class="very-sm-text mt-3" style="text-align: left;">* Cash Outs not made expire at the end of the year and will not be re-rewarded!</p>
+                        <p class="very-sm-text mt-3" style="text-align: left;">* Point value subject to change without notice</p>
+                        <p class="very-sm-text mt-3" style="text-align: left;">* Cash Outs not made expire at the end of the year and will not be re-rewarded!</p>
+                    @else
+                        <h2 class="yelow-clr h1 fw-bolder mt-5"> @if($get_cashout->type_id == 1) Pending @elseif($get_cashout->type_id == 2)Processing @endif</h2>
+                        <h5>@if($get_cashout->amount != 0){{$get_cashout->amount / 10}} ZAR @endif</h5>
+                    @endif
                 </div>
             </div>
         </div>
