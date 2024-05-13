@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 class RespondentsController extends Controller
 {
@@ -89,6 +90,7 @@ class RespondentsController extends Controller
                 $respondents->accept_terms = $request->input('accept_terms');
                 $respondents->save();
                 $respondents->id;
+                app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
                 return response()->json([
                     'status' => 200,
                     'last_insert_id' => $respondents->id,
@@ -182,6 +184,7 @@ class RespondentsController extends Controller
                     $respondents->accept_terms = $request->input('accept_terms');
                     $respondents->update();
                     $respondents->id;
+                    app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'updated','respondent');
                     return response()->json([
                         'status' => 200,
                         'last_insert_id' => $respondents->id,
@@ -208,6 +211,7 @@ class RespondentsController extends Controller
     {
         try {
             $contents = Respondents::find($id);
+            app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'deleted','respondent');
             if ($contents) {
                 $contents->delete();
                 return response()->json([
