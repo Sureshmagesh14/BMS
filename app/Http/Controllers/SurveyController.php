@@ -616,51 +616,56 @@ class SurveyController extends Controller
     }
     public function viewsurvey(Request $request, $id){
         $survey = Survey::with('questions')->where(['builderID'=>$id])->first();
-
-        if (Auth::check()) {
-            $response_user_id =  Auth::user()->id;
-            $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
-            if($checkresponse){
-                $status = 'alreadycompleted';
-                return view('admin.survey.responsecompleted', compact('survey','status'));
-
-                if($survey->survey_type =='survey'){
-                    return view('admin.survey.responseerror', compact('survey','status'));
-                }else{
+        if($survey->is_deleted == 0){
+            if (Auth::check()) {
+                $response_user_id =  Auth::user()->id;
+                $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
+                if($checkresponse){
+                    $status = 'alreadycompleted';
                     return view('admin.survey.responsecompleted', compact('survey','status'));
+    
+                    if($survey->survey_type =='survey'){
+                        return view('admin.survey.responseerror', compact('survey','status'));
+                    }else{
+                        return view('admin.survey.responsecompleted', compact('survey','status'));
+                    }
+                }else{
+                    // Update Visited Count 
+                    $visited_count=Survey::where(['builderID'=>$id])->update(['visited_count'=>$survey->visited_count+1]);
+        
+                    $questions=Questions::where(['survey_id'=>$survey->id])->whereIn('qus_type',['welcome_page','thank_you'])->get();
+                    $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
+                    if($welcomQus){
+                        $question=$welcomQus;
+                    }else{
+                        $question=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+                    }
+                    $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+        
+                    $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+                    if($question1){
+                        $question1=$question1;
+                    }else{
+                        $question1=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
+                    }
+                    // Check Survey has question or not 
+                    $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
+                    if(count($surveyQus)<=0){
+                        return view('admin.survey.noquserror', compact('survey'));
+        
+                    }else{
+                        return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+                    }
                 }
             }else{
-                // Update Visited Count 
-                $visited_count=Survey::where(['builderID'=>$id])->update(['visited_count'=>$survey->visited_count+1]);
+                return view('admin.survey.autherror', compact('survey'));
     
-                $questions=Questions::where(['survey_id'=>$survey->id])->whereIn('qus_type',['welcome_page','thank_you'])->get();
-                $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
-                if($welcomQus){
-                    $question=$welcomQus;
-                }else{
-                    $question=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
-                }
-                $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
-    
-                $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
-                if($question1){
-                    $question1=$question1;
-                }else{
-                    $question1=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
-                }
-                // Check Survey has question or not 
-                $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
-                if(count($surveyQus)<=0){
-                    return view('admin.survey.noquserror', compact('survey'));
-    
-                }else{
-                    return view('admin.survey.response', compact('survey','question','question1','questionsset'));
-                }
             }
         }else{
-            return view('admin.survey.autherror', compact('survey'));
+            return view('admin.survey.unavailable', compact('survey'));
 
         }
+        
     }
    
     public function startsurvey(Request $request, $id,$qus){
