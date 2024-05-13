@@ -7,12 +7,13 @@ use App\Models\Project_respondent;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
+use App\Mail\WelcomeEmail;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Yajra\DataTables\DataTables;
-
+use Illuminate\Support\Facades\Mail;
 class RespondentsController extends Controller
 {
     /**
@@ -911,4 +912,6 @@ class RespondentsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+   
+
 }

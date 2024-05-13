@@ -76,6 +76,8 @@
     </div>
 </div>
 
+
+
 @include('user.layout.footer')
 
 @if (count($errors) > 0)

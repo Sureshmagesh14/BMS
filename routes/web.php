@@ -83,6 +83,7 @@ Route::group([
         Route::get('cash_export','cash_export')->name('cash_export');     
         Route::get('export_cash','export_cash')->name('export_cash');
         Route::any('cash_multi_delete', 'CashoutsController@cash_multi_delete')->name('cash_multi_delete');
+        Route::any('cash_multi_update', 'CashoutsController@cash_multi_update')->name('cash_multi_update');
         Route::any('cashout_export','cashout_export')->name('cashout_export'); /* Cashout_export Export */
     });
 
