@@ -76,3 +76,8 @@
     </thead>
     <tbody></tbody>
 </table>
+<script>
+    $(document).ready(function() {
+        user_datatable();
+    });
+</script>

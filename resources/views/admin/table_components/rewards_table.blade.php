@@ -1,6 +1,7 @@
 <div class="text-right">
     <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group mr-2 rewards_table hided_option" role="group" aria-label="First group" style="display: none;">
+        <div class="btn-group mr-2 rewards_table hided_option" role="group" aria-label="First group"
+            style="display: none;">
             <select name="rewards_select_box" id="rewards_select_box" class="form-control rewards_select_box">
                 <option value="">Select Action</option>
                 <option value="1">Status > Approved</option>
@@ -31,3 +32,8 @@
     <tbody>
     </tbody>
 </table>
+<script>
+    $(document).ready(function() {
+        rewards_table();
+    });
+</script>
