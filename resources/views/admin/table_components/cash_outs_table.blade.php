@@ -93,3 +93,8 @@
     <tbody>
     </tbody>
 </table>
+<script>
+$(document).ready(function() {
+    cashout_table();
+});
+</script>

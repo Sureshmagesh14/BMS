@@ -271,6 +271,26 @@ class CashoutsController extends Controller
         header("Content-Type: application/vnd.ms-excel");
         return redirect(url('/')."/export/".$fileName);
     }
+
+    public function cash_multi_update(Request $request){
+        try {
+            $all_id = $request->all_id;
+            dd($request->all());
+            foreach($all_id as $id){
+                $arr=array('status_id',);
+                $cashout = Cashout::where('id',$id)->update($id);
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Tags Deleted'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
     
 
     public function cash_multi_delete(Request $request){

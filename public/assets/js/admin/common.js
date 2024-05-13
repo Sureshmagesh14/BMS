@@ -54,6 +54,9 @@ function select2() {
         if($('#user_ids').val()!=undefined && $('#user_ids').val()!=''){
             $('#privateusers').val($('#user_ids').val().split(","));
         }
+        if($('#existing_option_value').val()!=undefined && $('#existing_option_value').val()!=''){
+            $("#option_value").val($('#existing_option_value').val().split(",")).trigger('change');
+        }
         $('.select2').select2();
     }
 }

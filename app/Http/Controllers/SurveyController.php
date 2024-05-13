@@ -13,6 +13,7 @@ use App\Models\Project_respondent;
 use App\Models\Projects;
 use App\Models\SurveyTemplate;
 use App\Models\SurveyResponse;
+use App\Models\SurveyQuotas;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -222,6 +223,7 @@ class SurveyController extends Controller
 
     public function deleteSurvey(Request $request,$id){
         $survey=Survey::where(['id'=>$id])->first();
+        
         // if($survey->qus_count==0){
             $survey->is_deleted=1;
             $survey->save();
@@ -342,7 +344,7 @@ class SurveyController extends Controller
     // Update Qus Count 
     $survey=Survey::where(['id'=>$survey])->first();
     if($qustype!='welcome_page' && $qustype!='thank_you'){
-        $survey->qus_count=$survey->qus_count+1;
+        $survey->qus_count = $survey->qus_count+1;
     }
     $survey->save();
     $questions=Questions::where(['survey_id'=>$survey])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
@@ -352,8 +354,11 @@ class SurveyController extends Controller
 
    }
    public function deletequs(Request $request,$id){
-        $survey=Questions::where(['id'=>$id])->first();
-        $survey->delete();
+        $question=Questions::where(['id'=>$id])->first();
+        $survey = Survey::where(['id'=>$question->survey_id])->first();
+        $survey->qus_count = $survey->qus_count - 1;
+        $survey->save();
+        $question->delete();
         return json_encode(['success'=>'Question deleted Successfully',"error"=>""]);
         
     }
@@ -420,11 +425,11 @@ class SurveyController extends Controller
     }
     public function updateQus(Request $request,$id){
         $currentQus=Questions::where(['id'=>$id])->first();
-        // Update Qus Count 
-        $survey=Survey::where(['id'=>$currentQus->survey_id])->first();
-        if($request->qus_type!='welcome_page' && $request->qus_type!='thank_you'){
-            $survey->qus_count=$survey->qus_count+1;
-        }
+        // // Update Qus Count 
+        // $survey=Survey::where(['id'=>$currentQus->survey_id])->first();
+        // if($request->qus_type!='welcome_page' && $request->qus_type!='thank_you'){
+        //     $survey->qus_count=$survey->qus_count+1;
+        // }
         $survey->save();
         // Update Display Logic 
         $display_logic=json_encode(['logic_type_value_display'=>$request->display_logic_type_value_display,'logic_type_value_option_display'=>$request->logic_type_value_option_display,'display_qus_choice_andor_display'=>$request->display_qus_choice_andor_display,'display_qus_choice_display'=>$request->display_qus_choice_display]);
@@ -610,13 +615,20 @@ class SurveyController extends Controller
 
     }
     public function viewsurvey(Request $request, $id){
-        $survey=Survey::with('questions')->where(['builderID'=>$id])->first();
+        $survey = Survey::with('questions')->where(['builderID'=>$id])->first();
+
         if (Auth::check()) {
             $response_user_id =  Auth::user()->id;
             $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
             if($checkresponse){
                 $status = 'alreadycompleted';
                 return view('admin.survey.responsecompleted', compact('survey','status'));
+
+                if($survey->survey_type =='survey'){
+                    return view('admin.survey.responseerror', compact('survey','status'));
+                }else{
+                    return view('admin.survey.responsecompleted', compact('survey','status'));
+                }
             }else{
                 // Update Visited Count 
                 $visited_count=Survey::where(['builderID'=>$id])->update(['visited_count'=>$survey->visited_count+1]);
@@ -649,19 +661,24 @@ class SurveyController extends Controller
             return view('admin.survey.autherror', compact('survey'));
 
         }
-      
-        
     }
+   
     public function startsurvey(Request $request, $id,$qus){
         // Check User already taken the survey 
         $response_user_id =  Auth::user()->id;
        
         $survey=Survey::with('questions')->where(['id'=>$id])->first();
         $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
-      
+       
         if($checkresponse){
             $status = 'alreadycompleted';
+            return view('admin.survey.responsecompleted', compact('survey','status'));
+
+            if($survey->survey_type =='survey'){
+                return view('admin.survey.responseerror', compact('survey','status'));
+            }else{
                 return view('admin.survey.responsecompleted', compact('survey','status'));
+            }
 
         }else{
             if($request->type == 'welcome'){
@@ -1087,7 +1104,10 @@ class SurveyController extends Controller
         }
         if($next_qus_loop == 'yes'){
             $surveyController = new SurveyController;
-           return $surveyController->displaynextQus($question_id,$survey_id);
+            $checkquota = $surveyController->checkquota($survey_id);
+            if($checkquota == 'limitavailable'){
+                return $surveyController->displaynextQus($question_id,$survey_id);
+            }
         }else{
             // Update Survey Completion 
             $surveyRec=Survey::where(['id'=>$survey_id])->first();
@@ -1105,9 +1125,9 @@ class SurveyController extends Controller
                 $surveyres->save();
                 // Update Profile Completed or Survey Complete
 
-                if($surveyRec->survey_type == 'profile'){
-                    Respondents::where('id', '=' , $response_user_id)->update(['profile_completion_id'=>1]);
-                }
+                // if($surveyRec->survey_type == 'profile'){
+                //     Respondents::where('id', '=' , $response_user_id)->update(['profile_completion_id'=>1]);
+                // }
                 if($surveyRec->survey_type == 'survey'){
                     // Get Project ID 
                     $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
@@ -1403,7 +1423,10 @@ class SurveyController extends Controller
                         $surveyController = new SurveyController;
                         $next_question=Questions::where('id', '>', $next_qus->id)->where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
                         if($next_question){
-                            $surveyController->displaynextQus($next_question->id,$survey_id);
+                            $checkquota = $surveyController->checkquota($survey_id);
+                            if($checkquota == 'limitavailable'){
+                                $surveyController->displaynextQus($next_question->id,$survey_id);
+                            }
                         }else{
                             $next_question=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
                             if($next_question){
@@ -1858,6 +1881,250 @@ class SurveyController extends Controller
          $hexColor = sprintf("#%02x%02x%02x", $red, $green, $blue);
          return $hexColor;
      }
+
+    //  Set Quota
+    public function setquota(Request $request,$survey_id){
+        $questions=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+        $redirection=SurveyTemplate::where(['type'=>'thankyou'])->pluck('title', 'id')->toArray();
+
+        // $redirection=Questions::where(['survey_id'=>$survey_id])->whereIn('qus_type',['thank_you'])->get();
+        $quotas = SurveyQuotas::where(['survey_id'=>$survey_id])->get();
+        $survey = Survey::where(['id'=>$survey_id])->first();
+        return view('admin.survey.quota.index', compact('questions','redirection','quotas','survey'));
+    }
+
+    public function createquota(Request $request,$survey_id){
+        $user = Auth::guard('admin')->user();
+        
+        $questions=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+        $redirection=SurveyTemplate::where(['type'=>'thankyou'])->pluck('title', 'id')->toArray();
+        // Questions::where(['survey_id'=>$survey_id])->whereIn('qus_type',['thank_you'])->pluck('question_name', 'id')->toArray();
+        $quotas = SurveyQuotas::where(['survey_id'=>$survey_id])->get();
+        $survey = Survey::where(['id'=>$survey_id])->first();
+
+        $display_logic=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+        $display_logic_matrix=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
+
+        return view('admin.survey.quota.create', compact('quotas','survey','questions','display_logic_matrix','display_logic','redirection'));
+    }
+    public function storequota(Request $request){
+        $user = Auth::guard('admin')->user();
+        $surveyquota = new SurveyQuotas();
+        $surveyquota->survey_id = $request->survey_id;
+        $surveyquota->quota_name = $request->quota_name;
+        $surveyquota->quota_limit = $request->quota_limit;
+        $surveyquota->question_id = $request->question_id;
+        $surveyquota->option_type = $request->option_type;
+        if(is_array($request->option_value)){
+            $surveyquota->option_value = implode(',', $request->option_value);
+        }
+        else {
+            $surveyquota->option_value = $request->option_value;
+        }
+        $surveyquota->redirection_qus = $request->redirection_qus;
+        $surveyquota->created_by = $user->id;
+        $surveyquota->save();
+        return redirect()->back()->with('success', __('Quota Created Successfully.'));
+    }
+
+    public function editquota($id){
+
+        $quota=SurveyQuotas::where(['id'=>$id])->first();
+        $user = Auth::guard('admin')->user();
+        $survey_id = $quota->survey_id;
+        $questions=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+        // $redirection=Questions::where(['survey_id'=>$survey_id])->whereIn('qus_type',['thank_you'])->pluck('question_name', 'id')->toArray();
+        $redirection=SurveyTemplate::where(['type'=>'thankyou'])->pluck('title', 'id')->toArray();
+
+        $quotas = SurveyQuotas::where(['survey_id'=>$survey_id])->get();
+        $survey = Survey::where(['id'=>$survey_id])->first();
+        $display_logic=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+        $display_logic_matrix=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
+        return view('admin.survey.quota.edit', compact('quota','survey','questions','display_logic_matrix','display_logic','redirection'));
+    }
+
+    public function updatequota(Request $request,$id){
+        $user = Auth::guard('admin')->user();
+        $surveyquota=SurveyQuotas::where(['id'=>$id])->first();
+        $surveyquota->survey_id = $request->survey_id;
+        $surveyquota->quota_name = $request->quota_name;
+        $surveyquota->quota_limit = $request->quota_limit;
+        $surveyquota->question_id = $request->question_id;
+        $surveyquota->option_type = $request->option_type;
+        if(is_array($request->option_value)){
+            $surveyquota->option_value = implode(',', $request->option_value);
+        }
+        else {
+            $surveyquota->option_value = $request->option_value;
+        }
+        $surveyquota->redirection_qus = $request->redirection_qus;
+        $surveyquota->created_by = $user->id;
+        $surveyquota->save();
+        return redirect()->back()->with('success', __('Quota Updated Successfully.'));
+    }
+
+    public function deletequota(Request $request,$id){
+        $surveyquota=SurveyQuotas::where(['id'=>$id])->first();
+        $surveyquota->delete();
+        return json_encode(['success'=>'Quota deleted Successfully',"error"=>""]);
+    }
+
+    public function checkquota($survey_id){
+        $survey = Survey::where(['id'=>$survey_id])->first();
+        $surveyquota=SurveyQuotas::where(['survey_id'=>$survey_id])->get();
+        foreach($surveyquota as $quota){
+            $question_id = explode('_',$quota->question_id);
+            if(is_array($question_id)){
+                $checkresponse = SurveyResponse::with('questions')->where(['survey_id'=>$survey->id,'question_id'=>$question_id[0]])->get();
+                $limit = 0;
+                foreach($checkresponse as $userResp){
+                    $user_answered = '';
+                    $user_skipped = '';
+                    $qus_type = "";
+                    if($userResp){
+                        $qus_type = $userResp->questions[0]->qus_type;
+                        $user_answered =  $userResp->answer;
+                        $user_skipped =  $userResp->skip;
+                    }
+                    switch($quota->option_type){
+                        case 'isSelected':
+                            if($qus_type == 'matrix_qus'){
+                                $user_answered=json_decode($user_answered);
+                                if($user_answered[$question_id[1]]->key == $question_id[1]){
+                                    if($quota->option_value == $user_answered[$question_id[1]]->ans){
+                                        $limit++;
+                                    }
+                                }
+                            }
+                            else if($qus_type == 'multi_choice'){
+                                $user_answered =  explode(",",$user_answered);
+                                if (in_array($quota->option_value, $user_answered)) { 
+                                    $limit++;
+                                }
+                            }
+                            else if($qus_type != 'matrix_qus' && $qus_type != 'multi_choice'){
+                                if ($user_answered == $quota->option_value) { 
+                                    $limit++;
+                                }
+                            }
+                            break;
+
+                        case 'isNotSelected':
+                            if($qus_type == 'matrix_qus'){
+                                $user_answered=json_decode($user_answered);
+                                if($user_answered[$question_id[1]]->key == $question_id[1]){
+                                    if($quota->option_value != $user_answered[$question_id[1]]->ans){
+                                        $limit++;
+                                    }
+                                }
+                            }
+                            else if($qus_type == 'multi_choice'){
+                                $user_answered =  explode(",",$user_answered);
+                                if (!in_array($quota->option_value, $user_answered)) { 
+                                    $limit++;
+                                }
+                            }
+                            else if($qus_type != 'matrix_qus' && $qus_type != 'multi_choice'){
+                                if ($user_answered != $quota->option_value) { 
+                                    $limit++;
+                                }
+                            }
+                            break;
+
+                        case 'isAnswered':
+                            if($user_answered !=''){
+                                $limit++;
+                            }
+                            break;
+
+                        case 'isNotAnswered':
+                            if($user_skipped == 'yes'){
+                                $limit++;
+                            }
+                            break;
+
+
+                        case 'contains':
+                           
+                            if (str_contains($user_answered, $quota->option_value)) { 
+                                $limit++;
+                            }
+                            break;
+
+
+                        case 'doesNotContain':
+                            if (!str_contains($user_answered, $quota->option_value)) { 
+                                $limit++;
+                            }
+                            break;
+
+                        case 'startsWith':
+                            if (str_starts_with($user_answered, $quota->option_value)) { 
+                                $limit++;
+                            }
+                            break;
+
+                        case 'endsWith':
+                            if (str_ends_with($user_answered, $quota->option_value)) { 
+                                $limit++;
+                            }
+                            break;
+
+                        case 'equalsString':
+                            if ($user_answered == $quota->option_value) { 
+                                $limit++;
+                            }
+                            break;
+
+                        case 'notEqualTo':
+                            if ($user_answered != $quota->option_value) { 
+                                $limit++;
+                            }
+                            break;
+
+                        case 'lessThanForScale':
+                            $ans = (int)$quota->option_value;
+                            $user_answered = (int)$user_answered;
+                            if ($user_answered < $ans) {
+                                $limit++;
+                            }
+                            break;
+
+                        case 'greaterThanForScale':
+                            $ans = (int)$quota->option_value;
+                            $user_answered = (int)$user_answered;
+                            if ($user_answered > $ans) {
+                                $limit++;
+                            }
+                            break;
+
+                        case 'equalToForScale':
+                            $ans = (int)$quota->option_value;
+                            $user_answered = (int)$user_answered;
+                            if ($user_answered == $ans) {
+                                $limit++;
+                            }
+                            break;
+
+                        case 'notEqualToForScale':
+                            $ans = (int)$quota->option_value;
+                            $user_answered = (int)$user_answered;
+                            if ($user_answered != $ans) {
+                                $limit++;
+                            }
+                            break;
+                    }
+                }
+                if($limit <= $quota->quota_limit){
+                    return "limitavailable";
+                }else{
+                    $redirection_qus = SurveyTemplate::where(['id'=>$quota->redirection_qus])->first();
+                    return view('admin.survey.limitexceed', compact('survey','redirection_qus'));
+                }
+            }
+            
+        }
+    }
 }
 
 
