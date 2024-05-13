@@ -119,7 +119,6 @@
         {{-- <script src="{{ asset('assets/js/pages/dashboard.init.js') }}"></script> --}}
        
         <script src="{{ asset('assets/js/admin/app.js') }}"></script>
-        <script src="{{ asset('assets/js/admin/confirm.min.js') }}"></script>
         <script src="{{ asset('assets/js/admin/common.js') }}"></script>
         <script src="{{ asset('assets/js/admin/jquery.validate.js') }}"></script>
         <script src="{{ asset('assets/js/admin/confirm.min.js') }}"></script>
@@ -157,6 +156,7 @@
     <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
 
     <script>
+        var tempcsrf = '{!! csrf_token() !!}';
         function multi_delete(method_type, set_data, route, message, datatable_function){
             $.confirm({
                 title: "{{ Config::get('constants.delete') }}",

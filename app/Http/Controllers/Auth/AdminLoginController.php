@@ -28,6 +28,7 @@ class AdminLoginController extends Controller
 
     public function showLoginForm(){
         try {
+        
             return view('admin.auth.login');
         }
         catch (Exception $e) {

@@ -1,7 +1,8 @@
 <div class="text-right">
 
-    <div class="btn-group mr-2" role="group" aria-label="First group" >
-        <select name="action_2" id="action_2" class="form-control projects_table hided_option select_box" style="display:none;">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+        <select name="action_2" id="action_2" class="form-control projects_table hided_option select_box"
+            style="display:none;">
             <option value="">Select Action</option>
             <optgroup label="Project">
                 <option value="1">Export > Survey Responses</option>
@@ -27,30 +28,36 @@
     </a> --}}
 
     @if (str_contains(Request::url(), '/admin/respondents'))
-        <a href="#!" data-url="{{ route('attach_projects',['respondent_id' => $respondent_id]) }}" data-size="xl"
-            data-ajax-popup="true" class="btn btn-primary"
-            data-bs-original-title="{{ __('Attact Respondents') }}" class="btn btn-primary"
-            data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+        <a href="#!" data-url="{{ route('attach_projects', ['respondent_id' => $respondent_id]) }}" data-size="xl"
+            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attact Respondents') }}"
+            class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
             Attact Projects
         </a>
     @else
-        <a href="#!" data-url="{{ route('projects.create') }}" data-size="xl"
-            data-ajax-popup="true" class="btn btn-primary"
-            data-bs-original-title="{{ __('Create Projects') }}" class="btn btn-primary"
+        <a href="#!" data-url="{{ route('projects.create') }}" data-size="xl" data-ajax-popup="true"
+            class="btn btn-primary" data-bs-original-title="{{ __('Create Projects') }}" class="btn btn-primary"
             data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
             Create Project
         </a>
     @endif
 
     @if (Auth::guard('admin')->user()->role_id == 1)
-        <div class="btn-group projects_table hided_option" role="group" aria-label="Third group" style="display: none;">
+        <div class="btn-group projects_table hided_option" role="group" aria-label="Third group"
+            style="display: none;">
             <div class="btn-group dropdown-filter">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" aria-labelledby="delete" role="presentation" class="fill-current text-80">
-                        <path fill-rule="nonzero" d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                        aria-labelledby="delete" role="presentation" class="fill-current text-80">
+                        <path fill-rule="nonzero"
+                            d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z">
+                        </path>
                     </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" class="ml-2">
-                        <path fill="var(--90)" d="M8.292893.292893c.390525-.390524 1.023689-.390524 1.414214 0 .390524.390525.390524 1.023689 0 1.414214l-4 4c-.390525.390524-1.023689.390524-1.414214 0l-4-4c-.390524-.390525-.390524-1.023689 0-1.414214.390525-.390524 1.023689-.390524 1.414214 0L5 3.585786 8.292893.292893z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"
+                        class="ml-2">
+                        <path fill="var(--90)"
+                            d="M8.292893.292893c.390525-.390524 1.023689-.390524 1.414214 0 .390524.390525.390524 1.023689 0 1.414214l-4 4c-.390525.390524-1.023689.390524-1.414214 0l-4-4c-.390524-.390525-.390524-1.023689 0-1.414214.390525-.390524 1.023689-.390524 1.414214 0L5 3.585786 8.292893.292893z">
+                        </path>
                     </svg>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
@@ -90,3 +97,8 @@
     <tbody>
     </tbody>
 </table>
+<script>
+    $(document).ready(function() {
+        projects_table();
+    });
+</script>

@@ -62,7 +62,7 @@
                             href="{{ route('register') }}">Don't have an account? Register now</a></p>
                 </div>
                 @if (count($errors) > 0)
-                    @if(!str_contains($errors->all()[0], "Incorrect Email") && !str_contains($errors->all()[0], "Incorrect Phone No"))
+                    @if(!str_contains($errors->all()[0], "Incorrect Email") && !str_contains($errors->all()[0], "Incorrect Phone No") && !str_contains($errors->all()[0], "Unsubscribed"))
                         <div class="alert alert-danger">
                             @foreach ($errors->all() as $message)
                                 <strong>{{ $message }}</strong> Please try again or you can <a
@@ -75,6 +75,8 @@
         </div>
     </div>
 </div>
+
+
 
 @include('user.layout.footer')
 

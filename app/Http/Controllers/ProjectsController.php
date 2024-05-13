@@ -106,6 +106,7 @@ class ProjectsController extends Controller
                 $projects->survey_link = $request->input('survey_link');
                 $projects->save();
                 $projects->id;
+                app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','project');
                 return response()->json([
                     'status'=>200,
                     'last_insert_id' => $projects->id,
@@ -252,6 +253,7 @@ class ProjectsController extends Controller
                     $projects->survey_link = $request->input('survey_link');
                     $projects->update();
                     $projects->id;
+                    app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'updated','project');
                     return response()->json([
                         'status'=>200,
                         'last_insert_id' => $projects->id,
@@ -281,6 +283,7 @@ class ProjectsController extends Controller
     {
         try {
             $projects = Projects::find($id);
+            app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'deleted','project');
             if($projects)
             {
                 $projects->delete();
@@ -617,6 +620,7 @@ class ProjectsController extends Controller
     public function projects_multi_delete(Request $request){
         try {
             $all_id = $request->all_id;
+            app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'deleted','project');
             foreach($all_id as $id){
                 $rewards = Projects::find($id);
                 $rewards->delete();

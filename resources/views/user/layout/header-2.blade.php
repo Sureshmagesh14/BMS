@@ -13,6 +13,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link href="{{ asset('assets/css/admin/confirm.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -40,16 +41,19 @@
                     </li>
                 </ul>
                 <div class="d-flex align-items-center" style="padding-right: 20px">
-                    <a href="#" class="px-2"><img class="img-fluid" style="max-height: 21px"
+                    <!-- <a href="#" class="px-2"><img class="img-fluid" style="max-height: 21px"
                             src="{{ asset('user/images/icons/1c-04.png') }}" alt="" /></a>
                     <a href="#" class="pe-4">
                         <img class="img-fluid" style="max-height: 21px" src="{{ asset('user/images/icons/1c-05.png') }}"
-                            alt="" /></a>
+                            alt="" /></a> -->
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle vi-usr-profile p-3 me-3" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                V
+                                @php
+                                    $first_char = mb_substr(Session::get('resp_name'), 0, 1);
+                                @endphp
+                                {{ $first_char }}
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('user.viewprofile') }}">View Profile</a></li>
@@ -59,7 +63,7 @@
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">Sign Out</a>
+                                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" id="click_signout">Sign Out</a>
                                     </form>
                                 </li>
                             </ul>
