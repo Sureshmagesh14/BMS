@@ -1788,3 +1788,11 @@ button.removechoicelist_skip,button.removechoicelist_display {
 button#camera_btn {
     pointer-events: none;
 }
+
+/* Upload input */
+.fileupload-container{display:-webkit-box;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:flex;-webkit-box-direction:normal;-webkit-box-orient:vertical;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:start;-ms-flex-pack:start;-webkit-justify-content:flex-start;-moz-justify-content:flex-start;justify-content:flex-start;-webkit-box-align:start;-ms-flex-align:start;-webkit-align-items:flex-start;-moz-align-items:flex-start;align-items:flex-start;-webkit-flex-wrap:wrap;-moz-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+.fileupload-container p{margin:.25em 0 0;padding:0;font-weight:300;font-size:0.8em;color:rgba(77,52,70,0.8);width:75%;text-align:center;}
+.fileupload-container .fileupload-box{display:-webkit-box;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:flex;-webkit-box-direction:normal;-webkit-box-orient:horizontal;-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;-webkit-align-items:center;-moz-align-items:center;align-items:center;border:thin solid rgba(98,104,111,0.5);background-color:#f5f5f5;padding:1em;border-radius:3px;width:75%;cursor:not-allowed;}
+.fileupload-container .fileupload-box i{font-size:1.5em;color:#62686f;margin:0 .5em;}
+.fileupload-container .fileupload-box p{margin:0;padding:0;font-weight:500;font-size:16px;color:#62686f;width:auto;text-align:left;}
+.ss_row--builder{display:block;width:100%;position:relative;padding:.5em 0;}

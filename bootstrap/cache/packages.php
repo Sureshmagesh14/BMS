@@ -1,4 +1,19 @@
 <?php return array (
+  'artesaos/seotools' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Artesaos\\SEOTools\\Providers\\SEOToolsServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'SEOMeta' => 'Artesaos\\SEOTools\\Facades\\SEOMeta',
+      'OpenGraph' => 'Artesaos\\SEOTools\\Facades\\OpenGraph',
+      'Twitter' => 'Artesaos\\SEOTools\\Facades\\TwitterCard',
+      'JsonLd' => 'Artesaos\\SEOTools\\Facades\\JsonLd',
+      'SEO' => 'Artesaos\\SEOTools\\Facades\\SEOTools',
+    ),
+  ),
   'barryvdh/laravel-debugbar' => 
   array (
     'providers' => 
@@ -83,6 +98,17 @@
     'providers' => 
     array (
       0 => 'Sichikawa\\LaravelSendgridDriver\\SendgridTransportServiceProvider',
+    ),
+  ),
+  'simplesoftwareio/simple-qrcode' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'SimpleSoftwareIO\\QrCode\\QrCodeServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'QrCode' => 'SimpleSoftwareIO\\QrCode\\Facades\\QrCode',
     ),
   ),
   'spatie/laravel-ignition' => 

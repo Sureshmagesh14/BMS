@@ -33,9 +33,9 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Password *</label>
+        <label for="example-search-input" class="col-md-2 col-form-label">Password </label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="password" name="password" >
         </div>
     </div>
     <div class="form-group row">
@@ -136,16 +136,26 @@
                 email: {
                     required: true,
                     email: true,
-                    validate_email: true
+                    validate_email: true,
+                    remote: {
+                        url: '{{ route("user_email_id_check") }}',
+                        data: { 'form_name' : "useredit" ,'id':'{{ $users->id }}'},
+                        type: "GET"
+                    }
                 },
                 password: {
-                    required: true,
+                  
                     minlength: 8
                 },
                 cpassword: {
-                    required: true,
+                   
                     minlength: 8,
                     equalTo: "#password"
+                }
+            },
+            messages: {
+                email: {
+                    remote: "{{__('email Name already exists!')}}"
                 }
             }
         });

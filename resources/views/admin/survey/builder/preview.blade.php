@@ -3,6 +3,12 @@
 <head>
     <link href="{{ asset('assets/css/preview.css') }}" rel="stylesheet" type="text/css" />
     <style>
+        .upload_wrapper span a{color:inherit;text-decoration:underline;}
+.answer-option--file-input p{margin:0;padding:0;}
+.answer-option--file-input-text{display:block;text-align:center;}
+    img#tbs_logo {
+        width: 200px;
+    }
         .likert_scale_label {
             display: flex;
             width: 100%;
@@ -93,6 +99,17 @@ if(isset($qusvalue->left_label)){
             <div class="ss-fp-section__frame ss_classic_survey_intro_contents">
                 <div class="ss-fp-section__inner-frame">
                         <h3 class="ss-header-text--fluid ss-survey-heading--text ss-survey-font-family ss-survey-line-height--normal ss-survey-text-weight--semibold ss-survey-text-color--primary ss-survey-text-align--center ss-survey-text-question-text main-header-font-size--md">
+                            @if(isset($qusvalue->tbs_logo))
+                                @if($qusvalue->tbs_logo== 1 && isset($qusvalue->tbs_logo_url))
+                                    <figure>
+                                        <span>
+                                            <div class="ss_image_wrapper">
+                                                <img id="tbs_logo" src="{{ asset('uploads/survey/'.$qusvalue->tbs_logo_url) }}" alt="TBS Logo">
+                                            </div>
+                                        </span>
+                                    </figure>
+                                @endif
+                            @endif
                             @if(isset($qusvalue->welcome_title))
                                 <p>{{$qusvalue->welcome_title}}</p>
                             @endif
@@ -148,11 +165,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">
-                                            <p>
-                                                <br>
-                                            </p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div>
@@ -232,11 +246,9 @@ if(isset($qusvalue->left_label)){
                             <div class="ss_cl_survey_qstn_right">
                                 <div class="ss_cl_survey_qstn">
                                 <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text" id="question-title-8966626">
-                                    <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}}</span></h1>
-                                <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                    id="question-description-8966626">
-                                <p><br></p>
-                                </p>
+                                    <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}}</span>
+                                </h1>
+                                <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
                                 </div>
                             </div>
                         </div>
@@ -298,10 +310,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8982683">
-                                        <p><br></p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div>
@@ -365,8 +375,8 @@ if(isset($qusvalue->left_label)){
                                             <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                                 <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                             </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8962778"> </p>
+                                            <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div><span class="ss_span_wrapper">
@@ -435,12 +445,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text"
                                             id="question-title-8966750"><span
                                                 class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}}</span></h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8966750">
-                                        <p>
-                                            <br>
-                                        </p>
-                                        </p>
+                                                <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div><span class="ss_span_wrapper">
@@ -526,9 +532,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07" id="question-description-8966749">
-                                        <p><br> </p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div> <span class="ss_span_wrapper">
@@ -663,12 +668,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8966664">
-                                        <p>
-                                            <br>
-                                        </p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div><span class="ss_span_wrapper">
@@ -718,12 +719,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8972084">
-                                        <p>
-                                            <br>
-                                        </p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div><span class="ss_span_wrapper">
@@ -791,12 +788,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8972084">
-                                        <p>
-                                            <br>
-                                        </p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div>
@@ -815,6 +808,65 @@ if(isset($qusvalue->left_label)){
                                             </button>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="ss_cl_qstn_action ">
+                                    <div class="">
+                                        <button id="next_button" data-qa="next_button" data-hotkey-item="hotkey-cta-button" class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                            <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="ss-skip-container">
+                                        <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @elseif($currentQus->qus_type=='upload')
+    <div class="surveysparrow-survey-container--classic-form" data-current-item-id="8972084" data-section-id="4791226">
+        <div class="ss_classic_top_bar d-flex fx-row fx-jc--between fx-ai--center" role="banner">
+            <div class="d-flex fx-column fx-jc--center fx-ai--start ss_classic_top_bar_section_details"></div>
+        </div>
+        <div class="surveysparrow-survey-form-wrapper ss-survey-background" aria-live="polite">
+            <div id="fake-scroll-container" class="ss-fp-scroll ss-fake-scroll--center ">
+                <div class="ss-fp-scroll__item d-flex fx-column fx-jc--center ss-fp-scroll__item--content-overflow">
+                    <div class="ss-fp-scroll__item-data-wrap" style="display: block;">
+                        <div id="question_8972084" data-qa-question-id="8972084" data-qa-question-type="MultiChoicePicture"
+                            data-qa="question_normal" class="ss_cl_survey_qstn_item active" style="width: 100%;">
+                            <div class="ss_cl_survey_qstn_wrapper">
+                                <div class="ss_cl_survey_qstn_left d-flex fx-row fx-ai--center">
+                                    <p class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                        Question {{$qusNo}}
+                                    </p>
+                                </div>
+                                <div class="ss_cl_survey_qstn_right">
+                                    <div class="ss_cl_survey_qstn">
+                                        <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
+                                            <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
+                                        </h1>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ss_span_wrapper">
+                                <div class="ss_options_container">
+                                   <div class="ss_inline_input_container ss_component_animated">
+                                        <div class="ss-camera-input upload_wrapper">
+                                            <button class="answer-option--file-input ss-answer-option--bg-only ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--semibold ss-survey-text-color--primary ss-survey-border-width--thin ss-survey-border-style--dashed ss-survey-border-color--primary-02" type="button" id="camera_btn">
+                                                <input type="file" accept="image/*"  style="display: none;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="85" height="74" viewBox="0 0 85 74"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M58.723 52.091h9.054S84 49.987 84 34.155a17.847 17.847 0 0 0-5.515-12.904 18.068 18.068 0 0 0-13.179-4.995C60.391 5.887 49.026.152 37.704 2.328c-11.322 2.175-19.718 11.707-20.39 23.15a13.59 13.59 0 0 0-11.306 2.714A13.417 13.417 0 0 0 1 38.625C1 52.294 15.434 52.08 15.434 52.08h10.802M42.5 31.466v41.25"></path><path d="M53.818 42.716L42.5 31.466l-11.318 11.25"></path></g></svg>
+                                                <p id="file-upload-description">Drag and drop to upload<span class="answer-option--file-input-text ss-survey-font-family ss-survey-text-size--xs sm_ss-survey-text-size--xs ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--primary">or <a href="#!" tabindex="-1">browse</a> to choose a file </span></p>
+                                            </button>
+                                        </div>
+                                    </div>
+                                <span id="helper" class="answer-option--file-input-text ss-survey-font-family ss-survey-text-size--xs sm_ss-survey-text-size--xs ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--primary-06">Maximum number of files is 1. Maximum upload size per file is 10 MB.</span>
                                 </div>
                                 <div class="ss_cl_qstn_action ">
                                     <div class="">
@@ -857,12 +909,8 @@ if(isset($qusvalue->left_label)){
                                         <h1 class="ss-survey-heading--text ss-survey-font-family ss-survey-text-size--3xl sm_ss-survey-text-size--2xl ss-survey-line-height--heading ss-survey-text-weight--regular ss-survey-text-color--primary ss-survey-text-question-text">
                                             <span class="d-block ss-survey-heading--text__span">{{$currentQus->question_name}} </span>
                                         </h1>
-                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07"
-                                            id="question-description-8966644">
-                                        <p>
-                                            <br>
-                                        </p>
-                                        </p>
+                                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">{{$currentQus->question_description}}</p>
+
                                     </div>
                                 </div>
                             </div><span class="ss_span_wrapper">
@@ -902,7 +950,17 @@ if(isset($qusvalue->left_label)){
         <div class="ss-fp-section surveysparrow-survey-form-wrapper--centered ss-survey-background d-flex fx-column fx-jc--center fx-ai--center">
             <div class="ss-fp-section__frame ss_classic_survey_intro_contents">
                 <div class="ss-fp-section__inner-frame">
-                    
+                        @if(isset($qusvalue->tbs_logo))
+                            @if($qusvalue->tbs_logo== 1 && isset($qusvalue->tbs_logo_url))
+                                <figure>
+                                    <span>
+                                        <div class="ss_image_wrapper">
+                                            <img id="tbs_logo" src="{{ asset('uploads/survey/'.$qusvalue->tbs_logo_url) }}" alt="TBS Logo">
+                                        </div>
+                                    </span>
+                                </figure>
+                            @endif
+                        @endif
                         <h3 class="ss-header-text--fluid ss-survey-heading--text ss-survey-font-family ss-survey-line-height--normal ss-survey-text-weight--semibold ss-survey-text-color--primary ss-survey-text-align--center ss-survey-text-question-text main-header-font-size--md">
                             @if(isset($qusvalue->thankyou_title))
                                 <p>{{$qusvalue->thankyou_title}}</p>

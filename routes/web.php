@@ -29,6 +29,7 @@ Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.l
 Route::any('admin/forgot_password', 'Auth\AdminLoginController@forgot_password')->name('admin.forgot_password'); 
 
 Route::any('dashboard','WelcomeController@user_dashboard')->middleware(['auth', 'verified'])->name('user.dashboard');
+Route::any('view_client_survey_list','WelcomeController@view_client_survey_list')->middleware(['auth', 'verified'])->name('client.survey');
 Route::any('profile-edit','WelcomeController@user_profile')->middleware(['auth', 'verified'])->name('user.profile');
 Route::any('share','WelcomeController@user_share')->middleware(['auth', 'verified'])->name('user.share');
 Route::any('rewards','WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
@@ -61,6 +62,7 @@ Route::group([
     Route::get('export_user_activity','UsersController@export_user_activity')->name('export_user_activity');
     Route::get('export_referrals','UsersController@export_referrals')->name('export_referrals');
     Route::any('users_multi_delete', 'UsersController@users_multi_delete')->name('users_multi_delete');
+    Route::any('user_email_id_check', 'UsersController@user_email_id_check')->name('user_email_id_check');
 
     /* Internal Reports MENU*/
     Route::controller(InternalReportController::class)->group(function(){
@@ -95,6 +97,10 @@ Route::group([
     Route::any('projects_copy/{id}','ProjectsController@copy')->name('projects_copy');
     Route::any('export_projects', 'ProjectsController@export_projects')->name('export_projects');   
     Route::any('projects_multi_delete', 'ProjectsController@projects_multi_delete')->name('projects_multi_delete');
+    Route::any('attach_projects/{respondent_id}', 'ProjectsController@attach_projects')->name('attach_projects');
+    Route::any('project_seach_result', 'ProjectsController@project_seach_result')->name('project_seach_result');
+    Route::any('project_attach_store', 'ProjectsController@project_attach_store')->name('project_attach_store');
+    Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
 
     /* Respondents MENU*/
     Route::resource('respondents','RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
@@ -110,6 +116,8 @@ Route::group([
     Route::any('respondent_seach_result', 'RespondentsController@respondent_seach_result')->name('respondent_seach_result');
     Route::any('respondent_attach_store', 'RespondentsController@respondent_attach_store')->name('respondent_attach_store');
     Route::any('deattach_respondent/{respondent_id}/{project_id}', 'RespondentsController@deattach_respondent')->name('deattach_respondent');
+    Route::any('user_respondent_id_check', 'RespondentsController@user_respondent_id_check')->name('user_respondent_id_check');
+    Route::any('get_user_survey', 'RespondentsController@get_user_survey')->name('get_user_survey');
 
     /* Tags (or) Pannels MENU*/
     Route::resource('tags','TagsController')->name('index', 'tags.index')->name('destroy', 'tags.destroy')
@@ -190,7 +198,7 @@ Route::group([
     Route::get('/survey/questions/{id}', ['as' => 'survey.quesbuilder','uses' => 'SurveyController@questionList']);
     Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update','uses' => 'SurveyController@updateQus']);
 
-    /* Clone Survey*/
+    /* Survey Clone Routings*/
     Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication','uses' => 'SurveyController@surveyduplication']);
     Route::get('/survey/sharesurvey/{id}', ['as' => 'survey.sharesurvey','uses' => 'SurveyController@sharesurvey']);
     Route::get('/survey/movesurvey/{id}', ['as' => 'survey.movesurvey','uses' => 'SurveyController@movesurvey']);
@@ -201,6 +209,7 @@ Route::group([
     Route::get('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@background']); // Survey Background
     Route::post('/survey/background/{id}', ['as' => 'survey.background','uses' => 'SurveyController@setbackground']); // Survey Background
     
+    // Survey Get Qus
     Route::get('/survey/getqus', ['as' => 'survey.getqus','uses' => 'SurveyController@getqus']); // Get Qus
 
     // Survey Settings 
@@ -238,3 +247,10 @@ Route::any('check_email_name','CommonAdminController@check_email_name')->name('c
 
 
 require __DIR__.'/auth.php';
+
+// Reports
+Route::get('/generate-ppt-report', ['as' => 'survey.pptreport','uses' => 'SurveyController@generatePPTReport']);
+Route::get('/generate-wordcloud-report', ['as' => 'survey.wordcloudreport','uses' => 'SurveyController@generateWordCloud']);
+Route::get('/generate-pdf', ['as' => 'survey.pdfreport','uses' => 'SurveyController@generatePDF']);
+Route::get('/generate-barchart', ['as' => 'survey.barchart','uses' => 'SurveyController@generateBarChart']);
+Route::get('/wordcloud', 'WordCloudController@generateAndDownload');

@@ -4,9 +4,18 @@
 <!-- ========== Left Sidebar Start ========== -->
 <link href="{{ asset('assets/css/survey.css') }}" rel="stylesheet" type="text/css" />
 <?php
-    $link = $_SERVER['PHP_SELF'];
+   // $link = $_SERVER['PHP_SELF'];
+    $link=Request::url();
     $link_array = explode('/',$link);
+    //echo $link;
     $page = end($link_array);
+//echo $page;
+$selectedFolder = \App\Models\Folder::where(['id'=>$page])->first(); 
+
+$getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->get();
+//echo "<pre>"; print_r($selectedFolder);
+  //  print_r($getSurveys);
+    //exit;
 ?>
 <style>
     a.waves-effect.active span.menu-item {
@@ -55,7 +64,7 @@
         </a>
     </div>
     <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn1">
-    <a href="/admin/dashboard">
+    <a href="{{ route('admin.dashboard') }}">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
     </a>
     </button>
@@ -81,7 +90,9 @@
                         </div>
                     </div>
                     <div class="foldermenu ss-overflow-y--auto ss-scrollbar--hide h-100" style="padding-bottom: 100px;">
-                       
+                        @php 
+                        //dd($folders);
+                        @endphp
                         @foreach($folders as $folder)
                         <?php $className =""; ?>
                         @if(isset($selectedFolder))
@@ -140,10 +151,7 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<?php 
-$selectedFolder = \App\Models\Folder::where(['id'=>$page])->first(); 
-$getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->get();
-?>
+
 <div class="main-content1">
     <div class="page-content">
         <div class="container-fluid">
