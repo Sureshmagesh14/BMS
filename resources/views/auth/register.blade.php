@@ -25,7 +25,7 @@
     .icon-view-login {
         position: absolute;
         right: 12px;
-        top: 25px;
+        top: 15px;
     }
 
     i.fa.fa-eye {
@@ -40,9 +40,9 @@
         height: 1em !important;
     }
 </style>
-<div class="container-fluid vh-100">
+<div class="container-fluid">
     <div class="row justify-content-center align-items-center d-flex">
-        <div class="col-md-6 vi-nav-bg vh-100 text-center hide-mobile">
+        <div class="col-md-6 vi-nav-bg text-center hide-mobile">
             <img src="./assets/images/logo white.png" class="img-fluid mt-5 pt-5 text-center w-50 m-auto" alt="" />
             <h1 class="text-white py-5">Welcome!</h1>
 
@@ -62,7 +62,7 @@
                             class="form-control vi-border-clr vi-cs-textbox input-password" aria-label="password"
                             required>
                         <a href="JavaScript:void(0);" class="icon-view-login">
-                            <i class="fa fa-eye"></i>
+                            <i class="fa fa-eye-slash"></i>
                         </a>
                     </div>
 
@@ -160,7 +160,7 @@
                                     class="form-control vi-border-clr border-radius-0 input-password"
                                     aria-label="password" placeholder="Create Password" required>
                                 <a href="JavaScript:void(0);" class="icon-view">
-                                    <i class="fa fa-eye"></i>
+                                    <i class="fa fa-eye-slash"></i>
                                 </a>
                             </div>
                             <br>
@@ -169,7 +169,7 @@
                                     class="form-control vi-border-clr border-radius-0 input-password"
                                     aria-label="password" placeholder="Confirm/Retype Password" required>
                                 <a href="JavaScript:void(0);" class="icon-view">
-                                    <i class="fa fa-eye"></i>
+                                    <i class="fa fa-eye-slash"></i>
                                 </a>
                             </div>
 
@@ -339,13 +339,13 @@
             var $input = $(input);
             $input.parent().find('.icon-view').click(function() {
                 var change = "";
-                if ($(this).find('i').hasClass('fa-eye')) {
-                    $(this).find('i').removeClass('fa-eye')
-                    $(this).find('i').addClass('fa-eye-slash')
-                    change = "text";
-                } else {
+                if ($(this).find('i').hasClass('fa-eye-slash')) {
                     $(this).find('i').removeClass('fa-eye-slash')
                     $(this).find('i').addClass('fa-eye')
+                    change = "text";
+                } else {
+                    $(this).find('i').removeClass('fa-eye')
+                    $(this).find('i').addClass('fa-eye-slash')
                     change = "password";
                 }
                 var rep = $("<input type='" + change + "' />")
@@ -363,13 +363,13 @@
             var $input = $(input);
             $input.parent().find('.icon-view-login').click(function() {
                 var change = "";
-                if ($(this).find('i').hasClass('fa-eye')) {
-                    $(this).find('i').removeClass('fa-eye')
-                    $(this).find('i').addClass('fa-eye-slash')
-                    change = "text";
-                } else {
+                if ($(this).find('i').hasClass('fa-eye-slash')) {
                     $(this).find('i').removeClass('fa-eye-slash')
                     $(this).find('i').addClass('fa-eye')
+                    change = "text";
+                } else {
+                    $(this).find('i').removeClass('fa-eye')
+                    $(this).find('i').addClass('fa-eye-slash')
                     change = "password";
                 }
                 var rep = $("<input type='" + change + "' />")
