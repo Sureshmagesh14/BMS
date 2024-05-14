@@ -55,6 +55,16 @@ class AdminLoginController extends Controller
         ]);
 
         if (\Auth::guard('admin')->attempt($request->only(['email','password']), $request->get('remember'))){
+
+            if(isset($request->remember) && !empty($request->remember)){
+                setcookie("email",$request->email,time()+3600);
+                setcookie("password",$request->password,time()+3600);
+            }
+            else{
+                setcookie("email","");
+                setcookie("password","");
+            }
+
             return redirect()->route('admin.dashboard');
         }
 

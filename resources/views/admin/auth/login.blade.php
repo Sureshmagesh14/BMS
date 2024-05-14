@@ -59,25 +59,23 @@
             <div class="mb-6">
                 <label class="block font-bold mb-2" for="email">Email Address</label>
                 <input class="form-control form-input form-input-bordered w-full" id="email" type="email"
-                    name="email" value="" required autofocus>
+                    name="email" value="{{isset($_COOKIE["email"]) ? $_COOKIE["email"] : ''}}" required autofocus>
             </div>
 
             <div class="mb-6">
                 <label class="block font-bold mb-2" for="password">Password</label>
                 <div class="main-password">
-                    <input type="password" id="password" name="password"
+                    <input type="password" id="password" name="password" value="{{isset($_COOKIE["password"]) ? $_COOKIE["password"] : ''}}"
                         class="form-control form-input form-input-bordered w-full input-password" aria-label="password">
                     <a href="JavaScript:void(0);" class="icon-view">
                         <i class="fa fa-eye"></i>
                     </a>
                 </div>
-
-
             </div>
 
             <div class="flex mb-6">
                 <label class="flex items-center text-xl font-bold">
-                    <input class="" type="checkbox" name="remember">
+                    <input class="" type="checkbox" name="remember" id="remember" {{isset($_COOKIE["email"]) ? 'checked' : ''}}>
                     <span class="text-base ml-2">Remember Me</span>
                 </label>
 

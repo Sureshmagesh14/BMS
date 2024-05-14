@@ -3,14 +3,14 @@
         <select name="action_2" id="action_2" class="form-control cashout_table hided_option cashout_select_box" style="display:none;">
             <option value="">Select Action</option>
             <optgroup label="Cash Out">
-                <option value="1">EFT > Approve & Process</option>
-                <option value="2">Status > Completed</option>
-                <option value="3">Status > Declined</option>
-                <option value="4">Status > Failed</option>
-                <option value="5">Delete Cash Outs</option>
+                <option value="5">EFT > Approve & Process</option>
+                <option value="3">Status > Completed</option>
+                <option value="4">Status > Declined</option>
+                <option value="0">Status > Failed</option>
+                <option value="delete_all">Delete Cash Outs</option>
             </optgroup>
             <optgroup label="Standalone Actions">
-                <option value="6">Export - Airtime Cash Outs</option>
+                <option value="export">Export - Airtime Cash Outs</option>
                 {{-- <option value="7">Airtime - Status > Complete by Import</option> --}}
             </optgroup>
         </select>
@@ -20,6 +20,12 @@
             <option value="6">Export - Airtime Cash Outs</option>
             {{-- <option value="7">Airtime - Status > Complete by Import</option> --}}
         </select>
+
+        <div class="play-button-container ml-3">
+            <a class="play-button cashout_play_button">
+                <div class="play-button__triangle"></div>
+            </a>
+        </div>
     </div>
   
     <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
@@ -90,11 +96,5 @@
             <th>Action</th>
         </tr>
     </thead>
-    <tbody>
-    </tbody>
+    <tbody></tbody>
 </table>
-<script>
-$(document).ready(function() {
-    cashout_table();
-});
-</script>

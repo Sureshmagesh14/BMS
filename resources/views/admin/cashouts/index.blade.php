@@ -154,17 +154,6 @@
             });
         }
 
-        $(document).on('change', '.cashout_select_box', function(e) {
-            value = $(this).val();
-            form = 'cashout';
-            texthead = 'Export - Airtime Cash Outs';
-            value_array = [];
-
-            if(value == 6){
-                excel_report(value, form, "{{ route('cashout_export') }}", texthead, value_array);
-            }
-        });
-
         function cashout_type(get_this){
             type = $(get_this).val();
             cashout_table(type, status);
@@ -175,20 +164,33 @@
             cashout_table(type, status);
         }
 
-        $(document).on('click', '.cashout_select_box', function(e) {
-            values = $(this).val();
+        $(document).on('click', '.cashout_play_button', function(e) {
+            var all_id = [];
+            var values = $("#cashout_table tbody tr").map(function() {
+                var $this = $(this);
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
+                }
+            }).get();
 
-            if(values == 5){
-                var all_id = [];
+            select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $(".hided_option").val();
 
-                var values = $("#cashout_table tbody tr").map(function() {
-                    var $this = $(this);
-                    if ($this.find("[type=checkbox]").is(':checked')) {
-                        all_id.push($this.find("[type=checkbox]").attr('id'));
-                    }
-                }).get();
-
+            if($.isNumeric(select_value)){
+                titles = (select_value == 0) ? "Failed" : (select_value == 3) ? "Completed" : (select_value == 4) ? "Declined" : "EFT Approve & Process";
+                select_action("POST", all_id, select_value, "{{ route('cashout_action') }}", 'cashout_table', titles, "Are You Want To Change Status", "Action");
+            }
+            else if(select_value == "delete_all"){
                 multi_delete("POST", all_id, "{{ route('cash_multi_delete') }}", "Cashout Deleted", 'cashout_table');
+            }
+            else if(select_value == "export"){
+                value = $(this).val();
+                form = 'cashout';
+                texthead = 'Export - Airtime Cash Outs';
+                value_array = [];
+                excel_report(value, form, "{{ route('cashout_export') }}", texthead, value_array);
+            }
+            else{
+                toastr.info("OOPS! Select the action");
             }
         });
     </script>
