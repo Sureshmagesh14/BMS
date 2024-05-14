@@ -18,7 +18,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {   
-        $this->sendWelcomeEmail();
         return view('auth.login');
     }
 
