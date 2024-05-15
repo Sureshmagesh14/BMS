@@ -1,17 +1,18 @@
     <footer class="footer">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-12 d-flex justify-content-center">
                     © 
                     <script>
                         document.write(new Date().getFullYear())
-                    </script> {{Config::get('constants.footer')}}.
+                    </script> 
+                  {{Config::get('constants.footer')}}.
                 </div>
-                <div class="col-sm-6">
+                <div class="d-flex justify-content-center">
                     <div class="text-sm-right d-none d-sm-block">
                        
                     </div>
-                    </script> © BMS.
+                    </script>
                 </div>
                 {{-- <div class="col-sm-6">
                     <!-- <div class="text-sm-right d-none d-sm-block">
