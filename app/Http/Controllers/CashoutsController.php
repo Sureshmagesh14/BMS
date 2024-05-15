@@ -304,7 +304,7 @@ class CashoutsController extends Controller
             return response()->json([
                 'status'=>200,
                 'success' => true,
-                'message'=>'Tags Deleted'
+                'message'=>'Cashout Deleted'
             ]);
         }
         catch (Exception $e) {
@@ -318,6 +318,26 @@ class CashoutsController extends Controller
             $form     = $request->form;
 
             return view('admin.report.cashout')->with('form',$form)->with('id_value',$id_value);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function cashout_action(Request $request){
+        try {
+            $all_id = $request->all_id;
+            $value  = $request->value;
+           
+            foreach($all_id as $id){
+                $tags = Cashout::where('id',$id)->update(['status_id' => $value]);
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Status Changed'
+            ]);
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

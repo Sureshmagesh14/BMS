@@ -237,6 +237,44 @@
             });
         }
 
+        function select_action(method_type, set_data, value, route, datatable_function, titles, contents, texts){
+            $.confirm({
+                title: titles,
+                content: contents,
+                autoClose: 'cancel|8000',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    delete: {
+                        text: texts,
+                        action: function() {
+                            $.ajax({
+                                type: method_type,
+                                data: {
+                                    _token: tempcsrf,
+                                    all_id: set_data,
+                                    value: value,
+                                },
+                                url: route,
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.status == 404) {
+                                        $('.delete_student').text('');
+                                    } else {
+                                        toastr.success(response.message,"Success");
+                                        eval(datatable_function + "()");
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    cancel: function() {
+                        
+                    }
+                }
+            });
+        }
+
         function excel_report(value, form, route, texthead, checkbox_value){
             $.confirm({
                 title: texthead,

@@ -94,21 +94,6 @@
             });
         }
 
-        $(document).on('click', '.user_table.delete_all', function(e) {
-            e.preventDefault();
-            var all_id = [];
-
-            var values = $("#user_table tbody tr").map(function() {
-                var $this = $(this);
-                if ($this.find("[type=checkbox]").is(':checked')) {
-                    all_id.push($this.find("[type=checkbox]").attr('id'));
-                    // return {id: $this.find("[type=checkbox]").attr('id')};
-                }
-            }).get();
-
-            multi_delete("POST", all_id, "{{ route('users_multi_delete') }}", "Users Deleted", 'user_datatable');
-        });
-
         $(document).on('click', '#delete_users', function(e) {
             e.preventDefault();
             var id = $(this).data("id");
@@ -116,5 +101,28 @@
             url = url.replace(':id', id);
 
             single_delete("DELETE", id, url, "User Deleted", 'user_datatable');
+        });
+
+        $(document).on('click', '.user_play_button', function(e) {
+            value = $(".user_select").val();
+
+            var all_id = [];
+            var values = $("#user_table tbody tr").map(function() {
+                var $this = $(this);
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
+                }
+            }).get();
+
+            if(value == "delete_all"){
+                multi_delete("POST", all_id, "{{ route('users_multi_delete') }}", "Users Deleted", 'user_datatable');
+            }
+            else if(value == "active" || value == "deactive"){
+                titles = (value == "active") ? "Active Users" :  "De-Active Users";
+                select_action("POST", all_id, value, "{{ route('users_action') }}", 'user_datatable', titles, "Are You Want To Change Status", "Action");
+            }
+            else{
+                toastr.info("OOPS! Select the action");
+            }
         });
     </script>

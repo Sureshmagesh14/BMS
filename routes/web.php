@@ -68,6 +68,7 @@ Route::group([
     Route::get('export_user_activity','UsersController@export_user_activity')->name('export_user_activity');
     Route::get('export_referrals','UsersController@export_referrals')->name('export_referrals');
     Route::any('users_multi_delete', 'UsersController@users_multi_delete')->name('users_multi_delete');
+    Route::any('users_action', 'UsersController@users_action')->name('users_action');
     Route::any('user_email_id_check', 'UsersController@user_email_id_check')->name('user_email_id_check');
 
     /* Internal Reports MENU*/
@@ -87,6 +88,7 @@ Route::group([
         Route::any('cash_multi_delete', 'CashoutsController@cash_multi_delete')->name('cash_multi_delete');
         Route::any('cash_multi_update', 'CashoutsController@cash_multi_update')->name('cash_multi_update');
         Route::any('cashout_export','cashout_export')->name('cashout_export'); /* Cashout_export Export */
+        Route::any('cashout_action','cashout_action')->name('cashout_action');
     });
 
     /* Action Events MENU*/
