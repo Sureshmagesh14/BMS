@@ -21,6 +21,7 @@
                     Please update your profile.</small>
             </div>
         @endif
+        
 
         <div class="alert alert-danger bs-alert-old-docs text-center alert_message" style="display: none;"></div>
         <div class="row justify-content-center py-5 m-auto">
