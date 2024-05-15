@@ -169,7 +169,7 @@ if(isset($bg)){
         <input type="hidden" value="{{$question->qus_type}}" id="question_type"/>
         <input type="hidden" value="" id="answered"/>
         <?php if($survey->survey_type == 'profile'){
-            $urlRedirect = route('updaterofile');
+            $urlRedirect = route('updateprofile');
         }else{
             $urlRedirect = route('user.dashboard');
         } ?>
