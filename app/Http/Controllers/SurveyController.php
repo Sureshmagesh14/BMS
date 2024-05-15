@@ -1514,6 +1514,8 @@ class SurveyController extends Controller
                     array_push($cols,$data);
                 }
             }
+            return view('admin.survey.survey.overview',compact('survey','question','responses','survey_id','cols'));
+
             return view('admin.survey.survey.responses',compact('survey','question','responses','survey_id','cols'));
         }
         catch (Exception $e) {
