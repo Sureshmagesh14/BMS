@@ -49,12 +49,12 @@
                             alt="" /></a> -->
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle vi-usr-profile p-3 me-3" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
                                 @php
                                     $first_char = mb_substr(Session::get('resp_name'), 0, 1);
                                 @endphp
-                                {{ $first_char }}
+                                <span class="vi-usr-profile m-auto p-4" style="text-transform: capitalize;">C</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('user.viewprofile') }}">View Profile</a>
