@@ -234,7 +234,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    respondents_datatable();
                 },
                 complete: function(response) {
                     $('#respondents_create').html('Create New');

@@ -46,7 +46,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    contents_table();
                 },
                 complete: function(response) {
                     $('#content_create').html('Create New');
