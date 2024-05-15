@@ -46,7 +46,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    tags_table();
                 },
                 complete: function(response) {
                     $('#tags_create').html('Create New');

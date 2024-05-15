@@ -52,8 +52,4 @@
     <tbody>
     </tbody>
 </table>
-<script>
-    $(document).ready(function() {
-        banks_table();
-    });
-</script>
+

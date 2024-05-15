@@ -50,8 +50,3 @@
     <tbody>
     </tbody>
 </table>
-<script>
-    $(document).ready(function() {
-        network_table();
-    });
-</script>

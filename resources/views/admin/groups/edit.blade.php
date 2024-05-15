@@ -68,7 +68,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    groups_table();
                 },
                 complete: function(response) {
                     $('#groups_update').html('Create New');

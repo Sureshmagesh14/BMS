@@ -49,7 +49,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    tags_table();
                 },
                 complete: function(response) {
                     $('#tags_update').html('Create New');

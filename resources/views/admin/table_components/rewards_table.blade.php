@@ -32,8 +32,4 @@
     <tbody>
     </tbody>
 </table>
-<script>
-    $(document).ready(function() {
-        rewards_table();
-    });
-</script>
+
