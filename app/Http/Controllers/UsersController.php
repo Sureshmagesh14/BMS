@@ -641,4 +641,25 @@ class UsersController extends Controller
             // return 0; //Error
         }
     }
+
+    public function users_action(Request $request){
+        try {
+            $all_id = $request->all_id;
+            $status = ($request->value == "active") ? 1 : 2;
+            $texts = ($request->value == "active") ? "Active" : "De-Active";
+    
+            foreach($all_id as $id){
+                $tags = Users::where('id',$id)->update(['status_id' => $status]);
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Status '.$texts
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 }

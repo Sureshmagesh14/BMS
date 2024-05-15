@@ -386,7 +386,10 @@ class RespondentsController extends Controller
                             ->where('pr.project_id',$request->id);
                         }
                     }
-                $posts = $posts->orWhere('mobile', 'LIKE', "%{$search}%")
+                $posts = $posts->orWhere('name', 'LIKE', "%{$search}%")
+                    ->orWhere('surname', 'LIKE', "%{$search}%")
+                    ->orWhere('mobile', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%")
                     ->offset($start)
                     ->limit($limit)
                     ->orderBy($order, $dir)
@@ -399,7 +402,11 @@ class RespondentsController extends Controller
                             ->where('pr.project_id',$request->id);
                         }
                     }
-                $totalFiltered = $totalFiltered->orWhere('mobile', 'LIKE', "%{$search}%")->count();
+                $totalFiltered = $totalFiltered->orWhere('name', 'LIKE', "%{$search}%")
+                                                ->orWhere('surname', 'LIKE', "%{$search}%")
+                                                ->orWhere('mobile', 'LIKE', "%{$search}%")
+                                                ->orWhere('email', 'LIKE', "%{$search}%")
+                                                ->count();
             }
 
             $data = array();
@@ -415,9 +422,17 @@ class RespondentsController extends Controller
                     $nestedData['mobile'] = $post->mobile ?? '-';
                     $nestedData['whatsapp'] = $post->whatsapp ?? '-';
                     $nestedData['email'] = $post->email ?? '-';
-                    $dob = $post->date_of_birth;
-                    $diff = (date('Y') - date('Y', strtotime($dob)));
-                    $nestedData['date_of_birth'] = $diff ?? '-';
+                    if($post->date_of_birth!=null){
+                        $bday = new \DateTime($post->date_of_birth); // Creating a DateTime object representing your date of birth.
+                        $today = new \DateTime(date('m.d.y'));
+                        $diff = $today->diff($bday); 
+    
+                        $age=$diff->y. 'year '. $diff->m. 'month '. $diff->d .'days';
+                    }else{
+                        $age='-';
+                    }
+                   
+                    $nestedData['date_of_birth'] = $age;
                     $nestedData['race'] = $post->race ?? '-';
                     $nestedData['status'] = $post->status ?? '-';
                     $nestedData['profile_completion'] = $post->profile_completion ?? '-';

@@ -42,6 +42,38 @@
             ul.token-input-list-bootstrap {
                 border: 1px solid #ced4da !important;
             }
+
+            .play-button-container {
+                align-content: center;
+            }
+
+            .play-button {
+                position: relative;
+                display: block;
+                height: 25px;
+                width: 25px;
+                box-shadow: 0 0 0 3px #4099de;
+                border-radius: 15%;
+                cursor: pointer;
+            }
+
+            .play-button__triangle {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-30%, -50%);
+                z-index: 0;
+                border: solid #4099de;
+                border-right-width: 0;
+                border-left-width: 13.5px;
+                border-top-width: 8.1px;
+                border-bottom-width: 8.1px;
+                border-top-color: transparent;
+                border-bottom-color: transparent;
+                height: 0;
+                width: 0;
+                transition: 0.6s, 0s border-color;
+            }
         </style>
     </head>
 

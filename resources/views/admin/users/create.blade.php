@@ -44,18 +44,10 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Role * </label>
         <div class="col-md-10">
             <select id="role_id" name="role_id" class="w-full form-control form-select" required>
-                <option value="" selected="selected" disabled="disabled">
-                    Choose an option
-                </option>
-                <option value="1">
-                    Admin
-                </option>
-                <option value="2">
-                    User
-                </option>
-                <option value="3">
-                    Temp
-                </option>
+                <option value="" selected="selected" disabled="disabled">Choose an option</option>
+                <option value="1">Admin</option>
+                <option value="2">User</option>
+                <option value="3">Temp</option>
             </select>
         </div>
     </div>
@@ -64,17 +56,10 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Status * </label>
         <div class="col-md-10">
             <select id="status_id" name="status_id" class="w-full form-control form-select" required>
-                <option value="" selected="selected" disabled="disabled">
-                    Choose an option
-                </option>
-                <option value="1">
-                    Active
-                </option>
-                <option value="2">
-                    Inactive
-                </option>
+                <option value="" selected="selected" disabled="disabled">Choose an option</option>
+                <option value="1">Active</option>
+                <option value="2">Inactive</option>
             </select>
-
         </div>
     </div>
 
@@ -112,7 +97,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    user_datatable();
                 },
                 complete: function(response) {
                     $('#users_create').html('Create New');
