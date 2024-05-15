@@ -54,6 +54,7 @@ class WelcomeController extends Controller
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+        
     }
     
      /**

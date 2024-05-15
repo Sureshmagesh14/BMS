@@ -34,15 +34,15 @@
     </div>
 </section>
 
- <!-- <form name="form" id="x1" method="POST" action="https://paynow.netcash.co.za/site/paynow.aspx" target="_top">
-<input type="hidden" name="M1" value="d5b32568-2a7e-4a5d-9de4-5d27ca8b39c8"> 
+ <form name="form" id="x1" method="POST" action="https://paynow.netcash.co.za/site/paynow.aspx" target="_top">
+<input type="hidden" name="M1" value="600d1709-9d70-493f-89fa-559b5720ff46"> 
 <input type="hidden" name="M2" value="24ade73c-98cf-47b3-99be-cc7b867b3080">  
-<input type="hidden" name="p2" value="ID:123"> 
+<input type="hidden" name="p2" value="ID:1234"> 
 <input type="hidden" name="p3" value="Test / Demo goods"> 
 <input type="hidden" name="p4" value="5.00"> 
 <input type="hidden" name="Budget" value="Y"> 
 <input name="submit" type="submit" value="PAY"> 
-</form>  -->
+</form> 
 
 <!-- <form name="form" id="x1" method="POST" action="https://paynow.netcash.co.za/site/paynow.aspx" target="_top">
 <input type="hidden" name="M1" value="d5b32568-2a7e-4a5d-9de4-5d27ca8b39c8"> YOUR PAY NOW SERVICE KEY GOES IN HERE
