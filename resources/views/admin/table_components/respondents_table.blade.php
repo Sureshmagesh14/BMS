@@ -161,8 +161,4 @@
     <tbody>
     </tbody>
 </table>
-<script>
-    $(document).ready(function() {
-        respondents_datatable();
-    });
-</script>
+

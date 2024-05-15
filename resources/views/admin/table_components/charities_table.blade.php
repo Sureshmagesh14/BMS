@@ -50,8 +50,4 @@
     <tbody>
     </tbody>
 </table>
-<script>
-    $(document).ready(function() {
-        charities_table();
-    });
-</script>
+

@@ -91,8 +91,4 @@
     <tbody>
     </tbody>
 </table>
-<script>
-    $(document).ready(function() {
-        groups_table();
-    });
-</script>
+
