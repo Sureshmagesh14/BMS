@@ -426,7 +426,7 @@ class SurveyController extends Controller
     public function updateQus(Request $request,$id){
         $currentQus=Questions::where(['id'=>$id])->first();
         // // Update Qus Count 
-        // $survey=Survey::where(['id'=>$currentQus->survey_id])->first();
+        $survey=Survey::where(['id'=>$currentQus->survey_id])->first();
         // if($request->qus_type!='welcome_page' && $request->qus_type!='thank_you'){
         //     $survey->qus_count=$survey->qus_count+1;
         // }
@@ -1450,6 +1450,15 @@ class SurveyController extends Controller
                                 $surveyres->skip = '';
                                 $surveyres->deleted_at = 0;
                                 $surveyres->save();
+                                $surveyRec=Survey::where(['id'=>$survey_id])->first();
+
+                                if($surveyRec->survey_type == 'survey'){
+                                    // Get Project ID 
+                                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                                    if($project){
+                                        Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
+                                    }
+                                }
                                 return redirect()->route('survey.endsurvey',[$survey_id,$next_question->id]);
                             }else{
                                 
@@ -1485,6 +1494,13 @@ class SurveyController extends Controller
                 $surveyres->skip = '';
                 $surveyres->deleted_at = 0;
                 $surveyres->save();
+                if($surveyRec->survey_type == 'survey'){
+                    // Get Project ID 
+                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                    if($project){
+                        Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
+                    }
+                }
                 return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
             }else{
                 return redirect()->route('survey.endsurvey',[$survey_id,0]);
@@ -1496,7 +1512,7 @@ class SurveyController extends Controller
     {
         try {
             $survey = Survey::with('folder')->where(['id'=>$survey_id])->first();
-            $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you','matrix_qus'])->get();
+            $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
             $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
 
             $responses = SurveyResponse::where(['survey_id'=>$survey_id])->get();
@@ -2146,6 +2162,36 @@ class SurveyController extends Controller
             return "limitavailable";
         }
         
+    }
+        // Get qus type
+    function Qustype($type){
+        $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','upload'=>'Upload','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
+        return $questionTypes[$type];
+    }
+
+    // Human readable time 
+    function humanReadableTime($datetime){
+        // Create DateTime objects for the given datetime and the current datetime
+        $currentDateTime = new \DateTime();
+        $givenDateTime = new \DateTime($datetime);
+        // Calculate the difference between the given datetime and the current datetime
+        $interval = $currentDateTime->diff($givenDateTime);
+        // Convert the difference to a human-readable format
+        if ($interval->y > 0) {
+            $output = $interval->y . " year" . ($interval->y > 1 ? "s" : "") . " ago";
+        } elseif ($interval->m > 0) {
+            $output = $interval->m . " month" . ($interval->m > 1 ? "s" : "") . " ago";
+        } elseif ($interval->d > 0) {
+            $output = $interval->d . " day" . ($interval->d > 1 ? "s" : "") . " ago";
+        } elseif ($interval->h > 0) {
+            $output = $interval->h . " hour" . ($interval->h > 1 ? "s" : "") . " ago";
+        } elseif ($interval->i > 0) {
+            $output = $interval->i . " min" . ($interval->i > 1 ? "s" : "") . " ago";
+        } else {
+            $output = "Just now";
+        }
+
+        return $output;
     }
 }
 
