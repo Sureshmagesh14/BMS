@@ -15,7 +15,7 @@
 
         @if ($data->profile_completion_id == 0)
             <div class="alert alert-danger bs-alert-old-docs text-center">
-                <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile') }}">Update Profile</a>
+                <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile_wizard') }}">Update Profile</a>
                 <br>
                 <small class="leading-none mt-1 text-danger">Cash outs are only available if your profile is up to date.
                     Please update your profile.</small>

@@ -739,4 +739,24 @@ class ProjectsController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function project_action(Request $request){
+        try {
+            $all_id = $request->all_id;
+            $value  = $request->value;
+           
+            foreach($all_id as $id){
+                $tags = Projects::where('id',$id)->update(['status_id' => $value]);
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Status Changed'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 }
