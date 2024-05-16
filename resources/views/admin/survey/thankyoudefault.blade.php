@@ -38,6 +38,7 @@ button#back_to_profile {
                     <p>Profile Updated!</p>
                     @else    
                     <p>Survey Completed!</p>
+                    @endif
                         <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">Thanks for you time</p>
                         <figure>
                             <span>
@@ -52,6 +53,6 @@ button#back_to_profile {
         </div>
     </div>
 </body>
-<script src="http://127.0.0.1:8000/assets/js/jquery.min.js"></script>
+<script src="{{asset('assets/js/jquery.min.js')}}"></script>
 
 </html>

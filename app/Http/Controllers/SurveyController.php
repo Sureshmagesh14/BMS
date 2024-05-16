@@ -1989,158 +1989,163 @@ class SurveyController extends Controller
     public function checkquota($survey_id){
         $survey = Survey::where(['id'=>$survey_id])->first();
         $surveyquota=SurveyQuotas::where(['survey_id'=>$survey_id])->get();
-        foreach($surveyquota as $quota){
-            $question_id = explode('_',$quota->question_id);
-            if(is_array($question_id)){
-                $checkresponse = SurveyResponse::with('questions')->where(['survey_id'=>$survey->id,'question_id'=>$question_id[0]])->get();
-                $limit = 0;
-                foreach($checkresponse as $userResp){
-                    $user_answered = '';
-                    $user_skipped = '';
-                    $qus_type = "";
-                    if($userResp){
-                        $qus_type = $userResp->questions[0]->qus_type;
-                        $user_answered =  $userResp->answer;
-                        $user_skipped =  $userResp->skip;
-                    }
-                    switch($quota->option_type){
-                        case 'isSelected':
-                            if($qus_type == 'matrix_qus'){
-                                $user_answered=json_decode($user_answered);
-                                if($user_answered[$question_id[1]]->key == $question_id[1]){
-                                    if($quota->option_value == $user_answered[$question_id[1]]->ans){
+        if(count($surveyquota)>0){
+            foreach($surveyquota as $quota){
+                $question_id = explode('_',$quota->question_id);
+                if(is_array($question_id)){
+                    $checkresponse = SurveyResponse::with('questions')->where(['survey_id'=>$survey->id,'question_id'=>$question_id[0]])->get();
+                    $limit = 0;
+                    foreach($checkresponse as $userResp){
+                        $user_answered = '';
+                        $user_skipped = '';
+                        $qus_type = "";
+                        if($userResp){
+                            $qus_type = $userResp->questions[0]->qus_type;
+                            $user_answered =  $userResp->answer;
+                            $user_skipped =  $userResp->skip;
+                        }
+                        switch($quota->option_type){
+                            case 'isSelected':
+                                if($qus_type == 'matrix_qus'){
+                                    $user_answered=json_decode($user_answered);
+                                    if($user_answered[$question_id[1]]->key == $question_id[1]){
+                                        if($quota->option_value == $user_answered[$question_id[1]]->ans){
+                                            $limit++;
+                                        }
+                                    }
+                                }
+                                else if($qus_type == 'multi_choice'){
+                                    $user_answered =  explode(",",$user_answered);
+                                    if (in_array($quota->option_value, $user_answered)) { 
                                         $limit++;
                                     }
                                 }
-                            }
-                            else if($qus_type == 'multi_choice'){
-                                $user_answered =  explode(",",$user_answered);
-                                if (in_array($quota->option_value, $user_answered)) { 
+                                else if($qus_type != 'matrix_qus' && $qus_type != 'multi_choice'){
+                                    if ($user_answered == $quota->option_value) { 
+                                        $limit++;
+                                    }
+                                }
+                                break;
+    
+                            case 'isNotSelected':
+                                if($qus_type == 'matrix_qus'){
+                                    $user_answered=json_decode($user_answered);
+                                    if($user_answered[$question_id[1]]->key == $question_id[1]){
+                                        if($quota->option_value != $user_answered[$question_id[1]]->ans){
+                                            $limit++;
+                                        }
+                                    }
+                                }
+                                else if($qus_type == 'multi_choice'){
+                                    $user_answered =  explode(",",$user_answered);
+                                    if (!in_array($quota->option_value, $user_answered)) { 
+                                        $limit++;
+                                    }
+                                }
+                                else if($qus_type != 'matrix_qus' && $qus_type != 'multi_choice'){
+                                    if ($user_answered != $quota->option_value) { 
+                                        $limit++;
+                                    }
+                                }
+                                break;
+    
+                            case 'isAnswered':
+                                if($user_answered !=''){
                                     $limit++;
                                 }
-                            }
-                            else if($qus_type != 'matrix_qus' && $qus_type != 'multi_choice'){
+                                break;
+    
+                            case 'isNotAnswered':
+                                if($user_skipped == 'yes'){
+                                    $limit++;
+                                }
+                                break;
+    
+    
+                            case 'contains':
+                               
+                                if (str_contains($user_answered, $quota->option_value)) { 
+                                    $limit++;
+                                }
+                                break;
+    
+    
+                            case 'doesNotContain':
+                                if (!str_contains($user_answered, $quota->option_value)) { 
+                                    $limit++;
+                                }
+                                break;
+    
+                            case 'startsWith':
+                                if (str_starts_with($user_answered, $quota->option_value)) { 
+                                    $limit++;
+                                }
+                                break;
+    
+                            case 'endsWith':
+                                if (str_ends_with($user_answered, $quota->option_value)) { 
+                                    $limit++;
+                                }
+                                break;
+    
+                            case 'equalsString':
                                 if ($user_answered == $quota->option_value) { 
                                     $limit++;
                                 }
-                            }
-                            break;
-
-                        case 'isNotSelected':
-                            if($qus_type == 'matrix_qus'){
-                                $user_answered=json_decode($user_answered);
-                                if($user_answered[$question_id[1]]->key == $question_id[1]){
-                                    if($quota->option_value != $user_answered[$question_id[1]]->ans){
-                                        $limit++;
-                                    }
-                                }
-                            }
-                            else if($qus_type == 'multi_choice'){
-                                $user_answered =  explode(",",$user_answered);
-                                if (!in_array($quota->option_value, $user_answered)) { 
-                                    $limit++;
-                                }
-                            }
-                            else if($qus_type != 'matrix_qus' && $qus_type != 'multi_choice'){
+                                break;
+    
+                            case 'notEqualTo':
                                 if ($user_answered != $quota->option_value) { 
                                     $limit++;
                                 }
-                            }
-                            break;
-
-                        case 'isAnswered':
-                            if($user_answered !=''){
-                                $limit++;
-                            }
-                            break;
-
-                        case 'isNotAnswered':
-                            if($user_skipped == 'yes'){
-                                $limit++;
-                            }
-                            break;
-
-
-                        case 'contains':
-                           
-                            if (str_contains($user_answered, $quota->option_value)) { 
-                                $limit++;
-                            }
-                            break;
-
-
-                        case 'doesNotContain':
-                            if (!str_contains($user_answered, $quota->option_value)) { 
-                                $limit++;
-                            }
-                            break;
-
-                        case 'startsWith':
-                            if (str_starts_with($user_answered, $quota->option_value)) { 
-                                $limit++;
-                            }
-                            break;
-
-                        case 'endsWith':
-                            if (str_ends_with($user_answered, $quota->option_value)) { 
-                                $limit++;
-                            }
-                            break;
-
-                        case 'equalsString':
-                            if ($user_answered == $quota->option_value) { 
-                                $limit++;
-                            }
-                            break;
-
-                        case 'notEqualTo':
-                            if ($user_answered != $quota->option_value) { 
-                                $limit++;
-                            }
-                            break;
-
-                        case 'lessThanForScale':
-                            $ans = (int)$quota->option_value;
-                            $user_answered = (int)$user_answered;
-                            if ($user_answered < $ans) {
-                                $limit++;
-                            }
-                            break;
-
-                        case 'greaterThanForScale':
-                            $ans = (int)$quota->option_value;
-                            $user_answered = (int)$user_answered;
-                            if ($user_answered > $ans) {
-                                $limit++;
-                            }
-                            break;
-
-                        case 'equalToForScale':
-                            $ans = (int)$quota->option_value;
-                            $user_answered = (int)$user_answered;
-                            if ($user_answered == $ans) {
-                                $limit++;
-                            }
-                            break;
-
-                        case 'notEqualToForScale':
-                            $ans = (int)$quota->option_value;
-                            $user_answered = (int)$user_answered;
-                            if ($user_answered != $ans) {
-                                $limit++;
-                            }
-                            break;
+                                break;
+    
+                            case 'lessThanForScale':
+                                $ans = (int)$quota->option_value;
+                                $user_answered = (int)$user_answered;
+                                if ($user_answered < $ans) {
+                                    $limit++;
+                                }
+                                break;
+    
+                            case 'greaterThanForScale':
+                                $ans = (int)$quota->option_value;
+                                $user_answered = (int)$user_answered;
+                                if ($user_answered > $ans) {
+                                    $limit++;
+                                }
+                                break;
+    
+                            case 'equalToForScale':
+                                $ans = (int)$quota->option_value;
+                                $user_answered = (int)$user_answered;
+                                if ($user_answered == $ans) {
+                                    $limit++;
+                                }
+                                break;
+    
+                            case 'notEqualToForScale':
+                                $ans = (int)$quota->option_value;
+                                $user_answered = (int)$user_answered;
+                                if ($user_answered != $ans) {
+                                    $limit++;
+                                }
+                                break;
+                        }
+                    }
+                    if($limit <= $quota->quota_limit){
+                        return "limitavailable";
+                    }else{
+                        $redirection_qus = SurveyTemplate::where(['id'=>$quota->redirection_qus])->first();
+                        return view('admin.survey.limitexceed', compact('survey','redirection_qus'));
                     }
                 }
-                if($limit <= $quota->quota_limit){
-                    return "limitavailable";
-                }else{
-                    $redirection_qus = SurveyTemplate::where(['id'=>$quota->redirection_qus])->first();
-                    return view('admin.survey.limitexceed', compact('survey','redirection_qus'));
-                }
+                
             }
-            
+        }else{
+            return "limitavailable";
         }
+        
     }
 }
 
