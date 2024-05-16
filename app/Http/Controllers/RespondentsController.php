@@ -7,12 +7,14 @@ use App\Models\Project_respondent;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
+use App\Mail\WelcomeEmail;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Yajra\DataTables\DataTables;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 class RespondentsController extends Controller
 {
     /**
@@ -88,6 +90,7 @@ class RespondentsController extends Controller
                 $respondents->accept_terms = $request->input('accept_terms');
                 $respondents->save();
                 $respondents->id;
+                app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
                 return response()->json([
                     'status' => 200,
                     'last_insert_id' => $respondents->id,
@@ -181,6 +184,7 @@ class RespondentsController extends Controller
                     $respondents->accept_terms = $request->input('accept_terms');
                     $respondents->update();
                     $respondents->id;
+                    app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'updated','respondent');
                     return response()->json([
                         'status' => 200,
                         'last_insert_id' => $respondents->id,
@@ -207,6 +211,7 @@ class RespondentsController extends Controller
     {
         try {
             $contents = Respondents::find($id);
+            app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'deleted','respondent');
             if ($contents) {
                 $contents->delete();
                 return response()->json([
@@ -381,7 +386,10 @@ class RespondentsController extends Controller
                             ->where('pr.project_id',$request->id);
                         }
                     }
-                $posts = $posts->orWhere('mobile', 'LIKE', "%{$search}%")
+                $posts = $posts->orWhere('name', 'LIKE', "%{$search}%")
+                    ->orWhere('surname', 'LIKE', "%{$search}%")
+                    ->orWhere('mobile', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%")
                     ->offset($start)
                     ->limit($limit)
                     ->orderBy($order, $dir)
@@ -394,7 +402,11 @@ class RespondentsController extends Controller
                             ->where('pr.project_id',$request->id);
                         }
                     }
-                $totalFiltered = $totalFiltered->orWhere('mobile', 'LIKE', "%{$search}%")->count();
+                $totalFiltered = $totalFiltered->orWhere('name', 'LIKE', "%{$search}%")
+                                                ->orWhere('surname', 'LIKE', "%{$search}%")
+                                                ->orWhere('mobile', 'LIKE', "%{$search}%")
+                                                ->orWhere('email', 'LIKE', "%{$search}%")
+                                                ->count();
             }
 
             $data = array();
@@ -410,9 +422,17 @@ class RespondentsController extends Controller
                     $nestedData['mobile'] = $post->mobile ?? '-';
                     $nestedData['whatsapp'] = $post->whatsapp ?? '-';
                     $nestedData['email'] = $post->email ?? '-';
-                    $dob = $post->date_of_birth;
-                    $diff = (date('Y') - date('Y', strtotime($dob)));
-                    $nestedData['date_of_birth'] = $diff ?? '-';
+                    if($post->date_of_birth!=null){
+                        $bday = new \DateTime($post->date_of_birth); // Creating a DateTime object representing your date of birth.
+                        $today = new \DateTime(date('m.d.y'));
+                        $diff = $today->diff($bday); 
+    
+                        $age=$diff->y. 'year '. $diff->m. 'month '. $diff->d .'days';
+                    }else{
+                        $age='-';
+                    }
+                   
+                    $nestedData['date_of_birth'] = $age;
                     $nestedData['race'] = $post->race ?? '-';
                     $nestedData['status'] = $post->status ?? '-';
                     $nestedData['profile_completion'] = $post->profile_completion ?? '-';
@@ -911,4 +931,6 @@ class RespondentsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+   
+
 }

@@ -53,7 +53,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    banks_table();
                 },
                 complete: function(response) {
                     $('#bank_create').html('Create New');

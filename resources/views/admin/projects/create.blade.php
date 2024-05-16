@@ -222,7 +222,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    projects_table();
                 },
                 complete: function(response) {
                     $('#projects_create').html('Create New');

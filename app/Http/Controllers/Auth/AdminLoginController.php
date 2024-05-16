@@ -10,6 +10,8 @@ use DB;
 use Session;
 use Exception;
 use Hash;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 class AdminLoginController extends Controller
 {
 
@@ -28,6 +30,7 @@ class AdminLoginController extends Controller
 
     public function showLoginForm(){
         try {
+        
             return view('admin.auth.login');
         }
         catch (Exception $e) {
@@ -52,6 +55,16 @@ class AdminLoginController extends Controller
         ]);
 
         if (\Auth::guard('admin')->attempt($request->only(['email','password']), $request->get('remember'))){
+
+            if(isset($request->remember) && !empty($request->remember)){
+                setcookie("email",$request->email,time()+3600);
+                setcookie("password",$request->password,time()+3600);
+            }
+            else{
+                setcookie("email","");
+                setcookie("password","");
+            }
+
             return redirect()->route('admin.dashboard');
         }
 
@@ -121,6 +134,17 @@ class AdminLoginController extends Controller
             Session::flush();
             Auth::guard('admin')->logout();
             return Redirect()->route('admin.showlogin');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function email(Request $request){
+        try {
+            $data = ['message' => 'This is a test!'];
+
+            Mail::to('smartvijay018@gmail.com')->send(new WelcomeEmail($data));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

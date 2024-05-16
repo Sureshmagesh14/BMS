@@ -25,7 +25,7 @@
     .icon-view-login {
         position: absolute;
         right: 12px;
-        top: 25px;
+        top: 15px;
     }
 
     i.fa.fa-eye {
@@ -40,9 +40,9 @@
         height: 1em !important;
     }
 </style>
-<div class="container-fluid vh-100">
+<div class="container-fluid">
     <div class="row justify-content-center align-items-center d-flex">
-        <div class="col-md-6 vi-nav-bg vh-100 text-center hide-mobile">
+        <div class="col-md-6 vi-nav-bg text-center hide-mobile">
             <img src="./assets/images/logo white.png" class="img-fluid mt-5 pt-5 text-center w-50 m-auto" alt="" />
             <h1 class="text-white py-5">Welcome!</h1>
 
@@ -62,7 +62,7 @@
                             class="form-control vi-border-clr vi-cs-textbox input-password" aria-label="password"
                             required>
                         <a href="JavaScript:void(0);" class="icon-view-login">
-                            <i class="fa fa-eye"></i>
+                            <i class="fa fa-eye-slash"></i>
                         </a>
                     </div>
 
@@ -107,20 +107,20 @@
                                     <div class="input-group-text">+27</div>
                                 </div>
                                 <input type="text" name="mobile" id="mobile" placeholder="081 966 0786"
-                                    class="form-control vi-border-clr border-radius-0" oninput ="numonly(this);"
+                                    class="form-control vi-border-clr border-radius-0 w-50" oninput ="numonly(this);"
                                     maxlength="16" required>
                             </div>
 
                         </div>
 
                         <div class="mobile text-start w-48 m-auto my-3">
-                            <label for="mobile">Whatsapp <span class="text-danger">*</span></label>
+                            <label for="mobile">Whatsapp <span class="text-danger">*</span> <span class="text-xs text-brand underline pointer-events-auto cursor-pointer">(Use Mobile)</span></label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">+27</div>
                                 </div>
                                 <input type="text"  name="whatsapp" id="whatsapp" placeholder="081 966 0786"
-                                    class="form-control vi-border-clr border-radius-0" oninput ="numonly(this);"
+                                    class="form-control vi-border-clr border-radius-0 w-50" oninput ="numonly(this);"
                                     maxlength="16" required>
                             </div>
 
@@ -137,7 +137,7 @@
                             <span class="email_error">Invalid Email Address</span>
                         </div>
                         <div class="lname text-start w-48 m-auto my-3">
-                            <label for="id_passport">ID Number\ Passport </label>
+                            <label for="id_passport">ID Number\ Passport <span class="text-xs text-brand underline pointer-events-auto cursor-pointer">(Optional)</span></label>
                             <input type="text" name="id_passport" id="id_passport"
                                 placeholder="Valid RSA ID number or Passport number"
                                 class="form-control vi-border-clr border-radius-0" id="">
@@ -154,13 +154,13 @@
                     </div>
                     <div class="first-row">
                         <div class="date text-start w-48 my-3">
-                            <label for="date">Password<span class="text-danger">*</span></label>
+                            <label for="date">Password<span class="text-danger">*</span> <span class="text-xs text-brand underline pointer-events-auto cursor-pointer">(At least 6 characters)</span></label>
                             <div class="main-password">
                                 <input type="password" name="password_register" id="password_register"
                                     class="form-control vi-border-clr border-radius-0 input-password"
                                     aria-label="password" placeholder="Create Password" required>
                                 <a href="JavaScript:void(0);" class="icon-view">
-                                    <i class="fa fa-eye"></i>
+                                    <i class="fa fa-eye-slash"></i>
                                 </a>
                             </div>
                             <br>
@@ -169,14 +169,14 @@
                                     class="form-control vi-border-clr border-radius-0 input-password"
                                     aria-label="password" placeholder="Confirm/Retype Password" required>
                                 <a href="JavaScript:void(0);" class="icon-view">
-                                    <i class="fa fa-eye"></i>
+                                    <i class="fa fa-eye-slash"></i>
                                 </a>
                             </div>
 
 
                         </div>
                     </div>
-                    <div class="lname text-start w-48 m-auto my-3">
+                    <div class="lname text-start w-48 me-auto my-3">
                         <input type="checkbox" id="terms" name="terms" class="form-check-input" required>
                         <span class="form-check-label">Agree the <a data-bs-toggle="modal"
                                 data-bs-target="#exampleModal">terms and
@@ -199,7 +199,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Terms & Condition</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -339,13 +339,13 @@
             var $input = $(input);
             $input.parent().find('.icon-view').click(function() {
                 var change = "";
-                if ($(this).find('i').hasClass('fa-eye')) {
-                    $(this).find('i').removeClass('fa-eye')
-                    $(this).find('i').addClass('fa-eye-slash')
-                    change = "text";
-                } else {
+                if ($(this).find('i').hasClass('fa-eye-slash')) {
                     $(this).find('i').removeClass('fa-eye-slash')
                     $(this).find('i').addClass('fa-eye')
+                    change = "text";
+                } else {
+                    $(this).find('i').removeClass('fa-eye')
+                    $(this).find('i').addClass('fa-eye-slash')
                     change = "password";
                 }
                 var rep = $("<input type='" + change + "' />")
@@ -363,13 +363,13 @@
             var $input = $(input);
             $input.parent().find('.icon-view-login').click(function() {
                 var change = "";
-                if ($(this).find('i').hasClass('fa-eye')) {
-                    $(this).find('i').removeClass('fa-eye')
-                    $(this).find('i').addClass('fa-eye-slash')
-                    change = "text";
-                } else {
+                if ($(this).find('i').hasClass('fa-eye-slash')) {
                     $(this).find('i').removeClass('fa-eye-slash')
                     $(this).find('i').addClass('fa-eye')
+                    change = "text";
+                } else {
+                    $(this).find('i').removeClass('fa-eye')
+                    $(this).find('i').addClass('fa-eye-slash')
                     change = "password";
                 }
                 var rep = $("<input type='" + change + "' />")

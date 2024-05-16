@@ -1,17 +1,18 @@
     <footer class="footer">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-12 d-flex justify-content-center">
                     © 
                     <script>
                         document.write(new Date().getFullYear())
-                    </script> {{Config::get('constants.footer')}}.
+                    </script> 
+                  {{Config::get('constants.footer')}}.
                 </div>
-                <div class="col-sm-6">
+                <div class="d-flex justify-content-center">
                     <div class="text-sm-right d-none d-sm-block">
                        
                     </div>
-                    </script> © BMS.
+                    </script>
                 </div>
                 {{-- <div class="col-sm-6">
                     <!-- <div class="text-sm-right d-none d-sm-block">
@@ -119,7 +120,6 @@
         {{-- <script src="{{ asset('assets/js/pages/dashboard.init.js') }}"></script> --}}
        
         <script src="{{ asset('assets/js/admin/app.js') }}"></script>
-        <script src="{{ asset('assets/js/admin/confirm.min.js') }}"></script>
         <script src="{{ asset('assets/js/admin/common.js') }}"></script>
         <script src="{{ asset('assets/js/admin/jquery.validate.js') }}"></script>
         <script src="{{ asset('assets/js/admin/confirm.min.js') }}"></script>
@@ -157,6 +157,7 @@
     <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
 
     <script>
+        var tempcsrf = '{!! csrf_token() !!}';
         function multi_delete(method_type, set_data, route, message, datatable_function){
             $.confirm({
                 title: "{{ Config::get('constants.delete') }}",
@@ -224,6 +225,44 @@
                                         $('.delete_student').text('');
                                     } else {
                                         $.alert(message);
+                                        eval(datatable_function + "()");
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    cancel: function() {
+                        
+                    }
+                }
+            });
+        }
+
+        function select_action(method_type, set_data, value, route, datatable_function, titles, contents, texts){
+            $.confirm({
+                title: titles,
+                content: contents,
+                autoClose: 'cancel|8000',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    delete: {
+                        text: texts,
+                        action: function() {
+                            $.ajax({
+                                type: method_type,
+                                data: {
+                                    _token: tempcsrf,
+                                    all_id: set_data,
+                                    value: value,
+                                },
+                                url: route,
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.status == 404) {
+                                        $('.delete_student').text('');
+                                    } else {
+                                        toastr.success(response.message,"Success");
                                         eval(datatable_function + "()");
                                     }
                                 }

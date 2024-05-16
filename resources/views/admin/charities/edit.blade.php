@@ -45,7 +45,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    charities_table();
                 },
                 complete: function(response) {
                     $('#charities_update').html('Create New');

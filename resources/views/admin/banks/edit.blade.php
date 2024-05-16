@@ -55,7 +55,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    banks_table();
                 },
                 complete: function(response) {
                     $('#banks_update').html('Create New');

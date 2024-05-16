@@ -38,7 +38,7 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    datatable();
+                    network_table();
                 },
                 complete: function(response) {
                     $('#network_update').html('Create New');

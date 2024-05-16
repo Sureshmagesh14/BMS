@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Session;
-use Illuminate\Support\Facades\Auth;
 use App\Models\UserEvents;
 use App\Models\Users;
-use Illuminate\Support\Facades\Validator;
-use DB;
-use Yajra\DataTables\DataTables;
 use Exception;
+use Illuminate\Http\Request;
 
 class InternalReportController extends Controller
 {
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -23,15 +18,51 @@ class InternalReportController extends Controller
         try {
 
             $users = Users::withoutTrashed()->get();
-            return view('admin.internal_report.index',compact('users'));
-        }
-        catch (Exception $e) {
+            return view('admin.internal_report.index', compact('users'));
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
 
-    
-    
+    public static function call_activity($role, $auth_id, $action, $type)
+    {
+
+        $get_month = UserEvents::where('user_id', $auth_id)->where('action', $action)->where('month', date('M'))->first();
+
+        if ($get_month == null) {
+
+            $ins_data = array(
+                'role' => $role,
+                'user_id' => $auth_id,
+                'action' => $action,
+                'type' => $type,
+                'month' => date('M'),
+                'year' => date('Y'),
+                'created_at' => date('Y-m-d H:i:s'),
+                'count' => 0,
+            );
+
+            $task = UserEvents::Insert($ins_data);
+
+        } else {
+            $get_month = UserEvents::where('user_id', $auth_id)->where('action', $action)->where('month', date('M'))->first();
+            $count = $get_month->count + 1;
+            $ins_data = array(
+                'role' => $role,
+                'user_id' => $auth_id,
+                'action' => $action,
+                'type' => $type,
+                'month' => date('M'),
+                'year' => date('Y'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'count' => $count,
+            );
+            $task = UserEvents::where('user_id', $auth_id)->where('action', $action)->where('month', date('M'))->update($ins_data);
+        }
+
+        return $task;
+    }
+
     /**
      * Display the specified resource.
      */
@@ -54,10 +85,10 @@ class InternalReportController extends Controller
             );
 
             $totalData = UserEvents::select('user_events.*');
-                if($users != null){ $totalData->where('user_id',$users); }
-                if($roles != null){ $totalData->join('users','user_events.user_id','users.id')->where('role_id',$roles); }
-                if($action != null){ $totalData->where('action',$action); }
-                if($type != null){ $totalData->where('type',$type); }
+            if ($users != null) {$totalData->where('user_id', $users);}
+            if ($roles != null) {$totalData->join('users', 'user_events.user_id', 'users.id')->where('role_id', $roles);}
+            if ($action != null) {$totalData->where('action', $action);}
+            if ($type != null) {$totalData->where('type', $type);}
 
             $totalData = $totalData->count();
             $totalFiltered = $totalData;
@@ -69,10 +100,10 @@ class InternalReportController extends Controller
 
             if (empty($request->input('search.value'))) {
                 $posts = UserEvents::select('user_events.*')->offset($start);
-                    if($users != null){ $posts->where('user_id',$users); }
-                    if($roles != null){ $posts->join('users','user_events.user_id','users.id')->where('role_id',$roles); }
-                    if($action != null){ $posts->where('action',$action); }
-                    if($type != null){ $posts->where('type',$type); }
+                if ($users != null) {$posts->where('user_id', $users);}
+                if ($roles != null) {$posts->join('users', 'user_events.user_id', 'users.id')->where('role_id', $roles);}
+                if ($action != null) {$posts->where('action', $action);}
+                if ($type != null) {$posts->where('type', $type);}
 
                 $posts = $posts->limit($limit)->orderBy($order, $dir)->get();
             } else {
@@ -85,18 +116,18 @@ class InternalReportController extends Controller
                     ->orWhere('user_events.month', 'LIKE', "%{$search}%")
                     ->orWhere('user_events.year', 'LIKE', "%{$search}%")
                     ->orWhere('user_events.count', 'LIKE', "%{$search}%")
-                    ->join('users','user_events.user_id','users.id')
+                    ->join('users', 'user_events.user_id', 'users.id')
                     ->orWhere('users.name', 'LIKE', "%{$search}%")
                     ->orWhere('users.surname', 'LIKE', "%{$search}%");
-                    if($users != null){ $posts->where('user_id',$users); }
-                    if($roles != null){ $posts->join('users','user_events.user_id','users.id')->where('role_id',$roles); }
-                    if($action != null){ $posts->where('action',$action); }
-                    if($type != null){ $posts->where('type',$type); }
+                if ($users != null) {$posts->where('user_id', $users);}
+                if ($roles != null) {$posts->join('users', 'user_events.user_id', 'users.id')->where('role_id', $roles);}
+                if ($action != null) {$posts->where('action', $action);}
+                if ($type != null) {$posts->where('type', $type);}
 
-                    $posts = $posts->offset($start)
-                        ->limit($limit)
-                        ->orderBy($order, $dir)
-                        ->cursor();
+                $posts = $posts->offset($start)
+                    ->limit($limit)
+                    ->orderBy($order, $dir)
+                    ->cursor();
 
                 $totalFiltered = UserEvents::where('user_events.id', 'LIKE', "%{$search}%")
                     ->orWhere('user_events.action', 'LIKE', "%{$search}%")
@@ -104,15 +135,15 @@ class InternalReportController extends Controller
                     ->orWhere('user_events.month', 'LIKE', "%{$search}%")
                     ->orWhere('user_events.year', 'LIKE', "%{$search}%")
                     ->orWhere('user_events.count', 'LIKE', "%{$search}%")
-                    ->join('users','user_events.user_id','users.id')
+                    ->join('users', 'user_events.user_id', 'users.id')
                     ->orWhere('users.name', 'LIKE', "%{$search}%")
                     ->orWhere('users.surname', 'LIKE', "%{$search}%");
-                    
-                    if($users != null){ $totalFiltered->where('user_id',$users); }
-                    if($roles != null){ $totalFiltered->join('users','user_events.user_id','users.id')->where('role_id',$roles); }
-                    if($action != null){ $totalFiltered->where('action',$action); }
-                    if($type != null){ $totalFiltered->where('type',$type); }
-                    $totalFiltered = $totalFiltered->count();
+
+                if ($users != null) {$totalFiltered->where('user_id', $users);}
+                if ($roles != null) {$totalFiltered->join('users', 'user_events.user_id', 'users.id')->where('role_id', $roles);}
+                if ($action != null) {$totalFiltered->where('action', $action);}
+                if ($type != null) {$totalFiltered->where('type', $type);}
+                $totalFiltered = $totalFiltered->count();
             }
 
             $data = array();
@@ -120,31 +151,30 @@ class InternalReportController extends Controller
                 $i = 1;
                 foreach ($posts as $key => $post) {
 
-                    if(isset($post->users_data->name)){
-                        $name= $post->users_data->name.' '.$post->users_data->surname;
+                    if (isset($post->users_data->name)) {
+                        $name = $post->users_data->name . ' ' . $post->users_data->surname;
+                    } else {
+                        $name = '-';
                     }
-                    else{
-                        $name='-';
-                    }
-                    
-                    $view_route            = route("user-events-view",$post->id);
-                    $nestedData['id']      = $post->id;
+
+                    $view_route = route("user-events-view", $post->id);
+                    $nestedData['id'] = $post->id;
                     $nestedData['user_id'] = $name;
-                    $nestedData['action']  = $post->action ?? '-';
-                    $nestedData['type']    = $post->type ?? '-';
-                    $nestedData['month']   = $post->month ?? '-';
-                    $nestedData['year']    = $post->year ?? '-';
-                    $nestedData['count']   = $post->count ?? '-';
+                    $nestedData['action'] = $post->action ?? '-';
+                    $nestedData['type'] = $post->type ?? '-';
+                    $nestedData['month'] = $post->month ?? '-';
+                    $nestedData['year'] = $post->year ?? '-';
+                    $nestedData['count'] = $post->count ?? '-';
 
                     $nestedData['id_show'] = '
-                            <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                            <a href="#!" data-url="' . $view_route . '" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
                                 data-bs-original-title="View Internal Reports" class="waves-light waves-effect">
-                                '.$post->id.'
+                                ' . $post->id . '
                             </a>';
-                   
+
                     $nestedData['options'] = '<div class="">
                         <div class="btn-group mr-2 mb-2 mb-sm-0">
-                            <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                            <a href="#!" data-url="' . $view_route . '" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
                                 data-bs-original-title="View Internal Reports" class="btn btn-primary waves-light waves-effect">
                                 <i class="fa fa-eye"></i>
                             </a>
@@ -170,7 +200,7 @@ class InternalReportController extends Controller
     {
         try {
             $data = UserEvents::find($id);
-            $returnHTML = view('admin.internal_report.view',compact('data'))->render();
+            $returnHTML = view('admin.internal_report.view', compact('data'))->render();
 
             return response()->json(
                 [
@@ -178,13 +208,9 @@ class InternalReportController extends Controller
                     'html_page' => $returnHTML,
                 ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
 
-    
-    
-    
 }
