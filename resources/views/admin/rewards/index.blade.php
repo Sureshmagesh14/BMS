@@ -47,8 +47,8 @@
     <!-- End Page-content -->
 
     @include('admin.layout.footer')
-        @stack('adminside-js')
-        @stack('adminside-datatable')
+    @stack('adminside-js')
+    @stack('adminside-datatable')
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
         $(document).ready(function() {
@@ -77,33 +77,73 @@
                         alert("undefind error")
                     }
                 },
-                columns: [
-                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                    { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
-                    { data: 'points',name: 'points',orderable: true,searchable: true },
-                    { data: 'status_id',name: 'status_id',orderable: true,searchable: true },
-                    { data: 'respondent_id',name: 'respondent_id',orderable: true,searchable: true },
-                    { data: 'user_id',name: 'user_id',orderable: true,searchable: true },
-                    { data: 'project_id',name: 'project_id',orderable: true,searchable: true },
-                    { data: 'action',name: 'action',orderable: false,searchable: false }
+                columns: [{
+                        data: 'select_all',
+                        name: 'select_all',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'id_show',
+                        name: 'id_show',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'points',
+                        name: 'points',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'status_id',
+                        name: 'status_id',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'respondent_id',
+                        name: 'respondent_id',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'user_id',
+                        name: 'user_id',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'project_id',
+                        name: 'project_id',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
                 ]
             });
         }
 
-        
+
 
         $(document).on('change', '.rewards_select_box', function(e) {
             var all_id = [];
             values = $(this).val();
 
-            if(values == 2){
-                var values = $("#user_table tbody tr").map(function() {
+            if (values == 2) {
+                var values = $("#rewards_table tbody tr").map(function() {
                     var $this = $(this);
                     if ($this.find("[type=checkbox]").is(':checked')) {
                         all_id.push($this.find("[type=checkbox]").attr('id'));
                     }
                 }).get();
-                multi_delete("POST", all_id, "{{ route('rewards_multi_delete') }}", "Rewards Deleted", 'rewards_table');
+                multi_delete("POST", all_id, "{{ route('rewards_multi_delete') }}", "Rewards Deleted",
+                    'rewards_table');
             }
         });
 
@@ -112,4 +152,28 @@
             url = url + '/' + id;
             document.location.href = url;
         }
+
+        $(document).on('click', '.user_play_button', function(e) {
+            value = $(".rewards_select_box").val();
+
+            var all_id = [];
+            var values = $("#rewards_table tbody tr").map(function() {
+                var $this = $(this);
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
+                }
+            }).get();
+            console.log("all_id", all_id);
+            console.log("value", value);
+            if (value == "2") {
+                multi_delete("POST", all_id, "{{ route('rewards_multi_delete') }}", "Rewards Deleted",
+                    'rewards_table');
+            } else if (value == "1") {
+                titles = (value == "1") ? "Status > Approved" : "Delete Rewards";
+                select_action("POST", all_id, value, "{{ route('change_rewards_status') }}", 'rewards_table',
+                    titles, "Are You Want To Change Status", "Action");
+            } else {
+                toastr.info("OOPS! Select the action");
+            }
+        });
     </script>

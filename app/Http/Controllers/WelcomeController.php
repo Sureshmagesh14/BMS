@@ -166,27 +166,27 @@ class WelcomeController extends Controller
                     ->join('projects','resp.project_id','projects.id')
                     ->where('resp.respondent_id',$id)
                     ->where('resp.is_frontend_complete',1)->get();
+                  
                 
                 if(!empty($get_resp)){
                     foreach($get_resp as $resp){
                         
-                        if(isset($get_resp->project_id)){
-                            $proj_id = $get_resp->project_id ?? 0;
+                        if(isset($resp->project_id)){
+                            $proj_id = $resp->project_id;
                         }else{
                             $proj_id = 0;
                         }
-                        if(isset($get_resp->respondent_id)){
-                            $resp_id = $get_resp->respondent_id ?? 0;
+                        if(isset($resp->respondent_id)){
+                            $resp_id = $resp->respondent_id;
                         }else{
                             $resp_id = 0;
                         }
-                        if(isset($get_resp->reward)){
-                            $rew_id = $get_resp->reward ?? 0;
+                        if(isset($resp->reward)){
+                            $rew_id = $resp->reward;
                         }else{
                             $rew_id = 0;
                         }
-                        
-                        
+                      
                         if(DB::table('rewards')->where('project_id',$proj_id)->where('respondent_id',$resp_id)->doesntExist()){
                             
                             $insert_array = array(
