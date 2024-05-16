@@ -35,7 +35,7 @@
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Password </label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="password" name="password" >
+            <input type="password" class="form-control" id="password" name="password">
         </div>
     </div>
     <div class="form-group row">
@@ -82,18 +82,25 @@
 
         </div>
     </div>
-
+    @php
+        $sharelink = \App\Models\User::share_link(); #function call
+    @endphp
+    @if ($users->share_link != null)
+        @php $share_link=$users->share_link; @endphp
+    @else
+        @php $share_link=$sharelink; @endphp
+    @endif
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Share Link </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="share_link" value="{{ $users->share_link }}"
-                name="share_link">
+            <input type="text" class="form-control" value="{{ $share_link }}" disabled>
+            <input type="hidden" class="form-control" id="share_link" value="{{ $share_link }}" name="share_link">
         </div>
     </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="users_edit">Create New</button>
+        <button type="button" class="btn btn-primary" id="users_edit">Update</button>
     </div>
 </form>
 
@@ -138,29 +145,32 @@
                     email: true,
                     validate_email: true,
                     remote: {
-                        url: '{{ route("user_email_id_check") }}',
-                        data: { 'form_name' : "useredit" ,'id':'{{ $users->id }}'},
+                        url: '{{ route('user_email_id_check') }}',
+                        data: {
+                            'form_name': "useredit",
+                            'id': '{{ $users->id }}'
+                        },
                         type: "GET"
                     }
                 },
                 password: {
-                  
+
                     minlength: 8
                 },
                 cpassword: {
-                   
+
                     minlength: 8,
                     equalTo: "#password"
                 }
             },
             messages: {
                 email: {
-                    remote: "{{__('email Name already exists!')}}"
+                    remote: "{{ __('email Name already exists!') }}"
                 }
             }
         });
     });
-       $.validator.addMethod("validate_email", function(value, element) {
+    $.validator.addMethod("validate_email", function(value, element) {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
             return true;
         } else {

@@ -8,4 +8,5 @@ class Project_respondent extends Model
 {
     use HasFactory;
     protected $table = 'project_respondent';
+    
 }

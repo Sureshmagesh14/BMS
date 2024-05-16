@@ -62,11 +62,16 @@
             </select>
         </div>
     </div>
-
+    @php
+        $share_link = \App\Models\User::share_link(); #function call
+    @endphp
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Share Link </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="share_link" name="share_link">
+            <input type="text" class="form-control" id="" name="" value="{{ $share_link }}"
+            disabled>
+        <input type="hidden" class="form-control" id="share_link" name="share_link"
+            value="{{ $share_link }}">
         </div>
     </div>
 

@@ -22,9 +22,9 @@ button#back_to_profile {
 </head>
 
 <body>
-<a class="back_to_profile" href="{{ route('user.dashboard') }}">
+<a class="back_to_profile" href="{{ route('home') }}">
         <button id="back_to_profile">
-            <span class="ss-primary-action-btn__copy">Back to Profile</span>
+            <span class="ss-primary-action-btn__copy">Back to Login</span>
         </button>
     </a>
     <div class="surveysparrow-survey-container--classic-form welcome-page">
@@ -34,12 +34,7 @@ button#back_to_profile {
                 <div class="ss-fp-section__inner-frame">
 
                     <h3 class="ss-header-text--fluid ss-survey-heading--text ss-survey-font-family ss-survey-line-height--normal ss-survey-text-weight--semibold ss-survey-text-color--primary ss-survey-text-align--center ss-survey-text-question-text main-header-font-size--md">
-                    @if($survey->survey_type == 'profile')
-                    <p>Profile Updated!</p>
-                    @else    
-                    <p>Survey Completed!</p>
-                    @endif
-                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">You are already completed the survey.</p>
+                        <p>Survey Closed!</p>
                         <figure>
                             <span>
                                 <div class="ss_image_wrapper">

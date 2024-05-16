@@ -145,7 +145,8 @@ Route::group([
         Route::get('export_rewards', 'export_rewards')->name('export_rewards');
         Route::get('get_all_rewards', 'get_all_rewards')->name('get_all_rewards');
         Route::get('view_rewards/{id}', 'view_rewards')->name('view_rewards');
-        Route::get('rewards_multi_delete', 'rewards_multi_delete')->name('rewards_multi_delete');
+        Route::any('change_rewards_status', 'change_rewards_status')->name('change_rewards_status');
+        Route::any('rewards_multi_delete', 'rewards_multi_delete')->name('rewards_multi_delete');
     });
 
     /* Profile Groups MENU*/

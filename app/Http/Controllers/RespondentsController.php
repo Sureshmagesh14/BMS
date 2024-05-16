@@ -389,6 +389,7 @@ class RespondentsController extends Controller
                 $posts = $posts->orWhere('name', 'LIKE', "%{$search}%")
                     ->orWhere('surname', 'LIKE', "%{$search}%")
                     ->orWhere('mobile', 'LIKE', "%{$search}%")
+                    ->orWhere('whatsapp', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%")
                     ->offset($start)
                     ->limit($limit)
@@ -404,6 +405,7 @@ class RespondentsController extends Controller
                     }
                 $totalFiltered = $totalFiltered->orWhere('name', 'LIKE', "%{$search}%")
                                                 ->orWhere('surname', 'LIKE', "%{$search}%")
+                                                ->orWhere('whatsapp', 'LIKE', "%{$search}%")
                                                 ->orWhere('mobile', 'LIKE', "%{$search}%")
                                                 ->orWhere('email', 'LIKE', "%{$search}%")
                                                 ->count();
