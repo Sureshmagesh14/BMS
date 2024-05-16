@@ -327,9 +327,11 @@
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
-        $('#nav_profile').addClass('active');
+        $('#nav_dashboard').addClass('active');
         $('table.table.table-striped').dataTable().fnDestroy();
-        $('table.table.table-striped').DataTable();
+        $('table.table.table-striped').DataTable({
+            responsive: true
+        });
     });
 
     $("#opt_out").click(function() {
