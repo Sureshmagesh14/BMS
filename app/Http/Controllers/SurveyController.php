@@ -426,7 +426,7 @@ class SurveyController extends Controller
     public function updateQus(Request $request,$id){
         $currentQus=Questions::where(['id'=>$id])->first();
         // // Update Qus Count 
-        // $survey=Survey::where(['id'=>$currentQus->survey_id])->first();
+        $survey=Survey::where(['id'=>$currentQus->survey_id])->first();
         // if($request->qus_type!='welcome_page' && $request->qus_type!='thank_you'){
         //     $survey->qus_count=$survey->qus_count+1;
         // }
