@@ -46,21 +46,21 @@ class LoginRequest extends FormRequest
 
             $credentials = $this->only('email', 'password');
 
-            $get_resp_mobile = Respondents::select('active_status_id')->where('mobile', $credentials['email'])->first();
-            if($get_resp_mobile == null){
-                $get_resp_email = Respondents::select('active_status_id')->where('email', $credentials['email'])->first();
-                $active_status_id = $get_resp_email->active_status_id;
-            }
-            else{
-                $active_status_id = $get_resp_mobile->active_status_id;
-            }
+            // $get_resp_mobile = Respondents::select('active_status_id')->where('mobile', $credentials['email'])->first();
+            // if($get_resp_mobile != null){
+            //     $get_resp_email = Respondents::select('active_status_id')->where('email', $credentials['email'])->first();
+            //     $active_status_id = $get_resp_email->active_status_id;
+            // }
+            // else{
+            //     $active_status_id = $get_resp_mobile;
+            // }
 
-            if($active_status_id != 1){
-                $mess = strip_tags("<strong>Your Account was Unsubscribed.</strong>");
-                throw ValidationException::withMessages([
-                    'email' => $mess,
-                ]);
-            }
+            // if($active_status_id != 1){
+            //     $mess = strip_tags("<strong>Your Account was Unsubscribed.</strong>");
+            //     throw ValidationException::withMessages([
+            //         'email' => $mess,
+            //     ]);
+            // }
 
             if (Auth::attempt(['mobile' => $credentials['email'], 'password' => $credentials['password']]))
             {     
@@ -83,11 +83,11 @@ class LoginRequest extends FormRequest
                 'email' => $mess,
             ]);
             
-            RateLimiter::hit($this->throttleKey());
+            // RateLimiter::hit($this->throttleKey());
 
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
+            // throw ValidationException::withMessages([
+            //     'email' => trans('auth.failed'),
+            // ]);
 
         }
 
