@@ -232,39 +232,26 @@
                                             <label for="province">Province</label>
                                             <select name="province" id="province">
                                                 <option value="">Select</option>
-                                                <option value="eastern_cape">Eastern Cape</option>
-                                                <option value="free_state">Free State</option>
-                                                <option value="gauteng">Gauteng</option>
-                                                <option value="kwazulu">KwaZulu-Natal</option>
-                                                <option value="limpopo">Limpopo</option>
-                                                <option value="mpumalanga">Mpumalanga</option>
-                                                <option value="north_West_province">North-West Province</option>
-                                                <option value="northern_cape">Northern Cape</option>
-                                                <option value="western_cape">Western Cape</option>
+                                                @foreach ($state as $states)
+                                                    <option value="{{$states->id}}">{{$states->state}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-6 col-sm-4 mt-3">
+                                            <label for="suburb">Suburb</label>
+                                            <select name="suburb" id="suburb">
                                             </select>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="metropolitan_area">Metropolitan Area</label>
                                             <select name="metropolitan_area" id="metropolitan_area">
-                                                <option value="">Select</option>
-                                                @foreach ($state as $states)
-                                                    <optgroup label="{{$states->state}}">
-                                                        @foreach ($metropolitan_area as $area)
-                                                            @if($states->id == $area->type)
-                                                                @php $areas = json_decode($area->metropolitan); @endphp
-                                                                <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;{{$area->district}}">
-                                                                    @foreach ($areas as $area)
-                                                                        <option value="{{$area->area_id}}">&nbsp;&nbsp;&nbsp;&nbsp;{{$area->area}}</option>
-                                                                    @endforeach
-                                                                </optgroup>
-                                                            @endif
-                                                        @endforeach
-                                                    </optgroup>
-                                                @endforeach
-                                                
                                             </select>
                                         </div>
 
+                                        <div class="col-6 col-sm-4 mt-3">
+                                            <label for="no_houehold">Number of people living in your household</label>
+                                            <input type="number" name="no_houehold" id="no_houehold" class="form-control">
+                                        </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="no_children">Number of Children</label>
                                             <input type="number" name="no_children" id="no_children" class="form-control">
@@ -401,7 +388,6 @@
                 stepsOrientation: "vertical",
                 onStepChanging: function (event, currentIndex, newIndex)
                 {
-                    
                     if(currentIndex == 0 && newIndex == 1 || currentIndex == 2 && newIndex == 1){
                         $("#no_children").keyup(function(){
                             no_children = $(this).val();
@@ -479,6 +465,48 @@
                 var ageTotal = year + " Years," + month + " Months," + day + " Days";
                 console.log("ageTotal",ageTotal);
                 document.getElementById('agecal').innerText = ageTotal;
+            });
+
+            $("#province").change(function() {
+                province = $(this).val();
+                $.ajax({
+                    url : '{{route("get_suburb")}}',
+                    type : 'GET',
+                    data : {
+                        'province' : province
+                    },
+                    dataType:'json',
+                    success : function(data) { 
+                        if(data.type == true)             {
+                            $("#suburb").html(data.data);
+                        }
+                    },
+                    error : function(request,error)
+                    {
+                        // alert("Request: "+JSON.stringify(request));
+                    }
+                });
+            });
+
+            $("#suburb").change(function() {
+                suburb = $(this).val();
+                $.ajax({
+                    url : '{{route("get_area")}}',
+                    type : 'GET',
+                    data : {
+                        'suburb' : suburb
+                    },
+                    dataType:'json',
+                    success : function(data) { 
+                        if(data.type == true)             {
+                            $("#metropolitan_area").html(data.data);
+                        }
+                    },
+                    error : function(request,error)
+                    {
+                        // alert("Request: "+JSON.stringify(request));
+                    }
+                });
             });
         });
         
