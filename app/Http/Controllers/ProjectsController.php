@@ -38,7 +38,7 @@ class ProjectsController extends Controller
     {
         try {
             $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
-            $survey_title=DB::table('survey')->select('title','id')->get();
+            $survey_title=DB::table('survey')->select('title','id')->where('survey_type','=','survey')->get();
             $returnHTML = view('admin.projects.create',compact('users','survey_title'))->render();
 
             return response()->json(
@@ -149,7 +149,7 @@ class ProjectsController extends Controller
             if($projects)
             {
                 $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
-                $survey_title=DB::table('survey')->select('title','id')->get();
+                $survey_title=DB::table('survey')->select('title','id')->where('survey_type','=','survey')->get();
                 $returnHTML = view('admin.projects.edit',compact('projects','users','survey_title'))->render();
                 
                 return response()->json(
@@ -182,7 +182,8 @@ class ProjectsController extends Controller
             if($projects)
             {
                 $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
-                $returnHTML = view('admin.projects.copy',compact('projects','users'))->render();
+                $survey_title=DB::table('survey')->select('title','id')->where('survey_type','=','survey')->get();
+                $returnHTML = view('admin.projects.copy',compact('projects','users','survey_title'))->render();
                 return response()->json(
                     [
                         'success' => true,

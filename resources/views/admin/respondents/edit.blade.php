@@ -226,7 +226,7 @@
             var url_set = "{{ route('respondents.update', ':id') }}";
             url_set = url_set.replace(':id', id);
             $.ajax({
-                type: 'POST',
+                type: 'PUT',
                 url: url_set,
                 data: data,
                 headers: {
