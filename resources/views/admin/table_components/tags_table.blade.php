@@ -83,9 +83,3 @@
 
     </tbody>
 </table>
-<script>
-    $(document).ready(function() {
-        tags_table();
-        // $("#content_create_form-data").validate();
-    });
-</script>

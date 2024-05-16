@@ -148,7 +148,7 @@
             <th>Mobile</th>
             <th>Whatsapp</th>
             <th>Email</th>
-            <th>Date of Birth</th>
+            <th>Age</th>
             <th>race</th>
             <th>status</th>
             <th>profile_completion</th>
@@ -161,8 +161,4 @@
     <tbody>
     </tbody>
 </table>
-<script>
-    $(document).ready(function() {
-        respondents_datatable();
-    });
-</script>
+

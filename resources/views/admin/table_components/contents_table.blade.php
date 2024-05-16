@@ -50,8 +50,4 @@
     <tbody>
     </tbody>
 </table>
-<script>
-    $(document).ready(function() {
-        contents_table();
-    });
-</script>
+

@@ -114,7 +114,7 @@
                         </div>
 
                         <div class="mobile text-start w-48 m-auto my-3">
-                            <label for="mobile">Whatsapp <span class="text-danger">*</span></label>
+                            <label for="mobile">Whatsapp <span class="text-danger">*</span> <span class="text-xs text-brand underline pointer-events-auto cursor-pointer">(Use Mobile)</span></label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">+27</div>
@@ -137,7 +137,7 @@
                             <span class="email_error">Invalid Email Address</span>
                         </div>
                         <div class="lname text-start w-48 m-auto my-3">
-                            <label for="id_passport">ID Number\ Passport </label>
+                            <label for="id_passport">ID Number\ Passport <span class="text-xs text-brand underline pointer-events-auto cursor-pointer">(Optional)</span></label>
                             <input type="text" name="id_passport" id="id_passport"
                                 placeholder="Valid RSA ID number or Passport number"
                                 class="form-control vi-border-clr border-radius-0" id="">
@@ -154,7 +154,7 @@
                     </div>
                     <div class="first-row">
                         <div class="date text-start w-48 my-3">
-                            <label for="date">Password<span class="text-danger">*</span></label>
+                            <label for="date">Password<span class="text-danger">*</span> <span class="text-xs text-brand underline pointer-events-auto cursor-pointer">(At least 6 characters)</span></label>
                             <div class="main-password">
                                 <input type="password" name="password_register" id="password_register"
                                     class="form-control vi-border-clr border-radius-0 input-password"
@@ -199,7 +199,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Terms & Condition</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

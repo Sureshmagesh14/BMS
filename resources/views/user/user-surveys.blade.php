@@ -27,8 +27,8 @@
                         @forelse ($get_respondent as $res)
                             <tr>
                                 <td>{{ $res->name }}</td>
-                                <td>{{ $res->closing_date }}</td>
-                                <td>{{ $res->description }}</td>
+                                <td>{{ date("d-m-Y", strtotime($res->closing_date)) }}</td>
+                                <td title="{{$res->description}}"> {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}</td>
                                 <td>{{ $res->reward }}</td>
                                 @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
                                 @if ($get_link != null)
@@ -67,8 +67,8 @@
                         @foreach ($get_completed_survey as $res)
                             <tr>
                                 <td>{{ $res->name }}</td>
-                                <td>{{ $res->closing_date }}</td>
-                                <td>{{ $res->description }}</td>
+                                <td>{{ date("d-m-Y", strtotime($res->closing_date)) }}</td>
+                                <td title="{{$res->description}}"> {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}</td>
                                 <td>{{ $res->reward }}</td>
                                 @php
                                     $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
