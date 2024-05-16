@@ -1,0 +1,83 @@
+span.ansCount {
+    width: 20px;
+    display: inline-block;
+}
+
+.qusName{
+    text-transform: capitalize;
+    font-size: 17px;
+}
+
+.desc-content {
+    background: white;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    padding-top: 16px;
+}
+.desc-content-1{
+    background: white;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    margin-bottom: 20px;
+    padding-top: 16px;
+}
+span.qusNo,span.count {
+    font-weight: bold;
+}
+
+.header,.default-header {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 8px;
+}
+.default-header {
+    background: #fff;
+}
+.header{
+    background: rgba(81, 211, 217, 0.7);
+}
+#word-cloud {
+    width: 300px;
+    height: 300px;
+}
+
+.d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 6px; 
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+    pointer-events: none;
+    font-size: 10px;
+}
+
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 6px; 
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+}
+
+.d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+}
+
+
+.fx-row.fx-ai--start {
+    display: flex;
+    gap: 5px;
+    margin-left: 17px;
+}

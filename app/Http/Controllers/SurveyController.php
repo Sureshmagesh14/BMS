@@ -616,51 +616,56 @@ class SurveyController extends Controller
     }
     public function viewsurvey(Request $request, $id){
         $survey = Survey::with('questions')->where(['builderID'=>$id])->first();
-
-        if (Auth::check()) {
-            $response_user_id =  Auth::user()->id;
-            $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
-            if($checkresponse){
-                $status = 'alreadycompleted';
-                return view('admin.survey.responsecompleted', compact('survey','status'));
-
-                if($survey->survey_type =='survey'){
-                    return view('admin.survey.responseerror', compact('survey','status'));
-                }else{
+        if($survey->is_deleted == 0){
+            if (Auth::check()) {
+                $response_user_id =  Auth::user()->id;
+                $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
+                if($checkresponse){
+                    $status = 'alreadycompleted';
                     return view('admin.survey.responsecompleted', compact('survey','status'));
+    
+                    if($survey->survey_type =='survey'){
+                        return view('admin.survey.responseerror', compact('survey','status'));
+                    }else{
+                        return view('admin.survey.responsecompleted', compact('survey','status'));
+                    }
+                }else{
+                    // Update Visited Count 
+                    $visited_count=Survey::where(['builderID'=>$id])->update(['visited_count'=>$survey->visited_count+1]);
+        
+                    $questions=Questions::where(['survey_id'=>$survey->id])->whereIn('qus_type',['welcome_page','thank_you'])->get();
+                    $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
+                    if($welcomQus){
+                        $question=$welcomQus;
+                    }else{
+                        $question=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+                    }
+                    $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+        
+                    $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+                    if($question1){
+                        $question1=$question1;
+                    }else{
+                        $question1=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
+                    }
+                    // Check Survey has question or not 
+                    $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
+                    if(count($surveyQus)<=0){
+                        return view('admin.survey.noquserror', compact('survey'));
+        
+                    }else{
+                        return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+                    }
                 }
             }else{
-                // Update Visited Count 
-                $visited_count=Survey::where(['builderID'=>$id])->update(['visited_count'=>$survey->visited_count+1]);
+                return view('admin.survey.autherror', compact('survey'));
     
-                $questions=Questions::where(['survey_id'=>$survey->id])->whereIn('qus_type',['welcome_page','thank_you'])->get();
-                $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
-                if($welcomQus){
-                    $question=$welcomQus;
-                }else{
-                    $question=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
-                }
-                $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
-    
-                $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
-                if($question1){
-                    $question1=$question1;
-                }else{
-                    $question1=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->first();
-                }
-                // Check Survey has question or not 
-                $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
-                if(count($surveyQus)<=0){
-                    return view('admin.survey.noquserror', compact('survey'));
-    
-                }else{
-                    return view('admin.survey.response', compact('survey','question','question1','questionsset'));
-                }
             }
         }else{
-            return view('admin.survey.autherror', compact('survey'));
+            return view('admin.survey.unavailable', compact('survey'));
 
         }
+        
     }
    
     public function startsurvey(Request $request, $id,$qus){
@@ -834,6 +839,9 @@ class SurveyController extends Controller
         $question_id = $request->question_id;
         $response_user_id =  Auth::user()->id;
 
+        // Other details 
+        $other_details = ["device_id"=>$request->device_id,"device_name"=>$request->device_name,"browser"=>$request->browser,"os"=>$request->os,"device_type"=>$request->device_type,"long"=>$request->long,"lat"=>$request->lat,"location"=>$request->location,"ip_address"=>$request->ip_address,"lang_code"=>$request->lang_code,"lang_name"=>$request->lang_name];
+        
         $qus_check=Questions::where('id', '=', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
         $user_ans =$request->user_ans;
         if($request->hasfile('uploadfile'))
@@ -848,6 +856,7 @@ class SurveyController extends Controller
         $next_qus = $request->next_qus;
         $skip_ans =$request->skip_ans;
         $surveyres = new SurveyResponse();
+        $surveyres->other_details = json_encode($other_details);
         $surveyres->survey_id = $survey_id;
         $surveyres->response_user_id=$response_user_id;
         $surveyres->question_id=$request->question_id;
@@ -1106,7 +1115,7 @@ class SurveyController extends Controller
             $surveyController = new SurveyController;
             $checkquota = $surveyController->checkquota($survey_id);
             if($checkquota == 'limitavailable'){
-                return $surveyController->displaynextQus($question_id,$survey_id);
+                return $surveyController->displaynextQus($question_id,$survey_id,$other_details);
             }
         }else{
             // Update Survey Completion 
@@ -1122,6 +1131,7 @@ class SurveyController extends Controller
                 $surveyres->answer = 'thankyou_submitted';
                 $surveyres->skip = '';
                 $surveyres->deleted_at = 0;
+                $surveyres->other_details = json_encode($other_details);
                 $surveyres->save();
                 // Update Profile Completed or Survey Complete
 
@@ -1144,7 +1154,7 @@ class SurveyController extends Controller
         }
     }
 
-   public static  function displaynextQus($question_id,$survey_id){
+   public static  function displaynextQus($question_id,$survey_id,$other_details){
         $response_user_id =  Auth::user()->id;
         $next_qus=Questions::where('id', '>', $question_id)->where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
         if($next_qus){
@@ -1158,6 +1168,7 @@ class SurveyController extends Controller
                 $push_jump = [];
 
                 if(count($display_qus_choice_display)>0 && count($logic_type_value_display)>0){
+                   
                     foreach ($display_qus_choice_display as $k=>$display){
                         $logic=$logic_type_value_display[$k];
                         $logicv=$logic_type_value_option_display[$k];
@@ -1415,7 +1426,7 @@ class SurveyController extends Controller
                     // echo "<pre>"; print_r($push_jump);
                     $arr1 =serialize($display_qus_choice_andor_display);
                     $arr2 =serialize($push_jump);
-                    // exit;
+                    
                     if($arr1 == $arr2){
                         return redirect()->route('survey.startsurvey',[$survey_id,$next_qus->id]);
                     }else{
@@ -1425,12 +1436,13 @@ class SurveyController extends Controller
                         if($next_question){
                             $checkquota = $surveyController->checkquota($survey_id);
                             if($checkquota == 'limitavailable'){
-                                $surveyController->displaynextQus($next_question->id,$survey_id);
+                                return $surveyController->displaynextQus($next_question->id,$survey_id,$other_details);
                             }
                         }else{
                             $next_question=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
                             if($next_question){
                                 $surveyres = new SurveyResponse();
+                                $surveyres->other_details = json_encode($other_details);
                                 $surveyres->survey_id = $survey_id;
                                 $surveyres->response_user_id = $response_user_id;
                                 $surveyres->question_id = $next_question->id;
@@ -1441,7 +1453,7 @@ class SurveyController extends Controller
                                 return redirect()->route('survey.endsurvey',[$survey_id,$next_question->id]);
                             }else{
                                 
-                                    return redirect()->route('survey.endsurvey',[$survey_id,0]);
+                                return redirect()->route('survey.endsurvey',[$survey_id,0]);
                                 
                             }
                             
@@ -1465,6 +1477,7 @@ class SurveyController extends Controller
             $next_qus=Questions::where(['survey_id'=>$survey_id,'qus_type'=>'thank_you'])->first();
             if($next_qus){
                 $surveyres = new SurveyResponse();
+                $surveyres->other_details = json_encode($other_details);
                 $surveyres->survey_id = $survey_id;
                 $surveyres->response_user_id = $response_user_id;
                 $surveyres->question_id = $next_qus->id;
@@ -1501,6 +1514,8 @@ class SurveyController extends Controller
                     array_push($cols,$data);
                 }
             }
+            return view('admin.survey.survey.overview',compact('survey','question','responses','survey_id','cols'));
+
             return view('admin.survey.survey.responses',compact('survey','question','responses','survey_id','cols'));
         }
         catch (Exception $e) {
@@ -1629,6 +1644,7 @@ class SurveyController extends Controller
                                 }
                             }else{
                                 $output = json_decode($output);
+                                if($output!=null)
                                 foreach($output as $op){
                                     $tempresult = [$op->qus =>$op->ans];
                                     $result[$op->qus]=$op->ans; 
@@ -1638,6 +1654,7 @@ class SurveyController extends Controller
                         }else if($qus->qus_type == 'rankorder'){
                             $output = json_decode($output,true);
                             $ordering = [];
+                            if($output!=null)
                             foreach($output as $op){
                                 array_push($ordering,$op['id']);
                             }
