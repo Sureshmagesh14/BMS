@@ -126,4 +126,33 @@
 
             single_delete("DELETE", id, url, "Project Deleted", 'projects_table');
         });
+
+        $(document).on('click', '.project_play_button', function(e) {
+            var all_id = [];
+            var values = $("#projects_table tbody tr").map(function() {
+                var $this = $(this);
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
+                }
+            }).get();
+
+            select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $(".hided_option").val();
+
+            if(select_value == 3){
+                titles = "Status > Complete";
+                select_action("POST", all_id, select_value, "{{ route('project_action') }}", 'projects_table', titles, "Are You Want To Change Status", "Action");
+            }
+            else if(select_value == "delete_all"){
+                multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects Deleted", 'projects_table');
+            }
+            else if(select_value == "export_all_project"){
+               
+            }
+            else if(select_value == "export_survey_response"){
+               
+            }
+            else{
+                toastr.info("OOPS! Select the action");
+            }
+        });
     </script>
