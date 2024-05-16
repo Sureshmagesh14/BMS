@@ -2,16 +2,54 @@
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
-<?php
-// Get qus type
-function Qustype($type){
-    $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','upload'=>'Upload','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
-    return $questionTypes[$type];
-} ?>
+<?php $userController = resolve('App\Http\Controllers\SurveyController'); ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
-
+<style>
+.wordcloudgraph {
+    width: 400px;
+    height: 400px;
+}
+.desc-content table{
+    margin-bottom:20px;
+    width: 70%;
+}
+.desc-content td{
+    border: 1px solid gray;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 6px;  /* Reduced padding */
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+    pointer-events: none;
+    font-size: 10px;  /* Reduced font size */
+}
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 6px;  /* Reduced after content size */
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+}
+.d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+}    
+</style>
 <link href="{{ asset('assets/css/overview.css') }}" rel="stylesheet" type="text/css" />
 <div class="main-content">
     <div class="page-content">
@@ -21,9 +59,9 @@ function Qustype($type){
             <div class="row">
             <div class="card-container col-md-12">
                     <div class="default-header mt-2">
+                        <p>The Brand Surgeon |  {{$survey->title}}</p>
                         <p><span class="qusNo">Default Report</span></p>
                         <p class="qusName">Explore the data behind your survey responses. Gain a better perspective of your survey data and uncover insights for further planning.</p>
-                       
                     </div>
                     <div class="desc-content-1">
                         <div class="grid grid-nogutter row">
@@ -40,7 +78,7 @@ function Qustype($type){
                                     <div class="fx-colum ml--lg">
                                         <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--grey mb--xs">Visited</h3>
                                         <div class="fx-row fx-ai--end">
-                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">1539</h1>
+                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">{{$survey->visited_count}}</h1>
                                         </div>
                                     </div>
                                 </div>
@@ -54,7 +92,7 @@ function Qustype($type){
                                     <div class="fx-colum ml--lg">
                                         <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--grey mb--xs">Started</h3>
                                         <div class="fx-row fx-ai--end">
-                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">746</h1>
+                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">{{$survey->started_count}}</h1>
                                         </div>
                                     </div>
                                 </div>
@@ -67,7 +105,7 @@ function Qustype($type){
                                     <div class="fx-colum ml--lg">
                                         <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--grey mb--xs">Completed</h3>
                                         <div class="fx-row fx-ai--end">
-                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">746</h1>
+                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">{{$survey->completed_count}}</h1>
                                         </div>
                                     </div>
                                 </div>
@@ -82,10 +120,12 @@ function Qustype($type){
                                         <path d="M17.5 23.5C20.8137 23.5 23.5 20.8137 23.5 17.5C23.5 14.1863 20.8137 11.5 17.5 11.5C14.1863 11.5 11.5 14.1863 11.5 17.5C11.5 20.8137 14.1863 23.5 17.5 23.5Z" stroke="#63686F" stroke-linecap="round"></path>
                                         <path d="M20.1737 15.7549L17.2687 19.6289C17.2041 19.7148 17.1218 19.7858 17.0274 19.8372C16.933 19.8886 16.8286 19.9191 16.7214 19.9267C16.6142 19.9343 16.5066 19.9187 16.4059 19.8812C16.3052 19.8436 16.2137 19.7848 16.1377 19.7089L14.6377 18.2089" stroke="#63686F" stroke-linecap="round"></path>
                                     </svg>
+                                    <?php $completionRate = ($survey->started_count/$survey->completed_count) * 100;
+                                     ?>
                                     <div class="fx-colum ml--lg">
                                         <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--grey mb--xs">Completion Rate</h3>
                                         <div class="fx-row fx-ai--end">
-                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">100.00%</h1>
+                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">{{$completionRate}}%</h1>
                                         </div>
                                     </div>
                                 </div>
@@ -96,14 +136,95 @@ function Qustype($type){
                 @foreach($question as $key =>$qus)
                 <div class="card-container col-md-12">
                     <div class="header mt-2">
-                        <p><span class="qusNo">QUESTION {{str_pad($key+1, 2, "0", STR_PAD_LEFT)}}</span> | {{Qustype($qus->qus_type)}}</p>
+                        <?php  $userData = $userController->Qustype($qus->qus_type);  ?>
+                        <p><span class="qusNo">QUESTION {{str_pad($key+1, 2, "0", STR_PAD_LEFT)}}</span> | {{$userData}}</p>
                         <p class="qusName">{{$qus->question_name}}</p>
-                        <?php $totalResponse = \App\Models\SurveyResponse::where(['survey_id'=>$qus->survey_id,'question_id'=>$qus->id])->count();
+                        <?php $ResponseAns = \App\Models\SurveyResponse::where(['survey_id'=>$qus->survey_id,'question_id'=>$qus->id])->get();
+                        $getResp = \App\Models\SurveyResponse::where(['survey_id' => $qus->survey_id, 'question_id' => $qus->id])->get();
+
+                        $qusvalue = json_decode($qus->qus_ans);
+                        $totalResponse = \App\Models\SurveyResponse::where(['survey_id'=>$qus->survey_id,'question_id'=>$qus->id])->count();
                         $surveyResponeskip = \App\Models\SurveyResponse::where(['survey_id'=>$qus->survey_id,'question_id'=>$qus->id,'skip'=>'yes'])->count(); ?>
                         <p>Answered <span class="count">{{$totalResponse - $surveyResponeskip}}</span><span class="ansCount"></span>Skipped: <span class="count">{{$surveyResponeskip}}</span></p>
                     </div>
                     <div class="desc-content">
-                        <div id="word-cloud"></div>
+                    @if($totalResponse - $surveyResponeskip > 0)
+                        @if($qus->qus_type == 'open_qus')
+                            <?php $text ='';  
+                            foreach($ResponseAns as $respans){
+                                    $text.=' '.$respans->answer;
+                            } ?>
+                            <input type="hidden" id="{{$qus->id}}" value="{{$text}}" class="wordCloud"/>
+                            <div id="word-cloud{{$qus->id}}" class="wordcloudgraph"></div>
+                            @elseif($qus->qus_type == 'single_choice')
+                            <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): [];
+                            $allchoices = implode(",",$exiting_choices);
+                            $userchoices = [];
+                            foreach ($exiting_choices as $choice) {
+                                $getRespAns = \App\Models\SurveyResponse::where(['survey_id' => $qus->survey_id, 'question_id' => $qus->id, 'answer' => $choice])->count();
+                                $userchoices[$choice] = $getRespAns;
+                            }
+                            $userchoices_string = json_encode($userchoices);
+                            ?>
+                            <input type="hidden" id="userChoices{{$qus->id}}" value="{{$userchoices_string}}" class="userChoices"/>
+
+                            <input type="hidden" id="{{$qus->id}}" value="{{$allchoices}}" class="allChoices"/>
+                            <div id="single-choice-chart{{$qus->id}}" class="single-choice-chart">
+                                <canvas id="myChartChoice{{$qus->id}}"></canvas>
+                            </div>
+                        @elseif($qus->qus_type == 'multi_choice')
+                        <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): [];
+                            $allchoices = implode(",",$exiting_choices);
+                            $userchoices = [];
+                            foreach($getResp as $resp){
+                                $splitResponse = explode(",",$resp->answer);
+                                foreach($splitResponse as $res){
+                                    if(!isset($userchoices[$res])){
+                                        $userchoices[$res] = 1;
+                                    }else{
+                                        $userchoices[$res] = $userchoices[$res] + 1;
+                                    }
+                                }
+                            }
+                            $userchoices_string = json_encode($userchoices);
+                            ?>
+                            <input type="hidden" id="userChoices{{$qus->id}}" value="{{$userchoices_string}}" class="userChoices"/>
+                            <input type="hidden" id="{{$qus->id}}" value="{{$allchoices}}" class="allChoices"/>
+                            <div id="single-choice-chart{{$qus->id}}" class="single-choice-chart">
+                                <canvas id="myChartChoice{{$qus->id}}"></canvas>
+                            </div>
+                        @elseif($qus->qus_type == 'likert')
+                        <?php $likert_range = $qusvalue->likert_range;  
+                        
+                        $allchoices = implode(",",[$qusvalue->right_label,$qusvalue->right_label,$qusvalue->right_label]);
+                        ?>
+                        @elseif($qus->qus_type == 'rankorder')
+                        <?php //echo "<pre>"; print_r($qus);   ?>
+                        @elseif($qus->qus_type == 'rating')
+                        @elseif($qus->qus_type == 'dropdown')
+                        @elseif($qus->qus_type == 'picturechoice')
+                        @elseif($qus->qus_type == 'photo_capture')
+                        @elseif($qus->qus_type == 'email')
+                        <table>
+                            <tr><td>Respondent</td><td>Response</td><td>Response Time</td></tr>
+                            @foreach($getResp as $resp)
+                            <?php  $user = \App\Models\Respondents::where('id', '=' , $resp->response_user_id)->first(); ?>
+                            <tr>
+                                <td>{{$user->name}}</td>
+                                <td>{{$resp->answer}}</td>
+                                <td>{{$userController->humanReadableTime($resp->created_at)}}</td>
+                            </tr>
+                            @endforeach
+
+
+                        </table>
+                        @elseif($qus->qus_type == 'upload')
+                        @elseif($qus->qus_type == 'matrix_qus')
+                        @endif
+                    @else
+                    <p style="mt-4 mb-2">No Response Available</p>
+                    @endif
+
                     </div>
                 </div>
                 @endforeach                
@@ -112,75 +233,164 @@ function Qustype($type){
     </div>
 </div>
 <script>
+function generateRandomColor() {
+    const red = Math.floor(Math.random() * 256); // Random integer between 0 and 255
+    const green = Math.floor(Math.random() * 256);
+    const blue = Math.floor(Math.random() * 256);
+    const colorCode = "#" + red.toString(16).padStart(2, '0') + green.toString(16).padStart(2, '0') + blue.toString(16).padStart(2, '0');
+    return colorCode;
+}
+function getWordFrequencies(text) {
+    // Remove punctuation and convert to lowercase
+    const cleanedText = text.toLowerCase().replace(/[^\w\s]/g, '');
+    const words = cleanedText.split(/\s+/);
+    const frequencies = {};
+
+    words.forEach(word => {
+        if (word) {
+            frequencies[word] = (frequencies[word] || 0) + 1;
+        }
+    });
+
+    return frequencies;
+}
+
+function generateWordArray(frequencies) {
+    const words = [];
+    const maxFrequency = Math.max(...Object.values(frequencies));
+    const minSize = 10;
+    const maxSize = 40;
+    
+    Object.entries(frequencies).forEach(([word, count]) => {
+        const size = minSize + ((count / maxFrequency) * (maxSize - minSize));
+        words.push({ text: word, size: Math.round(size), count });
+    });
+
+    return words;
+}
 document.addEventListener('DOMContentLoaded', function () {
-    var words = [
-        {text: "loperamide", size: 40, count: 14},
-        {text: "imodium", size: 30, count: 10},
-        {text: "tasectan", size: 20, count: 8},
-        {text: "gastrop", size: 15, count: 5},
-        {text: "smecta", size: 25, count: 7},
-        {text: "pepto", size: 10, count: 3},
-        {text: "none", size: 5, count: 2},
-        {text: "select", size: 15, count: 6},
-        {text: "alternative", size: 10, count: 4},
-        {text: "anti", size: 10, count: 4},
-        {text: "brand", size: 20, count: 6},
-        {text: "choose", size: 10, count: 4},
-        {text: "diarocare", size: 15, count: 6},
-        {text: "gastropect", size: 20, count: 7},
-        {text: "pectrolyte", size: 10, count: 4},
-        {text: "didn't", size: 15, count: 6}
-    ];
+    // Open Qus
+    $('.wordCloud').each(function(index, element) {
+        let id ='word-cloud'+$(this).attr('id');
+        let text = $(this).val();
+        let frequencies = getWordFrequencies(text);
+        let words = generateWordArray(frequencies);
+        // var words = JSON.stringify(wordsArray, null, 2);
+        // console.log(wordsArray,'words')
+        var width = document.getElementById(id).offsetWidth;
+        var height = document.getElementById(id).offsetHeight;
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(event, d) {
+                return "This word appears " + event.count + 'time(s) in your responses';
+            });
 
-    var width = document.getElementById('word-cloud').offsetWidth;
-    var height = document.getElementById('word-cloud').offsetHeight;
+        var layout = d3.layout.cloud()
+            .size([width, height])
+            .words(words.map(function(d) {
+                return {text: d.text, size: d.size, count: d.count};
+            }))
+            .padding(1) 
+            .rotate(function() { return ~~(Math.random() * 2) * 90; })
+            .font("Impact")
+            .fontSize(function(d) { return d.size; })
+            .on("end", draw);
 
-    var color = d3.scaleOrdinal(d3.schemeCategory10);
+        layout.start();
 
-    var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([-10, 0])
-        .html(function(event, d) {
-            return "This word appears " + event.count + 'time(s) in your responses';
+        function draw(words) {
+            var svg = d3.select("#"+id).append("svg")
+                .attr("width", layout.size()[0])
+                .attr("height", layout.size()[1])
+                .append("g")
+                .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")");
+
+            svg.call(tip);
+
+            svg.selectAll("text")
+                .data(words)
+                .enter().append("text")
+                .style("font-size", function(d) { return d.size + "px"; })
+                .style("font-family", "Impact")
+                .style("fill", function(d, i) { return color(i); })
+                .attr("text-anchor", "middle")
+                .attr("transform", function(d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function(d) { return d.text; })
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
+        }
+
+    });
+    const options = {
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        var label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += context.parsed.y;
+                        }
+                        return label;
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                stacked: true,
+                grid: {
+                    display: false // Hide vertical grid lines
+                }
+            },
+            y: {
+                stacked: true
+            }
+        }
+    };
+    // Single Choice 
+    $('.allChoices').each(function(index,element){
+        console.log($(this).val(),"allChoices")
+        let userData = JSON.parse($('#userChoices'+$(this).attr('id')).val());
+        console.log(userData,'userData')
+        const allChoices = $(this).val().split(',');
+        let data = allChoices.map(val => userData.hasOwnProperty(val) ? userData[val] : 0);
+        console.log(data,'data');
+        let colors = [];
+        allChoices.map(val=>{
+            colors.push(generateRandomColor());
+        })
+        let chartID = 'myChartChoice'+$(this).attr('id');
+        // Get the canvas element
+        const ctx = document.getElementById(chartID).getContext('2d');
+        // Create a new bar chart instance
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: allChoices,
+                datasets: [{
+                    label: "",
+                    data: data,
+                    backgroundColor: colors,
+                    borderColor: colors,
+                    borderWidth: 1,
+                }]
+            },
+            options: options
         });
+        myChart.options.plugins.legend.display = false;
+        myChart.update();
 
-    var layout = d3.layout.cloud()
-        .size([width, height])
-        .words(words.map(function(d) {
-            return {text: d.text, size: d.size, count: d.count};
-        }))
-        .padding(1)  // Reduced padding to make words closer
-        .rotate(function() { return ~~(Math.random() * 2) * 90; })
-        .font("Impact")
-        .fontSize(function(d) { return d.size; })
-        .on("end", draw);
-
-    layout.start();
-
-    function draw(words) {
-        var svg = d3.select("#word-cloud").append("svg")
-            .attr("width", layout.size()[0])
-            .attr("height", layout.size()[1])
-            .append("g")
-            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")");
-
-        svg.call(tip);
-
-        svg.selectAll("text")
-            .data(words)
-            .enter().append("text")
-            .style("font-size", function(d) { return d.size + "px"; })
-            .style("font-family", "Impact")
-            .style("fill", function(d, i) { return color(i); })
-            .attr("text-anchor", "middle")
-            .attr("transform", function(d) {
-                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-            })
-            .text(function(d) { return d.text; })
-            .on('mouseover', tip.show)
-            .on('mouseout', tip.hide);
-    }
+    });
 });
+
+
 
 </script>     
 @include('admin.layout.footer')
