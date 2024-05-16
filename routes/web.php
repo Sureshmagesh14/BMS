@@ -44,6 +44,8 @@ Route::any('cashout_sent', 'WelcomeController@cashout_sent')->middleware(['auth'
 Route::any('cashout_form', 'WelcomeController@cashout_form')->middleware(['auth', 'verified'])->name('cashout_form');
 Route::any('cashouts', 'WelcomeController@user_cashout')->middleware(['auth', 'verified'])->name('user.cashouts');
 
+Route::any('updateprofile_wizard', 'ProfileController@updateprofile_wizard')->middleware(['auth', 'verified'])->name('updateprofile_wizard');
+
 /* USERS */
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
