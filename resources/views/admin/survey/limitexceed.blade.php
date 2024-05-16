@@ -67,6 +67,6 @@ button#back_to_profile {
             </div>
         </div>
 </body>
-<script src="http://127.0.0.1:8000/assets/js/jquery.min.js"></script>
+<script src="{{asset('assets/js/jquery.min.js')}}"></script>
 
 </html>

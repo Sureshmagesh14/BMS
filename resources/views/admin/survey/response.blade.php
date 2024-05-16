@@ -1191,12 +1191,74 @@ if(isset($bg)){
             <input type="text" id="next_qus" name="next_qus"/>
             <input type="text" id="user_ans" name="user_ans"/>
             <input type="text" id="skip_ans" name="skip_ans"/>
+            <input type="text" id="device_id" name="device_id"/>
+            <input type="text" id="device_name" name="device_name"/>
+            <input type="text" id="browser" name="browser"/>
+            <input type="text" id="os" name="os"/>
+            <input type="text" id="ip_address" name="ip_address"/>
+            <input type="text" id="location" name="location"/>
+            <input type="text" id="lat" name="lat"/>
+            <input type="text" id="long" name="long"/>
+            <input type="text" id="device_type" name="device_type"/>
+            <input type="text" id="lang_code" name="lang_code"/>
+            <input type="text" id="lang_name" name="lang_name"/>
         </form>
     </div>
 </body>
 <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
 
 <script>
+//Get browser details 
+document.addEventListener('DOMContentLoaded', function() {
+    $('#device_name').val(navigator.platform);
+    $('#browser').val(`${navigator.appName} ${navigator.appVersion}`);
+    $('#os').val(`${navigator.userAgent}`);
+    fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+        $('#ip_address').val(data.ip);
+    })
+    .catch(error => console.error('Error fetching IP address:', error));
+    const deviceLanguage = navigator.language || navigator.userLanguage; 
+    let languageName = getLanguageName(deviceLanguage);
+    $('#lang_code').val(deviceLanguage);
+    $('#lang_name').val(languageName);
+    $('#device_name').val(navigator.platform);
+    if(isMobileDevice()){
+        $('#device_type').val('Mobile');
+    }else{
+        $('#device_type').val('Desktop');
+    }
+    fetch('https://ipinfo.io/json')
+    .then(response => response.json())
+    .then(data => {
+        $('#location').val(data?.city+", "+data?.country);
+        const loc = data?.loc.split(",", 2); 
+        $('#lat').val(loc[0]);
+        $('#long').val(loc[1]);
+    })
+    .catch(error => console.error('Error fetching IP address:', error));
+
+});
+
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+function isDesktopBrowser() {
+  return !isMobileDevice();
+}
+
+function getLanguageName(languageCode) {
+  try {
+    return new Intl.DisplayNames([navigator.language], { type: 'language' }).of(languageCode);
+  } catch (error) {
+    console.error('Error:', error);
+    return null;
+  }
+}
+
+           
 $('.text-ans-input').change(function(){
     if($(this).val()!=''){
         $('#next_button').removeClass('disabled');
