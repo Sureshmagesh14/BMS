@@ -205,7 +205,7 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="edit_create">Create New</button>
+        <button type="button" class="btn btn-primary" id="edit_create">Update</button>
     </div>
 </form>
 
