@@ -3,6 +3,7 @@
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
 <?php
+// Get qus type
 function Qustype($type){
     $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','upload'=>'Upload','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
     return $questionTypes[$type];
