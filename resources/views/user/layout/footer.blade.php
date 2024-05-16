@@ -45,6 +45,7 @@
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="{{ asset('assets/js/admin/jquery.validate.js') }}"></script>
+    
     <script src="{{ asset('assets/js/admin/confirm.min.js') }}"></script>
 
     <script>
