@@ -7,6 +7,11 @@
                 <option value="1">Status > Approved</option>
                 <option value="2">Delete Rewards</option>
             </select>
+            <div class="play-button-container ml-3">
+                <a class="play-button user_play_button">
+                    <div class="play-button__triangle"></div>
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -32,4 +37,3 @@
     <tbody>
     </tbody>
 </table>
-

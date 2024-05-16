@@ -172,7 +172,7 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="respondents_edit">Create New</button>
+        <button type="button" class="btn btn-primary" id="respondents_edit">Update</button>
     </div>
 </form>
 
@@ -226,7 +226,7 @@
             var url_set = "{{ route('respondents.update', ':id') }}";
             url_set = url_set.replace(':id', id);
             $.ajax({
-                type: 'POST',
+                type: 'PUT',
                 url: url_set,
                 data: data,
                 headers: {

@@ -44,6 +44,8 @@ Route::any('cashout_sent', 'WelcomeController@cashout_sent')->middleware(['auth'
 Route::any('cashout_form', 'WelcomeController@cashout_form')->middleware(['auth', 'verified'])->name('cashout_form');
 Route::any('cashouts', 'WelcomeController@user_cashout')->middleware(['auth', 'verified'])->name('user.cashouts');
 
+Route::any('updateprofile_wizard', 'ProfileController@updateprofile_wizard')->middleware(['auth', 'verified'])->name('updateprofile_wizard');
+
 /* USERS */
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -109,6 +111,7 @@ Route::group([
     Route::any('project_seach_result', 'ProjectsController@project_seach_result')->name('project_seach_result');
     Route::any('project_attach_store', 'ProjectsController@project_attach_store')->name('project_attach_store');
     Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
+    Route::any('project_action', 'ProjectsController@project_action')->name('project_action');
 
     /* Respondents MENU*/
     Route::resource('respondents', 'RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
@@ -142,7 +145,8 @@ Route::group([
         Route::get('export_rewards', 'export_rewards')->name('export_rewards');
         Route::get('get_all_rewards', 'get_all_rewards')->name('get_all_rewards');
         Route::get('view_rewards/{id}', 'view_rewards')->name('view_rewards');
-        Route::get('rewards_multi_delete', 'rewards_multi_delete')->name('rewards_multi_delete');
+        Route::any('change_rewards_status', 'change_rewards_status')->name('change_rewards_status');
+        Route::any('rewards_multi_delete', 'rewards_multi_delete')->name('rewards_multi_delete');
     });
 
     /* Profile Groups MENU*/

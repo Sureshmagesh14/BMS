@@ -4,7 +4,8 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Projects;
-use App\Models\project_respondent;
+use App\Models\Project_respondent;
+
 use App\Models\Users;
 use App\Models\Respondents;
 use DB;
@@ -37,7 +38,7 @@ class ProjectsController extends Controller
     {
         try {
             $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
-            $survey_title=DB::table('survey')->select('title','id')->get();
+            $survey_title=DB::table('survey')->select('title','id')->where('survey_type','=','survey')->get();
             $returnHTML = view('admin.projects.create',compact('users','survey_title'))->render();
 
             return response()->json(
@@ -148,7 +149,7 @@ class ProjectsController extends Controller
             if($projects)
             {
                 $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
-                $survey_title=DB::table('survey')->select('title','id')->get();
+                $survey_title=DB::table('survey')->select('title','id')->where('survey_type','=','survey')->get();
                 $returnHTML = view('admin.projects.edit',compact('projects','users','survey_title'))->render();
                 
                 return response()->json(
@@ -181,7 +182,8 @@ class ProjectsController extends Controller
             if($projects)
             {
                 $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
-                $returnHTML = view('admin.projects.copy',compact('projects','users'))->render();
+                $survey_title=DB::table('survey')->select('title','id')->where('survey_type','=','survey')->get();
+                $returnHTML = view('admin.projects.copy',compact('projects','users','survey_title'))->render();
                 return response()->json(
                     [
                         'success' => true,
@@ -735,6 +737,26 @@ class ProjectsController extends Controller
         }
         catch (Exception $e) {
             return $e->getMessage();
+        }
+    }
+
+    public function project_action(Request $request){
+        try {
+            $all_id = $request->all_id;
+            $value  = $request->value;
+           
+            foreach($all_id as $id){
+                $tags = Projects::where('id',$id)->update(['status_id' => $value]);
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Status Changed'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 }

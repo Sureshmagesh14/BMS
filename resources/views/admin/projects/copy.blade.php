@@ -183,7 +183,16 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Survey Link *
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="survey_link" name="survey_link" value="{{$projects->survey_link}}" required>
+            <select id="survey_link" name="survey_link" class="w-full form-control form-select" required>
+                <option value="" selected="selected" disabled="disabled">
+                    Choose an option
+                </option>
+                @foreach ($survey_title as $title)
+                    <option @if ($projects->survey_link == $title->id) selected @endif value="{{ $title->id }}">
+                        {{ $title->title }}
+                    </option>
+                @endforeach
+            </select>
         </div>
     </div>
 
