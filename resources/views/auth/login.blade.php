@@ -12,6 +12,10 @@
         z-index: 2;
     }
 
+    .rightside.text-center {
+        margin-top: 85px !important;
+    }
+
     .container {
         padding-top: 50px;
         margin: auto;
@@ -62,7 +66,10 @@
                             href="{{ route('register') }}">Don't have an account? Register now</a></p>
                 </div>
                 @if (count($errors) > 0)
-                    @if(!str_contains($errors->all()[0], "Incorrect Email") && !str_contains($errors->all()[0], "Incorrect Phone No") && !str_contains($errors->all()[0], "Unsubscribed"))
+                    @if (
+                        !str_contains($errors->all()[0], 'Incorrect Email') &&
+                            !str_contains($errors->all()[0], 'Incorrect Phone No') &&
+                            !str_contains($errors->all()[0], 'Unsubscribed'))
                         <div class="alert alert-danger">
                             @foreach ($errors->all() as $message)
                                 <strong>{{ $message }}</strong> Please try again or you can <a
