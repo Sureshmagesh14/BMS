@@ -15,6 +15,10 @@
             width: 100%;
             margin-bottom: 0px !important;
         }
+
+        .wizard > .content {
+            background: #fff;
+        }
         /* .wizard > .steps .current a, .wizard > .steps .current a:hover, .wizard > .steps .current a:active {
             background: #edbf1b;
         }
