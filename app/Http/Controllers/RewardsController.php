@@ -273,6 +273,25 @@ class RewardsController extends Controller
         header("Content-Type: application/vnd.ms-excel");
         return redirect(url('/')."/export/".$fileName);
     }
+
+    public function change_rewards_status(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $data=array('status_id'=>2);
+                $rewards = Rewards::whereIn('id', [$id])->update($data);
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Rewards Status Changed'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
     public function rewards_multi_delete(Request $request){
         try {
             $all_id = $request->all_id;
