@@ -119,12 +119,10 @@
 
 <script>
     $(document).ready(function() {
-        $('table.table.table-striped').dataTable().fnDestroy();
+        $('#nav_surveys').addClass('active');
         $('table.table.table-striped').DataTable({
             responsive: true
         });
-
-        $('#nav_surveys').addClass('active');
     });
 
     // $(document).ready(function() {

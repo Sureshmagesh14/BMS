@@ -328,7 +328,6 @@
     var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
         $('#nav_dashboard').addClass('active');
-        $('table.table.table-striped').dataTable().fnDestroy();
         $('table.table.table-striped').DataTable({
             responsive: true
         });
