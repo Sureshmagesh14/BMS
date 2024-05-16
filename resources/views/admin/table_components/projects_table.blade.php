@@ -36,8 +36,14 @@
 
         <select name="action_1" id="action_1" class="form-control projects_table show_hided_option select_box">
             <option value="">Select Action</option>
-            <option value="6">Export - All Projects</option>
+            <option value="delete_all">Export - All Projects</option>
         </select>
+
+        <div class="play-button-container ml-3">
+            <a class="play-button project_play_button">
+                <div class="play-button__triangle"></div>
+            </a>
+        </div>
     </div>
 
     {{-- <a href="#!" data-url="{{ route('export_projects') }}" data-size="xl"
