@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Projects;
-use App\Models\project_respondent;
+use App\Models\Project_respondent;
 
 use App\Models\Users;
 use App\Models\Respondents;
