@@ -515,5 +515,9 @@
         });
         
 
-        
+    $(document).ready(function() {
+
+        $('#nav_profile').addClass('active');
+
+    });
     </script>

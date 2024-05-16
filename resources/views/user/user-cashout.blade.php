@@ -107,7 +107,6 @@
     $(document).ready(function() {
 
         $('#nav_rewards').addClass('active');
-        $('table.table.table-striped').dataTable().fnDestroy();
         $('table.table.table-striped').DataTable({
             responsive: true
         });
