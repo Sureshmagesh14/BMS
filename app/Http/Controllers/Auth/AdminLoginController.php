@@ -10,8 +10,6 @@ use DB;
 use Session;
 use Exception;
 use Hash;
-use App\Mail\WelcomeEmail;
-use Illuminate\Support\Facades\Mail;
 class AdminLoginController extends Controller
 {
 
@@ -140,14 +138,5 @@ class AdminLoginController extends Controller
         }
     }
 
-    public function email(Request $request){
-        try {
-            $data = ['message' => 'This is a test!'];
-
-            Mail::to('smartvijay018@gmail.com')->send(new WelcomeEmail($data));
-        }
-        catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
+    
 }

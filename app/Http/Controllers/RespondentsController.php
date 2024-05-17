@@ -91,6 +91,7 @@ class RespondentsController extends Controller
                 $respondents->save();
                 $respondents->id;
                 app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
+                app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
                 return response()->json([
                     'status' => 200,
                     'last_insert_id' => $respondents->id,

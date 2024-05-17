@@ -18,6 +18,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Illuminate\Support\Facades\Hash;
 use Exception;
 use Carbon\Carbon;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 
 class WelcomeController extends Controller
 {   
@@ -588,6 +590,21 @@ class WelcomeController extends Controller
         }
 
         return redirect()->back()->withsuccess('Request Send Successfully');
+    }
+
+    public function update_activitation(){
+
+    }
+
+    public function email(Request $request){
+        try {
+            $data = ['message' => 'This is a test!'];
+
+            Mail::to('smartvijay018@gmail.com')->send(new WelcomeEmail($data));
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
 }
