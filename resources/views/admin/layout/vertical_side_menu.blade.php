@@ -193,6 +193,16 @@
                         </a>
                     </li>
                 @endif
+
+                <li class="menu-title" key="t-apps">Downloads </li>
+
+                    <li>
+                        <a href="export_index" class="waves-effect">
+                            <i class="icon nav-icon" data-feather="download"></i>
+                            <span class="menu-item" key="t-calendar">Export</span>
+                        </a>
+                    </li>
+
             </ul>
         </div>
         <!-- Sidebar -->
