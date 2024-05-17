@@ -8,6 +8,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
 <style>
+.imgphoto_capture{
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
 .wordcloudgraph {
     width: 400px;
     height: 400px;
@@ -156,7 +161,7 @@
                             } ?>
                             <input type="hidden" id="{{$qus->id}}" value="{{$text}}" class="wordCloud"/>
                             <div id="word-cloud{{$qus->id}}" class="wordcloudgraph"></div>
-                            @elseif($qus->qus_type == 'single_choice')
+                        @elseif($qus->qus_type == 'single_choice' || $qus->qus_type == 'dropdown')
                             <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): [];
                             $allchoices = implode(",",$exiting_choices);
                             $userchoices = [];
@@ -201,9 +206,32 @@
                         @elseif($qus->qus_type == 'rankorder')
                         <?php //echo "<pre>"; print_r($qus);   ?>
                         @elseif($qus->qus_type == 'rating')
-                        @elseif($qus->qus_type == 'dropdown')
+                        <?php $existing_choices=[1,2,3,4,5]; $allchoices = implode(",",$existing_choices); 
+                         $userchoices = [];
+                         foreach ($existing_choices as $choice) {
+                             $getRespAns = \App\Models\SurveyResponse::where(['survey_id' => $qus->survey_id, 'question_id' => $qus->id, 'answer' => $choice])->count();
+                             $userchoices[$choice] = $getRespAns;
+                         }
+                         $userchoices_string = json_encode($userchoices); ?>
+                            <input type="hidden" id="userChoices{{$qus->id}}" value="{{$userchoices_string}}" class="userChoices"/>
+                            <input type="hidden" id="{{$qus->id}}" value="{{$allchoices}}" class="allChoices"/>
+                            <div id="single-choice-chart{{$qus->id}}" class="single-choice-chart">
+                                <canvas id="myChartChoice{{$qus->id}}"></canvas>
+                            </div>
+
                         @elseif($qus->qus_type == 'picturechoice')
                         @elseif($qus->qus_type == 'photo_capture')
+                        <table>
+                            <tr><td>Respondent</td><td>Response</td><td>Response Time</td></tr>
+                            @foreach($getResp as $resp)
+                            <?php  $user = \App\Models\Respondents::where('id', '=' , $resp->response_user_id)->first(); ?>
+                            <tr>
+                                <td>{{$user->name}}</td>
+                                <td><img class="imgphoto_capture" src="{{$resp->answer}}"/></td>
+                                <td>{{$userController->humanReadableTime($resp->created_at)}}</td>
+                            </tr>
+                            @endforeach
+                        </table>
                         @elseif($qus->qus_type == 'email')
                         <table>
                             <tr><td>Respondent</td><td>Response</td><td>Response Time</td></tr>
@@ -215,10 +243,19 @@
                                 <td>{{$userController->humanReadableTime($resp->created_at)}}</td>
                             </tr>
                             @endforeach
-
-
                         </table>
                         @elseif($qus->qus_type == 'upload')
+                        <table>
+                            <tr><td>Respondent</td><td>Response</td><td>Response Time</td></tr>
+                            @foreach($getResp as $resp)
+                            <?php  $user = \App\Models\Respondents::where('id', '=' , $resp->response_user_id)->first(); ?>
+                            <tr>
+                                <td>{{$user->name}}</td>
+                                <td><a target="_blank" href="{{ asset('uploads/survey/'.$resp->answer) }}">{{$resp->answer}}</a></td>
+                                <td>{{$userController->humanReadableTime($resp->created_at)}}</td>
+                            </tr>
+                            @endforeach
+                        </table>
                         @elseif($qus->qus_type == 'matrix_qus')
                         @endif
                     @else
