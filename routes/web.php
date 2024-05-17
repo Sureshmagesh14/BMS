@@ -84,7 +84,7 @@ Route::group([
         Route::get('cashouts', 'cashouts')->name('cashouts');
         Route::any('get_all_cashouts', 'get_all_cashouts')->name('get_all_cashouts');
         Route::get('cashouts-view/{id}', 'view')->name('cashouts-view');
-        Route::get('cash_export', 'cash_export')->name('cash_export');
+        Route::post('cash_export', 'cash_export')->name('cash_export');
         Route::get('export_cash', 'export_cash')->name('export_cash');
         Route::any('cash_multi_delete', 'CashoutsController@cash_multi_delete')->name('cash_multi_delete');
         Route::any('cash_multi_update', 'CashoutsController@cash_multi_update')->name('cash_multi_update');

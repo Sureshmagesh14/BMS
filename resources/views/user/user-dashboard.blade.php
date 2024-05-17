@@ -327,7 +327,7 @@
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
-        $('#nav_dashboard').addClass('active');
+        $('#nav_profile').addClass('active');
         $('table.table.table-striped').dataTable().fnDestroy();
         $('table.table.table-striped').DataTable();
     });
