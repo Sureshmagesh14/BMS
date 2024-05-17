@@ -1148,6 +1148,13 @@ class SurveyController extends Controller
 
                 return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
             }else{
+                if($surveyRec->survey_type == 'survey'){
+                    // Get Project ID 
+                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                    if($project){
+                        Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
+                    }
+                }
                 return redirect()->route('survey.endsurvey',[$survey_id,0]);
             }
            
@@ -1461,6 +1468,13 @@ class SurveyController extends Controller
                                 }
                                 return redirect()->route('survey.endsurvey',[$survey_id,$next_question->id]);
                             }else{
+                                if($surveyRec->survey_type == 'survey'){
+                                    // Get Project ID 
+                                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                                    if($project){
+                                        Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
+                                    }
+                                }
                                 
                                 return redirect()->route('survey.endsurvey',[$survey_id,0]);
                                 
@@ -1503,6 +1517,13 @@ class SurveyController extends Controller
                 }
                 return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
             }else{
+                if($surveyRec->survey_type == 'survey'){
+                    // Get Project ID 
+                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                    if($project){
+                        Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
+                    }
+                }
                 return redirect()->route('survey.endsurvey',[$survey_id,0]);
             }
          
