@@ -1140,7 +1140,7 @@ class SurveyController extends Controller
                 // }
                 if($surveyRec->survey_type == 'survey'){
                     // Get Project ID 
-                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                    $project = Projects::where(['survey_link'=> $surveyRec->id])->first();
                     if($project){
                         Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
                     }
@@ -1150,7 +1150,7 @@ class SurveyController extends Controller
             }else{
                 if($surveyRec->survey_type == 'survey'){
                     // Get Project ID 
-                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                    $project = Projects::where(['survey_link'=> $surveyRec->id])->first();
                     if($project){
                         Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
                     }
@@ -1461,7 +1461,7 @@ class SurveyController extends Controller
 
                                 if($surveyRec->survey_type == 'survey'){
                                     // Get Project ID 
-                                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                                    $project = Projects::where(['survey_link'=> $surveyRec->id])->first();
                                     if($project){
                                         Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
                                     }
@@ -1470,7 +1470,7 @@ class SurveyController extends Controller
                             }else{
                                 if($surveyRec->survey_type == 'survey'){
                                     // Get Project ID 
-                                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                                    $project = Projects::where(['survey_link'=> $surveyRec->id])->first();
                                     if($project){
                                         Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
                                     }
@@ -1510,7 +1510,7 @@ class SurveyController extends Controller
                 $surveyres->save();
                 if($surveyRec->survey_type == 'survey'){
                     // Get Project ID 
-                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                    $project = Projects::where(['survey_link'=> $surveyRec->id])->first();
                     if($project){
                         Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
                     }
@@ -1519,7 +1519,7 @@ class SurveyController extends Controller
             }else{
                 if($surveyRec->survey_type == 'survey'){
                     // Get Project ID 
-                    $project = Projects::where(['survey_link'=> $surveyRec->id,'user_id' => $response_user_id])->first();
+                    $project = Projects::where(['survey_link'=> $surveyRec->id])->first();
                     if($project){
                         Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
                     }
