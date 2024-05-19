@@ -7,7 +7,7 @@ use App\Models\Project_respondent;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
-use App\Mail\WelcomeEmail;
+use App\Mail\Respondentprojectmail;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
@@ -785,11 +785,12 @@ class RespondentsController extends Controller
             }
             else{
                 Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $respondents]);
-                $data = ['message' => 'Welcome','respondents'=>$respondents];
+                $projects=Projects::select('name')->where('id',$project_id)->first();
+                $data = ['message' => 'Welcome','respondents'=>$respondents,'projects'=>$projects];
                 if ($respondents != null) {
                     $get_email = Respondents::where('id', $respondents)->first();
         
-                    Mail::to($get_email->email)->send(new WelcomeEmail($data));
+                    Mail::to($get_email->email)->send(new Respondentprojectmail($data));
                 }
 
                 return response()->json([
