@@ -79,7 +79,7 @@
 
             </form>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 pt-3">
             <div class="text-center">
                 <p>Let's get you started</p>
                 <h3>Join our Database</h3>
@@ -189,7 +189,7 @@
                     </div>
 
                     <div class="submit-btn text-start">
-                        <button type="submit" class="btn vi-nav-bg border-radius-0 text-white px-5 py-3"
+                        <button type="submit" class="btn vi-light-bg text-white py-3 px-5 w-30"
                             id="save_org">Continue</button>
                     </div>
                 </form>

@@ -53,7 +53,15 @@
     margin: -1px 0 0 0;
     top: 100%;
     left: 0;
-}    
+} 
+.downloadReport {
+    gap:5px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}   
 </style>
 <link href="{{ asset('assets/css/overview.css') }}" rel="stylesheet" type="text/css" />
 <div class="main-content">
@@ -62,11 +70,15 @@
         
         <div class="container-fluid">
             <div class="row">
-            <div class="card-container col-md-12">
+                <div class="card-container col-md-12">
                     <div class="default-header mt-2">
-                        <p>The Brand Surgeon |  {{$survey->title}}</p>
+                        <p>The Brand Surgeon |  <a href="{{route('survey.template',$survey->folder_id)}}">{{$survey->title}}</a></p>
                         <p><span class="qusNo">Default Report</span></p>
-                        <p class="qusName">Explore the data behind your survey responses. Gain a better perspective of your survey data and uncover insights for further planning.</p>
+                        <p class="qusName1">Explore the data behind your survey responses. Gain a better perspective of your survey data and uncover insights for further planning.</p>
+                        <div class="downloadReport">
+                            <a class="btn btn-primary" href="{{route('survey.report',[$survey->id,'csv'])}}">Download CSV Report</a>
+                            <a class="btn btn-primary" href="{{route('survey.report',[$survey->id,'xlsx'])}}">Download XLSX Report</a>
+                        </div>
                     </div>
                     <div class="desc-content-1">
                         <div class="grid grid-nogutter row">

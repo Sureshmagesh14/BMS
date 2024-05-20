@@ -249,6 +249,10 @@ Route::group([
     Route::get('/survey/responses/{id}', ['as' => 'survey.responses', 'uses' => 'SurveyController@responses']);
     Route::any('get_all_response/{id}', 'SurveyController@get_all_response')->name('get_all_response');
 
+    // Survey Report Routings 
+    Route::get('/survey/report/{id}/{type}', ['as' => 'survey.report', 'uses' => 'SurveyController@generateReport']);
+
+
     // Survey Template
     Route::get('/survey/default-template/{id}/{type}', ['as' => 'survey.surveytemplate', 'uses' => 'SurveyController@surveytemplate']);
     Route::any('get_all_templates/{id}/{type}', 'SurveyController@get_all_templates')->name('get_all_templates');

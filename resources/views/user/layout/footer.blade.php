@@ -1,6 +1,6 @@
 <footer class="bg-white">
-    <div class="container">
-        <div class="container py-3">
+    <!-- <div class="container"> -->
+        <div class="container py-0">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
                     <div class="d-flex align-items-end">
@@ -9,7 +9,7 @@
                                 document.write(new Date().getFullYear())
                             </script> {{ Config::get('constants.app_title') }}
                         </p>
-                        <a href="{{ route('terms') }}" class="nav-link px-5 mb-0 pb-0">Terms & Conditions</a>
+                        <a href="{{ route('terms') }}" class="nav-link ps-5 mb-0 pb-0">Terms & Conditions</a>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 </footer>
 
 <!-- Common modal -->
@@ -30,7 +30,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title mt-0" id="exampleModalScrollableTitle"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
