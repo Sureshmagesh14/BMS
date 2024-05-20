@@ -21,11 +21,14 @@
         padding-top: 50px;
         margin: auto;
     }
+    .image-cover{
+        object-fit: cover;
+    }
 </style>
 <div class="container-fluid vh-90">
     <div class="row">
         <div class="col-md-6 d-none-mobile">
-            <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}" class="img-fluid vh-90 w-100"
+            <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}" class="img-fluid vh-90 w-100 image-cover"
                 alt="" />
         </div>
         <div class="col-md-6 col-sm-12">
