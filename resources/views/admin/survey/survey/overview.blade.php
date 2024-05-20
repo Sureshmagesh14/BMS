@@ -8,7 +8,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
 <style>
-.wordcloudgraph {
+.imgphoto_capture{
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+.wordcloudgraph,.matrix-choice-chart {
     width: 400px;
     height: 400px;
 }
@@ -156,7 +161,7 @@
                             } ?>
                             <input type="hidden" id="{{$qus->id}}" value="{{$text}}" class="wordCloud"/>
                             <div id="word-cloud{{$qus->id}}" class="wordcloudgraph"></div>
-                            @elseif($qus->qus_type == 'single_choice')
+                        @elseif($qus->qus_type == 'single_choice' || $qus->qus_type == 'dropdown')
                             <?php $exiting_choices=$qusvalue!=null ? explode(",",$qusvalue->choices_list): [];
                             $allchoices = implode(",",$exiting_choices);
                             $userchoices = [];
@@ -167,7 +172,6 @@
                             $userchoices_string = json_encode($userchoices);
                             ?>
                             <input type="hidden" id="userChoices{{$qus->id}}" value="{{$userchoices_string}}" class="userChoices"/>
-
                             <input type="hidden" id="{{$qus->id}}" value="{{$allchoices}}" class="allChoices"/>
                             <div id="single-choice-chart{{$qus->id}}" class="single-choice-chart">
                                 <canvas id="myChartChoice{{$qus->id}}"></canvas>
@@ -194,32 +198,110 @@
                                 <canvas id="myChartChoice{{$qus->id}}"></canvas>
                             </div>
                         @elseif($qus->qus_type == 'likert')
-                        <?php $likert_range = $qusvalue->likert_range;  
-                        
-                        $allchoices = implode(",",[$qusvalue->right_label,$qusvalue->right_label,$qusvalue->right_label]);
-                        ?>
+                            <?php $likert_range = $qusvalue->likert_range;  
+                            $allchoices = implode(",",[$qusvalue->left_label,$qusvalue->middle_label,$qusvalue->right_label]);
+                            $getRespAns = \App\Models\SurveyResponse::where(['survey_id' => $qus->survey_id, 'question_id' => $qus->id])->pluck('answer')->toArray();
+
+                            ?>
+                            <input type="hidden" id="userChoices{{$qus->id}}" value="{{json_encode($getRespAns)}}" class="userChoices"/>
+                            <input type="hidden" data-likert_range="{{$likert_range}}" id="{{$qus->id}}" value="{{$allchoices}}" class="allChoicesLikert"/>
+                            <div id="likert-chart{{$qus->id}}" class="likert-chart">
+                                <canvas id="likertCanvas{{$qus->id}}"></canvas>
+                            </div>
                         @elseif($qus->qus_type == 'rankorder')
-                        <?php //echo "<pre>"; print_r($qus);   ?>
+                        
+                            <?php              
+                            $getRespAns = \App\Models\SurveyResponse::where(['survey_id' => $qus->survey_id, 'question_id' => $qus->id])->pluck('answer')->toArray();
+                            ?>
+                            <input type="hidden" id="{{$qus->id}}" value="{{json_encode($getRespAns)}}" class="rankorderChoice"/>
+                            <div id="rank-choice-chart{{$qus->id}}" class="rank-choice-chart">
+                                <canvas id="myChartRankChoice{{$qus->id}}"></canvas>
+                            </div>
                         @elseif($qus->qus_type == 'rating')
-                        @elseif($qus->qus_type == 'dropdown')
+                            <?php $existing_choices=[1,2,3,4,5]; $allchoices = implode(",",$existing_choices); 
+                            $userchoices = [];
+                            foreach ($existing_choices as $choice) {
+                                $getRespAns = \App\Models\SurveyResponse::where(['survey_id' => $qus->survey_id, 'question_id' => $qus->id, 'answer' => $choice])->count();
+                                $userchoices[$choice] = $getRespAns;
+                            }
+                            $userchoices_string = json_encode($userchoices); ?>
+                            <input type="hidden" id="userChoices{{$qus->id}}" value="{{$userchoices_string}}" class="userChoices"/>
+                            <input type="hidden" id="{{$qus->id}}" value="{{$allchoices}}" class="allChoices"/>
+                            <div id="single-choice-chart{{$qus->id}}" class="single-choice-chart">
+                                <canvas id="myChartChoice{{$qus->id}}"></canvas>
+                            </div>
+
                         @elseif($qus->qus_type == 'picturechoice')
+                            <?php
+                            $exiting_choices=$qusvalue!=null ? json_decode($qusvalue->choices_list): [];
+                            
+                            $allchoices = [];
+                            foreach($exiting_choices as $key=>$choice){
+                                array_push($allchoices,$choice->text);
+                            }
+                            $userchoices = [];
+                            foreach ($allchoices as $choice) {
+                                $getRespAns = \App\Models\SurveyResponse::where(['survey_id' => $qus->survey_id, 'question_id' => $qus->id, 'answer' => $choice])->count();
+                                $userchoices[$choice] = $getRespAns;
+                            }
+                            $userchoices_string = json_encode($userchoices);
+                            $allchoices = implode(",",$allchoices);
+                            
+                            ?>
+                            <input type="hidden" id="userChoices{{$qus->id}}" value="{{$userchoices_string}}" class="userChoices"/>
+                            <input type="hidden" id="{{$qus->id}}" value="{{$allchoices}}" class="allChoices"/>
+                            <div id="single-choice-chart{{$qus->id}}" class="single-choice-chart">
+                                <canvas id="myChartChoice{{$qus->id}}"></canvas>
+                            </div>
                         @elseif($qus->qus_type == 'photo_capture')
+                            <table>
+                                <tr><td>Respondent</td><td>Response</td><td>Response Time</td></tr>
+                                @foreach($getResp as $resp)
+                                <?php  $user = \App\Models\Respondents::where('id', '=' , $resp->response_user_id)->first(); ?>
+                                <tr>
+                                    <td>{{$user->name}}</td>
+                                    <td><img class="imgphoto_capture" src="{{$resp->answer}}"/></td>
+                                    <td>{{$userController->humanReadableTime($resp->created_at)}}</td>
+                                </tr>
+                                @endforeach
+                            </table>
                         @elseif($qus->qus_type == 'email')
-                        <table>
-                            <tr><td>Respondent</td><td>Response</td><td>Response Time</td></tr>
-                            @foreach($getResp as $resp)
-                            <?php  $user = \App\Models\Respondents::where('id', '=' , $resp->response_user_id)->first(); ?>
-                            <tr>
-                                <td>{{$user->name}}</td>
-                                <td>{{$resp->answer}}</td>
-                                <td>{{$userController->humanReadableTime($resp->created_at)}}</td>
-                            </tr>
-                            @endforeach
-
-
-                        </table>
+                            <table>
+                                <tr><td>Respondent</td><td>Response</td><td>Response Time</td></tr>
+                                @foreach($getResp as $resp)
+                                <?php  $user = \App\Models\Respondents::where('id', '=' , $resp->response_user_id)->first(); ?>
+                                <tr>
+                                    <td>{{$user->name}}</td>
+                                    <td>{{$resp->answer}}</td>
+                                    <td>{{$userController->humanReadableTime($resp->created_at)}}</td>
+                                </tr>
+                                @endforeach
+                            </table>
                         @elseif($qus->qus_type == 'upload')
+                            <table>
+                                <tr><td>Respondent</td><td>Response</td><td>Response Time</td></tr>
+                                @foreach($getResp as $resp)
+                                <?php  $user = \App\Models\Respondents::where('id', '=' , $resp->response_user_id)->first(); ?>
+                                <tr>
+                                    <td>{{$user->name}}</td>
+                                    <td><a target="_blank" href="{{ asset('uploads/survey/'.$resp->answer) }}">{{$resp->answer}}</a></td>
+                                    <td>{{$userController->humanReadableTime($resp->created_at)}}</td>
+                                </tr>
+                                @endforeach
+                            </table>
                         @elseif($qus->qus_type == 'matrix_qus')
+                        <?php 
+                        $getRespAns = \App\Models\SurveyResponse::where(['survey_id' => $qus->survey_id, 'question_id' => $qus->id])->pluck('answer')->toArray();
+                        $matrix_choice=$qusvalue!=null ? $qusvalue->matrix_choice:"";
+                        $matrix_qus=$qusvalue!=null ? $qusvalue->matrix_qus:"" ?>
+                            <input type="hidden" id="userChoices{{$qus->id}}" value="{{json_encode($getRespAns)}}" class="userChoices"/>
+
+                            <input type="hidden" id="matrix_choice{{$qus->id}}" value="{{$matrix_choice}}"/>
+                            <input type="hidden" id="{{$qus->id}}" value="{{$matrix_qus}}" class="matrix_qus"/>
+                            <div id="matrix-choice-chart{{$qus->id}}" class="matrix-choice-chart">
+                                <canvas id="matrixCanvas{{$qus->id}}"></canvas>
+                            </div>
+                        
                         @endif
                     @else
                     <p style="mt-4 mb-2">No Response Available</p>
@@ -275,8 +357,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let text = $(this).val();
         let frequencies = getWordFrequencies(text);
         let words = generateWordArray(frequencies);
-        // var words = JSON.stringify(wordsArray, null, 2);
-        // console.log(wordsArray,'words')
         var width = document.getElementById(id).offsetWidth;
         var height = document.getElementById(id).offsetHeight;
         var color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -325,6 +405,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
     });
+
     const options = {
         plugins: {
             tooltip: {
@@ -354,14 +435,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     };
-    // Single Choice 
+
+    // Choice Bar Chart
     $('.allChoices').each(function(index,element){
-        console.log($(this).val(),"allChoices")
         let userData = JSON.parse($('#userChoices'+$(this).attr('id')).val());
-        console.log(userData,'userData')
         const allChoices = $(this).val().split(',');
         let data = allChoices.map(val => userData.hasOwnProperty(val) ? userData[val] : 0);
-        console.log(data,'data');
         let colors = [];
         allChoices.map(val=>{
             colors.push(generateRandomColor());
@@ -388,6 +467,224 @@ document.addEventListener('DOMContentLoaded', function () {
         myChart.update();
 
     });
+
+    // Rank Order 
+    $('.rankorderChoice').each(function(index,element){
+        let chartID = 'myChartRankChoice'+$(this).attr('id');
+        var rankings = JSON.parse($(this).val());
+        // Function to parse rankings and calculate average ranks
+        function calculateAverageRanks(rankings) {
+            var rankSums = {};
+            var rankCounts = {};
+            rankings.forEach(function(userRanking) {
+                JSON.parse(userRanking).forEach(function(rank) {
+                    var id = rank.id;
+                    var value = parseInt(rank.val);
+    
+                    if (!rankSums[id]) {
+                        rankSums[id] = 0;
+                        rankCounts[id] = 0;
+                    }
+    
+                    rankSums[id] += value;
+                    rankCounts[id] += 1;
+                });
+            });
+    
+            var averageRanks = {};
+            for (var id in rankSums) {
+                if (rankSums.hasOwnProperty(id)) {
+                    averageRanks[id] = rankSums[id] / rankCounts[id];
+                }
+            }
+    
+            return averageRanks;
+        }
+    
+        var averageRanks = calculateAverageRanks(rankings);
+    
+        // Extract labels and data for Chart.js
+        var labels = Object.keys(averageRanks);
+        var data = Object.values(averageRanks);
+        var ctx = document.getElementById(chartID).getContext('2d');
+        var myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Average Ranking',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',  // Color for "Rank1"
+                        'rgba(54, 162, 235, 0.6)',  // Color for "Rank2"
+                        'rgba(75, 192, 192, 0.6)'   // Color for "Rank3"
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            reverse: true, // Reverse the order to show rank 1 at the top
+                            callback: function(value) {
+                                return value ; // Add 'place' to y-axis labels
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Hide the legend
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Avg Rank: ' + context.raw.toFixed(2) + ' %'; // Add 'place' to tooltip
+                            }
+                        }
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+    })
+
+    // Likert Chart 
+    $('.allChoicesLikert').each(function(index,element){
+        let scaleRange = [1,parseInt($(this).attr('data-likert_range'))];
+        const labels = $(this).val().split(',');
+        let userData = JSON.parse($('#userChoices'+$(this).attr('id')).val());
+        const responses = userData; 
+        // Canvas setup
+        const canvas = document.getElementById("likertCanvas"+$(this).attr('id'));
+        const ctx = canvas.getContext("2d");
+
+        // Calculate percentage of "good" responses
+        const calculateGoodPercentage = () => {
+            const goodCount = responses.filter(response => response >= scaleRange[1] / 2).length;
+            return (goodCount / responses.length) * 100;
+        };
+
+        // Draw Likert scale bar chart
+        const drawChart = () => {
+            const barWidth = 40;
+            const barSpacing = 20;
+            const maxBarHeight = canvas.height - 50;
+
+            const scaleStep = (canvas.width - (barWidth + barSpacing) * (responses.length - 1)) / responses.length;
+
+            // Draw bars
+            ctx.fillStyle = "blue";
+            responses.forEach((response, index) => {
+                const barHeight = (response - scaleRange[0]) / (scaleRange[1] - scaleRange[0]) * maxBarHeight;
+                const xPos = index * (scaleStep + barWidth + barSpacing) + barSpacing;
+                const yPos = canvas.height - barHeight - 20;
+                ctx.fillRect(xPos, yPos, barWidth, barHeight);
+
+                // Draw percentage count above the bar
+                const percentage = calculateGoodPercentage();
+                ctx.fillStyle = "black";
+                ctx.textAlign = "center";
+                ctx.fillText(`${percentage.toFixed(2)}%`, xPos + barWidth / 2, yPos - 5);
+            });
+
+            // Draw labels
+            ctx.fillStyle = "black";
+            ctx.textAlign = "center";
+            labels.forEach((label, index) => {
+                const xPos = index * (scaleStep + barWidth + barSpacing) + barSpacing + barWidth / 2;
+                ctx.fillText(label, xPos, canvas.height - 5);
+            });
+        };
+
+        // Initialize chart
+        drawChart();
+    });
+
+    // Matrix Chart
+    $('.matrix_qus').each(function(index,element){
+        let qus = $(this).val().split(',');
+        let matrix_choice = $('#matrix_choice'+$(this).attr('id')).val().split(',');
+        let userData = JSON.parse(JSON.parse($('#userChoices'+$(this).attr('id')).val()));
+        let choiceCount = [];
+        Object.values(userData).forEach(data=>{
+            if(choiceCount[data['qus']]!=undefined){
+                let existingAns = choiceCount[data['qus']];
+                existingAns.push(data['ans']);
+                choiceCount[data['qus']] = [data['ans']];
+            }else{
+                choiceCount[data['qus']] = [data['ans']];
+            }
+        });
+        // Initialize an empty object to store the counts per question
+        const questionCounts = {};
+
+        // Loop through each question and their choices
+        for (const question in choiceCount) {
+            if (choiceCount.hasOwnProperty(question)) {
+                // Initialize a nested object for the current question if not already present
+                if (!questionCounts[question]) {
+                    questionCounts[question] = {};
+                }
+                // Count occurrences of each choice for the current question
+                choiceCount[question].forEach(choice => {
+                    if (questionCounts[question][choice]) {
+                        questionCounts[question][choice] += 1;
+                    } else {
+                        questionCounts[question][choice] = 1;
+                    }
+                });
+            }
+        }
+
+        const data = {
+            labels: qus, 
+            datasets: matrix_choice.map(choice => {
+                return {
+                    label: choice, 
+                    backgroundColor: generateRandomColor(), 
+                    data: qus.map(qu => questionCounts[qu] && questionCounts[qu][choice] ? questionCounts[qu][choice] : 0)
+                };
+            })
+        };
+        const options = {
+            indexAxis: 'y',
+            elements: {
+                bar: {
+                    borderWidth: 2,
+                }
+            },
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                title: {
+                    display: false,
+                    text: 'Multi-level Matrix Horizontal Bar Chart'
+                }
+            }
+        };
+
+        const ctx = document.getElementById('matrixCanvas'+$(this).attr('id')).getContext('2d');
+        const matrixChart = new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: options
+        });
+    });
+
+
 });
 
 
