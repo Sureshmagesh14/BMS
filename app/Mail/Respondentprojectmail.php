@@ -5,7 +5,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-class WelcomeEmail extends Mailable
+class Respondentprojectmail extends Mailable
 {
     use Queueable, SerializesModels;
     /**
@@ -26,14 +26,15 @@ class WelcomeEmail extends Mailable
         $subject = 'This is a demo!';
         $name = 'Jane Doe';
 
-        return $this->view('admin.emails.welcome')
+        return $this->view('admin.emails.respond_project')
                     ->from($address, $name)
                     ->cc($address, $name)
                     ->bcc($address, $name)
                     ->replyTo($address, $name)
                     ->subject($subject)
                     ->with([ 'test_message' => $this->data['message'] ])
-                    ->with([ 'id' => $this->data['id'] ]);
+                    ->with([ 'respondents' => $this->data['respondents'] ])
+                    ->with([ 'projects' => $this->data['projects'] ]);
     }
    
     

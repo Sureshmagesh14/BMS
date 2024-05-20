@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::any('/', 'WelcomeController@home')->name('home');
-
+Route::any('update_activitation/{id}', 'WelcomeController@update_activitation')->name('update_activitation');
+Route::any('activation_status/{id}/{active_id}', 'WelcomeController@activation_status')->name('activation_status');
 // View Survey
 Route::get('/survey/view/{id}', ['as' => 'survey.view', 'uses' => 'SurveyController@viewsurvey']);
 // Start Survey
@@ -27,7 +28,7 @@ Route::any('terms', 'WelcomeController@terms')->name('terms');
 Route::any('admin', 'Auth\AdminLoginController@showLoginForm')->name('admin.showlogin'); //.....Admin Login
 Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.login'); //.....Admin Login
 Route::any('admin/forgot_password', 'Auth\AdminLoginController@forgot_password')->name('admin.forgot_password');
-Route::any('email', 'Auth\AdminLoginController@email')->name('email');
+Route::any('email', 'WelcomeController@email')->name('email');
 
 Route::any('dashboard', 'WelcomeController@user_dashboard')->middleware(['auth', 'verified'])->name('user.dashboard');
 Route::any('view_client_survey_list', 'WelcomeController@view_client_survey_list')->middleware(['auth', 'verified'])->name('client.survey');
