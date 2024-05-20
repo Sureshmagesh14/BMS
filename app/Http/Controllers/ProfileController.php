@@ -95,8 +95,10 @@ class ProfileController extends Controller
                 $get_pid = RespondentProfile::orderBy('pid','DESC')->first();
                 $pid = ($get_pid != null) ? $get_pid->pid+1 : 1;
             }
+
+            $profile_data = ($profile != null) ? json_decode($profile->profile_data, true) : array();
           
-            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks'));
+            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks', 'profile_data'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -136,6 +138,54 @@ class ProfileController extends Controller
     }
 
     public function profile_save(Request $request){
-        dd($request->all());
+        $steps = $request->step;
+        $unique_id = $request->get_unique_id;
+        $resp_id   = Session::get('resp_id');
+        $parse_array = array();
+        parse_str($request->serialize_data, $parse_array);
+
+        $total_ques = count($parse_array);
+        $total_ans  = count(array_filter($parse_array));
+
+        if($steps == 1){
+            $resp_save = array(
+                'name'          => $parse_array['first_name'],
+                'surname'       => $parse_array['last_name'],
+                'date_of_birth' => $parse_array['date_of_birth'],
+                'email'         => $parse_array['email'],
+                'mobile'        => $parse_array['mobile_number'],
+                'whatsapp'      => $parse_array['whatsapp_number']
+            );
+
+            Respondents::where('id',$resp_id)->update($resp_save);
+
+            $step_word = "Basic Details Updated";
+        }
+        else{
+            $profile_data = array(
+                'pid' => $parse_array['unique_id'],
+                'respondent_id' => $resp_id,
+                'profile_data' => json_encode($parse_array),
+            );
+
+            if($total_ques == $total_ans){
+                $profile_data['profile_completion'] = 1;
+            }
+            
+            if(RespondentProfile::where('id',$resp_id)->doesntExist()){
+                RespondentProfile::insert($profile_data);
+                $step_word = ($steps == 2) ? "Essential Details Added" : "Extended Details Added";
+            }
+            else{
+                RespondentProfile::where('respondent_id',$resp_id)->update($profile_data);
+                $step_word = ($steps == 2) ? "Essential Details Updated" : "Extended Details Updated";
+            }
+        }
+
+        return response()->json([
+            'status'  => 200,
+            'success' => true,
+            'message' => $step_word. ' Successfully'
+        ]);
     }
 }
