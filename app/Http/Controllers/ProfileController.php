@@ -17,6 +17,7 @@ use App\Models\Groups;
 use App\Models\Projects;
 use App\Models\Banks;
 use App\Models\Rewards;
+use App\Models\RespondentProfile;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -79,23 +80,25 @@ class ProfileController extends Controller
             
             $resp_id   = Session::get('resp_id');
             $resp_name = Session::get('resp_name');
-            $data      = Respondents::find($resp_id);
-            $profil    = DB::table('groups as gr')
-                        ->leftjoin('survey as sr','gr.survey_id','=','sr.id') 
-                        ->leftjoin('survey_response as resp','gr.survey_id','=','resp.survey_id') 
-                        ->select('gr.name', 'sr.builderID','gr.type_id','resp.updated_at',DB::raw('(SELECT COUNT(*) FROM questions WHERE gr.survey_id = questions.survey_id) AS totq'),DB::raw('(SELECT COUNT(*) FROM survey_response WHERE survey_response.response_user_id='.$resp_id.' AND gr.survey_id = survey_response.survey_id AND survey_response.skip IS NULL) AS tota'))
-                        ->where('gr.deleted_at', NULL)
-                        ->orderBy('gr.sort_order', 'ASC')
-                        ->groupBy('gr.id')
-                        ->get();
-                        
-            $prof_response  = DB::table('survey_response')->where('response_user_id', $resp_id)->get();
-
+            $resp_details = Respondents::select('id','name','surname','date_of_birth','email','mobile','whatsapp')->find($resp_id);
+           
             $state = DB::table('state')->whereNull('deleted_at')->get();
-            $suburb = DB::table('district')->whereNull('deleted_at')->get();
-            $metropolitan_area = DB::table('metropolitan_area')->whereNull('deleted_at')->get();
+            $industry_company = DB::table('industry_company')->whereNull('deleted_at')->get();
+            $income_per_month = DB::table('income_per_month')->whereNull('deleted_at')->get();
+            $banks = Banks::whereNull('deleted_at')->where('active',1)->get();
+            $profile = RespondentProfile::where('respondent_id',$resp_id)->first();
+
+            if($profile != null){
+                $pid = $profile->pid;
+            }
+            else{
+                $get_pid = RespondentProfile::orderBy('pid','DESC')->first();
+                $pid = ($get_pid != null) ? $get_pid->pid+1 : 1;
+            }
+
+            $profile_data = ($profile != null) ? json_decode($profile->profile_data, true) : array();
           
-            return view('user.profile_wizard', compact('data','profil','prof_response','state','suburb','metropolitan_area'));
+            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks', 'profile_data'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -132,5 +135,57 @@ class ProfileController extends Controller
             'type' => true,
             'data' => $options
         );
+    }
+
+    public function profile_save(Request $request){
+        $steps = $request->step;
+        $unique_id = $request->get_unique_id;
+        $resp_id   = Session::get('resp_id');
+        $parse_array = array();
+        parse_str($request->serialize_data, $parse_array);
+
+        $total_ques = count($parse_array);
+        $total_ans  = count(array_filter($parse_array));
+
+        if($steps == 1){
+            $resp_save = array(
+                'name'          => $parse_array['first_name'],
+                'surname'       => $parse_array['last_name'],
+                'date_of_birth' => $parse_array['date_of_birth'],
+                'email'         => $parse_array['email'],
+                'mobile'        => $parse_array['mobile_number'],
+                'whatsapp'      => $parse_array['whatsapp_number']
+            );
+
+            Respondents::where('id',$resp_id)->update($resp_save);
+
+            $step_word = "Basic Details Updated";
+        }
+        else{
+            $profile_data = array(
+                'pid' => $parse_array['unique_id'],
+                'respondent_id' => $resp_id,
+                'profile_data' => json_encode($parse_array),
+            );
+
+            if($total_ques == $total_ans){
+                $profile_data['profile_completion'] = 1;
+            }
+            
+            if(RespondentProfile::where('id',$resp_id)->doesntExist()){
+                RespondentProfile::insert($profile_data);
+                $step_word = ($steps == 2) ? "Essential Details Added" : "Extended Details Added";
+            }
+            else{
+                RespondentProfile::where('respondent_id',$resp_id)->update($profile_data);
+                $step_word = ($steps == 2) ? "Essential Details Updated" : "Extended Details Updated";
+            }
+        }
+
+        return response()->json([
+            'status'  => 200,
+            'success' => true,
+            'message' => $step_word. ' Successfully'
+        ]);
     }
 }
