@@ -585,7 +585,7 @@ class WelcomeController extends Controller
 
     public function activation_status(Request $request)
     {
-        try {4t5r
+        try {
             $id=$request->id;
             $active_id=$request->active_id;
             $status=array('active_status_id'=>$active_id);
