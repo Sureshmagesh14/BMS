@@ -17,7 +17,7 @@
 
         <select name="action_1" id="action_1" class="form-control cashout_table show_hided_option cashout_select_box">
             <option value="">Select Action</option>
-            <option value="6">Export - Airtime Cash Outs</option>
+            <option value="export">Export - Airtime Cash Outs</option>
             {{-- <option value="7">Airtime - Status > Complete by Import</option> --}}
         </select>
 

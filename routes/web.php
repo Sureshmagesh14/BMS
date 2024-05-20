@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::any('/', 'WelcomeController@home')->name('home');
-
+Route::any('update_activitation/{id}', 'WelcomeController@update_activitation')->name('update_activitation');
+Route::any('activation_status/{id}/{active_id}', 'WelcomeController@activation_status')->name('activation_status');
 // View Survey
 Route::get('/survey/view/{id}', ['as' => 'survey.view', 'uses' => 'SurveyController@viewsurvey']);
 // Start Survey
@@ -27,7 +28,7 @@ Route::any('terms', 'WelcomeController@terms')->name('terms');
 Route::any('admin', 'Auth\AdminLoginController@showLoginForm')->name('admin.showlogin'); //.....Admin Login
 Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.login'); //.....Admin Login
 Route::any('admin/forgot_password', 'Auth\AdminLoginController@forgot_password')->name('admin.forgot_password');
-Route::any('email', 'Auth\AdminLoginController@email')->name('email');
+Route::any('email', 'WelcomeController@email')->name('email');
 
 Route::any('dashboard', 'WelcomeController@user_dashboard')->middleware(['auth', 'verified'])->name('user.dashboard');
 Route::any('view_client_survey_list', 'WelcomeController@view_client_survey_list')->middleware(['auth', 'verified'])->name('client.survey');
@@ -36,6 +37,8 @@ Route::any('share', 'WelcomeController@user_share')->middleware(['auth', 'verifi
 Route::any('rewards', 'WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
 Route::any('surveys', 'WelcomeController@user_surveys')->middleware(['auth', 'verified'])->name('user.surveys');
 Route::any('viewprofile', 'WelcomeController@user_viewprofile')->middleware(['auth', 'verified'])->name('user.viewprofile');
+Route::any('change_password', 'WelcomeController@change_password')->middleware(['auth', 'verified'])->name('user.change_password');
+Route::any('update_password', 'WelcomeController@update_password')->middleware(['auth', 'verified'])->name('user.update_password');
 Route::any('updateprofile', 'WelcomeController@user_editprofile')->middleware(['auth', 'verified'])->name('updateprofile');
 Route::any('updaterofile', 'WelcomeController@user_editprofile')->middleware(['auth', 'verified'])->name('updaterofile');
 Route::post('user_update', 'WelcomeController@user_update')->middleware(['auth', 'verified'])->name('user_update');
@@ -47,6 +50,7 @@ Route::any('cashouts', 'WelcomeController@user_cashout')->middleware(['auth', 'v
 Route::any('updateprofile_wizard', 'ProfileController@updateprofile_wizard')->middleware(['auth', 'verified'])->name('updateprofile_wizard');
 Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'verified'])->name('get_suburb');
 Route::any('get_area', 'ProfileController@get_area')->middleware(['auth', 'verified'])->name('get_area');
+Route::any('profile_save', 'ProfileController@profile_save')->middleware(['auth', 'verified'])->name('profile_save');
 
 /* USERS */
 Route::middleware('auth')->group(function () {
@@ -62,7 +66,9 @@ Route::group([
 ], function () {
     Route::any('dashboard', 'Auth\AdminLoginController@admin_dashboard')->name('admin.dashboard');
     Route::get('signout', 'Auth\AdminLoginController@signOut')->name('signout');
-
+    Route::any('export_index', 'ExportController@export_index')->name('admin.export');
+    Route::post('export_all', 'ExportController@export_all')->name('export_all');
+    
     /* Users MENU*/
     Route::resource('users', 'UsersController')
         ->name('index', 'users.index')->name('destroy', 'users.destroy')
@@ -86,7 +92,7 @@ Route::group([
         Route::get('cashouts', 'cashouts')->name('cashouts');
         Route::any('get_all_cashouts', 'get_all_cashouts')->name('get_all_cashouts');
         Route::get('cashouts-view/{id}', 'view')->name('cashouts-view');
-        Route::get('cash_export', 'cash_export')->name('cash_export');
+        Route::post('cash_export', 'cash_export')->name('cash_export');
         Route::get('export_cash', 'export_cash')->name('export_cash');
         Route::any('cash_multi_delete', 'CashoutsController@cash_multi_delete')->name('cash_multi_delete');
         Route::any('cash_multi_update', 'CashoutsController@cash_multi_update')->name('cash_multi_update');

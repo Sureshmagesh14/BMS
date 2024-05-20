@@ -172,6 +172,8 @@ class CashoutsController extends Controller
         $module_name = $request->module_name;
         $from = date('Y-m-d',strtotime($request->start));
         $to = date('Y-m-d',strtotime($request->end));
+        
+        dd($request);
 
         $type='xlsx';
         

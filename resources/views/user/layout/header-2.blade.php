@@ -31,11 +31,11 @@
         <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
             <li class="nav-item pe-2">
                 <a class="nav-link" href="{{ route('user.dashboard') }}" id="nav_dashboard"
-                  aria-current="page" href="#">Dashboard</a>
+                  >Dashboard</a>
               </li>
           <li class="nav-item pe-2">
             <a class="nav-link" href="{{ route('user.surveys') }}" id="nav_surveys"
-              aria-current="page" href="#">Surveys</a>
+              >Surveys</a>
           </li>
           <li class="nav-item pe-2">
             <a class="nav-link" href="{{ route('user.rewards') }}" id="nav_rewards"
@@ -74,6 +74,12 @@
               </a>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{{ route('user.viewprofile') }}">View Profile</a>
+                </li>
+               
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="{{ route('user.change_password') }}">Change Password</a>
                 </li>
                 <li>
                   <hr class="dropdown-divider" />
