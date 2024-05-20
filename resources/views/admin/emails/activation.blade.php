@@ -79,33 +79,20 @@
 </head>
 <body>
     <div class="container">
-      @if($msg=='declined')
-            <h1 class="expired">Invitation Declined</h1>
-            <p>The invitation you received from {{$companyDetails->company_name}} has declined.</p>
-            <div class="button-container">
-                <a class="button" href="{{ env('APP_URL') }}">Go to Home</a>
-            </div>
-        @elseif($msg=='accepted')
-            <h1 class="accepted">Invitation Accepted</h1>
-            <p>The invitation you received from {{$companyDetails->company_name}} has successfully accepted.</p>
-            <div class="button-container">
-                <a class="button" href="{{ env('APP_URL') }}">Go to Home</a>
-            </div>
-        @else
+     
             <h1>Acceptance Invitation</h1>
             <p>
-                You have received an invitation to collaborate on a consultant for this company
-                 {{$companyDetails->company_name}}.
+                You have received an activation email to collaborate on The Brand Surgeon.
             </p>
             <div class="btn-container">
                 <button class="btn accept">
-                    <a href="{{ env('APP_URL') }}update_activitation/{{$checkConnection->id}}/accepted">Accept</a>
+                    <a href="{{ env('APP_URL') }}activation_status/{{$id}}/1">Accept</a>
                 </button>
                 <button class="btn decline">
-                    <a href="{{ env('APP_URL') }}update_activitation/{{$checkConnection->id}}/decline">Decline</a>
+                    <a href="{{ env('APP_URL') }}activation_status/{{$id}}/0">Decline</a>
                 </button>
             </div>
-        @endif
+      
     </div>
 </body>
 </html>

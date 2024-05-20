@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::any('/', 'WelcomeController@home')->name('home');
-Route::any('update_activitation', 'WelcomeController@update_activitation')->name('update_activitation');
+Route::any('update_activitation/{id}', 'WelcomeController@update_activitation')->name('update_activitation');
+Route::any('activation_status/{id}/{active_id}', 'WelcomeController@activation_status')->name('activation_status');
 // View Survey
 Route::get('/survey/view/{id}', ['as' => 'survey.view', 'uses' => 'SurveyController@viewsurvey']);
 // Start Survey
