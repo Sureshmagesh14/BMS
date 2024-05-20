@@ -75,6 +75,12 @@
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{{ route('user.viewprofile') }}">View Profile</a>
                 </li>
+               
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="{{ route('user.change_password') }}">Change Password</a>
+                </li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>

@@ -45,7 +45,7 @@
                         <input id="password-field" type="password" placeholder=""
                             class="form-control vi-border-clr vi-cs-textbox" name="password" required />
 
-                        <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                        <span toggle="#password-field" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
                     </div>
                     @if (Route::has('password.request'))
                         <div class="forgetpass me-5">
