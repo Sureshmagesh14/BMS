@@ -7,7 +7,7 @@ use App\Models\Project_respondent;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
-use App\Mail\WelcomeEmail;
+use App\Mail\Respondentprojectmail;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
@@ -91,6 +91,13 @@ class RespondentsController extends Controller
                 $respondents->save();
                 $respondents->id;
                 app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
+                $data = $respondents->id;
+                if($data!=null){
+                    $get_email=DB::where('id',$data)->first();
+                    
+                    Mail::to($get_email->email)->send(new WelcomeEmail($data));
+                }
+              
                 return response()->json([
                     'status' => 200,
                     'last_insert_id' => $respondents->id,
@@ -778,6 +785,13 @@ class RespondentsController extends Controller
             }
             else{
                 Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $respondents]);
+                $projects=Projects::select('name')->where('id',$project_id)->first();
+                $data = ['message' => 'Welcome','respondents'=>$respondents,'projects'=>$projects];
+                if ($respondents != null) {
+                    $get_email = Respondents::where('id', $respondents)->first();
+        
+                    Mail::to($get_email->email)->send(new Respondentprojectmail($data));
+                }
 
                 return response()->json([
                     'text_status' => true,

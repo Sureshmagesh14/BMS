@@ -43,6 +43,9 @@
             <!-- end page title -->
 
             <div class="row">
+                
+        
+
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
@@ -68,7 +71,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url('export_cashout_year') }}">
+                    <form action="{{ url('admin/cash_export') }}" method="post">
                         @csrf
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Select Year:</label>
@@ -183,11 +186,13 @@
                 multi_delete("POST", all_id, "{{ route('cash_multi_delete') }}", "Cashout Deleted", 'cashout_table');
             }
             else if(select_value == "export"){
-                value = $(this).val();
-                form = 'cashout';
-                texthead = 'Export - Airtime Cash Outs';
-                value_array = [];
-                excel_report(value, form, "{{ route('cashout_export') }}", texthead, value_array);
+
+                $('#exampleModal').modal('show'); 
+                // value = $(this).val();
+                // form = 'cashout';
+                // texthead = 'Export - Airtime Cash Outs';
+                // value_array = [];
+                // excel_report(value, form, "{{ route('cashout_export') }}", texthead, value_array);
             }
             else{
                 toastr.info("OOPS! Select the action");
