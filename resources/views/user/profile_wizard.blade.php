@@ -47,6 +47,12 @@
         .input-group-text {
             line-height: 2.3;
         }
+        label#whatsapp_number-error {
+            width: 100%;
+        }
+        label#mobile_number-error {
+            width: 100%;
+        }
     </style>
 
     <section class="bg-greybg">
