@@ -25,16 +25,16 @@
                 <div class="btn-class-bnr">
                     <div class="d-flex align-items-center flex-column">
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">
+                            <a href="{{ route('register') }}" class="w-100">
                                 <button
-                                    class="btn vi-nav-bg text-white w-md-25 m-auto my-2 text-uppercase vi-main-btn-db">Join
+                                    class="w-100 btn vi-nav-bg text-white w-md-25 m-auto my-2 text-uppercase vi-main-btn-db">Join
                                     our Database </button>
                             </a>
                         @endif
 
-                        <a href="{{ route('login') }}">
+                        <a href="{{ route('login') }}"  class="w-100">
                             <button
-                                class="btn w-md-25 m-auto bg-white vi-common-clr text-uppercase vi-main-bnr-login">Login
+                                class="w-100 btn w-md-25 m-auto bg-white vi-common-clr text-uppercase vi-main-bnr-login">Login
                             </button>
                         </a>
                     </div>
