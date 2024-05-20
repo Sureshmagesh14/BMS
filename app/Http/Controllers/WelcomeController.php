@@ -367,6 +367,67 @@ class WelcomeController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+    public function change_password(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+            
+          
+            $data = Respondents::find($resp_id);
+            return view('user.change_password', compact('data'));
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    public function update_password(Request $request){
+        try {
+           
+
+            $auth = Auth::user();
+    
+     
+     // The passwords matches
+            if (!Hash::check($request->get('current_password'), $auth->password)) 
+            {
+               
+                return response()->json([
+                    'status'=>0,
+                    'success' => true,
+                    'message'=>'Current Password is Invalid'
+                ]);
+
+            }
+     
+    // Current password and new password same
+            if (strcmp($request->get('current_password'), $request->new_password) == 0) 
+            {
+                return response()->json([
+                    'status'=>1,
+                    'success' => true,
+                    'message'=>'New Password cannot be same as your current password.'
+                ]);
+               
+            }
+     
+            $user =  Respondents::find($auth->id);
+            $user->password =  Hash::make($request->new_password);
+            $user->save();
+            return response()->json([
+                'status'=>2,
+                'success' => true,
+                'message'=>'Password Changed Successfully.'
+            ]);
+           
+          
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    
 
     public function user_profile(Request $request){
         try {
