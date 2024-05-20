@@ -209,46 +209,9 @@
 
 
                     <div class="mt-4">
-                        <br><br>
-                        <h5 class="text-center fw-bolder percentage-size">{{ $percentage }}%</h5>
-                        <div class="percent-border mx-5">
-                            <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:{{ $percentage }}%">
-                            </div>
-
-                        </div>
-                        <h5 class="text-center my-3">Profile Percentage</h5>
-                        <!-- <div class="w-50 m-auto">
-                <div class="c100 p100 yellow">
-                  <span>100%</span>
-                  <div class="slice">
-                    <div class="bar"></div>
-                    <div class="fill"></div>
-                  </div>
-                </div>
-                <h5 class="text-center my-3">Profile Percentage</h5>
-              </div> -->
-
-                        <!-- <div class="w-50">
-                <div class="c100 p75 yellow">
-                  <span>75%</span>
-                  <div class="slice">
-                    <div class="bar"></div>
-                    <div class="fill"></div>
-                  </div>
-                </div>
-                <h5 class="text-center my-3">Profile Percentage</h5>
-              </div> -->
-                        <!-- <div class="percentage-1 text-center">
-                  <div style="width:120px;height:120px;border:6px solid #edbf1b;margin:auto;display:flex;justify-content: center;align-items: center;border-radius:50%;"><span>70%</span></div>
-                  <p class="mt-2">Profile percentage</p>
-                </div>
-                  <div class="percentage-2 text-center">
-                    <div style="width:120px;height:120px;border:6px solid #edbf1b;margin:auto;display:flex;justify-content: center;align-items: center;border-radius:50%;"><span>100%</span></div>
-                    <p  class="mt-2">Reward Amount</p>
-                  </div> -->
+                    <div id="chartdiv"></div>
+                  
                     </div>
-              
-
 
                 </div>
                 <div class="bg-white my-2 max-w-100" style="min-height: 400px;">

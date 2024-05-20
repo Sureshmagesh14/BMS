@@ -73,8 +73,9 @@
                 <span class="vi-usr-profile m-auto p-4" style="text-transform: capitalize;">{{ $first_char }}</span>
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{{ route('user.viewprofile') }}">View Profile</a>
+                <li><a class="dropdown-item" href="{{ route('updateprofile_wizard') }}">View Profile</a>
                 </li>
+                {{-- {{ route('user.viewprofile') }} --}}
                
                 <li>
                   <hr class="dropdown-divider" />
