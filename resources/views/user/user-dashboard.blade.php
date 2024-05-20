@@ -30,6 +30,13 @@
         background-color: #edbf1b;
         color: white;
     }
+
+    #chartdiv {
+    width: 100%;
+    height: 300px;
+    }
+
+
 </style>
 @php
     $first_character = mb_substr($data->name, 0, 1);
@@ -202,53 +209,12 @@
 
 
                     <div class="mt-4">
-                        <br><br>
-                        <h4 class="text-center fw-bolder percentage-size">{{ $percentage }}%</h4>
-                        <div class="percent-border mx-5">
-                            <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:{{ $percentage }}%">
-                            </div>
-
-                        </div>
-                        <h5 class="text-center my-3">Profile Percentage</h5>
-                        <!-- <div class="w-50 m-auto">
-                <div class="c100 p100 yellow">
-                  <span>100%</span>
-                  <div class="slice">
-                    <div class="bar"></div>
-                    <div class="fill"></div>
-                  </div>
-                </div>
-                <h5 class="text-center my-3">Profile Percentage</h5>
-              </div> -->
-
-                        <!-- <div class="w-50">
-                <div class="c100 p75 yellow">
-                  <span>75%</span>
-                  <div class="slice">
-                    <div class="bar"></div>
-                    <div class="fill"></div>
-                  </div>
-                </div>
-                <h5 class="text-center my-3">Profile Percentage</h5>
-              </div> -->
-                        <!-- <div class="percentage-1 text-center">
-                  <div style="width:120px;height:120px;border:6px solid #edbf1b;margin:auto;display:flex;justify-content: center;align-items: center;border-radius:50%;"><span>70%</span></div>
-                  <p class="mt-2">Profile percentage</p>
-                </div>
-                  <div class="percentage-2 text-center">
-                    <div style="width:120px;height:120px;border:6px solid #edbf1b;margin:auto;display:flex;justify-content: center;align-items: center;border-radius:50%;"><span>100%</span></div>
-                    <p  class="mt-2">Reward Amount</p>
-                  </div> -->
+                      
+                    
+                    <div id="chartdiv"></div>
+                  
                     </div>
-                    <!-- <div class="mt-4">
-                        <h4 class="text-center fw-bolder percentage-size">100%</h4>
-                        <div class="percent-border mx-5">
-                            <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:100%"></div>
-
-                        </div>
-                        <h5 class="text-center my-3">Reward Point</h5>
-                    </div> -->
-
+              
 
 
                 </div>
@@ -324,9 +290,109 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap4.js"></script>
+
+<script src="//cdn.amcharts.com/lib/5/index.js"></script>
+<script src="//cdn.amcharts.com/lib/5/percent.js"></script>
+<script src="//cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
 <script>
+
+
+var root = am5.Root.new("chartdiv");
+
+root.setThemes([
+  am5themes_Animated.new(root)
+]);
+
+var chart = root.container.children.push(
+  am5percent.PieChart.new(root, {
+    radius: am5.percent(90),
+    innerRadius: am5.percent(40)
+  })
+);
+
+// Create series
+var series = chart.series.push(
+  am5percent.PieSeries.new(root, {
+    name: "Series",
+    valueField: "sales",
+    categoryField: "country"
+  })
+);
+
+series.data.setAll([{
+  country: "Extended",
+  sales: 10
+}, {
+  country: "Extended",
+  sales: 6
+}]);
+
+// Disabling labels and ticks
+series.labels.template.set("visible", false);
+series.ticks.template.set("visible", false);
+
+
+var series2 = chart.series.push(
+  am5percent.PieSeries.new(root, {
+    name: "Series",
+    valueField: "sales",
+    categoryField: "country"
+  })
+);
+
+series2.data.setAll([{
+  country: "Essential",
+  sales: 10
+}, {
+  country: "Essential",
+  sales: 1
+}]);
+
+// Configuring slices
+series2.slices.template.setAll({
+  stroke: am5.color(0xffffff),
+  strokeWidth: 2
+})
+
+// Disabling labels and ticks
+series2.labels.template.set("visible", false);
+series2.ticks.template.set("visible", false);
+
+
+
+var series3 = chart.series.push(
+  am5percent.PieSeries.new(root, {
+    name: "Series",
+    valueField: "sales",
+    categoryField: "country"
+  })
+);
+
+series3.data.setAll([{
+  country: "Basic",
+  sales: 0
+}, {
+  country: "Basic",
+  sales: 10
+}]);
+
+// Configuring slices
+series3.slices.template.setAll({
+  stroke: am5.color(0xffffff),
+  strokeWidth: 2
+})
+
+// Disabling labels and ticks
+series3.labels.template.set("visible", false);
+series3.ticks.template.set("visible", false);
+
+
+
     var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
+        let chart = am5.Root.new('chartdiv');
+        chart._logo.dispose();
         $('#nav_dashboard').addClass('active');
         $('table.table.table-striped').DataTable({
             responsive: true
