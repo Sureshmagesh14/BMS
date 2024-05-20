@@ -62,6 +62,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $id = DB::getPdo()->lastInsertId();
+        //email starts
         $data = ['message' => 'Welcome','id'=>$id];
       
         if ($id != null) {
@@ -69,7 +70,7 @@ class RegisteredUserController extends Controller
 
             Mail::to($get_email->email)->send(new WelcomeEmail($data));
         }
-
+        //email ends
         if (session()->has('refer_id')) {
 
             $referred_respondent_id = session()->get('refer_id');
