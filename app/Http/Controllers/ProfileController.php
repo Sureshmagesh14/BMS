@@ -96,9 +96,16 @@ class ProfileController extends Controller
                 $pid = ($get_pid != null) ? $get_pid->pid+1 : 1;
             }
 
-            $profile_data = ($profile != null) ? json_decode($profile->profile_data, true) : array();
-          
-            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks', 'profile_data'));
+            $essential_details = ($profile != null) ? (($profile->essential_details != null) ? json_decode($profile->essential_details, true) : array()) : array();
+            $extended_details  = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
+            $child_details     = ($profile != null) ? (($profile->children_data != null) ? json_decode($profile->children_data, true) : array()) : array();
+            $vehicle_details     = ($profile != null) ? (($profile->vehicle_data != null) ? json_decode($profile->vehicle_data, true) : array()) : array();
+
+            $get_suburb = (isset($essential_details['province'])) ? DB::table('district')->where('type',$essential_details['province'])->whereNull('deleted_at')->orderBy('district','ASC')->get() : array();
+            $get_area  = (isset($essential_details['suburb'])) ? DB::table('metropolitan_area')->where('district_id',$essential_details['suburb'])->whereNull('deleted_at')->orderBy('area','ASC')->get() : array();
+            
+            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area',
+                'child_details','vehicle_details'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -139,38 +146,61 @@ class ProfileController extends Controller
 
     public function profile_save(Request $request){
         $steps = $request->step;
-        $unique_id = $request->get_unique_id;
-        $resp_id   = Session::get('resp_id');
+        $resp_id = Session::get('resp_id');
         $parse_array = array();
         parse_str($request->serialize_data, $parse_array);
+        $unique_id = $parse_array['unique_id'];
 
-        $total_ques = count($parse_array);
-        $total_ans  = count(array_filter($parse_array));
+        $basic_details     = json_encode($parse_array['basic']);
+        $essential_details = json_encode($parse_array['essential']);
+        $extended_details  = json_encode($parse_array['extended']);
 
         if($steps == 1){
             $resp_save = array(
-                'name'          => $parse_array['first_name'],
-                'surname'       => $parse_array['last_name'],
-                'date_of_birth' => $parse_array['date_of_birth'],
-                'email'         => $parse_array['email'],
-                'mobile'        => $parse_array['mobile_number'],
-                'whatsapp'      => $parse_array['whatsapp_number']
+                'name'          => $parse_array['basic']['first_name'],
+                'surname'       => $parse_array['basic']['last_name'],
+                'date_of_birth' => $parse_array['basic']['date_of_birth'],
+                'email'         => $parse_array['basic']['email'],
+                'mobile'        => $parse_array['basic']['mobile_number'],
+                'whatsapp'      => $parse_array['basic']['whatsapp_number']
             );
 
             Respondents::where('id',$resp_id)->update($resp_save);
 
+            $basic_data = array(
+                'pid'           => $unique_id,
+                'respondent_id' => $resp_id,
+                'basic_details' => $basic_details,
+            );
+
+            if(RespondentProfile::where('id',$resp_id)->doesntExist()){
+                RespondentProfile::insert($basic_data);
+            }
+            else{
+                RespondentProfile::where('respondent_id',$resp_id)->update($basic_data);
+            }
+            
             $step_word = "Basic Details Updated";
         }
         else{
             $profile_data = array(
-                'pid' => $parse_array['unique_id'],
-                'respondent_id' => $resp_id,
-                'profile_data' => json_encode($parse_array),
+                'pid'               => $unique_id,
+                'respondent_id'     => $resp_id,
+                'essential_details' => $essential_details,
+                'extended_details'  => $extended_details,
             );
 
-            if($total_ques == $total_ans){
-                $profile_data['profile_completion'] = 1;
+            if(isset($request->child_val)){
+                $profile_data['children_data'] = json_encode($request->child_val);
             }
+
+            if(isset($request->vehicle_val)){
+                $profile_data['vehicle_data'] = json_encode($request->vehicle_val);
+            }
+
+            // if($total_ques == $total_ans){
+            //     $profile_data['profile_completion'] = 1;
+            // }
             
             if(RespondentProfile::where('id',$resp_id)->doesntExist()){
                 RespondentProfile::insert($profile_data);
