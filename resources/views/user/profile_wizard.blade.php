@@ -26,6 +26,7 @@
             background: #ebddae;
             color: #fff;
         } */
+       
     </style>
 
     <section class="bg-greybg">
@@ -39,31 +40,31 @@
                                 <h2>Basic Details</h2>
                                 <section>
                                     <div class="row">
-                                        <div class="col-6 col-sm-12">
+                                        <div class="col-md-6 col-lg-6 col-sm-12">
                                             <label for="unique_id">PID</label>
                                             <input type="number" class="form-control" id="unique_id" disabled value="1">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="first_name">First Name</label>
                                             <input type="text" class="form-control" id="first_name" name="first_name" value="Christopher">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="last_name">Last Name</label>
                                             <input type="text" class="form-control" id="last_name" name="last_name" value="Alexander">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="mobile_number">Mobile Number</label>
                                             <input type="number" class="form-control" id="mobile_number" name="mobile_number" value="27836050638">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="whatsapp_number">Whats App Number</label>
                                             <input type="number" class="form-control" id="whatsapp_number" name="whatsapp_number">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="email">Email</label>
                                             <input type="email" class="form-control" id="email" name="email" value="jessylee09@gmail.com">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="date_of_birth">Age</label>
                                             <input type="date" class="form-control" id="date_of_birth" name="date_of_birth">
                                             <span id="agecal"></span>
@@ -74,11 +75,11 @@
                                 <h2>Essential Details</h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
-                                        <div class="col-6 col-sm-4">
+                                        <div class="col-md-6 col-lg-6 col-sm-12">
                                             <label for="dob">DOB</label>
                                             <input type="date" class="form-control" id="dob" name="dob">
                                         </div>
-                                        <div class="col-6 col-sm-4">
+                                        <div class="col-md-6 col-lg-6 col-sm-12">
                                             <label for="relationship_status">Relationship Status</label>
                                             <select name="relationship_status" id="relationship_status">
                                                 <option value="">Select</option>
@@ -90,7 +91,7 @@
                                                 <option value="widowed">Widowed</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4">
+                                        <div class="col-md-6 col-lg-6 col-sm-12">
                                             <label for="gender">Gender</label>
                                             <select name="gender" id="gender">
                                                 <option value="">Select</option>
@@ -101,7 +102,7 @@
                                                 <option value="other">Other</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="ethnic_group">Ethnic Group / Race</label>
                                             <select name="ethnic_group" id="ethnic_group">
                                                 <option value="">Select</option>
@@ -112,7 +113,7 @@
                                                 <option value="white">White</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="education_level">Highest Education Level</label>
                                             <select name="education_level" id="education_level">
                                                 <option value="">Select</option>
@@ -123,7 +124,7 @@
                                                 <option value="pg">Post Grad Degree - Honours, Masters, PhD, MBA</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="employment_status">Employment Status</label>
                                             <select name="employment_status" id="employment_status">
                                                 <option value="">Select</option>
@@ -137,7 +138,7 @@
                                                 <option value="unemployed">Unemployed</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="industry_my_company">Industry my company is in</label>
                                             <select name="industry_my_company" id="industry_my_company">
                                                 <option value="">Select</option>
@@ -182,11 +183,11 @@
                                                 <option value="other">Other</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="job_title">Job Title</label>
                                             <input type="text" class="form-control" id="job_title" name="job_title">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="personal_income_per_month">Personal Income Per Month</label>
                                             <select name="personal_income_per_month" id="personal_income_per_month">
                                                 <option value="">Select</option>
@@ -209,7 +210,7 @@
                                                 <option value="120000">R120 000+</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="household_income_per_monty">Household Income per monthly</label>
                                             <select name="household_income_per_monty" id="household_income_per_monty">
                                                 <option value="">Select</option>
@@ -232,7 +233,7 @@
                                                 <option value="120000">R120 000+</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="province">Province</label>
                                             <select name="province" id="province">
                                                 <option value="">Select</option>
@@ -241,26 +242,26 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="suburb">Suburb</label>
                                             <select name="suburb" id="suburb">
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="metropolitan_area">Metropolitan Area</label>
                                             <select name="metropolitan_area" id="metropolitan_area">
                                             </select>
                                         </div>
 
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="no_houehold">Number of people living in your household</label>
                                             <input type="number" name="no_houehold" id="no_houehold" class="form-control">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="no_children">Number of Children</label>
                                             <input type="number" name="no_children" id="no_children" class="form-control">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="no_vehicle">Number of Vehicles</label>
                                             <input type="number" name="no_vehicle" id="no_vehicle" class="form-control">
                                         </div>
@@ -270,7 +271,7 @@
                                 <h2>Extended Details</h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
-                                        <div class="col-6 col-sm-5">
+                                        <div class="col-md-6 col-lg-6 col-sm-5">
                                             <table border="1" id="children_table" class="children_table table table-bordered table-striped table-highlight">
                                                 <colgroup>
                                                     <col width="20%"/>
@@ -284,7 +285,7 @@
                                                 </tr>
                                             </table>
                                         </div>
-                                        <div class="col-6 col-sm-7">
+                                        <div class="col-md-6 col-lg-6 col-sm-7">
                                             <table border="1" id="vehicle_table" class="vehicle_table table table-bordered table-striped table-highlight">
                                                 <colgroup>
                                                     <col width="20%"/>
@@ -302,7 +303,7 @@
                                                 </tr>
                                             </table>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="org">Which best describes the role in you business / organization?</label>
                                             <select name="org" id="org">
                                                 <option value="">Select</option>
@@ -315,7 +316,7 @@
                                                 <option value="north_West_province">Other</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="org_company">What is the number of people in your organisation / company?</label>
                                             <select name="org_company" id="org_company">
                                                 <option value="">Select</option>
@@ -332,7 +333,7 @@
                                                 <option value="more_than_1000">More than 1000 people</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="bank_main">Which bank do you bank with (which is your bank main)</label>
                                             <select name="bank_main" id="bank_main">
                                                 <option value="">Select</option>
@@ -353,7 +354,7 @@
                                                 <option value="other">Other</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-lg-6 col-sm-12 mt-3">
                                             <label for="home_lang">Home Language</label>
                                             <select name="home_lang" id="home_lang">
                                                 <option value="">Select</option>
@@ -454,7 +455,7 @@
                     return true;
                     
                 }
-            });
+            }).addClass('responsive-wizard');
 
             $("#date_of_birth").change(function() {
                 var date_of_birth = $(this).val();

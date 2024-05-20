@@ -7,11 +7,11 @@
 
    
     table#DataTables_Table_0 {
-        width: 709.406px;
+        /* width: 709.406px; */
     }
 
     table#DataTables_Table_1 {
-        width: 709.406px;
+        /* width: 709.406px; */
     }
 
     div#DataTables_Table_0_wrapper {
@@ -99,7 +99,7 @@
                         allowfullscreen></iframe>
                 </div>
                 <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
-                    <h4 class="d-flex align-items-center justify-content-around">
+                    <h5 class="d-flex align-items-center justify-content-around">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
                                 alt=""> <span class="small-font-sm">Current Survey</span> </div>
                         <div class="px-3">
@@ -119,8 +119,8 @@
                                 </li>
                             </ul> -->
                         </div>
-                    </h4>
-                    <table class="table table-striped">
+                    </h5>
+                    <table class="table table-striped table-responsive w-100">
                         <thead>
                             <tr>
                                 <th>NAME </th>
@@ -158,7 +158,7 @@
                 <div class="bg-white" style="min-height: 440px;;">
 
 
-                    <h4 class="d-flex align-items-center justify-content-around vi-light-grey small-font-sm">
+                    <h5 class="d-flex align-items-center justify-content-around vi-light-grey small-font-sm">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-06.png') }}"
                                 alt="">
                             <span>Plan Status</span>
@@ -198,12 +198,12 @@
                                 </ul>
                             </h5>
                         </div>
-                    </h4>
+                    </h5>
 
 
                     <div class="mt-4">
                         <br><br>
-                        <h4 class="text-center fw-bolder percentage-size">{{ $percentage }}%</h4>
+                        <h5 class="text-center fw-bolder percentage-size">{{ $percentage }}%</h5>
                         <div class="percent-border mx-5">
                             <div class="vi-nav-bg p-3 percentage-bar" style="height:24px;width:{{ $percentage }}%">
                             </div>
@@ -253,7 +253,7 @@
 
                 </div>
                 <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
-                    <h4 class="d-flex align-items-center justify-content-around">
+                    <h5 class="d-md-flex align-items-center justify-content-around">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
                                 alt="">
                             <span class="small-font-sm">Completed Survey</span>
@@ -276,8 +276,8 @@
                                 </li>
                             </ul>
                         </div>
-                    </h4>
-                    <table class="table table-striped">
+                    </h5>
+                    <table class="table table-striped table-responsive w-100">
                         <thead>
                             <tr>
                                 <th>NAME </th>
@@ -328,7 +328,7 @@
     var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
         $('#nav_dashboard').addClass('active');
-        $('table.table.table-striped').DataTable({
+        $('table.table.table-striped.table-responsive').DataTable({
             responsive: true
         });
     });

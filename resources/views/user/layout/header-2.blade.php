@@ -28,23 +28,23 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarScroll">
-        <ul class="navbar-nav m-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
-            <li class="nav-item pe-5">
+        <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
+            <li class="nav-item pe-2">
                 <a class="nav-link" href="{{ route('user.dashboard') }}" id="nav_dashboard"
                   aria-current="page" href="#">Dashboard</a>
               </li>
-          <li class="nav-item pe-5">
+          <li class="nav-item pe-2">
             <a class="nav-link" href="{{ route('user.surveys') }}" id="nav_surveys"
               aria-current="page" href="#">Surveys</a>
           </li>
-          <li class="nav-item px-5">
+          <li class="nav-item pe-2">
             <a class="nav-link" href="{{ route('user.rewards') }}" id="nav_rewards"
               href="#">Rewards</a>
           </li>
-          <li class="nav-item px-5">
+          <li class="nav-item pe-2">
             <a class="nav-link" href="{{ route('updateprofile_wizard') }}" id="nav_profile">Profile</a>
           </li>
-          <li class="nav-item ps-5">
+          <li class="nav-item pe-2">
             <a class="nav-link" href="{{ route('user.share') }}" id="nav_share">Share</a>
           </li>
         </ul>
