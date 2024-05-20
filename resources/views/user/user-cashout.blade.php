@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap4.css">
 <style>
     table#DataTables_Table_0 {
-        width: 709.406px;
+        /* width: 709.406px; */
     }
 
     div#DataTables_Table_0_wrapper {

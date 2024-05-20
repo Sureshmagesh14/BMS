@@ -13,7 +13,8 @@
     }
 
     .rightside.text-center {
-        margin-top: 85px !important;
+        /* margin-top: 85px !important; */
+        padding: 20px !important;
     }
 
     .container {
@@ -21,10 +22,10 @@
         margin: auto;
     }
 </style>
-<div class="container-fluid vh-100">
+<div class="container-fluid vh-90">
     <div class="row">
         <div class="col-md-6 d-none-mobile">
-            <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}" class="img-fluid vh-100"
+            <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}" class="img-fluid vh-90 w-100"
                 alt="" />
         </div>
         <div class="col-md-6 col-sm-12">
@@ -54,11 +55,11 @@
                         </div>
                     @endif
                     <div class="mobile-space">
-                        <input type="submit" value="Login" class="btn vi-nav-bg text-white py-3 px-5" />
+                        <input type="submit" value="Login" class="rounded vi-nav-bg text-white w-md-25 m-auto my-2 text-uppercase vi-main-btn-db" />
                     </div>
                 </form>
 
-                <div class="vi-horizo-line my-5 w-25 m-auto">
+                <div class="vi-horizo-line my-3 w-25 m-auto">
                     <span class="vi-bdr-set-or position-relative px-3">OR</span>
                 </div>
                 <div class="regaccount ">

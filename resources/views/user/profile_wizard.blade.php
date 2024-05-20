@@ -493,7 +493,7 @@
                     }
                     scroll_div_vehicle.append(vehicle_html);
                 }
-            });
+            }).addClass('responsive-wizard');
 
             $("#date_of_birth").change(function() {
                 var date_of_birth = $(this).val();
