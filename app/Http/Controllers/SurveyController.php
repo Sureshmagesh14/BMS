@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Hash;
 use Session;
@@ -17,6 +18,8 @@ use App\Models\SurveyQuotas;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Excel;
+use Illuminate\Support\Facades\Storage;
 
 // Word Cloud 
 use Artesaos\SEOTools\Facades\SEOTools;
@@ -2214,6 +2217,246 @@ class SurveyController extends Controller
 
         return $output;
     }
+    public function generateReport(Excel $excel, $survey_id, $type)
+    {
+        // Custom array data to export
+        $survey = Survey::where(['id'=>$survey_id])->first();
+        $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->get();
+        $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
+        $cols = ["Respondent Name", "Response Info","Device ID","Device Name","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name"];
+        foreach($question as $qus){
+            array_push($cols,$qus->question_name);
+        }
+      
+        foreach($matrix_qus as $qus){
+            $qus = json_decode($qus->qus_ans); 
+            $exiting_qus_matrix= $qus!=null ? explode(",",$qus->matrix_qus): []; $i=0;
+            foreach($exiting_qus_matrix as $qus1){
+                array_push($cols,$qus1);
+            }
+        }
+
+        function getValues($data) {
+            $values = [];
+        
+            foreach ($data as $row) {
+                $values[] = array_values($row);
+            }
+        
+            return $values;
+        }
+        
+        // Get Survey Data 
+        $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+                
+        $surveyResponseUsers =  SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+        $finalResult =[$cols];
+        foreach($surveyResponseUsers as $userID){
+            $user = Respondents::where('id', '=' , $userID)->first();
+            $starttime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "asc")->first();
+            $endtime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
+            $startedAt = $starttime->created_at;
+            $endedAt = $endtime->created_at;
+            $time = $endedAt->diffInSeconds($startedAt); 
+            $responseinfo = $startedAt->toDayDateTimeString().' | '.$time.' seconds';
+            $other_details = json_decode($endtime->other_details);
+
+            $result =['name'=>$user->name,'responseinfo'=>$responseinfo,'device_id'=>$other_details->device_id,'device_name'=>$other_details->device_name,'browser'=>$other_details->browser,'os'=>$other_details->os,'device_type'=>$other_details->device_type,'long'=>$other_details->long,'lat'=>$other_details->lat,'location'=>$other_details->location,'ip_address'=>$other_details->ip_address,'lang_code'=>$other_details->lang_code,'lang_name'=>$other_details->lang_name];
+            foreach($question as $qus){
+                $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->first();
+                if($respone){
+                    if($respone->skip == 'yes'){
+                        $output = 'Skip';
+                    }else{
+                        $output = $respone->answer;
+                    }
+                }else{
+                    $output = '-';
+                }
+                if($qus->qus_type == 'likert'){
+                    $qusvalue = json_decode($qus->qus_ans);
+                    $left_label='Least Likely';
+                    $middle_label='Netural';
+                    $right_label='Most Likely';
+                    $likert_range = 10;
+                    if(isset($qusvalue->right_label)){
+                        $right_label=$qusvalue->right_label;
+                    }
+                    if(isset($qusvalue->middle_label)){
+                        $middle_label=$qusvalue->middle_label;
+                    }
+                    if(isset($qusvalue->likert_range)){
+                        $likert_range=$qusvalue->likert_range;
+                    }
+                    if(isset($qusvalue->left_label)){
+                        $left_label=$qusvalue->left_label;
+                    }
+                    $output = intval($output);
+                    $likert_label = $output;
+                    if($likert_range <= 4 && $output <= 4){
+                        if($output == 1 || $output == 2){
+                            $likert_label = $left_label;
+                        }else{
+                            $likert_label = $right_label;
+                        }
+                    }else if($likert_range >= 5 && $output >=5){
+                        if($likert_range == 5){
+                            if($output == 1 || $output == 2){
+                                $likert_label = $left_label;
+                            }else if($output == 3){
+                                $likert_label = $middle_label;
+                            }else if($output == 4 || $output == 5){
+                                $likert_label = $right_label;
+                            }
+                        }else if($likert_range == 6){
+                            if($output == 1 || $output == 2){
+                                $likert_label = $left_label;
+                            }else if($output == 3 || $output == 4){
+                                $likert_label = $middle_label;
+                            }else if($output == 5 || $output == 6){
+                                $likert_label = $right_label;
+                            }
+                        }else if($likert_range == 7){
+                            if($output == 1 || $output == 2){
+                                $likert_label = $left_label;
+                            }else if($output == 3 || $output == 4 || $output == 5){
+                                $likert_label = $middle_label;
+                            }else if($output == 6 || $output == 7){
+                                $likert_label = $right_label;
+                            }
+                        }else if($likert_range == 8){
+                            if($output == 1 || $output == 2 || $output == 3){
+                                $likert_label = $left_label;
+                            }else if($output == 4 || $output == 5){
+                                $likert_label = $middle_label;
+                            }else if($output == 6 || $output == 7 || $output == 8){
+                                $likert_label = $right_label;
+                            }
+                        }else if($likert_range == 9){
+                            if($output == 1 || $output == 2 || $output == 3){
+                                $likert_label = $left_label;
+                            }else if($output == 4 || $output == 5 || $output == 6){
+                                $likert_label = $middle_label;
+                            }else if($output == 7 || $output == 8 || $output == 9){
+                                $likert_label = $right_label;
+                            }
+                        }else if($likert_range == 10){
+                            if($output == 1 || $output == 2 || $output == 3){
+                                $likert_label = $left_label;
+                            }else if($output == 4 || $output == 5 || $output == 6 || $output == 7){
+                                $likert_label = $middle_label;
+                            }else if($output == 8 || $output == 9 || $output == 10){
+                                $likert_label = $right_label;
+                            }
+                        }
+                    }
+                    $tempresult = [$qus->question_name => $likert_label];
+                    $result[$qus->question_name]= $likert_label;
+
+                }
+                else if($qus->qus_type == 'matrix_qus'){
+                    if($output=='Skip'){
+                        $qusvalue = json_decode($qus->qus_ans); 
+                        $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
+                        foreach($exiting_qus_matrix as $op){
+                            $result[$op]='Skip'; 
+                        }
+                    }else{
+                        $output = json_decode($output);
+                        if($output!=null)
+                        foreach($output as $op){
+                            $tempresult = [$op->qus =>$op->ans];
+                            $result[$op->qus]=$op->ans; 
+                        }
+                    }
+                    
+                }else if($qus->qus_type == 'rankorder'){
+                    $output = json_decode($output,true);
+                    $ordering = [];
+                    if($output!=null)
+                    foreach($output as $op){
+                        array_push($ordering,$op['id']);
+                    }
+                    $tempresult = [$qus->question_name =>implode(',',$ordering)];
+                    $result[$qus->question_name]=implode(',',$ordering);
+                }else if($qus->qus_type == 'photo_capture'){
+                    $img = $output;
+                    $tempresult = [$qus->question_name =>$img];
+                    $result[$qus->question_name]=$img;
+                }else if($qus->qus_type=='upload'){
+                    $output1=asset('uploads/survey/'.$output);
+                    $img = $output1;
+                    $tempresult = [$qus->question_name =>$img];
+                    $result[$qus->question_name]=$img;
+                }else{
+                    $tempresult = [$qus->question_name =>$output];
+                    $result[$qus->question_name]=$output;
+                }
+            }
+            array_push($finalResult,$result);
+        }
+        $data = getValues($finalResult);
+        if($type == 'csv'){
+            // Generate a dynamic filename based on the current timestamp
+            $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.csv';
+
+            // Export data to Excel with the dynamic filename
+            $callback = function () use ($data) {
+                $file = fopen('php://output', 'w');
+                foreach ($data as $row) {
+                    fputcsv($file, $row);
+                }
+                fclose($file);
+            };
+
+            // Generate the Excel file and return a download response
+            return response()->streamDownload($callback, $filename, [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ]);
+        }else{
+            // Generate a dynamic filename based on the current timestamp
+            $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.xlsx';
+
+            // Generate the Excel content
+            $excelContent = $this->generateExcelContent($data);
+
+            // Store the Excel file
+            Storage::put($filename, $excelContent);
+
+            // Return a download response
+            return response()->download(storage_path('app/' . $filename), $filename);
+        }
+       
+    }
+
+    private function generateExcelContent($data)
+    {
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        // Set data into the spreadsheet
+        foreach ($data as $rowIndex => $row) {
+            foreach ($row as $columnIndex => $value) {
+                // Convert column index to alphabetic column name (e.g., 1 -> A, 2 -> B, ...)
+                $columnName = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex + 1);
+                $cellReference = $columnName . ($rowIndex + 1);
+                $worksheet->setCellValue($cellReference, $value);
+            }
+        }
+
+        // Create a writer object
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        // Write the spreadsheet data to a string
+        ob_start();
+        $writer->save('php://output');
+        $excelContent = ob_get_contents();
+        ob_end_clean();
+
+        return $excelContent;
+    }
+    
 }
 
 
