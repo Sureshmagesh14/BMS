@@ -92,16 +92,45 @@ class ProfileController extends Controller
             $prof_response  = DB::table('survey_response')->where('response_user_id', $resp_id)->get();
 
             $state = DB::table('state')->whereNull('deleted_at')->get();
-            $metropolitan_area = DB::table('district')->select('district.*',DB::raw("json_arrayagg(json_object('area_id',area.id, 'area',area.area))as metropolitan"))
-                ->join('metropolitan_area as area','area.district_id','district.id')
-                ->whereNull('district.deleted_at')
-                ->groupBy('district.id')
-                ->get();
+            $suburb = DB::table('district')->whereNull('deleted_at')->get();
+            $metropolitan_area = DB::table('metropolitan_area')->whereNull('deleted_at')->get();
           
-            return view('user.profile_wizard', compact('data','profil','prof_response','state','metropolitan_area'));
+            return view('user.profile_wizard', compact('data','profil','prof_response','state','suburb','metropolitan_area'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    public function get_suburb(Request $request){
+        $province = $request->province;
+        $suburb = DB::table('district')->where('type',$province)->whereNull('deleted_at')->orderBy('district','ASC')->get();
+        $options = "";
+
+        $options .= "<option value=''>Select</option>";
+        foreach($suburb as $sub){
+            $options .= "<option value='".$sub->id."'> ".$sub->district." </option>";
+        }
+
+        return array(
+            'type' => true,
+            'data' => $options
+        );
+    }
+
+    public function get_area(Request $request){
+        $suburb = $request->suburb;
+        $areas  = DB::table('metropolitan_area')->where('district_id',$suburb)->whereNull('deleted_at')->orderBy('area','ASC')->get();
+        $options = "";
+
+        $options .= "<option value=''>Select</option>";
+        foreach($areas as $area){
+            $options .= "<option value='".$area->id."'> ".$area->area." </option>";
+        }
+
+        return array(
+            'type' => true,
+            'data' => $options
+        );
     }
 }
