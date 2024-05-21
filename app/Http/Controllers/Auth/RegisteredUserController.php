@@ -63,13 +63,13 @@ class RegisteredUserController extends Controller
 
         $id = DB::getPdo()->lastInsertId();
         //email starts
-        $data = ['message' => 'Welcome','id'=>$id];
+        // $data = ['message' => 'Welcome','id'=>$id];
       
-        if ($id != null) {
-            $get_email = Respondents::where('id', $id)->first();
+        // if ($id != null) {
+        //     $get_email = Respondents::where('id', $id)->first();
 
-            Mail::to($get_email->email)->send(new WelcomeEmail($data));
-        }
+        //     Mail::to($get_email->email)->send(new WelcomeEmail($data));
+        // }
         //email ends
         if (session()->has('refer_id')) {
 
