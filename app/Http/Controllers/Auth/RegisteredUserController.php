@@ -55,8 +55,8 @@ class RegisteredUserController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'id_passport' => $request->id_passport,
             'email' => $request->email,
-            'mobile' => $request->mobile,
-            'whatsapp' => $request->whatsapp,
+            'mobile' => str_replace(' ', '', $request->mobile),
+            'whatsapp' => str_replace(' ', '', $request->whatsapp),
             'password' => Hash::make($request->password_register),
             'referral_code' => $ref_code,
         ]);

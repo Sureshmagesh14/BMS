@@ -39,6 +39,14 @@
     input#terms {
         height: 1em !important;
     }
+
+    label#mobile-error {
+        width: 100% !important;
+    }
+
+    label#whatsapp-error {
+        width: 100% !important;
+    }
 </style>
 <div class="container-fluid">
     <div class="row justify-content-center align-items-center d-flex">
@@ -233,8 +241,8 @@
 @endif
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
-    $('#mobile').inputmask("999 999-9999");
-    $('#whatsapp').inputmask("999 999-9999");
+    $('#mobile').inputmask("999 999 9999");
+    $('#whatsapp').inputmask("999 999 9999");
     $('form#reg_table').on('blur', '.reg_email', function() {
         var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
         var reg_email = $(this).val();
