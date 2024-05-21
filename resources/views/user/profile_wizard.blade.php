@@ -106,7 +106,7 @@
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
                                                 <label for="date_of_birth">Date of Birth</label>
-                                                <input type="date" class="form-control" id="date_of_birth" name="basic[date_of_birth]" value="{{$resp_details->date_of_birth}}" required>
+                                                <input type="text" placeholder="YYYY-MM-DD" class="form-control" id="date_of_birth" name="basic[date_of_birth]" value="{{$resp_details->date_of_birth}}" required>
                                                 
                                                 @if ($resp_details->date_of_birth!=null)
                                                     @php
@@ -653,5 +653,11 @@
         
         $(document).ready(function() {
             $('#nav_profile').addClass('active');
+            $('#date_of_birth').inputmask("yyyy/mm/dd", {
+            "placeholder": "YYYY/MM/DD",
+            onincomplete: function() {
+                $(this).val('');
+            }
+            });
         });
     </script>
