@@ -106,7 +106,7 @@
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
                                                 <label for="date_of_birth">Date of Birth</label>
-                                                <input type="date" class="form-control" id="date_of_birth" name="basic[date_of_birth]" value="{{$resp_details->date_of_birth}}" required>
+                                                <input type="text" placeholder="YYYY-MM-DD" class="form-control" id="date_of_birth" name="basic[date_of_birth]" value="{{$resp_details->date_of_birth}}" required>
                                                 
                                                 @if ($resp_details->date_of_birth!=null)
                                                     @php
@@ -416,6 +416,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('assets/js/inputmask.js') }}"></script>
     <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
     <script>
         $(function () {
             var tempcsrf = '{!! csrf_token() !!}';
@@ -518,8 +519,8 @@
                 let numbers = value.replace(/[^0-9]/g, "");
                 input.value = numbers;
             }
-            $('#mobile_number').inputmask("999 999-9999");
-            $('#whatsapp_number').inputmask("999 999-9999");
+            $('#mobile_number').inputmask("999 999 9999");
+            $('#whatsapp_number').inputmask("999 999 9999");
 
             $('#relationship_status, #gender, #ethnic_group, #education_level, #employment_status, #industry_my_company, #personal_income_per_month, #business_org,'+
                 '#household_income_per_monty, #province, #suburb, #metropolitan_area, #org, #org_company, #bank_main, #home_lang, #household_income_per_month').select2({ height: '10%', width: '100%' });
@@ -582,17 +583,34 @@
 
             $("#date_of_birth").change(function() {
                 var date_of_birth = $(this).val();
-                var birthDay = $(this).val();
-                var DOB = new Date(birthDay);
                 var today = new Date();
-                var age = today.getTime() - DOB.getTime();
-                var elapsed = new Date(age);
-                var year = elapsed.getYear() - 70;
-                var month = elapsed.getMonth();
-                var day = elapsed.getDay();
-                var ageTotal = year + " Years," + month + " Months," + day + " Days";
-                console.log("ageTotal",ageTotal);
-                document.getElementById('agecal').innerText = ageTotal;
+                var out;
+
+                out = diffDate(new Date(date_of_birth), new Date(today));
+                display(out);
+
+                function diffDate(startDate, endDate) {
+                    var b = moment(startDate),
+                        a = moment(endDate),
+                        intervals = ['Years', 'Months', 'Days'],
+                        out = {};
+
+                    for (var i = 0; i < intervals.length; i++) {
+                        var diff = a.diff(b, intervals[i]);
+                        b.add(diff, intervals[i]);
+                        out[intervals[i]] = diff;
+                    }
+                    return out;
+                }
+
+                function display(obj) {
+                    var str = '';
+                    for (key in obj) {
+                        str = str + obj[key] + ' ' + key + ' '
+                    }
+                    console.log("str", str);
+                    document.getElementById('agecal').innerText = str;
+                }
             });
 
             $("#province").change(function() {
@@ -653,5 +671,11 @@
         
         $(document).ready(function() {
             $('#nav_profile').addClass('active');
+            $('#date_of_birth').inputmask("yyyy/mm/dd", {
+            "placeholder": "YYYY/MM/DD",
+            onincomplete: function() {
+                $(this).val('');
+            }
+            });
         });
     </script>

@@ -161,10 +161,10 @@ class ProfileController extends Controller
                 'surname'       => $parse_array['basic']['last_name'],
                 'date_of_birth' => $parse_array['basic']['date_of_birth'],
                 'email'         => $parse_array['basic']['email'],
-                'mobile'        => $parse_array['basic']['mobile_number'],
-                'whatsapp'      => $parse_array['basic']['whatsapp_number']
+                'mobile'        =>  str_replace(' ', '', $parse_array['basic']['mobile_number']),
+                'whatsapp'      => str_replace(' ', '', $parse_array['basic']['whatsapp_number'])
             );
-
+         
             Respondents::where('id',$resp_id)->update($resp_save);
 
             $basic_data = array(

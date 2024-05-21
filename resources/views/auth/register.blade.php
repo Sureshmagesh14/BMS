@@ -36,8 +36,16 @@
         line-height: 2.3;
     }
 
-    input#terms{
+    input#terms {
         height: 1em !important;
+    }
+
+    label#mobile-error {
+        width: 100% !important;
+    }
+
+    label#whatsapp-error {
+        width: 100% !important;
     }
 </style>
 <div class="container-fluid">
@@ -114,19 +122,21 @@
                         </div>
 
                         <div class="mobile text-start w-48 m-auto my-3">
-                            <label for="mobile">Whatsapp <span class="text-danger">*</span> <span class="text-xs text-brand underline pointer-events-auto cursor-pointer">(Use Mobile)</span></label>
+                            <label for="mobile">Whatsapp <span class="text-danger">*</span> <span
+                                    class="text-xs text-brand underline pointer-events-auto cursor-pointer">(Use
+                                    Mobile)</span></label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">+27</div>
                                 </div>
-                                <input type="text"  name="whatsapp" id="whatsapp" placeholder="081 966 0786"
+                                <input type="text" name="whatsapp" id="whatsapp" placeholder="081 966 0786"
                                     class="form-control vi-border-clr border-radius-0 w-50" oninput ="numonly(this);"
                                     maxlength="16" required>
                             </div>
 
                         </div>
 
-                      
+
 
                     </div>
                     <div class="first-row d-md-flex">
@@ -137,7 +147,8 @@
                             <span class="email_error">Invalid Email Address</span>
                         </div>
                         <div class="lname text-start w-48 m-auto my-3">
-                            <label for="id_passport">ID Number\ Passport <span class="text-xs text-brand underline pointer-events-auto cursor-pointer">(Optional)</span></label>
+                            <label for="id_passport">ID Number\ Passport <span
+                                    class="text-xs text-brand underline pointer-events-auto cursor-pointer">(Optional)</span></label>
                             <input type="text" name="id_passport" id="id_passport"
                                 placeholder="Valid RSA ID number or Passport number"
                                 class="form-control vi-border-clr border-radius-0" id="">
@@ -154,7 +165,9 @@
                     </div>
                     <div class="first-row">
                         <div class="date text-start w-48 my-3">
-                            <label for="date">Password<span class="text-danger">*</span> <span class="text-xs text-brand underline pointer-events-auto cursor-pointer">(At least 6 characters)</span></label>
+                            <label for="date">Password<span class="text-danger">*</span> <span
+                                    class="text-xs text-brand underline pointer-events-auto cursor-pointer">(At least 6
+                                    characters)</span></label>
                             <div class="main-password">
                                 <input type="password" name="password_register" id="password_register"
                                     class="form-control vi-border-clr border-radius-0 input-password"
@@ -214,6 +227,7 @@
 @include('user.layout.footer')
 <script src="{{ asset('assets/js/inputmask.js') }}"></script>
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 @if (count($errors) > 0)
     @foreach ($errors->all() as $message)
         <script>
@@ -227,8 +241,8 @@
 @endif
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
-    $('#mobile').inputmask("999 999-9999");
-    $('#whatsapp').inputmask("999 999-9999");
+    $('#mobile').inputmask("999 999 9999");
+    $('#whatsapp').inputmask("999 999 9999");
     $('form#reg_table').on('blur', '.reg_email', function() {
         var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
         var reg_email = $(this).val();
@@ -335,6 +349,9 @@
         input.value = numbers;
     }
     $(document).ready(function() {
+
+
+
         $('.main-password').find('.input-password').each(function(index, input) {
             var $input = $(input);
             $input.parent().find('.icon-view').click(function() {
@@ -387,17 +404,34 @@
     $("#date_of_birth").change(function() {
         var date_of_birth = $(this).val();
 
-        var birthDay = $(this).val();
-        var DOB = new Date(birthDay);
         var today = new Date();
-        var age = today.getTime() - DOB.getTime();
-        var elapsed = new Date(age);
-        var year = elapsed.getYear() - 70;
-        var month = elapsed.getMonth();
-        var day = elapsed.getDay();
-        var ageTotal = year + " Years," + month + " Months," + day + " Days";
 
-        document.getElementById('agecal').innerText = ageTotal;
+        var out;
 
+        out = diffDate(new Date(date_of_birth), new Date(today));
+        display(out);
+
+        function diffDate(startDate, endDate) {
+            var b = moment(startDate),
+                a = moment(endDate),
+                intervals = ['Years', 'Months', 'Days'],
+                out = {};
+
+            for (var i = 0; i < intervals.length; i++) {
+                var diff = a.diff(b, intervals[i]);
+                b.add(diff, intervals[i]);
+                out[intervals[i]] = diff;
+            }
+            return out;
+        }
+
+        function display(obj) {
+            var str = '';
+            for (key in obj) {
+                str = str + obj[key] + ' ' + key + ' '
+            }
+            console.log("str", str);
+            document.getElementById('agecal').innerText = str;
+        }
     });
 </script>
