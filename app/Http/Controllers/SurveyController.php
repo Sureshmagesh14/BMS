@@ -2461,12 +2461,26 @@ class SurveyController extends Controller
 
     public function templogin(Request $request){
         $respondents = new Respondents;
+        
         $respondents->name = $request->input('name');
         $respondents->email = $request->input('email');
         $respondents->password = "SurveyBMS@2024";
+        $respondents->type = "temporary";
         $respondents->save();
-        $data = $respondents->id;
-        echo $data;
+       
+
+        $user = Respondents::find($respondents->id);
+
+        if ($user) {
+            Auth::login($user);
+            if (Auth::check()) {
+                return redirect()->route('survey.view',$request->survey_id);
+            } else {
+                return redirect()->route('survey.view',$request->survey_id);
+            }
+        } else {
+            return redirect()->route('survey.view',$request->survey_id);
+        }
 
     }
     
