@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap4.css">
 <style>
         table#DataTables_Table_1 {
-        width: 709.406px;
+        /* width: 709.406px; */
     }
 
     div#DataTables_Table_0_wrapper {
@@ -25,11 +25,11 @@
     <div class="container">
         <div class="row align-items-center justify-content-center pt-5">
 
-            <div class="bg-white my-2 max-w-100">
+            <div class="bg-white my-2 w-100">
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm">Current Survey</span>
                 </h4>
-                <table class="table table-striped">
+                <table class="table table-striped table-responsive w-100">
                     <thead>
                         <tr>
                             <th>NAME </th>
@@ -65,11 +65,11 @@
 
             <br>
 
-            <div class="bg-white my-2 max-w-100">
+            <div class="bg-white my-2 w-100">
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm">Completed Survey</span>
                 </h4>
-                <table class="table table-striped">
+                <table class="table table-striped table-responsive w-100">
                     <thead>
                         <tr>
                             <th>NAME </th>
@@ -120,12 +120,8 @@
 <script>
     $(document).ready(function() {
         $('#nav_surveys').addClass('active');
-        $('table.table.table-striped').DataTable({
+        $('table.table.table-striped.table-responsive').DataTable({
             responsive: true
         });
     });
-
-    // $(document).ready(function() {
-    //     $('table.display').DataTable();
-    // } );
 </script>

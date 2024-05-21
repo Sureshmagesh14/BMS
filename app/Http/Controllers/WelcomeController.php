@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Session;
-
+use Illuminate\Support\Facades\Auth;
 class WelcomeController extends Controller
 {
     public function home(Request $request)
