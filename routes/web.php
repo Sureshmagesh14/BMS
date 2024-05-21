@@ -283,3 +283,5 @@ Route::get('/generate-pdf', ['as' => 'survey.pdfreport', 'uses' => 'SurveyContro
 Route::get('/generate-barchart', ['as' => 'survey.barchart', 'uses' => 'SurveyController@generateBarChart']);
 Route::get('/wordcloud', 'WordCloudController@generateAndDownload');
 Route::get('/checkquota/{id}', 'SurveyController@checkquota');
+
+Route::post('templogin', 'SurveyController@templogin')->name('templogin');;

@@ -661,8 +661,10 @@ class SurveyController extends Controller
                     }
                 }
             }else{
+                // Create Temp User 
+                return view('admin.survey.tempuser',compact('survey'));
+
                 return view('admin.survey.autherror', compact('survey'));
-    
             }
         }else{
             return view('admin.survey.unavailable', compact('survey'));
@@ -2455,6 +2457,17 @@ class SurveyController extends Controller
         ob_end_clean();
 
         return $excelContent;
+    }
+
+    public function templogin(Request $request){
+        $respondents = new Respondents;
+        $respondents->name = $request->input('name');
+        $respondents->email = $request->input('email');
+        $respondents->password = "SurveyBMS@2024";
+        $respondents->save();
+        $data = $respondents->id;
+        echo $data;
+
     }
     
 }

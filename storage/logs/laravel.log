@@ -38,3 +38,761 @@
 #10 C:\\wamp64\\www\\tracer_out\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #11 {main}
 "} 
+[2024-05-21 15:48:04] local.ERROR: Route [templogin] not defined. {"view":{"view":"C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\resources\\views\\admin\\survey\\tempuser.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-118935774 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1587</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
+</samp>}
+</pre><script>Sfdump(\"sf-dump-118935774\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","survey":"<pre class=sf-dump id=sf-dump-1202886871 data-indent-pad=\"  \"><span class=sf-dump-note>App\\Models\\Survey</span> {<a class=sf-dump-ref>#1609</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">connection</span>: \"<span class=sf-dump-str title=\"5 characters\">mysql</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">table</span>: \"<span class=sf-dump-str title=\"6 characters\">survey</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">primaryKey</span>: \"<span class=sf-dump-str title=\"2 characters\">id</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">keyType</span>: \"<span class=sf-dump-str title=\"3 characters\">int</span>\"
+  +<span class=sf-dump-public title=\"Public property\">incrementing</span>: <span class=sf-dump-const>true</span>
+  #<span class=sf-dump-protected title=\"Protected property\">with</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">withCount</span>: []
+  +<span class=sf-dump-public title=\"Public property\">preventsLazyLoading</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">perPage</span>: <span class=sf-dump-num>15</span>
+  +<span class=sf-dump-public title=\"Public property\">exists</span>: <span class=sf-dump-const>true</span>
+  +<span class=sf-dump-public title=\"Public property\">wasRecentlyCreated</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">attributes</span>: <span class=sf-dump-note>array:14</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => <span class=sf-dump-num>10</span>
+    \"<span class=sf-dump-key>title</span>\" => \"<span class=sf-dump-str title=\"7 characters\">Testing</span>\"
+    \"<span class=sf-dump-key>folder_id</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>survey_type</span>\" => \"<span class=sf-dump-str title=\"6 characters\">survey</span>\"
+    \"<span class=sf-dump-key>visited_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>started_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>completed_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>qus_count</span>\" => <span class=sf-dump-num>14</span>
+    \"<span class=sf-dump-key>avg_completion_time</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>builderID</span>\" => \"<span class=sf-dump-str title=\"36 characters\">1f52cf6f-e07a-4f07-b733-20749349bb31</span>\"
+    \"<span class=sf-dump-key>is_deleted</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>created_by</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-05-16 05:57:03</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-05-16 10:27:27</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">original</span>: <span class=sf-dump-note>array:14</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => <span class=sf-dump-num>10</span>
+    \"<span class=sf-dump-key>title</span>\" => \"<span class=sf-dump-str title=\"7 characters\">Testing</span>\"
+    \"<span class=sf-dump-key>folder_id</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>survey_type</span>\" => \"<span class=sf-dump-str title=\"6 characters\">survey</span>\"
+    \"<span class=sf-dump-key>visited_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>started_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>completed_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>qus_count</span>\" => <span class=sf-dump-num>14</span>
+    \"<span class=sf-dump-key>avg_completion_time</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>builderID</span>\" => \"<span class=sf-dump-str title=\"36 characters\">1f52cf6f-e07a-4f07-b733-20749349bb31</span>\"
+    \"<span class=sf-dump-key>is_deleted</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>created_by</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-05-16 05:57:03</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-05-16 10:27:27</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">changes</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">casts</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">classCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">attributeCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dateFormat</span>: <span class=sf-dump-const>null</span>
+  #<span class=sf-dump-protected title=\"Protected property\">appends</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dispatchesEvents</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">observables</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">relations</span>: <span class=sf-dump-note>array:1</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>questions</span>\" => <span class=sf-dump-note title=\"Illuminate\\Database\\Eloquent\\Collection
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Database\\Eloquent</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Collection</span> {<a class=sf-dump-ref>#1631</a><samp data-depth=3 class=sf-dump-compact>
+      #<span class=sf-dump-protected title=\"Protected property\">items</span>: <span class=sf-dump-note>array:14</span> [ &#8230;14]
+      #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+    </samp>}
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">touches</span>: []
+  +<span class=sf-dump-public title=\"Public property\">timestamps</span>: <span class=sf-dump-const>true</span>
+  +<span class=sf-dump-public title=\"Public property\">usesUniqueIds</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">hidden</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">visible</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">fillable</span>: <span class=sf-dump-note>array:9</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str title=\"5 characters\">title</span>\"
+    <span class=sf-dump-index>1</span> => \"<span class=sf-dump-str title=\"9 characters\">folder_id</span>\"
+    <span class=sf-dump-index>2</span> => \"<span class=sf-dump-str title=\"13 characters\">visited_count</span>\"
+    <span class=sf-dump-index>3</span> => \"<span class=sf-dump-str title=\"13 characters\">started_count</span>\"
+    <span class=sf-dump-index>4</span> => \"<span class=sf-dump-str title=\"15 characters\">completed_count</span>\"
+    <span class=sf-dump-index>5</span> => \"<span class=sf-dump-str title=\"9 characters\">qus_count</span>\"
+    <span class=sf-dump-index>6</span> => \"<span class=sf-dump-str title=\"19 characters\">avg_completion_time</span>\"
+    <span class=sf-dump-index>7</span> => \"<span class=sf-dump-str title=\"9 characters\">builderID</span>\"
+    <span class=sf-dump-index>8</span> => \"<span class=sf-dump-str title=\"10 characters\">created_by</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">guarded</span>: <span class=sf-dump-note>array:1</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str>*</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">accessToken</span>: <span class=sf-dump-const>null</span>
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1202886871\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+"}},"exception":"[object] (Spatie\\LaravelIgnition\\Exceptions\\ViewException(code: 0): Route [templogin] not defined. at C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\UrlGenerator.php:477)
+[stacktrace]
+#0 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(811): Illuminate\\Routing\\UrlGenerator->route('templogin', Array, true)
+#1 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\resources\\views\\admin\\survey\\tempuser.blade.php(55): route('templogin')
+#2 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(123): require('C:\\\\Users\\\\gomath...')
+#3 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#4 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('C:\\\\Users\\\\gomath...', Array)
+#5 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('C:\\\\Users\\\\gomath...', Array)
+#6 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\Users\\\\gomath...', Array)
+#7 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#8 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#9 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(918): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#12 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(885): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#13 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#14 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#15 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#23 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#30 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#31 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#32 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#33 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#34 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#37 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#38 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#53 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#55 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\Users\\\\gomath...')
+#56 {main}
+
+[previous exception] [object] (Symfony\\Component\\Routing\\Exception\\RouteNotFoundException(code: 0): Route [templogin] not defined. at C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\UrlGenerator.php:477)
+[stacktrace]
+#0 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(811): Illuminate\\Routing\\UrlGenerator->route('templogin', Array, true)
+#1 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\storage\\framework\\views\\42c9874bf05ac907acb51a671fb557fd.php(55): route('templogin')
+#2 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(123): require('C:\\\\Users\\\\gomath...')
+#3 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#4 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('C:\\\\Users\\\\gomath...', Array)
+#5 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('C:\\\\Users\\\\gomath...', Array)
+#6 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\Users\\\\gomath...', Array)
+#7 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#8 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#9 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(918): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#12 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(885): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#13 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#14 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#15 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#23 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#30 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#31 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#32 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#33 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#34 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#37 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#38 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#53 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#55 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\Users\\\\gomath...')
+#56 {main}
+"} 
+[2024-05-21 15:49:22] local.ERROR: Route [templogin] not defined. {"view":{"view":"C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\resources\\views\\admin\\survey\\tempuser.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-225555426 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1588</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
+</samp>}
+</pre><script>Sfdump(\"sf-dump-225555426\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","survey":"<pre class=sf-dump id=sf-dump-91879283 data-indent-pad=\"  \"><span class=sf-dump-note>App\\Models\\Survey</span> {<a class=sf-dump-ref>#1610</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">connection</span>: \"<span class=sf-dump-str title=\"5 characters\">mysql</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">table</span>: \"<span class=sf-dump-str title=\"6 characters\">survey</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">primaryKey</span>: \"<span class=sf-dump-str title=\"2 characters\">id</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">keyType</span>: \"<span class=sf-dump-str title=\"3 characters\">int</span>\"
+  +<span class=sf-dump-public title=\"Public property\">incrementing</span>: <span class=sf-dump-const>true</span>
+  #<span class=sf-dump-protected title=\"Protected property\">with</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">withCount</span>: []
+  +<span class=sf-dump-public title=\"Public property\">preventsLazyLoading</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">perPage</span>: <span class=sf-dump-num>15</span>
+  +<span class=sf-dump-public title=\"Public property\">exists</span>: <span class=sf-dump-const>true</span>
+  +<span class=sf-dump-public title=\"Public property\">wasRecentlyCreated</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">attributes</span>: <span class=sf-dump-note>array:14</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => <span class=sf-dump-num>10</span>
+    \"<span class=sf-dump-key>title</span>\" => \"<span class=sf-dump-str title=\"7 characters\">Testing</span>\"
+    \"<span class=sf-dump-key>folder_id</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>survey_type</span>\" => \"<span class=sf-dump-str title=\"6 characters\">survey</span>\"
+    \"<span class=sf-dump-key>visited_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>started_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>completed_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>qus_count</span>\" => <span class=sf-dump-num>14</span>
+    \"<span class=sf-dump-key>avg_completion_time</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>builderID</span>\" => \"<span class=sf-dump-str title=\"36 characters\">1f52cf6f-e07a-4f07-b733-20749349bb31</span>\"
+    \"<span class=sf-dump-key>is_deleted</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>created_by</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-05-16 05:57:03</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-05-16 10:27:27</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">original</span>: <span class=sf-dump-note>array:14</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => <span class=sf-dump-num>10</span>
+    \"<span class=sf-dump-key>title</span>\" => \"<span class=sf-dump-str title=\"7 characters\">Testing</span>\"
+    \"<span class=sf-dump-key>folder_id</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>survey_type</span>\" => \"<span class=sf-dump-str title=\"6 characters\">survey</span>\"
+    \"<span class=sf-dump-key>visited_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>started_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>completed_count</span>\" => <span class=sf-dump-num>4</span>
+    \"<span class=sf-dump-key>qus_count</span>\" => <span class=sf-dump-num>14</span>
+    \"<span class=sf-dump-key>avg_completion_time</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>builderID</span>\" => \"<span class=sf-dump-str title=\"36 characters\">1f52cf6f-e07a-4f07-b733-20749349bb31</span>\"
+    \"<span class=sf-dump-key>is_deleted</span>\" => <span class=sf-dump-num>0</span>
+    \"<span class=sf-dump-key>created_by</span>\" => <span class=sf-dump-num>1</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-05-16 05:57:03</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-05-16 10:27:27</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">changes</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">casts</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">classCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">attributeCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dateFormat</span>: <span class=sf-dump-const>null</span>
+  #<span class=sf-dump-protected title=\"Protected property\">appends</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dispatchesEvents</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">observables</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">relations</span>: <span class=sf-dump-note>array:1</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>questions</span>\" => <span class=sf-dump-note title=\"Illuminate\\Database\\Eloquent\\Collection
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Database\\Eloquent</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Collection</span> {<a class=sf-dump-ref>#1632</a><samp data-depth=3 class=sf-dump-compact>
+      #<span class=sf-dump-protected title=\"Protected property\">items</span>: <span class=sf-dump-note>array:14</span> [ &#8230;14]
+      #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+    </samp>}
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">touches</span>: []
+  +<span class=sf-dump-public title=\"Public property\">timestamps</span>: <span class=sf-dump-const>true</span>
+  +<span class=sf-dump-public title=\"Public property\">usesUniqueIds</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">hidden</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">visible</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">fillable</span>: <span class=sf-dump-note>array:9</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str title=\"5 characters\">title</span>\"
+    <span class=sf-dump-index>1</span> => \"<span class=sf-dump-str title=\"9 characters\">folder_id</span>\"
+    <span class=sf-dump-index>2</span> => \"<span class=sf-dump-str title=\"13 characters\">visited_count</span>\"
+    <span class=sf-dump-index>3</span> => \"<span class=sf-dump-str title=\"13 characters\">started_count</span>\"
+    <span class=sf-dump-index>4</span> => \"<span class=sf-dump-str title=\"15 characters\">completed_count</span>\"
+    <span class=sf-dump-index>5</span> => \"<span class=sf-dump-str title=\"9 characters\">qus_count</span>\"
+    <span class=sf-dump-index>6</span> => \"<span class=sf-dump-str title=\"19 characters\">avg_completion_time</span>\"
+    <span class=sf-dump-index>7</span> => \"<span class=sf-dump-str title=\"9 characters\">builderID</span>\"
+    <span class=sf-dump-index>8</span> => \"<span class=sf-dump-str title=\"10 characters\">created_by</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">guarded</span>: <span class=sf-dump-note>array:1</span> [<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str>*</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">accessToken</span>: <span class=sf-dump-const>null</span>
+</samp>}
+</pre><script>Sfdump(\"sf-dump-91879283\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+"}},"exception":"[object] (Spatie\\LaravelIgnition\\Exceptions\\ViewException(code: 0): Route [templogin] not defined. at C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\UrlGenerator.php:477)
+[stacktrace]
+#0 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(811): Illuminate\\Routing\\UrlGenerator->route('templogin', Array, true)
+#1 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\resources\\views\\admin\\survey\\tempuser.blade.php(55): route('templogin')
+#2 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(123): require('C:\\\\Users\\\\gomath...')
+#3 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#4 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('C:\\\\Users\\\\gomath...', Array)
+#5 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('C:\\\\Users\\\\gomath...', Array)
+#6 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\Users\\\\gomath...', Array)
+#7 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#8 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#9 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(918): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#12 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(885): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#13 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#14 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#15 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#23 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#30 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#31 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#32 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#33 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#34 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#37 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#38 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#53 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#55 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\Users\\\\gomath...')
+#56 {main}
+
+[previous exception] [object] (Symfony\\Component\\Routing\\Exception\\RouteNotFoundException(code: 0): Route [templogin] not defined. at C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\UrlGenerator.php:477)
+[stacktrace]
+#0 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(811): Illuminate\\Routing\\UrlGenerator->route('templogin', Array, true)
+#1 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\storage\\framework\\views\\42c9874bf05ac907acb51a671fb557fd.php(55): route('templogin')
+#2 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(123): require('C:\\\\Users\\\\gomath...')
+#3 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#4 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('C:\\\\Users\\\\gomath...', Array)
+#5 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('C:\\\\Users\\\\gomath...', Array)
+#6 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\Users\\\\gomath...', Array)
+#7 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#8 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#9 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(918): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#12 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(885): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#13 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#14 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#15 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#23 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#30 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#31 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#32 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#33 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#34 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#37 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#38 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#53 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#55 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\Users\\\\gomath...')
+#56 {main}
+"} 
+[2024-05-21 15:50:48] local.ERROR: Method App\Http\Controllers\SurveyController::templogin does not exist. {"exception":"[object] (BadMethodCallException(code: 0): Method App\\Http\\Controllers\\SurveyController::templogin does not exist. at C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php:68)
+[stacktrace]
+#0 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): Illuminate\\Routing\\Controller->__call('templogin', Array)
+#1 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('templogin', Array)
+#2 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\SurveyController), 'templogin')
+#3 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#4 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#5 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#6 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#7 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#8 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#9 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#10 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#11 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#12 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#13 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#14 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#15 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#21 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#22 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#23 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#24 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#25 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#26 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#30 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#44 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#45 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\Users\\\\gomath...')
+#47 {main}
+"} 
+[2024-05-21 15:55:23] local.ERROR: Please install the suggested Algolia client: algolia/algoliasearch-client-php. {"exception":"[object] (Exception(code: 0): Please install the suggested Algolia client: algolia/algoliasearch-client-php. at C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\EngineManager.php:87)
+[stacktrace]
+#0 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\EngineManager.php(40): Laravel\\Scout\\EngineManager->ensureAlgoliaClientIsInstalled()
+#1 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Manager.php(106): Laravel\\Scout\\EngineManager->createAlgoliaDriver()
+#2 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Manager.php(80): Illuminate\\Support\\Manager->createDriver('algolia')
+#3 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\EngineManager.php(30): Illuminate\\Support\\Manager->driver('algolia')
+#4 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(329): Laravel\\Scout\\EngineManager->engine()
+#5 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(63): App\\Models\\Respondents->searchableUsing()
+#6 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(42): App\\Models\\Respondents->queueMakeSearchable(Object(Illuminate\\Database\\Eloquent\\Collection))
+#7 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Macroable\\Traits\\Macroable.php(123): Illuminate\\Database\\Eloquent\\Collection->Laravel\\Scout\\{closure}()
+#8 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(183): Illuminate\\Support\\Collection->__call('searchable', Array)
+#9 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\ModelObserver.php(109): App\\Models\\Respondents->searchable()
+#10 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(478): Laravel\\Scout\\ModelObserver->saved(Object(App\\Models\\Respondents))
+#11 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(286): Illuminate\\Events\\Dispatcher->Illuminate\\Events\\{closure}('eloquent.saved:...', Array)
+#12 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(266): Illuminate\\Events\\Dispatcher->invokeListeners('eloquent.saved:...', Array, false)
+#13 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\HasEvents.php(215): Illuminate\\Events\\Dispatcher->dispatch('eloquent.saved:...', Array)
+#14 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1176): Illuminate\\Database\\Eloquent\\Model->fireModelEvent('saved', false)
+#15 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1149): Illuminate\\Database\\Eloquent\\Model->finishSave(Array)
+#16 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\app\\Http\\Controllers\\SurveyController.php(2467): Illuminate\\Database\\Eloquent\\Model->save()
+#17 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\SurveyController->templogin(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('templogin', Array)
+#19 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\SurveyController), 'templogin')
+#20 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#21 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#22 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#31 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#38 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#39 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#40 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#41 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#42 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#53 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#58 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#59 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#61 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#62 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#63 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\Users\\\\gomath...')
+#64 {main}
+"} 
+[2024-05-21 15:58:46] local.ERROR: rename(C:\Users\gomathy\Desktop\Gomathy\GPC\BMS\bootstrap\cache\pacAB72.tmp,C:\Users\gomathy\Desktop\Gomathy\GPC\BMS\bootstrap\cache\packages.php): Access is denied (code: 5) {"exception":"[object] (ErrorException(code: 0): rename(C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\bootstrap\\cache\\pacAB72.tmp,C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\bootstrap\\cache\\packages.php): Access is denied (code: 5) at C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php:233)
+[stacktrace]
+#0 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'rename(C:\\\\Users...', 'C:\\\\Users\\\\gomath...', 233)
+#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'rename(C:\\\\Users...', 'C:\\\\Users\\\\gomath...', 233)
+#2 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(233): rename('C:\\\\Users\\\\gomath...', 'C:\\\\Users\\\\gomath...')
+#3 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\PackageManifest.php(181): Illuminate\\Filesystem\\Filesystem->replace('C:\\\\Users\\\\gomath...', '<?php return ar...')
+#4 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\PackageManifest.php(131): Illuminate\\Foundation\\PackageManifest->write(Array)
+#5 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\PackageDiscoverCommand.php(36): Illuminate\\Foundation\\PackageManifest->build()
+#6 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Foundation\\Console\\PackageDiscoverCommand->handle(Object(Illuminate\\Foundation\\PackageManifest))
+#7 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Foundation\\Console\\PackageDiscoverCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2024-05-21 15:59:01] local.ERROR: Please install the suggested Algolia client: algolia/algoliasearch-client-php. {"exception":"[object] (Exception(code: 0): Please install the suggested Algolia client: algolia/algoliasearch-client-php. at C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\EngineManager.php:87)
+[stacktrace]
+#0 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\EngineManager.php(40): Laravel\\Scout\\EngineManager->ensureAlgoliaClientIsInstalled()
+#1 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Manager.php(106): Laravel\\Scout\\EngineManager->createAlgoliaDriver()
+#2 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Manager.php(80): Illuminate\\Support\\Manager->createDriver('algolia')
+#3 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\EngineManager.php(30): Illuminate\\Support\\Manager->driver('algolia')
+#4 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(329): Laravel\\Scout\\EngineManager->engine()
+#5 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(63): App\\Models\\Respondents->searchableUsing()
+#6 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(42): App\\Models\\Respondents->queueMakeSearchable(Object(Illuminate\\Database\\Eloquent\\Collection))
+#7 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Macroable\\Traits\\Macroable.php(123): Illuminate\\Database\\Eloquent\\Collection->Laravel\\Scout\\{closure}()
+#8 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(183): Illuminate\\Support\\Collection->__call('searchable', Array)
+#9 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\ModelObserver.php(109): App\\Models\\Respondents->searchable()
+#10 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(478): Laravel\\Scout\\ModelObserver->saved(Object(App\\Models\\Respondents))
+#11 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(286): Illuminate\\Events\\Dispatcher->Illuminate\\Events\\{closure}('eloquent.saved:...', Array)
+#12 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(266): Illuminate\\Events\\Dispatcher->invokeListeners('eloquent.saved:...', Array, false)
+#13 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\HasEvents.php(215): Illuminate\\Events\\Dispatcher->dispatch('eloquent.saved:...', Array)
+#14 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1176): Illuminate\\Database\\Eloquent\\Model->fireModelEvent('saved', false)
+#15 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1149): Illuminate\\Database\\Eloquent\\Model->finishSave(Array)
+#16 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\app\\Http\\Controllers\\SurveyController.php(2467): Illuminate\\Database\\Eloquent\\Model->save()
+#17 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\SurveyController->templogin(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('templogin', Array)
+#19 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\SurveyController), 'templogin')
+#20 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#21 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#22 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#31 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#38 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#39 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#40 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#41 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#42 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#53 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#58 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#59 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#61 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#62 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#63 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\Users\\\\gomath...')
+#64 {main}
+"} 
+[2024-05-21 16:00:05] local.ERROR: Please install the suggested Algolia client: algolia/algoliasearch-client-php. {"exception":"[object] (Exception(code: 0): Please install the suggested Algolia client: algolia/algoliasearch-client-php. at C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\EngineManager.php:87)
+[stacktrace]
+#0 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\EngineManager.php(40): Laravel\\Scout\\EngineManager->ensureAlgoliaClientIsInstalled()
+#1 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Manager.php(106): Laravel\\Scout\\EngineManager->createAlgoliaDriver()
+#2 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Manager.php(80): Illuminate\\Support\\Manager->createDriver('algolia')
+#3 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\EngineManager.php(30): Illuminate\\Support\\Manager->driver('algolia')
+#4 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(329): Laravel\\Scout\\EngineManager->engine()
+#5 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(63): App\\Models\\Respondents->searchableUsing()
+#6 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(42): App\\Models\\Respondents->queueMakeSearchable(Object(Illuminate\\Database\\Eloquent\\Collection))
+#7 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Macroable\\Traits\\Macroable.php(123): Illuminate\\Database\\Eloquent\\Collection->Laravel\\Scout\\{closure}()
+#8 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(183): Illuminate\\Support\\Collection->__call('searchable', Array)
+#9 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\ModelObserver.php(109): App\\Models\\Respondents->searchable()
+#10 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(478): Laravel\\Scout\\ModelObserver->saved(Object(App\\Models\\Respondents))
+#11 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(286): Illuminate\\Events\\Dispatcher->Illuminate\\Events\\{closure}('eloquent.saved:...', Array)
+#12 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(266): Illuminate\\Events\\Dispatcher->invokeListeners('eloquent.saved:...', Array, false)
+#13 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\HasEvents.php(215): Illuminate\\Events\\Dispatcher->dispatch('eloquent.saved:...', Array)
+#14 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1176): Illuminate\\Database\\Eloquent\\Model->fireModelEvent('saved', false)
+#15 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1149): Illuminate\\Database\\Eloquent\\Model->finishSave(Array)
+#16 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\app\\Http\\Controllers\\SurveyController.php(2467): Illuminate\\Database\\Eloquent\\Model->save()
+#17 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\SurveyController->templogin(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('templogin', Array)
+#19 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\SurveyController), 'templogin')
+#20 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#21 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#22 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#31 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#38 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#39 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#40 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#41 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#42 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#53 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#58 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#59 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#61 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#62 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#63 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\Users\\\\gomath...')
+#64 {main}
+"} 
+[2024-05-21 16:01:05] local.ERROR: Impossible to connect, please check your Algolia Application Id. {"exception":"[object] (Algolia\\AlgoliaSearch\\Exceptions\\UnreachableException(code: 0): Impossible to connect, please check your Algolia Application Id. at C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\algolia\\algoliasearch-client-php\\src\\RetryStrategy\\ApiWrapper.php:196)
+[stacktrace]
+#0 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\algolia\\algoliasearch-client-php\\src\\RetryStrategy\\ApiWrapper.php(100): Algolia\\AlgoliaSearch\\RetryStrategy\\ApiWrapper->request('POST', '/1/indexes/resp...', Object(Algolia\\AlgoliaSearch\\RequestOptions\\RequestOptions), Array, 30, Array)
+#1 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\algolia\\algoliasearch-client-php\\src\\SearchIndex.php(298): Algolia\\AlgoliaSearch\\RetryStrategy\\ApiWrapper->write('POST', '/1/indexes/resp...', Array, Object(Algolia\\AlgoliaSearch\\RequestOptions\\RequestOptions))
+#2 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\algolia\\algoliasearch-client-php\\src\\SearchIndex.php(338): Algolia\\AlgoliaSearch\\SearchIndex->rawBatch(Array, Array)
+#3 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\algolia\\algoliasearch-client-php\\src\\SearchIndex.php(183): Algolia\\AlgoliaSearch\\SearchIndex->splitIntoBatches('updateObject', Array, Array)
+#4 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Engines\\AlgoliaEngine.php(74): Algolia\\AlgoliaSearch\\SearchIndex->saveObjects(Array)
+#5 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(63): Laravel\\Scout\\Engines\\AlgoliaEngine->update(Object(Illuminate\\Database\\Eloquent\\Collection))
+#6 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(42): App\\Models\\Respondents->queueMakeSearchable(Object(Illuminate\\Database\\Eloquent\\Collection))
+#7 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Macroable\\Traits\\Macroable.php(123): Illuminate\\Database\\Eloquent\\Collection->Laravel\\Scout\\{closure}()
+#8 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\Searchable.php(183): Illuminate\\Support\\Collection->__call('searchable', Array)
+#9 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\scout\\src\\ModelObserver.php(109): App\\Models\\Respondents->searchable()
+#10 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(478): Laravel\\Scout\\ModelObserver->saved(Object(App\\Models\\Respondents))
+#11 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(286): Illuminate\\Events\\Dispatcher->Illuminate\\Events\\{closure}('eloquent.saved:...', Array)
+#12 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Events\\Dispatcher.php(266): Illuminate\\Events\\Dispatcher->invokeListeners('eloquent.saved:...', Array, false)
+#13 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\HasEvents.php(215): Illuminate\\Events\\Dispatcher->dispatch('eloquent.saved:...', Array)
+#14 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1176): Illuminate\\Database\\Eloquent\\Model->fireModelEvent('saved', false)
+#15 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1149): Illuminate\\Database\\Eloquent\\Model->finishSave(Array)
+#16 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\app\\Http\\Controllers\\SurveyController.php(2467): Illuminate\\Database\\Eloquent\\Model->save()
+#17 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\SurveyController->templogin(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('templogin', Array)
+#19 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\SurveyController), 'templogin')
+#20 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#21 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#22 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#31 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#38 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#39 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#40 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#41 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#42 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#53 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#58 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#59 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#61 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#62 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#63 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\Users\\\\gomath...')
+#64 {main}
+"} 
