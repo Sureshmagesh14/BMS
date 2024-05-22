@@ -35,12 +35,23 @@
         width: 100%;
         height: 300px;
     }
+
+    .form-control-sm {
+        height: calc(1.5em + 0.5rem + 2px) !important;
+        line-height: 1.5 !important;
+
+    }
+    label {
+        display: inline-block;
+        margin-bottom: 0.5rem !important;
+    }
 </style>
 @php
     $first_character = mb_substr($data->name, 0, 1);
 @endphp
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap4.css">
+<link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap4.css">
 <section class="">
     <div class="container-fluid">
 
@@ -126,8 +137,8 @@
                         </div>
                     </h5>
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover dataTable" id="DataTables_Table_0" style="width: 100%;"
-                            aria-describedby="example_info">
+                        <table class="table table-striped table-bordered table-hover dataTable" id="DataTables_Table_0"
+                            style="width: 100%;" aria-describedby="example_info">
                             <thead>
                                 <tr>
                                     <th>NAME </th>
@@ -242,8 +253,8 @@
                         </div>
                     </h5>
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover dataTable" id="DataTables_Table_1" style="width: 100%;"
-                            aria-describedby="completed_info">
+                        <table class="table table-striped table-bordered table-hover dataTable"
+                            id="DataTables_Table_1" style="width: 100%;" aria-describedby="completed_info">
                             <thead>
                                 <tr>
                                     <th>NAME </th>
@@ -316,7 +327,7 @@
                 "sEmptyTable": "No Completed Survey Found"
             }
         });
-        
+
     });
 
     $("#opt_out").click(function() {

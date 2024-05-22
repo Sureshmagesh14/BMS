@@ -21,6 +21,15 @@
         background-color: #edbf1b;
         color: white;
     }
+    .form-control-sm {
+        height: calc(1.5em + 0.5rem + 2px) !important;
+        line-height: 1.5 !important;
+
+    }
+    label {
+        display: inline-block;
+        margin-bottom: 0.5rem !important;
+    }
 </style>
 <section class="bg-greybg vh-100">
     <div class="container">
