@@ -32,8 +32,8 @@ class WelcomeEmail extends Mailable
                     ->bcc($address, $name)
                     ->replyTo($address, $name)
                     ->subject($subject)
-                    ->with([ 'test_message' => $this->data['message'] ])
-                    ->with([ 'id' => $this->data['id'] ]);
+                    // ->with([ 'id' => $this->data['id'] ])
+                    ->with([ 'test_message' => $this->data['message'] ]);
     }
    
     
