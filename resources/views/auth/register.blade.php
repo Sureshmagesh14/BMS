@@ -115,7 +115,7 @@
                                     <div class="input-group-text">+27</div>
                                 </div>
                                 <input type="text" name="mobile" id="mobile" placeholder="081 966 0786"
-                                    class="form-control vi-border-clr border-radius-0 w-50" oninput ="numonly(this);"
+                                    class="form-control vi-border-clr border-radius-0 w-50" 
                                     maxlength="16" required>
                             </div>
 
@@ -130,7 +130,7 @@
                                     <div class="input-group-text">+27</div>
                                 </div>
                                 <input type="text" name="whatsapp" id="whatsapp" placeholder="081 966 0786"
-                                    class="form-control vi-border-clr border-radius-0 w-50" oninput ="numonly(this);"
+                                    class="form-control vi-border-clr border-radius-0 w-50"
                                     maxlength="16" required>
                             </div>
 
