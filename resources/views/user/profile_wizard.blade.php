@@ -90,7 +90,7 @@
                                                         <div class="input-group-text">+27</div>
                                                     </div>
                                                     <input type="text" name="basic[mobile_number]" id="mobile_number" placeholder="081 966 0786" class="form-control vi-border-clr border-radius-0"
-                                                    value="{{$resp_details->mobile}}" oninput ="numonly(this);" maxlength="16" required>
+                                                    value="{{$resp_details->mobile}}" maxlength="16" required>
                                                 </div>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
@@ -100,7 +100,7 @@
                                                         <div class="input-group-text">+27</div>
                                                     </div>
                                                     <input type="text" name="basic[whatsapp_number]" id="whatsapp_number" placeholder="081 966 0786" class="form-control vi-border-clr border-radius-0"
-                                                    value="{{$resp_details->whatsapp}}" oninput ="numonly(this);" maxlength="16" required>
+                                                    value="{{$resp_details->whatsapp}}" maxlength="16" required>
                                                 </div>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
