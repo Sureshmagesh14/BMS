@@ -1,6 +1,6 @@
 @include('user.layout.header-2')
     <link rel="stylesheet" href="{{ asset('assets/wizard/css/jquery.steps.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets/select2/select2.min.css') }}">
     <style>
         a {text-decoration: none;}
         /* .wizard>.steps{
@@ -53,6 +53,9 @@
         label#mobile_number-error {
             width: 100%;
         }
+        .star_require{
+            color: red;
+        }
     </style>
 
     <section class="bg-greybg">
@@ -73,15 +76,15 @@
                                                 <input type="hidden" name="unique_id" class="form-control unique_id" id="get_unique_id" value="{{$pid}}">
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="first_name">First Name</label>
+                                                <label for="first_name">First Name <span class="star_require">*</span></label>
                                                 <input type="text" class="form-control" id="first_name" name="basic[first_name]" value="{{$resp_details->name}}" required>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="last_name">Last Name</label>
+                                                <label for="last_name">Last Name <span class="star_require">*</span></label>
                                                 <input type="text" class="form-control" id="last_name" name="basic[last_name]" value="{{$resp_details->surname}}" required>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="mobile_number">Mobile Number</label>
+                                                <label for="mobile_number">Mobile Number <span class="star_require">*</span></label>
                                                 <div class="input-group mb-2">
                                                     <div class="input-group-prepend">
                                                         <div class="input-group-text">+27</div>
@@ -91,7 +94,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="whatsapp_number">Whats App Number</label>
+                                                <label for="whatsapp_number">Whats App Number <span class="star_require">*</span></label>
                                                 <div class="input-group mb-2">
                                                     <div class="input-group-prepend">
                                                         <div class="input-group-text">+27</div>
@@ -101,11 +104,11 @@
                                                 </div>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="email">Email</label>
+                                                <label for="email">Email <span class="star_require">*</span></label>
                                                 <input type="email" class="form-control" id="email" name="basic[email]" value="{{$resp_details->email}}" required>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="date_of_birth">Date of Birth</label>
+                                                <label for="date_of_birth">Date of Birth <span class="star_require">*</span></label>
                                                 <input type="text" placeholder="YYYY-MM-DD" class="form-control" id="date_of_birth" name="basic[date_of_birth]" value="{{$resp_details->date_of_birth}}" required>
                                                 
                                                 @if ($resp_details->date_of_birth!=null)
@@ -128,8 +131,8 @@
                                     <section style="overflow-x: auto;">
                                         <div class="row">
                                             <div class="col-6 col-sm-4">
-                                                <label for="relationship_status">Relationship Status</label>
-                                                <select name="essential[relationship_statu]s" id="relationship_status" required>
+                                                <label for="relationship_status">Relationship Status <span class="star_require">*</span></label>
+                                                <select name="essential[relationship_status]" id="relationship_status" required>
                                                     <option value="">Select</option>
                                                     <option value="single" @isset($essential_details['relationship_status']) @if($essential_details['relationship_status'] == "single") selected @endif @endisset>Single</option>
                                                     <option value="cohabitation" @isset($essential_details['relationship_status']) @if($essential_details['relationship_status'] == "cohabitation") selected @endif @endisset>Cohabitation</option>
@@ -140,7 +143,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4">
-                                                <label for="gender">Gender</label>
+                                                <label for="gender">Gender <span class="star_require">*</span></label>
                                                 <select name="essential[gender]" id="gender" required>
                                                     <option value="">Select</option>
                                                     <option value="male" @isset($essential_details['gender']) @if($essential_details['gender'] == "male") selected @endif @endisset>Male</option>
@@ -151,7 +154,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4">
-                                                <label for="ethnic_group">Ethnic Group / Race</label>
+                                                <label for="ethnic_group">Ethnic Group / Race <span class="star_require">*</span></label>
                                                 <select name="essential[ethnic_group]" id="ethnic_group" required>
                                                     <option value="">Select</option>
                                                     <option value="asian" @isset($essential_details['ethnic_group']) @if($essential_details['ethnic_group'] == "asian") selected @endif @endisset>Asian</option>
@@ -162,7 +165,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="education_level">Highest Education Level</label>
+                                                <label for="education_level">Highest Education Level <span class="star_require">*</span></label>
                                                 <select name="essential[education_level]" id="education_level" required>
                                                     <option value="">Select</option>
                                                     <option value="matric" @isset($essential_details['education_level']) @if($essential_details['education_level'] == "matric") selected @endif @endisset>Matric</option>
@@ -173,7 +176,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="employment_status">Employment Status</label>
+                                                <label for="employment_status">Employment Status <span class="star_require">*</span></label>
                                                 <select name="essential[employment_status]" id="employment_status" required>
                                                     <option value="">Select</option>
                                                     <option value="emp_full_time" @isset($essential_details['employment_status']) @if($essential_details['employment_status'] == "emp_full_time") selected @endif @endisset>Employed Full-Time</option>
@@ -187,7 +190,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="industry_my_company">Industry my company is in</label>
+                                                <label for="industry_my_company">Industry my company is in <span class="star_require">*</span></label>
                                                 <select name="essential[industry_my_company]" id="industry_my_company" required>
                                                     <option value="">Select</option>
                                                     @foreach ($industry_company as $industry)
@@ -196,11 +199,11 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="job_title">Job Title</label>
+                                                <label for="job_title">Job Title <span class="star_require">*</span></label>
                                                 <input type="text" class="form-control" id="job_title" name="essential[job_title]" required @isset($essential_details['job_title']) value ="{{$essential_details['job_title']}}" @endisset>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="personal_income_per_month">Personal Income Per Month</label>
+                                                <label for="personal_income_per_month">Personal Income Per Month <span class="star_require">*</span></label>
                                                 <select name="essential[personal_income_per_month]" id="personal_income_per_month" required>
                                                     <option value="">Select</option>
                                                     @foreach ($income_per_month as $income)
@@ -209,7 +212,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="household_income_per_month">Household Income per month</label>
+                                                <label for="household_income_per_month">Household Income per month <span class="star_require">*</span></label>
                                                 <select name="essential[household_income_per_month]" id="household_income_per_month" required>
                                                     <option value="">Select</option>
                                                     @foreach ($income_per_month as $income)
@@ -218,7 +221,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="province">Province</label>
+                                                <label for="province">Province <span class="star_require">*</span></label>
                                                 <select name="essential[province]" id="province" required>
                                                     <option value="">Select</option>
                                                     @foreach ($state as $states)
@@ -227,7 +230,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="suburb">Suburb</label>
+                                                <label for="suburb">Suburb <span class="star_require">*</span></label>
                                                 <select name="essential[suburb]" id="suburb" required>
                                                     <option value="">Select</option>
                                                     @foreach ($get_suburb as $suburb)
@@ -236,25 +239,26 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="metropolitan_area">Metropolitan Area</label>
-                                                <select name="essential[metropolitan_area]" id="metropolitan_area" required>
+                                                <label for="metropolitan_area">Metropolitan Area <span class="star_require">*</span></label>
+                                                <input type="text" name="essential[metropolitan_area]" id="metropolitan_area" class="form-control" required @isset($essential_details['metropolitan_area']) value ="{{$essential_details['metropolitan_area']}}" @endisset>
+                                                {{-- <select name="essential[metropolitan_area]" id="metropolitan_area" required>
                                                     <option value="">Select</option>
                                                     @foreach ($get_area as $area)
                                                         <option value="{{$area->id}}" @isset($essential_details['metropolitan_area']) @if($essential_details['metropolitan_area'] == $area->id) selected @endif @endisset>{{$area->area}}</option>
                                                     @endforeach
-                                                </select>
+                                                </select> --}}
                                             </div>
 
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="no_houehold">Number of people living in your household</label>
+                                                <label for="no_houehold">Number of people living in your household <span class="star_require">*</span></label>
                                                 <input type="number" name="essential[no_houehold]" id="no_houehold" class="form-control" required @isset($essential_details['no_houehold']) value ="{{$essential_details['no_houehold']}}" @endisset>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="no_children">Number of Children</label>
+                                                <label for="no_children">Number of Children <span class="star_require">*</span></label>
                                                 <input type="number" name="essential[no_children]" id="no_children" class="form-control" required @isset($essential_details['no_children']) value ="{{$essential_details['no_children']}}" @endisset>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="no_vehicle">Number of Vehicles</label>
+                                                <label for="no_vehicle">Number of Vehicles <span class="star_require">*</span></label>
                                                 <input type="number" name="essential[no_vehicle]" id="no_vehicle" class="form-control" required @isset($essential_details['no_vehicle']) value ="{{$essential_details['no_vehicle']}}" @endisset>
                                             </div>
                                         </div>
@@ -413,10 +417,10 @@
 
 @include('user.layout.footer')
     <script src="{{ asset('assets/wizard/js/jquery.steps.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{ asset('assets/select2/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/inputmask.js') }}"></script>
-    <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+    <script src="{{ asset('assets/inputmask/jquery.inputmask.bundle.js') }}"></script>
+    <script src="{{ asset('assets/moment/moment.js') }}"></script>
     <script>
         $(function () {
             var tempcsrf = '{!! csrf_token() !!}';
@@ -426,6 +430,8 @@
                 headerTag: "h2",
                 bodyTag: "section",
                 transitionEffect: "slideLeft",
+                autoFocus: true,
+                // saveState: true,
                 // stepsOrientation: "vertical",
                 onStepChanging: function (event, currentIndex, newIndex)
                 {
@@ -449,9 +455,11 @@
                         return form.valid();
                     }
                     else if(currentIndex == 1 && newIndex == 2){
-                        // return form.valid();
-                        datas2 = {_token: tempcsrf, serialize_data: form.serialize(), step: 2};
-                        wizard_save(datas2);
+                        if(form.valid() == true){
+                            datas2 = {_token: tempcsrf, serialize_data: form.serialize(), step: 2};
+                            wizard_save(datas2);
+                        }
+                        return form.valid();
                     }
                     return true;
                 },
@@ -523,7 +531,7 @@
             $('#whatsapp_number').inputmask("999 999 9999");
 
             $('#relationship_status, #gender, #ethnic_group, #education_level, #employment_status, #industry_my_company, #personal_income_per_month, #business_org,'+
-                '#household_income_per_monty, #province, #suburb, #metropolitan_area, #org, #org_company, #bank_main, #home_lang, #household_income_per_month').select2({ height: '10%', width: '100%' });
+                '#household_income_per_monty, #province, #suburb, #org, #org_company, #bank_main, #home_lang, #household_income_per_month').select2({ height: '10%', width: '100%' });
 
             $("#no_children").keyup(function(){
                 no_children = $(this).val();
@@ -634,26 +642,26 @@
                 });
             });
 
-            $("#suburb").change(function() {
-                suburb = $(this).val();
-                $.ajax({
-                    url : '{{route("get_area")}}',
-                    type : 'GET',
-                    data : {
-                        'suburb' : suburb
-                    },
-                    dataType:'json',
-                    success : function(data) { 
-                        if(data.type == true)             {
-                            $("#metropolitan_area").html(data.data);
-                        }
-                    },
-                    error : function(request,error)
-                    {
-                        // alert("Request: "+JSON.stringify(request));
-                    }
-                });
-            });
+            // $("#suburb").change(function() {
+            //     suburb = $(this).val();
+            //     $.ajax({
+            //         url : '{{route("get_area")}}',
+            //         type : 'GET',
+            //         data : {
+            //             'suburb' : suburb
+            //         },
+            //         dataType:'json',
+            //         success : function(data) { 
+            //             if(data.type == true)             {
+            //                 $("#metropolitan_area").html(data.data);
+            //             }
+            //         },
+            //         error : function(request,error)
+            //         {
+            //             // alert("Request: "+JSON.stringify(request));
+            //         }
+            //     });
+            // });
         });
 
         function wizard_save(datas){
