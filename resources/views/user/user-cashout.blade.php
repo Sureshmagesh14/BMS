@@ -27,69 +27,72 @@
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm">Cashout Summary</span>
                 </h4>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Project </th>
-                            <th>Type </th>
-                            <th>Points </th>
-                            <th>Amount </th>
-                            <th>Status </th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($get_res as $res)
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTable" style="width: 100%;"
+                        aria-describedby="cashout_info">
+                        <thead>
                             <tr>
-                                <td>{{ $res->name }}</td>
-                                <td>
-                                    @php
-                                        if ($res->type_id == 1) {
-                                            $types = 'EFT';
-                                        } elseif ($res->type_id == 2) {
-                                            $types = 'Data';
-                                        } elseif ($res->type_id == 3) {
-                                            $types = 'Airtime';
-                                        } elseif ($res->type_id == 4) {
-                                            $types = 'Donation';
-                                        } else {
-                                            $types = '-';
-                                        }
-                                    @endphp
-                                    {{ $types }}
-                                </td>
-                                <td>
-                                    {{ $res->points }}
-                                </td>
-                                <td>
-                                    {{ $res->amount / 10 }}
-                                </td>
-                                <td>
-                                    @php
-                                        if ($res->status_id == 0) {
-                                            $stats = 'Failed';
-                                        } elseif ($res->status_id == 1) {
-                                            $stats = 'Pending';
-                                        } elseif ($res->status_id == 2) {
-                                            $stats = 'Processing';
-                                        } elseif ($res->status_id == 3) {
-                                            $stats = 'Complete';
-                                        } elseif ($res->status_id == 4) {
-                                            $stats = 'Declined';
-                                        } else {
-                                            $stats = 'Approved For Processing';
-                                        }
-                                    @endphp
-
-                                    {{ $stats }}
-                                </td>
-                                <td>
-                                    {{ $res->updated_at }}
-                                </td>
+                                <th>Project </th>
+                                <th>Type </th>
+                                <th>Points </th>
+                                <th>Amount </th>
+                                <th>Status </th>
+                                <th>Date</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($get_res as $res)
+                                <tr>
+                                    <td>{{ $res->name }}</td>
+                                    <td>
+                                        @php
+                                            if ($res->type_id == 1) {
+                                                $types = 'EFT';
+                                            } elseif ($res->type_id == 2) {
+                                                $types = 'Data';
+                                            } elseif ($res->type_id == 3) {
+                                                $types = 'Airtime';
+                                            } elseif ($res->type_id == 4) {
+                                                $types = 'Donation';
+                                            } else {
+                                                $types = '-';
+                                            }
+                                        @endphp
+                                        {{ $types }}
+                                    </td>
+                                    <td>
+                                        {{ $res->points }}
+                                    </td>
+                                    <td>
+                                        {{ $res->amount / 10 }}
+                                    </td>
+                                    <td>
+                                        @php
+                                            if ($res->status_id == 0) {
+                                                $stats = 'Failed';
+                                            } elseif ($res->status_id == 1) {
+                                                $stats = 'Pending';
+                                            } elseif ($res->status_id == 2) {
+                                                $stats = 'Processing';
+                                            } elseif ($res->status_id == 3) {
+                                                $stats = 'Complete';
+                                            } elseif ($res->status_id == 4) {
+                                                $stats = 'Declined';
+                                            } else {
+                                                $stats = 'Approved For Processing';
+                                            }
+                                        @endphp
+
+                                        {{ $stats }}
+                                    </td>
+                                    <td>
+                                        {{ $res->updated_at }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
 
@@ -107,8 +110,11 @@
     $(document).ready(function() {
 
         $('#nav_rewards').addClass('active');
-        $('table.table.table-striped').DataTable({
-            responsive: true
+        $('table.table.table-striped.table-bordered.table-hover.dataTable').DataTable({
+            responsive: true,
+            "oLanguage": {
+                "sEmptyTable": "No Cashout Summary Found"
+            }
         });
 
     });

@@ -5,7 +5,7 @@
         color: unset;
     }
 
-   
+
     table#DataTables_Table_0 {
         /* width: 709.406px; */
     }
@@ -32,11 +32,9 @@
     }
 
     #chartdiv {
-    width: 100%;
-    height: 300px;
+        width: 100%;
+        height: 300px;
     }
-
-
 </style>
 @php
     $first_character = mb_substr($data->name, 0, 1);
@@ -127,36 +125,40 @@
                             </ul> -->
                         </div>
                     </h5>
-                    <table class="table table-striped table-responsive w-100">
-                        <thead>
-                            <tr>
-                                <th>NAME </th>
-                                <th>DATE </th>
-                                <th>TASK </th>
-                                <th>REWARD POINTS</th>
-                                <th>ACTION </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($get_respondent as $res)
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable" id="DataTables_Table_0" style="width: 100%;"
+                            aria-describedby="example_info">
+                            <thead>
                                 <tr>
-                                    <td>{{ $res->name }}</td>
-                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
-                                    <td title="{{ $res->description }}">
-                                        {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
-                                    </td>
-                                    <td>{{ $res->reward }}</td>
-                                    @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
-                                    @if ($get_link != null)
-                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
-                                                class="btn btn-yellow">DETAIL</a></td>
-                                    @else
-                                        <td>No Survey</td>
-                                    @endif
+                                    <th>NAME </th>
+                                    <th>DATE </th>
+                                    <th>TASK </th>
+                                    <th>REWARD POINTS</th>
+                                    <th>ACTION </th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($get_respondent as $res)
+                                    <tr>
+                                        <td>{{ $res->name }}</td>
+                                        <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                        <td title="{{ $res->description }}">
+                                            {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
+                                        </td>
+                                        <td>{{ $res->reward }}</td>
+                                        @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
+                                        @if ($get_link != null)
+                                            <td><a target="_blank"
+                                                    href="{{ url('survey/view', $get_link->builderID) }}"
+                                                    class="btn btn-yellow">DETAIL</a></td>
+                                        @else
+                                            <td>No Survey</td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
@@ -209,8 +211,8 @@
 
 
                     <div class="mt-4">
-                    <div id="chartdiv"></div>
-                  
+                        <div id="chartdiv"></div>
+
                     </div>
 
                 </div>
@@ -239,38 +241,44 @@
                             </ul>
                         </div>
                     </h5>
-                    <table class="table table-striped table-responsive w-100">
-                        <thead>
-                            <tr>
-                                <th>NAME </th>
-                                <th>DATE </th>
-                                <th>TASK </th>
-                                <th>REWARD POINTS </th>
-                                <th>ACTION </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($get_completed_survey as $res)
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable" id="DataTables_Table_1" style="width: 100%;"
+                            aria-describedby="completed_info">
+                            <thead>
                                 <tr>
-                                    <td>{{ $res->name }}</td>
-                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
-                                    <td title="{{ $res->description }}">
-                                        {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
-                                    </td>
-                                    <td>{{ $res->reward }}</td>
-                                    @php
-                                        $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
-                                    @endphp
-                                    @if ($get_link != null)
-                                        <td><a class="btn btn-yellow" target="_blank"
-                                                href="{{ url('survey/view', $get_link->builderID) }}">DETAIL</a></td>
-                                    @else
-                                        <td>No Survey</td>
-                                    @endif
+                                    <th>NAME </th>
+                                    <th>DATE </th>
+                                    <th>TASK </th>
+                                    <th>REWARD POINTS </th>
+                                    <th>ACTION </th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($get_completed_survey as $res)
+                                    <tr>
+                                        <td>{{ $res->name }}</td>
+                                        <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                        <td title="{{ $res->description }}">
+                                            {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
+                                        </td>
+                                        <td>{{ $res->reward }}</td>
+                                        @php
+                                            $get_link = \App\Models\Respondents::get_respondend_survey(
+                                                $res->survey_link,
+                                            );
+                                        @endphp
+                                        @if ($get_link != null)
+                                            <td><a class="btn btn-yellow" target="_blank"
+                                                    href="{{ url('survey/view', $get_link->builderID) }}">DETAIL</a>
+                                            </td>
+                                        @else
+                                            <td>No Survey</td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -292,107 +300,23 @@
 <script src="//cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
-
-
-var root = am5.Root.new("chartdiv");
-
-root.setThemes([
-  am5themes_Animated.new(root)
-]);
-
-var chart = root.container.children.push(
-  am5percent.PieChart.new(root, {
-    radius: am5.percent(90),
-    innerRadius: am5.percent(40)
-  })
-);
-
-// Create series
-var series = chart.series.push(
-  am5percent.PieSeries.new(root, {
-    name: "Series",
-    valueField: "sales",
-    categoryField: "country"
-  })
-);
-
-series.data.setAll([{
-  country: "Extended",
-  sales: 10
-}, {
-  country: "Extended",
-  sales: 6
-}]);
-
-// Disabling labels and ticks
-series.labels.template.set("visible", false);
-series.ticks.template.set("visible", false);
-
-
-var series2 = chart.series.push(
-  am5percent.PieSeries.new(root, {
-    name: "Series",
-    valueField: "sales",
-    categoryField: "country"
-  })
-);
-
-series2.data.setAll([{
-  country: "Essential",
-  sales: 10
-}, {
-  country: "Essential",
-  sales: 1
-}]);
-
-// Configuring slices
-series2.slices.template.setAll({
-  stroke: am5.color(0xffffff),
-  strokeWidth: 2
-})
-
-// Disabling labels and ticks
-series2.labels.template.set("visible", false);
-series2.ticks.template.set("visible", false);
-
-
-
-var series3 = chart.series.push(
-  am5percent.PieSeries.new(root, {
-    name: "Series",
-    valueField: "sales",
-    categoryField: "country"
-  })
-);
-
-series3.data.setAll([{
-  country: "Basic",
-  sales: 0
-}, {
-  country: "Basic",
-  sales: 10
-}]);
-
-// Configuring slices
-series3.slices.template.setAll({
-  stroke: am5.color(0xffffff),
-  strokeWidth: 2
-})
-
-// Disabling labels and ticks
-series3.labels.template.set("visible", false);
-series3.ticks.template.set("visible", false);
-
-
-
     var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
-        let chart = am5.Root.new('chartdiv');
-        chart._logo.dispose();
+
         $('#nav_dashboard').addClass('active');
-        $('table.table.table-striped.table-responsive').DataTable({
-            responsive: true
+        $('#DataTables_Table_0').DataTable({
+            responsive: true,
+            "oLanguage": {
+                "sEmptyTable": "No Current Survey Found"
+            }
         });
+        $('#DataTables_Table_1').DataTable({
+            responsive: true,
+            "oLanguage": {
+                "sEmptyTable": "No Completed Survey Found"
+            }
+        });
+        
     });
 
     $("#opt_out").click(function() {

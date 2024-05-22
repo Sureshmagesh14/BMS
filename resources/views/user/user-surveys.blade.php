@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap4.css">
 <style>
-        table#DataTables_Table_1 {
+    table#DataTables_Table_1 {
         /* width: 709.406px; */
     }
 
@@ -16,6 +16,7 @@
     div#DataTables_Table_1_wrapper {
         padding: 20px;
     }
+
     a.btn.btn-yellow {
         background-color: #edbf1b;
         color: white;
@@ -29,38 +30,39 @@
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm">Current Survey</span>
                 </h4>
-                <table class="table table-striped table-responsive w-100">
-                    <thead>
-                        <tr>
-                            <th>NAME </th>
-                            <th>DATE </th>
-                            <th>TASK </th>
-                            <th>AMOUNT </th>
-                            <th>ACTION </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($get_respondent as $res)
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTable" id="current_survey"
+                        style="width: 100%;" aria-describedby="current_survey">
+                        <thead>
                             <tr>
-                                <td>{{ $res->name }}</td>
-                                <td>{{ date("d-m-Y", strtotime($res->closing_date)) }}</td>
-                                <td title="{{$res->description}}"> {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}</td>
-                                <td>{{ $res->reward }}</td>
-                                @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
-                                @if ($get_link != null)
-                                    <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
-                                            class="btn btn-yellow">DETAIL</a></td>
-                                @else
-                                    <td>No Survey</td>
-                                @endif
+                                <th>NAME </th>
+                                <th>DATE </th>
+                                <th>TASK </th>
+                                <th>AMOUNT </th>
+                                <th>ACTION </th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5">No Survey Assigned</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($get_respondent as $res)
+                                <tr>
+                                    <td>{{ $res->name }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                    <td title="{{ $res->description }}">
+                                        {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
+                                    </td>
+                                    <td>{{ $res->reward }}</td>
+                                    @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
+                                    @if ($get_link != null)
+                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
+                                                class="btn btn-yellow">DETAIL</a></td>
+                                    @else
+                                        <td>No Survey</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <br>
@@ -69,36 +71,41 @@
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm">Completed Survey</span>
                 </h4>
-                <table class="table table-striped table-responsive w-100">
-                    <thead>
-                        <tr>
-                            <th>NAME </th>
-                            <th>DATE </th>
-                            <th>TASK </th>
-                            <th>AMOUNT </th>
-                            <th>ACTION </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($get_completed_survey as $res)
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTable" id="completed_survey"
+                        style="width: 100%;" aria-describedby="completed_survey">
+                        <thead>
                             <tr>
-                                <td>{{ $res->name }}</td>
-                                <td>{{ date("d-m-Y", strtotime($res->closing_date)) }}</td>
-                                <td title="{{$res->description}}"> {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}</td>
-                                <td>{{ $res->reward }}</td>
-                                @php
-                                    $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
-                                @endphp
-                                @if ($get_link != null)
-                                    <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
-                                            class="btn btn-yellow">DETAIL</a></td>
-                                @else
-                                    <td>No Survey</td>
-                                @endif
+                                <th>NAME </th>
+                                <th>DATE </th>
+                                <th>TASK </th>
+                                <th>AMOUNT </th>
+                                <th>ACTION </th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($get_completed_survey as $res)
+                                <tr>
+                                    <td>{{ $res->name }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                    <td title="{{ $res->description }}">
+                                        {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
+                                    </td>
+                                    <td>{{ $res->reward }}</td>
+                                    @php
+                                        $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
+                                    @endphp
+                                    @if ($get_link != null)
+                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
+                                                class="btn btn-yellow">DETAIL</a></td>
+                                    @else
+                                        <td>No Survey</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
 
@@ -120,8 +127,19 @@
 <script>
     $(document).ready(function() {
         $('#nav_surveys').addClass('active');
-        $('table.table.table-striped.table-responsive').DataTable({
-            responsive: true
+        $('#current_survey').DataTable({
+            responsive: true,
+            "oLanguage": {
+                "sEmptyTable": "No Current Survey Found"
+            }
         });
+
+        $('#completed_survey').DataTable({
+            responsive: true,
+            "oLanguage": {
+                "sEmptyTable": "No Completed Survey Found"
+            }
+        });
+
     });
 </script>
