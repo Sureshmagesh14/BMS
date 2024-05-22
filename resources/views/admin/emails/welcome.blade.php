@@ -142,7 +142,8 @@
                                 <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 30px 30px;">
                                     <table border="0" cellspacing="0" cellpadding="0">
                                         <tr>
-                                            <td align="center" style="border-radius: 3px;" bgcolor="red"><a href="{{route('update_activitation',['id' => $id])}}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid red; display: inline-block;">Activate Account</a></td>
+                                            {{-- <td align="center" style="border-radius: 3px;" bgcolor="red"><a href="{{route('update_activitation',['id' => $id])}}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid red; display: inline-block;">Activate Account</a></td> --}}
+                                            <td align="center" style="border-radius: 3px;" bgcolor="red"><a  target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid red; display: inline-block;">Activate Account</a></td>
                                         </tr>
                                     </table>
                                 </td>
