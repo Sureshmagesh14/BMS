@@ -236,7 +236,7 @@
                         <div class="px-3">
                             <ul class="navbar-nav">
                                 <li class="nav-item dropdown">
-                                    <a class="dropdown-item" href="{{ route('user.cashouts') }}">Cashout
+                                    <a class="btn btn-yellow" href="{{ route('user.cashouts') }}">Cashout
                                         History</a>
 
                                     </a>
