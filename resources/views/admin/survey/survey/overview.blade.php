@@ -100,6 +100,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <?php if($survey->started_count <= 0){
+                                    $started_count =  \App\Models\SurveyResponse::where(['survey_id'=>$survey->id])->groupBy('response_user_id')->count();
+                                }else{
+                                    $started_count = $survey->started_count;
+                                }
+                                if($survey->completed_count > 0){
+                                        $completionRate = ($survey->completed_count / $started_count) * 100; 
+                                }else{
+                                    $completionRate = 0;
+                                }  ?>
                             <div class="col-3 wmb--md">
                                 <div class="fx-row fx-ai--start" style="font-family: &quot;Source Sans Pro&quot;;"><svg height="24" width="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M7.60594 19.1941C5.9894 18.7726 4.5126 17.9322 3.32449 16.7578C2.13637 15.5834 1.27896 14.1165 0.83872 12.5049C0.398485 10.8934 0.390997 9.19424 0.817011 7.57888C1.24303 5.96353 2.08748 4.48907 3.26519 3.30423C4.44291 2.11939 5.91225 1.26607 7.52501 0.830319C9.13777 0.394573 10.8369 0.391817 12.4511 0.822328C14.0652 1.25284 15.5373 2.10139 16.7189 3.28241C17.9005 4.46342 18.7497 5.93513 19.1809 7.54909" stroke="#63686F" stroke-linecap="round"></path>
@@ -109,7 +119,7 @@
                                     <div class="fx-colum ml--lg">
                                         <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--grey mb--xs">Started</h3>
                                         <div class="fx-row fx-ai--end">
-                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">{{$survey->started_count}}</h1>
+                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">{{$started_count}}</h1>
                                         </div>
                                     </div>
                                 </div>
@@ -137,12 +147,11 @@
                                         <path d="M17.5 23.5C20.8137 23.5 23.5 20.8137 23.5 17.5C23.5 14.1863 20.8137 11.5 17.5 11.5C14.1863 11.5 11.5 14.1863 11.5 17.5C11.5 20.8137 14.1863 23.5 17.5 23.5Z" stroke="#63686F" stroke-linecap="round"></path>
                                         <path d="M20.1737 15.7549L17.2687 19.6289C17.2041 19.7148 17.1218 19.7858 17.0274 19.8372C16.933 19.8886 16.8286 19.9191 16.7214 19.9267C16.6142 19.9343 16.5066 19.9187 16.4059 19.8812C16.3052 19.8436 16.2137 19.7848 16.1377 19.7089L14.6377 18.2089" stroke="#63686F" stroke-linecap="round"></path>
                                     </svg>
-                                    <?php $completionRate = ($survey->started_count/$survey->completed_count) * 100;
-                                     ?>
+                                   
                                     <div class="fx-colum ml--lg">
                                         <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--grey mb--xs">Completion Rate</h3>
                                         <div class="fx-row fx-ai--end">
-                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">{{$completionRate}}%</h1>
+                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">{{round($completionRate)}}%</h1>
                                         </div>
                                     </div>
                                 </div>
