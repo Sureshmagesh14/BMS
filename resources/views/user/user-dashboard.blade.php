@@ -31,10 +31,6 @@
         color: white;
     }
 
-    #chartdiv {
-        width: 100%;
-        height: 300px;
-    }
 
     .form-control-sm {
         height: calc(1.5em + 0.5rem + 2px) !important;
@@ -44,6 +40,39 @@
     label {
         display: inline-block;
         margin-bottom: 0.5rem !important;
+    }
+    #buttons12{
+        float:right;
+        position:relative;
+        left:-50%;
+        text-align:left;
+        top: -53px;
+    }
+    #buttons12 ul{
+        list-style:none;
+        position:relative;
+        left:50%;
+    }
+
+    #buttons12 li{float:left;position:relative;}/* ie needs position:relative here*/
+    #buttons12 a{
+        text-decoration:none;
+        margin:10px;
+        float:left;
+        border:0px outset blue;
+        color:#000;
+        padding:2px 5px;
+        text-align:center;
+        white-space:nowrap;
+    }
+    #buttons12 a:hover{ border:0px inset blue;}
+    .center {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
     }
 </style>
 @php
@@ -222,7 +251,16 @@
 
 
                     <div class="mt-4">
-                        <div id="chartdiv"></div>
+                   
+                    <div id="container123"></div>
+              
+                    <div id="buttons12">
+                        <ul>
+                            <li><a style="background:#e90b3a;">Basic</a></li>
+                            <li><a style="background:#a0ff03;">Essential</a></li>
+                            <li><a style="background:#1ad5de;">Extended</a></li>
+                        </ul>
+                    </div>
 
                     </div>
 
@@ -306,11 +344,136 @@
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap4.js"></script>
 
-<script src="//cdn.amcharts.com/lib/5/index.js"></script>
-<script src="//cdn.amcharts.com/lib/5/percent.js"></script>
-<script src="//cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-
+<script src="https://cdn.rawgit.com/bm-w/d3/master/d3.js"></script>
 <script>
+
+var gap = 8;
+
+var ranDataset = function () {
+	var ran = .9;
+
+	return    [
+		{index: 0, name: 'Basic', percentage: 60},
+		{index: 1, name: 'Essential', percentage: 20},
+		{index: 2, name: 'Extended', percentage:30}
+	];
+
+};
+
+var colors = ["#e90b3a", "#a0ff03", "#1ad5de"];
+
+var width = 500,
+	height = 500,
+	τ = 2 * Math.PI;
+
+var arc = d3.svg.arc()
+	.startAngle(0)
+	.endAngle(function (d) {
+		return d.percentage / 100 * τ;
+	})
+	.innerRadius(function (d) {
+		return 140 - d.index * (40 + gap)
+	})
+	.outerRadius(function (d) {
+		return 180 - d.index * (40 + gap)
+	})
+	.cornerRadius(1);//modified d3 api only
+
+var background = d3.svg.arc()
+	.startAngle(0)
+	.endAngle(τ)
+	.innerRadius(function (d, i) {
+		return 140 - d.index * (40 + gap)
+	})
+	.outerRadius(function (d, i) {
+		return 180 - d.index * (40 + gap)
+	});
+
+var svg = d3.select("#container123").append("svg")
+	.attr("width", width)
+	.attr("height", height)
+	.append("g")
+	.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+//add some shadows 
+var defs = svg.append("defs");
+
+var filter = defs.append("filter")
+	.attr("id", "dropshadow")
+
+filter.append("feGaussianBlur")
+	.attr("in", "SourceAlpha")
+	.attr("stdDeviation", 4)
+	.attr("result", "blur");
+filter.append("feOffset")
+	.attr("in", "blur")
+	.attr("dx", 1)
+	.attr("dy", 1)
+	.attr("result", "offsetBlur");
+
+var feMerge = filter.append("feMerge");
+
+feMerge.append("feMergeNode")
+	.attr("in", "offsetBlur");
+feMerge.append("feMergeNode")
+	.attr("in", "SourceGraphic");
+
+var field = svg.selectAll("g")
+	.data(ranDataset)
+	.enter().append("g");
+
+field.append("path").attr("class", "progress").attr("filter", "url(#dropshadow)");
+
+field.append("path").attr("class", "bg")
+	.style("fill", function (d) {
+		return colors[d.index];
+	})
+	.style("opacity", 0.2)
+	.attr("d", background);
+
+field.append("text");
+
+d3.transition().duration(1750).each(update);
+
+function update() {
+	field = field
+		.each(function (d) {
+			this._value = d.percentage;
+		})
+		.data(ranDataset)
+		.each(function (d) {
+			d.previousValue = this._value;
+		});
+
+	field.select("path.progress").transition().duration(1750).delay(function (d, i) {
+		return i * 200
+	})
+		.ease("elastic")
+		.attrTween("d", arcTween)
+		.style("fill", function (d) {
+			return colors[d.index];
+		});
+
+	// field.select("text").attr('class', 'name').text(function (d) {
+	// 	return d.name;
+	// }).attr("transform", function (d) {
+	// 		return "translate(10," + -(150 - d.index * (40 + gap)) + ")"
+    // });
+
+	setTimeout(update, 2000);
+
+}
+
+function arcTween(d) {
+	var i = d3.interpolateNumber(d.previousValue, d.percentage);
+	return function (t) {
+		d.percentage = i(t);
+		return arc(d);
+	};
+}
+
+
+
     var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
 
