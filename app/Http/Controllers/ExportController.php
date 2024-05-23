@@ -551,7 +551,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
-                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $sheet->setCellValue('I' . $rows, $all_data->created_by);
                         $rows++;
                         // $rows++;
                         // $i++;
@@ -836,11 +836,14 @@ class ExportController extends Controller
                 $from = '2023-12-12';
                 $to = '2024-02-02';
 
-                $all_datas = DB::table('rewards')
-                ->select('rewards.*')
-                ->whereBetween('rewards.created_at', [$from, $to])
-                ->orderby("id","desc")
-                ->get();
+                // $all_datas = DB::table('rewards')
+                // ->select('rewards.*')
+                // ->whereBetween('rewards.created_at', [$from, $to])
+                // ->orderby("id","desc")
+                // ->get();
+
+                $all_datas = Respondents::join('rewards', 'respondents.id', '=', 'rewards.respondent_id')
+                ->get(['respondents.name', 'respondents.surname','respondents.surname','respondents.mobile','respondents.whatsapp','respondents.email','rewards.status_id']);
 
                 $styleArray = array( // font color
                     'font' => array(
@@ -947,6 +950,29 @@ class ExportController extends Controller
                 $i=1;
                 foreach($all_datas as $all_data){
 
+                    $sheet->setCellValue('A' . $rows, $i);
+                    $sheet->setCellValue('B' . $rows, $all_data->name);
+                    $sheet->setCellValue('C' . $rows, $all_data->surname);
+                    $sheet->setCellValue('D' . $rows, $all_data->mobile);
+                    $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                    $sheet->setCellValue('F' . $rows, $all_data->email);
+                    if($all_data->status_id==1){
+                        $status = 'Pending';
+                    }else if($all_data->status_id==2){
+                        $status= 'Approved';
+                    }else if($all_data->status_id==4){
+                        $status= 'Processed';
+                    }else{  
+                        $status= '-';
+                    }
+
+                    $sheet->setCellValue('G' . $rows, $status);
+                   
+
+
+
+
+
                     // $rows++;
                     // $i++;
                 }
@@ -957,7 +983,7 @@ class ExportController extends Controller
                 $from = '2023-12-12';
                 $to = '2024-02-02';
 
-                $all_datas = Projects::select('projects.*','projects.name as uname')
+                $all_datas = Projects::select('projects.*','projects.name as uname','users.name')
                 ->join('users', 'users.id', '=', 'projects.user_id') 
                 ->orderby("id","desc")
                 ->whereBetween('projects.created_at', [$from, $to])
@@ -1057,14 +1083,12 @@ class ExportController extends Controller
                 foreach($all_datas as $all_data){
 
                     $sheet->setCellValue('A' . $rows, $i);
-                    $sheet->setCellValue('B' . $rows, $all_data->name);
-                    $sheet->setCellValue('C' . $rows, $all_data->surname);
-                    $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                    $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                    $sheet->setCellValue('B' . $rows, $all_data->number);
+                    $sheet->setCellValue('C' . $rows, $all_data->uname);
+                    $sheet->setCellValue('D' . $rows, $all_data->name);
+                    $sheet->setCellValue('E' . $rows, $all_data->created_at);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
-                    $sheet->setCellValue('G' . $rows, $all_data->updated_at);
-                    $sheet->setCellValue('H' . $rows, $all_data->created_by);
-                    $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                   
 
                     // $rows++;
                     // $i++;
