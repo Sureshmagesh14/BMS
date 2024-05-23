@@ -411,8 +411,17 @@ class ExportController extends Controller
                     $i=1;
                     foreach($all_datas as $all_data){
 
+                    $sheet->setCellValue('A' . $rows, $i);
+                    $sheet->setCellValue('B' . $rows, $all_data->name);
+                    $sheet->setCellValue('C' . $rows, $all_data->surname);
+                    $sheet->setCellValue('D' . $rows, $all_data->mobile);
+                    $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                    $sheet->setCellValue('F' . $rows, $all_data->email);
+                    $sheet->setCellValue('G' . $rows, $all_data->updated_at);
+                    $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                    $rows++;
                     
-                        // $rows++;
+                       
                         // $i++;
                     }
 
@@ -534,7 +543,16 @@ class ExportController extends Controller
                     $i=1;
                     foreach($all_datas as $all_data){
 
-                    
+                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('B' . $rows, $all_data->name);
+                        $sheet->setCellValue('C' . $rows, $all_data->surname);
+                        $sheet->setCellValue('D' . $rows, $all_data->mobile);
+                        $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                        $sheet->setCellValue('F' . $rows, $all_data->email);
+                        $sheet->setCellValue('G' . $rows, $all_data->updated_at);
+                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $rows++;
                         // $rows++;
                         // $i++;
                     }
@@ -1037,6 +1055,16 @@ class ExportController extends Controller
                 $rows = 2;
                 $i=1;
                 foreach($all_datas as $all_data){
+
+                    $sheet->setCellValue('A' . $rows, $i);
+                    $sheet->setCellValue('B' . $rows, $all_data->name);
+                    $sheet->setCellValue('C' . $rows, $all_data->surname);
+                    $sheet->setCellValue('D' . $rows, $all_data->mobile);
+                    $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                    $sheet->setCellValue('F' . $rows, $all_data->email);
+                    $sheet->setCellValue('G' . $rows, $all_data->updated_at);
+                    $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                    $sheet->setCellValue('H' . $rows, $all_data->created_by);
 
                     // $rows++;
                     // $i++;

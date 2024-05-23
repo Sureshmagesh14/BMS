@@ -55,21 +55,22 @@ class RegisteredUserController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'id_passport' => $request->id_passport,
             'email' => $request->email,
-            'mobile' => $request->mobile,
-            'whatsapp' => $request->whatsapp,
+            'mobile' => str_replace(' ', '', $request->mobile),
+            'whatsapp' => str_replace(' ', '', $request->whatsapp),
             'password' => Hash::make($request->password_register),
             'referral_code' => $ref_code,
         ]);
 
         $id = DB::getPdo()->lastInsertId();
-        $data = ['message' => 'Welcome','id'=>$id];
+        //email starts
+        // $data = ['message' => 'Welcome','id'=>$id];
       
-        if ($id != null) {
-            $get_email = Respondents::where('id', $id)->first();
+        // if ($id != null) {
+        //     $get_email = Respondents::where('id', $id)->first();
 
-            Mail::to($get_email->email)->send(new WelcomeEmail($data));
-        }
-
+        //     Mail::to($get_email->email)->send(new WelcomeEmail($data));
+        // }
+        //email ends
         if (session()->has('refer_id')) {
 
             $referred_respondent_id = session()->get('refer_id');

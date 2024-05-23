@@ -68,7 +68,7 @@
                     <input type="password" id="password" name="password" value="{{isset($_COOKIE["password"]) ? $_COOKIE["password"] : ''}}"
                         class="form-control form-input form-input-bordered w-full input-password" aria-label="password">
                     <a href="JavaScript:void(0);" class="icon-view">
-                        <i class="fa fa-eye"></i>
+                        <i class="fa fa-eye-slash"></i>
                     </a>
                 </div>
             </div>
