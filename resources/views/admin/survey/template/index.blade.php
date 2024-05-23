@@ -231,14 +231,25 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
                                     <?php 
                                     $query="SELECT * FROM `survey_response` WHERE (`survey_id` = $survey->id) GROUP BY `response_user_id`, `survey_id`";
                                     $responsCount =  DB::select($query);
+                                    $countresp = count($responsCount);
                                     ?>
                                     <div class="col-4 d-none d-md-flex flex-column align-items-center justify-content-center">
-                                        <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">{{count($responsCount)}}</h3>
+                                        <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">{{$countresp}}</h3>
                                         <a href="{{route('survey.responses',$survey->id)}}" class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Responses</a>
                                     </div>
                                     <div class="col-4 d-none d-md-flex flex-column align-items-center justify-content-center">
-                                        <?php $completionRate = ($survey->started_count/$survey->completed_count) * 100; ?>
-                                        <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">{{$completionRate}}%</h3>
+                                        <?php 
+                                        if($survey->started_count <= 0){
+                                            $started_count =  \App\Models\SurveyResponse::where(['survey_id'=>$survey->id])->groupBy('response_user_id')->count();
+                                        }else{
+                                            $started_count = $survey->started_count;
+                                        }
+                                        if($survey->completed_count > 0){
+                                                $completionRate = ($survey->completed_count / $started_count) * 100; 
+                                        }else{
+                                            $completionRate = 0;
+                                        }   ?>
+                                        <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">{{round($completionRate)}} %</h3>
                                         <a href="{{route('survey.builder',[$survey->builderID,0])}}" class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Completion Rate</a>
                                     </div>
                                
