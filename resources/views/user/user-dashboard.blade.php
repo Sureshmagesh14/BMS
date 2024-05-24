@@ -52,6 +52,7 @@
 <link rel="stylesheet" type="text/css"
     href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap4.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.min.css">
 <section class="">
     <div class="container-fluid">
 
@@ -108,7 +109,7 @@
             </div>
             <div class="col-md-5 my-sm-5-mob">
                 <div class="bg-white">
-                    <iframe class="w-100 px-5 my-3" style="height:400px;"
+                    <iframe class="w-100 px-5 my-3 h-400 h-sm-100"
                         src="https://www.youtube.com/embed/vGq8cT1qF60?si=7D_j6L0CbrIj-wBw" title="YouTube video player"
                         frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -136,7 +137,7 @@
                             </ul> -->
                         </div>
                     </h5>
-                    <div class="table-responsive">
+                    <div class="">
                         <table class="table table-striped table-bordered table-hover dataTable" id="DataTables_Table_0"
                             style="width: 100%;" aria-describedby="example_info">
                             <thead>
@@ -252,7 +253,7 @@
                             </ul>
                         </div>
                     </h5>
-                    <div class="table-responsive">
+                    <div class="">
                         <table class="table table-striped table-bordered table-hover dataTable"
                             id="DataTables_Table_1" style="width: 100%;" aria-describedby="completed_info">
                             <thead>
@@ -305,7 +306,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap4.js"></script>
-
+<script src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js"></script>
 <script src="//cdn.amcharts.com/lib/5/index.js"></script>
 <script src="//cdn.amcharts.com/lib/5/percent.js"></script>
 <script src="//cdn.amcharts.com/lib/5/themes/Animated.js"></script>
