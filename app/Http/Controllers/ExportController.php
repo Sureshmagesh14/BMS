@@ -25,9 +25,9 @@ class ExportController extends Controller
         try {
             
             $active_val   = DB::table('respondents')->where("active_status_id",1)->count();
-                       
+            $users_list   = DB::table('users')->where("status_id",1)->orderBy('id', 'ASC')->get();
             
-            return view('admin.export',compact('active_val'));
+            return view('admin.export',compact('active_val','users_list'));
             
             return redirect("/")->withSuccess('You are not allowed to access');
         }
@@ -289,7 +289,10 @@ class ExportController extends Controller
             }else if($module=='Respondents'){
 
 
-                $all_datas = Respondents::where('id',1)->get();
+                $all_datas = Respondents::where('id',1)
+                                ->where('respondents.created_at', '>=', $from)
+                                ->where('respondents.created_at', '<=', $to)
+                                ->get();
                 
                 $styleArray = array( // font color
                     'font' => array(
@@ -570,7 +573,8 @@ class ExportController extends Controller
 
                 $all_datas = Cashout::select('cashouts.*','respondents.name','respondents.email','respondents.mobile')
                     ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id') 
-                    ->whereBetween('cashouts.created_at', [$from, $to])
+                    ->where('cashouts.created_at', '>=', $from)
+                    ->where('cashouts.created_at', '<=', $to)
                     ->orderby("id","desc")
                     ->get();
                 
@@ -838,7 +842,8 @@ class ExportController extends Controller
 
                 $all_datas = DB::table('rewards')
                 ->select('rewards.*')
-                ->whereBetween('rewards.created_at', [$from, $to])
+                ->where('rewards.created_at', '>=', $from)
+                ->where('rewards.created_at', '<=', $to)
                 ->orderby("id","desc")
                 ->get();
 
@@ -960,7 +965,8 @@ class ExportController extends Controller
                 $all_datas = Projects::select('projects.*','projects.name as uname')
                 ->join('users', 'users.id', '=', 'projects.user_id') 
                 ->orderby("id","desc")
-                ->whereBetween('projects.created_at', [$from, $to])
+                ->where('projects.created_at', '>=', $from)
+                ->where('projects.created_at', '<=', $to)
                 ->get();
    
 
@@ -1076,10 +1082,44 @@ class ExportController extends Controller
                 $from = '2023-12-12';
                 $to = '2024-02-02';
 
-                $all_datas = UserEvents::select('user_events.*')->orderby("id","desc")
-                ->whereBetween('created_at', [$from, $to])
+                $all_datas = UserEvents::select('users.name','users.surname','user_events.*')
+                ->join('users', 'user_events.user_id', 'users.id')
+                ->orderby("user_events.id","desc")
+                ->where('type','=','respondent')
+                ->where('user_events.created_at', '>=', $from)
+                ->where('user_events.created_at', '<=', $to)
                 ->get();
-   
+         
+                $total_created=UserEvents::select('users.name','users.surname','user_events.*')
+                ->join('users', 'user_events.user_id', 'users.id')
+                ->orderby("user_events.id","desc")
+                ->where("user_events.action","created")
+                ->where('type','=','respondent')
+                ->where('user_events.created_at', '>=', $from)
+                ->where('user_events.created_at', '<=', $to)
+                ->get()
+                ->count();
+               
+
+                 $total_deactivated=UserEvents::select('users.name','users.surname','user_events.*')
+                ->join('users', 'user_events.user_id', 'users.id')
+                ->orderby("user_events.id","desc")
+                ->where("user_events.action","deleted")
+                ->where('type','=','respondent')
+                ->where('user_events.created_at', '>=', $from)
+                ->where('user_events.created_at', '<=', $to)
+                ->get()
+                ->count();
+
+                 $total_blacklisted=UserEvents::select('users.name','users.surname','user_events.*')
+                ->join('users', 'user_events.user_id', 'users.id')
+                ->orderby("user_events.id","desc")
+                ->where("user_events.action","deactivated")
+                ->where('type','=','respondent')
+                ->where('user_events.created_at', '>=', $from)
+                ->where('user_events.created_at', '<=', $to)
+                ->get()
+                ->count();
 
                 $styleArray = array( // font color
                     'font' => array(
@@ -1147,22 +1187,21 @@ class ExportController extends Controller
                 $sheet->getStyle('D1')
                     ->applyFromArray($styleArray);
 
-                $sheet->setCellValue('E1', 'Total respondents recruited');
-
-                $sheet->getStyle('E1')
-                    ->getFill()
-                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                    ->getStartColor()
-                    ->setARGB('0f609b'); // cell color
-
-                $sheet->getStyle('E1')
-                    ->applyFromArray($styleArray);
+             
 
                 
                 
                 $rows = 2;
                 $i=1;
                 foreach($all_datas as $all_data){
+
+                    $sheet->setCellValue('A' . $rows, $all_data->name." ".$all_data->surname);
+                    $sheet->setCellValue('B' . $rows, $total_created);
+                    $sheet->setCellValue('C' . $rows, $total_deactivated);
+                    $sheet->setCellValue('D' . $rows, $total_blacklisted);
+                  
+                
+                    $rows++;
 
                     // $rows++;
                     // $i++;
