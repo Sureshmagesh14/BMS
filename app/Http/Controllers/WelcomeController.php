@@ -6,6 +6,7 @@ use App\Models\Banks;
 use App\Models\Contents;
 use App\Models\Groups;
 use App\Models\Respondents;
+use App\Models\RespondentProfile;
 use App\Models\Rewards;
 use Carbon\Carbon;
 use DB;
@@ -130,6 +131,77 @@ class WelcomeController extends Controller
                 Respondents::where('id', $id)->update(['profile_completion_id' => 1]);
             }
 
+            $resp_datas =  RespondentProfile::where('respondent_id', $id)->first();
+            $percent1 = $resp_datas->basic_details;
+            $percent2 = $resp_datas->essential_details;
+            $percent3 = $resp_datas->extended_details;
+
+            if($percent1!=''){
+
+                $json_array  = json_decode($percent1, true);
+                $tot_count  = count($json_array);
+
+                $fill_count =0;
+                foreach ($json_array as $key => $value) {
+                    if (!strlen($value)) {
+                       
+                    }else{
+                        $fill_count ++;
+                    }
+                }
+
+                $percent1 = ($fill_count/$tot_count)*100;
+                $percent1 = round($percent1);
+
+            }else{
+                $percent1 =0;
+            }
+            
+            if($percent2!=''){
+                
+                $json_array  = json_decode($percent2, true);
+                $tot_count  = count($json_array);
+
+                $fill_count =0;
+                foreach ($json_array as $key => $value) {
+                    if (!strlen($value)) {
+                       
+                    }else{
+                        $fill_count ++;
+                    }
+                }
+
+                $percent2 = ($fill_count/$tot_count)*100;
+                $percent2 = round($percent2);
+
+
+            }else{
+                $percent2 =0;
+            }
+
+            if($percent3!=''){
+                
+                $json_array  = json_decode($percent3, true);
+                $tot_count  = count($json_array);
+
+                $fill_count =0;
+                foreach ($json_array as $key => $value) {
+                    if (!strlen($value)) {
+                       
+                    }else{
+                        $fill_count ++;
+                    }
+                }
+
+                $percent3 = ($fill_count/$tot_count)*100;
+                $percent3 = round($percent3);
+
+            }else{
+                $percent3 =0;
+            }
+            
+
+
             if ($tot_rows == 0) {
                 $percentage = 0;
             } else {
@@ -192,7 +264,7 @@ class WelcomeController extends Controller
                 }
             }
 
-            return view('user.user-dashboard', compact('data', 'get_respondent', 'get_completed_survey', 'percentage'));
+            return view('user.user-dashboard', compact('data', 'get_respondent', 'get_completed_survey', 'percentage','percent1','percent2','percent3'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());

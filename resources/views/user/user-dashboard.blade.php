@@ -31,10 +31,6 @@
         color: white;
     }
 
-    #chartdiv {
-        width: 100%;
-        height: 300px;
-    }
 
     .form-control-sm {
         height: calc(1.5em + 0.5rem + 2px) !important;
@@ -45,6 +41,8 @@
         display: inline-block;
         margin-bottom: 0.5rem !important;
     }
+    
+  
 </style>
 @php
     $first_character = mb_substr($data->name, 0, 1);
@@ -222,7 +220,9 @@
 
 
                     <div class="mt-4">
-                        <div id="chartdiv"></div>
+                   
+                    <div id="chartDiv"></div>
+              
 
                     </div>
 
@@ -306,11 +306,23 @@
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap4.js"></script>
 
-<script src="//cdn.amcharts.com/lib/5/index.js"></script>
-<script src="//cdn.amcharts.com/lib/5/percent.js"></script>
-<script src="//cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<script src="{{ asset('assets/js/jquery.radialBar.min.js') }}"></script>
 
 <script>
+var data = [
+    {primaryColor: "#346946", secondaryColor: "#F4F4F4", progress: <?php echo $percent1; ?>, labelText: "Basic <?php echo $percent1; ?>%"},
+    {primaryColor: "#0BB74D", secondaryColor: "#F4F4F4", progress: <?php echo $percent2; ?>, labelText: "Essential <?php echo $percent2; ?>%"},
+    {primaryColor: "#36E895", secondaryColor: "#F4F4F4", progress: <?php echo $percent3; ?>, labelText: "Extended <?php echo $percent3; ?>%"},
+];
+
+$("#chartDiv").radialBar({
+    data: data,
+    width: "400",
+    height: "400",
+    strokeWidth: 15,
+});
+
     var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
 
