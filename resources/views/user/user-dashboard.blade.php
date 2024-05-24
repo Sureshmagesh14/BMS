@@ -310,6 +310,15 @@
 
 <script>
 // CHART CONFIG
+
+var completed_imp_one = @php echo $completed[0]; @endphp;
+var completed_imp_two = @php echo $completed[1]; @endphp;
+var completed_imp_three = @php echo $completed[2]; @endphp;
+
+var notcompleted_imp_one = @php echo $notcompleted[0]; @endphp;
+var notcompleted_imp_two = @php echo $notcompleted[1]; @endphp;
+var notcompleted_imp_three = @php echo $notcompleted[2]; @endphp;
+
 // -----------------------------
 let chartConfig = {
   type: 'nestedpie',
@@ -387,12 +396,12 @@ let chartConfig = {
   series: [
     {
       text: 'Completed',
-      values: ["{{$completed[0]}}", "{{$completed[1]}}", "{{$completed[2]}}"],
+      values: [completed_imp_one,completed_imp_two,completed_imp_three],
       backgroundColor: 'green blue',
     },
     {
       text: 'Not-Completed',
-      values: [30, 59, 35],
+      values: [notcompleted_imp_one,notcompleted_imp_two,notcompleted_imp_three],
       backgroundColor: 'blue purple',
     },
   ],
