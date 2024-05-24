@@ -219,13 +219,12 @@
                     </h5>
 
 
-                    <div class="mt-4">
-                   
-                    <div id="chartDiv"></div>
-              
-
-                    </div>
-
+                    <div class="text-center mt-4">
+                 
+                        <div id="myChart" class="chart--container">
+                            <a href="https://www.zingchart.com/" rel="noopener" class="zc-ref">Powered by ZingChart</a>
+                          </div>
+  
                 </div>
                 <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
                     <h5 class="d-md-flex align-items-center justify-content-around">
@@ -307,21 +306,107 @@
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap4.js"></script>
 
 
-<script src="{{ asset('assets/js/jquery.radialBar.min.js') }}"></script>
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 
 <script>
-var data = [
-    {primaryColor: "#346946", secondaryColor: "#F4F4F4", progress: <?php echo $percent1; ?>, labelText: "Basic <?php echo $percent1; ?>%"},
-    {primaryColor: "#0BB74D", secondaryColor: "#F4F4F4", progress: <?php echo $percent2; ?>, labelText: "Essential <?php echo $percent2; ?>%"},
-    {primaryColor: "#36E895", secondaryColor: "#F4F4F4", progress: <?php echo $percent3; ?>, labelText: "Extended <?php echo $percent3; ?>%"},
-];
+// CHART CONFIG
+// -----------------------------
+let chartConfig = {
+  type: 'nestedpie',
+  title: {
+    text: 'Animated Nested Pie Chart',
+  },
+  legend: {
+    borderColor: 'gray',
+    borderRadius: '5px',
+    borderWidth: '1px',
+    dragHandler: 'icon',
+    header: {
+      text: 'Ages',
+      fontColor: 'purple',
+      fontFamily: 'Georgia',
+      fontSize: '12px',
+      fontWeight: 'normal',
+    },
+    icon: {
+      lineColor: 'orange',
+    },
+    item: {
+      fontColor: 'black',
+      fontFamily: 'Georgia',
+    },
+    lineStyle: 'dashdot',
+    marker: {
+      type: 'circle',
+    },
+    minimize: true,
+    toggleAction: 'remove',
+  },
+  plot: {
+    tooltip: {
+      text: '%data-year Ages %t: %v',
+      padding: '10%',
+      alpha: 0.7,
+      backgroundColor: 'white',
+      borderColor: 'gray',
+      borderRadius: '3px',
+      borderWidth: '1px',
+      fontColor: 'black',
+      fontFamily: 'Georgia',
+      fontSize: '12px',
+      lineStyle: 'dashdot',
+      textAlpha: 1,
+    },
+    valueBox: {
+      text: '%data-year',
+      fontColor: 'white',
+      fontFamily: 'Georgia',
+      fontSize: '12px',
+      fontWeight: 'normal',
+      rules: [
+        {
+          rule: '%p != 0',
+          visible: false,
+        },
+      ],
+    },
+    alpha: 0.8,
+    animation: {
+      effect: 'ANIMATION_EXPAND_LEFT',
+      onLegendToggle: false,
+      method: 'ANIMATION_BACK_EASE_OUT',
+      sequence: 'ANIMATION_BY_PLOT',
+      speed: 700,
+    },
+    borderColor: 'white',
+    borderWidth: '1px',
+    dataYear: ['Basic', 'Essential', 'Extended'],
+    shadow: false,
+    sliceStart: '30%',
+  },
+  series: [
+    {
+      text: 'Completed',
+      values: ["{{$completed[0]}}", "{{$completed[1]}}", "{{$completed[2]}}"],
+      backgroundColor: 'green blue',
+    },
+    {
+      text: 'Not-Completed',
+      values: [30, 59, 35],
+      backgroundColor: 'blue purple',
+    },
+  ],
+};
 
-$("#chartDiv").radialBar({
-    data: data,
-    width: "400",
-    height: "400",
-    strokeWidth: 15,
+// RENDER CHARTS
+// -----------------------------
+zingchart.render({
+  id: 'myChart',
+  data: chartConfig,
 });
+ 
+// RENDER CHARTS
+
 
     var tempcsrf = '{!! csrf_token() !!}';
     $(document).ready(function() {
