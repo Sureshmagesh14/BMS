@@ -21,11 +21,11 @@
             <optgroup label="Project">
                 <option value="3">Status > Complete</option>
                 {{-- <option value="3">Project Complete & Reward</option> --}}
-                <option value="export_survey_response">Export > Survey Responses</option>
+                {{-- <option value="export_survey_response">Export > Survey Responses</option> --}}
             </optgroup>
-            <optgroup label="Standalone Actions">
+            {{-- <optgroup label="Standalone Actions">
                 <option value="export_all_project">Export - All Projects</option>
-            </optgroup>
+            </optgroup> --}}
             @if (Auth::guard('admin')->user()->role_id == 1)
                 <optgroup label="Delete Project">
                     <option value="delete_all">Delete Selected</option>
@@ -34,10 +34,10 @@
             
         </select>
 
-        <select name="action_1" id="action_1" class="form-control projects_table show_hided_option select_box">
+        {{-- <select name="action_1" id="action_1" class="form-control projects_table show_hided_option select_box">
             <option value="">Select Action</option>
             <option value="delete_all">Export - All Projects</option>
-        </select>
+        </select> --}}
 
         <div class="play-button-container ml-3">
             <a class="play-button project_play_button">
