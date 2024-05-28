@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Session;
+use App\Models\Contents;
 
 class RegisteredUserController extends Controller
 {
@@ -24,8 +25,10 @@ class RegisteredUserController extends Controller
      * Display the registration view.
      */
     public function create(): View
+    
     {
-        return view('auth.register');
+        $content=Contents::where('type_id',1)->first();
+        return view('auth.register',compact('content'));
     }
 
     /**

@@ -59,5 +59,29 @@
             });
         }
     });
+
+    $(function() {
+        $('#content_form').validate({
+            rules: {
+                type_id: {
+                    required: true,
+                    remote: {
+                        url: '{{ route('check_content_duplicate') }}',
+                        data: { 'form_name': "useredit", 'id': '{{ $content->id }}' },
+                        asysc:false,
+                        type: "GET"
+                    }
+                },
+              
+
+            },
+            messages: {
+                type_id: {
+                    remote: "{{ __('Type Name already exists!') }}"
+                }
+            }
+        });
+    });
+
 </script>
         

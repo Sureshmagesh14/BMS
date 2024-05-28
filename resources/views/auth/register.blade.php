@@ -47,6 +47,10 @@
     label#whatsapp-error {
         width: 100% !important;
     }
+
+    a#policy {
+        color: blue;
+    }
 </style>
 <div class="container-fluid">
     <div class="row justify-content-center align-items-center d-flex">
@@ -115,8 +119,7 @@
                                     <div class="input-group-text">+27</div>
                                 </div>
                                 <input type="text" name="mobile" id="mobile" placeholder="081 966 0786"
-                                    class="form-control vi-border-clr border-radius-0 w-50" 
-                                    maxlength="16" required>
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
                             </div>
 
                         </div>
@@ -130,8 +133,7 @@
                                     <div class="input-group-text">+27</div>
                                 </div>
                                 <input type="text" name="whatsapp" id="whatsapp" placeholder="081 966 0786"
-                                    class="form-control vi-border-clr border-radius-0 w-50"
-                                    maxlength="16" required>
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
                             </div>
 
                         </div>
@@ -191,7 +193,7 @@
                     </div>
                     <div class="lname text-start w-48 me-auto my-3">
                         <input type="checkbox" id="terms" name="terms" class="form-check-input" required>
-                        <span class="form-check-label">Agree the <a data-bs-toggle="modal"
+                        <span class="form-check-label">Agree the <a id="policy" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal">terms and
                                 policy</a>.</span>
                     </div>
@@ -216,7 +218,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ...
+                {{$content->data}}
             </div>
 
         </div>
