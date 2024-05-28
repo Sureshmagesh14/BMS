@@ -2262,8 +2262,47 @@ class SurveyController extends Controller
             $time = $endedAt->diffInSeconds($startedAt); 
             $responseinfo = $startedAt->toDayDateTimeString().' | '.$time.' seconds';
             $other_details = json_decode($endtime->other_details);
+            $deviceID = '';
+            $device_name ='';
+            $browser =''; $os ='';$device_type='';
+            $lang_name =''; $long='';$lat =''; $location=''; $ip_address =''; $lang_code =''; $lang_name ='';
 
-            $result =['name'=>$user->name,'responseinfo'=>$responseinfo,'device_id'=>$other_details->device_id,'device_name'=>$other_details->device_name,'browser'=>$other_details->browser,'os'=>$other_details->os,'device_type'=>$other_details->device_type,'long'=>$other_details->long,'lat'=>$other_details->lat,'location'=>$other_details->location,'ip_address'=>$other_details->ip_address,'lang_code'=>$other_details->lang_code,'lang_name'=>$other_details->lang_name];
+            if(isset($other_details->device_id)){
+                $deviceID =$other_details->device_id;
+            }
+            if(isset($other_details->device_name)){
+                $deviceID =$other_details->device_name;
+            }
+            if(isset($other_details->browser)){
+                $browser =$other_details->browser;
+            }
+            if(isset($other_details->os)){
+                $os =$other_details->os;
+            }
+            if(isset($other_details->lang_name)){
+                $lang_name =$other_details->lang_name;
+            }
+            if(isset($other_details->lang_code)){
+                $lang_code =$other_details->lang_code;
+            }
+            if(isset($other_details->ip_address)){
+                $ip_address =$other_details->ip_address;
+            }
+            if(isset($other_details->location)){
+                $location =$other_details->location;
+            }
+            if(isset($other_details->lat)){
+                $lat =$other_details->lat;
+            }
+            if(isset($other_details->long)){
+                $long =$other_details->long;
+            }
+            if(isset($other_details->lang_name)){
+                $lang_name =$other_details->lang_name;
+            }
+            
+
+            $result =['name'=>$user->name,'responseinfo'=>$responseinfo,'device_id'=>$deviceID,'device_name'=>$device_name,'browser'=>$browser,'os'=>$os,'device_type'=>$device_type,'long'=>$long,'lat'=>$lat,'location'=>$location,'ip_address'=>$ip_address,'lang_code'=>$lang_code,'lang_name'=>$lang_name];
             foreach($question as $qus){
                 $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->first();
                 if($respone){
