@@ -9,17 +9,17 @@
                 <option value="0">Status > Failed</option>
                 <option value="delete_all">Delete Cash Outs</option>
             </optgroup>
-            <optgroup label="Standalone Actions">
-                <option value="export">Export - Airtime Cash Outs</option>
+            {{-- <optgroup label="Standalone Actions">
+                <option value="export">Export - Airtime Cash Outs</option> --}}
                 {{-- <option value="7">Airtime - Status > Complete by Import</option> --}}
-            </optgroup>
+            {{-- </optgroup> --}}
         </select>
 
-        <select name="action_1" id="action_1" class="form-control cashout_table show_hided_option cashout_select_box">
+        {{-- <select name="action_1" id="action_1" class="form-control cashout_table show_hided_option cashout_select_box">
             <option value="">Select Action</option>
             <option value="export">Export - Airtime Cash Outs</option>
             {{-- <option value="7">Airtime - Status > Complete by Import</option> --}}
-        </select>
+        {{-- </select> --}}
 
         <div class="play-button-container ml-3">
             <a class="play-button cashout_play_button">
