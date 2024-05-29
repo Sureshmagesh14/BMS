@@ -2300,9 +2300,13 @@ class SurveyController extends Controller
             if(isset($other_details->lang_name)){
                 $lang_name =$other_details->lang_name;
             }
+            $name = 'Anonymous';
+            if(isset($user->name)){
+                $name = $user->name;
+            }
             
 
-            $result =['name'=>$user->name,'responseinfo'=>$responseinfo,'device_id'=>$deviceID,'device_name'=>$device_name,'browser'=>$browser,'os'=>$os,'device_type'=>$device_type,'long'=>$long,'lat'=>$lat,'location'=>$location,'ip_address'=>$ip_address,'lang_code'=>$lang_code,'lang_name'=>$lang_name];
+            $result =['name'=>$name,'responseinfo'=>$responseinfo,'device_id'=>$deviceID,'device_name'=>$device_name,'browser'=>$browser,'os'=>$os,'device_type'=>$device_type,'long'=>$long,'lat'=>$lat,'location'=>$location,'ip_address'=>$ip_address,'lang_code'=>$lang_code,'lang_name'=>$lang_name];
             foreach($question as $qus){
                 $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->first();
                 if($respone){
@@ -2456,19 +2460,45 @@ class SurveyController extends Controller
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
             ]);
         }else{
-            // Generate a dynamic filename based on the current timestamp
-            $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.xlsx';
+            // // Generate a dynamic filename based on the current timestamp
+            // $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.xlsx';
 
-            // Generate the Excel content
-            $excelContent = $this->generateExcelContent($data);
+            // // Generate the Excel content
+            // $excelContent = $this->generateExcelContent($data);
 
-            // Store the Excel file
-            Storage::put($filename, $excelContent);
+            // // Store the Excel file
+            // Storage::put($filename, $excelContent);
+
+            // // Return a download response
+            // return response()->download(storage_path('app/' . $filename), $filename);
+             // Generate the Excel content and store the file directly
+            $filename = $survey->title.'_Report_' . now()->format('YmdHis') . '.xlsx';
+            $filePath = storage_path('app/' . $filename);
+            $this->generateAndStoreExcelContent($data, $filePath);
 
             // Return a download response
-            return response()->download(storage_path('app/' . $filename), $filename);
+            return response()->download($filePath, $filename);
         }
        
+    }
+    private function generateAndStoreExcelContent($data, $filePath)
+    {
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        // Set data into the spreadsheet
+        foreach ($data as $rowIndex => $row) {
+            foreach ($row as $columnIndex => $value) {
+                // Convert column index to alphabetic column name (e.g., 1 -> A, 2 -> B, ...)
+                $columnName = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex + 1);
+                $cellReference = $columnName . ($rowIndex + 1);
+                $worksheet->setCellValue($cellReference, $value);
+            }
+        }
+
+        // Create a writer object and save the file directly to the specified path
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save($filePath);
     }
 
     private function generateExcelContent($data)
