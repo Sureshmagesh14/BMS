@@ -10,6 +10,10 @@
         /* width: 709.406px; */
     }
 
+    a.zc-ref {
+        display: none;
+    }
+
     table#DataTables_Table_1 {
         /* width: 709.406px; */
     }
@@ -37,12 +41,11 @@
         line-height: 1.5 !important;
 
     }
+
     label {
         display: inline-block;
         margin-bottom: 0.5rem !important;
     }
-    
-  
 </style>
 @php
     $first_character = mb_substr($data->name, 0, 1);
@@ -221,26 +224,27 @@
 
 
                     <div class="text-center mt-4">
-                 
-                        <div id="myChart" class="chart--container">
-                            <a href="https://www.zingchart.com/" rel="noopener" class="zc-ref">Powered by ZingChart</a>
-                          </div>
-  
-                </div>
-                <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
-                    <h5 class="d-md-flex align-items-center justify-content-around">
-                        <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
-                                alt="">
-                            <span class="small-font-sm">Completed Survey</span>
-                        </div>
-                        <div class="px-3">
-                            <ul class="navbar-nav">
-                                <li class="nav-item dropdown">
-                                    <a class="btn btn-yellow" href="{{ route('user.cashouts') }}">Cashout
-                                        History</a>
 
-                                    </a>
-                                    {{-- <ul class="dropdown-menu">
+                        <div id="myChart" class="chart--container">
+                            <a href="https://www.zingchart.com/" rel="noopener" class="zc-ref">Powered by
+                                ZingChart</a>
+                        </div>
+
+                    </div>
+                    <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
+                        <h5 class="d-md-flex align-items-center justify-content-around">
+                            <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
+                                    alt="">
+                                <span class="small-font-sm">Completed Survey</span>
+                            </div>
+                            <div class="px-3">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item dropdown">
+                                        <a class="btn btn-yellow" href="{{ route('user.cashouts') }}">Cashout
+                                            History</a>
+
+                                        </a>
+                                        {{-- <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="{{ route('user.cashouts') }}">Cashout
                                                 History</a></li>
                                         <!-- <li>
@@ -248,55 +252,55 @@
                                         </li>
                                         <li><a class="dropdown-item" href="#">Unclaimed Rewards</a></li> -->
                                     </ul> --}}
-                                </li>
-                            </ul>
-                        </div>
-                    </h5>
-                    <div class="">
-                        <table class="table table-striped table-bordered table-hover dataTable"
-                            id="DataTables_Table_1" style="width: 100%;" aria-describedby="completed_info">
-                            <thead>
-                                <tr>
-                                    <th>NAME </th>
-                                    <th>DATE </th>
-                                    <th>TASK </th>
-                                    <th>REWARD POINTS </th>
-                                    <th>ACTION </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($get_completed_survey as $res)
+                                    </li>
+                                </ul>
+                            </div>
+                        </h5>
+                        <div class="">
+                            <table class="table table-striped table-bordered table-hover dataTable"
+                                id="DataTables_Table_1" style="width: 100%;" aria-describedby="completed_info">
+                                <thead>
                                     <tr>
-                                        <td>{{ $res->name }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
-                                        <td title="{{ $res->description }}">
-                                            {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
-                                        </td>
-                                        <td>{{ $res->reward }}</td>
-                                        @php
-                                            $get_link = \App\Models\Respondents::get_respondend_survey(
-                                                $res->survey_link,
-                                            );
-                                        @endphp
-                                        @if ($get_link != null)
-                                            <td><a class="btn btn-yellow" target="_blank"
-                                                    href="{{ url('survey/view', $get_link->builderID) }}">DETAIL</a>
-                                            </td>
-                                        @else
-                                            <td>No Survey</td>
-                                        @endif
+                                        <th>NAME </th>
+                                        <th>DATE </th>
+                                        <th>TASK </th>
+                                        <th>REWARD POINTS </th>
+                                        <th>ACTION </th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($get_completed_survey as $res)
+                                        <tr>
+                                            <td>{{ $res->name }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                            <td title="{{ $res->description }}">
+                                                {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
+                                            </td>
+                                            <td>{{ $res->reward }}</td>
+                                            @php
+                                                $get_link = \App\Models\Respondents::get_respondend_survey(
+                                                    $res->survey_link,
+                                                );
+                                            @endphp
+                                            @if ($get_link != null)
+                                                <td><a class="btn btn-yellow" target="_blank"
+                                                        href="{{ url('survey/view', $get_link->builderID) }}">DETAIL</a>
+                                                </td>
+                                            @else
+                                                <td>No Survey</td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+
+
             </div>
 
-
         </div>
-
-    </div>
     </div>
 </section>
 @include('user.layout.footer')
@@ -310,112 +314,109 @@
 <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 
 <script>
-// CHART CONFIG
+    // CHART CONFIG
 
-var completed_imp_one = @php echo $completed[0]; @endphp;
-var completed_imp_two = @php echo $completed[1]; @endphp;
-var completed_imp_three = @php echo $completed[2]; @endphp;
+    var completed_imp_one = @php echo $completed[0]; @endphp;
+    var completed_imp_two = @php echo $completed[1]; @endphp;
+    var completed_imp_three = @php echo $completed[2]; @endphp;
 
-var notcompleted_imp_one = @php echo $notcompleted[0]; @endphp;
-var notcompleted_imp_two = @php echo $notcompleted[1]; @endphp;
-var notcompleted_imp_three = @php echo $notcompleted[2]; @endphp;
+    var notcompleted_imp_one = @php echo $notcompleted[0]; @endphp;
+    var notcompleted_imp_two = @php echo $notcompleted[1]; @endphp;
+    var notcompleted_imp_three = @php echo $notcompleted[2]; @endphp;
 
-// -----------------------------
-let chartConfig = {
-  type: 'nestedpie',
-  title: {
-    text: 'Animated Nested Pie Chart',
-  },
-  legend: {
-    borderColor: 'gray',
-    borderRadius: '5px',
-    borderWidth: '1px',
-    dragHandler: 'icon',
-    header: {
-      text: 'Ages',
-      fontColor: 'purple',
-      fontFamily: 'Georgia',
-      fontSize: '12px',
-      fontWeight: 'normal',
-    },
-    icon: {
-      lineColor: 'orange',
-    },
-    item: {
-      fontColor: 'black',
-      fontFamily: 'Georgia',
-    },
-    lineStyle: 'dashdot',
-    marker: {
-      type: 'circle',
-    },
-    minimize: true,
-    toggleAction: 'remove',
-  },
-  plot: {
-    tooltip: {
-      text: '%data-year Ages %t: %v',
-      padding: '10%',
-      alpha: 0.7,
-      backgroundColor: 'white',
-      borderColor: 'gray',
-      borderRadius: '3px',
-      borderWidth: '1px',
-      fontColor: 'black',
-      fontFamily: 'Georgia',
-      fontSize: '12px',
-      lineStyle: 'dashdot',
-      textAlpha: 1,
-    },
-    valueBox: {
-      text: '%data-year',
-      fontColor: 'white',
-      fontFamily: 'Georgia',
-      fontSize: '12px',
-      fontWeight: 'normal',
-      rules: [
-        {
-          rule: '%p != 0',
-          visible: false,
+    // -----------------------------
+    let chartConfig = {
+        type: 'nestedpie',
+        title: {
+            text: 'Profile Pie Chart',
         },
-      ],
-    },
-    alpha: 0.8,
-    animation: {
-      effect: 'ANIMATION_EXPAND_LEFT',
-      onLegendToggle: false,
-      method: 'ANIMATION_BACK_EASE_OUT',
-      sequence: 'ANIMATION_BY_PLOT',
-      speed: 700,
-    },
-    borderColor: 'white',
-    borderWidth: '1px',
-    dataYear: ['Basic', 'Essential', 'Extended'],
-    shadow: false,
-    sliceStart: '30%',
-  },
-  series: [
-    {
-      text: 'Completed',
-      values: [completed_imp_one,completed_imp_two,completed_imp_three],
-      backgroundColor: 'green blue',
-    },
-    {
-      text: 'Not-Completed',
-      values: [notcompleted_imp_one,notcompleted_imp_two,notcompleted_imp_three],
-      backgroundColor: 'blue purple',
-    },
-  ],
-};
+        legend: {
+            borderColor: 'gray',
+            borderRadius: '5px',
+            borderWidth: '1px',
+            dragHandler: 'icon',
+            header: {
+                text: 'Status',
+                fontColor: 'purple',
+                fontFamily: 'Georgia',
+                fontSize: '12px',
+                fontWeight: 'normal',
+            },
+            icon: {
+                lineColor: 'orange',
+            },
+            item: {
+                fontColor: 'black',
+                fontFamily: 'Georgia',
+            },
+            lineStyle: 'dashdot',
+            marker: {
+                type: 'circle',
+            },
+            minimize: true,
+            toggleAction: 'remove',
+        },
+        plot: {
+            tooltip: {
+                text: '%data-year Ages %t: %v',
+                padding: '10%',
+                alpha: 0.7,
+                backgroundColor: 'white',
+                borderColor: 'gray',
+                borderRadius: '3px',
+                borderWidth: '1px',
+                fontColor: 'black',
+                fontFamily: 'Georgia',
+                fontSize: '12px',
+                lineStyle: 'dashdot',
+                textAlpha: 1,
+            },
+            valueBox: {
+                text: '%data-year',
+                fontColor: 'white',
+                fontFamily: 'Georgia',
+                fontSize: '12px',
+                fontWeight: 'normal',
+                rules: [{
+                    rule: '%p != 0',
+                    visible: false,
+                }, ],
+            },
+            alpha: 0.8,
+            animation: {
+                effect: 'ANIMATION_EXPAND_LEFT',
+                onLegendToggle: false,
+                method: 'ANIMATION_BACK_EASE_OUT',
+                sequence: 'ANIMATION_BY_PLOT',
+                speed: 700,
+            },
+            borderColor: 'white',
+            borderWidth: '1px',
+            dataYear: ['Basic', 'Essential', 'Extended'],
+            shadow: false,
+            sliceStart: '30%',
+        },
+        series: [{
+                text: 'Completed',
+                values: [completed_imp_one, completed_imp_two, completed_imp_three],
+                backgroundColor: 'green',
+            },
+            {
+                text: 'Not-Completed',
+                values: [notcompleted_imp_one, notcompleted_imp_two, notcompleted_imp_three],
+                backgroundColor: 'red',
+            },
+        ],
+    };
 
-// RENDER CHARTS
-// -----------------------------
-zingchart.render({
-  id: 'myChart',
-  data: chartConfig,
-});
- 
-// RENDER CHARTS
+    // RENDER CHARTS
+    // -----------------------------
+    zingchart.render({
+        id: 'myChart',
+        data: chartConfig,
+    });
+
+    // RENDER CHARTS
 
 
     var tempcsrf = '{!! csrf_token() !!}';
