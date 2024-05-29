@@ -168,8 +168,8 @@ font-size:45px;}
 <body class="bg-greybg">
   <nav class="navbar navbar-expand-lg bg-white">
     <div class="container-fluid align-items-end">
-      <a class="navbar-brand w-25" href="{{ route('user.dashboard') }}"><img
-          class="img-fluid w-75 m-auto" src="{{ asset('user/images/small-logo.png') }}"
+      <a class="navbar-brand w-25 w-sm-75" href="{{ route('user.dashboard') }}"><img
+          class="img-fluid w-75 m-auto w-sm-100" src="{{ asset('user/images/small-logo.png') }}"
           alt=""></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
         aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">

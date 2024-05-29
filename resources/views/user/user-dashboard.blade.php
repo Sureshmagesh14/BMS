@@ -53,6 +53,7 @@
 <link rel="stylesheet" type="text/css"
     href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap4.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.min.css">
 <section class="">
     <div class="container-fluid">
 
@@ -108,13 +109,13 @@
 
             </div>
             <div class="col-md-5 my-sm-5-mob">
-                <div class="bg-white">
-                    <iframe class="w-100 px-5 my-3" style="height:400px;"
+                {{-- <div class="bg-white">
+                    <iframe class="w-100 px-5 my-3 h-400 h-sm-100"
                         src="https://www.youtube.com/embed/vGq8cT1qF60?si=7D_j6L0CbrIj-wBw" title="YouTube video player"
                         frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowfullscreen></iframe>
-                </div>
+                </div> --}}
                 <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
                     <h5 class="d-flex align-items-center justify-content-around">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
@@ -137,7 +138,7 @@
                             </ul> -->
                         </div>
                     </h5>
-                    <div class="table-responsive">
+                    <div class="">
                         <table class="table table-striped table-bordered table-hover dataTable" id="DataTables_Table_0"
                             style="width: 100%;" aria-describedby="example_info">
                             <thead>
@@ -173,13 +174,8 @@
                     </div>
                 </div>
 
-            </div>
-
-            <div class="col-md-5">
-                <div class="bg-white" style="min-height: 440px;;">
-
-
-                    <h5 class="d-flex align-items-center justify-content-around vi-light-grey small-font-sm">
+                <div class="bg-white my-2 max-w-100" style="min-height: 440px;;">
+                    {{-- <h5 class="d-flex align-items-center justify-content-around vi-light-grey small-font-sm">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-06.png') }}"
                                 alt="">
                             <span>Plan Status</span>
@@ -219,84 +215,83 @@
                                 </ul>
                             </h5>
                         </div>
-                    </h5>
+                    </h5> --}}
 
-
+                   
                     <div class="text-center mt-4">
-
                         <div id="myChart" class="chart--container">
                             <a href="https://www.zingchart.com/" rel="noopener" class="zc-ref">Powered by
                                 ZingChart</a>
                         </div>
-
-                    </div>
-                    <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
-                        <h5 class="d-md-flex align-items-center justify-content-around">
-                            <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
-                                    alt="">
-                                <span class="small-font-sm">Completed Survey</span>
-                            </div>
-                            <div class="px-3">
-                                <ul class="navbar-nav">
-                                    <li class="nav-item dropdown">
-                                        <a class="btn btn-yellow" href="{{ route('user.cashouts') }}">Cashout
-                                            History</a>
-
-                                        </a>
-                                        {{-- <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('user.cashouts') }}">Cashout
-                                                History</a></li>
-                                        <!-- <li>
-                                            <hr class="dropdown-divider" />
-                                        </li>
-                                        <li><a class="dropdown-item" href="#">Unclaimed Rewards</a></li> -->
-                                    </ul> --}}
-                                    </li>
-                                </ul>
-                            </div>
-                        </h5>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover dataTable"
-                                id="DataTables_Table_1" style="width: 100%;" aria-describedby="completed_info">
-                                <thead>
-                                    <tr>
-                                        <th>NAME </th>
-                                        <th>DATE </th>
-                                        <th>TASK </th>
-                                        <th>REWARD POINTS </th>
-                                        <th>ACTION </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($get_completed_survey as $res)
-                                        <tr>
-                                            <td>{{ $res->name }}</td>
-                                            <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
-                                            <td title="{{ $res->description }}">
-                                                {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
-                                            </td>
-                                            <td>{{ $res->reward }}</td>
-                                            @php
-                                                $get_link = \App\Models\Respondents::get_respondend_survey(
-                                                    $res->survey_link,
-                                                );
-                                            @endphp
-                                            @if ($get_link != null)
-                                                <td><a class="btn btn-yellow" target="_blank"
-                                                        href="{{ url('survey/view', $get_link->builderID) }}">DETAIL</a>
-                                                </td>
-                                            @else
-                                                <td>No Survey</td>
-                                            @endif
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="col-md-5">
+                <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
+                    <h5 class="d-md-flex align-items-center justify-content-around">
+                        <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
+                                alt="">
+                            <span class="small-font-sm">Completed Survey</span>
+                        </div>
+                        <div class="px-3">
+                            <ul class="navbar-nav">
+                                <li class="nav-item dropdown">
+                                    <a class="btn btn-yellow" href="{{ route('user.cashouts') }}">Cashout
+                                        History</a>
 
+                                    </a>
+                                    {{-- <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ route('user.cashouts') }}">Cashout
+                                            History</a></li>
+                                    <!-- <li>
+                                        <hr class="dropdown-divider" />
+                                    </li>
+                                    <li><a class="dropdown-item" href="#">Unclaimed Rewards</a></li> -->
+                                </ul> --}}
+                                </li>
+                            </ul>
+                        </div>
+                    </h5>
+                    <div class="">
+                        <table class="table table-striped table-bordered table-hover dataTable"
+                            id="DataTables_Table_1" style="width: 100%;" aria-describedby="completed_info">
+                            <thead>
+                                <tr>
+                                    <th>NAME </th>
+                                    <th>DATE </th>
+                                    <th>TASK </th>
+                                    <th>REWARD POINTS </th>
+                                    <th>ACTION </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($get_completed_survey as $res)
+                                    <tr>
+                                        <td>{{ $res->name }}</td>
+                                        <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                        <td title="{{ $res->description }}">
+                                            {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
+                                        </td>
+                                        <td>{{ $res->reward }}</td>
+                                        @php
+                                            $get_link = \App\Models\Respondents::get_respondend_survey(
+                                                $res->survey_link,
+                                            );
+                                        @endphp
+                                        @if ($get_link != null)
+                                            <td><a class="btn btn-yellow" target="_blank"
+                                                    href="{{ url('survey/view', $get_link->builderID) }}">DETAIL</a>
+                                            </td>
+                                        @else
+                                            <td>No Survey</td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -327,7 +322,7 @@
     let chartConfig = {
         type: 'nestedpie',
         title: {
-            text: 'Profile Pie Chart',
+            text: 'Profile Status',
         },
         legend: {
             borderColor: 'gray',
@@ -357,7 +352,7 @@
         },
         plot: {
             tooltip: {
-                text: '%data-year Ages %t: %v',
+                text: '%data-year %t: %v',
                 padding: '10%',
                 alpha: 0.7,
                 backgroundColor: 'white',

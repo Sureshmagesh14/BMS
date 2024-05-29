@@ -3,13 +3,17 @@
     <div class="container">
     <div class="container py-3">
         <div class="row justify-content-center align-items-center">
-        <div class="col-md-6">
-            <div class="d-flex align-items-end">
-            <p class="mb-0 pb-0">@ 2024 The Brand Surgeon</p>
-            <a href="" class="nav-link px-5 mb-0 pb-0">Terms & Conditions</a>
+        <div class="col-md-6 col-sm-12">
+                <div class="d-md-flex d-lg-flex d-sm-block align-items-end">
+                    <p class="mb-0 pb-0">@
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script> {{ Config::get('constants.app_title') }}
+                    </p>
+                    <a class="ps-2" href="{{ route('terms') }}" class="nav-link mb-0 pb-0">Terms & Conditions</a>
+                </div>
             </div>
-        </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-12">
             <div class="social-icons text-end">
             <a href="https://www.instagram.com/thebrandsurgeon/?igshid=YmMyMTA2M2Y%3D"><i class="fa fa-instagram" aria-hidden="true"></i></a>
             <a href="https://www.facebook.com/thebrandsurgeonsa"><i class="fa fa-facebook" aria-hidden="true"></i></a>
