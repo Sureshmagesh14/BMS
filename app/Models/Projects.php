@@ -21,4 +21,9 @@ class Projects extends Model
             'client' => $this->client
         ];
     }
+
+    public static function get_user_name($userid){
+        return User::where('id',$userid)->first();
+    }
+
 }

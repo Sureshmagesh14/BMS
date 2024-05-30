@@ -2262,8 +2262,51 @@ class SurveyController extends Controller
             $time = $endedAt->diffInSeconds($startedAt); 
             $responseinfo = $startedAt->toDayDateTimeString().' | '.$time.' seconds';
             $other_details = json_decode($endtime->other_details);
+            $deviceID = '';
+            $device_name ='';
+            $browser =''; $os ='';$device_type='';
+            $lang_name =''; $long='';$lat =''; $location=''; $ip_address =''; $lang_code =''; $lang_name ='';
 
-            $result =['name'=>$user->name,'responseinfo'=>$responseinfo,'device_id'=>$other_details->device_id,'device_name'=>$other_details->device_name,'browser'=>$other_details->browser,'os'=>$other_details->os,'device_type'=>$other_details->device_type,'long'=>$other_details->long,'lat'=>$other_details->lat,'location'=>$other_details->location,'ip_address'=>$other_details->ip_address,'lang_code'=>$other_details->lang_code,'lang_name'=>$other_details->lang_name];
+            if(isset($other_details->device_id)){
+                $deviceID =$other_details->device_id;
+            }
+            if(isset($other_details->device_name)){
+                $deviceID =$other_details->device_name;
+            }
+            if(isset($other_details->browser)){
+                $browser =$other_details->browser;
+            }
+            if(isset($other_details->os)){
+                $os =$other_details->os;
+            }
+            if(isset($other_details->lang_name)){
+                $lang_name =$other_details->lang_name;
+            }
+            if(isset($other_details->lang_code)){
+                $lang_code =$other_details->lang_code;
+            }
+            if(isset($other_details->ip_address)){
+                $ip_address =$other_details->ip_address;
+            }
+            if(isset($other_details->location)){
+                $location =$other_details->location;
+            }
+            if(isset($other_details->lat)){
+                $lat =$other_details->lat;
+            }
+            if(isset($other_details->long)){
+                $long =$other_details->long;
+            }
+            if(isset($other_details->lang_name)){
+                $lang_name =$other_details->lang_name;
+            }
+            $name = 'Anonymous';
+            if(isset($user->name)){
+                $name = $user->name;
+            }
+            
+
+            $result =['name'=>$name,'responseinfo'=>$responseinfo,'device_id'=>$deviceID,'device_name'=>$device_name,'browser'=>$browser,'os'=>$os,'device_type'=>$device_type,'long'=>$long,'lat'=>$lat,'location'=>$location,'ip_address'=>$ip_address,'lang_code'=>$lang_code,'lang_name'=>$lang_name];
             foreach($question as $qus){
                 $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->first();
                 if($respone){
@@ -2417,19 +2460,45 @@ class SurveyController extends Controller
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
             ]);
         }else{
-            // Generate a dynamic filename based on the current timestamp
-            $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.xlsx';
+            // // Generate a dynamic filename based on the current timestamp
+            // $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.xlsx';
 
-            // Generate the Excel content
-            $excelContent = $this->generateExcelContent($data);
+            // // Generate the Excel content
+            // $excelContent = $this->generateExcelContent($data);
 
-            // Store the Excel file
-            Storage::put($filename, $excelContent);
+            // // Store the Excel file
+            // Storage::put($filename, $excelContent);
+
+            // // Return a download response
+            // return response()->download(storage_path('app/' . $filename), $filename);
+             // Generate the Excel content and store the file directly
+            $filename = $survey->title.'_Report_' . now()->format('YmdHis') . '.xlsx';
+            $filePath = storage_path('app/' . $filename);
+            $this->generateAndStoreExcelContent($data, $filePath);
 
             // Return a download response
-            return response()->download(storage_path('app/' . $filename), $filename);
+            return response()->download($filePath, $filename);
         }
        
+    }
+    private function generateAndStoreExcelContent($data, $filePath)
+    {
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        // Set data into the spreadsheet
+        foreach ($data as $rowIndex => $row) {
+            foreach ($row as $columnIndex => $value) {
+                // Convert column index to alphabetic column name (e.g., 1 -> A, 2 -> B, ...)
+                $columnName = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex + 1);
+                $cellReference = $columnName . ($rowIndex + 1);
+                $worksheet->setCellValue($cellReference, $value);
+            }
+        }
+
+        // Create a writer object and save the file directly to the specified path
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save($filePath);
     }
 
     private function generateExcelContent($data)

@@ -1,23 +1,23 @@
 {{-- <a class="dropdown-item" href="{{ url('tags_export/xlsx') }}">Panels</a> --}}
 <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
     <div class="btn-group mr-2" role="group" aria-label="First group">
-        <select name="action_2" id="action_2" class="form-control tags_table hided_option tags_select_box"
+        {{-- <select name="action_2" id="action_2" class="form-control tags_table hided_option tags_select_box"
             style="display:none;">
             <option value="">Select Action</option>
             <optgroup label="Respondents">
                 <option value="respondents">Export - Respondents</option>
             </optgroup>
-            <optgroup label="Standalone Actions">
+            <optgroup label="Standalone Actions"> --}}
                 {{-- <option value="2">Import - Respondents</option> --}}
-                <option value="panels">Export - Pannels</option>
+                {{-- <option value="panels">Export - Pannels</option>
             </optgroup>
-        </select>
+        </select> --}}
 
-        <select name="action_1" id="action_1" class="form-control tags_table show_hided_option tags_select_box">
-            <option value="">Select Action</option>
+        {{-- <select name="action_1" id="action_1" class="form-control tags_table show_hided_option tags_select_box">
+            <option value="">Select Action</option> --}}
             {{-- <option value="2">Import - Respondents</option> --}}
-            <option value="panels">Export - Pannels</option>
-        </select>
+            {{-- <option value="panels">Export - Pannels</option>
+        </select> --}}
     </div>
 
 

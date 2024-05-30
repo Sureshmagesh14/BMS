@@ -136,6 +136,17 @@
 
                                                 </div>
                                             </div>
+                                            <div class="form-group row show_user">
+                                                <label class="col-md-2 col-form-label">Select User</label>
+                                                <div class="col-md-10">
+                                                <select id="user" name="user" class="w-full form-control form-select" >
+                                                    <option value="" selected="selected" disabled="disabled">Please select</option>
+                                                    @foreach ($users_list as $user)
+                                                        <option value="{{ $user->id }}">{{ $user->name }} {{ $user->surname }}</option>
+                                                    @endforeach
+                                                </select>
+                                                </div>
+                                            </div>
                                             <div class="modal-footer">
                                                 <button type="submit" class="btn btn-primary">Export</button>
                                             </div>
@@ -158,6 +169,7 @@ $(document).ready(function(){
     $(".show_resp").hide();
     $(".show_resp_status").hide();
     $(".show_resp_type").hide();
+    $(".show_user").hide();
     
     $(".show_year").hide();
     $(".show_month").hide();
@@ -174,6 +186,7 @@ $(document).ready(function(){
         $(".show_resp").show();
         $(".show_resp_status").hide();
         $(".show_resp_type").hide();
+        $(".show_user").hide();
       }
       else if ( this.value == 'Respondents info')
       {
@@ -182,6 +195,7 @@ $(document).ready(function(){
         $(".show_resp").hide();
         $(".show_resp_type").show();
         $(".show_resp_status").hide();
+        $(".show_user").hide();
       }
       else if (( this.value == 'Cashout')||( this.value == 'Rewards'))
       {
@@ -190,9 +204,19 @@ $(document).ready(function(){
         $(".show_resp").hide();
         $(".show_resp_status").hide();
         $(".show_resp_type").hide();
+        $(".show_user").hide();
+      }else if ( this.value == 'Team Activity')
+      {
+        $(".show_year").hide();
+        $(".show_month").hide();
+        $(".show_resp").hide();
+        $(".show_resp_status").hide();
+        $(".show_resp_type").hide();
+        $(".show_user").show();
       }
       else
       {
+        $(".show_user").hide();
         $(".show_year").hide();
         $(".show_month").hide();
         $(".show_resp").hide();
