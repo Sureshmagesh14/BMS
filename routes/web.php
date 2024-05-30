@@ -52,6 +52,8 @@ Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'v
 Route::any('get_area', 'ProfileController@get_area')->middleware(['auth', 'verified'])->name('get_area');
 Route::any('profile_save', 'ProfileController@profile_save')->middleware(['auth', 'verified'])->name('profile_save');
 
+Route::any('createFile', 'WelcomeController@createFile')->name('createFile');
+
 /* USERS */
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
