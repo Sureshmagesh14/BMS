@@ -767,13 +767,31 @@ class WelcomeController extends Controller
                             ->where('c.status_id',5)->where('c.type_id',1)->get();
             // status_id ApprovedForProcessing  type_id eft
 
-            dd($cashouts);
+            //dd($cashouts);
             
             if (count($cashouts)) {
                 $batch = $this->generateBatchFile($cashouts);
                 //dd($batch);
 
                 $key = '2dee881e-8c53-4fb8-9e2a-c9ad3c6fc3bd';
+
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL,"https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl");
+                curl_setopt($ch, CURLOPT_POST, 1);
+                //curl_setopt($ch, CURLOPT_POSTFIELDS,"postvar1=value1&postvar2=value2&postvar3=value3");
+
+                // In real life you should use something like:
+                 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('ServiceKey' => $key,'File' => $batch)));
+
+                // Receive server response ...
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                $server_output = curl_exec($ch);
+
+                curl_close($ch);
+                
+                dd($server_output);
 
                 $curl = curl_init();
 
