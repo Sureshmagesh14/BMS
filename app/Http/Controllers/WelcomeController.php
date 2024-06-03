@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Session;
 use Illuminate\Support\Facades\Auth;
+use Soap;
+
 class WelcomeController extends Controller
 {
     public function home(Request $request)
@@ -758,8 +760,6 @@ class WelcomeController extends Controller
     public function createFile(){
 
         try {
-
-          
             // starts
 
             $cashouts = DB::table('cashouts as c')
@@ -775,6 +775,48 @@ class WelcomeController extends Controller
                 //dd($batch);
 
                 $key = '2dee881e-8c53-4fb8-9e2a-c9ad3c6fc3bd';
+
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => array('ServiceKey' => $key,'File' => $batch),
+                CURLOPT_HTTPHEADER => array(
+                    'Cookie: ASP.NET_SessionId=qekk3poz2eerjhrdz2nnmvx1; ApplicationGatewayAffinity=ea2e72380504a82d4dd5a81e13fd6150; ApplicationGatewayAffinityCORS=ea2e72380504a82d4dd5a81e13fd6150'
+                ),
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
+                dd($response);
+
+
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL,"https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl");
+                curl_setopt($ch, CURLOPT_POST, 1);
+                //curl_setopt($ch, CURLOPT_POSTFIELDS,"postvar1=value1&postvar2=value2&postvar3=value3");
+
+                // In real life you should use something like:
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('ServiceKey' => $key,'File' => $batch)));
+
+                // Receive server response ...
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                $server_output = curl_exec($ch);
+
+                curl_close($ch);
+                dd($server_output);
+                
+
                 $response = Soap::baseWsdl('https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl')->BatchFileUpload(['ServiceKey' => $key ,'File' => $batch]);
                 //Log::info([$batch, $response->body()]);
                 
@@ -798,6 +840,7 @@ class WelcomeController extends Controller
 
     }
 
+    
     public function generateBatchFile($cashouts)
     {
         $total = 0;
@@ -810,6 +853,8 @@ class WelcomeController extends Controller
 
         $batchFile = "H\t" . $serviceKey . "\t1\t" . $instruction . "\t" . $batchName . "\t" . $date . "\t" . $vendorKey . "\n";
         $batchFile .= "K\t101\t102\t131\t132\t133\t134\t135\t136\t162\t252\n";
+
+        //dd($cashouts);
 
         foreach ($cashouts as $cashout) {
             // $total += 1;
