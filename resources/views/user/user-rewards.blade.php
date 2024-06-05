@@ -3,7 +3,19 @@
 
 <section class="bg-greybg vh-100">
     <div class="container">
+        
+       <br> <br>
+            <!-- <div class="alert alert-danger bs-alert-old-docs text-center">
+                <strong>Alert</strong> Bank Details Incomplete <a href="{{ route('update_bank') }}">Update
+                    Bank Info</a>
+                <br>
+                <small class="leading-none mt-1 text-danger">Cash outs are only available if your profile is up to date.
+                    Please update your profile.</small>
+            </div> -->
+        
+
         <div class="row justify-content-center">
+
 
             <div class="col-md-3 " style="margin-top: 5% !important;">
                 <div class="position-relative text-center vi-gift-box">

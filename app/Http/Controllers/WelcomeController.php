@@ -347,12 +347,14 @@ class WelcomeController extends Controller
                 $get_bank = null;
             }
             
-            dd($get_cashout);
+            $bank_data = Respondents::where('id', $resp_id)->first();
+            
+            //dd($bank_data);
 
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-            return view('user.user-rewards')->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
+            return view('user.user-rewards')->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank)->with('bank_data', $bank_data);
             //}
 
         } catch (Exception $e) {

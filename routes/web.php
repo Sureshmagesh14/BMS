@@ -51,7 +51,7 @@ Route::any('updateprofile_wizard', 'ProfileController@updateprofile_wizard')->mi
 Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'verified'])->name('get_suburb');
 Route::any('get_area', 'ProfileController@get_area')->middleware(['auth', 'verified'])->name('get_area');
 Route::any('profile_save', 'ProfileController@profile_save')->middleware(['auth', 'verified'])->name('profile_save');
-Route::any('update_bank', 'WelcomeController@update_bank')->middleware(['auth', 'verified'])->name('user.update_bank');
+Route::any('update_bank', 'WelcomeController@update_bank')->middleware(['auth', 'verified'])->name('update_bank');
 Route::any('bank_save', 'WelcomeController@bank_save')->middleware(['auth', 'verified'])->name('bank_save');
 
 Route::any('createFile', 'WelcomeController@createFile')->name('createFile');

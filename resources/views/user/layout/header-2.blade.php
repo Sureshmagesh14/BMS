@@ -223,6 +223,8 @@ font-size:45px;}
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{{ route('updateprofile_wizard') }}">View Profile</a>
                 </li>
+                <!-- <li><a class="dropdown-item" href="{{ route('update_bank') }}">Update Bank Info</a>
+                </li> -->
                 {{-- {{ route('user.viewprofile') }} --}}
                
                 <li>

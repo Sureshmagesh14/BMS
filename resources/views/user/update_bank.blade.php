@@ -15,7 +15,7 @@
                 @csrf
 
                 <div class="first-row d-md-flex text-center">
-                <div><img class="w-5 me-2 ms-3 my-3" src="http://localhost/bms_new/public/user/images/icons/1c-07.png" alt=""> <span class="small-font-sm">Update Bank Details</span> </div>
+                <div><img class="w-5 me-2 ms-3 my-3" src="http://localhost/bms_new/public/user/images/icons/1c-07.png" alt=""> <span class="small-font-sm">Update Bank Info</span> </div>
                 </div>
                  <div class="first-row d-md-flex">
                      <div class="email text-start w-100 m-auto my-3">
