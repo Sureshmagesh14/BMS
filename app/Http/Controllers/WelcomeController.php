@@ -346,6 +346,8 @@ class WelcomeController extends Controller
             } else {
                 $get_bank = null;
             }
+            
+            dd($get_cashout);
 
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
@@ -492,7 +494,43 @@ class WelcomeController extends Controller
         }
     }
 
-    
+    public function update_bank(){
+        try {
+
+            $resp_id = Session::get('resp_id');
+            $resp_name = Session::get('resp_name');
+
+            $bank_data = Respondents::where('id', $resp_id)->first();
+            $bank_list = DB::table('banks')->where('active',1)->get();
+
+            return view('user.update_bank',compact('bank_list','bank_data'));
+        
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    public function bank_save(Request $request){
+        
+        $resp_id = Session::get('resp_id');
+
+        $bank_list = DB::table('banks')->where('id',$request->bank_name)->where('active',1)->first();
+        $bank_name = $bank_list->bank_name;
+        $branch_code = $bank_list->branch_code;
+        
+        
+        //dd($request);
+
+        $up_array = array(
+            'bank_name' => $request->bank_name,
+            'branch_code' => $branch_code,
+            'account_type' => $request->account_type,
+            'account_holder' => $request->account_holder,
+            'account_number' => $request->account_number,
+        );
+
+        Respondents::where('id', $resp_id)->update($up_array);
+        return redirect()->back()->withsuccess('Saved Successfully');
+    }
 
     public function user_profile(Request $request)
     {
@@ -779,28 +817,50 @@ class WelcomeController extends Controller
 
                 curl_setopt($ch, CURLOPT_URL,"https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl");
                 curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_FAILONERROR, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query(array('ServiceKey' => $key,'File' => $batch)));
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: text/html; charset=UTF-8'));
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 
+                // receive server response ...
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                
+                $server_output = curl_exec ($ch);
+                $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $curl_errno= curl_errno($ch);
+
+                curl_close ($ch);
+                dd($http_status);
+                
+                //starts 
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL,"https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl");
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_FAILONERROR, true);
+
                 // In real life you should use something like:
                  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('ServiceKey' => $key,'File' => $batch)));
 
                 // Receive server response ...
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
+                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                 
+                 
                 $server_output = curl_exec($ch);
+                //$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 
-                if (curl_errno($ch)) {
-                    $error_msg = curl_error($ch);
-                }
-                curl_close($ch);
+                // if (curl_errno($ch)) {
+                //     $error_msg = curl_error($ch);
+                // }
+                // curl_close($ch);
                 
-                if (isset($error_msg)) {
-                    // TODO - Handle cURL error accordingly
-                    dd($error_msg);
-                }
-
+                // if (isset($error_msg)) {
+                //     // TODO - Handle cURL error accordingly
+                //     dd($error_msg);
+                // }
+                
                 curl_close($ch);
              
+                //print_r($server_output);
                 dd($server_output);
 
                 $curl = curl_init();
