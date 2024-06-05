@@ -83,7 +83,7 @@
             <input type="url" class="form-control" id="project_link"
                 value="{{ Config::get('constants.url') . $refcode }}" disabled>
             <input type="hidden" class="form-control" name="project_link"
-                value="{{ Config::get('constants.url') . $refcode }}" >
+                value="{{ Config::get('constants.url') . $refcode }}">
         </div>
     </div>
 
@@ -181,7 +181,7 @@
     </div>
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Survey Link *
+        <label for="example-search-input" class="col-md-2 col-form-label">Survey Name*
         </label>
         <div class="col-md-10">
             <select id="survey_link" name="survey_link" class="w-full form-control form-select" required>
@@ -196,6 +196,20 @@
             </select>
         </div>
     </div>
+
+    <div class="form-group row">
+        <label for="example-search-input" class="col-md-2 col-form-label">Survey Link
+        </label>
+        <div class="col-md-10">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="survey" id="survey" readonly>
+                <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2" onclick="copy_link();">Copy</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
@@ -232,4 +246,38 @@
             });
         }
     });
+
+    $("#survey_link").change(function() {
+        var survey = this.value;
+        $.ajax({
+
+            type: "GET",
+            url: "{{ route('get_survey_link') }}",
+            data: {
+                "survey_id": survey,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                console.log("response", data.repsonse);
+                $("#survey").val(data.repsonse);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
+    });
+
+    function copy_link() {
+        var checkval = $('#survey').val();
+        if (checkval != '') {
+            let copyGfGText = document.getElementById("survey");
+            copyGfGText.select();
+            document.execCommand("copy");
+            toastr.success('Survey Link Copied Successfully');
+        } else {
+            toastr.error('No Survey Link Found');
+        }
+    }
 </script>

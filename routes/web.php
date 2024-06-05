@@ -122,6 +122,8 @@ Route::group([
     Route::any('project_attach_store', 'ProjectsController@project_attach_store')->name('project_attach_store');
     Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
     Route::any('project_action', 'ProjectsController@project_action')->name('project_action');
+    Route::any('get_survey_link', 'ProjectsController@get_survey_link')->name('get_survey_link');
+    
 
     /* Respondents MENU*/
     Route::resource('respondents', 'RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
