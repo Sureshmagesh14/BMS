@@ -779,7 +779,8 @@ class WelcomeController extends Controller
 
                 curl_setopt($ch, CURLOPT_URL,"https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl");
                 curl_setopt($ch, CURLOPT_POST, 1);
-             
+                curl_setopt($ch, CURLOPT_FAILONERROR, true);
+                
                 // In real life you should use something like:
                  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('ServiceKey' => $key,'File' => $batch)));
 
