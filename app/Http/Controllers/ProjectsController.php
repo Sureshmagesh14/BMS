@@ -765,7 +765,7 @@ class ProjectsController extends Controller
         $survey_id = $request->survey_id;
         $app_url=config('app.url'); 
         $get_survey=Projects::get_survey($survey_id);
-        $repsonse=$app_url.'survey/view/'.$get_survey->builderID;
+        $repsonse=$app_url.'/survey/view/'.$get_survey->builderID;
 
         return response()->json(['repsonse' => $repsonse], 200);
     }

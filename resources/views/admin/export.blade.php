@@ -2,7 +2,8 @@
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
-<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/wenzhixin/multiple-select/e14b36de/multiple-select.css">
+<link rel="stylesheet" type="text/css"
+    href="https://cdn.rawgit.com/wenzhixin/multiple-select/e14b36de/multiple-select.css">
 <style>
     #demo {
         display: none;
@@ -168,19 +169,20 @@
                                 </div>
 
                                 <div class="form-group row respondents">
-                                    <label class="col-md-2 col-form-label">Type</label>
+                                    <label class="col-md-2 col-form-label">Respondents</label>
                                     <div class="col-md-10">
 
-                                        <input class="form-control" type="text" id="respondents" name="respondents[]" value="{{ request()->get('q') }}" required>
+                                        <input class="form-control" type="text" id="respondents"
+                                            name="respondents[]" value="{{ request()->get('q') }}" required>
                                     </div>
                                 </div>
 
-                              
+
                                 <div class="form-group row show_user">
                                     <label class="col-md-2 col-form-label">Select Respondents</label>
                                     <div class="col-md-10">
-                                        <select id="user" name="user[]"  multiple="multiple"
-                                             style="width: 100%;">
+                                        <select id="user" name="user[]" multiple="multiple"
+                                            style="width: 100%;">
                                             <option value="" selected="selected" disabled="disabled">Please
                                                 select</option>
                                             @foreach ($users_list as $user)
@@ -197,7 +199,7 @@
                         </div>
                     </div>
                 </div>
-             
+
             </div>
 
             <!-- end col-->
@@ -217,18 +219,21 @@
                     $(".show_user").hide();
                     $(".report_type").hide();
                     $(".respondents").hide();
-                    
-
                     $(".show_year").hide();
                     $(".show_month").hide();
-
                     $("#module").val("");
                     $("#year").val("");
                     $("#month").val("");
 
-                    $('#module,.report_type').on('change', function() {
-                        var report_type=$('input[name="type_method"]:checked').val();
-                        console.log("report_type",report_type);
+                    $('input[type=radio][name=type_method]').change(function() {
+                        if (this.value == 'Individual') {
+                            $(".respondents").show();
+                        } else if (this.value == 'All') {
+                            $(".respondents").hide();
+                        }
+                    });
+
+                    $('#module').on('change', function() {
                         if (this.value == 'Respondents') {
                             $(".show_year").hide();
                             $(".show_month").hide();
@@ -237,9 +242,8 @@
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
                             $(".respondents").show();
-                            
                             $(".report_type").show();
-                        } else if (this.value == 'Respondents info' || report_type=='Individual') {
+                        } else if (this.value == 'Respondents info') {
                             $(".show_year").hide();
                             $(".show_month").hide();
                             $(".show_resp").hide();
@@ -247,17 +251,7 @@
                             $(".show_resp_status").hide();
                             $(".show_user").hide();
                             $(".report_type").show();
-                            $(".respondents").show();
-
-                        }else if (this.value == 'Respondents info' || report_type=='All') {
-                            $(".show_year").hide();
-                            $(".show_month").hide();
-                            $(".show_resp").hide();
-                            $(".show_resp_type").show();
-                            $(".show_resp_status").hide();
-                            $(".show_user").hide();
-                            $(".report_type").show();
-                            $(".respondents").show();
+                            $(".respondents").hide();
 
                         } else if ((this.value == 'Cashout') || (this.value == 'Rewards')) {
                             $(".show_year").hide();
@@ -288,31 +282,31 @@
                             $(".show_month").hide();
                         }
                     });
-                       // Initialize multiple select on your regular select
-    $("#user").multipleSelect({
-        filter: true
-    });
+                    // Initialize multiple select on your regular select
+                    $("#user").multipleSelect({
+                        filter: true
+                    });
 
-    $("#respondents").tokenInput("{{ route('respondent_seach_result') }}", {
-        propertyToSearch: "name",
-        tokenValue: "id",
-        tokenDelimiter: ",",
-        hintText: "{{ __('Search Respondent... By(ID, Name, Surname, Mobile)') }}",
-        noResultsText: "{{ __('Respondent not found.') }}",
-        searchingText: "{{ __('Searching...') }}",
-        deleteText: "&#215;",
-        minChars: 2,
-        tokenLimit: 20,
-        zindex: 9999,
-        animateDropdown: false,
-        resultsLimit: 20,
-        deleteText: "&times;",
-        preventDuplicates: true,
-        theme: "bootstrap"
-    });
+                    $("#respondents").tokenInput("{{ route('respondent_seach_result') }}", {
+                        propertyToSearch: "name",
+                        tokenValue: "id",
+                        tokenDelimiter: ",",
+                        hintText: "{{ __('Search Respondent... By(ID, Name, Surname, Mobile)') }}",
+                        noResultsText: "{{ __('Respondent not found.') }}",
+                        searchingText: "{{ __('Searching...') }}",
+                        deleteText: "&#215;",
+                        minChars: 2,
+                        tokenLimit: 20,
+                        zindex: 9999,
+                        animateDropdown: false,
+                        resultsLimit: 20,
+                        deleteText: "&times;",
+                        preventDuplicates: true,
+                        theme: "bootstrap"
+                    });
 
-    $('#attach_respondents_form').validate({
-        ignore: ':hidden:not("#respondents")'
-    });
+                    $('#attach_respondents_form').validate({
+                        ignore: ':hidden:not("#respondents")'
+                    });
                 });
             </script>
