@@ -28,9 +28,18 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
+                            
                             <div class="mb-0">
                                 <div class="text-right">
 
+                                    <div class="btn-group mr-2" >
+                                      
+                                        <a href="#!" data-url="{{ route('projects.edit', $data->id) }}" data-size="xl"
+                                            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="Edit Projects"
+                                            data-bs-toggle="tooltip" id="create">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
                                     <div class="btn-group mr-2" role="group" aria-label="First group" >
                                       
                                         <input type="hidden" name="project_id" id="project_id" value="{{$data->id}}">
@@ -63,12 +72,27 @@
                                         </tr>
                                         <tr>
                                             <th>Creator</th>
-                                            <td>{{$data->user_id}}</td>
+                                            <td>
+                                                @php $name_r=\App\Models\Projects::get_user_name($data->user_id); @endphp
+                                                {{$name_r->name}}   {{$name_r->lname}}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th>Type</th>
-                                            <td>{{$data->user_id}}</td>
+                                            <td>
+                                                @if($data->status_id==1)   
+                                                Pre-Screener
+                                                @elseif($data->status_id==2)  
+                                                Pre-Task
+                                                @elseif($data->status_id==3)  
+                                                Paid survey
+                                                @elseif($data->status_id==4)  
+                                                Unpaid survey
+                                                
+                                                @endif</td>
                                         </tr>
+
+                                      
                                         <tr>
                                             <th>Reward Amount (R)</th>
                                             <td>{{$data->reward}}</td>
@@ -80,10 +104,15 @@
                                         <tr>
                                             <th>Status</th>
                                             <td>
-                                                @if($data->status_id==1) Pending
-                                                @elseif($data->status_id==2) Active
-                                                @elseif($data->status_id==3) Completed
-                                                @elseif($data->status_id==4) Cancelled @endif
+                                                @if($data->status_id==1) 
+                                                Pending
+                                                @elseif($data->status_id==2) 
+                                                Active
+                                                @elseif($data->status_id==3) 
+                                                Completed
+                                                @elseif($data->status_id==4) 
+                                                Cancelled 
+                                                @endif
                                             </td>
                                         </tr>
                                         <tr>

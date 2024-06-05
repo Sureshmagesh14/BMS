@@ -87,6 +87,7 @@ class ProfileController extends Controller
             $income_per_month = DB::table('income_per_month')->whereNull('deleted_at')->get();
             $banks = Banks::whereNull('deleted_at')->where('active',1)->get();
             $profile = RespondentProfile::where('respondent_id',$resp_id)->first();
+            $vehicle_master = DB::table('vehicle_master')->whereNull('deleted_at')->get();
 
             if($profile != null){
                 $pid = $profile->pid;
@@ -105,7 +106,7 @@ class ProfileController extends Controller
             $get_area  = (isset($essential_details['suburb'])) ? DB::table('metropolitan_area')->where('district_id',$essential_details['suburb'])->whereNull('deleted_at')->orderBy('area','ASC')->get() : array();
             
             return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area',
-                'child_details','vehicle_details'));
+                'child_details','vehicle_details','vehicle_master'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

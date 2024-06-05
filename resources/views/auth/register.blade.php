@@ -1,5 +1,29 @@
 @include('user.layout.nomenu-header')
 <style>
+    .error {
+        color: red;
+    }
+
+    .field-icon {
+        float: right;
+        margin-right: 12px;
+        margin-top: -37px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .rightside.text-center {
+        /* margin-top: 85px !important; */
+        padding: 20px !important;
+    }
+
+    .container {
+        padding-top: 50px;
+        margin: auto;
+    }
+    .image-cover{
+        object-fit: cover;
+    }
     .email_error {
         display: none;
     }
@@ -47,48 +71,20 @@
     label#whatsapp-error {
         width: 100% !important;
     }
+
+    a#policy {
+        color: blue;
+    }
 </style>
-<div class="container-fluid">
-    <div class="row justify-content-center align-items-center d-flex">
-        <div class="col-md-6 vi-nav-bg text-center hide-mobile">
-            <img src="./assets/images/logo white.png" class="img-fluid mt-5 pt-5 text-center w-50 m-auto" alt="" />
-            <h1 class="text-white py-5">Welcome!</h1>
-
-            <form method="POST" id="login_table" action="{{ route('login') }}">
-                @csrf
-                <div class="my-3  w-50 m-auto text-start">
-                    <label class="text-white" for="email">Email or Mobile</label>
-
-                    <input type="email" class="form-control vi-border-clr vi-cs-textbox" name="email" id="email"
-                        required />
-                </div>
-                <div class="my-3 w-50 m-auto text-start">
-                    <label class="text-white" for="email">Password</label>
-
-                    <div class="main-password">
-                        <input type="password" name="password" id="password"
-                            class="form-control vi-border-clr vi-cs-textbox input-password" aria-label="password"
-                            required>
-                        <a href="JavaScript:void(0);" class="icon-view-login">
-                            <i class="fa fa-eye-slash"></i>
-                        </a>
-                    </div>
-
-                </div>
-                <div class="text-center w-50 m-auto">
-                    <input type="submit" value="Login" class="btn vi-light-bg text-white py-3 px-5 w-100" />
-                </div>
-                <div class="forgetpass text-center my-3 d-flex align-items-center justify-content-center">
-                    <p class="p-0 m-0">Forgot your Password?</p>
-                    @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" class="nav-link p-0 m-0 ps-1">Click here</a>
-                    @endif
-                </div>
-
-            </form>
+<div class="container-fluid vh-80">
+    <div class="row">
+        <div class="col-md-6 d-none-mobile">
+            <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}" class="img-fluid vh-90 w-100 image-cover"
+                alt="" />
         </div>
-        <div class="col-md-6 pt-3">
-            <div class="text-center">
+        <div class="col-md-6 col-sm-12">
+            <div class="rightside text-center">
+
                 <p>Let's get you started</p>
                 <h3>Join our Database</h3>
                 <form method="POST" id="reg_table" action="{{ route('register') }}">
@@ -98,14 +94,12 @@
                             <label for="name">First Name <span class="text-danger">*</span></label>
                             <input type="text" name="name" id="name" placeholder="John"
                                 oninput ="alphanum(this);" class="form-control vi-border-clr border-radius-0" required>
-
                         </div>
                         <div class="lname text-start w-48 m-auto">
                             <label for="surname">Last Name <span class="text-danger">*</span></label>
                             <input type="text" name="surname" id="surname" placeholder="Doe"
                                 oninput ="alphanum(this);" class="form-control vi-border-clr border-radius-0" required>
                         </div>
-
                     </div>
                     <div class="first-row d-md-flex">
                         <div class="mobile text-start w-48 m-auto my-3">
@@ -115,10 +109,8 @@
                                     <div class="input-group-text">+27</div>
                                 </div>
                                 <input type="text" name="mobile" id="mobile" placeholder="081 966 0786"
-                                    class="form-control vi-border-clr border-radius-0 w-50" oninput ="numonly(this);"
-                                    maxlength="16" required>
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
                             </div>
-
                         </div>
 
                         <div class="mobile text-start w-48 m-auto my-3">
@@ -130,14 +122,9 @@
                                     <div class="input-group-text">+27</div>
                                 </div>
                                 <input type="text" name="whatsapp" id="whatsapp" placeholder="081 966 0786"
-                                    class="form-control vi-border-clr border-radius-0 w-50" oninput ="numonly(this);"
-                                    maxlength="16" required>
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
                             </div>
-
                         </div>
-
-
-
                     </div>
                     <div class="first-row d-md-flex">
                         <div class="email text-start w-48 m-auto my-3">
@@ -181,9 +168,7 @@
                                 <input type="password" name="password_confirmation" id="password_confirmation"
                                     class="form-control vi-border-clr border-radius-0 input-password"
                                     aria-label="password" placeholder="Confirm/Retype Password" required>
-                                <a href="JavaScript:void(0);" class="icon-view">
-                                    <i class="fa fa-eye-slash"></i>
-                                </a>
+                                <a href="JavaScript:void(0);" class="icon-view"><i class="fa fa-eye-slash"></i></a>
                             </div>
 
 
@@ -191,22 +176,24 @@
                     </div>
                     <div class="lname text-start w-48 me-auto my-3">
                         <input type="checkbox" id="terms" name="terms" class="form-check-input" required>
-                        <span class="form-check-label">Agree the <a data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">terms and
-                                policy</a>.</span>
+                        <span class="form-check-label">Agree the <a style="cursor: pointer;" id="policy" data-bs-toggle="modal" data-bs-target="#exampleModal">terms and policy</a>.</span>
                     </div>
 
-                    <div class="submit-btn text-start">
-                        <button type="submit" class="btn vi-light-bg text-white py-3 px-5 w-30"
-                            id="save_org">Continue</button>
+                    <div class="submit-btn text-center">
+                        <button type="submit" class="btn vi-light-bg text-white py-3 px-5 w-30" id="save_org">Continue</button>
                     </div>
                 </form>
-            </div>
 
+                <div class="vi-horizo-line my-3 w-25 m-auto">
+                    <span class="vi-bdr-set-or position-relative px-3">OR</span>
+                </div>
+                <div class="regaccount ">
+                    <p class="d-flex align-items-center justify-content-center"><a class="ps-2 nav-link fw-500" href="{{ route('login') }}">Do you have an account? Login</a></p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -216,18 +203,17 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ...
+                {{$content->data}}
             </div>
-
         </div>
     </div>
 </div>
-
 
 @include('user.layout.footer')
 <script src="{{ asset('assets/js/inputmask.js') }}"></script>
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+
 @if (count($errors) > 0)
     @foreach ($errors->all() as $message)
         <script>
@@ -239,6 +225,7 @@
         </script>
     @endforeach
 @endif
+
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
     $('#mobile').inputmask("999 999 9999");
@@ -264,6 +251,7 @@
             $('.email_error').hide();
         }
     });
+
     $(function() {
         var mess =
             'This email is already registered. Want to <a href="{{ route('login') }}">login</a> or <a href="{{ url('forgot-password') }}">recover your password?</a>';
@@ -313,6 +301,7 @@
             // }
         });
     });
+
     $(function() {
         $('#login_table').validate({
             rules: {
@@ -329,6 +318,7 @@
             }
         });
     });
+
     $.validator.addMethod("validate_email", function(value, element) {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
             return true;
@@ -348,10 +338,8 @@
         let numbers = value.replace(/[^a-zA-Z0-9 ]/g, "");
         input.value = numbers;
     }
+
     $(document).ready(function() {
-
-
-
         $('.main-password').find('.input-password').each(function(index, input) {
             var $input = $(input);
             $input.parent().find('.icon-view').click(function() {

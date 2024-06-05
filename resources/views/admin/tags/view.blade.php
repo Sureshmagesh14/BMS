@@ -28,6 +28,14 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
+                            <div class="text-right">
+                                <a href="#!" data-url="{{ route('tags.edit', $data->id) }}"
+                                    data-size="xl" data-ajax-popup="true" class="btn btn-primary"
+                                    data-bs-original-title="Edit Panel" data-bs-toggle="tooltip"
+                                    id="create">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
                             <div class="mb-0" >
                                 <table class="table">
                                     <tbody>

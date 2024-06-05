@@ -162,13 +162,13 @@ class ContentsController extends Controller
             }
             else
             {
-                $content = Contents::find($request->id);
-                if($content)
+                $content = Contents::where('id',$request->id)->first();
+                if(!empty($content))
                 {
-                    $content->type_id = $request->input('type_id');
-                    $content->data    = $request->input('data');
-                    $content->update();
-                    $content->id;
+                    $type_id = $request->type_id;
+                    $data    = $request->data;
+                    $data=array('type_id'=>$type_id,"data"=>$data);
+                    Contents::where('id',$request->id)->update($data);
                     return response()->json([
                         'status'  => 200,
                         'success' => true,
@@ -297,6 +297,31 @@ class ContentsController extends Controller
                 'success' => true,
                 'message'=>'Contents Deleted'
             ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function check_content_duplicate(Request $request){
+        try {
+            if($request->form_name=="contentcreate"){
+                $get_count=Contents::where('id',$request->type_id)->get()->count();
+                if($get_count<1){
+                    echo "true";
+                }else{
+                    echo "false";
+                }
+            }else{
+                $get_count=Contents::whereNot('id',$request->type_id)->get()->count();
+                if($get_count<1){
+                    echo "true";
+                }else{
+                    echo "false";
+                }
+            }
+            
+             
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

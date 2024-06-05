@@ -357,7 +357,8 @@ class ProjectsController extends Controller
                         return $all_data->description;
                     }) 
                     ->addColumn('creator', function ($all_data) {
-                        return $all_data->uname;
+                        $get_name=Projects::get_user_name($all_data->user_id);
+                        return $get_name->name.''.$get_name->lname;
                     })
                     ->addColumn('type', function ($all_data) {
                         if($all_data->type_id==1){

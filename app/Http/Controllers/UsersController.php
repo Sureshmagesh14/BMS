@@ -310,20 +310,6 @@ class UsersController extends Controller
                     $edit_route = route("users.edit",$all_data->id);
                     $view_route = route("users.show",$all_data->id);
 
-                    // $design = '<div class="">
-                    //     <div class="btn-group mr-2 mb-2 mb-sm-0 gap">
-                    //         <a href="'.$view_route.'" class="rounded btn btn-primary waves-light waves-effect">
-                    //             <i class="fa fa-eye"></i>
-                    //         </a>
-                    //         <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                    //             data-bs-original-title="Edit Project" class="rounded btn btn-primary waves-light waves-effect">
-                    //             <i class="fa fa-edit"></i>
-                    //         </a>
-                    //         <button type="button" id="delete_users" data-id="'.$all_data->id.'" class="rounded btn btn-primary waves-light waves-effect">
-                    //             <i class="far fa-trash-alt"></i>
-                    //         </button>
-                    //     </div>
-                    // </div>';
 
                     $design = '<div class="col-md-2">
                             <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"

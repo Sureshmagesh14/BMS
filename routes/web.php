@@ -186,6 +186,7 @@ Route::group([
         ->name('create', 'contents.create')->name('show', 'contents.show')->name('update', 'contents.update');
     Route::get('contents_datatable', 'ContentsController@contents_datatable')->name('contents_datatable');
     Route::any('contents_multi_delete', 'ContentsController@contents_multi_delete')->name('contents_multi_delete');
+    Route::any('check_content_duplicate', 'ContentsController@check_content_duplicate')->name('check_content_duplicate');
 
     Route::get('inner_module', 'CommonAdminController@inner_module')->name('inner_module');
 
@@ -283,3 +284,5 @@ Route::get('/generate-pdf', ['as' => 'survey.pdfreport', 'uses' => 'SurveyContro
 Route::get('/generate-barchart', ['as' => 'survey.barchart', 'uses' => 'SurveyController@generateBarChart']);
 Route::get('/wordcloud', 'WordCloudController@generateAndDownload');
 Route::get('/checkquota/{id}', 'SurveyController@checkquota');
+
+Route::post('templogin', 'SurveyController@templogin')->name('templogin');;

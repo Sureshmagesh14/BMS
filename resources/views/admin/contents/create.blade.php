@@ -1,4 +1,3 @@
-
 <form id="content_form" class="validation">
     @csrf
     <div class="form-group row">
@@ -27,7 +26,30 @@
 
 
 <script>
-    $("#content_create").click(function () {
+    $(function() {
+        $('#content_form').validate({
+            rules: {
+                type_id: {
+                    required: true,
+                    remote: {
+                        url: '{{ route('check_content_duplicate') }}',
+                        data: { 'form_name' : "contentcreate" },
+                        asysc:false,
+                        type: "GET"
+                    }
+                },
+              
+
+            },
+            messages: {
+                type_id: {
+                    remote: "{{ __('Type Name already exists!') }}"
+                }
+            }
+        });
+    });
+
+    $("#content_create").click(function() {
         if (!$("#content_form").valid()) { // Not Valid
             return false;
         } else {
@@ -35,7 +57,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: "{{route('contents.store')}}",
+                url: "{{ route('contents.store') }}",
                 data: data,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

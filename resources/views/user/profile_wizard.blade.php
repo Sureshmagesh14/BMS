@@ -1,6 +1,6 @@
 @include('user.layout.header-2')
     <link rel="stylesheet" href="{{ asset('assets/wizard/css/jquery.steps.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets/select2/select2.min.css') }}">
     <style>
         a {text-decoration: none;}
         /* .wizard>.steps{
@@ -53,6 +53,9 @@
         label#mobile_number-error {
             width: 100%;
         }
+        .star_require{
+            color: red;
+        }
     </style>
 
     <section class="bg-greybg">
@@ -73,39 +76,39 @@
                                                 <input type="hidden" name="unique_id" class="form-control unique_id" id="get_unique_id" value="{{$pid}}">
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="first_name">First Name</label>
+                                                <label for="first_name">First Name <span class="star_require">*</span></label>
                                                 <input type="text" class="form-control" id="first_name" name="basic[first_name]" value="{{$resp_details->name}}" required>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="last_name">Last Name</label>
+                                                <label for="last_name">Last Name <span class="star_require">*</span></label>
                                                 <input type="text" class="form-control" id="last_name" name="basic[last_name]" value="{{$resp_details->surname}}" required>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="mobile_number">Mobile Number</label>
+                                                <label for="mobile_number">Mobile Number <span class="star_require">*</span></label>
                                                 <div class="input-group mb-2">
                                                     <div class="input-group-prepend">
                                                         <div class="input-group-text">+27</div>
                                                     </div>
                                                     <input type="text" name="basic[mobile_number]" id="mobile_number" placeholder="081 966 0786" class="form-control vi-border-clr border-radius-0"
-                                                    value="{{$resp_details->mobile}}" oninput ="numonly(this);" maxlength="16" required>
+                                                    value="{{$resp_details->mobile}}" maxlength="16" required>
                                                 </div>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="whatsapp_number">Whats App Number</label>
+                                                <label for="whatsapp_number">Whats App Number <span class="star_require">*</span></label>
                                                 <div class="input-group mb-2">
                                                     <div class="input-group-prepend">
                                                         <div class="input-group-text">+27</div>
                                                     </div>
                                                     <input type="text" name="basic[whatsapp_number]" id="whatsapp_number" placeholder="081 966 0786" class="form-control vi-border-clr border-radius-0"
-                                                    value="{{$resp_details->whatsapp}}" oninput ="numonly(this);" maxlength="16" required>
+                                                    value="{{$resp_details->whatsapp}}" maxlength="16" required>
                                                 </div>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="email">Email</label>
+                                                <label for="email">Email <span class="star_require">*</span></label>
                                                 <input type="email" class="form-control" id="email" name="basic[email]" value="{{$resp_details->email}}" required>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="date_of_birth">Date of Birth</label>
+                                                <label for="date_of_birth">Date of Birth <span class="star_require">*</span></label>
                                                 <input type="text" placeholder="YYYY-MM-DD" class="form-control" id="date_of_birth" name="basic[date_of_birth]" value="{{$resp_details->date_of_birth}}" required>
                                                 
                                                 @if ($resp_details->date_of_birth!=null)
@@ -128,8 +131,8 @@
                                     <section style="overflow-x: auto;">
                                         <div class="row">
                                             <div class="col-6 col-sm-4">
-                                                <label for="relationship_status">Relationship Status</label>
-                                                <select name="essential[relationship_statu]s" id="relationship_status" required>
+                                                <label for="relationship_status">Relationship Status <span class="star_require">*</span></label>
+                                                <select name="essential[relationship_status]" id="relationship_status" required>
                                                     <option value="">Select</option>
                                                     <option value="single" @isset($essential_details['relationship_status']) @if($essential_details['relationship_status'] == "single") selected @endif @endisset>Single</option>
                                                     <option value="cohabitation" @isset($essential_details['relationship_status']) @if($essential_details['relationship_status'] == "cohabitation") selected @endif @endisset>Cohabitation</option>
@@ -140,7 +143,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4">
-                                                <label for="gender">Gender</label>
+                                                <label for="gender">Gender <span class="star_require">*</span></label>
                                                 <select name="essential[gender]" id="gender" required>
                                                     <option value="">Select</option>
                                                     <option value="male" @isset($essential_details['gender']) @if($essential_details['gender'] == "male") selected @endif @endisset>Male</option>
@@ -151,7 +154,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4">
-                                                <label for="ethnic_group">Ethnic Group / Race</label>
+                                                <label for="ethnic_group">Ethnic Group / Race <span class="star_require">*</span></label>
                                                 <select name="essential[ethnic_group]" id="ethnic_group" required>
                                                     <option value="">Select</option>
                                                     <option value="asian" @isset($essential_details['ethnic_group']) @if($essential_details['ethnic_group'] == "asian") selected @endif @endisset>Asian</option>
@@ -162,7 +165,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="education_level">Highest Education Level</label>
+                                                <label for="education_level">Highest Education Level <span class="star_require">*</span></label>
                                                 <select name="essential[education_level]" id="education_level" required>
                                                     <option value="">Select</option>
                                                     <option value="matric" @isset($essential_details['education_level']) @if($essential_details['education_level'] == "matric") selected @endif @endisset>Matric</option>
@@ -170,10 +173,11 @@
                                                     <option value="post_matric_diploma" @isset($essential_details['education_level']) @if($essential_details['education_level'] == "post_matric_diploma") selected @endif @endisset>Post Matric Diploma</option>
                                                     <option value="ug" @isset($essential_details['education_level']) @if($essential_details['education_level'] == "ug") selected @endif @endisset>Undergrad University Degree</option>
                                                     <option value="pg" @isset($essential_details['education_level']) @if($essential_details['education_level'] == "pg") selected @endif @endisset>Post Grad Degree - Honours, Masters, PhD, MBA</option>
+                                                    <option value="school_no_metric" @isset($essential_details['education_level']) @if($essential_details['education_level'] == "school_no_metric") selected @endif @endisset>School But No Matric</option>
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="employment_status">Employment Status</label>
+                                                <label for="employment_status">Employment Status <span class="star_require">*</span></label>
                                                 <select name="essential[employment_status]" id="employment_status" required>
                                                     <option value="">Select</option>
                                                     <option value="emp_full_time" @isset($essential_details['employment_status']) @if($essential_details['employment_status'] == "emp_full_time") selected @endif @endisset>Employed Full-Time</option>
@@ -184,10 +188,11 @@
                                                     <option value="home_person" @isset($essential_details['employment_status']) @if($essential_details['employment_status'] == "home_person") selected @endif @endisset>Stay at Home person</option>
                                                     <option value="retired" @isset($essential_details['employment_status']) @if($essential_details['employment_status'] == "retired") selected @endif @endisset>Retired</option>
                                                     <option value="unemployed" @isset($essential_details['employment_status']) @if($essential_details['employment_status'] == "unemployed") selected @endif @endisset>Unemployed</option>
+                                                    <option value="other" @isset($essential_details['employment_status']) @if($essential_details['employment_status'] == "other") selected @endif @endisset>Other</option>
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="industry_my_company">Industry my company is in</label>
+                                                <label for="industry_my_company">Industry my company is in <span class="star_require">*</span></label>
                                                 <select name="essential[industry_my_company]" id="industry_my_company" required>
                                                     <option value="">Select</option>
                                                     @foreach ($industry_company as $industry)
@@ -196,11 +201,11 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="job_title">Job Title</label>
+                                                <label for="job_title">Job Title <span class="star_require">*</span></label>
                                                 <input type="text" class="form-control" id="job_title" name="essential[job_title]" required @isset($essential_details['job_title']) value ="{{$essential_details['job_title']}}" @endisset>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="personal_income_per_month">Personal Income Per Month</label>
+                                                <label for="personal_income_per_month">Personal Income Per Month <span class="star_require">*</span></label>
                                                 <select name="essential[personal_income_per_month]" id="personal_income_per_month" required>
                                                     <option value="">Select</option>
                                                     @foreach ($income_per_month as $income)
@@ -209,7 +214,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="household_income_per_month">Household Income per month</label>
+                                                <label for="household_income_per_month">Household Income per month <span class="star_require">*</span></label>
                                                 <select name="essential[household_income_per_month]" id="household_income_per_month" required>
                                                     <option value="">Select</option>
                                                     @foreach ($income_per_month as $income)
@@ -218,7 +223,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="province">Province</label>
+                                                <label for="province">Province <span class="star_require">*</span></label>
                                                 <select name="essential[province]" id="province" required>
                                                     <option value="">Select</option>
                                                     @foreach ($state as $states)
@@ -227,7 +232,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="suburb">Suburb</label>
+                                                <label for="suburb">Suburb <span class="star_require">*</span></label>
                                                 <select name="essential[suburb]" id="suburb" required>
                                                     <option value="">Select</option>
                                                     @foreach ($get_suburb as $suburb)
@@ -236,26 +241,27 @@
                                                 </select>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="metropolitan_area">Metropolitan Area</label>
-                                                <select name="essential[metropolitan_area]" id="metropolitan_area" required>
+                                                <label for="metropolitan_area">Metropolitan Area <span class="star_require">*</span></label>
+                                                <input type="text" name="essential[metropolitan_area]" id="metropolitan_area" class="form-control" required @isset($essential_details['metropolitan_area']) value ="{{$essential_details['metropolitan_area']}}" @endisset>
+                                                {{-- <select name="essential[metropolitan_area]" id="metropolitan_area" required>
                                                     <option value="">Select</option>
                                                     @foreach ($get_area as $area)
                                                         <option value="{{$area->id}}" @isset($essential_details['metropolitan_area']) @if($essential_details['metropolitan_area'] == $area->id) selected @endif @endisset>{{$area->area}}</option>
                                                     @endforeach
-                                                </select>
+                                                </select> --}}
                                             </div>
 
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="no_houehold">Number of people living in your household</label>
-                                                <input type="number" name="essential[no_houehold]" id="no_houehold" class="form-control" required @isset($essential_details['no_houehold']) value ="{{$essential_details['no_houehold']}}" @endisset>
+                                                <label for="no_houehold">Number of people living in your household <span class="star_require">*</span></label>
+                                                <input type="number" name="essential[no_houehold]" id="no_houehold" class="form-control" required @isset($essential_details['no_houehold']) value ="{{$essential_details['no_houehold']}}" @endisset min="0">
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="no_children">Number of Children</label>
-                                                <input type="number" name="essential[no_children]" id="no_children" class="form-control" required @isset($essential_details['no_children']) value ="{{$essential_details['no_children']}}" @endisset>
+                                                <label for="no_children">Number of Children <span class="star_require">*</span></label>
+                                                <input type="number" name="essential[no_children]" id="no_children" class="form-control" required @isset($essential_details['no_children']) value ="{{$essential_details['no_children']}}" @endisset min="0" max="10">
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="no_vehicle">Number of Vehicles</label>
-                                                <input type="number" name="essential[no_vehicle]" id="no_vehicle" class="form-control" required @isset($essential_details['no_vehicle']) value ="{{$essential_details['no_vehicle']}}" @endisset>
+                                                <label for="no_vehicle">Number of Vehicles <span class="star_require">*</span></label>
+                                                <input type="number" name="essential[no_vehicle]" id="no_vehicle" class="form-control" required @isset($essential_details['no_vehicle']) value ="{{$essential_details['no_vehicle']}}" @endisset min="0" max="10">
                                             </div>
                                         </div>
                                     </section>
@@ -278,8 +284,8 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($child_details as $child_key => $child)
-                                                            @php $child_key++; @endphp
+                                                        @php $child_key = 1; @endphp
+                                                        @foreach ($child_details as $child)
                                                             <tr class="more_tr role_tr" id="children_tr{{$child_key}}">
                                                                 <td><lable>Child {{$child_key}}</lable></td>
                                                                 <td>
@@ -293,6 +299,7 @@
                                                                     </select>
                                                                 </td>
                                                             </tr>
+                                                            @php $child_key++; @endphp
                                                         @endforeach
                                                     </tbody>
                                                 </table>
@@ -316,18 +323,32 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($vehicle_details as $vehicle_key => $vehicle)
-                                                            @php $vehicle_key++; @endphp
+                                                        @php $vehicle_key = 1; @endphp
+                                                        @foreach ($vehicle_details as $vehicle)
                                                             <tr class="more_tr role_tr" id="children_tr{{$child_key}}">
                                                                 <tr class="more_tr role_tr" id="vehicle_tr{{$vehicle_key}}">
                                                                     <td>
                                                                         <lable>Vehicle {{$vehicle_key}}</lable>
                                                                     </td>
                                                                     <td>
-                                                                        <input type="text" value="{{$vehicle['brand']}}" id="brand_{{$vehicle_key}}" class="form-control vehicle_brand" name="vehicle[brand_{{$vehicle_key}}][]">
+                                                                        <select class="form-control vehicle_brand" id="brand_{{$vehicle_key}}" name="vehicle[brand_{{$vehicle_key}}][]">
+                                                                            @foreach ($vehicle_master as $veh)
+                                                                                <option @if($veh->id == $vehicle['brand']) selected @endif value="{{$veh->id}}">{{$veh->vehicle_name}}</option>
+                                                                            @endforeach
+                                                                        </select>
                                                                     </td>
                                                                     <td>
-                                                                        <input type="text" value="{{$vehicle['type']}}" id="type_{{$vehicle_key}}" class="form-control vehicle_type" name="vehicle[type_{{$vehicle_key}}][]">
+                                                                        <select class="form-control vehicle_type" id="type_{{$vehicle_key}}" name="vehicle[type_{{$vehicle_key}}][]">
+                                                                            <option value="sedan" @isset($vehicle['type']) @if("sedan" == $vehicle['type']) selected @endif @endisset>Sedan</option>
+                                                                            <option value="coupe" @isset($vehicle['type']) @if("coupe" == $vehicle['type']) selected @endif @endisset>Coupe</option>
+                                                                            <option value="sports_car" @isset($vehicle['type']) @if("sports_car" == $vehicle['type']) selected @endif @endisset>Sports Car</option>
+                                                                            <option value="wagon" @isset($vehicle['type']) @if("wagon" == $vehicle['type']) selected @endif @endisset>Station Wagon</option>
+                                                                            <option value="hatchback" @isset($vehicle['type']) @if("hatchback" == $vehicle['type']) selected @endif @endisset>Hatchback</option>
+                                                                            <option value="convertible" @isset($vehicle['type']) @if("convertible" == $vehicle['type']) selected @endif @endisset>Convertible</option>
+                                                                            <option value="suv" @isset($vehicle['type']) @if("suv" == $vehicle['type']) selected @endif @endisset>SPORT-UTILITY VEHICLE (SUV)</option>
+                                                                            <option value="minivan" @isset($vehicle['type']) @if("minivan" == $vehicle['type']) selected @endif @endisset>Minivan</option>
+                                                                            <option value="pickup_tuck" @isset($vehicle['type']) @if("pickup_tuck" == $vehicle['type']) selected @endif @endisset>Pickup Truck</option>
+                                                                        </select>
                                                                     </td>
                                                                     <td>
                                                                         <input type="text" value="{{$vehicle['model']}}" id="model_{{$vehicle_key}}" class="form-control vehicle_model" name="vehicle[model_{{$vehicle_key}}][]">
@@ -337,6 +358,7 @@
                                                                     </td>
                                                                 </tr>
                                                             </tr>
+                                                            @php $vehicle_key++; @endphp
                                                         @endforeach
                                                     </tbody>
                                                 </table>
@@ -413,10 +435,10 @@
 
 @include('user.layout.footer')
     <script src="{{ asset('assets/wizard/js/jquery.steps.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{ asset('assets/select2/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/inputmask.js') }}"></script>
-    <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+    <script src="{{ asset('assets/inputmask/jquery.inputmask.bundle.js') }}"></script>
+    <script src="{{ asset('assets/moment/moment.js') }}"></script>
     <script>
         $(function () {
             var tempcsrf = '{!! csrf_token() !!}';
@@ -426,6 +448,8 @@
                 headerTag: "h2",
                 bodyTag: "section",
                 transitionEffect: "slideLeft",
+                autoFocus: true,
+                // saveState: true,
                 // stepsOrientation: "vertical",
                 onStepChanging: function (event, currentIndex, newIndex)
                 {
@@ -449,9 +473,11 @@
                         return form.valid();
                     }
                     else if(currentIndex == 1 && newIndex == 2){
-                        // return form.valid();
-                        datas2 = {_token: tempcsrf, serialize_data: form.serialize(), step: 2};
-                        wizard_save(datas2);
+                        if(form.valid() == true){
+                            datas2 = {_token: tempcsrf, serialize_data: form.serialize(), step: 2};
+                            wizard_save(datas2);
+                        }
+                        return form.valid();
                     }
                     return true;
                 },
@@ -523,7 +549,7 @@
             $('#whatsapp_number').inputmask("999 999 9999");
 
             $('#relationship_status, #gender, #ethnic_group, #education_level, #employment_status, #industry_my_company, #personal_income_per_month, #business_org,'+
-                '#household_income_per_monty, #province, #suburb, #metropolitan_area, #org, #org_company, #bank_main, #home_lang, #household_income_per_month').select2({ height: '10%', width: '100%' });
+                '#household_income_per_monty, #province, #suburb, #org, #org_company, #bank_main, #home_lang, #household_income_per_month').select2({ height: '10%', width: '100%' });
 
             $("#no_children").keyup(function(){
                 no_children = $(this).val();
@@ -564,10 +590,25 @@
                                 '<lable>Vehicle '+vehicles+'</lable>'+
                             '</td>'+
                             '<td>'+
-                                '<input type="text" id="brand_'+vehicles+'" class="form-control vehicle_brand" name="vehicle[brand_'+vehicles+'][]">'+
+                                '<select class="form-control vehicle_brand" id="brand_'+vehicles+'" name="vehicle[brand_'+vehicles+'][]">'+
+                                    '<option value="" selected>Select Vechicle</option>'+
+                                    '@foreach ($vehicle_master as $veh)'+
+                                        '<option value="{{$veh->id}}">{{$veh->vehicle_name}}</option>'+
+                                    '@endforeach'+
+                                '</select>'+
                             '</td>'+
                             '<td>'+
-                                '<input type="text" id="type_'+vehicles+'" class="form-control vehicle_type" name="vehicle[type_'+vehicles+'][]">'+
+                                '<select class="form-control vehicle_brand" id="type_'+vehicles+'" name="vehicle[type_'+vehicles+'][]">'+
+                                    '<option value="sedan">Sedan</option>'+
+                                    '<option value="coupe">Coupe</option>'+
+                                    '<option value="sports_car">Sports Car</option>'+
+                                    '<option value="wagon">Station Wagon</option>'+
+                                    '<option value="hatchback">Hatchback</option>'+
+                                    '<option value="convertible">Convertible</option>'+
+                                    '<option value="suv">SPORT-UTILITY VEHICLE (SUV)</option>'+
+                                    '<option value="minivan">Minivan</option>'+ 
+                                    '<option value="pickup_tuck">Pickup Truck</option>'+
+                                '</select>'+
                             '</td>'+
                             '<td>'+
                                 '<input type="text" id="model_'+vehicles+'" class="form-control vehicle_model" name="vehicle[model_'+vehicles+'][]">'+
@@ -634,26 +675,26 @@
                 });
             });
 
-            $("#suburb").change(function() {
-                suburb = $(this).val();
-                $.ajax({
-                    url : '{{route("get_area")}}',
-                    type : 'GET',
-                    data : {
-                        'suburb' : suburb
-                    },
-                    dataType:'json',
-                    success : function(data) { 
-                        if(data.type == true)             {
-                            $("#metropolitan_area").html(data.data);
-                        }
-                    },
-                    error : function(request,error)
-                    {
-                        // alert("Request: "+JSON.stringify(request));
-                    }
-                });
-            });
+            // $("#suburb").change(function() {
+            //     suburb = $(this).val();
+            //     $.ajax({
+            //         url : '{{route("get_area")}}',
+            //         type : 'GET',
+            //         data : {
+            //             'suburb' : suburb
+            //         },
+            //         dataType:'json',
+            //         success : function(data) { 
+            //             if(data.type == true)             {
+            //                 $("#metropolitan_area").html(data.data);
+            //             }
+            //         },
+            //         error : function(request,error)
+            //         {
+            //             // alert("Request: "+JSON.stringify(request));
+            //         }
+            //     });
+            // });
         });
 
         function wizard_save(datas){

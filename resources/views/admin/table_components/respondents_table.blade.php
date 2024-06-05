@@ -28,24 +28,24 @@
                 <option value="1">Status > Activate</option>
                 <option value="2">Status > Deactivate</option>
                 <option value="3">Status > Opt-Out</option>
-                <option value="4">Export - Simple Database</option>
+                {{-- <option value="4">Export - Simple Database</option>
                 <option value="5">Export - Normal Database</option>
-                <option value="6">Export - Extended Database</option>
+                <option value="6">Export - Extended Database</option> --}}
             </optgroup>
-            <optgroup label="Standalone Actions">
-                <option value="7">Export - Deactivated Respondents</option>
+            {{-- <optgroup label="Standalone Actions">
+                <option value="7">Export - Deactivated Respondents</option> --}}
                 {{-- <option value="8">Import - Old Respondents</option> --}}
                 {{-- <option value="9">Updates imports with file</option> --}}
-            </optgroup>
+            {{-- </optgroup> --}}
         </select>
 
-        <select name="action_1" id="action_1"
+        {{-- <select name="action_1" id="action_1"
             class="form-control respondents_datatable show_hided_option respondents_select_box">
             <option value="">Select Action</option>
             <option value="7">Export - Deactivated Respondents</option>
             {{-- <option value="8">Import - Old Respondents</option> --}}
             {{-- <option value="9">Updates imports with file</option> --}}
-        </select>
+        {{-- </select> --}}
     </div>
 
     {{-- <a href="#!" data-url="{{ route('export_resp') }}" data-size="xl"

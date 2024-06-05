@@ -1,31 +1,35 @@
 <footer class="bg-white">
     <!-- <div class="container"> -->
-        <div class="container py-0">
-            <div class="row justify-content-center align-items-center">
-                <div class="col-md-6">
-                    <div class="d-flex align-items-end">
-                        <p class="mb-0 pb-0">@
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script> {{ Config::get('constants.app_title') }}
-                        </p>
-                        <a href="{{ route('terms') }}" class="nav-link ps-5 mb-0 pb-0">Terms & Conditions</a>
-                    </div>
+    <div class="container py-4 my-2">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6 col-sm-12">
+                <div class="d-md-flex d-lg-flex d-sm-block align-items-end">
+                    <p class="mb-0 pb-0">@
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script> {{ Config::get('constants.app_title') }}
+                    </p>
+                    <a  class="ps-2" href="{{ route('terms') }}" class="nav-link mb-0 pb-0">Terms & Conditions</a>
                 </div>
-                <div class="col-md-6">
-                    <div class="social-icons text-end">
-                        <a href="https://www.instagram.com/thebrandsurgeon/?igshid=YmMyMTA2M2Y%3D" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                        <a href="https://www.facebook.com/thebrandsurgeonsa" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                        <a href="https://www.linkedin.com/company/the-brand-surgeon-company/" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-                    </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="social-icons text-md-end text-lg-end text-sm-start">
+                    <a href="https://www.instagram.com/thebrandsurgeon/?igshid=YmMyMTA2M2Y%3D" target="_blank"><i
+                            class="fa fa-instagram" aria-hidden="true"></i></a>
+                    <a href="https://www.facebook.com/thebrandsurgeonsa" target="_blank"><i class="fa fa-facebook"
+                            aria-hidden="true"></i></a>
+                    <a href="https://www.linkedin.com/company/the-brand-surgeon-company/" target="_blank"><i
+                            class="fa fa-linkedin" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>
+    </div>
     <!-- </div> -->
 </footer>
 
 <!-- Common modal -->
-<div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+<div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -35,21 +39,22 @@
                 </button>
             </div>
             <div class="modal-body">
-                
+
             </div>
         </div>
     </div>
 </div>
 
 </body>
-    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script src="{{ asset('assets/js/admin/jquery.validate.js') }}"></script>
-    
-    <script src="{{ asset('assets/js/admin/confirm.min.js') }}"></script>
+<script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="{{ asset('assets/js/admin/jquery.validate.js') }}"></script>
 
-    <script>
-        $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true"], div[data-ajax-popup="true"]', function () {
+<script src="{{ asset('assets/js/admin/confirm.min.js') }}"></script>
+
+<script>
+    $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true"], div[data-ajax-popup="true"]',
+        function() {
             var data = {};
             var title1 = $(this).data("title");
             var title2 = $(this).data("bs-original-title");
@@ -72,22 +77,36 @@
 
             $.ajax({
                 url: url,
-                data: {value},
-                success: function (data) {
-                    if(data['html_page'] != undefined){
+                data: {
+                    value
+                },
+                success: function(data) {
+                    if (data['html_page'] != undefined) {
                         $('#commonModal .modal-body').html(data['html_page']);
-                    }
-                    else{
+                    } else {
                         $('#commonModal .modal-body').html(data);
                     }
-                    
+
                     $("#commonModal").modal('show');
                 },
-                error: function (data) {
+                error: function(data) {
                     data = data.responseJSON;
                     toastr.error("Something Went Wrong");
                 }
             });
         });
-    </script>
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('#container').addClass('loaded');
+            // Once the container has finished, the scroll appears
+            if ($('#container').hasClass('loaded')) {
+                // It is so that once the container is gone, the entire preloader section is deleted
+                $('#preloader').delay(1000).queue(function() {
+                    $(this).remove();
+                });
+            }
+        }, 400);
+    });
+</script>
+
 </html>
