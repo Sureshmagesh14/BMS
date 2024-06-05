@@ -151,7 +151,11 @@
                                         </tr>
                                         <tr>
                                             <th>Survey Link</th>
-                                            <td>{{$data->survey_link}}</td>
+                                            @php $survey_link=\App\Models\Projects::get_survey($data->survey_link); @endphp
+                                         
+                                            <td><a title="{{$survey_link->title}}" class="btn btn-yellow" target="_blank"
+                                                href="{{ url('survey/view', $survey_link->builderID) }}">{{url('survey/view', $survey_link->builderID) }}</a>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>

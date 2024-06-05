@@ -26,7 +26,7 @@ class ExportController extends Controller
             
             $active_val   = DB::table('respondents')->where("active_status_id",1)->count();
             $users_list   = DB::table('users')->where("status_id",1)->orderBy('id', 'ASC')->get();
-            
+            $res_users_list   = DB::table('respondents')->where("active_status_id",1)->orderBy('id', 'ASC')->get();
             return view('admin.export',compact('active_val','users_list'));
             
             return redirect("/")->withSuccess('You are not allowed to access');
@@ -186,23 +186,7 @@ class ExportController extends Controller
                     $sheet->getColumnDimension('D')->setAutoSize(true);
                     $sheet->getColumnDimension('E')->setAutoSize(true);
                     $sheet->getColumnDimension('F')->setAutoSize(true);
-                    $sheet->getColumnDimension('G')->setAutoSize(true);
-                    $sheet->getColumnDimension('H')->setAutoSize(true);
-                    $sheet->getColumnDimension('I')->setAutoSize(true);
-                    $sheet->getColumnDimension('J')->setAutoSize(true);
-                    $sheet->getColumnDimension('K')->setAutoSize(true);
-                    $sheet->getColumnDimension('L')->setAutoSize(true);
-                    $sheet->getColumnDimension('M')->setAutoSize(true);
-                    $sheet->getColumnDimension('N')->setAutoSize(true);
-                    $sheet->getColumnDimension('O')->setAutoSize(true);
-                    $sheet->getColumnDimension('P')->setAutoSize(true);
-                    $sheet->getColumnDimension('Q')->setAutoSize(true);
-                    $sheet->getColumnDimension('R')->setAutoSize(true);
-                    $sheet->getColumnDimension('S')->setAutoSize(true);
-                    $sheet->getColumnDimension('T')->setAutoSize(true);
-                    $sheet->getColumnDimension('U')->setAutoSize(true);
-                    $sheet->getColumnDimension('V')->setAutoSize(true);
-                    $sheet->getColumnDimension('W')->setAutoSize(true);
+                  
                     $sheet->getColumnDimension('X')->setAutoSize(true);
                         
                     $sheet->setCellValue('A1', 'PID');
@@ -277,7 +261,14 @@ class ExportController extends Controller
                     $i=1;
                     foreach($all_datas as $all_data){
 
-                    
+                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('B' . $rows, $all_data->name);
+                        $sheet->setCellValue('C' . $rows, $all_data->surname);
+                        $sheet->setCellValue('D' . $rows, $all_data->mobile);
+                        $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                        $sheet->setCellValue('F' . $rows, $all_data->email);
+                        $sheet->setCellValue('G' . $rows, $all_data->updated_at);
+                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
                         // $rows++;
                         // $i++;
                     }
@@ -287,12 +278,21 @@ class ExportController extends Controller
             $fileName = $module."_".$resp_type."_".date('ymd').".".$type;
 
             }else if($module=='Respondents'){
-
-
-                $all_datas = Respondents::where('id',1)
-                                ->where('respondents.created_at', '>=', $from)
-                                ->where('respondents.created_at', '<=', $to)
-                                ->get();
+              
+                $respondents = $request->respondents;
+             
+                if ($request->respondents != null) {
+                    $respondents = implode(',', array_filter($request->respondents));
+                } else {
+                    $respondents = null;
+                }
+              
+                    $all_datas = Respondents::whereIn('respondents.id', [$respondents])
+                    ->where('respondents.created_at', '>=', $from)
+                    ->where('respondents.created_at', '<=', $to)
+                    ->get();
+                
+              
                 
                 $styleArray = array( // font color
                     'font' => array(
@@ -798,40 +798,42 @@ class ExportController extends Controller
                 $i=1;
                 foreach($all_datas as $all_data){
 
-                    // if($all_data->type_id==1){
-                    //     $type_val ='EFT';
-                    // }else if($all_data->type_id==2){
-                    //     $type_val ='Data';
-                    // }else if($all_data->type_id==3){
-                    //     $type_val ='Airtime';
-                    // }else{  
-                    //     $type_val ='-';
-                    // }
+                    if($all_data->type_id==1){
+                        $type_val ='EFT';
+                    }else if($all_data->type_id==2){
+                        $type_val ='Data';
+                    }else if($all_data->type_id==3){
+                        $type_val ='Airtime';
+                    }else{  
+                        $type_val ='-';
+                    }
                     
-                    // if($all_data->status_id==0){
-                    //     $status_val ='Failed';
-                    // }else if($all_data->status_id==1){
-                    //     $status_val ='';
-                    // }else if($all_data->status_id==2){
-                    //     $status_val ='';
-                    // }else if($all_data->status_id==3){
-                    //     $status_val ='Complete';
-                    // }else if($all_data->status_id==4){
-                    //     $status_val ='Declined';
-                    // }else{  
-                    //     $status_val ='-';
-                    // }
+                    if($all_data->status_id==0){
+                        $status_val ='Failed';
+                    }else if($all_data->status_id==1){
+                        $status_val ='';
+                    }else if($all_data->status_id==2){
+                        $status_val ='';
+                    }else if($all_data->status_id==3){
+                        $status_val ='Complete';
+                    }else if($all_data->status_id==4){
+                        $status_val ='Declined';
+                    }else{  
+                        $status_val ='-';
+                    }
 
-                    // $amount = $all_data->amount/10;
-                    // $respondent = $all_data->name.' - '.$all_data->email.' - '.$all_data->mobile;
+                    $amount = $all_data->amount/10;
+                    $respondent = $all_data->name.' - '.$all_data->email.' - '.$all_data->mobile;
                     
-                    // $sheet->setCellValue('A' . $rows, $i);
-                    // $sheet->setCellValue('B' . $rows, $type_val);
-                    // $sheet->setCellValue('C' . $rows, $status_val);
-                    // $sheet->setCellValue('D' . $rows, $amount);
-                    // $sheet->setCellValue('E' . $rows, $respondent);
-                    // $rows++;
-                    // $i++;
+                    $sheet->setCellValue('A' . $rows, $i);
+                    $sheet->setCellValue('B' . $rows, $all_data->name);
+                    $sheet->setCellValue('C' . $rows, $all_data->surname);
+                    $sheet->setCellValue('D' . $rows, $all_data->mobile);
+                    $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                    $sheet->setCellValue('F' . $rows, $all_data->email);
+                    $sheet->setCellValue('G' . $rows, $all_data->type_val);
+                    $rows++;
+                    $i++;
                 }
 
                 $fileName = $module."_".date('ymd').".".$type;
