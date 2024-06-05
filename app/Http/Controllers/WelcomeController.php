@@ -779,8 +779,8 @@ class WelcomeController extends Controller
 
                 curl_setopt($ch, CURLOPT_URL,"https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl");
                 curl_setopt($ch, CURLOPT_POST, 1);
-                //curl_setopt($ch, CURLOPT_POSTFIELDS,"postvar1=value1&postvar2=value2&postvar3=value3");
-
+                curl_setopt($ch, CURLOPT_FAILONERROR, true);
+                
                 // In real life you should use something like:
                  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('ServiceKey' => $key,'File' => $batch)));
 
@@ -788,9 +788,19 @@ class WelcomeController extends Controller
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
                 $server_output = curl_exec($ch);
-
+                
+                if (curl_errno($ch)) {
+                    $error_msg = curl_error($ch);
+                }
                 curl_close($ch);
                 
+                if (isset($error_msg)) {
+                    // TODO - Handle cURL error accordingly
+                    dd($error_msg);
+                }
+
+                curl_close($ch);
+             
                 dd($server_output);
 
                 $curl = curl_init();
