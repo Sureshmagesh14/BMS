@@ -141,6 +141,6 @@
                 }
             }).get();
 
-            multi_delete("POST", all_id, "{{ route('networks_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
+            multi_delete("POST", all_id, "{{ route('respondents_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
         });
     </script>

@@ -242,6 +242,25 @@ class RespondentsController extends Controller
 
     }
 
+    public function respondents_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $contents = Respondents::find($id);
+                $contents->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Respondents Deleted Successfully'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function get_all_respondents(Request $request)
     {
 
