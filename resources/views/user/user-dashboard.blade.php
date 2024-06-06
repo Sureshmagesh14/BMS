@@ -62,7 +62,7 @@
                 <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile_wizard') }}">Update
                     Profile</a>
                 <br>
-                <small class="leading-none mt-1 text-danger">Cash outs are only available if your profile is up to date.
+                <small class="leading-none mt-1 text-danger">Cash Outs and Surveys are available if your profile is up to date.
                     Please update your profile.</small>
             </div>
         @endif
@@ -145,7 +145,7 @@
                                 <tr>
                                     <th>NAME </th>
                                     <th>DATE </th>
-                                    <th>TASK </th>
+                                    <th>TYPE OF SURVEY </th>
                                     <th>REWARD POINTS</th>
                                     <th>ACTION </th>
                                 </tr>
@@ -156,17 +156,35 @@
                                         <td>{{ $res->name }}</td>
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                         <td title="{{ $res->description }}">
-                                            {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
+
+                                        @if ($res->type_id == 1) 
+                                        Pre-Screener
+                                        @elseif ($res->type_id == 2) 
+                                        Pre-Task
+                                        @elseif ($res->type_id == 3) 
+                                        Paid survey
+                                        @elseif ($res->type_id == 4) 
+                                        Unpaid survey
+                                        @endif
+                                         
+                                            <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
                                         </td>
                                         <td>{{ $res->reward }}</td>
                                         @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
-                                        @if ($get_link != null)
-                                            <td><a target="_blank"
-                                                    href="{{ url('survey/view', $get_link->builderID) }}"
-                                                    class="btn btn-yellow">DETAIL</a></td>
-                                        @else
-                                            <td>No Survey</td>
+
+                                        @if ($data->profile_completion_id == 0)
+
+                                        <td> Profile Incomple </td>
+                                        @else 
+                                            @if ($get_link != null)
+                                                <td><a target="_blank"
+                                                        href="{{ url('survey/view', $get_link->builderID) }}"
+                                                        class="btn btn-yellow">START</a></td>
+                                            @else
+                                                <td>No Survey</td>
+                                            @endif
                                         @endif
+                                            
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -260,7 +278,7 @@
                                 <tr>
                                     <th>NAME </th>
                                     <th>DATE </th>
-                                    <th>TASK </th>
+                                    <th>TYPE OF SURVEY </th>
                                     <th>REWARD POINTS </th>
                                     <th>ACTION </th>
                                 </tr>
@@ -271,7 +289,18 @@
                                         <td>{{ $res->name }}</td>
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                         <td title="{{ $res->description }}">
-                                            {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
+                                        
+                                            @if ($res->type_id == 1) 
+                                            Pre-Screener
+                                            @elseif ($res->type_id == 2) 
+                                            Pre-Task
+                                            @elseif ($res->type_id == 3) 
+                                            Paid survey
+                                            @elseif ($res->type_id == 4) 
+                                            Unpaid survey
+                                            @endif
+                                            
+                                            <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
                                         </td>
                                         <td>{{ $res->reward }}</td>
                                         @php

@@ -39,7 +39,10 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Mobile Number
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="mobile" name="mobile" value="{{ $respondents->mobile }}" maxlength="16">
+            <div class="input-group">
+                <div class="input-group-text">+27</div>
+                <input type="text" class="form-control" id="mobile" name="mobile" value="{{ $respondents->mobile }}"  maxlength="16">
+            </div>
         </div>
     </div>
 
@@ -48,8 +51,10 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Whatsapp Number
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="whatsapp" name="whatsapp"
-                value="{{ $respondents->whatsapp }}" maxlength="16">
+            <div class="input-group">
+                <div class="input-group-text">+27</div>
+                <input type="text" class="form-control" id="whatsapp" name="whatsapp" value="{{ $respondents->whatsapp }}"  maxlength="16">
+            </div>
         </div>
     </div>
 

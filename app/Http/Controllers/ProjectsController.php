@@ -15,7 +15,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Exception;
-
+use Config;
 class ProjectsController extends Controller
 {
      /**
@@ -760,4 +760,14 @@ class ProjectsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+
+    public function get_survey_link(Request $request){
+        $survey_id = $request->survey_id;
+        $app_url=config('app.url'); 
+        $get_survey=Projects::get_survey($survey_id);
+        $repsonse=$app_url.'/survey/view/'.$get_survey->builderID;
+
+        return response()->json(['repsonse' => $repsonse], 200);
+    }
+    
 }
