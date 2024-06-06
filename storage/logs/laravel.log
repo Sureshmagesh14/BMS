@@ -7782,3 +7782,7 @@
 #50 C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\Users\\\\gomath...')
 #51 {main}
 "} 
+[2024-05-30 05:05:33] local.ERROR: Maximum execution time of 60 seconds exceeded {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Maximum execution time of 60 seconds exceeded at C:\\Users\\gomathy\\Desktop\\Gomathy\\GPC\\BMS\\vendor\\composer\\ClassLoader.php:429)
+[stacktrace]
+#0 {main}
+"} 

@@ -237,6 +237,16 @@ class SurveyController extends Controller
         // }
         
     }
+    public function restoreSurvey(Request $request,$id){
+        $survey=Survey::where(['id'=>$id])->first();
+        
+            $survey->is_deleted=0;
+            $survey->save();
+            return redirect()->back()->with('success', __('Survey restored Successfully.'));
+        
+    }
+
+    
     public function templateList(Request $request,$id){
        
         $user = Auth::guard('admin')->user();
