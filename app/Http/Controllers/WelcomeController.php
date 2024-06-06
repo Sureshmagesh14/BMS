@@ -316,10 +316,17 @@ class WelcomeController extends Controller
                 ->join('projects', 'rewards.project_id', 'projects.id')
                 ->where('rewards.respondent_id', '=', $resp_id)->get();
 
+            $get_res_out = DB::table('rewards')->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at')
+                ->join('cashouts', 'rewards.cashout_id', 'cashouts.id')
+                ->join('projects', 'rewards.project_id', 'projects.id')
+                ->where('rewards.respondent_id', '=', $resp_id)
+                ->where('cashouts.status_id', 1)
+                ->orWhere('cashouts.status_id', 2)->get();
+
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-            return view('user.user-cashout')->with('get_res', $get_res);
+            return view('user.user-cashout',compact('get_res_out'))->with('get_res', $get_res);
             //}
 
         } catch (Exception $e) {
