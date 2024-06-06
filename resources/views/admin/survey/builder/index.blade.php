@@ -1389,10 +1389,16 @@ async function  uploadfile(file,id){
     await fetch("{{route('survey.uploadimage')}}", requestOptions)
     .then((response) => response.text())
     .then((result) => {
-        let img="http://127.0.0.1:8000/uploads/survey/"+result;
-        id.children('img.current_image').attr('src',img);
-        id.children('img.current_image').css('display','block');
-        id.children(".trigger_choice").css('display','none');
+        if(result == 'size issue'){
+            alert('Upload image lesser than 2mb');
+        }else{
+            var baseUrl = window.location.origin;
+            let img=baseUrl+"/uploads/survey/"+result;
+            id.children('img.current_image').attr('src',img);
+            id.children('img.current_image').css('display','block');
+            id.children(".trigger_choice").css('display','none');
+        }
+        
     })
     .catch((error) => console.error(error));
     return img;
@@ -2030,7 +2036,9 @@ $('#welcome_template').on("change",function(){
             $('#welcome_imagetitle').val(result?.sub_title);
             $('#welcome_imagesubtitle').val(result?.description);
             $('#welcome_btn').val(result?.button_label);
-            $('#existing_image').attr("src","http://127.0.0.1:8000/uploads/survey/"+result?.image);
+            var baseUrl = window.location.origin;
+
+            $('#existing_image').attr("src",baseUrl+"/uploads/survey/"+result?.image);
             $('#existing_image_uploaded').val(result?.image);
             $('.exitingImg').css('display','flex');
             $('#existing_image').css('display',"block");
@@ -2053,7 +2061,9 @@ $('#thankyou_template').on("change",function(){
             $('#thankyou_title').val(result?.title);
             $('#thankyou_imagetitle').val(result?.sub_title);
             $('#existing_image_uploaded').val(result?.image);
-            $('#existing_image_thankyou').attr("src","http://127.0.0.1:8000/uploads/survey/"+result?.image);
+            var baseUrl = window.location.origin;
+
+            $('#existing_image_thankyou').attr("src",baseUrl+"/uploads/survey/"+result?.image);
         }
     });
 

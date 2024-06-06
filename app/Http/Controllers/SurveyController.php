@@ -767,7 +767,7 @@ class SurveyController extends Controller
             echo $filename;
 
         }else{
-            echo "no file";
+            echo "size issue";
         }
     }
     public function getqus(Request $request){
@@ -818,8 +818,17 @@ class SurveyController extends Controller
         echo "<pre>"; print_r($qus);
     }
     public function background(Request $request,$id){
+      
         $survey=Survey::where(['id'=>$id])->first();
         return view('admin.survey.background', compact('survey'));
+    }
+    private function getRealIp(Request $request)
+    {
+        if ($request->hasHeader('X-Forwarded-For')) {
+            $ips = explode(',', $request->header('X-Forwarded-For'));
+            return trim($ips[0]);
+        }
+        return $request->ip();
     }
     public function setbackground(Request $request,$id){
         $survey=Survey::where(['id'=>$id])->first();
@@ -853,9 +862,9 @@ class SurveyController extends Controller
         $survey_id = $request->survey_id;
         $question_id = $request->question_id;
         $response_user_id =  Auth::user()->id;
-
+        $ipAddress = $this->getRealIp($request);
         // Other details 
-        $other_details = ["device_id"=>$request->device_id,"device_name"=>$request->device_name,"browser"=>$request->browser,"os"=>$request->os,"device_type"=>$request->device_type,"long"=>$request->long,"lat"=>$request->lat,"location"=>$request->location,"ip_address"=>$request->ip_address,"lang_code"=>$request->lang_code,"lang_name"=>$request->lang_name];
+        $other_details = ["device_id"=>$request->device_id,"device_name"=>$request->device_name,"browser"=>$request->browser,"os"=>$request->os,"device_type"=>$request->device_type,"long"=>$request->long,"lat"=>$request->lat,"location"=>$request->location,"ip_address"=>$ipAddress,"lang_code"=>$request->lang_code,"lang_name"=>$request->lang_name];
         
         $qus_check=Questions::where('id', '=', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
         $user_ans =$request->user_ans;
@@ -1552,7 +1561,7 @@ class SurveyController extends Controller
             $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
 
             $responses = SurveyResponse::where(['survey_id'=>$survey_id])->get();
-            $cols = [ ["data"=>"#","name"=>"#","orderable"=> false,"searchable"=> false], ["data"=>"name","name"=>"Name","orderable"=> true,"searchable"=> true],["data"=>"responseinfo","name"=>"Response Info","orderable"=> true,"searchable"=> true]];
+            $cols = [ ["data"=>"#","name"=>"#","orderable"=> false,"searchable"=> false], ["data"=>"name","name"=>"Name","orderable"=> true,"searchable"=> true],["data"=>"responseinfo","name"=>"Date","orderable"=> true,"searchable"=> true]];
             
             foreach($question as $qus){
                 $data = ["data"=>$qus->question_name,"name"=>$qus->question_name,"orderable"=> true,"searchable"=> true];
@@ -2235,7 +2244,7 @@ class SurveyController extends Controller
         $survey = Survey::where(['id'=>$survey_id])->first();
         $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->get();
         $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
-        $cols = ["Respondent Name", "Response Info","Device ID","Device Name","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name"];
+        $cols = ["Respondent Name", "Date","Device ID","Device Name","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name"];
         foreach($question as $qus){
             array_push($cols,$qus->question_name);
         }

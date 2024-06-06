@@ -1471,7 +1471,7 @@ $('#next_button').click(function(){
                 submit =1;
             }else{
                 submit = 0;
-                alert('Pls choose answ');
+                alert('Please select an answer');
                 return false;
             }
         });
@@ -1491,7 +1491,7 @@ $('#next_button').click(function(){
         $('#next_qus').val($(this).data('url'));
         $('#skip_qus').submit();
     }else{
-        alert('Pls choose answ');
+        alert('Please select an answer');
         return false;
     }
 });
