@@ -132,12 +132,11 @@ class WelcomeController extends Controller
             }
 
             $resp_datas =  RespondentProfile::where('respondent_id', $id)->first();
-            $percent1 = $resp_datas->basic_details;
-            $percent2 = $resp_datas->essential_details;
-            $percent3 = $resp_datas->extended_details;
+            
 
-            if($percent1!=''){
+            if(isset($resp_datas->basic_details) && ($resp_datas->basic_details!='')){
 
+                $percent1 = $resp_datas->basic_details;
                 $json_array  = json_decode($percent1, true);
                 $tot_count  = count($json_array);
 
@@ -157,8 +156,9 @@ class WelcomeController extends Controller
                 $percent1 =0;
             }
             
-            if($percent2!=''){
-                
+            if(isset($resp_datas->essential_details) && ($resp_datas->essential_details!='')){
+
+                $percent2 = $resp_datas->essential_details;
                 $json_array  = json_decode($percent2, true);
                 $tot_count  = count($json_array);
 
@@ -179,8 +179,9 @@ class WelcomeController extends Controller
                 $percent2 =0;
             }
 
-            if($percent3!=''){
-                
+            if(isset($resp_datas->extended_details) && ($resp_datas->extended_details!='')){
+
+                $percent3 = $resp_datas->extended_details;
                 $json_array  = json_decode($percent3, true);
                 $tot_count  = count($json_array);
 
