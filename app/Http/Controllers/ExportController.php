@@ -102,7 +102,7 @@ class ExportController extends Controller
 
                 $sheet->getRowDimension('1')->setRowHeight(30);
 
-                if ($resp_type == 'Basic and Essential Info' && $type_method == 'Individual') {
+                if ($resp_type == 'Basic and Essential Info') {
 
                     // starts
 
@@ -397,10 +397,14 @@ class ExportController extends Controller
                         $respondents = null;
                     }
 
-                    $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                        $join->on('respondent_profile.id', '=', 'respondent_profile.respondent_id');
-                    })
+                    if($type_method == 'Individual'){
+
+                        $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
+                            $join->on('respondent_profile.id', '=', 'respondent_profile.respondent_id');
+                        })
                         ->whereIn('respondents.id', [$respondents])
+                        ->where('respondents.created_at', '>=', $from)
+                        ->where('respondents.created_at', '<=', $to)
                         ->get([
                             'respondents.opted_in',
                             'respondent_profile.basic_details',
@@ -408,35 +412,53 @@ class ExportController extends Controller
                             'respondent_profile.extended_details',
                             'respondent_profile.updated_at',
                         ]);
+                        
+                    }else{
+
+                        $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
+                            $join->on('respondent_profile.id', '=', 'respondent_profile.respondent_id');
+                        })
+                        ->where('respondents.created_at', '>=', $from)
+                        ->where('respondents.created_at', '<=', $to)
+                        ->get([
+                            'respondents.opted_in',
+                            'respondent_profile.basic_details',
+                            'respondent_profile.essential_details',
+                            'respondent_profile.extended_details',
+                            'respondent_profile.updated_at',
+                        ]);
+                        
+                    }
+                    
 
                     foreach ($all_datas as $all_data) {
                         $basic = json_decode($all_data->basic_details);
                         $essential = json_decode($all_data->essential_details);
 
                         $sheet->setCellValue('A' . $rows, $i);
-                        $sheet->setCellValue('B' . $rows, $basic->first_name);
-                        $sheet->setCellValue('C' . $rows, $basic->last_name);
-                        $sheet->setCellValue('D' . $rows, $basic->mobile_number);
-                        $sheet->setCellValue('E' . $rows, $basic->whatsapp_number);
-                        $sheet->setCellValue('F' . $rows, $basic->email);
+                        $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
+                        $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
+                        $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
+                        $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
+                        $sheet->setCellValue('F' . $rows, $basic->email ?? '');
                         $year = (date('Y') - date('Y', strtotime($basic->date_of_birth)));
                         $sheet->setCellValue('G' . $rows, $year);
-                        $sheet->setCellValue('H' . $rows, $essential->relationship_statu);
-                        $sheet->setCellValue('I' . $rows, $essential->ethnic_group);
-                        $sheet->setCellValue('J' . $rows, $essential->gender);
-                        $sheet->setCellValue('K' . $rows, $essential->education_level);
-                        $sheet->setCellValue('L' . $rows, $essential->employment_status);
-                        $sheet->setCellValue('M' . $rows, $essential->industry_my_company);
-                        $sheet->setCellValue('N' . $rows, $essential->job_title);
-                        $sheet->setCellValue('O' . $rows, $essential->personal_income_per_month);
-                        $sheet->setCellValue('P' . $rows, $essential->job_title);
+                        $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
+                        $sheet->setCellValue('I' . $rows, $essential->ethnic_group ?? '');
+                        $sheet->setCellValue('J' . $rows, $essential->gender ?? '');
+                        $sheet->setCellValue('K' . $rows, $essential->education_level ?? '');
+                        $sheet->setCellValue('L' . $rows, $essential->employment_status ?? '');
+                        $sheet->setCellValue('M' . $rows, $essential->industry_my_company ?? '');
+                        $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
+                        $sheet->setCellValue('O' . $rows, $essential->personal_income_per_month ?? '');
+                        $sheet->setCellValue('P' . $rows, $essential->job_title ?? '');
                         $get_state = DB::table('state')->where('id', $essential->province)->first();
-                        $sheet->setCellValue('Q' . $rows, $get_state->state);
+                        $sheet->setCellValue('Q' . $rows, $get_state->state ?? '');
                         $get_district = DB::table('district')->where('id', $essential->suburb)->first();
-                        $sheet->setCellValue('R' . $rows, $get_district->district);
-                        $sheet->setCellValue('S' . $rows, $essential->no_houehold);
-                        $sheet->setCellValue('T' . $rows, $essential->no_children);
-                        $sheet->setCellValue('U' . $rows, $essential->no_vehicle);
+                        $sheet->setCellValue('R' . $rows, $get_district->district ?? '');
+                        $sheet->setCellValue('S' . $rows, $essential->no_houehold ?? '');
+                        $sheet->setCellValue('T' . $rows, $essential->no_children ?? '');
+                        $sheet->setCellValue('U' . $rows, $essential->no_vehicle ?? '');
                         if ($all_data->opted_in != null) {
                             $opted_in = date("d-m-Y", strtotime($all_data->opted_in));
                         } else {
