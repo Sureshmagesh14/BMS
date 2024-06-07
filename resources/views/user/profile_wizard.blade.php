@@ -115,11 +115,12 @@
                                                 <input type="hidden" placeholder="YYYY-MM-DD" class="form-control" id="date_of_birth" name="basic[date_of_birth]" value="{{$resp_details->date_of_birth}}" required>
                                                 
                                                 @if ($resp_details->date_of_birth!=null)
-                                                    <code>@php
+                                                    <code>
+                                                        @php
                                                         $bday = new \DateTime($resp_details->date_of_birth);
                                                         $today = new \DateTime(date('m.d.y'));
                                                         $diff = $today->diff($bday);
-                                                        $age  = $diff->y. ' Years,'. $diff->m. ' Months';
+                                                        $age  = $diff->y. ' Years';
                                                     @endphp
                                                     </code>
                                                     <small id="agecal" class="text-danger">{{$age}}</small>
