@@ -92,6 +92,8 @@ class RespondentsController extends Controller
                 $respondents->save();
                 $respondents->id;
                 app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
+                $ref=array('respondent_id'=>$respondents->id,'user_id'=>Auth::guard('admin')->user()->id,'created_at'=>date("Y-m-d H:i:s A"));
+                DB::table('respondent_referrals')->insert($ref);
                 //email starts
                 // $data = $respondents->id;
                 // if($data!=null){

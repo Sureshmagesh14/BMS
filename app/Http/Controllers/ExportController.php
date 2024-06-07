@@ -47,55 +47,56 @@ class ExportController extends Controller
             $type_method = $request->type_method;
 
             $type = 'xlsx';
+            $styleArray = array( // font color
+                'font' => array(
+                    'bold' => true,
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                    'color' => array(
+                        'rgb' => 'ffffff',
+                    ),
+                ),
+            );
+
+            $styleArray2 = [
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['argb' => '000000'],
+                    ],
+                ],
+                'font' => [
+                    'size' => 11,
+                    'name' => 'Arial',
+                ],
+                'alignment' => [
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    // 'wrapText' => true,
+                ],
+            ];
+
+            // Datas
+            $styleArray3 = [
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['argb' => '000000'],
+                    ],
+                ],
+                'font' => [
+                    'size' => 11,
+                    'name' => 'Arial',
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                ],
+            ];
 
             if ($module == 'Respondents info') {
 
                 // dd($all_datas,'basic_details');
 
-                $styleArray = array( // font color
-                    'font' => array(
-                        'bold' => true,
-                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
-                        'color' => array(
-                            'rgb' => 'ffffff',
-                        ),
-                    ),
-                );
-
-                $styleArray2 = [
-                    'borders' => [
-                        'allBorders' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                            'color' => ['argb' => '000000'],
-                        ],
-                    ],
-                    'font' => [
-                        'size' => 11,
-                        'name' => 'Arial',
-                    ],
-                    'alignment' => [
-                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                        // 'wrapText' => true,
-                    ],
-                ];
-
-                // Datas
-                $styleArray3 = [
-                    'borders' => [
-                        'allBorders' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                            'color' => ['argb' => '000000'],
-                        ],
-                    ],
-                    'font' => [
-                        'size' => 11,
-                        'name' => 'Arial',
-                    ],
-                    'alignment' => [
-                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    ],
-                ];
+               
 
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
@@ -400,11 +401,11 @@ class ExportController extends Controller
                     if($type_method == 'Individual'){
 
                         $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                            $join->on('respondent_profile.id', '=', 'respondent_profile.respondent_id');
+                            $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
                         })
                         ->whereIn('respondents.id', [$respondents])
-                        // ->where('respondent_profile.created_at', '>=', $from)
-                        // ->where('respondent_profile.created_at', '<=', $to)
+                        ->where('respondents.created_at', '>=', $from)
+                        ->where('respondents.created_at', '<=', $to)
                         ->get([
                             'respondents.opted_in',
                             'respondent_profile.basic_details',
@@ -412,11 +413,15 @@ class ExportController extends Controller
                             'respondent_profile.extended_details',
                             'respondent_profile.updated_at',
                         ]);
+
+
+
+
                         
                     }else{
-
+                    
                         $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                            $join->on('respondent_profile.id', '=', 'respondent_profile.respondent_id');
+                            $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
                         })
                         ->where('respondents.created_at', '>=', $from)
                         ->where('respondents.created_at', '<=', $to)
@@ -432,6 +437,7 @@ class ExportController extends Controller
                     
 
                     foreach ($all_datas as $all_data) {
+                  
                         $basic = json_decode($all_data->basic_details);
                         $essential = json_decode($all_data->essential_details);
 
@@ -441,7 +447,12 @@ class ExportController extends Controller
                         $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
                         $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
-                        $year = (date('Y') - date('Y', strtotime($basic->date_of_birth)));
+                        if(isset($basic->date_of_birth)){
+                            $year = (date('Y') - date('Y', strtotime($basic->date_of_birth ?? '')));
+                        }else{
+                            $year = '-';
+                        }
+                       
                         $sheet->setCellValue('G' . $rows, $year);
                         $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
                         $sheet->setCellValue('I' . $rows, $essential->ethnic_group ?? '');
@@ -452,10 +463,21 @@ class ExportController extends Controller
                         $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
                         $sheet->setCellValue('O' . $rows, $essential->personal_income_per_month ?? '');
                         $sheet->setCellValue('P' . $rows, $essential->job_title ?? '');
-                        $get_state = DB::table('state')->where('id', $essential->province)->first();
-                        $sheet->setCellValue('Q' . $rows, $get_state->state ?? '');
-                        $get_district = DB::table('district')->where('id', $essential->suburb)->first();
-                        $sheet->setCellValue('R' . $rows, $get_district->district ?? '');
+                        if(isset($basic->state)){
+                            $state = DB::table('state')->where('id', $essential->province)->first();
+                            $get_state=$get_state->state;
+                        }else{
+                            $get_state='';
+                        }
+                      
+                        $sheet->setCellValue('Q' . $rows, $get_state ?? '');
+                        if(isset($basic->suburb)){
+                            $district = DB::table('district')->where('id', $essential->suburb)->first();
+                            $get_district=$district->district;
+                        }else{
+
+                        }
+                        $sheet->setCellValue('R' . $rows, $get_district ?? '');
                         $sheet->setCellValue('S' . $rows, $essential->no_houehold ?? '');
                         $sheet->setCellValue('T' . $rows, $essential->no_children ?? '');
                         $sheet->setCellValue('U' . $rows, $essential->no_vehicle ?? '');
@@ -768,11 +790,11 @@ class ExportController extends Controller
                     if($type_method == 'Individual'){
 
                         $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                            $join->on('respondent_profile.id', '=', 'respondent_profile.respondent_id');
+                            $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
                         })
                         ->whereIn('respondents.id', [$respondents])
-                        // ->where('respondent_profile.created_at', '>=', $from)
-                        // ->where('respondent_profile.created_at', '<=', $to)
+                        ->where('respondents.created_at', '>=', $from)
+                        ->where('respondents.created_at', '<=', $to)
                         ->get([
                             'respondents.opted_in',
                             'respondent_profile.basic_details',
@@ -780,11 +802,15 @@ class ExportController extends Controller
                             'respondent_profile.extended_details',
                             'respondent_profile.updated_at',
                         ]);
+
+
+
+
                         
                     }else{
-
+                    
                         $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                            $join->on('respondent_profile.id', '=', 'respondent_profile.respondent_id');
+                            $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
                         })
                         ->where('respondents.created_at', '>=', $from)
                         ->where('respondents.created_at', '<=', $to)
@@ -800,7 +826,7 @@ class ExportController extends Controller
                   
                     foreach ($all_datas as $all_data) {
                         $basic = json_decode($all_data->basic_details);
-                        $extended = json_decode($all_data->extended_details);
+                        $essential = json_decode($all_data->extended_details);
 
                         $sheet->setCellValue('A' . $rows, $i);
                         $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
@@ -808,7 +834,12 @@ class ExportController extends Controller
                         $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
                         $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
-                        $year = (date('Y') - date('Y', strtotime($basic->date_of_birth)));
+                        if(isset($basic->date_of_birth)){
+                            $year = (date('Y') - date('Y', strtotime($basic->date_of_birth ?? '')));
+                        }else{
+                            $year = '-';
+                        }
+                       
                         $sheet->setCellValue('G' . $rows, $year);
                         $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
                         $sheet->setCellValue('I' . $rows, $essential->ethnic_group ?? '');
@@ -819,10 +850,21 @@ class ExportController extends Controller
                         $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
                         $sheet->setCellValue('O' . $rows, $essential->personal_income_per_month ?? '');
                         $sheet->setCellValue('P' . $rows, $essential->job_title ?? '');
-                        $get_state = DB::table('state')->where('id', $essential->province)->first();
-                        $sheet->setCellValue('Q' . $rows, $get_state->state ?? '');
-                        $get_district = DB::table('district')->where('id', $essential->suburb)->first();
-                        $sheet->setCellValue('R' . $rows, $get_district->district ?? '');
+                        if(isset($basic->state)){
+                            $state = DB::table('state')->where('id', $essential->province)->first();
+                            $get_state=$get_state->state;
+                        }else{
+                            $get_state='';
+                        }
+                      
+                        $sheet->setCellValue('Q' . $rows, $get_state ?? '');
+                        if(isset($basic->suburb)){
+                            $district = DB::table('district')->where('id', $essential->suburb)->first();
+                            $get_district=$district->district;
+                        }else{
+
+                        }
+                        $sheet->setCellValue('R' . $rows, $get_district ?? '');
                         $sheet->setCellValue('S' . $rows, $essential->no_houehold ?? '');
                         $sheet->setCellValue('T' . $rows, $essential->no_children ?? '');
                         $sheet->setCellValue('U' . $rows, $essential->no_vehicle ?? '');
@@ -843,8 +885,8 @@ class ExportController extends Controller
                         $sheet->getStyle('C' . $rows . ':W' . $rows)->applyFromArray($styleArray2);
                         $sheet->getStyle('C' . $rows . ':W' . $rows)->getAlignment()->setIndent(1);
                     }
-                        // $rows++;
-                        // $i++;
+                        $rows++;
+                        $i++;
                     
 
                 }
@@ -861,10 +903,8 @@ class ExportController extends Controller
                     $respondents = null;
                 }
 
-                $all_datas = Respondents::whereIn('respondents.id', [$respondents])
-                    ->where('respondents.created_at', '>=', $from)
-                    ->where('respondents.created_at', '<=', $to)
-                    ->get();
+
+              
 
                 $styleArray = array( // font color
                     'font' => array(
@@ -884,6 +924,9 @@ class ExportController extends Controller
                 if ($resp_status == 'Deactivated') {
 
                     // starts
+
+                  
+
 
                     $sheet->getColumnDimension('A')->setAutoSize(true);
                     $sheet->getColumnDimension('B')->setAutoSize(true);
@@ -984,6 +1027,11 @@ class ExportController extends Controller
 
                     $rows = 2;
                     $i = 1;
+                    $all_datas = Respondents::whereIn('respondents.id', [$respondents])
+                    ->where('respondents.created_at', '>=', $from)
+                    ->where('respondents.created_at', '<=', $to)
+                    ->where('respondents.active_status_id','=',3)
+                    ->get();
                     foreach ($all_datas as $all_data) {
 
                         $sheet->setCellValue('A' . $rows, $i);
@@ -996,7 +1044,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
                         $rows++;
 
-                        // $i++;
+                        $i++;
                     }
 
                     // ends
@@ -1115,6 +1163,14 @@ class ExportController extends Controller
 
                     $rows = 2;
                     $i = 1;
+
+                    $all_datas = Respondents::whereIn('respondents.id', [$respondents])
+                    ->where('respondents.created_at', '>=', $from)
+                    ->where('respondents.created_at', '<=', $to)
+                    ->where('respondents.active_status_id','=',5)
+                    ->get();
+
+
                     foreach ($all_datas as $all_data) {
 
                         $sheet->setCellValue('A' . $rows, $i);
@@ -1124,11 +1180,13 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
+
+                        // $get_createdby=DB::table('respondent_referrals')->where('respondent_id',$respondents)->first();
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
                         $sheet->setCellValue('I' . $rows, $all_data->created_by);
                         $rows++;
-                        // $rows++;
-                        // $i++;
+                        $rows++;
+                        $i++;
                     }
 
                     // ends
@@ -1587,22 +1645,25 @@ class ExportController extends Controller
                     } else {
                         $respondents = null;
                     }
-                if($type_method == 'Individual'){
-                $all_datas = Projects::select('projects.*', 'projects.name as uname')
-                    ->join('users', 'users.id', '=', 'projects.user_id')
-                    ->orderby("id", "desc")
-                    ->whereIn('projects.user_id', [$respondents])
+            
+
+                    $all_datas = Projects::leftJoin('users', function ($join) {
+                        $join->on('users.id', '=', 'projects.user_id');
+                    })
                     ->where('projects.created_at', '>=', $from)
                     ->where('projects.created_at', '<=', $to)
-                    ->get();
-                }else{
-                    $all_datas = Projects::select('projects.*', 'projects.name as uname')
-                    ->join('users', 'users.id', '=', 'projects.user_id')
-                    ->orderby("id", "desc")
-                    ->where('projects.created_at', '>=', $from)
-                    ->where('projects.created_at', '<=', $to)
-                    ->get();
-                }
+                    ->get([
+                        'users.name as uname',
+                        'users.surname',
+                        'projects.number',
+                        'projects.name',
+                        'projects.published_date',
+                        'projects.closing_date',
+                        'projects.total_responnded_attended',
+                        'projects.total_responded_recruited',
+                    ]);
+
+              
 
                 $styleArray = array( // font color
                     'font' => array(
@@ -1625,7 +1686,9 @@ class ExportController extends Controller
                 $sheet->getColumnDimension('D')->setAutoSize(true);
                 $sheet->getColumnDimension('E')->setAutoSize(true);
 
-                $sheet->setCellValue('A1', 'Project Number');
+              
+
+                $sheet->setCellValue('A1', 'Project Number & Project Name');
 
                 $sheet->getStyle('A1')
                     ->getFill()
@@ -1636,7 +1699,7 @@ class ExportController extends Controller
                 $sheet->getStyle('A1')
                     ->applyFromArray($styleArray);
 
-                $sheet->setCellValue('B1', 'Project Name');
+                $sheet->setCellValue('B1', 'PM Name');
 
                 $sheet->getStyle('B1')
                     ->getFill()
@@ -1647,7 +1710,7 @@ class ExportController extends Controller
                 $sheet->getStyle('B1')
                     ->applyFromArray($styleArray);
 
-                $sheet->setCellValue('C1', 'PM Name');
+                $sheet->setCellValue('C1', 'Dates of project( Live Date and Closing Date)');
 
                 $sheet->getStyle('C1')
                     ->getFill()
@@ -1658,7 +1721,7 @@ class ExportController extends Controller
                 $sheet->getStyle('C1')
                     ->applyFromArray($styleArray);
 
-                $sheet->setCellValue('D1', 'ates of project( Live Date and Closing Date)');
+                $sheet->setCellValue('D1', 'Total respondents recruited');
 
                 $sheet->getStyle('D1')
                     ->getFill()
@@ -1669,7 +1732,7 @@ class ExportController extends Controller
                 $sheet->getStyle('D1')
                     ->applyFromArray($styleArray);
 
-                $sheet->setCellValue('E1', 'Total respondents recruited');
+                $sheet->setCellValue('E1', 'Total respondents actually attended');
 
                 $sheet->getStyle('E1')
                     ->getFill()
@@ -1678,33 +1741,38 @@ class ExportController extends Controller
                     ->setARGB('0f609b'); // cell color
 
                 $sheet->getStyle('E1')
-                    ->applyFromArray($styleArray);
-
-                $sheet->setCellValue('F1', 'Total respondents actually attended');
-
-                $sheet->getStyle('F1')
-                    ->getFill()
-                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                    ->getStartColor()
-                    ->setARGB('0f609b'); // cell color
-
-                $sheet->getStyle('F1')
                     ->applyFromArray($styleArray);
 
                 $rows = 2;
                 $i = 1;
                 foreach ($all_datas as $all_data) {
 
-                    $sheet->setCellValue('A' . $rows, $i);
-                    $sheet->setCellValue('B' . $rows, $all_data->number);
-                    $sheet->setCellValue('C' . $rows, $all_data->uname);
-                    $sheet->setCellValue('D' . $rows, $all_data->name);
-                    $sheet->setCellValue('E' . $rows, $all_data->created_at);
-                    $sheet->setCellValue('F' . $rows, $all_data->email);
-                   
+                  
+                    $sheet->setCellValue('A' . $rows, $all_data->number.' '.$all_data->name);
+                    $sheet->setCellValue('B' . $rows, $all_data->uname.$all_data->surname);
+                    if(isset($all_data->published_date)){
+                        $published_date=date("d-m-Y", strtotime($all_data->published_date));
+                    }else{
+                        $published_date='-';
+                    }
 
-                    // $rows++;
-                    // $i++;
+                    if(isset($all_data->closing_date)){
+                        $closing_date=date("d-m-Y", strtotime($all_data->closing_date));
+                    }else{
+                        $closing_date='-';
+                    }
+
+                    $sheet->setCellValue('C' . $rows, $published_date. '-' .$closing_date);
+                  
+                    $sheet->setCellValue('D' . $rows, $all_data->total_responnded_attended);
+                    $sheet->setCellValue('E' . $rows, $all_data->total_responded_recruited);
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':E' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':E' . $rows)->getAlignment()->setIndent(1);
+
+                    $rows++;
+                    $i++;
                 }
 
                 $fileName = $module . "_" . date('ymd') . "." . $type;
@@ -1877,7 +1945,7 @@ class ExportController extends Controller
                     $rows++;
 
                     // $rows++;
-                    // $i++;
+                    $i++;
                 }
 
                 $fileName = $module . "_" . date('ymd') . "." . $type;

@@ -162,6 +162,7 @@
                                         <div class="custom-control custom-radio mb-3">
                                             <input type="radio" id="All" name="type_method"
                                                 class="custom-control-input type_method" value="All">
+                                                <input type="hidden" name="all" id="all">
                                             <label class="custom-control-label" for="All">All</label>
                                         </div>
 
@@ -173,7 +174,7 @@
                                     <div class="col-md-10">
 
                                         <input class="form-control" type="text" id="respondents"
-                                            name="respondents[]" value="{{ request()->get('q') }}" required>
+                                            name="respondents[]" value="{{ request()->get('q') }}" >
                                     </div>
                                 </div>
 
@@ -276,8 +277,10 @@
                             $(".show_year").hide();
                             $(".show_month").hide();
                             $(".show_resp").hide();
+                            $(".report_type").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
+                            $(".respondents").hide();
                             $(".show_year").hide();
                             $(".show_month").hide();
                         }
