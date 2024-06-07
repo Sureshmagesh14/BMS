@@ -132,12 +132,11 @@ class WelcomeController extends Controller
             }
 
             $resp_datas =  RespondentProfile::where('respondent_id', $id)->first();
-            $percent1 = $resp_datas->basic_details;
-            $percent2 = $resp_datas->essential_details;
-            $percent3 = $resp_datas->extended_details;
+            
 
-            if($percent1!=''){
+            if(isset($resp_datas->basic_details) && ($resp_datas->basic_details!='')){
 
+                $percent1 = $resp_datas->basic_details;
                 $json_array  = json_decode($percent1, true);
                 $tot_count  = count($json_array);
 
@@ -157,8 +156,9 @@ class WelcomeController extends Controller
                 $percent1 =0;
             }
             
-            if($percent2!=''){
-                
+            if(isset($resp_datas->essential_details) && ($resp_datas->essential_details!='')){
+
+                $percent2 = $resp_datas->essential_details;
                 $json_array  = json_decode($percent2, true);
                 $tot_count  = count($json_array);
 
@@ -179,8 +179,9 @@ class WelcomeController extends Controller
                 $percent2 =0;
             }
 
-            if($percent3!=''){
-                
+            if(isset($resp_datas->extended_details) && ($resp_datas->extended_details!='')){
+
+                $percent3 = $resp_datas->extended_details;
                 $json_array  = json_decode($percent3, true);
                 $tot_count  = count($json_array);
 
@@ -316,10 +317,17 @@ class WelcomeController extends Controller
                 ->join('projects', 'rewards.project_id', 'projects.id')
                 ->where('rewards.respondent_id', '=', $resp_id)->get();
 
+            $get_res_out = DB::table('rewards')->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at')
+                ->join('cashouts', 'rewards.cashout_id', 'cashouts.id')
+                ->join('projects', 'rewards.project_id', 'projects.id')
+                ->where('rewards.respondent_id', '=', $resp_id)
+                ->where('cashouts.status_id', 1)
+                ->orWhere('cashouts.status_id', 2)->get();
+
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-            return view('user.user-cashout')->with('get_res', $get_res);
+            return view('user.user-cashout',compact('get_res_out'))->with('get_res', $get_res);
             //}
 
         } catch (Exception $e) {

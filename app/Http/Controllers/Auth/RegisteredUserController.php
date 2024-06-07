@@ -46,7 +46,6 @@ class RegisteredUserController extends Controller
             'whatsapp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . Respondents::class],
             'date_of_birth' => ['required', 'string', 'max:255'],
-            'id_passport' => ['required', 'string', 'max:255'],
             'password_register' => ['required', Rules\Password::defaults()->min(6)],
         ]);
         $ref_code = substr(md5(time()), 0, 8);
