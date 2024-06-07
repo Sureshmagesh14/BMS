@@ -119,7 +119,7 @@
                 <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
                     <h5 class="d-flex align-items-center justify-content-around">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
-                                alt=""> <span class="small-font-sm">Current Survey</span> </div>
+                                alt=""> <span class="small-font-sm">See if You Qualify for Other Research</span> </div>
                         <div class="px-3">
                             <!-- <ul class="navbar-nav">
                                 <li class="nav-item dropdown">
