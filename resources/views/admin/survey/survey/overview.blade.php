@@ -76,8 +76,8 @@
                         <p><span class="qusNo">Default Report</span></p>
                         <p class="qusName1">Explore the data behind your survey responses. Gain a better perspective of your survey data and uncover insights for further planning.</p>
                         <div class="downloadReport">
-                            <a class="btn btn-primary" href="{{route('survey.report',[$survey->id,'csv'])}}">Download CSV Report</a>
-                            <a class="btn btn-primary" href="{{route('survey.report',[$survey->id,'xlsx'])}}">Download XLSX Report</a>
+                            <a class="btn btn-primary" href="{{route('survey.report',[$survey->id,'csv'])}}">Download CSV Responses</a>
+                            <a class="btn btn-primary" href="{{route('survey.report',[$survey->id,'xlsx'])}}">Download XLSX Responses</a>
                         </div>
                     </div>
                     <div class="desc-content-1">

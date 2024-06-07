@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
-
+use DB;
 class Projects extends Model
 {
     use HasFactory,SoftDeletes, Searchable;
@@ -21,4 +21,13 @@ class Projects extends Model
             'client' => $this->client
         ];
     }
+
+    public static function get_user_name($userid){
+        return User::where('id',$userid)->first();
+    }
+
+    public static function get_survey($id){
+        return DB::table('survey')->where('id',$id)->first();
+    }
+
 }

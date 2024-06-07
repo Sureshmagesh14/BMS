@@ -92,6 +92,8 @@ class RespondentsController extends Controller
                 $respondents->save();
                 $respondents->id;
                 app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
+                $ref=array('respondent_id'=>$respondents->id,'user_id'=>Auth::guard('admin')->user()->id,'created_at'=>date("Y-m-d H:i:s A"));
+                DB::table('respondent_referrals')->insert($ref);
                 //email starts
                 // $data = $respondents->id;
                 // if($data!=null){
@@ -240,6 +242,25 @@ class RespondentsController extends Controller
             throw new Exception($e->getMessage());
         }
 
+    }
+
+    public function respondents_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $contents = Respondents::find($id);
+                $contents->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Respondents Deleted Successfully'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     public function get_all_respondents(Request $request)

@@ -6,6 +6,7 @@ use App\Models\Banks;
 use App\Models\Contents;
 use App\Models\Groups;
 use App\Models\Respondents;
+use App\Models\RespondentProfile;
 use App\Models\Rewards;
 use Carbon\Carbon;
 use DB;
@@ -130,12 +131,86 @@ class WelcomeController extends Controller
                 Respondents::where('id', $id)->update(['profile_completion_id' => 1]);
             }
 
+            $resp_datas =  RespondentProfile::where('respondent_id', $id)->first();
+            
+
+            if(isset($resp_datas->basic_details) && ($resp_datas->basic_details!='')){
+
+                $percent1 = $resp_datas->basic_details;
+                $json_array  = json_decode($percent1, true);
+                $tot_count  = count($json_array);
+
+                $fill_count =0;
+                foreach ($json_array as $key => $value) {
+                    if (!strlen($value)) {
+                       
+                    }else{
+                        $fill_count ++;
+                    }
+                }
+
+                $percent1 = ($fill_count/$tot_count)*100;
+                $percent1 = round($percent1);
+
+            }else{
+                $percent1 =0;
+            }
+            
+            if(isset($resp_datas->essential_details) && ($resp_datas->essential_details!='')){
+
+                $percent2 = $resp_datas->essential_details;
+                $json_array  = json_decode($percent2, true);
+                $tot_count  = count($json_array);
+
+                $fill_count =0;
+                foreach ($json_array as $key => $value) {
+                    if (!strlen($value)) {
+                       
+                    }else{
+                        $fill_count ++;
+                    }
+                }
+
+                $percent2 = ($fill_count/$tot_count)*100;
+                $percent2 = round($percent2);
+
+
+            }else{
+                $percent2 =0;
+            }
+
+            if(isset($resp_datas->extended_details) && ($resp_datas->extended_details!='')){
+
+                $percent3 = $resp_datas->extended_details;
+                $json_array  = json_decode($percent3, true);
+                $tot_count  = count($json_array);
+
+                $fill_count =0;
+                foreach ($json_array as $key => $value) {
+                    if (!strlen($value)) {
+                       
+                    }else{
+                        $fill_count ++;
+                    }
+                }
+
+                $percent3 = ($fill_count/$tot_count)*100;
+                $percent3 = round($percent3);
+
+            }else{
+                $percent3 =0;
+            }
+            
+
+           
             if ($tot_rows == 0) {
                 $percentage = 0;
             } else {
                 $percentage = ($ans_c / $tot_rows) * 100; // 20
                 $percentage = round($percentage);
             }
+
+            $completed=[$percent1,$percent2,$percent3];
 
             $get_respondent = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
@@ -192,7 +267,7 @@ class WelcomeController extends Controller
                 }
             }
 
-            return view('user.user-dashboard', compact('data', 'get_respondent', 'get_completed_survey', 'percentage'));
+            return view('user.user-dashboard', compact('data', 'get_respondent', 'get_completed_survey', 'percentage','completed'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -235,10 +310,17 @@ class WelcomeController extends Controller
                 ->join('projects', 'rewards.project_id', 'projects.id')
                 ->where('rewards.respondent_id', '=', $resp_id)->get();
 
+            $get_res_out = DB::table('rewards')->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at')
+                ->join('cashouts', 'rewards.cashout_id', 'cashouts.id')
+                ->join('projects', 'rewards.project_id', 'projects.id')
+                ->where('rewards.respondent_id', '=', $resp_id)
+                ->where('cashouts.status_id', 1)
+                ->orWhere('cashouts.status_id', 2)->get();
+
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-            return view('user.user-cashout')->with('get_res', $get_res);
+            return view('user.user-cashout',compact('get_res_out'))->with('get_res', $get_res);
             //}
 
         } catch (Exception $e) {
@@ -672,6 +754,182 @@ class WelcomeController extends Controller
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    public function createFile(){
+
+        try {
+            // starts
+
+            $cashouts = DB::table('cashouts as c')
+                            ->leftjoin('respondents as r', 'c.respondent_id', '=', 'r.id')
+                            ->leftjoin('banks as b', 'c.bank_id', '=', 'b.id')
+                            ->select('c.*', 'r.id','r.name','r.surname','b.bank_name','b.branch_code') 
+                            ->where('c.status_id',5)->where('c.type_id',1)->get();
+            // status_id ApprovedForProcessing  type_id eft
+
+            //dd($cashouts);
+            
+            if (count($cashouts)) {
+                $batch = $this->generateBatchFile($cashouts);
+                //dd($batch);
+
+                $key = '2dee881e-8c53-4fb8-9e2a-c9ad3c6fc3bd';
+
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL,"https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl");
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_FAILONERROR, true);
+                
+                // In real life you should use something like:
+                 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('ServiceKey' => $key,'File' => $batch)));
+
+                // Receive server response ...
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                $server_output = curl_exec($ch);
+                
+                if (curl_errno($ch)) {
+                    $error_msg = curl_error($ch);
+                }
+                curl_close($ch);
+                
+                if (isset($error_msg)) {
+                    // TODO - Handle cURL error accordingly
+                    dd($error_msg);
+                }
+
+                curl_close($ch);
+             
+                dd($server_output);
+
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => array('ServiceKey' => $key,'File' => $batch),
+                CURLOPT_HTTPHEADER => array(
+                    'Cookie: ASP.NET_SessionId=qekk3poz2eerjhrdz2nnmvx1; ApplicationGatewayAffinity=ea2e72380504a82d4dd5a81e13fd6150; ApplicationGatewayAffinityCORS=ea2e72380504a82d4dd5a81e13fd6150'
+                ),
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
+                dd($response);
+
+
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL,"https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl");
+                curl_setopt($ch, CURLOPT_POST, 1);
+                //curl_setopt($ch, CURLOPT_POSTFIELDS,"postvar1=value1&postvar2=value2&postvar3=value3");
+
+                // In real life you should use something like:
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('ServiceKey' => $key,'File' => $batch)));
+
+                // Receive server response ...
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                $server_output = curl_exec($ch);
+
+                curl_close($ch);
+                dd($server_output);
+               
+            }
+
+            
+            // ends
+
+            $id = 1;
+            $data = Contents::find($id);
+            return view('user.test_upload', compact('data'));
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+    }
+
+    
+    public function generateBatchFile($cashouts)
+    {
+        $total = 0;
+        $instruction = 'Realtime';
+        $batchName = 'My Creditor batch';
+        $vendorKey = '24ade73c-98cf-47b3-99be-cc7b867b3080';
+        $serviceKey = '2dee881e-8c53-4fb8-9e2a-c9ad3c6fc3bd';
+        // $date = Carbon::now()->addDay()->format('Ymd');
+        $date = Carbon::now()->format('Ymd');
+
+        $batchFile = "H\t" . $serviceKey . "\t1\t" . $instruction . "\t" . $batchName . "\t" . $date . "\t" . $vendorKey . "\n";
+        $batchFile .= "K\t101\t102\t131\t132\t133\t134\t135\t136\t162\t252\n";
+
+        //dd($cashouts);
+
+        foreach ($cashouts as $cashout) {
+            // $total += 1;
+            $amount = $this->convertCashoutAmountToCents($cashout->amount);
+            $total += $amount;
+            //$respondent = $cashout->respondent;
+            $fullName = $cashout->name . ' ' . $cashout->surname;
+
+            // $batchFile .= 'T\t' . $respondent->id . '\t' . $fullName . '\t1\t' . $fullName . '\t1\t' . $cashout->bank->branch_code . '\t0\t' . $cashout->account_number . '\t1\tThe Brand Surgeon Cashout\n';
+            // $batchFile .= 'T\t' . $respondent->id . '\t' . $fullName . '\t1\t' . $fullName . '\t1\t' . $cashout->bank->branch_code . '\t0\t' . $cashout->account_number . '\t' . $cashout->amount . '\tThe Brand Surgeon Cashout\n';
+
+            // 101 : Account reference - EMP001
+            $batchFile .= "T\t" . $cashout->id;
+
+            // 102 : Account name - A Employee
+            $batchFile .= "\t" . $fullName;
+
+            // 131 : Banking detail type - 1
+            // $batchFile .= '\t';
+
+            // 132 : Bank account name - AB Employee
+            $batchFile .= "\t1\t" . $fullName;
+
+            // 133 : Bank account type - 1
+            // $batchFile .= "\t";
+
+            // 134 : Branch code - 632005
+            $batchFile .= "\t1\t" . $cashout->branch_code;
+
+            // 135 : Filler - 0
+            // $batchFile .= "\t";
+
+            // 136 : Bank account number - 40600000004
+            $batchFile .= "\t0\t" . $cashout->account_number;
+
+            // 162 : Amount (cents) - 110200
+            $batchFile .= "\t" . $amount;
+
+            // 252 : Beneficiary statement reference - Dated  sal test
+            $batchFile .= "\tThe Brand Surgeon Cashout\n";
+        }
+
+        $batchFile .= "F\t" . $cashouts->count() . "\t" . $total . "\t9999";
+
+
+
+        return $batchFile;
+        
+    }
+
+    /**
+     * Convert Cashout amount to cents
+     */
+    private function convertCashoutAmountToCents(int $points): int
+    {
+        $rands = $points / 10;
+        return  $rands * 100;
     }
 
 }

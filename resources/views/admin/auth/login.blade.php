@@ -1,14 +1,13 @@
 @include('admin.auth.admin-header')
 <style>
-    .main-password {
+    .field-icon {
+        float: right;
+        margin-right: 12px;
+        margin-top: -26px;
         position: relative;
+        z-index: 2;
     }
 
-    .icon-view {
-        position: absolute;
-        right: 12px;
-        top: 9px;
-    }
 
     i.fa.fa-eye {
         color: black;
@@ -59,23 +58,23 @@
             <div class="mb-6">
                 <label class="block font-bold mb-2" for="email">Email Address</label>
                 <input class="form-control form-input form-input-bordered w-full" id="email" type="email"
-                    name="email" value="{{isset($_COOKIE["email"]) ? $_COOKIE["email"] : ''}}" required autofocus>
+                    name="email" placeholder="Enter Your Email"  value="{{ isset($_COOKIE['email']) ? $_COOKIE['email'] : '' }}" required autofocus>
             </div>
 
             <div class="mb-6">
                 <label class="block font-bold mb-2" for="password">Password</label>
-                <div class="main-password">
-                    <input type="password" id="password" name="password" value="{{isset($_COOKIE["password"]) ? $_COOKIE["password"] : ''}}"
-                        class="form-control form-input form-input-bordered w-full input-password" aria-label="password">
-                    <a href="JavaScript:void(0);" class="icon-view">
-                        <i class="fa fa-eye-slash"></i>
-                    </a>
+                <div class="my-3 w-75 m-auto">
+                    <input class="form-control form-input form-input-bordered w-full input-password" id="password-field"
+                        type="password" name="password" placeholder="Enter Your Password"
+                        value="{{ isset($_COOKIE['password']) ? $_COOKIE['password'] : '' }}" required />
+                    <span toggle="#password-field" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
                 </div>
             </div>
 
             <div class="flex mb-6">
                 <label class="flex items-center text-xl font-bold">
-                    <input class="" type="checkbox" name="remember" id="remember" {{isset($_COOKIE["email"]) ? 'checked' : ''}}>
+                    <input class="" type="checkbox" name="remember" id="remember"
+                        {{ isset($_COOKIE['email']) ? 'checked' : '' }}>
                     <span class="text-base ml-2">Remember Me</span>
                 </label>
 
@@ -131,30 +130,15 @@
                 return false;
             }
         }, "Please enter a valid email address.");
-        $(document).ready(function() {
-            $('.main-password').find('.input-password').each(function(index, input) {
-                var $input = $(input);
-                $input.parent().find('.icon-view').click(function() {
-                    var change = "";
-                    if ($(this).find('i').hasClass('fa-eye')) {
-                        $(this).find('i').removeClass('fa-eye')
-                        $(this).find('i').addClass('fa-eye-slash')
-                        change = "text";
-                    } else {
-                        $(this).find('i').removeClass('fa-eye-slash')
-                        $(this).find('i').addClass('fa-eye')
-                        change = "password";
-                    }
-                    var rep = $("<input type='" + change + "' />")
-                        .attr('id', $input.attr('id'))
-                        .attr('name', $input.attr('name'))
-                        .attr('class', $input.attr('class'))
-                        .val($input.val())
-                        .insertBefore($input);
-                    $input.remove();
-                    $input = rep;
-                }).insertAfter($input);
-            });
+        $(".toggle-password").click(function() {
+
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
         });
     </script>
 

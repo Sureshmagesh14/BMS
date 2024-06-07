@@ -52,6 +52,8 @@ Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'v
 Route::any('get_area', 'ProfileController@get_area')->middleware(['auth', 'verified'])->name('get_area');
 Route::any('profile_save', 'ProfileController@profile_save')->middleware(['auth', 'verified'])->name('profile_save');
 
+Route::any('createFile', 'WelcomeController@createFile')->name('createFile');
+
 /* USERS */
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -120,6 +122,8 @@ Route::group([
     Route::any('project_attach_store', 'ProjectsController@project_attach_store')->name('project_attach_store');
     Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
     Route::any('project_action', 'ProjectsController@project_action')->name('project_action');
+    Route::any('get_survey_link', 'ProjectsController@get_survey_link')->name('get_survey_link');
+    
 
     /* Respondents MENU*/
     Route::resource('respondents', 'RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
@@ -137,6 +141,7 @@ Route::group([
     Route::any('deattach_respondent/{respondent_id}/{project_id}', 'RespondentsController@deattach_respondent')->name('deattach_respondent');
     Route::any('user_respondent_id_check', 'RespondentsController@user_respondent_id_check')->name('user_respondent_id_check');
     Route::any('get_user_survey', 'RespondentsController@get_user_survey')->name('get_user_survey');
+    Route::any('respondents_multi_delete', 'RespondentsController@respondents_multi_delete')->name('respondents_multi_delete');
 
     /* Tags (or) Pannels MENU*/
     Route::resource('tags', 'TagsController')->name('index', 'tags.index')->name('destroy', 'tags.destroy')
@@ -181,11 +186,14 @@ Route::group([
     Route::get('get_all_networks', 'NetworkController@get_all_networks')->name('get_all_networks');
     Route::any('networks_multi_delete', 'NetworkController@networks_multi_delete')->name('networks_multi_delete');
 
+    
+
     /* Contents MENU*/
     Route::resource('contents', 'ContentsController')->name('index', 'contents.index')->name('destroy', 'contents.destroy')
         ->name('create', 'contents.create')->name('show', 'contents.show')->name('update', 'contents.update');
     Route::get('contents_datatable', 'ContentsController@contents_datatable')->name('contents_datatable');
     Route::any('contents_multi_delete', 'ContentsController@contents_multi_delete')->name('contents_multi_delete');
+    Route::any('check_content_duplicate', 'ContentsController@check_content_duplicate')->name('check_content_duplicate');
 
     Route::get('inner_module', 'CommonAdminController@inner_module')->name('inner_module');
 

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Session;
+use App\Models\Contents;
 
 class RegisteredUserController extends Controller
 {
@@ -24,8 +25,10 @@ class RegisteredUserController extends Controller
      * Display the registration view.
      */
     public function create(): View
+    
     {
-        return view('auth.register');
+        $content=Contents::where('type_id',2)->first();
+        return view('auth.register',compact('content'));
     }
 
     /**
@@ -43,7 +46,6 @@ class RegisteredUserController extends Controller
             'whatsapp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . Respondents::class],
             'date_of_birth' => ['required', 'string', 'max:255'],
-            'id_passport' => ['required', 'string', 'max:255'],
             'password_register' => ['required', Rules\Password::defaults()->min(6)],
         ]);
         $ref_code = substr(md5(time()), 0, 8);
