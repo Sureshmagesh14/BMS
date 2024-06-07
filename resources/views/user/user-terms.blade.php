@@ -1,4 +1,8 @@
+@if(Session::get('resp_id')!='')
 @include('user.layout.header-2')
+@else 
+@include('user.layout.header')
+@endif 
 <style>
     .container {
         font-size: 20px;

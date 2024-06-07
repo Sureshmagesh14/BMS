@@ -58,14 +58,14 @@
             <div class="mb-6">
                 <label class="block font-bold mb-2" for="email">Email Address</label>
                 <input class="form-control form-input form-input-bordered w-full" id="email" type="email"
-                    name="email" value="{{ isset($_COOKIE['email']) ? $_COOKIE['email'] : '' }}" required autofocus>
+                    name="email" placeholder="Enter Your Email"  value="{{ isset($_COOKIE['email']) ? $_COOKIE['email'] : '' }}" required autofocus>
             </div>
 
             <div class="mb-6">
                 <label class="block font-bold mb-2" for="password">Password</label>
                 <div class="my-3 w-75 m-auto">
                     <input class="form-control form-input form-input-bordered w-full input-password" id="password-field"
-                        type="password" name="password"
+                        type="password" name="password" placeholder="Enter Your Password"
                         value="{{ isset($_COOKIE['password']) ? $_COOKIE['password'] : '' }}" required />
                     <span toggle="#password-field" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
                 </div>
