@@ -27,7 +27,7 @@ class RegisteredUserController extends Controller
     public function create(): View
     
     {
-        $content=Contents::where('type_id',1)->first();
+        $content=Contents::where('type_id',2)->first();
         return view('auth.register',compact('content'));
     }
 
