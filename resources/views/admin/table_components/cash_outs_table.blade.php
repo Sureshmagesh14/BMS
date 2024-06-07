@@ -1,6 +1,6 @@
 <div class="text-right">
-    <div class="btn-group mr-2" role="group" aria-label="First group" >
-        <select name="action_2" id="action_2" class="form-control cashout_table hided_option cashout_select_box" style="display:none;">
+    <div class="btn-group mr-2 cashout_table hided_option" role="group" aria-label="First group" style="display: none;">
+        <select name="action_2" id="action_2" class="form-control cashout_select_box">
             <option value="">Select Action</option>
             <optgroup label="Cash Out">
                 <option value="5">EFT > Approve & Process</option>
