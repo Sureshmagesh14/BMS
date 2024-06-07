@@ -123,7 +123,7 @@ Route::group([
     Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
     Route::any('project_action', 'ProjectsController@project_action')->name('project_action');
     Route::any('get_survey_link', 'ProjectsController@get_survey_link')->name('get_survey_link');
-    
+ 
 
     /* Respondents MENU*/
     Route::resource('respondents', 'RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
@@ -141,6 +141,9 @@ Route::group([
     Route::any('deattach_respondent/{respondent_id}/{project_id}', 'RespondentsController@deattach_respondent')->name('deattach_respondent');
     Route::any('user_respondent_id_check', 'RespondentsController@user_respondent_id_check')->name('user_respondent_id_check');
     Route::any('get_user_survey', 'RespondentsController@get_user_survey')->name('get_user_survey');
+    Route::any('respondents_multi_delete', 'RespondentsController@respondents_multi_delete')->name('respondents_multi_delete');
+    Route::any('get_branch_code', 'RespondentsController@get_branch_code')->name('get_branch_code');
+    
 
     /* Tags (or) Pannels MENU*/
     Route::resource('tags', 'TagsController')->name('index', 'tags.index')->name('destroy', 'tags.destroy')
@@ -184,6 +187,8 @@ Route::group([
         ->name('create', 'networks.create')->name('show', 'networks.show')->name('update', 'networks.update');
     Route::get('get_all_networks', 'NetworkController@get_all_networks')->name('get_all_networks');
     Route::any('networks_multi_delete', 'NetworkController@networks_multi_delete')->name('networks_multi_delete');
+
+    
 
     /* Contents MENU*/
     Route::resource('contents', 'ContentsController')->name('index', 'contents.index')->name('destroy', 'contents.destroy')

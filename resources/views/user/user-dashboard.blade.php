@@ -46,6 +46,10 @@
         display: inline-block;
         margin-bottom: 0.5rem !important;
     }
+
+    .apexcharts-legend.apexcharts-align-center.apx-legend-position-left {
+        text-align: left !important;
+    }
 </style>
 @php
     $first_character = mb_substr($data->name, 0, 1);
@@ -61,7 +65,7 @@
                 <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile_wizard') }}">Update
                     Profile</a>
                 <br>
-                <small class="leading-none mt-1 text-danger">Cash outs are only available if your profile is up to date.
+                <small class="leading-none mt-1 text-danger">Cash Outs and Surveys are available if your profile is up to date.
                     Please update your profile.</small>
             </div>
         @endif
@@ -118,7 +122,7 @@
                 <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
                     <h5 class="d-flex align-items-center justify-content-around">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
-                                alt=""> <span class="small-font-sm">Current Survey</span> </div>
+                                alt=""> <span class="small-font-sm">See if You Qualify for Other Research</span> </div>
                         <div class="px-3">
                             <!-- <ul class="navbar-nav">
                                 <li class="nav-item dropdown">
@@ -144,7 +148,7 @@
                                 <tr>
                                     <th>NAME </th>
                                     <th>DATE </th>
-                                    <th>TASK </th>
+                                    <th>TYPE OF SURVEY </th>
                                     <th>REWARD POINTS</th>
                                     <th>ACTION </th>
                                 </tr>
@@ -155,17 +159,35 @@
                                         <td>{{ $res->name }}</td>
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                         <td title="{{ $res->description }}">
-                                            {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
+
+                                        @if ($res->type_id == 1) 
+                                        Pre-Screener
+                                        @elseif ($res->type_id == 2) 
+                                        Pre-Task
+                                        @elseif ($res->type_id == 3) 
+                                        Paid survey
+                                        @elseif ($res->type_id == 4) 
+                                        Unpaid survey
+                                        @endif
+                                         
+                                            <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
                                         </td>
                                         <td>{{ $res->reward }}</td>
                                         @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
-                                        @if ($get_link != null)
-                                            <td><a target="_blank"
-                                                    href="{{ url('survey/view', $get_link->builderID) }}"
-                                                    class="btn btn-yellow">DETAIL</a></td>
-                                        @else
-                                            <td>No Survey</td>
+
+                                        @if ($data->profile_completion_id == 0)
+
+                                        <td> Profile Incomple </td>
+                                        @else 
+                                            @if ($get_link != null)
+                                                <td><a target="_blank"
+                                                        href="{{ url('survey/view', $get_link->builderID) }}"
+                                                        class="btn btn-yellow">START</a></td>
+                                            @else
+                                                <td>No Survey</td>
+                                            @endif
                                         @endif
+                                            
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -173,7 +195,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white my-2 max-w-100" style="min-height: 440px;;">
+                <div class="bg-white my-2 max-w-100" style="min-height: 270px !important;">
                     {{-- <h5 class="d-flex align-items-center justify-content-around vi-light-grey small-font-sm">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-06.png') }}"
                                 alt="">
@@ -216,11 +238,8 @@
                         </div>
                     </h5> --}}
 
-                   
                     <div class="text-center mt-4">
-                        <div id="myChart" class="chart--container">
-                            <a href="https://www.zingchart.com/" rel="noopener" class="zc-ref">Powered by
-                                ZingChart</a>
+                        <div id="radial_multi_chart" class="chart--container">
                         </div>
                     </div>
                 </div>
@@ -259,7 +278,7 @@
                                 <tr>
                                     <th>NAME </th>
                                     <th>DATE </th>
-                                    <th>TASK </th>
+                                    <th>TYPE OF SURVEY </th>
                                     <th>REWARD POINTS </th>
                                     <th>ACTION </th>
                                 </tr>
@@ -270,7 +289,18 @@
                                         <td>{{ $res->name }}</td>
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                         <td title="{{ $res->description }}">
-                                            {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
+                                        
+                                            @if ($res->type_id == 1) 
+                                            Pre-Screener
+                                            @elseif ($res->type_id == 2) 
+                                            Pre-Task
+                                            @elseif ($res->type_id == 3) 
+                                            Paid survey
+                                            @elseif ($res->type_id == 4) 
+                                            Unpaid survey
+                                            @endif
+                                            
+                                            <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
                                         </td>
                                         <td>{{ $res->reward }}</td>
                                         @php
@@ -303,113 +333,65 @@
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap4.js"></script>
 
-
-<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <script>
     // CHART CONFIG
+    var basic_data = @php echo $completed[0]; @endphp;
+    var essential_data = @php echo $completed[1]; @endphp;
+    var extended_data = @php echo $completed[2]; @endphp;
 
-    var completed_imp_one = @php echo $completed[0]; @endphp;
-    var completed_imp_two = @php echo $completed[1]; @endphp;
-    var completed_imp_three = @php echo $completed[2]; @endphp;
+    var fully_completed = (basic_data + essential_data + extended_data) / 3;
+    var round = Math.round(fully_completed);
 
-    var notcompleted_imp_one = @php echo $notcompleted[0]; @endphp;
-    var notcompleted_imp_two = @php echo $notcompleted[1]; @endphp;
-    var notcompleted_imp_three = @php echo $notcompleted[2]; @endphp;
-
-    // -----------------------------
-    let chartConfig = {
-        type: 'nestedpie',
-        title: {
-            text: 'Profile Status',
+    var options = {
+        series: [extended_data, essential_data, basic_data],
+        labels: ['Extended', 'Essential', 'Basic'],
+        // colors: ['#775DD0', '#00C8E1', '#FFB900'],
+        theme: {
+            monochrome: {
+                enabled: false
+            }
+        },
+        chart: {
+            height: 300,
+            type: 'radialBar',
+        },
+        plotOptions: {
+            radialBar: {
+                dataLabels: {
+                    name: {
+                        fontSize: '22px',
+                    },
+                    value: {
+                        fontSize: '16px',
+                    },
+                    total: {
+                        show: true,
+                        label: 'Total',
+                        formatter: function (w) {
+                            return round+"%"
+                        }
+                    }
+                },
+                offsetY: -5,
+                offsetX: -60
+            }
         },
         legend: {
-            borderColor: 'gray',
-            borderRadius: '5px',
-            borderWidth: '1px',
-            dragHandler: 'icon',
-            header: {
-                text: 'Status',
-                fontColor: 'purple',
-                fontFamily: 'Georgia',
-                fontSize: '12px',
-                fontWeight: 'normal',
-            },
-            icon: {
-                lineColor: 'orange',
-            },
-            item: {
-                fontColor: 'black',
-                fontFamily: 'Georgia',
-            },
-            lineStyle: 'dashdot',
-            marker: {
-                type: 'circle',
-            },
-            minimize: true,
-            toggleAction: 'remove',
+            show: true,
+            position: 'left',
+            containerMargin: {
+                right: 5
+            }
         },
-        plot: {
-            tooltip: {
-                text: '%data-year %t: %v',
-                padding: '10%',
-                alpha: 0.7,
-                backgroundColor: 'white',
-                borderColor: 'gray',
-                borderRadius: '3px',
-                borderWidth: '1px',
-                fontColor: 'black',
-                fontFamily: 'Georgia',
-                fontSize: '12px',
-                lineStyle: 'dashdot',
-                textAlpha: 1,
-            },
-            valueBox: {
-                text: '%data-year',
-                fontColor: 'white',
-                fontFamily: 'Georgia',
-                fontSize: '12px',
-                fontWeight: 'normal',
-                rules: [{
-                    rule: '%p != 0',
-                    visible: false,
-                }, ],
-            },
-            alpha: 0.8,
-            animation: {
-                effect: 'ANIMATION_EXPAND_LEFT',
-                onLegendToggle: false,
-                method: 'ANIMATION_BACK_EASE_OUT',
-                sequence: 'ANIMATION_BY_PLOT',
-                speed: 700,
-            },
-            borderColor: 'white',
-            borderWidth: '1px',
-            dataYear: ['Basic', 'Essential', 'Extended'],
-            shadow: false,
-            sliceStart: '30%',
-        },
-        series: [{
-                text: 'Completed',
-                values: [completed_imp_one, completed_imp_two, completed_imp_three],
-                backgroundColor: 'green',
-            },
-            {
-                text: 'Not-Completed',
-                values: [notcompleted_imp_one, notcompleted_imp_two, notcompleted_imp_three],
-                backgroundColor: 'red',
-            },
-        ],
+        title: {
+            text: 'Profile Status',
+        }
     };
 
-    // RENDER CHARTS
-    // -----------------------------
-    zingchart.render({
-        id: 'myChart',
-        data: chartConfig,
-    });
-
-    // RENDER CHARTS
+    var chart = new ApexCharts(document.querySelector("#radial_multi_chart"), options);
+    chart.render();
 
 
     var tempcsrf = '{!! csrf_token() !!}';

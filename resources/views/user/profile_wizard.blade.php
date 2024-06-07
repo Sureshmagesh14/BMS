@@ -76,8 +76,9 @@
                                                 <input type="hidden" name="unique_id" class="form-control unique_id" id="get_unique_id" value="{{$pid}}">
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="first_name">First Name <span class="star_require">*</span></label>
-                                                <input type="text" class="form-control" id="first_name" name="basic[first_name]" value="{{$resp_details->name}}" required>
+                                                <label for="first_name">First Name <span class="star_require">*</span></label><br>
+                                                {{$resp_details->name}}
+                                                <input type="hidden" class="form-control" id="first_name" name="basic[first_name]" value="{{$resp_details->name}}" required>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
                                                 <label for="last_name">Last Name <span class="star_require">*</span></label>
@@ -108,17 +109,19 @@
                                                 <input type="email" class="form-control" id="email" name="basic[email]" value="{{$resp_details->email}}" required>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
-                                                <label for="date_of_birth">Date of Birth <span class="star_require">*</span></label>
-                                                <input type="text" placeholder="YYYY-MM-DD" class="form-control" id="date_of_birth" name="basic[date_of_birth]" value="{{$resp_details->date_of_birth}}" required>
+                                                <label for="date_of_birth">Date of Birth <span class="star_require">*</span></label><br>
+                                                {{$resp_details->date_of_birth}} 
+                                                <input type="hidden" placeholder="YYYY-MM-DD" class="form-control" id="date_of_birth" name="basic[date_of_birth]" value="{{$resp_details->date_of_birth}}" required>
                                                 
                                                 @if ($resp_details->date_of_birth!=null)
-                                                    @php
+                                                    <code>@php
                                                         $bday = new \DateTime($resp_details->date_of_birth);
                                                         $today = new \DateTime(date('m.d.y'));
                                                         $diff = $today->diff($bday);
-                                                        $age  = $diff->y. ' Years,'. $diff->m. ' Months,'. $diff->d .' Days';
+                                                        $age  = $diff->y. ' Years,'. $diff->m. ' Months';
                                                     @endphp
-                                                    <span id="agecal">{{$age}}</span>
+                                                    </code>
+                                                    <small id="agecal" class="text-danger">{{$age}}</small>
                                                 @else
                                                     <span id="agecal"></span>
                                                 @endif
@@ -633,7 +636,8 @@
                 function diffDate(startDate, endDate) {
                     var b = moment(startDate),
                         a = moment(endDate),
-                        intervals = ['Years', 'Months', 'Days'],
+                        intervals1 = ['Years', 'Months', 'Days'],
+                        intervals = ['Years'],
                         out = {};
 
                     for (var i = 0; i < intervals.length; i++) {
