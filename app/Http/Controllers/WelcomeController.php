@@ -211,13 +211,6 @@ class WelcomeController extends Controller
             }
 
             $completed=[$percent1,$percent2,$percent3];
-            $per1_not_completed = ($percent1 == 0) ? 100 : (100 - $percent1);
-            $per2_not_completed = ($percent2 == 0) ? 100 : (100 - $percent2);
-            $per3_not_completed = ($percent3 == 0) ? 100 : (100 - $percent3);
-            $notcompleted=[$per1_not_completed,$per2_not_completed,$per3_not_completed];
-
-            $completed_imp = implode(',',$completed);
-            $incompleted_imp = implode(',',$notcompleted);
 
             $get_respondent = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
@@ -274,7 +267,7 @@ class WelcomeController extends Controller
                 }
             }
 
-            return view('user.user-dashboard', compact('data', 'get_respondent', 'get_completed_survey', 'percentage','completed','notcompleted'));
+            return view('user.user-dashboard', compact('data', 'get_respondent', 'get_completed_survey', 'percentage','completed'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());

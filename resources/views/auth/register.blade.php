@@ -108,7 +108,7 @@
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">+27</div>
                                 </div>
-                                <input type="text" name="mobile" id="mobile" placeholder="081 966 0786"
+                                <input type="text" name="mobile" id="mobile" placeholder="819 966 078"
                                     class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">+27</div>
                                 </div>
-                                <input type="text" name="whatsapp" id="whatsapp" placeholder="081 966 0786"
+                                <input type="text" name="whatsapp" id="whatsapp" placeholder="819 966 078"
                                     class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
                             </div>
                         </div>
@@ -228,8 +228,8 @@
 
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
-    $('#mobile').inputmask("999 999 9999");
-    $('#whatsapp').inputmask("999 999 9999");
+    $('#mobile').inputmask("999 999 999");
+    $('#whatsapp').inputmask("999 999 999");
     $('form#reg_table').on('blur', '.reg_email', function() {
         var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
         var reg_email = $(this).val();
@@ -402,7 +402,8 @@
         function diffDate(startDate, endDate) {
             var b = moment(startDate),
                 a = moment(endDate),
-                intervals = ['Years', 'Months', 'Days'],
+                intervals1 = ['Years', 'Months', 'Days'],
+                intervals = ['Years'],
                 out = {};
 
             for (var i = 0; i < intervals.length; i++) {

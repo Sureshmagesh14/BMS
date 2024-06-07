@@ -636,7 +636,8 @@
                 function diffDate(startDate, endDate) {
                     var b = moment(startDate),
                         a = moment(endDate),
-                        intervals = ['Years', 'Months', 'Days'],
+                        intervals1 = ['Years', 'Months', 'Days'],
+                        intervals = ['Years'],
                         out = {};
 
                     for (var i = 0; i < intervals.length; i++) {

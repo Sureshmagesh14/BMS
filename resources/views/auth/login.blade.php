@@ -42,11 +42,11 @@
                     <div class="my-3  w-75 m-auto">
                         <label class="email-start vi-common-clr" for="email">Username</label>
                         <input type="text" class="form-control vi-border-clr vi-cs-textbox" name="email"
-                            id="email" />
+                            id="email" placeholder="Enter Your Username Or Mobile"/>
                     </div>
                     <div class="my-3 w-75 m-auto">
                         <label class="pass-start vi-common-clr" for="email text-start">Password</label>
-                        <input id="password-field" type="password" placeholder=""
+                        <input id="password-field" type="password" placeholder="Enter Your Password"
                             class="form-control vi-border-clr vi-cs-textbox" name="password" required />
 
                         <span toggle="#password-field" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
