@@ -964,7 +964,16 @@ select:focus {
 .prev:hover {
   color: #d50000 !important;
 }
-
+.navbar-toggler{
+  background-color: rgb(0 0 0 / 0%) !important;
+    border: 1px solid #dee2e6 !important;
+}
+.navbar-toggler-icon{
+  background: norepeat center center !important;
+}
+.navbar-nav.ms-auto.my-2.my-lg-0.navbar-nav-scroll{
+  --bs-scroll-height: 250px !important;
+}
 @media screen and (max-width: 912px) {
   .card00 {
     padding-top: 30px;
@@ -1026,6 +1035,12 @@ select:focus {
   height: 400px !important;
 }
 @media (max-width: 768px) {
+  .m-hide{
+    display: none !important;
+  }
+  .wizard > .steps > ul > li {
+    width: 100% !important;
+  }
   .d-flex.d-sm-block{
     display: block !important;
   }
