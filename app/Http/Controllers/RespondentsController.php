@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Respondents;
 use App\Models\Projects;
+use App\Models\Banks;
 use App\Models\Project_respondent;
 use DB;
 use Exception;
@@ -36,8 +37,8 @@ class RespondentsController extends Controller
     public function create()
     {
         try {
-
-            $returnHTML = view('admin.respondents.create')->render();
+            $banks=Banks::where('active','=',1)->orderBy('bank_name', 'ASC')->get();
+            $returnHTML = view('admin.respondents.create',compact('banks'))->render();
 
             return response()->json(
                 [
@@ -139,7 +140,8 @@ class RespondentsController extends Controller
 
             $respondents = Respondents::find($id);
             if ($respondents) {
-                $returnHTML = view('admin.respondents.edit', compact('respondents'))->render();
+                $banks=Banks::where('active','=',1)->orderBy('bank_name', 'ASC')->get();
+                $returnHTML = view('admin.respondents.edit', compact('respondents','banks'))->render();
                 return response()->json(
                     [
                         'success' => true,
@@ -165,7 +167,9 @@ class RespondentsController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
+                'email' => 'required',
+                'active_status_id' => 'required',
+                'accept_terms'=> 'required',
             ]);
 
             if ($validator->fails()) {
@@ -174,10 +178,10 @@ class RespondentsController extends Controller
                     'errors' => $validator->messages(),
                 ]);
             } else {
-
+// dd($request->id);
                 $respondents = Respondents::find($request->id);
                 if ($respondents) {
-                    $respondents = new Respondents;
+                 
                     $respondents->name = $request->input('name');
                     $respondents->surname = $request->input('surname');
                     $respondents->date_of_birth = $request->input('date_of_birth');
@@ -973,6 +977,12 @@ class RespondentsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-   
+    public function get_branch_code(Request $request){
+        $bank_id = $request->bank_id;
+        $branch_code=Banks::where('id',$bank_id)->first();
+        $repsonse=$branch_code->branch_code;
 
+        return response()->json(['repsonse' => $repsonse], 200);
+    }
+    
 }
