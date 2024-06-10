@@ -4,21 +4,21 @@
     @else
         @php $projects_id = '0'; @endphp
     @endisset
-    <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
-        @if (str_contains(Request::url(), '/admin/projects'))
-            <a href="#!" data-url="{{ route('attach_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
-                data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attact Respondents') }}"
-                class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-                Attact Respondents
-            </a>
-        @else
-            <a href="#!" data-url="{{ route('respondents.create') }}" data-size="xl" data-ajax-popup="true"
-                class="btn btn-primary" data-bs-original-title="{{ __('Create Respondents') }}" class="btn btn-primary"
-                data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-                Create Respondents
-            </a>
-        @endif
-    </div>
+    
+    @if (str_contains(Request::url(), '/admin/projects'))
+        <a href="#!" data-url="{{ route('attach_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
+            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attact Respondents') }}"
+            class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+            Attact Respondents
+        </a>
+    @else
+        <a href="#!" data-url="{{ route('respondents.create') }}" data-size="xl" data-ajax-popup="true"
+            class="btn btn-primary" data-bs-original-title="{{ __('Create Respondents') }}" class="btn btn-primary"
+            data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+            Create Respondents
+        </a>
+    @endif
+    <br><br>
 
     <div class="btn-group mr-2" role="group" aria-label="First group">
         <select name="action_2" id="action_2"
@@ -48,12 +48,6 @@
         {{-- </select> --}}
     </div>
 
-    {{-- <a href="#!" data-url="{{ route('export_resp') }}" data-size="xl"
-        data-ajax-popup="true" class="btn btn-primary"
-        data-bs-original-title="{{ __('export Respondents') }}" class="btn btn-primary"
-        data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="export">
-        Export
-    </a> --}}
     <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="First group">
             <div class="btn-group dropdown-filter">
