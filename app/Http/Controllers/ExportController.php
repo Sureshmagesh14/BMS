@@ -413,7 +413,7 @@ class ExportController extends Controller
                     }
 
                     if($from != null && $to != null){
-                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
+                        $all_datas = $all_datas->whereDate('respondents.created_at', '>=', $from)->whereDate('respondents.created_at', '<=', $to);
                     }
                         
                     $all_datas = $all_datas->get();
@@ -440,7 +440,7 @@ class ExportController extends Controller
                     $sheet->setCellValue('F1', 'Email');
                     $sheet->setCellValue('G1', 'Date Blacklisted');
                     $sheet->setCellValue('H1', 'Blacklisted By');
-                    $sheet->setCellValue('I1', 'Reason');
+                    // $sheet->setCellValue('I1', 'Reason');
 
                     $sheet->getStyle('A1:I1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
                     $sheet->getStyle('A1:I1')->applyFromArray($styleArray);
@@ -453,10 +453,9 @@ class ExportController extends Controller
                             $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                         }
                         if($from != null && $to != null){
-                            $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
+                            $all_datas = $all_datas->whereDate('respondents.created_at', '>=', $from)->whereDate('respondents.created_at', '<=', $to);
                         }
                     $all_datas = $all_datas->get();
-
 
                     foreach ($all_datas as $all_data) {
                         $sheet->setCellValue('A' . $rows, $i);
@@ -466,10 +465,8 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
-
-                        // $get_createdby=DB::table('respondent_referrals')->where('respondent_id',$respondents)->first();
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
-                        $sheet->setCellValue('I' . $rows, $all_data->created_by);
+                        // $sheet->setCellValue('I' . $rows, $all_data->created_by);
                         $rows++;
                         $i++;
                     }
@@ -546,12 +543,12 @@ class ExportController extends Controller
                 if($type_method == 'Individual'){
 
                     $all_datas = Respondents::leftJoin('rewards', function ($join) {
-                        $join->on('respondent_profile.id', '=', 'respondent_profile.respondent_id');
-                    })
-                    ->whereIn('respondents.id', [$respondents])
-                    // ->where('respondent_profile.created_at', '>=', $from)
-                    // ->where('respondent_profile.created_at', '<=', $to)
-                    ->get([
+                        $join->on('rewards.respondent_id', '=', 'respondents.id');
+                    });
+                        if($respondents != ""){
+                            $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                        }
+                    $all_datas = $all_datas->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -623,19 +620,22 @@ class ExportController extends Controller
             else if ($module == 'Projects') {
                 $all_datas = Projects::leftJoin('users', function ($join) {
                         $join->on('users.id', '=', 'projects.user_id');
-                    })
-                    ->where('projects.created_at', '>=', $from)
-                    ->where('projects.created_at', '<=', $to)
-                    ->get([
-                        'users.name as uname',
-                        'users.surname',
-                        'projects.number',
-                        'projects.name',
-                        'projects.published_date',
-                        'projects.closing_date',
-                        'projects.total_responnded_attended',
-                        'projects.total_responded_recruited',
-                    ]);
+                    });
+
+                    if($from != null && $to != null){
+                        $all_datas = $all_datas->whereDate('projects.created_at', '>=', $from)->whereDate('projects.created_at', '<=', $to);
+                    }
+
+                $all_datas = $all_datas->get([
+                    'users.name as uname',
+                    'users.surname',
+                    'projects.number',
+                    'projects.name',
+                    'projects.published_date',
+                    'projects.closing_date',
+                    'projects.total_responnded_attended',
+                    'projects.total_responded_recruited',
+                ]);
 
                 $sheet->setCellValue('A1', 'Project Number & Project Name');
                 $sheet->setCellValue('B1', 'PM Name');
@@ -684,84 +684,90 @@ class ExportController extends Controller
                 if($type_method == 'Individual'){
                     $all_datas = UserEvents::select('users.name', 'users.surname', 'user_events.*')
                         ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->whereIn('user_events.user_id', [$respondents])
-                        ->where('type', '=', 'respondent')
-                        ->where('user_events.created_at', '>=', $from)
-                        ->where('user_events.created_at', '<=', $to)
-                        ->get();
+                        ->orderby("user_events.id", "desc");
+                        if($respondents != ""){
+                            $all_datas = $all_datas->whereIn('user_events.user_id', [$respondents]);
+                        }
+                        if($from != null && $to != null){
+                            $all_datas = $all_datas->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
+                        }
+                        $all_datas = $all_datas->where('type', '=', 'respondent')->get();
 
                     $total_created = UserEvents::select('users.name', 'users.surname', 'user_events.*')
                         ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->whereIn('user_events.user_id', [$respondents])
-                        ->where("user_events.action", "created")
+                        ->orderby("user_events.id", "desc");
+                        if($respondents != ""){
+                            $total_created = $total_created->whereIn('user_events.user_id', [$respondents]);
+                        }
+                        if($from != null && $to != null){
+                            $total_created = $total_created->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
+                        }
+                    $total_created = $total_created->where("user_events.action", "created")
                         ->where('type', '=', 'respondent')
-                        ->where('user_events.created_at', '>=', $from)
-                        ->where('user_events.created_at', '<=', $to)
                         ->get()
                         ->count();
 
                     $total_deactivated = UserEvents::select('users.name', 'users.surname', 'user_events.*')
                         ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->whereIn('user_events.user_id', [$respondents])
-                        ->where("user_events.action", "deleted")
-                        ->where('type', '=', 'respondent')
-                        ->where('user_events.created_at', '>=', $from)
-                        ->where('user_events.created_at', '<=', $to)
-                        ->get()
-                        ->count();
+                        ->orderby("user_events.id", "desc");
+                        if($respondents != ""){
+                            $total_deactivated = $total_deactivated->whereIn('user_events.user_id', [$respondents]);
+                        }
+                        if($from != null && $to != null){
+                            $total_deactivated = $total_deactivated->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
+                        }
+                    $total_deactivated = $total_deactivated->where("user_events.action", "deleted")->where('type', '=', 'respondent')->get()->count();
 
                     $total_blacklisted = UserEvents::select('users.name', 'users.surname', 'user_events.*')
                         ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->whereIn('user_events.user_id', [$respondents])
-                        ->where("user_events.action", "deactivated")
-                        ->where('type', '=', 'respondent')
-                        ->where('user_events.created_at', '>=', $from)
-                        ->where('user_events.created_at', '<=', $to)
-                        ->get()
-                        ->count();
+                        ->orderby("user_events.id", "desc");
+                        if($respondents != ""){
+                            $total_blacklisted = $total_blacklisted->whereIn('user_events.user_id', [$respondents]);
+                        }
+                        if($from != null && $to != null){
+                            $total_blacklisted = $total_blacklisted->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
+                        }
+                        $total_blacklisted = $total_blacklisted->where("user_events.action", "deactivated")->where('type', '=', 'respondent')->get()->count();
                 }
                 else{
                     $all_datas = UserEvents::select('users.name', 'users.surname', 'user_events.*')
                         ->join('users', 'user_events.user_id', 'users.id')
                         ->orderby("user_events.id", "desc")
-                        ->where('type', '=', 'respondent')
-                        ->where('user_events.created_at', '>=', $from)
-                        ->where('user_events.created_at', '<=', $to)
-                        ->get();
+                        ->where('type', '=', 'respondent');
+                        if($from != null && $to != null){
+                            $all_datas = $all_datas->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
+                        }
+                        $all_datas = $all_datas->get();
 
                     $total_created = UserEvents::select('users.name', 'users.surname', 'user_events.*')
                         ->join('users', 'user_events.user_id', 'users.id')
                         ->orderby("user_events.id", "desc")
                         ->where("user_events.action", "created")
-                        ->where('type', '=', 'respondent')
-                        ->where('user_events.created_at', '>=', $from)
-                        ->where('user_events.created_at', '<=', $to)
-                        ->get()
-                        ->count();
+                        ->where('type', '=', 'respondent');
+                        if($from != null && $to != null){
+                            $total_created = $total_created->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
+                        }
+                        $total_created = $total_created->get()->count();
 
                     $total_deactivated = UserEvents::select('users.name', 'users.surname', 'user_events.*')
                         ->join('users', 'user_events.user_id', 'users.id')
                         ->orderby("user_events.id", "desc")
                         ->where("user_events.action", "deleted")
-                        ->where('type', '=', 'respondent')
-                        ->where('user_events.created_at', '>=', $from)
-                        ->where('user_events.created_at', '<=', $to)
-                        ->get()
-                        ->count();
+                        ->where('type', '=', 'respondent');
+                        if($from != null && $to != null){
+                            $total_deactivated = $total_deactivated->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
+                        }
+                        $total_deactivated = $total_deactivated->get()->count();
 
                     $total_blacklisted = UserEvents::select('users.name', 'users.surname', 'user_events.*')
                         ->join('users', 'user_events.user_id', 'users.id')
                         ->orderby("user_events.id", "desc")
                         ->where("user_events.action", "deactivated")
-                        ->where('type', '=', 'respondent')
-                        ->where('user_events.created_at', '>=', $from)
-                        ->where('user_events.created_at', '<=', $to)
-                        ->get()
-                        ->count();
+                        ->where('type', '=', 'respondent');
+                        if($from != null && $to != null){
+                            $total_blacklisted = $total_blacklisted->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
+                        }
+                        $total_blacklisted = $total_blacklisted->get()->count();
                 }
 
                 $sheet->setCellValue('A1', 'Name of team member');
