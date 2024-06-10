@@ -77,7 +77,8 @@
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
                                                 <label for="first_name">First Name <span class="star_require">*</span></label><br>
-                                                {{$resp_details->name}}
+                                                <input type="text" value="{{$resp_details->name}}" disabled class="form-control">
+                                                
                                                 <input type="hidden" class="form-control" id="first_name" name="basic[first_name]" value="{{$resp_details->name}}" required>
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
@@ -110,15 +111,16 @@
                                             </div>
                                             <div class="col-6 col-sm-4 mt-3">
                                                 <label for="date_of_birth">Date of Birth <span class="star_require">*</span></label><br>
-                                                {{$resp_details->date_of_birth}} 
+                                                <input type="text" value="{{$resp_details->date_of_birth}}" disabled class="form-control">
                                                 <input type="hidden" placeholder="YYYY-MM-DD" class="form-control" id="date_of_birth" name="basic[date_of_birth]" value="{{$resp_details->date_of_birth}}" required>
                                                 
                                                 @if ($resp_details->date_of_birth!=null)
-                                                    <code>@php
+                                                    <code>
+                                                        @php
                                                         $bday = new \DateTime($resp_details->date_of_birth);
                                                         $today = new \DateTime(date('m.d.y'));
                                                         $diff = $today->diff($bday);
-                                                        $age  = $diff->y. ' Years,'. $diff->m. ' Months';
+                                                        $age  = $diff->y. ' Years';
                                                     @endphp
                                                     </code>
                                                     <small id="agecal" class="text-danger">{{$age}}</small>
@@ -531,7 +533,7 @@
 
                                     datas2 = {_token: tempcsrf, serialize_data: form.serialize(), step: 3, child_val: child_val, vehicle_val:vehicle_val};
                                     wizard_save(datas2);
-                                    // location.reload();
+                                    window.location.href = "{{route('user.dashboard')}}";
                                 }
                             },
                             cancel: function() {
