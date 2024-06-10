@@ -14,9 +14,8 @@
     @endif
     <br><br>
 
-    <div class="btn-group mr-2" role="group" aria-label="First group">
-        <select name="action_2" id="action_2" class="form-control projects_table hided_option select_box"
-            style="display:none;">
+    <div class="btn-group mr-2 projects_table hided_option" role="group" aria-label="First group" style="display:none;">
+        <select name="action_2" id="action_2" class="form-control select_box">
             <option value="">Select Action</option>
             <optgroup label="Project">
                 <option value="3">Status > Complete</option>

@@ -68,7 +68,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row date_range" style="display: none;">
                                     <label class="col-md-2 col-form-label">Date Range</label>
                                     <div class="col-md-10">
                                         <div class="input-daterange input-group" data-provide="datepicker"
@@ -178,21 +178,6 @@
                                     </div>
                                 </div>
 
-
-                                <div class="form-group row show_user">
-                                    <label class="col-md-2 col-form-label">Select Respondents</label>
-                                    <div class="col-md-10">
-                                        <select id="user" name="user[]" multiple="multiple"
-                                            style="width: 100%;">
-                                            <option value="" selected="selected" disabled="disabled">Please
-                                                select</option>
-                                            @foreach ($users_list as $user)
-                                                <option value="{{ $user->id }}">{{ $user->name }}
-                                                    {{ $user->surname }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Export</button>
                                 </div>
@@ -244,6 +229,7 @@
                             $(".show_user").hide();
                             $(".respondents").show();
                             $(".report_type").show();
+                            $(".date_range").show();
                         } else if (this.value == 'Respondents info') {
                             $(".show_year").hide();
                             $(".show_month").hide();
@@ -253,8 +239,9 @@
                             $(".show_user").hide();
                             $(".report_type").show();
                             $(".respondents").hide();
+                            $(".date_range").hide();
 
-                        } else if ((this.value == 'Cashout') || (this.value == 'Rewards')) {
+                        } else if ((this.value == 'Cashout')) {
                             $(".show_year").hide();
                             $(".show_month").hide();
                             $(".show_resp").hide();
@@ -263,15 +250,29 @@
                             $(".show_user").hide();
                             $(".respondents").show();
                             $(".report_type").show();
-                        } else if (this.value == 'Team Activity') {
+                            $(".date_range").show();
+                        }
+                        else if (this.value == 'Rewards') {
+                            $(".show_year").hide();
+                            $(".show_month").hide();
+                            $(".show_resp").hide();
+                            $(".show_resp_status").hide();
+                            $(".show_resp_type").hide();
+                            $(".show_user").hide();
+                            $(".respondents").show();
+                            $(".report_type").show();
+                            $(".date_range").hide();
+                        }
+                        else if (this.value == 'Team Activity') {
                             $(".show_year").hide();
                             $(".show_month").hide();
                             $(".show_resp").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").show();
-                            $(".respondents").hide();
+                            $(".respondents").show();
                             $(".report_type").show();
+                            $(".date_range").show();
                         } else {
                             $(".show_user").hide();
                             $(".show_year").hide();
@@ -283,11 +284,8 @@
                             $(".respondents").hide();
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".date_range").show();
                         }
-                    });
-                    // Initialize multiple select on your regular select
-                    $("#user").multipleSelect({
-                        filter: true
                     });
 
                     $("#respondents").tokenInput("{{ route('respondent_seach_result') }}", {
