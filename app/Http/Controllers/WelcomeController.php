@@ -8,6 +8,7 @@ use App\Models\Groups;
 use App\Models\Respondents;
 use App\Models\RespondentProfile;
 use App\Models\Rewards;
+use App\Models\Users;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Session;
 use Illuminate\Support\Facades\Auth;
+
 class WelcomeController extends Controller
 {
     public function home(Request $request)
@@ -28,7 +30,17 @@ class WelcomeController extends Controller
                 $data = Respondents::find($id);
 
                 $data = Respondents::where('referral_code', $referral_code)->first();
-                Session::put('refer_id', $data->id);
+                if(isset($data->id)&&($data->id!='')){
+                   
+                    Session::put('refer_id', $data->id);
+                }else{
+                    
+                    $data = Users::where('share_link', $referral_code)->first();
+                    if(isset($data->id)&&($data->id!='')){
+                        Session::put('refer_id', $data->id);
+                    }
+                }
+                
 
             } else {
                 $data = '';
