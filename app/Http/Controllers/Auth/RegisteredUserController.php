@@ -72,7 +72,7 @@ class RegisteredUserController extends Controller
 
         //     Mail::to($get_email->email)->send(new WelcomeEmail($data));
         // }
-        //email ends
+        //email ends 
         if (session()->has('refer_id')) {
 
             $referred_respondent_id = session()->get('refer_id');
@@ -82,6 +82,16 @@ class RegisteredUserController extends Controller
                 'referred_respondent_id' => $referred_respondent_id,
             ]);
             Session::forget('refer_id');
+        }
+        if (session()->has('u_refer_id')) {
+
+            $referred_respondent_id = session()->get('u_refer_id');
+
+            $userInfo = Respondent_referrals::create([
+                'respondent_id' => $user->id,
+                'user_id' => $referred_respondent_id,
+            ]);
+            Session::forget('u_refer_id');
         }
 
         event(new Registered($user));
