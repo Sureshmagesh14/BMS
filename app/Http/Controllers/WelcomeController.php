@@ -37,7 +37,7 @@ class WelcomeController extends Controller
                     
                     $data = Users::where('share_link', $referral_code)->first();
                     if(isset($data->id)&&($data->id!='')){
-                        Session::put('refer_id', $data->id);
+                        Session::put('u_refer_id', $data->id);
                     }
                 }
                 
