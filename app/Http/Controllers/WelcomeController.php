@@ -932,4 +932,50 @@ class WelcomeController extends Controller
         return  $rands * 100;
     }
 
+    public function change_profile(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+            
+          
+            $data = Respondents::find($resp_id);
+            return view('user.update_image', compact('data'));
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function image_update(Request $request){
+        try {
+
+            $resp_id =Session::get('resp_id');
+
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ]);
+            $image = request()->file('image');
+            $imageName = time().'.'.$request->image->extension();  
+            $path = 'public/uploads/'.Session::get('resp_id').'/';
+            $request->image->move($path, $imageName);
+
+            $data=array('profile_image'=>$imageName,'profile_path'=>$path);
+            
+            Respondents::where('id',$resp_id)->update($data);
+            
+            return response()->json([
+                'status'  => 200,
+                'success' => true,
+                'message' =>'Image uploaded successfull.'
+            ]);
+              
+          
+            
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
 }
