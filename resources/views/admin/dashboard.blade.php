@@ -10,7 +10,8 @@
     .card {
         min-height: 231px !important;
     }
-    .apexcharts-legend.apexcharts-align-center.position-right{
+
+    .apexcharts-legend.apexcharts-align-center.position-right {
         top: 38px !important;
     }
 </style>
@@ -63,17 +64,17 @@
                             <p class="">Copy below share link to share with friends and
                                 family </p>
                             <div class="col-sm-12 d-flex">
-                                <input class="form-control mr-1"
-                                    value="{{ URL::to('/') }}?r={{ $share_link->share_link }}" disabled type="text"
+                                <input class="form-control mr-1" id="survey"
+                                    value="{{ URL::to('/') }}?r={{ $share_link->share_link }}" readonly type="text"
                                     name="SearchString" placeholder="Search">
                                 <button type="submit" class="btn btn-default btn-info"
-                                    onclick="copy('#demo')">Copy</button>
+                                    onclick="copy_link();">Copy</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                
+
                 <!-- end col-->
             </div>
 
@@ -178,19 +179,15 @@
                 chart.render();
 
 
-                function copy(selector) {
-
-                    var $temp = $("<div>");
-                    $("body").append($temp);
-                    $temp.attr("contenteditable", true).html($(selector).html()).select().on("focus", function() {
-                        document.execCommand('selectAll', false, null);
-                    }).focus();
-                    document.execCommand("copy");
-                    $temp.remove();
-                    toastr.options = {
-                        "closeButton": true,
-                        "progressBar": true
+                function copy_link() {
+                    var checkval = $('#survey').val();
+                    if (checkval != '') {
+                        let copyGfGText = document.getElementById("survey");
+                        copyGfGText.select();
+                        document.execCommand("copy");
+                        toastr.success('Survey Link Copied Successfully');
+                    } else {
+                        toastr.error('No Survey Link Found');
                     }
-                    toastr.success("Link copied");
                 }
             </script>

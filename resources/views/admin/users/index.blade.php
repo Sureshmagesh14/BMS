@@ -61,11 +61,8 @@
                 ordering: true,
                 dom: 'lfrtip',
                 info: true,
-                iDisplayLength: 10,
-                lengthMenu: [
-                    [10, 50, 100, -1],
-                    [10, 50, 100, "All"]
-                ],
+                iDisplayLength: 100,
+                lengthMenu: [[100, "All", 50, 25], [100, "All", 50, 25]],               
                 ajax: {
                     url: "{{ route('get_all_users') }}",
                     data: {

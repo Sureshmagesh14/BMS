@@ -72,6 +72,8 @@
                 "ordering": true,
                 "processing": true,
                 "serverSide": true,
+                "iDisplayLength": 100,
+                "lengthMenu": [[100, "All", 50, 25], [100, "All", 50, 25]],     
                 dom: 'lfrtip',
                 "ajax": {
                     "url": "{{ route('get_all_respond') }}",
