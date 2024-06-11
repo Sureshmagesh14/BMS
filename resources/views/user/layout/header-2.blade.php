@@ -223,6 +223,11 @@ font-size:45px;}
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{{ route('updateprofile_wizard') }}">View Profile</a>
                 </li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="{{ route('user.change_profile') }}">Change Profile</a>
+                </li>
                 {{-- {{ route('user.viewprofile') }} --}}
                
                 <li>
