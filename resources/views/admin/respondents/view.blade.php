@@ -131,7 +131,7 @@
                                         </tr>
                                         <tr>
                                             <th>Referral Code</th>
-                                            <td>{{ $data->referral_code }}</td>
+                                            <td><a href="{{ URL::to('/') }}?r={{ $data->referral_code }}">{{ URL::to('/') }}?r={{ $data->referral_code }}</a></td>
                                         </tr>
                                         <tr>
                                             <th>Accepted Terms</th>
