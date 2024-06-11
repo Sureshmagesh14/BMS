@@ -90,6 +90,10 @@
     i.fa.fa-eye {
         color: black;
     }
+    button#change_password:hover{
+        background-color: #6396b1;
+        color: #fff;
+    }
 </style>
 <section class="bg-greybg vh-100">
     <div class="container">

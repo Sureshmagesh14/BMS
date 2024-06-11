@@ -8,6 +8,7 @@ use App\Models\Groups;
 use App\Models\Respondents;
 use App\Models\RespondentProfile;
 use App\Models\Rewards;
+use App\Models\Users;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Session;
 use Illuminate\Support\Facades\Auth;
+
 class WelcomeController extends Controller
 {
     public function home(Request $request)
@@ -28,7 +30,17 @@ class WelcomeController extends Controller
                 $data = Respondents::find($id);
 
                 $data = Respondents::where('referral_code', $referral_code)->first();
-                Session::put('refer_id', $data->id);
+                if(isset($data->id)&&($data->id!='')){
+                   
+                    Session::put('refer_id', $data->id);
+                }else{
+                    
+                    $data = Users::where('share_link', $referral_code)->first();
+                    if(isset($data->id)&&($data->id!='')){
+                        Session::put('u_refer_id', $data->id);
+                    }
+                }
+                
 
             } else {
                 $data = '';
@@ -930,6 +942,52 @@ class WelcomeController extends Controller
     {
         $rands = $points / 10;
         return  $rands * 100;
+    }
+
+    public function change_profile(Request $request){
+        try {
+            
+            $resp_id =Session::get('resp_id');
+            $resp_name =Session::get('resp_name');
+            
+          
+            $data = Respondents::find($resp_id);
+            return view('user.update_image', compact('data'));
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function image_update(Request $request){
+        try {
+
+            $resp_id =Session::get('resp_id');
+
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ]);
+            $image = request()->file('image');
+            $imageName = time().'.'.$request->image->extension();  
+            $path = 'public/uploads/'.Session::get('resp_id').'/';
+            $request->image->move($path, $imageName);
+
+            $data=array('profile_image'=>$imageName,'profile_path'=>$path);
+            
+            Respondents::where('id',$resp_id)->update($data);
+            
+            return response()->json([
+                'status'  => 200,
+                'success' => true,
+                'message' =>'Image uploaded successfull.'
+            ]);
+              
+          
+            
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
 }

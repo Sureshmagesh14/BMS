@@ -5,7 +5,10 @@
         color: unset;
     }
 
-
+    button#opt_out:hover{
+        background-color: #6396b1;
+        color: #fff;
+    }
     table#DataTables_Table_0 {
         /* width: 709.406px; */
     }

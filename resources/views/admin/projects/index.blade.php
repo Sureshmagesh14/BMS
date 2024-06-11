@@ -87,10 +87,10 @@
                 ordering: true,
                 dom: 'lfrtip',
                 info: true,
-                iDisplayLength: 10,
+                iDisplayLength: 100,
                 lengthMenu: [
-                    [10, 50, 100, -1],
-                    [10, 50, 100, "All"]
+                    [100, 50, 25, -1],
+                    [100, 50, 25, "All"]
                 ],
                 ajax: {
                     url: "{{ route('get_all_projects') }}",
