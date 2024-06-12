@@ -45,7 +45,7 @@
         <div class="col-md-10">
             <select id="role_id" name="role_id" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">Choose an option</option>
-                <option value="1">Admin</option>
+                <option value="1">Super User</option>
                 <option value="2">User</option>
                 <option value="3">Temp</option>
             </select>
@@ -65,15 +65,23 @@
     @php
         $share_link = \App\Models\User::share_link(); #function call
     @endphp
+
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Share Link </label>
+        <label for="example-search-input" class="col-md-2 col-form-label">Share Link
+        </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="" name="" value="{{ $share_link }}"
-            disabled>
-        <input type="hidden" class="form-control" id="share_link" name="share_link"
-            value="{{ $share_link }}">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="share_link_url" name="" value="{{ Config::get('constants.url').'/?r='.$share_link }}"
+            readonly>
+            <input type="hidden" class="form-control" id="share_link" name="share_link"
+            value="{{ Config::get('constants.url').'/'.$share_link }}">
+                <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2" onclick="copy_link();">Copy</span>
+                </div>
+            </div>
         </div>
     </div>
+
 
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
@@ -149,4 +157,16 @@
             return false;
         }
     }, "Please enter a valid email address.");
+
+    function copy_link() {
+        var checkval = $('#share_link_url').val();
+        if (checkval != '') {
+            let copyGfGText = document.getElementById("share_link_url");
+            copyGfGText.select();
+            document.execCommand("copy");
+            toastr.success('Sharable Link Copied Successfully');
+        } else {
+            toastr.error('No Survey Link Found');
+        }
+    }
 </script>

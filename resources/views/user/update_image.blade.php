@@ -114,14 +114,14 @@
                                 </div>
                                 <div class="avatar-preview">
                                     <div id="imagePreview"
-                                        @if ($profile_image != null) style="background-image: url({{ asset($profile_path . $profile_image) }});" @else style="background-image: url({{ asset('user/images/avatar.jpg') }});" @endif
+                                        @if ($profile_image != null) style="background-image: url({{ asset($profile_path . $profile_image) }});" @else style="background-image: url({{ asset('assets/images/avatar.png') }});" @endif
                                         height="10">
                                     </div>
                                 </div>
                                 <span class="text-danger" id="image-input-error"></span>
                             </div>
                         </div>
-                   
+
                         <div class="submit-btn text-start">
                             <button type="submit" id="profile"
                                 class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 w-100">Update</button>
@@ -162,9 +162,16 @@
                 if (response.status == 400) {
                     this.reset();
                     toastr.info(response.message);
+                } else if (response.status == 500) {
+                    this.reset();
+                    toastr.error(response.message);
                 } else {
                     this.reset();
                     toastr.success(response.message);
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
+
                 }
 
             },
