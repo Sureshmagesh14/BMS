@@ -5,10 +5,11 @@
         color: unset;
     }
 
-    button#opt_out:hover{
+    button#opt_out:hover {
         background-color: #6396b1;
         color: #fff;
     }
+
     table#DataTables_Table_0 {
         /* width: 709.406px; */
     }
@@ -56,6 +57,10 @@
 </style>
 @php
     $first_character = mb_substr($data->name, 0, 1);
+    $resp_id = Session::get('resp_id');
+    $data = $folderspublic = \App\Models\Respondents::find($resp_id);
+    $profile_image = $data->profile_image ?? '';
+    $profile_path = $data->profile_path ?? '';
 @endphp
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap4.css">
@@ -68,7 +73,8 @@
                 <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile_wizard') }}">Update
                     Profile</a>
                 <br>
-                <small class="leading-none mt-1 text-danger">Cash Outs and Surveys are available if your profile is up to date.
+                <small class="leading-none mt-1 text-danger">Cash Outs and Surveys are available if your profile is up to
+                    date.
                     Please update your profile.</small>
             </div>
         @endif
@@ -79,8 +85,13 @@
             <div class="col-md-2 vi-light-grey mx-0 px-0">
                 <div class="logo bg-white pt-3">
                     <div class="profile text-center m-auto ">
-                        <span class="vi-usr-profile m-auto p-4"
-                            style="text-transform: capitalize;">{{ $first_character }}</span>
+                        @if ($profile_image != null)
+                            <img id="profile" src="{{ asset($profile_path . $profile_image) }}"
+                                style="width:100px; border: 2px solid black;">
+                        @else
+                            <span class="vi-usr-profile m-auto p-4"
+                                style="text-transform: capitalize;">{{ $first_char }}</span>
+                        @endif
                     </div>
                     <div class="py-3 mb-5">
                         <p class="text-center fw-bolder" style="text-transform: capitalize;">{{ $data->name }}</p>
@@ -125,7 +136,8 @@
                 <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
                     <h5 class="d-flex align-items-center justify-content-around">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
-                                alt=""> <span class="small-font-sm">See if You Qualify for Other Research</span> </div>
+                                alt=""> <span class="small-font-sm">See if You Qualify for Other Research</span>
+                        </div>
                         <div class="px-3">
                             <!-- <ul class="navbar-nav">
                                 <li class="nav-item dropdown">
@@ -163,25 +175,24 @@
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                         <td title="{{ $res->description }}">
 
-                                        @if ($res->type_id == 1) 
-                                        Pre-Screener
-                                        @elseif ($res->type_id == 2) 
-                                        Pre-Task
-                                        @elseif ($res->type_id == 3) 
-                                        Paid survey
-                                        @elseif ($res->type_id == 4) 
-                                        Unpaid survey
-                                        @endif
-                                         
+                                            @if ($res->type_id == 1)
+                                                Pre-Screener
+                                            @elseif ($res->type_id == 2)
+                                                Pre-Task
+                                            @elseif ($res->type_id == 3)
+                                                Paid survey
+                                            @elseif ($res->type_id == 4)
+                                                Unpaid survey
+                                            @endif
+
                                             <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
                                         </td>
                                         <td>{{ $res->reward }}</td>
                                         @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
 
                                         @if ($data->profile_completion_id == 0)
-
-                                        <td> Profile Incomple </td>
-                                        @else 
+                                            <td> Profile Incomple </td>
+                                        @else
                                             @if ($get_link != null)
                                                 <td><a target="_blank"
                                                         href="{{ url('survey/view', $get_link->builderID) }}"
@@ -190,7 +201,7 @@
                                                 <td>No Survey</td>
                                             @endif
                                         @endif
-                                            
+
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -292,17 +303,17 @@
                                         <td>{{ $res->name }}</td>
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                         <td title="{{ $res->description }}">
-                                        
-                                            @if ($res->type_id == 1) 
-                                            Pre-Screener
-                                            @elseif ($res->type_id == 2) 
-                                            Pre-Task
-                                            @elseif ($res->type_id == 3) 
-                                            Paid survey
-                                            @elseif ($res->type_id == 4) 
-                                            Unpaid survey
+
+                                            @if ($res->type_id == 1)
+                                                Pre-Screener
+                                            @elseif ($res->type_id == 2)
+                                                Pre-Task
+                                            @elseif ($res->type_id == 3)
+                                                Paid survey
+                                            @elseif ($res->type_id == 4)
+                                                Unpaid survey
                                             @endif
-                                            
+
                                             <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
                                         </td>
                                         <td>{{ $res->reward }}</td>
@@ -372,8 +383,8 @@
                     total: {
                         show: true,
                         label: 'Total',
-                        formatter: function (w) {
-                            return round+"%"
+                        formatter: function(w) {
+                            return round + "%"
                         }
                     }
                 },

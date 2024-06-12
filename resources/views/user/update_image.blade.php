@@ -84,7 +84,8 @@
             }
         }
     }
-    button#profile:hover{
+
+    button#profile:hover {
         background-color: #6396b1;
         color: #fff;
     }
@@ -97,53 +98,40 @@
             </div>
             <div class="col-md-6 bg-white p-5">
                 <div class="text-center">
-
-                    <form class="validation" id="image-upload"  method="POST" enctype="multipart/form-data">
+                    @php
+                        $profile_image = $data->profile_image ?? '';
+                        $profile_path = $data->profile_path ?? '';
+                    @endphp
+                    <form class="validation" id="image-upload" method="POST" enctype="multipart/form-data">
                         @csrf
-
                         <div class="container">
-                            <h1>Change Profile
-
-                            </h1>
+                            <h1>Change Profile</h1>
                             <div class="avatar-upload">
                                 <div class="avatar-edit">
-                                    <input  name="image"  type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                                    <input name="image" type='file' id="imageUpload"
+                                        accept=".png, .jpg, .jpeg,.gif" />
                                     <label for="imageUpload"></label>
                                 </div>
                                 <div class="avatar-preview">
-                                    @php
-                                        $profile_image=$data->profile_image ?? '';
-
-                                        $profile_path=$data->profile_path ?? '';
-                                    @endphp
-                                  
                                     <div id="imagePreview"
-                                         style="background-image: url({{ asset('user/images/avatar.jpg') }});"  height="10">
+                                        @if ($profile_image != null) style="background-image: url({{ asset($profile_path . $profile_image) }});" @else style="background-image: url({{ asset('user/images/avatar.jpg') }});" @endif
+                                        height="10">
                                     </div>
-                                  
                                 </div>
                                 <span class="text-danger" id="image-input-error"></span>
                             </div>
                         </div>
-
-
                         <br>
                         <div class="submit-btn text-start">
-                            <button type="submit" id="profile" class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 w-100"
-                               >Update</button>
+                            <button type="submit" id="profile"
+                                class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 w-100">Update</button>
                         </div>
-
                     </form>
                 </div>
-
-
             </div>
         </div>
     </div>
 </section>
-
-
-
 @include('user.layout.footer')
 
 <!--  jquery script  -->
@@ -160,28 +148,35 @@
 
 
     $('#image-upload').submit(function(e) {
-           e.preventDefault();
-           let formData = new FormData(this);
-           $('#image-input-error').text('');
-    
-           $.ajax({
-                type:'POST',
-                url: "{{ route('user.image_update') }}",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: (response) => {
+        e.preventDefault();
+        let formData = new FormData(this);
+        $('#image-input-error').text('');
+
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('user.image_update') }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: (response) => {
+                if (response.status == 400) {
+                    this.reset();
+                    toastr.info(response.message);
+                } else {
                     this.reset();
                     toastr.success(response.message);
-                },
-                error: function(response){
-                    $('#image-upload').find(".print-error-msg").find("ul").html('');
-                    $('#image-upload').find(".print-error-msg").css('display','block');
-                    $.each( response.responseJSON.errors, function( key, value ) {
-                        $('#image-upload').find(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                    });
                 }
-           });
+
+            },
+            error: function(response) {
+                $('#image-upload').find(".print-error-msg").find("ul").html('');
+                $('#image-upload').find(".print-error-msg").css('display', 'block');
+                $.each(response.responseJSON.errors, function(key, value) {
+                    $('#image-upload').find(".print-error-msg").find("ul").append('<li>' +
+                        value + '</li>');
+                });
+            }
+        });
     });
 
     $(function() {
@@ -213,7 +208,18 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
-    $("#imageUpload").change(function() {
-        readURL(this);
+    $(document).on('change', '#imageUpload', function() {
+        var fileExtension = ['jpeg', 'jpg', 'png', 'pdf', 'gif'];
+        if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+            $('button#profile').prop('disabled', true);
+            $("#image-input-error").html("Upload only pdf, jpeg, jpg, png, gif");
+
+            return false;
+        } else {
+            readURL(this);
+            $('button#profile').prop('disabled', false);
+            $("#image-input-error").hide();
+            return true;
+        }
     });
 </script>
