@@ -60,7 +60,6 @@
     $resp_id = Session::get('resp_id');
     $data = $folderspublic = \App\Models\Respondents::find($resp_id);
     $profile_image = $data->profile_image ?? '';
-
     $profile_path = $data->profile_path ?? '';
 @endphp
 
@@ -87,7 +86,7 @@
                 <div class="logo bg-white pt-3">
                     <div class="profile text-center m-auto ">
                         @if ($profile_image != null)
-                            <img src="{{ asset($profile_path . $profile_image) }}"
+                            <img id="profile" src="{{ asset($profile_path . $profile_image) }}"
                                 style="width:100px; border: 2px solid black;">
                         @else
                             <span class="vi-usr-profile m-auto p-4"

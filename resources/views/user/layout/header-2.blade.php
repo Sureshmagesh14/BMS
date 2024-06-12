@@ -103,7 +103,7 @@
             animation-delay: 0.4s;
         }
 
-        img {
+        img#profile{
             border-radius: 50%;
             height: 50px;
             width: 52px !important;
@@ -313,7 +313,7 @@
 
                                 @endphp
                                 @if ($profile_image != null)
-                                    <img src="{{ asset($profile_path . $profile_image) }}"
+                                    <img id="profile" src="{{ asset($profile_path . $profile_image) }}"
                                         style="width:100px; border: 2px solid black;">
                                 @else
                                     <span class="vi-usr-profile m-auto p-4"
