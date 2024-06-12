@@ -964,26 +964,36 @@ class WelcomeController extends Controller
 
             $resp_id =Session::get('resp_id');
 
-            $request->validate([
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-            ]);
-            $image = request()->file('image');
-            $imageName = time().'.'.$request->image->extension();  
-            $path = 'public/uploads/'.Session::get('resp_id').'/';
-            $request->image->move($path, $imageName);
+            if ($request->hasFile('image')) {
+                // image restriction
+                $validator = \Validator::make(
+                    $request->all(), [
+                        'image' => 'mimes:jpeg,jpg,png,gif|required|max:20480',
+                    ]
+                );
 
-            $data=array('profile_image'=>$imageName,'profile_path'=>$path);
+                $image = request()->file('image');
+                $imageName = time().'.'.$request->image->extension();  
+                $path = 'public/uploads/'.Session::get('resp_id').'/';
+                $request->image->move($path, $imageName);
+
+                $data=array('profile_image'=>$imageName,'profile_path'=>$path);
+                
+                Respondents::where('id',$resp_id)->update($data);
             
-            Respondents::where('id',$resp_id)->update($data);
-            
-            return response()->json([
-                'status'  => 200,
-                'success' => true,
-                'message' =>'Image uploaded successfull.'
-            ]);
+                return response()->json([
+                    'status'  => 200,
+                    'success' => true,
+                    'message' =>'Profile Image successfully Updated.'
+                ]);
+            }else{
+                return response()->json([
+                    'status'  => 400,
+                    'success' => true,
+                    'message' =>'Profile Image already Updated.'
+                ]);
+            }
               
-          
-            
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
