@@ -121,7 +121,7 @@
                                 <span class="text-danger" id="image-input-error"></span>
                             </div>
                         </div>
-                        <br>
+                   
                         <div class="submit-btn text-start">
                             <button type="submit" id="profile"
                                 class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 w-100">Update</button>
