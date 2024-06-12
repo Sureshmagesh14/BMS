@@ -2244,7 +2244,7 @@ class SurveyController extends Controller
         $survey = Survey::where(['id'=>$survey_id])->first();
         $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->get();
         $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
-        $cols = ["Respondent Name", "Date","Device ID","Device Name","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name"];
+        $cols = ["Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name"];
         foreach($question as $qus){
             array_push($cols,$qus->question_name);
         }
@@ -2290,7 +2290,7 @@ class SurveyController extends Controller
                 $deviceID =$other_details->device_id;
             }
             if(isset($other_details->device_name)){
-                $deviceID =$other_details->device_name;
+                $device_name =$other_details->device_name;
             }
             if(isset($other_details->browser)){
                 $browser =$other_details->browser;
@@ -2323,9 +2323,16 @@ class SurveyController extends Controller
             if(isset($user->name)){
                 $name = $user->name;
             }
-            
 
-            $result =['name'=>$name,'responseinfo'=>$responseinfo,'device_id'=>$deviceID,'device_name'=>$device_name,'browser'=>$browser,'os'=>$os,'device_type'=>$device_type,'long'=>$long,'lat'=>$lat,'location'=>$location,'ip_address'=>$ip_address,'lang_code'=>$lang_code,'lang_name'=>$lang_name];
+            $completedRes =SurveyResponse::where(['response_user_id'=>$userID ,'survey_id'=>$survey_id,'answer'=>'thankyou_submitted'])->first();
+
+            if($completedRes){
+                $completion_status = 'Completed';
+            }else{
+                $completion_status = 'Partially Completed';
+            }
+
+            $result =['name'=>$name,'responseinfo'=>$responseinfo,'device_id'=>$deviceID,'device_name'=>$device_name,'completion_status'=>$completion_status,'browser'=>$browser,'os'=>$os,'device_type'=>$device_type,'long'=>$long,'lat'=>$lat,'location'=>$location,'ip_address'=>$ip_address,'lang_code'=>$lang_code,'lang_name'=>$lang_name];
             foreach($question as $qus){
                 $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->first();
                 if($respone){
