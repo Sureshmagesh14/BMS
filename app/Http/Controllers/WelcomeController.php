@@ -963,7 +963,7 @@ class WelcomeController extends Controller
         try {
 
             $resp_id =Session::get('resp_id');
-
+            $check_data=Respondents::find($resp_id);
             if ($request->hasFile('image')) {
                 // image restriction
                 $validator = \Validator::make(
@@ -985,6 +985,12 @@ class WelcomeController extends Controller
                     'status'  => 200,
                     'success' => true,
                     'message' =>'Profile Image successfully Updated.'
+                ]);
+            }elseif($check_data->profile_image==null){
+                return response()->json([
+                    'status'  => 500,
+                    'success' => true,
+                    'message' =>'Please Upload Your Profile Image.'
                 ]);
             }else{
                 return response()->json([
