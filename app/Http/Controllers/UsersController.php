@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Illuminate\Support\Facades\Hash;
+use Config;
 class UsersController extends Controller
 {
      /**
@@ -283,7 +284,7 @@ class UsersController extends Controller
                 })  
                 ->addColumn('role_id', function ($all_data) {
                     if($all_data->role_id==1){
-                        return 'Admin';
+                        return 'Super User';
                     }else if($all_data->role_id==2){
                         return 'User';
                     }else if($all_data->role_id==3){
@@ -294,7 +295,7 @@ class UsersController extends Controller
                    
                 })
                 ->addColumn('share_link', function ($all_data) {
-                    return $all_data->share_link;
+                    return Config::get('constants.url').'/?r='.$all_data->share_link;
                 })  
                 ->addColumn('status_id', function ($all_data) {
                    

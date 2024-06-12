@@ -69,7 +69,7 @@
                                             <th>Role</th>
                                             <td>
                                                 @if ($data->role_id == 1)
-                                                    Admin
+                                                    Super User
                                                 @elseif($data->role_id == 2)
                                                     User
                                                 @else
@@ -90,7 +90,7 @@
                                         </tr>
                                         <tr>
                                             <th>Share Link</th>
-                                            <td>{{ $data->share_link }}</td>
+                                            <td><a target="_blank" rel="noopener" href="{{ Config::get('constants.url').'/?r='.$data->share_link }}">{{ Config::get('constants.url').'/?r='.$data->share_link }}<a></td>
                                         </tr>
 
                                     </tbody>
