@@ -2,12 +2,19 @@
     <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="First group">
             <div class="btn-group dropdown-filter">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" aria-labelledby="filter" role="presentation" class="fill-current text-80">
-                        <path fill-rule="nonzero" d="M.293 5.707A1 1 0 0 1 0 4.999V1A1 1 0 0 1 1 0h18a1 1 0 0 1 1 1v4a1 1 0 0 1-.293.707L13 12.413v2.585a1 1 0 0 1-.293.708l-4 4c-.63.629-1.707.183-1.707-.708v-6.585L.293 5.707zM2 2v2.585l6.707 6.707a1 1 0 0 1 .293.707v4.585l2-2V12a1 1 0 0 1 .293-.707L18 4.585V2H2z"></path>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                        aria-labelledby="filter" role="presentation" class="fill-current text-80">
+                        <path fill-rule="nonzero"
+                            d="M.293 5.707A1 1 0 0 1 0 4.999V1A1 1 0 0 1 1 0h18a1 1 0 0 1 1 1v4a1 1 0 0 1-.293.707L13 12.413v2.585a1 1 0 0 1-.293.708l-4 4c-.63.629-1.707.183-1.707-.708v-6.585L.293 5.707zM2 2v2.585l6.707 6.707a1 1 0 0 1 .293.707v4.585l2-2V12a1 1 0 0 1 .293-.707L18 4.585V2H2z">
+                        </path>
                     </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" class="ml-2">
-                        <path fill="var(--90)" d="M8.292893.292893c.390525-.390524 1.023689-.390524 1.414214 0 .390524.390525.390524 1.023689 0 1.414214l-4 4c-.390525.390524-1.023689.390524-1.414214 0l-4-4c-.390524-.390525-.390524-1.023689 0-1.414214.390525-.390524 1.023689-.390524 1.414214 0L5 3.585786 8.292893.292893z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"
+                        class="ml-2">
+                        <path fill="var(--90)"
+                            d="M8.292893.292893c.390525-.390524 1.023689-.390524 1.414214 0 .390524.390525.390524 1.023689 0 1.414214l-4 4c-.390525.390524-1.023689.390524-1.414214 0l-4-4c-.390524-.390525-.390524-1.023689 0-1.414214.390525-.390524 1.023689-.390524 1.414214 0L5 3.585786 8.292893.292893z">
+                        </path>
                     </svg>
                 </button>
                 <br>
@@ -51,6 +58,34 @@
                                 <option value="respondent">Respondent</option>
                             </select>
                         </li>
+                        <li class="mb-3">
+                            <h5>Year Filter</h5>
+                            <select name="year" id="year" class="form-control" onchange="select_year(this)">
+                                <option value="">Select Year</option>
+                                <?php
+                                for ($i = 2022; $i <= date('Y'); $i++) {
+                                    echo "<option>$i</option>";
+                                }
+                                ?>
+                            </select>
+                        </li>
+                        <li class="mb-3">
+                            <h5>Month Filter</h5>
+                            <select name="month" id="month" class="form-control" onchange="select_month(this)">
+                                <option value="">Select Month</option>
+                                <?php
+                                // Loop through 12 months
+                                for ($i = 1; $i <= 12; $i++) {
+                                    // Get the month name using DateTime class
+                                    $monthName = DateTime::createFromFormat('!m', $i)->format('F');
+                                    // Output option tag with month name and value (1-indexed)
+                                    echo "<option value='$monthName'>$monthName</option>";
+                                }
+                                ?>
+                            </select>
+                        </li>
+
+
                     </ul>
                 </div>
             </div>

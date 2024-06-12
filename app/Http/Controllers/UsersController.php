@@ -257,9 +257,18 @@ class UsersController extends Controller
             if ($request->ajax()) {
 
                 $token = csrf_token();
-            
+                $role = $request->role;
+                $status = $request->status;
                 
-                $all_datas = Users::withoutTrashed()->latest()->get();
+                $all_datas = Users::withoutTrashed();
+                if($role != null){
+                    $all_datas->where('users.role_id',$role);
+                }
+
+                if($status != null){
+                    $all_datas->where('users.status_id',$status);
+                }
+                $all_datas=$all_datas->latest()->get();
                 
                 return Datatables::of($all_datas)
                 ->addColumn('select_all', function ($all_data) {
@@ -295,7 +304,8 @@ class UsersController extends Controller
                    
                 })
                 ->addColumn('share_link', function ($all_data) {
-                    return Config::get('constants.url').'/?r='.$all_data->share_link;
+                    $url= Config::get('constants.url').'/?r='.$all_data->share_link;
+                    return '<a rel="noopener" target="_blank" href="'.$url.'">'.$url.'</a>';
                 })  
                 ->addColumn('status_id', function ($all_data) {
                    
