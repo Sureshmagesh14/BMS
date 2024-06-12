@@ -90,7 +90,7 @@
                                 style="width:100px; border: 2px solid black;">
                         @else
                             <span class="vi-usr-profile m-auto p-4"
-                                style="text-transform: capitalize;">{{ $first_char }}</span>
+                                style="text-transform: capitalize;">{{ $first_character }}</span>
                         @endif
                     </div>
                     <div class="py-3 mb-5">
