@@ -973,7 +973,10 @@ class WelcomeController extends Controller
                 );
 
                 $image = request()->file('image');
-                $imageName = time().'.'.$request->image->extension();  
+                $imageName = time().'.'.$request->image->extension();
+                if (!file_exists(public_path() . '/uploads/'.Session::get('resp_id'))) {
+                    mkdir(public_path() . '/uploads/'.Session::get('resp_id'));
+                }  
                 $path = 'public/uploads/'.Session::get('resp_id').'/';
                 $request->image->move($path, $imageName);
 
