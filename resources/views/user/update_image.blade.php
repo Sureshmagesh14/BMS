@@ -118,7 +118,7 @@
                                     @endphp
                                   
                                     <div id="imagePreview"
-                                         style="background-image: url({{ asset('user/images/avatar.jpg') }});"  height="10">
+                                         @if($profile_image!=null) style="background-image: url({{ asset($profile_path.$profile_image) }});" @else style="background-image: url({{ asset('user/images/avatar.jpg') }});" @endif height="10">
                                     </div>
                                   
                                 </div>
