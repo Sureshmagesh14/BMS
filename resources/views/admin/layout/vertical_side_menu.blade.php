@@ -27,7 +27,7 @@
                 <li class="menu-title" key="t-menu">Menu</li>
 
                 <li>
-                    <a href="dashboard" class="waves-effect">
+                    <a href="{{ route('admin.dashboard') }}" class="waves-effect">
                         <i class="icon nav-icon" data-feather="home"></i>
                         <span class="menu-item" key="t-dashboards">Dashboards</span>
                     </a>
