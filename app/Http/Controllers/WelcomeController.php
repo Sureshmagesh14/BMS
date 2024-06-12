@@ -977,8 +977,9 @@ class WelcomeController extends Controller
                 if (!file_exists(public_path() . '/uploads/'.Session::get('resp_id'))) {
                     mkdir(public_path() . '/uploads/'.Session::get('resp_id'));
                 }  
-                $path = 'public/uploads/'.Session::get('resp_id').'/';
-                $request->image->move($path, $imageName);
+                $path = 'uploads/'.Session::get('resp_id').'/';
+             
+                move_uploaded_file($_FILES["image"]["tmp_name"], $path . $imageName);
 
                 $data=array('profile_image'=>$imageName,'profile_path'=>$path);
                 
