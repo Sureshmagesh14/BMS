@@ -173,11 +173,13 @@ if(isset($bg)){
         }else{
             $urlRedirect = route('user.dashboard');
         } ?>
+        @if($survey->survey_type == 'profile')
         <a class="back_to_profile" href="{{ $urlRedirect }} ">
             <button id="back_to_profile">
                 <span class="ss-primary-action-btn__copy">Back to Profile</span>
             </button>
         </a>
+        @endif
         <?php //echo "<pre>";  print_r($survey); ?>
 @if($survey->survey_type == 'profile')
 <div class="pagination">
@@ -961,7 +963,11 @@ if(isset($bg)){
                                                             </div>
                                                         </div>
                                                         <div class="ss-choice-content">
+                                                            @if($choice->text!='')
                                                             <p title="{{$choice->text}}">{{$choice->text}}</p>
+                                                            @else
+                                                            <p title="{{$azRange[$key]}}">{{$azRange[$key]}}</p>
+                                                            @endif
                                                             <div class="ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--bold ss-option-no"
                                                                 aria-label="Press {{$azRange[$key]}} to select">
                                                                 <div class="ss-option-no__index">{{$azRange[$key]}}</div>
@@ -1183,13 +1189,14 @@ if(isset($bg)){
                 }
                 $string_version = implode(',', $accept); 
                     ?>
-            <input id="uploadfile" accet="{{$string_version}}" name="uploadfile" type="file" style="display: none;">
+            <input id="uploadfile" accept="{{$string_version}}" name="uploadfile" type="file" style="display: none;">
 
             @endif
             <input type="text" id="question_id" value="{{$question->id}}" name="question_id"/>
             <input type="text" id="survey_id" value="{{$survey->id}}" name="survey_id"/>
             <input type="text" id="next_qus" name="next_qus"/>
             <input type="text" id="user_ans" name="user_ans"/>
+            <input type="text" id="uploadurl" name="uploadurl"/>
             <input type="text" id="skip_ans" name="skip_ans"/>
             <input type="text" id="device_id" name="device_id"/>
             <input type="text" id="device_name" name="device_name"/>
@@ -1268,6 +1275,15 @@ $('.text-ans-input').change(function(){
         $('#answered').val('no');
     }
 });
+$('.text-ans-input').keyup(function(){
+    if($(this).val()!=''){
+        $('#next_button').removeClass('disabled');
+        $('#answered').val('yes');
+    }else{
+        $('#next_button').addClass('disabled');
+        $('#answered').val('no');
+    }
+});
 $('.single_choice_choice').click(function(){
     $(this).toggleClass("active");
     $('.single_choice_choice').not(this).removeClass("active");
@@ -1319,12 +1335,15 @@ $('.answer-option-rating--icons').click(function(){
     $('.answer-option-rating--icons').each(function(){
         if($(this).hasClass('active')){
             enable=1;
+            
         }
     });
     if(enable == 1){
+        $('#next_button').removeClass('disabled');
         $('#answered').val('yes');
     }else{
         $('#answered').val('no');
+        $('#next_button').addClass('disabled');
     }
 });
 $('#back_editor').click(function(){
@@ -1334,6 +1353,12 @@ $('#back_editor').click(function(){
 $('.ss-answer-option--picture-choice').click(function(){
     $(this).toggleClass("active");
     $('.ss-answer-option--picture-choice').not(this).removeClass("active");
+    if($('.ss-answer-option--picture-choice.active .ss-choice-content p').text() !=''){
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#next_button').addClass('disabled');
+
+    }
 });
 var array = $('#rank_order_value').val();
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -1471,7 +1496,7 @@ $('#next_button').click(function(){
                 submit =1;
             }else{
                 submit = 0;
-                alert('Pls choose answ');
+                alert('Please select an answer');
                 return false;
             }
         });
@@ -1487,11 +1512,13 @@ $('#next_button').click(function(){
             submit=1;
         }
     }
+    // console.log(submit,qusVal);
+    // return false;
     if(submit == 1){
         $('#next_qus').val($(this).data('url'));
         $('#skip_qus').submit();
     }else{
-        alert('Pls choose answ');
+        alert('Please select an answer');
         return false;
     }
 });
@@ -1577,17 +1604,30 @@ dragdropfile.addEventListener('click', async function() {
     $('#uploadfile').click();
 });
 
+$('#uploadfile').change((e)=>{
+    if(e.target.files.length>0){
+        $('#uploadurl').val(e.target.files[0].name);
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#uploadurl').val('');
+        $('#next_button').addClass('disabled');
+    }
+  
+});
 function handleDrop(event) {
     event.preventDefault();
     const files = event.dataTransfer.files;
     if (files) {
-        console.log(files,'filesfiles')
+    $('#uploadurl').val(files[0].name);
       const validFiles = Array.from(files).filter(file => {
         const allowedFormats = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","text/csv",'application/vnd.openxmlformats-officedocument.presentationml.presentation','application/pdf',"audio/mpeg","audio/mp3","audio/wav","audio/aac", 'image/png', 'image/jpeg','image/jpg','audio/mp3','audio/*'];
-        conso
         return allowedFormats.includes(file.type);
       });
-      console.log(validFiles,'validFilesvalidFiles');
+    }
+    if($('#uploadurl').val() != ''){
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#next_button').addClass('disabled');
     }
 }
 

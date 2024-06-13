@@ -5,6 +5,10 @@
 @include('admin.layout.horizontal_left_menu')
 </div>
 <style>
+.d-flex.qus_set.qus {
+    align-items: center;
+    margin-left: 10px;
+}
 .uploadfile_type span {
     margin-left: 5px;
     margin-right: 12px;
@@ -88,6 +92,27 @@
         <!--- Sidemenu -->
         <div id="sidebar-menu">
             <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
+                <a class="setbackground" role="button"  data-url="{{route('survey.sharesurvey',$survey->id)}}" data-ajax-popup="true"
+                        title="Share Survey" data-title="Share Survey">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="">
+                        <g stroke="#0D1B1E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" clip-path="url(#clip0_1106_12949)" opacity="0.9">
+                        <path d="M8.553 10.114a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M19.219 4.781a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M19.219 15.447a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M9.04 10.81l5.92-2.96M9.04 13.19l5.92 2.96"></path>
+                        </g>
+                        <defs>
+                        <clipPath id="clip0_1106_12949">
+                            <path fill="#fff" d="M0 0H24V24H0z"></path>
+                        </clipPath>
+                        </defs>
+                    </svg>   <p>Share Survey</p>
+                </a>
+            </div>
+            <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
+            <a class="setbackground" target="_blank" href="{{route('survey.responses',$survey->id)}}" >
+            <svg width="16" height="16" class="me-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C12.5523 2 13 2.44772 13 3V12.5858L15.2929 10.2929C15.6834 9.90237 16.3166 9.90237 16.7071 10.2929C17.0976 10.6834 17.0976 11.3166 16.7071 11.7071L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L7.29289 11.7071C6.90237 11.3166 6.90237 10.6834 7.29289 10.2929C7.68342 9.90237 8.31658 9.90237 8.70711 10.2929L11 12.5858V3C11 2.44772 11.4477 2 12 2ZM3 13.0769C3.55228 13.0769 4 13.5246 4 14.0769V18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V14.0769C20 13.5246 20.4477 13.0769 21 13.0769C21.5523 13.0769 22 13.5246 22 14.0769V18C22 20.2091 20.2092 22 18 22H6C3.79086 22 2 20.2091 2 18V14.0769C2 13.5246 2.44772 13.0769 3 13.0769Z" fill="#100E0E"></path></g></svg> <p>Responses</p>
+                </a>
+            </div>
+
+            <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
                 <a class="setbackground"  href="{{route('survey.surveytemplate',[$survey->id,'welcome'])}}">
                 <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 21H0V19H5V21ZM8.424 15.282L12.826 19.681L7 21L8.424 15.282ZM24 8.534L14.311 18.338L9.775 13.802L19.464 4L24 8.534Z" fill="#63686F"></path></svg>
                     <p>Welcome Templates</p>
@@ -137,7 +162,10 @@
                <?php $i=1;?>
                 @foreach($questions as $qus)
                     <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
-                            @if($qus->qus_type=='open_qus')
+                            <?php  $qus_url=route('survey.builder',[$survey->builderID,$qus->id]); ?>
+                            <div class="d-flex qus_set qus" onclick="sectactivequs({{$qus->id}},'{{$qus->qus_type}}','{{$qus_url}}')">
+                                <span class="qus_no"><?php echo $i; ?></span>
+                                @if($qus->qus_type=='open_qus')
                             <svg height="32" width="32" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect height="32" width="32" fill="transparent" rx="3"></rect><path d="M6 12H26V20H6V12Z" stroke="#63686F"></path><line stroke="#63686F" x1="19.5" x2="19.5" y1="8" y2="24"></line><line stroke="#63686F" x1="17" x2="22" y1="8.5" y2="8.5"></line><line stroke="#63686F" x1="17" x2="22" y1="23.5" y2="23.5"></line></svg>
                             @elseif($qus->qus_type=='single_choice' || $qus->qus_type=='multi_choice')
                             <svg height="32" width="32" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect height="32" width="32" fill="transparent" rx="3"></rect><path d="M10.5981 8.49989C9.1632 7.67147 7.32843 8.16309 6.5 9.59797C5.67157 11.0328 6.1632 12.8676 7.59808 13.696C9.03295 14.5245 10.8677 14.0328 11.6962 12.598" stroke="#63686F"></path><path d="M10.5981 19.4999C9.1632 18.6715 7.32843 19.1631 6.5 20.598C5.67157 22.0328 6.1632 23.8676 7.59808 24.696C9.03295 25.5245 10.8677 25.0328 11.6962 23.598" stroke="#63686F"></path><line stroke="#63686F" x1="13.915" x2="25.915" y1="9.63379" y2="9.63379"></line><line stroke="#63686F" x1="13.915" x2="21.915" y1="11.6338" y2="11.6338"></line><line stroke="#63686F" x1="13.915" x2="25.915" y1="20.6338" y2="20.6338"></line><line stroke="#63686F" x1="13.915" x2="21.915" y1="22.6338" y2="22.6338"></line></svg>
@@ -159,10 +187,7 @@
                             <svg height="32" width="32" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect height="32" width="32" fill="transparent" rx="3"></rect><path d="M13.5 21H10.4307C9.39106 21 8.40093 20.6358 7.63358 19.9802C6.17315 18.742 4.68796 16.4597 7.98013 13.5218C7.98013 13.5218 7.53457 12.4292 8.00488 11.4094C8.45044 10.4868 9.83661 9.27279 11.6931 9.95263C15.2081 5.07236 20.7528 6.65055 22.1142 11.7008C24.7628 11.7008 27.6094 15.9012 24.9113 18.9848C23.7726 20.2959 22.0647 21 20.2825 21H19.5" stroke="#63686F"></path><path d="M14 18L16.5 16L19 18" stroke="#63686F"></path><line stroke="#63686F" x1="16.5" x2="16.5" y1="16" y2="25"></line></svg>
                             @elseif($qus->qus_type=='matrix_qus')
                             <svg height="32" width="32" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect height="32" width="32" fill="transparent" rx="3"></rect><circle cx="9" cy="9" fill="#63686F" r="2.5" stroke="#63686F"></circle><circle cx="16" cy="9" fill="#63686F" r="2.5" stroke="#63686F"></circle><circle cx="23" cy="9" fill="#63686F" r="2.5" stroke="#63686F"></circle><circle cx="9" cy="16" r="2.5" stroke="#63686F"></circle><circle cx="16" cy="16" fill="#63686F" r="2.5" stroke="#63686F"></circle><circle cx="23" cy="16" r="2.5" stroke="#63686F"></circle><circle cx="9" cy="23" r="2.5" stroke="#63686F"></circle><circle cx="16" cy="23" r="2.5" stroke="#63686F"></circle><circle cx="23" cy="23" r="2.5" stroke="#63686F"></circle></svg>
-                            @endif
-                            <?php  $qus_url=route('survey.builder',[$survey->builderID,$qus->id]); ?>
-                            <div class="d-flex qus_set" onclick="sectactivequs({{$qus->id}},'{{$qus->qus_type}}','{{$qus_url}}')">
-                                <span class="qus_no"><?php echo $i; ?></span>
+                            @endif  
                                 <a href="javascript:void(0);" class="quesset">
                                     @if($qus->question_name!='')
                                     <p><?php echo substr($qus->question_name, 0, 15); if(strlen($qus->question_name)>16) echo ".."; ?></p>
@@ -171,6 +196,8 @@
                                     @endif
                                 </a>
                             </div>
+                           
+                           
                         <div class="ss-builder-features__button">
                         <?php $url =route("survey.deletequs",$qus->id);?>
                             <i data-feather="trash-2" onclick="qusdelete('{{$url}}')"></i>
@@ -1389,10 +1416,16 @@ async function  uploadfile(file,id){
     await fetch("{{route('survey.uploadimage')}}", requestOptions)
     .then((response) => response.text())
     .then((result) => {
-        let img="http://127.0.0.1:8000/uploads/survey/"+result;
-        id.children('img.current_image').attr('src',img);
-        id.children('img.current_image').css('display','block');
-        id.children(".trigger_choice").css('display','none');
+        if(result == 'size issue'){
+            alert('Upload image lesser than 2mb');
+        }else{
+            var baseUrl = window.location.origin;
+            let img=baseUrl+"/uploads/survey/"+result;
+            id.children('img.current_image').attr('src',img);
+            id.children('img.current_image').css('display','block');
+            id.children(".trigger_choice").css('display','none');
+        }
+        
     })
     .catch((error) => console.error(error));
     return img;
@@ -2030,7 +2063,9 @@ $('#welcome_template').on("change",function(){
             $('#welcome_imagetitle').val(result?.sub_title);
             $('#welcome_imagesubtitle').val(result?.description);
             $('#welcome_btn').val(result?.button_label);
-            $('#existing_image').attr("src","http://127.0.0.1:8000/uploads/survey/"+result?.image);
+            var baseUrl = window.location.origin;
+
+            $('#existing_image').attr("src",baseUrl+"/uploads/survey/"+result?.image);
             $('#existing_image_uploaded').val(result?.image);
             $('.exitingImg').css('display','flex');
             $('#existing_image').css('display',"block");
@@ -2053,7 +2088,9 @@ $('#thankyou_template').on("change",function(){
             $('#thankyou_title').val(result?.title);
             $('#thankyou_imagetitle').val(result?.sub_title);
             $('#existing_image_uploaded').val(result?.image);
-            $('#existing_image_thankyou').attr("src","http://127.0.0.1:8000/uploads/survey/"+result?.image);
+            var baseUrl = window.location.origin;
+
+            $('#existing_image_thankyou').attr("src",baseUrl+"/uploads/survey/"+result?.image);
         }
     });
 

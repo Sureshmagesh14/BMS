@@ -12,12 +12,16 @@
 //echo $page;
 $selectedFolder = \App\Models\Folder::where(['id'=>$page])->first(); 
 
-$getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->get();
+$getSurveys = App\Models\Survey::where(['folder_id'=>$page])->get();
 //echo "<pre>"; print_r($selectedFolder);
   //  print_r($getSurveys);
     //exit;
 ?>
 <style>
+    .col-12.restore {
+        display: flex;
+        justify-content: flex-end;
+    }
     a.waves-effect.active span.menu-item {
         color: #495057 !important;
     }
@@ -222,6 +226,7 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
                     </div>
                     <div class="ss-dashboard__list-item--right col-12 col-xl-7 py-md-3">
                         <div class="row no-gutters">
+                            @if($survey->is_deleted == 0)
                             <div class="col-7">
                                 <div class="row no-gutters align-items-center h-100">
                                     <div class="col-4 d-none d-md-flex flex-column align-items-center justify-content-center">
@@ -330,6 +335,14 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page,'is_deleted'=>0])->ge
                                     </div>
                                 </div>
                             </div>
+                            @endif
+                            @if($survey->is_deleted != 0)
+                            <div class="col-12 restore">
+                                <a href="{{route('survey.restore',$survey->id)}}" data-html="true"  class="ss-button__link bg-grey-6 p-3 rounded-md" >Restore
+                                </a>
+                            </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
