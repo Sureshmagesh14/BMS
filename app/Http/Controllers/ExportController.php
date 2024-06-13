@@ -37,14 +37,13 @@ class ExportController extends Controller
 
         try {
 
-            //dd($request);
-
             $module = $request->module;
             $resp_status = $request->resp_status;
-            $resp_type = $request->resp_type;
+            $resp_type = $request->show_resp_type;
             $from = ($request->start != null) ? date('Y-m-d', strtotime($request->start)) : null;
             $to = ($request->end != null) ? date('Y-m-d', strtotime($request->end)) : null;
             $type_method = $request->type_method;
+            $type_resp = $request->type_resp;
 
             $type = 'xlsx';
             $styleArray = array( // font color
@@ -135,10 +134,76 @@ class ExportController extends Controller
             $sheet->getColumnDimension('X')->setAutoSize(true);
 
             $respondents = ($request->respondents != null) ? implode(',', array_filter($request->respondents)) : null;
+
+            if($type_method == 'Individual'){
+                $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
+                    $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
+                })
+                ->whereIn('respondents.id', [$respondents])
+                ->get([
+                    'respondents.id',
+                    'respondents.opted_in',
+                    'respondent_profile.basic_details',
+                    'respondent_profile.essential_details',
+                    'respondent_profile.extended_details',
+                    'respondent_profile.updated_at',
+                ]);
+            }
+            else{
+                $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
+                    $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
+                })
+                ->where('active_status_id',1)
+                ->get([
+                    'respondents.id',
+                    'respondents.opted_in',
+                    'respondent_profile.basic_details',
+                    'respondent_profile.essential_details',
+                    'respondent_profile.extended_details',
+                    'respondent_profile.updated_at',
+                ]);
+            }
            
             if ($module == 'Respondents info') {
-        
-                if ($resp_type == 'Basic and Essential Info') {
+                if($resp_type == 'simple'){
+                    $sheet->setCellValue('A1', 'PID');
+                    $sheet->setCellValue('B1', 'First Name');
+                    $sheet->setCellValue('C1', 'Last Name');
+                    $sheet->setCellValue('D1', 'Mobile Number');
+                    $sheet->setCellValue('E1', 'WA Number');
+                    $sheet->setCellValue('F1', 'Email');
+                    $sheet->setCellValue('G1', 'Age');
+                    $sheet->setCellValue('H1', 'Date of Birth');
+
+                    $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:H1')->applyFromArray($styleArray);
+
+                    $rows = 2;
+                    $i = 1;
+
+                    foreach ($all_datas as $all_data) {
+                  
+                        $basic = json_decode($all_data->basic_details);
+                        $essential = json_decode($all_data->essential_details);
+
+                        $sheet->setCellValue('A' . $rows, $all_data->id);
+                        $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
+                        $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
+                        $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
+                        $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
+                        $sheet->setCellValue('F' . $rows, $basic->email ?? '');
+
+                        $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+                        $sheet->setCellValue('G' . $rows, $year);
+                        $sheet->setCellValue('H' . $rows, $basic->date_of_birth ?? '');
+                       
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
+                    }
+                }
+                else if ($resp_type == 'essential') {
                     $sheet->setCellValue('A1', 'PID');
                     $sheet->setCellValue('B1', 'First Name');
                     $sheet->setCellValue('C1', 'Last Name');
@@ -169,39 +234,12 @@ class ExportController extends Controller
                     $rows = 2;
                     $i = 1;
 
-                    if($type_method == 'Individual'){
-                        $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                                $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
-                            })
-                            ->whereIn('respondents.id', [$respondents])
-                            ->get([
-                                'respondents.opted_in',
-                                'respondent_profile.basic_details',
-                                'respondent_profile.essential_details',
-                                'respondent_profile.extended_details',
-                                'respondent_profile.updated_at',
-                            ]);
-                    }
-                    else{
-                        $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                                $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
-                            })
-                            ->where('active_status_id',1)
-                            ->get([
-                                'respondents.opted_in',
-                                'respondent_profile.basic_details',
-                                'respondent_profile.essential_details',
-                                'respondent_profile.extended_details',
-                                'respondent_profile.updated_at',
-                            ]);
-                    }
-
                     foreach ($all_datas as $all_data) {
                   
                         $basic = json_decode($all_data->basic_details);
                         $essential = json_decode($all_data->essential_details);
 
-                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
                         $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
                         $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
@@ -260,7 +298,7 @@ class ExportController extends Controller
                     }
 
                 }
-                else if ($resp_type == 'Extended Info') {
+                else if ($resp_type == 'extended') {
                     $sheet->setCellValue('A1', 'PID');
                     $sheet->setCellValue('B1', 'First Name');
                     $sheet->setCellValue('C1', 'Last Name');
@@ -290,40 +328,12 @@ class ExportController extends Controller
 
                     $rows = 2;
                     $i = 1;
-
-                    if($type_method == 'Individual'){
-
-                        $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                                $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
-                            })
-                            ->whereIn('respondents.id', [$respondents])
-                            ->get([
-                                'respondents.opted_in',
-                                'respondent_profile.basic_details',
-                                'respondent_profile.essential_details',
-                                'respondent_profile.extended_details',
-                                'respondent_profile.updated_at',
-                            ]);
-                    }
-                    else{
-                        $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                                $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
-                            })
-                            ->where('active_status_id',1)
-                            ->get([
-                                'respondents.opted_in',
-                                'respondent_profile.basic_details',
-                                'respondent_profile.essential_details',
-                                'respondent_profile.extended_details',
-                                'respondent_profile.updated_at',
-                            ]);
-                    }
                   
                     foreach ($all_datas as $all_data) {
                         $basic = json_decode($all_data->basic_details);
                         $essential = json_decode($all_data->extended_details);
 
-                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
                         $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
                         $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
@@ -481,6 +491,9 @@ class ExportController extends Controller
                     ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
                         if($from != null && $to != null){
                             $all_datas = $all_datas->where('cashouts.created_at', '>=', $from)->where('cashouts.created_at', '<=', $to);
+                        }
+                        if($respondents != ""){
+                            $all_datas = $all_datas->whereIn('cashouts.respondent_id', [$respondents]);
                         }
                     $all_datas = $all_datas->orderby("id", "desc")->get();
                
@@ -678,6 +691,69 @@ class ExportController extends Controller
 
                 $fileName = $module . "_" . date('ymd') . "." . $type;
 
+            }
+            else if ($module == 'Internal Reports') {
+                $action=$request->action;
+                $role=$request->role;
+                $year=$request->year;
+                $month=$request->month;
+                $pro_type=$request->pro_type;
+              
+                $sheet->setCellValue('A1', 'ID');
+                $sheet->setCellValue('B1', 'User');
+                $sheet->setCellValue('C1', 'Action');
+                $sheet->setCellValue('D1', 'Type');
+                $sheet->setCellValue('E1', 'Month');
+                $sheet->setCellValue('F1', 'Year');
+                $sheet->setCellValue('G1', 'Count');
+               
+
+                $sheet->getStyle('A1:G1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                $sheet->getStyle('A1:G1')->applyFromArray($styleArray);
+
+                $rows = 2;
+                $i    = 1;
+
+                $all_datas = UserEvents::select('users.name', 'users.surname', 'user_events.*')
+                        ->join('users', 'user_events.user_id', 'users.id');
+                       
+                if($action != ""){
+                    $all_datas = $all_datas->where('user_events.action','=', $action);
+                }
+                if($role != ""){
+                    $all_datas = $all_datas->where('user_events.role','=', $role);
+                }
+                if($year != ""){
+                    $all_datas = $all_datas->where('user_events.year','=', $year);
+                }
+                if($month != ""){
+                    $all_datas = $all_datas->where('user_events.month','=',$month);
+                }
+                if($pro_type != ""){
+                    $all_datas = $all_datas->where('user_events.type','=',$pro_type);
+                }
+                $all_datas = $all_datas->orderby("user_events.id", "desc")->get();
+
+                foreach ($all_datas as $all_data) {
+                    $sheet->setCellValue('A' . $rows, $i);
+                    $sheet->setCellValue('B' . $rows, $all_data->name.$all_data->surname);
+                    $sheet->setCellValue('C' . $rows, $all_data->action);
+                    $sheet->setCellValue('D' . $rows, $all_data->type);
+                    $sheet->setCellValue('E' . $rows, $all_data->month);
+                    $sheet->setCellValue('F' . $rows, $all_data->year);
+                    $sheet->setCellValue('G' . $rows, $all_data->count);
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':G' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':G' . $rows)->getAlignment()->setIndent(1);
+                    $rows++;
+                    $i++;
+
+                   
+
+                }
+
+                $fileName = $module . "_" . date('ymd') . "." . $type;
             }
             else if ($module == 'Team Activity') {
                

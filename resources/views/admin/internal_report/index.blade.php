@@ -52,32 +52,43 @@
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
 
-        users = ''; roles = ''; action = ''; type = '';
+        users = ''; roles = ''; action = ''; type = ''; year = ''; month = '';
         $(document).ready(function() {
-            user_events(users, roles, action,type);
+            user_events(users, roles, action,type,year,month);
         });
 
         function select_users(get_this){
             users = $(get_this).val();
-            user_events(users, roles, action, type);
+            user_events(users, roles, action, type,year,month);
         }
 
         function select_role(get_this){
             roles = $(get_this).val();
-            user_events(users, roles, action, type);
+            user_events(users, roles, action, type,year,month);
         }
 
         function select_action(get_this){
             action = $(get_this).val();
-            user_events(users, roles, action, type);
+            user_events(users, roles, action, type,year,month);
         }
 
         function select_type(get_this){
             type = $(get_this).val();
-            user_events(users, roles, action, type);
+            user_events(users, roles, action, type,year,month);
+        }
+
+        function select_year(get_this){
+            year = $(get_this).val();
+            user_events(users, roles, action, type,year,month);
+        }
+
+        function select_month(get_this){
+            month = $(get_this).val();
+            user_events(users, roles, action, type,year,month);
         }
         
-        function user_events(users, roles, action,type){
+        
+        function user_events(users, roles, action,type,year,month){
             $('#user_events').dataTable().fnDestroy();
             var postsTable = $('#user_events').dataTable({
                 "ordering": true,
@@ -91,7 +102,9 @@
                         users: users,
                         roles: roles,
                         action: action,
-                        type: type
+                        type: type,
+                        year:year,
+                        month:month,
                     },
                     "dataType": "json",
                     "type": "POST"

@@ -74,6 +74,8 @@ class InternalReportController extends Controller
             $roles = $request->roles;
             $action = $request->action;
             $type = $request->type;
+            $year = $request->year;
+            $month = $request->month;
 
             $columns = array(
                 0 => 'id',
@@ -89,6 +91,8 @@ class InternalReportController extends Controller
             if ($roles != null) {$totalData->join('users', 'user_events.user_id', 'users.id')->where('role_id', $roles);}
             if ($action != null) {$totalData->where('action', $action);}
             if ($type != null) {$totalData->where('type', $type);}
+            if ($year != null) {$totalData->where('year', $year);}
+            if ($month != null) {$totalData->where('month', $month);}
 
             $totalData = $totalData->count();
             $totalFiltered = $totalData;
@@ -104,6 +108,9 @@ class InternalReportController extends Controller
                 if ($roles != null) {$posts->join('users', 'user_events.user_id', 'users.id')->where('role_id', $roles);}
                 if ($action != null) {$posts->where('action', $action);}
                 if ($type != null) {$posts->where('type', $type);}
+                if ($year != null) {$posts->where('year', $year);}
+                if ($month != null) {$posts->where('month', $month);}
+                
 
                 $posts = $posts->limit($limit)->orderBy($order, $dir)->get();
             } else {
@@ -123,6 +130,8 @@ class InternalReportController extends Controller
                 if ($roles != null) {$posts->join('users', 'user_events.user_id', 'users.id')->where('role_id', $roles);}
                 if ($action != null) {$posts->where('action', $action);}
                 if ($type != null) {$posts->where('type', $type);}
+                if ($year != null) {$posts->where('year', $year);}
+                if ($month != null) {$posts->where('month', $month);}
 
                 $posts = $posts->offset($start)
                     ->limit($limit)
@@ -143,6 +152,8 @@ class InternalReportController extends Controller
                 if ($roles != null) {$totalFiltered->join('users', 'user_events.user_id', 'users.id')->where('role_id', $roles);}
                 if ($action != null) {$totalFiltered->where('action', $action);}
                 if ($type != null) {$totalFiltered->where('type', $type);}
+                if ($year != null) {$totalFiltered->where('year', $year);}
+                if ($month != null) {$posts->where('month', $month);}
                 $totalFiltered = $totalFiltered->count();
             }
 

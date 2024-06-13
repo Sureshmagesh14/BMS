@@ -64,6 +64,7 @@
                                             <option value="Rewards">Rewards</option>
                                             <option value="Cashout">Cashout</option>
                                             <option value="Team Activity">Team Activity</option>
+                                            <option value="Internal Reports">Internal Reports</option>
                                         </select>
                                     </div>
                                 </div>
@@ -79,7 +80,23 @@
                                     </div>
                                 </div>
 
+<<<<<<< HEAD
+                                {{-- <div class="form-group row show_year">
+=======
+                                <div class="form-group row show_resp_type" style="display: none;">
+                                    <label class="col-md-2 col-form-label">Choose Type</label>
+                                    <div class="col-md-10">
+                                        <select name="show_resp_type" id="show_resp_type" class="form-control">
+                                            <option value="">Select</option>
+                                            <option value="simple">Simple Database</option>
+                                            <option value="essential">Essential Database</option>
+                                            <option value="extended">Extended Database</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="form-group row show_year">
+>>>>>>> d023648d4902df4ad79b7be9ff7477af14b7493c
                                     <label class="col-md-2 col-form-label">Select Year</label>
                                     <div class="col-md-10">
                                         <select id="year" name="year" class="w-full form-control form-select">
@@ -108,7 +125,8 @@
                                             @endfor
                                         </select>
                                     </div>
-                                </div>
+<<<<<<< HEAD
+                                </div> --}}
                                 <div class="form-group row show_resp_type">
                                     <label class="col-md-2 col-form-label">Type</label>
                                     <div class="col-md-10">
@@ -128,6 +146,8 @@
                                         </div>
 
                                     </div>
+=======
+>>>>>>> d023648d4902df4ad79b7be9ff7477af14b7493c
                                 </div>
 
                                 <div class="form-group row show_resp">
@@ -162,7 +182,7 @@
                                         <div class="custom-control custom-radio mb-3">
                                             <input type="radio" id="All" name="type_method"
                                                 class="custom-control-input type_method" value="All">
-                                                <input type="hidden" name="all" id="all">
+                                            <input type="hidden" name="all" id="all">
                                             <label class="custom-control-label" for="All">All</label>
                                         </div>
 
@@ -174,7 +194,92 @@
                                     <div class="col-md-10">
 
                                         <input class="form-control" type="text" id="respondents"
-                                            name="respondents[]" value="{{ request()->get('q') }}" >
+                                            name="respondents[]" value="{{ request()->get('q') }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row show_action">
+                                    <label class="col-md-2 col-form-label">Action</label>
+                                    <div class="col-md-10">
+                                        <select name="action" id="action" class="form-control">
+                                            <option value="">Select Action</option>
+                                            <option value="created">Created</option>
+                                            <option value="updated">Updated</option>
+                                            <option value="deleted">Deleted</option>
+                                            <option value="activated">Activated</option>
+                                            <option value="deactivated">Deactivated</option>
+                                            <option value="created_with_share_url">Created With Share URL</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row show_role">
+                                    <label class="col-md-2 col-form-label">Role</label>
+                                    <div class="col-md-10">
+                                        <select id="role" name="role"
+                                            class="w-full form-control form-select">
+                                            <option value="" selected="selected" disabled="disabled">Please
+                                                select
+                                            </option>
+                                            <option value="">Select Role</option>
+                                            <option value="1">Administrator</option>
+                                            <option value="2">User</option>
+                                            <option value="3">Temp</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row show_year">
+                                    <label class="col-md-2 col-form-label">Year</label>
+                                    <div class="col-md-10">
+                                        <select id="year" name="year"
+                                            class="w-full form-control form-select">
+                                            <option value="" selected="selected" disabled="disabled">Please
+                                                select
+                                            </option>
+                                            <option value="">Select Year</option>
+                                            <?php
+                                            for ($i = 2022; $i <= date('Y'); $i++) {
+                                                echo "<option>$i</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row show_month">
+                                    <label class="col-md-2 col-form-label">Month</label>
+                                    <div class="col-md-10">
+                                        <select id="month" name="month"
+                                            class="w-full form-control form-select">
+                                            <option value="" selected="selected" disabled="disabled">Please
+                                                select
+                                            </option>
+                                            <option value="">Select Month</option>
+                                            <?php
+                                            for ($i = 1; $i <= 12; $i++) {
+                                                // Get the month name using DateTime class
+                                                $monthName = DateTime::createFromFormat('!m', $i)->format('F');
+                                                // Output option tag with month name and value (1-indexed)
+                                                echo "<option value='$monthName'>$monthName</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row show_pro_type">
+                                    <label class="col-md-2 col-form-label">Type</label>
+                                    <div class="col-md-10">
+                                        <select id="pro_type" name="pro_type"
+                                            class="w-full form-control form-select">
+                                            <option value="" selected="selected" disabled="disabled">Please
+                                                select
+                                            </option>
+                                            <option value="">Select Role</option>
+                                            <option value="project">Project</option>
+                                            <option value="respondent">Respondent</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -207,6 +312,9 @@
                     $(".respondents").hide();
                     $(".show_year").hide();
                     $(".show_month").hide();
+                    $(".show_role").hide();
+                    $(".show_action").hide();
+                    $(".show_pro_type").hide();
                     $("#module").val("");
                     $("#year").val("");
                     $("#month").val("");
@@ -223,9 +331,12 @@
                         if (this.value == 'Respondents') {
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").show();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
+                            $(".show_pro_type").hide();
                             $(".show_user").hide();
                             $(".respondents").show();
                             $(".report_type").show();
@@ -233,50 +344,75 @@
                         } else if (this.value == 'Respondents info') {
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".show_resp_type").show();
                             $(".show_resp_status").hide();
                             $(".show_user").hide();
                             $(".report_type").show();
                             $(".respondents").hide();
-                            $(".date_range").hide();
+                            $(".date_range").hide(); 
+                            $(".show_pro_type").hide();
 
                         } else if ((this.value == 'Cashout')) {
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
                             $(".respondents").show();
                             $(".report_type").show();
+                            $(".show_pro_type").hide();
                             $(".date_range").show();
-                        }
-                        else if (this.value == 'Rewards') {
+                        } else if (this.value == 'Rewards') {
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
                             $(".respondents").show();
-                            $(".report_type").show();
+                            $(".report_type").show(); 
+                            $(".show_pro_type").hide();
                             $(".date_range").hide();
-                        }
-                        else if (this.value == 'Team Activity') {
+                        } else if (this.value == 'Team Activity') {
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").show();
                             $(".respondents").show();
+                            $(".show_pro_type").hide();
                             $(".report_type").show();
                             $(".date_range").show();
+                        } else if (this.value == 'Internal Reports') {
+                            $(".show_year").show();
+                            $(".show_month").show();
+                            $(".show_role").show();
+                            $(".show_action").show();
+                            $(".show_resp").hide();
+                            $(".show_resp_status").hide();
+                            $(".show_resp_type").hide();
+                            $(".show_user").show();
+                            $(".respondents").hide();
+                            $(".report_type").hide();
+                            $(".show_pro_type").show();
+                            $(".date_range").hide();
                         } else {
                             $(".show_user").hide();
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".report_type").hide();
                             $(".show_resp_status").hide();
@@ -284,6 +420,7 @@
                             $(".respondents").hide();
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_pro_type").show();
                             $(".date_range").show();
                         }
                     });

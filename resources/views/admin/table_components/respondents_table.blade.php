@@ -11,6 +11,12 @@
             class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
             Attact Respondents
         </a>
+
+        <a href="#!" data-url="{{ route('import_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
+            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Import - Respondents to Project') }}"
+            class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+            Import Respondents
+        </a>
     @else
         <a href="#!" data-url="{{ route('respondents.create') }}" data-size="xl" data-ajax-popup="true"
             class="btn btn-primary" data-bs-original-title="{{ __('Create Respondents') }}" class="btn btn-primary"
