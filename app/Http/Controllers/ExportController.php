@@ -679,6 +679,45 @@ class ExportController extends Controller
                 $fileName = $module . "_" . date('ymd') . "." . $type;
 
             }
+            else if ($module == 'Internal Reports') {
+                $sheet->setCellValue('A1', 'ID');
+                $sheet->setCellValue('B1', 'User');
+                $sheet->setCellValue('C1', 'Action');
+                $sheet->setCellValue('D1', 'Type');
+                $sheet->setCellValue('E1', 'Month');
+                $sheet->setCellValue('F1', 'Year');
+                $sheet->setCellValue('G1', 'Count');
+               
+
+                $sheet->getStyle('A1:G1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                $sheet->getStyle('A1:G1')->applyFromArray($styleArray);
+
+                $rows = 2;
+                $i    = 1;
+
+                $all_datas = UserEvents::select('users.name', 'users.surname', 'user_events.*')
+                        ->join('users', 'user_events.user_id', 'users.id')
+                        ->orderby("user_events.id", "desc")->get();
+                // if($respondents != ""){
+                //     $all_datas = $all_datas->whereIn('user_events.user_id', [$respondents]);
+                // }
+                // if($from != null && $to != null){
+                //     $all_datas = $all_datas->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
+                // }
+                // $all_datas = $all_datas->get();
+
+                foreach ($all_datas as $all_data) {
+                    $sheet->setCellValue('A' . $rows, $i);
+                    $sheet->setCellValue('B' . $rows, $all_data->name.$all_data->surname);
+                    $sheet->setCellValue('C' . $rows, $all_data->action);
+                    $sheet->setCellValue('D' . $rows, $all_data->type);
+                    $sheet->setCellValue('E' . $rows, $all_data->month);
+                    $sheet->setCellValue('F' . $rows, $all_data->year);
+                    $sheet->setCellValue('G' . $rows, $all_data->count);
+                    $rows++;
+                    $i++;
+                }
+            }
             else if ($module == 'Team Activity') {
                
                 if($type_method == 'Individual'){

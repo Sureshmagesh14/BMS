@@ -64,6 +64,7 @@
                                             <option value="Rewards">Rewards</option>
                                             <option value="Cashout">Cashout</option>
                                             <option value="Team Activity">Team Activity</option>
+                                            <option value="Internal Reports">Internal Reports</option>
                                         </select>
                                     </div>
                                 </div>
@@ -79,7 +80,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row show_year">
+                                {{-- <div class="form-group row show_year">
                                     <label class="col-md-2 col-form-label">Select Year</label>
                                     <div class="col-md-10">
                                         <select id="year" name="year" class="w-full form-control form-select">
@@ -108,7 +109,7 @@
                                             @endfor
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="form-group row show_resp_type">
                                     <label class="col-md-2 col-form-label">Type</label>
                                     <div class="col-md-10">
@@ -162,7 +163,7 @@
                                         <div class="custom-control custom-radio mb-3">
                                             <input type="radio" id="All" name="type_method"
                                                 class="custom-control-input type_method" value="All">
-                                                <input type="hidden" name="all" id="all">
+                                            <input type="hidden" name="all" id="all">
                                             <label class="custom-control-label" for="All">All</label>
                                         </div>
 
@@ -174,7 +175,78 @@
                                     <div class="col-md-10">
 
                                         <input class="form-control" type="text" id="respondents"
-                                            name="respondents[]" value="{{ request()->get('q') }}" >
+                                            name="respondents[]" value="{{ request()->get('q') }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row show_action">
+                                    <label class="col-md-2 col-form-label">Action</label>
+                                    <div class="col-md-10">
+                                        <select name="action" id="action" class="form-control"
+                                            onchange="select_action(this)">
+                                            <option value="">Select Action</option>
+                                            <option value="created">Created</option>
+                                            <option value="updated">Updated</option>
+                                            <option value="deleted">Deleted</option>
+                                            <option value="activated">Activated</option>
+                                            <option value="deactivated">Deactivated</option>
+                                            <option value="created_with_share_url">Created With Share URL</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row show_role">
+                                    <label class="col-md-2 col-form-label">Role</label>
+                                    <div class="col-md-10">
+                                        <select id="role" name="role"
+                                            class="w-full form-control form-select">
+                                            <option value="" selected="selected" disabled="disabled">Please
+                                                select
+                                            </option>
+                                            <option value="">Select Role</option>
+                                            <option value="1">Administrator</option>
+                                            <option value="2">User</option>
+                                            <option value="3">Temp</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row show_year">
+                                    <label class="col-md-2 col-form-label">Year</label>
+                                    <div class="col-md-10">
+                                        <select id="year" name="year"
+                                            class="w-full form-control form-select">
+                                            <option value="" selected="selected" disabled="disabled">Please
+                                                select
+                                            </option>
+                                            <option value="">Select Year</option>
+                                            <?php
+                                            for ($i = 2022; $i <= date('Y'); $i++) {
+                                                echo "<option>$i</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row show_month">
+                                    <label class="col-md-2 col-form-label">Month</label>
+                                    <div class="col-md-10">
+                                        <select id="month" name="month"
+                                            class="w-full form-control form-select">
+                                            <option value="" selected="selected" disabled="disabled">Please
+                                                select
+                                            </option>
+                                            <option value="">Select Month</option>
+                                            <?php
+                                            for ($i = 1; $i <= 12; $i++) {
+                                                // Get the month name using DateTime class
+                                                $monthName = DateTime::createFromFormat('!m', $i)->format('F');
+                                                // Output option tag with month name and value (1-indexed)
+                                                echo "<option value='$monthName'>$monthName</option>";
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -207,6 +279,8 @@
                     $(".respondents").hide();
                     $(".show_year").hide();
                     $(".show_month").hide();
+                    $(".show_role").hide();
+                    $(".show_action").hide();
                     $("#module").val("");
                     $("#year").val("");
                     $("#month").val("");
@@ -223,6 +297,8 @@
                         if (this.value == 'Respondents') {
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").show();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
@@ -233,6 +309,8 @@
                         } else if (this.value == 'Respondents info') {
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".show_resp_type").show();
                             $(".show_resp_status").hide();
@@ -244,6 +322,8 @@
                         } else if ((this.value == 'Cashout')) {
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
@@ -251,10 +331,11 @@
                             $(".respondents").show();
                             $(".report_type").show();
                             $(".date_range").show();
-                        }
-                        else if (this.value == 'Rewards') {
+                        } else if (this.value == 'Rewards') {
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
@@ -262,10 +343,11 @@
                             $(".respondents").show();
                             $(".report_type").show();
                             $(".date_range").hide();
-                        }
-                        else if (this.value == 'Team Activity') {
+                        } else if (this.value == 'Team Activity') {
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
@@ -273,10 +355,24 @@
                             $(".respondents").show();
                             $(".report_type").show();
                             $(".date_range").show();
+                        } else if (this.value == 'Internal Reports') {
+                            $(".show_year").show();
+                            $(".show_month").show();
+                            $(".show_role").show();
+                            $(".show_action").show();
+                            $(".show_resp").hide();
+                            $(".show_resp_status").hide();
+                            $(".show_resp_type").hide();
+                            $(".show_user").show();
+                            $(".respondents").hide();
+                            $(".report_type").hide();
+                            $(".date_range").hide();
                         } else {
                             $(".show_user").hide();
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".report_type").hide();
                             $(".show_resp_status").hide();
