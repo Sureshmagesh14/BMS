@@ -3,6 +3,11 @@
     .error {
         color: red;
     }
+
+    button#reset:hover {
+        background-color: #6396b1;
+        color: #fff;
+    }
 </style>
 <!-- main starts -->
 <main class="forgot-pass my-5 py-5">
@@ -18,7 +23,8 @@
                         <input type="email" name="email" id="email" placeholder="email@address.com"
                             class="form-control vi-border-clr border-radius-6px" id="">
                         <button type="submit"
-                            class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2">REQUEST
+                            class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2"
+                            id="reset">REQUEST
                             RESET</button>
                         <a href="{{ route('login') }}"
                             class="btn vi-white-bg border-radius-0 text-white px-5 py-3 m-auto w-100">BACK TO
