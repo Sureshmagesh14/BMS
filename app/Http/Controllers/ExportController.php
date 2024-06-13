@@ -680,6 +680,10 @@ class ExportController extends Controller
 
             }
             else if ($module == 'Internal Reports') {
+                $action=$request->action;
+                $role=$request->role;
+                $year=$request->year;
+                $month=$request->month;
                 $sheet->setCellValue('A1', 'ID');
                 $sheet->setCellValue('B1', 'User');
                 $sheet->setCellValue('C1', 'Action');
@@ -696,15 +700,21 @@ class ExportController extends Controller
                 $i    = 1;
 
                 $all_datas = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")->get();
-                // if($respondents != ""){
-                //     $all_datas = $all_datas->whereIn('user_events.user_id', [$respondents]);
-                // }
-                // if($from != null && $to != null){
-                //     $all_datas = $all_datas->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                // }
-                // $all_datas = $all_datas->get();
+                        ->join('users', 'user_events.user_id', 'users.id');
+                       
+                if($action != ""){
+                    $all_datas = $all_datas->where('user_events.action', $action);
+                }
+                if($role != ""){
+                    $all_datas = $all_datas->where('user_events.role', $role);
+                }
+                if($year != ""){
+                    $all_datas = $all_datas->where('user_events.year', $year);
+                }
+                if($month != ""){
+                    $all_datas = $all_datas->where('user_events.month', $month);
+                }
+                $all_datas = $all_datas->orderby("user_events.id", "desc")->get();
 
                 foreach ($all_datas as $all_data) {
                     $sheet->setCellValue('A' . $rows, $i);
@@ -717,6 +727,8 @@ class ExportController extends Controller
                     $rows++;
                     $i++;
                 }
+
+                $fileName = $module . "_" . date('ymd') . "." . $type;
             }
             else if ($module == 'Team Activity') {
                

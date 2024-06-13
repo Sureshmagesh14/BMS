@@ -182,8 +182,7 @@
                                 <div class="form-group row show_action">
                                     <label class="col-md-2 col-form-label">Action</label>
                                     <div class="col-md-10">
-                                        <select name="action" id="action" class="form-control"
-                                            onchange="select_action(this)">
+                                        <select name="action" id="action" class="form-control">
                                             <option value="">Select Action</option>
                                             <option value="created">Created</option>
                                             <option value="updated">Updated</option>
