@@ -107,22 +107,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row show_month">
-                                    <label class="col-md-2 col-form-label">Select Month</label>
-                                    <div class="col-md-10">
-                                        <select id="month" name="month" class="w-full form-control form-select">
-                                            <option value="" selected="selected" disabled="disabled">Please select
-                                            </option>
-                                            @for ($i = 1; $i <= 12; $i++)
-                                                @php
-                                                    $lval = date('F', strtotime("$i/12/10"));
-                                                @endphp
-                                                <option value="{{ $i }}">{{ $lval }}</option>
-                                            @endfor
-                                        </select>
-                                    </div>
-                                </div>
-
+                               
                                 <div class="form-group row show_resp">
                                     <label class="col-md-2 col-form-label">Status</label>
                                     <div class="col-md-10">
@@ -181,7 +166,7 @@
                                             <option value="deleted">Deleted</option>
                                             <option value="activated">Activated</option>
                                             <option value="deactivated">Deactivated</option>
-                                            <option value="created_with_share_url">Created With Share URL</option>
+                                            <option value="created by share url">Created With Share URL</option>
                                         </select>
                                     </div>
                                 </div>
@@ -202,24 +187,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row show_year">
-                                    <label class="col-md-2 col-form-label">Year</label>
-                                    <div class="col-md-10">
-                                        <select id="year" name="year"
-                                            class="w-full form-control form-select">
-                                            <option value="" selected="selected" disabled="disabled">Please
-                                                select
-                                            </option>
-                                            <option value="">Select Year</option>
-                                            <?php
-                                            for ($i = 2022; $i <= date('Y'); $i++) {
-                                                echo "<option>$i</option>";
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-
+                                
                                 <div class="form-group row show_month">
                                     <label class="col-md-2 col-form-label">Month</label>
                                     <div class="col-md-10">
