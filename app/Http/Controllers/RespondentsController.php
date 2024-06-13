@@ -768,6 +768,42 @@ class RespondentsController extends Controller
         }
     }
 
+    public function import_respondents(Request $request){
+        try {
+            $project_id = $request->project_id;
+            $projects = Projects::select('projects.id','projects.name')->where('projects.id',$project_id)->first();
+
+            $returnHTML = view('admin.respondents.import', compact('projects','project_id'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function upload_respondent(Request $request){
+        $import_excel = $request->import_excel;
+        
+        $kilobyte  = 1024;
+        $megabyte  = $kilobyte * 1024;
+        $size      = $_FILES["import_excel"]['size'];
+        $filename  = $_FILES["file"]["name"];
+        $sizein_mb = round($size / $megabyte,2);
+
+        if($sizein_mb <= 5){
+
+        }
+        else{
+            return redirect()->back()->withErrors("Please Upload Less than 5mb");
+        }
+    }
+
     public function respondent_seach_result(Request $request){
         try {
             $searchValue = $request['q'];

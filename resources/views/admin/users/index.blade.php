@@ -49,10 +49,20 @@
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
-
+        role = ''; status = '';
         $(document).ready(function() {
-            user_datatable();
+            user_datatable(role, status);
         });
+
+        function role_type(get_this){
+            role = $(get_this).val();
+            user_datatable(role, status);
+        }
+
+        function user_status(get_this){
+            status = $(get_this).val();
+            user_datatable(role, status);
+        }
 
         function user_datatable() {
             $('#user_table').dataTable().fnDestroy();
@@ -67,6 +77,8 @@
                     url: "{{ route('get_all_users') }}",
                     data: {
                         _token: tempcsrf,
+                        role: role,
+                        status: status
                     },
                     error: function(xhr, error, thrown) {
                         console.log("User Datatabel Error");
