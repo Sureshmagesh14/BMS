@@ -80,7 +80,23 @@
                                     </div>
                                 </div>
 
+<<<<<<< HEAD
                                 {{-- <div class="form-group row show_year">
+=======
+                                <div class="form-group row show_resp_type" style="display: none;">
+                                    <label class="col-md-2 col-form-label">Choose Type</label>
+                                    <div class="col-md-10">
+                                        <select name="show_resp_type" id="show_resp_type" class="form-control">
+                                            <option value="">Select</option>
+                                            <option value="simple">Simple Database</option>
+                                            <option value="essential">Essential Database</option>
+                                            <option value="extended">Extended Database</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row show_year">
+>>>>>>> d023648d4902df4ad79b7be9ff7477af14b7493c
                                     <label class="col-md-2 col-form-label">Select Year</label>
                                     <div class="col-md-10">
                                         <select id="year" name="year" class="w-full form-control form-select">
@@ -109,6 +125,7 @@
                                             @endfor
                                         </select>
                                     </div>
+<<<<<<< HEAD
                                 </div> --}}
                                 <div class="form-group row show_resp_type">
                                     <label class="col-md-2 col-form-label">Type</label>
@@ -129,6 +146,8 @@
                                         </div>
 
                                     </div>
+=======
+>>>>>>> d023648d4902df4ad79b7be9ff7477af14b7493c
                                 </div>
 
                                 <div class="form-group row show_resp">
