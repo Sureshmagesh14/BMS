@@ -143,6 +143,8 @@ Route::group([
     Route::any('get_user_survey', 'RespondentsController@get_user_survey')->name('get_user_survey');
     Route::any('respondents_multi_delete', 'RespondentsController@respondents_multi_delete')->name('respondents_multi_delete');
     Route::any('get_branch_code', 'RespondentsController@get_branch_code')->name('get_branch_code');
+    Route::any('import_respondents/{project_id}', 'RespondentsController@import_respondents')->name('import_respondents');
+    Route::any('upload_respondent', 'RespondentsController@upload_respondent')->name('upload_respondent');
     
 
     /* Tags (or) Pannels MENU*/

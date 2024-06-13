@@ -79,6 +79,18 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group row show_resp_type" style="display: none;">
+                                    <label class="col-md-2 col-form-label">Choose Type</label>
+                                    <div class="col-md-10">
+                                        <select name="show_resp_type" id="show_resp_type" class="form-control">
+                                            <option value="">Select</option>
+                                            <option value="simple">Simple Database</option>
+                                            <option value="essential">Essential Database</option>
+                                            <option value="extended">Extended Database</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="form-group row show_year">
                                     <label class="col-md-2 col-form-label">Select Year</label>
                                     <div class="col-md-10">
@@ -107,26 +119,6 @@
                                                 <option value="{{ $i }}">{{ $lval }}</option>
                                             @endfor
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row show_resp_type">
-                                    <label class="col-md-2 col-form-label">Type</label>
-                                    <div class="col-md-10">
-
-                                        <div class="custom-control custom-radio mb-3">
-                                            <input type="radio" id="Basic and Essential Info" name="resp_type"
-                                                class="custom-control-input" value="Basic and Essential Info">
-                                            <label class="custom-control-label" for="Basic and Essential Info">Basic and
-                                                Essential Info</label>
-                                        </div>
-
-                                        <div class="custom-control custom-radio mb-3">
-                                            <input type="radio" id="Extended Info" name="resp_type"
-                                                class="custom-control-input" value="Extended Info">
-                                            <label class="custom-control-label" for="Extended Info">Extended
-                                                Info</label>
-                                        </div>
-
                                     </div>
                                 </div>
 
