@@ -249,6 +249,21 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group row show_pro_type">
+                                    <label class="col-md-2 col-form-label">Type</label>
+                                    <div class="col-md-10">
+                                        <select id="pro_type" name="pro_type"
+                                            class="w-full form-control form-select">
+                                            <option value="" selected="selected" disabled="disabled">Please
+                                                select
+                                            </option>
+                                            <option value="">Select Role</option>
+                                            <option value="project">Project</option>
+                                            <option value="respondent">Respondent</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Export</button>
                                 </div>
@@ -280,6 +295,7 @@
                     $(".show_month").hide();
                     $(".show_role").hide();
                     $(".show_action").hide();
+                    $(".show_pro_type").hide();
                     $("#module").val("");
                     $("#year").val("");
                     $("#month").val("");
@@ -301,6 +317,7 @@
                             $(".show_resp").show();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
+                            $(".show_pro_type").hide();
                             $(".show_user").hide();
                             $(".respondents").show();
                             $(".report_type").show();
@@ -316,7 +333,8 @@
                             $(".show_user").hide();
                             $(".report_type").show();
                             $(".respondents").hide();
-                            $(".date_range").hide();
+                            $(".date_range").hide(); 
+                            $(".show_pro_type").hide();
 
                         } else if ((this.value == 'Cashout')) {
                             $(".show_year").hide();
@@ -329,6 +347,7 @@
                             $(".show_user").hide();
                             $(".respondents").show();
                             $(".report_type").show();
+                            $(".show_pro_type").hide();
                             $(".date_range").show();
                         } else if (this.value == 'Rewards') {
                             $(".show_year").hide();
@@ -340,7 +359,8 @@
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
                             $(".respondents").show();
-                            $(".report_type").show();
+                            $(".report_type").show(); 
+                            $(".show_pro_type").hide();
                             $(".date_range").hide();
                         } else if (this.value == 'Team Activity') {
                             $(".show_year").hide();
@@ -352,6 +372,7 @@
                             $(".show_resp_type").hide();
                             $(".show_user").show();
                             $(".respondents").show();
+                            $(".show_pro_type").hide();
                             $(".report_type").show();
                             $(".date_range").show();
                         } else if (this.value == 'Internal Reports') {
@@ -365,6 +386,7 @@
                             $(".show_user").show();
                             $(".respondents").hide();
                             $(".report_type").hide();
+                            $(".show_pro_type").show();
                             $(".date_range").hide();
                         } else {
                             $(".show_user").hide();
@@ -379,6 +401,7 @@
                             $(".respondents").hide();
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".show_pro_type").show();
                             $(".date_range").show();
                         }
                     });

@@ -684,6 +684,8 @@ class ExportController extends Controller
                 $role=$request->role;
                 $year=$request->year;
                 $month=$request->month;
+                $pro_type=$request->pro_type;
+              
                 $sheet->setCellValue('A1', 'ID');
                 $sheet->setCellValue('B1', 'User');
                 $sheet->setCellValue('C1', 'Action');
@@ -703,16 +705,19 @@ class ExportController extends Controller
                         ->join('users', 'user_events.user_id', 'users.id');
                        
                 if($action != ""){
-                    $all_datas = $all_datas->where('user_events.action', $action);
+                    $all_datas = $all_datas->where('user_events.action','=', $action);
                 }
                 if($role != ""){
-                    $all_datas = $all_datas->where('user_events.role', $role);
+                    $all_datas = $all_datas->where('user_events.role','=', $role);
                 }
                 if($year != ""){
-                    $all_datas = $all_datas->where('user_events.year', $year);
+                    $all_datas = $all_datas->where('user_events.year','=', $year);
                 }
                 if($month != ""){
-                    $all_datas = $all_datas->where('user_events.month', $month);
+                    $all_datas = $all_datas->where('user_events.month','=',$month);
+                }
+                if($pro_type != ""){
+                    $all_datas = $all_datas->where('user_events.type','=',$pro_type);
                 }
                 $all_datas = $all_datas->orderby("user_events.id", "desc")->get();
 
@@ -724,8 +729,15 @@ class ExportController extends Controller
                     $sheet->setCellValue('E' . $rows, $all_data->month);
                     $sheet->setCellValue('F' . $rows, $all_data->year);
                     $sheet->setCellValue('G' . $rows, $all_data->count);
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':G' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':G' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
                     $i++;
+
+                   
+
                 }
 
                 $fileName = $module . "_" . date('ymd') . "." . $type;
