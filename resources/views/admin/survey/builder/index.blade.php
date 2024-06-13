@@ -5,6 +5,17 @@
 @include('admin.layout.horizontal_left_menu')
 </div>
 <style>
+.shortcuts {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+.sidebar-menu-scroll {
+    margin-top: 110px;
+}
+.navbar-brand-box.flex{
+    flex-direction:column;
+}
 .d-flex.qus_set.qus {
     align-items: center;
     margin-left: 10px;
@@ -78,39 +89,23 @@
 <div class="vertical-menu">
 
     <!-- LOGO -->
-    <div class="navbar-brand-box">
+    <div class="navbar-brand-box flex">
+        
         <a href="{{route('survey.template',$survey->folder_id)}}"  class="logo  surveytitle">
             {{$survey->title}}
         </a>
-        <a href="{{route('survey.template',$survey->folder_id)}}" ><i data-feather="home"></i></a>
-
-       
+        <div class="shortcuts">
+            <a href="{{route('survey.template',$survey->folder_id)}}" ><i data-feather="home"></i></a>
+            <a class="setbackground" role="button"  data-url="{{route('survey.sharesurvey',$survey->id)}}" data-ajax-popup="true"  title="Share Survey" data-title="Share Survey"><i data-feather="share-2"></i> </a>
+            <a class="setbackground" target="_blank" href="{{route('survey.responses',$survey->id)}}" ><i data-feather="download-cloud"></i> </a>
+        </div>
     </div>
 
     <div data-simplebar class="sidebar-menu-scroll">
 
         <!--- Sidemenu -->
         <div id="sidebar-menu">
-            <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
-                <a class="setbackground" role="button"  data-url="{{route('survey.sharesurvey',$survey->id)}}" data-ajax-popup="true"
-                        title="Share Survey" data-title="Share Survey">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="">
-                        <g stroke="#0D1B1E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" clip-path="url(#clip0_1106_12949)" opacity="0.9">
-                        <path d="M8.553 10.114a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M19.219 4.781a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M19.219 15.447a2.667 2.667 0 11-3.772 3.772 2.667 2.667 0 013.772-3.772M9.04 10.81l5.92-2.96M9.04 13.19l5.92 2.96"></path>
-                        </g>
-                        <defs>
-                        <clipPath id="clip0_1106_12949">
-                            <path fill="#fff" d="M0 0H24V24H0z"></path>
-                        </clipPath>
-                        </defs>
-                    </svg>   <p>Share Survey</p>
-                </a>
-            </div>
-            <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
-            <a class="setbackground" target="_blank" href="{{route('survey.responses',$survey->id)}}" >
-            <svg width="16" height="16" class="me-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C12.5523 2 13 2.44772 13 3V12.5858L15.2929 10.2929C15.6834 9.90237 16.3166 9.90237 16.7071 10.2929C17.0976 10.6834 17.0976 11.3166 16.7071 11.7071L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L7.29289 11.7071C6.90237 11.3166 6.90237 10.6834 7.29289 10.2929C7.68342 9.90237 8.31658 9.90237 8.70711 10.2929L11 12.5858V3C11 2.44772 11.4477 2 12 2ZM3 13.0769C3.55228 13.0769 4 13.5246 4 14.0769V18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V14.0769C20 13.5246 20.4477 13.0769 21 13.0769C21.5523 13.0769 22 13.5246 22 14.0769V18C22 20.2091 20.2092 22 18 22H6C3.79086 22 2 20.2091 2 18V14.0769C2 13.5246 2.44772 13.0769 3 13.0769Z" fill="#100E0E"></path></g></svg> <p>Responses</p>
-                </a>
-            </div>
+           
 
             <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
                 <a class="setbackground"  href="{{route('survey.surveytemplate',[$survey->id,'welcome'])}}">

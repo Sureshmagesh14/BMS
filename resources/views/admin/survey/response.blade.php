@@ -698,7 +698,7 @@ if(isset($bg)){
                                     </div>
                                     <div class="ss_cl_qstn_action disabled {{$question->qus_type}}_action">
                                         <div class="">
-                                            <button data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif"  id="next_button"  class="disabled ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                            <button data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif"  id="next_button"  class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
                                                 <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
                                                 </svg>
@@ -1284,6 +1284,13 @@ $('.text-ans-input').keyup(function(){
         $('#answered').val('no');
     }
 });
+$('#dropdownlist').change(function(){
+    if($(this).val()!=''){
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#next_button').addClass('disabled');
+    }
+})
 $('.single_choice_choice').click(function(){
     $(this).toggleClass("active");
     $('.single_choice_choice').not(this).removeClass("active");
@@ -1319,8 +1326,12 @@ $('.likert_choice').click(function(){
     });
     if(enable == 1){
         $('#answered').val('yes');
+        $('#next_button').removeClass('disabled');
+
     }else{
         $('#answered').val('no');
+        $('#next_button').addClass('disabled');
+
     }
 });
 $('.multi_choice_choice').click(function(){
