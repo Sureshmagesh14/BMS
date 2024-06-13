@@ -78,6 +78,41 @@
                 <!-- end col-->
             </div>
 
+            <div class="row">
+
+            <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+            
+            <table id="banks_table" class="table dt-responsive nowrap w-100">
+                <thead>
+                    <tr>
+                        <th>User Code</th>
+                        <th>User Name</th>
+                        <th>New Respondents Added</th>
+                        <th>New Respondents Deactivated</th>
+                        <th>Respondent Profile Updated</th>
+                    </tr>
+                </thead>
+               
+                <tbody>
+                @foreach($dashboard_data as $data)
+                    <tr>
+                        <td>{{$data['id']}}</td>
+                        <td>{{$data['name']}}</td>
+                        <td>{{$data['createCount']}}</td>
+                        <td>{{$data['deactCount']}}</td>
+                        <td>{{$data['updateCount']}}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+
+
+                </div>
+                </div>
+                </div>
+            </div>
 
             <!-- End Page-content -->
             @include('admin.layout.footer')
@@ -85,6 +120,18 @@
             @stack('adminside-js')
             <script src="{{ asset('assets//libs/apexcharts/apexcharts.min.js') }}"></script>
             <script>
+                $('#banks_table').DataTable({
+                    searching: true,
+                    ordering: true,
+                    dom: 'lfrtip',
+                    info: true,
+                    iDisplayLength: 10,
+                    lengthMenu: [
+                        [10, 50, 100, -1],
+                        [10, 50, 100, "All"]
+                    ],
+                )};
+
                 var options = {
                     series: [{{ $active_val }}, {{ $pending_val }}, {{ $deactive_val }}, {{ $unsub_val }},
                         {{ $black_val }}
