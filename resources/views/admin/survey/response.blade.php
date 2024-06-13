@@ -1189,13 +1189,14 @@ if(isset($bg)){
                 }
                 $string_version = implode(',', $accept); 
                     ?>
-            <input id="uploadfile" accet="{{$string_version}}" name="uploadfile" type="file" style="display: none;">
+            <input id="uploadfile" accept="{{$string_version}}" name="uploadfile" type="file" style="display: none;">
 
             @endif
             <input type="text" id="question_id" value="{{$question->id}}" name="question_id"/>
             <input type="text" id="survey_id" value="{{$survey->id}}" name="survey_id"/>
             <input type="text" id="next_qus" name="next_qus"/>
             <input type="text" id="user_ans" name="user_ans"/>
+            <input type="text" id="uploadurl" name="uploadurl"/>
             <input type="text" id="skip_ans" name="skip_ans"/>
             <input type="text" id="device_id" name="device_id"/>
             <input type="text" id="device_name" name="device_name"/>
@@ -1511,6 +1512,8 @@ $('#next_button').click(function(){
             submit=1;
         }
     }
+    // console.log(submit,qusVal);
+    // return false;
     if(submit == 1){
         $('#next_qus').val($(this).data('url'));
         $('#skip_qus').submit();
@@ -1601,17 +1604,30 @@ dragdropfile.addEventListener('click', async function() {
     $('#uploadfile').click();
 });
 
+$('#uploadfile').change((e)=>{
+    if(e.target.files.length>0){
+        $('#uploadurl').val(e.target.files[0].name);
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#uploadurl').val('');
+        $('#next_button').addClass('disabled');
+    }
+  
+});
 function handleDrop(event) {
     event.preventDefault();
     const files = event.dataTransfer.files;
     if (files) {
-        console.log(files,'filesfiles')
+    $('#uploadurl').val(files[0].name);
       const validFiles = Array.from(files).filter(file => {
         const allowedFormats = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","text/csv",'application/vnd.openxmlformats-officedocument.presentationml.presentation','application/pdf',"audio/mpeg","audio/mp3","audio/wav","audio/aac", 'image/png', 'image/jpeg','image/jpg','audio/mp3','audio/*'];
-        conso
         return allowedFormats.includes(file.type);
       });
-      console.log(validFiles,'validFilesvalidFiles');
+    }
+    if($('#uploadurl').val() != ''){
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#next_button').addClass('disabled');
     }
 }
 
