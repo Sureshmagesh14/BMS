@@ -80,9 +80,6 @@
                                     </div>
                                 </div>
 
-<<<<<<< HEAD
-                                {{-- <div class="form-group row show_year">
-=======
                                 <div class="form-group row show_resp_type" style="display: none;">
                                     <label class="col-md-2 col-form-label">Choose Type</label>
                                     <div class="col-md-10">
@@ -96,7 +93,6 @@
                                 </div>
 
                                 <div class="form-group row show_year">
->>>>>>> d023648d4902df4ad79b7be9ff7477af14b7493c
                                     <label class="col-md-2 col-form-label">Select Year</label>
                                     <div class="col-md-10">
                                         <select id="year" name="year" class="w-full form-control form-select">
@@ -125,29 +121,6 @@
                                             @endfor
                                         </select>
                                     </div>
-<<<<<<< HEAD
-                                </div> --}}
-                                <div class="form-group row show_resp_type">
-                                    <label class="col-md-2 col-form-label">Type</label>
-                                    <div class="col-md-10">
-
-                                        <div class="custom-control custom-radio mb-3">
-                                            <input type="radio" id="Basic and Essential Info" name="resp_type"
-                                                class="custom-control-input" value="Basic and Essential Info">
-                                            <label class="custom-control-label" for="Basic and Essential Info">Basic and
-                                                Essential Info</label>
-                                        </div>
-
-                                        <div class="custom-control custom-radio mb-3">
-                                            <input type="radio" id="Extended Info" name="resp_type"
-                                                class="custom-control-input" value="Extended Info">
-                                            <label class="custom-control-label" for="Extended Info">Extended
-                                                Info</label>
-                                        </div>
-
-                                    </div>
-=======
->>>>>>> d023648d4902df4ad79b7be9ff7477af14b7493c
                                 </div>
 
                                 <div class="form-group row show_resp">

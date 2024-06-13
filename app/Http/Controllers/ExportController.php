@@ -715,24 +715,25 @@ class ExportController extends Controller
                 $i    = 1;
 
                 $all_datas = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id');
-                       
-                if($action != ""){
-                    $all_datas = $all_datas->where('user_events.action','=', $action);
-                }
-                if($role != ""){
-                    $all_datas = $all_datas->where('user_events.role','=', $role);
-                }
-                if($year != ""){
-                    $all_datas = $all_datas->where('user_events.year','=', $year);
-                }
-                if($month != ""){
-                    $all_datas = $all_datas->where('user_events.month','=',$month);
-                }
-                if($pro_type != ""){
-                    $all_datas = $all_datas->where('user_events.type','=',$pro_type);
-                }
-                $all_datas = $all_datas->orderby("user_events.id", "desc")->get();
+                ->join('users', 'user_events.user_id', '=', 'users.id');
+            
+            if (!empty($action)) {
+                $all_datas->where('user_events.action', '=', $action);
+            }
+            if (!empty($role)) {
+                $all_datas->where('user_events.role', '=', $role);
+            }
+            if (!empty($year)) {
+                $all_datas->where('user_events.year', '=', $year);
+            }
+            if (!empty($month)) {
+                $all_datas->where('user_events.month', '=', $month);
+            }
+            if (!empty($pro_type)) {
+                $all_datas->where('user_events.type', '=', $pro_type);
+            }
+            
+            $all_datas = $all_datas->orderBy("user_events.id", "desc")->get();
 
                 foreach ($all_datas as $all_data) {
                     $sheet->setCellValue('A' . $rows, $i);
