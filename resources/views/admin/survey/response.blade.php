@@ -1689,6 +1689,12 @@ function click_button_camera(){
     
     dataurl.value = image_data_url;
     dataurl_container.style.display = 'block';
+    if(image_data_url!=''){
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#next_button').addClass('disabled');
+
+    }
 }
 
 </script>

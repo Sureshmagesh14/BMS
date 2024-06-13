@@ -1135,7 +1135,7 @@ class SurveyController extends Controller
                 $next_qus_loop ='yes';
             }
         }
-        echo $next_qus_loop.'-loop';
+        // echo $next_qus_loop.'-loop';
         if($next_qus_loop == 'yes'){
             $surveyController = new SurveyController;
             $checkquota = $surveyController->checkquota($survey_id);
