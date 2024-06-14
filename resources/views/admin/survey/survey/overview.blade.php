@@ -105,12 +105,17 @@
                                 }else{
                                     $started_count = $survey->started_count;
                                 }
-                                if($survey->completed_count > 0){
+                                if($survey->completed_count > 0 && $started_count!=0){
                                         $completionRate = ($survey->completed_count / $started_count) * 100; 
                                 }else{
                                     $completionRate = 0;
                                 } 
+                               
                                 $partially_completed =(int)$started_count - (int)$survey->completed_count;
+                                if($survey->started_count == 0){
+                                    $survey->completed_count = 0;
+                                    $partially_completed =0;
+                                }
                                 ?>
                             <div class="col-2 wmb--md">
                                 <div class="fx-row fx-ai--start" style="font-family: &quot;Source Sans Pro&quot;;"><svg height="24" width="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
