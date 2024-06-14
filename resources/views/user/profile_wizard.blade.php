@@ -276,8 +276,7 @@
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="employment_status">Employment Status <span
                                                     class="star_require">*</span></label>
-                                            <select name="essential[employment_status]" id="employment_status"
-                                                required>
+                                            <select name="essential[employment_status]" id="employment_status" required onchange="show_other(this, 'employment_status')">
                                                 <option value="">Select</option>
                                                 <option value="emp_full_time"
                                                     @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'emp_full_time') selected @endif @endisset>
@@ -307,19 +306,26 @@
                                                     @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'other') selected @endif @endisset>
                                                     Other</option>
                                             </select>
+                                            <input type="text" name="essential[employment_status_other]" id="employment_status_other" class="form-control"
+                                                @if($essential_details['employment_status'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                                placeholder="Enter Your Option" value="{{$essential_details['employment_status_other']}}">
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="industry_my_company">Industry my company is in <span
                                                     class="star_require">*</span></label>
-                                            <select name="essential[industry_my_company]" id="industry_my_company"
-                                                required>
+                                            <select name="essential[industry_my_company]" id="industry_my_company" required onchange="show_other(this, 'industry_my_company')">
                                                 <option value="">Select</option>
                                                 @foreach ($industry_company as $industry)
                                                     <option value="{{ $industry->id }}"
                                                         @isset($essential_details['industry_my_company']) @if ($essential_details['industry_my_company'] == $industry->id) selected @endif @endisset>
                                                         {{ $industry->company }}</option>
                                                 @endforeach
+                                                <option value="other" @if ($essential_details['industry_my_company'] == "other") selected @endif>Other</option>
                                             </select>
+
+                                            <input type="text" name="essential[industry_my_company_other]" id="industry_my_company_other" class="form-control" 
+                                                @if($essential_details['industry_my_company'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                                placeholder="Enter Your Option" value="{{$essential_details['industry_my_company_other']}}">
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="job_title">Job Title <span
@@ -550,10 +556,12 @@
                                                                     name="vehicle[model_{{ $vehicle_key }}][]">
                                                             </td>
                                                             <td>
-                                                                <input type="number" value="{{ $vehicle['year'] }}"
-                                                                    id="year_{{ $vehicle_key }}"
-                                                                    class="form-control vehicle_year"
-                                                                    name="vehicle[year_{{ $vehicle_key }}][]">
+                                                                <select name="vehicle[year_{{ $vehicle_key }}][]" id="year_{{ $vehicle_key }}" class="form-control vehicle_year">
+                                                                    <option value="">Select Year</option>
+                                                                    @for ($year_drop = date('Y'); $year_drop >= $get_year; $year_drop--)
+                                                                        <option value="{{$year_drop}}" @if($year_drop == $vehicle['year']) selected @endif>{{$year_drop}}</option>
+                                                                    @endfor
+                                                                </select>
                                                             </td>
                                                         </tr>
                                                         </tr>
@@ -566,7 +574,7 @@
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="business_org">Which best describes the role in you business /
                                                 organization?</label>
-                                            <select name="extended[business_org]" id="business_org">
+                                            <select name="extended[business_org]" id="business_org" onchange="show_other(this, 'business_org')">
                                                 <option value="">Select</option>
                                                 <option value="eastern_cape"
                                                     @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'eastern_cape') selected @endif @endisset>
@@ -587,10 +595,14 @@
                                                 <option value="mpumalanga"
                                                     @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'mpumalanga') selected @endif @endisset>
                                                     Worker (e.g., Security Guard, Cleaner, Helper, etc.)</option>
-                                                <option value="north_West_province"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'north_West_province') selected @endif @endisset>
+                                                <option value="other"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'other') selected @endif @endisset>
                                                     Other</option>
                                             </select>
+                                            <br>
+                                            <input type="text" name="extended[business_org_other]" id="business_org_other" class="form-control" placeholder="Enter Your Option"
+                                                @if($extended_details['business_org'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                                value="{{$extended_details['business_org_other']}}">
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="org_company">What is the number of people in your organisation
@@ -635,7 +647,7 @@
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="bank_main">Which bank do you bank with (which is your bank
                                                 main)</label>
-                                            <select name="extended[bank_main]" id="bank_main">
+                                            <select name="extended[bank_main]" id="bank_main" onchange="show_other(this, 'bank_main')">
                                                 <option value="">Select</option>
                                                 @foreach ($banks as $bank)
                                                     <option value="{{ $bank->id }}"
@@ -646,10 +658,14 @@
                                                     @isset($extended_details['bank_main']) @if ($extended_details['bank_main'] == 'other') selected @endif @endisset>
                                                     Other</option>
                                             </select>
+                                            <br>
+                                            <input type="text" name="extended[bank_main_other]" id="bank_main_other" class="form-control" placeholder="Enter Your Option"
+                                            @if($extended_details['bank_main'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                            value="{{$extended_details['bank_main_other']}}">
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="home_lang">Home Language</label>
-                                            <select name="extended[home_lang]" id="home_lang">
+                                            <select name="extended[home_lang]" id="home_lang" onchange="show_other(this, 'home_lang')">
                                                 <option value="">Select</option>
                                                 <option value="afrikaans"
                                                     @isset($extended_details['home_lang']) @if ($extended_details['home_lang'] == 'afrikaans') selected @endif @endisset>
@@ -688,6 +704,10 @@
                                                     @isset($extended_details['home_lang']) @if ($extended_details['home_lang'] == 'other') selected @endif @endisset>
                                                     Other</option>
                                             </select>
+                                            <br>
+                                            <input type="text" name="extended[home_lang_other]" id="home_lang_other" class="form-control" placeholder="Enter Your Option"
+                                            @if($extended_details['home_lang'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                            value="{{$extended_details['home_lang_other']}}">
                                         </div>
                                     </div>
                                 </section>
@@ -916,8 +936,12 @@
                         '][]">' +
                         '</td>' +
                         '<td>' +
-                        '<input type="number" id="year_' + vehicles +
-                        '" class="form-control vehicle_year" name="vehicle[year_' + vehicles + '][]">' +
+                        '<select name="vehicle[year_{{ $vehicle_key }}][]" id="year_{{ $vehicle_key }}" class="form-control vehicle_year">'+
+                            '<option value="">Select Year</option>'+
+                            '@for ($year_drop = date("Y"); $year_drop >= $get_year; $year_drop--)'+
+                                '<option value="{{$year_drop}}" @if($year_drop == $vehicle["year"]) selected @endif>{{$year_drop}}</option>'+
+                            '@endfor'+
+                        '</select>' +
                         '</td>' +
                         '</tr>';
                 }
@@ -999,6 +1023,17 @@
         //     });
         // });
     });
+
+    function show_other(get_this, id_val){
+        value = $(get_this).val();
+        console.log("value",value);
+        if(value == "other"){
+            console.log("HI");
+            $("#"+id_val+"_other").show();
+        }else{
+            $("#"+id_val+"_other").hide();
+        }
+    }
 
     function wizard_save(datas) {
         $.ajax({

@@ -95,14 +95,21 @@ class RespondentsController extends Controller
                 app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
                 $ref=array('respondent_id'=>$respondents->id,'user_id'=>Auth::guard('admin')->user()->id,'created_at'=>date("Y-m-d H:i:s A"));
                 DB::table('respondent_referrals')->insert($ref);
+         
+
                 //email starts
-                // $data = $respondents->id;
-                // if($data!=null){
-                //     $get_email=DB::where('id',$data)->first();
-                    
-                //     Mail::to($get_email->email)->send(new WelcomeEmail($data));
-                // }
-                //email ends
+                $id =$respondents->id;
+                if ($id != null) {
+
+                    $get_email = Respondents::where('id', $id)->first();
+                    $to_address = $get_email->email;
+                    //$to_address = 'hemanathans1@gmail.com';
+
+                    $data = ['subject' => 'New account created','type' => 'new_register'];
+
+                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                }
+                //email ends 
               
                 return response()->json([
                     'status' => 200,
@@ -850,14 +857,24 @@ class RespondentsController extends Controller
             else{
                 Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $respondents]);
                 $projects=Projects::select('name')->where('id',$project_id)->first();
-                   //email starts
-                // $data = ['message' => 'Welcome','respondents'=>$respondents,'projects'=>$projects];
-                // if ($respondents != null) {
-                //     $get_email = Respondents::where('id', $respondents)->first();
-        
-                //     Mail::to($get_email->email)->send(new Respondentprojectmail($data));
-                // }
-                // //email ends
+
+                 //email starts
+                 $proj = Projects::where('id',$project_id)->first();
+                 $resp = Respondents::where('id',$respondents)->first();
+                 
+                 if($proj->name!='')
+                 {
+                    $to_address = $resp->email;
+                    //$to_address = 'hemanathans1@gmail.com';
+                    $resp_name = $resp->name.' '.$resp->surname;
+                    $proj_name = $proj->name;
+
+                    $data = ['subject' => 'New Survey Assigned','name' => $resp_name,'project' => $proj_name,'type' => 'new_project'];
+                
+                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                 }
+                //email ends
+                
 
                 return response()->json([
                     'text_status' => true,

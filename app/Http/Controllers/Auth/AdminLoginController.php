@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Users;
+use App\Models\UserEvents;
 use DB;
 use Session;
 use Exception;
@@ -111,10 +112,51 @@ class AdminLoginController extends Controller
 
                 $share_link  = DB::table('users')->select('share_link')->where("id",Auth::guard('admin')->user()->id)->first();
                
-              
-                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val',
-                'black_val','pending_val','complete','incomplete','tot','comp_per','incomp_per','act_per',
-                'dec_per','unsub_pre','pen_per','bla_per','share_link'));
+                
+                $from = date("2023-m-01");
+                $to = date("2023-12-d");
+                
+                $all_datas = DB::select("select u.id,u.name,u.surname, (select count(*) from user_events e where e.user_id = u.id AND e.action='created' AND e.type='respondent' ) as createCount, (select count(*) from user_events e where e.user_id = u.id AND e.action='updated' AND e.type='respondent' ) as updateCount, (select count(*) from user_events e where e.user_id = u.id AND e.action='deactivated' AND e.type='respondent' ) as deactCount from users u;");
+                
+                // $all_datas = DUsers::select('users.id','users.name', 'users.surname', 'user_events.*')
+                // ->join('user_events', 'user_events.user_id', 'users.id')
+                // ->orderby("user_events.id", "desc")
+                // ->where('type', '=', 'respondent');
+                // if($from != null && $to != null){
+                //     $all_datas = $all_datas->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
+                // }
+                // $all_datas = $all_datas->groupBy('user_events.user_id');
+                // $all_datas = $all_datas->get();
+
+                // $total_created = Users::select('users.name', 'users.surname', 'user_events.*')
+                //     ->join('user_events', 'user_events.user_id', 'users.id')
+                //     ->orderby("user_events.id", "desc")
+                //     ->where("user_events.action", "created")
+                //     ->where('type', '=', 'respondent');
+
+                // if($from != null && $to != null){
+                //     $total_created = $total_created->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
+                // }
+                //$total_created = $total_created->groupBy('user_events.user_id');
+                //$total_created = $total_created->get()->count();
+                
+                $dashboard_data = array();
+                foreach ($all_datas as $all_data) {
+
+                    $newdata =  array (
+                        'id' => $all_data->id,
+                        'name' => $all_data->name . " " . $all_data->surname,
+                        'createCount' => $all_data->createCount,
+                        'updateCount' => $all_data->updateCount,
+                        'deactCount' => $all_data->deactCount,
+                    );
+
+                    array_push($dashboard_data, $newdata);
+                }
+
+                //dd($dashboard_data);
+
+                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val','black_val','pending_val','complete','incomplete','tot','comp_per','incomp_per','act_per','dec_per','unsub_pre','pen_per','bla_per','share_link','dashboard_data'));
                 
                 return redirect("/")->withSuccess('You are not allowed to access');
             }
