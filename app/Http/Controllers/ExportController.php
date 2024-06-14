@@ -410,7 +410,7 @@ class ExportController extends Controller
                         $business_org = ($extended->business_org == 'other') ? $extended->business_org_other : $extended->business_org;
                         $home_lang    = ($extended->home_lang == 'other') ? $extended->home_lang_other : $extended->home_lang;
 
-                        $banks = DB::table('banks')->where('id',$extended->bank_main)->where('active',1)->get();
+                        $banks = DB::table('banks')->where('id',$extended->bank_main)->where('active',1)->first();
                         $bank_main = ($extended->bank_main == 'other') ? $extended->bank_main_other : $banks->bank_name;
                             
                         $sheet->setCellValue('W' . $rows, $business_org ?? '');
@@ -790,7 +790,7 @@ class ExportController extends Controller
                     $all_datas->where('user_events.type', '=', $pro_type);
                 }
          
-            $all_datas = $all_datas->orderBy("user_events.id", "desc")->get();
+                $all_datas = $all_datas->orderBy("user_events.id", "desc")->get();
 
                 foreach ($all_datas as $all_data) {
                     $sheet->setCellValue('A' . $rows, $i);
