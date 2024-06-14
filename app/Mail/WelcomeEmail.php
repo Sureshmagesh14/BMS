@@ -5,6 +5,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+
 class WelcomeEmail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -32,7 +33,6 @@ class WelcomeEmail extends Mailable
                     ->bcc($address, $name)
                     ->replyTo($address, $name)
                     ->subject($subject)
-                    // ->with([ 'id' => $this->data['id'] ])
                     ->with([ 'test_message' => $this->data['message'] ]);
     }
    
