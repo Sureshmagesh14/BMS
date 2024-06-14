@@ -16,6 +16,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Exception;
 use Config;
+use App\Mail\WelcomeEmail;
+
 class ProjectsController extends Controller
 {
      /**
@@ -728,6 +730,23 @@ class ProjectsController extends Controller
             }
             else{
                 Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $respondents]);
+
+                $proj = Projects::where('id',$project_id)->first();
+                $resp = Respondents::where('id',$respondents)->first();
+
+                //email starts
+                if($proj->name!='')
+                {
+                    $to_address = $resp->email;
+                    //$to_address = 'hemanathans1@gmail.com';
+                    $resp_name = $resp->name.' '.$resp->surname;
+                    $proj_name = $proj->name;
+
+                    $data = ['subject' => 'New Survey Assigned','name' => $resp_name,'project' => $proj_name,'type' => 'new_project'];
+                
+                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                }
+                //email ends
 
                 return response()->json([
                     'text_status' => true,
