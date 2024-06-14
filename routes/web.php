@@ -220,6 +220,7 @@ Route::group([
     Route::get('/survey/edit/{id}', ['as' => 'survey.edit', 'uses' => 'SurveyController@editSurvey']);
     Route::post('/survey/update/{id}', ['as' => 'survey.update', 'uses' => 'SurveyController@updateSurvey']);
     Route::get('/survey/delete/{id}', ['as' => 'survey.delete', 'uses' => 'SurveyController@deleteSurvey']);
+    Route::get('/survey/restore/{id}', ['as' => 'survey.restore', 'uses' => 'SurveyController@restoreSurvey']);
 
     /* Survey Template Routings*/
     Route::get('/survey/template/{id}', ['as' => 'survey.template', 'uses' => 'SurveyController@templateList']);

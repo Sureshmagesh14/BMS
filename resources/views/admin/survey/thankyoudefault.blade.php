@@ -22,11 +22,13 @@ button#back_to_profile {
 </head>
 
 <body>
+@if($survey->survey_type == 'profile')
 <a class="back_to_profile" href="{{ route('user.dashboard') }}">
         <button id="back_to_profile">
             <span class="ss-primary-action-btn__copy">Back to Profile</span>
         </button>
     </a>
+    @endif
     <div class="surveysparrow-survey-container--classic-form welcome-page">
         <div
             class="ss-fp-section surveysparrow-survey-form-wrapper--centered ss-survey-background d-flex fx-column fx-jc--center fx-ai--center">
@@ -38,13 +40,15 @@ button#back_to_profile {
                     <p>Profile Updated!</p>
                     @else    
                     <p>Survey Completed!</p>
+                    
                     @endif
                         <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">Thanks for you time</p>
                         <figure>
                             <span>
                                 <div class="ss_image_wrapper">
-                                    <img src="{{ asset('assets/images/brand_surgen.png') }}" id="brandLogo">
+                                <a href="/"><img src="{{ asset('assets/images/brand_surgen.png') }}" id="brandLogo"> </a>
                                 </div>
+
                             </span>
                         </figure>
                     </h3>
