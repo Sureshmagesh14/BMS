@@ -308,7 +308,7 @@
                                             </select>
                                             <input type="text" name="essential[employment_status_other]" id="employment_status_other" class="form-control"
                                                 @if($essential_details['employment_status'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
-                                                placeholder="Enter Your Option" value="{{$essential_details['employment_status_other']}}">
+                                                placeholder="Enter Your Option" @isset($essential_details['employment_status_other']) value="{{$essential_details['employment_status_other']}}" @endisset>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="industry_my_company">Industry my company is in <span
@@ -325,7 +325,7 @@
 
                                             <input type="text" name="essential[industry_my_company_other]" id="industry_my_company_other" class="form-control" 
                                                 @if($essential_details['industry_my_company'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
-                                                placeholder="Enter Your Option" value="{{$essential_details['industry_my_company_other']}}">
+                                                placeholder="Enter Your Option" @isset($essential_details['industry_my_company_other']) value="{{$essential_details['industry_my_company_other']}}" @endisset>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="job_title">Job Title <span
@@ -602,7 +602,7 @@
                                             <br>
                                             <input type="text" name="extended[business_org_other]" id="business_org_other" class="form-control" placeholder="Enter Your Option"
                                                 @if($extended_details['business_org'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
-                                                value="{{$extended_details['business_org_other']}}">
+                                                @isset($extended_details['business_org_other']) value="{{$extended_details['business_org_other']}}" @endisset>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="org_company">What is the number of people in your organisation
@@ -661,7 +661,7 @@
                                             <br>
                                             <input type="text" name="extended[bank_main_other]" id="bank_main_other" class="form-control" placeholder="Enter Your Option"
                                             @if($extended_details['bank_main'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
-                                            value="{{$extended_details['bank_main_other']}}">
+                                            @isset($extended_details['bank_main_other']) value="{{$extended_details['bank_main_other']}}" @endisset>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="home_lang">Home Language</label>
@@ -707,7 +707,7 @@
                                             <br>
                                             <input type="text" name="extended[home_lang_other]" id="home_lang_other" class="form-control" placeholder="Enter Your Option"
                                             @if($extended_details['home_lang'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
-                                            value="{{$extended_details['home_lang_other']}}">
+                                            @isset($extended_details['home_lang_other']) value="{{$extended_details['home_lang_other']}}" @endisset>
                                         </div>
                                     </div>
                                 </section>
