@@ -5,6 +5,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+
+
 class WelcomeEmail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -22,19 +24,34 @@ class WelcomeEmail extends Mailable
 
     public function build()
     {
-        $address = 'smartvijay@gmail.com';
-        $subject = 'This is a demo!';
-        $name = 'Jane Doe';
+        //dd($this->data);
+        
+        if($this->data=='new_register'){
 
-        return $this->view('admin.emails.welcome')
-                    ->from($address, $name)
-                    ->cc($address, $name)
-                    ->bcc($address, $name)
-                    ->replyTo($address, $name)
-                    ->subject($subject)
-                    // ->with([ 'id' => $this->data['id'] ])
+            return $this->view('mail.new_account')
+                    ->from(env('mail_from_address'), env('MAIL_FROM_NAME'))
+                    ->replyTo(env('mail_from_address'),env('MAIL_FROM_NAME'))
+                    ->subject($this->data['subject']);
+
+        }else if($this->data=='new_project'){
+
+            
+
+            return $this->view('mail.new_survey')
+                    ->from(env('mail_from_address'), env('MAIL_FROM_NAME'))
+                    ->replyTo(env('mail_from_address'),env('MAIL_FROM_NAME'))
+                    ->subject($this->data['subject'])
+                    ->with(['project'=>$this->data['project']]);
+
+        }else{
+
+        
+            return $this->view('mail.new_survey')
+                    ->from(env('mail_from_address'), env('MAIL_FROM_NAME'))
+                    ->replyTo(env('mail_from_address'),env('MAIL_FROM_NAME'))
+                    ->subject($this->data['subject'])
                     ->with([ 'test_message' => $this->data['message'] ]);
+        }
     }
-   
     
 }
