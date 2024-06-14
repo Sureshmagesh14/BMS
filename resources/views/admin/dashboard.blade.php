@@ -80,6 +80,25 @@
 
             <div class="row">
 
+            <div class="col-12 text-right">
+            <select id="year">
+            @for($i = date('Y'); $i>=date('Y')-10; $i--)
+                <option value="{{$i}}">{{$i}}</option>
+            @endfor
+            </select>
+
+            <select name="month" id="month" size='1'>
+            @for ($i = 0; $i < 12; $i++)
+                @php 
+                $time = strtotime(sprintf('%d months', $i));   
+                $label = date('F', $time);   
+                $value = date('n', $time);
+                @endphp 
+                <option value='{{$value}}'>{{$label}}</option>
+            @endfor
+            </select>
+            <button type="submit" class="btn btn-default btn-primary" onclick="banks_table();">Submit</button>
+            </div>
             <div class="col-12">
                     <div class="card">
                         <div class="card-body">
@@ -120,17 +139,47 @@
             @stack('adminside-js')
             <script src="{{ asset('assets//libs/apexcharts/apexcharts.min.js') }}"></script>
             <script>
-                $('#banks_table').DataTable({
-                    searching: true,
-                    ordering: true,
-                    dom: 'lfrtip',
-                    info: true,
-                    iDisplayLength: 10,
-                    lengthMenu: [
-                        [10, 50, 100, -1],
-                        [10, 50, 100, "All"]
-                    ],
-                )};
+                var tempcsrf = '{!! csrf_token() !!}';
+
+                $(document).ready(function() {
+                    //banks_table();
+                });
+
+                function banks_table(year,month) {
+                    $('#banks_table').dataTable().fnDestroy();
+                    $('#banks_table').DataTable({
+                        searching: true,
+                        ordering: true,
+                        dom: 'lfrtip',
+                        info: true,
+                        iDisplayLength: 10,
+                        lengthMenu: [
+                            [10, 50, 100, -1],
+                            [10, 50, 100, "All"]
+                        ],
+                        ajax: {
+                            url: "{{ route('get_all_banks') }}",
+                            data: {
+                                _token: tempcsrf,
+                                year: year,
+                                month: month,
+                            },
+                            error: function(xhr, error, thrown) {
+                                alert("undefind error");
+                            }
+                        },
+                        columns: [
+                            { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
+                            { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
+                            { data: 'bank_name',name: 'bank_name',orderable: true,searchable: true },
+                            { data: 'branch_code',name: 'branch_code',orderable: true,searchable: true },
+                            { data: 'active',name: 'active',orderable: false,searchable: false },
+                            { data: 'action',name: 'action',orderable: false,searchable: false }
+                        ]
+                    });
+                }
+
+                
 
                 var options = {
                     series: [{{ $active_val }}, {{ $pending_val }}, {{ $deactive_val }}, {{ $unsub_val }},
