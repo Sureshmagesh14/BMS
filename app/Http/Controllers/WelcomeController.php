@@ -761,7 +761,7 @@ class WelcomeController extends Controller
     {
         try {
             
-            $data = ['subject' => 'Welcome','message' => 'test'];
+            $data = ['subject' => 'New Survey Assigned','message' => 'test12322222','name' => 'jonh','project' => 'test project','type' => 'new_project'];
             
             Mail::to('hemanathans1@gmail.com')->send(new WelcomeEmail($data));
         } catch (Exception $e) {

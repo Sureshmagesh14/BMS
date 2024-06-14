@@ -25,17 +25,28 @@ class WelcomeEmail extends Mailable
     public function build()
     {
         //dd($this->data);
-
+        
         if($this->data=='new_register'){
 
             return $this->view('mail.new_account')
                     ->from(env('mail_from_address'), env('MAIL_FROM_NAME'))
                     ->replyTo(env('mail_from_address'),env('MAIL_FROM_NAME'))
                     ->subject($this->data['subject']);
+
+        }else if($this->data=='new_project'){
+
+            
+
+            return $this->view('mail.new_survey')
+                    ->from(env('mail_from_address'), env('MAIL_FROM_NAME'))
+                    ->replyTo(env('mail_from_address'),env('MAIL_FROM_NAME'))
+                    ->subject($this->data['subject'])
+                    ->with(['project'=>$this->data['project']]);
+
         }else{
 
         
-            return $this->view('mail.new_account')
+            return $this->view('mail.new_survey')
                     ->from(env('mail_from_address'), env('MAIL_FROM_NAME'))
                     ->replyTo(env('mail_from_address'),env('MAIL_FROM_NAME'))
                     ->subject($this->data['subject'])

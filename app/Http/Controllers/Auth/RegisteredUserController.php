@@ -70,7 +70,7 @@ class RegisteredUserController extends Controller
 
             $get_email = Respondents::where('id', $id)->first();
             $to_address = $get_email->email;
-            $to_address = 'hemanathans1@gmail.com';
+            //$to_address = 'hemanathans1@gmail.com';
 
             $data = ['subject' => 'New account created','type' => 'new_register'];
 
