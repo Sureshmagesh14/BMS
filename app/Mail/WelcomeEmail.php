@@ -26,31 +26,23 @@ class WelcomeEmail extends Mailable
     {
         //dd($this->data);
         
-        if($this->data=='new_register'){
-
+        if ($this->data['type'] == 'new_register') {
             return $this->view('mail.new_account')
-                    ->from(env('mail_from_address'), env('MAIL_FROM_NAME'))
-                    ->replyTo(env('mail_from_address'),env('MAIL_FROM_NAME'))
-                    ->subject($this->data['subject']);
-
-        }else if($this->data=='new_project'){
-
-            
-
+                ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->replyTo(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->subject($this->data['subject']);
+        } elseif ($this->data['type'] == 'new_project') {
             return $this->view('mail.new_survey')
-                    ->from(env('mail_from_address'), env('MAIL_FROM_NAME'))
-                    ->replyTo(env('mail_from_address'),env('MAIL_FROM_NAME'))
-                    ->subject($this->data['subject'])
-                    ->with(['project'=>$this->data['project']]);
-
-        }else{
-
-        
+                ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->replyTo(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->subject($this->data['subject'])
+                ->with(['project' => $this->data['project']]);
+        } else {
             return $this->view('mail.new_survey')
-                    ->from(env('mail_from_address'), env('MAIL_FROM_NAME'))
-                    ->replyTo(env('mail_from_address'),env('MAIL_FROM_NAME'))
-                    ->subject($this->data['subject'])
-                    ->with([ 'test_message' => $this->data['message'] ]);
+                ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->replyTo(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->subject($this->data['subject'])
+                ->with(['test_message' => $this->data['message']]);
         }
     }
     
