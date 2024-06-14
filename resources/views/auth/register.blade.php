@@ -21,9 +21,11 @@
         padding-top: 50px;
         margin: auto;
     }
-    .image-cover{
+
+    .image-cover {
         object-fit: cover;
     }
+
     .email_error {
         display: none;
     }
@@ -68,19 +70,57 @@
         width: 100% !important;
     }
 
+    label#email-error {
+        width: 100% !important;
+    }
+
+
     label#whatsapp-error {
+        width: 100% !important;
+    }
+
+    label#date_of_birth-error {
         width: 100% !important;
     }
 
     a#policy {
         color: blue;
     }
+
+    .modal-body {
+        width: 400px;
+        height: 600px;
+        margin: 10px auto;
+        overflow-y: auto;
+
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 14px;
+    }
+
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        border-radius: 10px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+    }
 </style>
 <div class="container-fluid vh-80">
     <div class="row">
         <div class="col-md-6 d-none-mobile">
-            <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}" class="img-fluid vh-90 w-100 image-cover"
-                alt="" />
+            <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}"
+                class="img-fluid vh-90 w-100 image-cover" alt="" />
         </div>
         <div class="col-md-6 col-sm-12">
             <div class="rightside text-center">
@@ -129,29 +169,34 @@
                     <div class="first-row d-md-flex">
                         <div class="email text-start w-48 m-auto my-3">
                             <label for="email">Email <span class="text-danger">*</span></label>
-                            <input type="text" name="email" id="email" placeholder="john@example.com"
-                                class="form-control vi-border-clr border-radius-0 reg_email" required>
-                            <span class="email_error">Invalid Email Address</span>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fa fa-envelope" style="font-size:36px;"
+                                            aria-hidden="true"></i></div>
+                                </div>
+                                <input type="text" name="email" id="email" placeholder="john@example.com"
+                                    class="form-control vi-border-clr border-radius-0 reg_email" required>
+                                <span class="email_error">Invalid Email Address</span>
+                            </div>
+
                         </div>
-                        <div class="lname text-start w-48 m-auto my-3">
-                            <label for="id_passport">ID Number\ Passport <span
-                                    class="text-xs text-brand underline pointer-events-auto cursor-pointer">(Optional)</span></label>
-                            <input type="text" name="id_passport" id="id_passport"
-                                placeholder="Valid RSA ID number or Passport number"
-                                class="form-control vi-border-clr border-radius-0" id="">
+                        <div class="date text-start w-48 my-3">
+                            <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fa fa-calendar" style="font-size:36px;"
+                                            aria-hidden="true"></i></i></div>
+                                </div>
+                                <input type="text" name="date_of_birth" id="date_of_birth" placeholder="yyyy/mm/dd"
+                                    class="form-control vi-border-clr border-radius-0" required>
+
+                            </div>
+                            <span id="agecal"></span>
                         </div>
 
                     </div>
                     <div class="first-row d-md-flex">
-                        <div class="date text-start w-48 my-3">
-                            <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
-                            <input type="date" name="date_of_birth" id="date_of_birth" placeholder="dd/mm/yyyy"
-                                class="form-control vi-border-clr border-radius-0" required>
-                            <span id="agecal"></span>
-                        </div>
-                    </div>
-                    <div class="first-row">
-                        <div class="date text-start w-48 my-3">
+                        <div class="email text-start w-48 m-auto my-3">
                             <label for="date">Password<span class="text-danger">*</span> <span
                                     class="text-xs text-brand underline pointer-events-auto cursor-pointer">(At least 6
                                     characters)</span></label>
@@ -163,24 +208,29 @@
                                     <i class="fa fa-eye-slash"></i>
                                 </a>
                             </div>
-                            <br>
+                        </div>
+                        <div class="date text-start w-48 my-3">
+                            <label for="date">Confirm Password<span class="text-danger">*</span> <span
+                                    class="text-xs text-brand underline pointer-events-auto cursor-pointer"></span></label>
                             <div class="main-password">
                                 <input type="password" name="password_confirmation" id="password_confirmation"
                                     class="form-control vi-border-clr border-radius-0 input-password"
                                     aria-label="password" placeholder="Confirm/Retype Password" required>
                                 <a href="JavaScript:void(0);" class="icon-view"><i class="fa fa-eye-slash"></i></a>
                             </div>
-
-
                         </div>
+
                     </div>
+
                     <div class="lname text-start w-48 me-auto my-3">
                         <input type="checkbox" id="terms" name="terms" class="form-check-input" required>
-                        <span class="form-check-label">Agree the <a style="cursor: pointer;" id="policy" data-bs-toggle="modal" data-bs-target="#exampleModal">terms and policy</a>.</span>
+                        <span class="form-check-label">Agree the <a style="cursor: pointer;" id="policy"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal">terms and policy</a>.</span>
                     </div>
 
                     <div class="submit-btn text-center">
-                        <button type="submit" class="btn vi-light-bg text-white py-3 px-5 w-30" id="save_org">Continue</button>
+                        <button type="submit" class="btn vi-light-bg text-white py-3 px-5 w-30"
+                            id="save_org">Continue</button>
                     </div>
                 </form>
 
@@ -188,7 +238,8 @@
                     <span class="vi-bdr-set-or position-relative px-3">OR</span>
                 </div>
                 <div class="regaccount ">
-                    <p class="d-flex align-items-center justify-content-center"><a class="ps-2 nav-link fw-500" href="{{ route('login') }}">Do you have an account? Login</a></p>
+                    <p class="d-flex align-items-center justify-content-center"><a class="ps-2 nav-link fw-500"
+                            href="{{ route('login') }}">Do you have an account? Login</a></p>
                 </div>
             </div>
         </div>
@@ -203,7 +254,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {{$content->data}}
+                {{ $content->data }}
             </div>
         </div>
     </div>
@@ -422,5 +473,15 @@
             console.log("str", str);
             document.getElementById('agecal').innerText = str;
         }
+    });
+
+    $(document).ready(function() {
+
+        $('#date_of_birth').inputmask("yyyy/mm/dd", {
+            "placeholder": "YYYY/MM/DD",
+            onincomplete: function() {
+                $(this).val('');
+            }
+        });
     });
 </script>
