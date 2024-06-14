@@ -27,22 +27,36 @@ class WelcomeEmail extends Mailable
         //dd($this->data);
         
         if ($this->data['type'] == 'new_register') {
+
             return $this->view('mail.new_account')
                 ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
                 ->replyTo(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
                 ->subject($this->data['subject']);
+
         } elseif ($this->data['type'] == 'new_project') {
+
             return $this->view('mail.new_survey')
                 ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
                 ->replyTo(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
                 ->subject($this->data['subject'])
-                ->with(['project' => $this->data['project']]);
+                ->with(['project' => $this->data['project'],'name' => $this->data['name']]);
+
+        }elseif ($this->data['type'] == 'reward_approve') {
+
+            return $this->view('mail.reward_approved')
+                ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->replyTo(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->subject($this->data['subject'])
+                ->with(['project' => $this->data['project'],'name' => $this->data['name']]);
+
         } else {
+
             return $this->view('mail.new_survey')
                 ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
                 ->replyTo(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
                 ->subject($this->data['subject'])
                 ->with(['test_message' => $this->data['message']]);
+
         }
     }
     

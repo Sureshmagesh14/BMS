@@ -279,6 +279,27 @@ class RewardsController extends Controller
             $all_id = $request->all_id;
             foreach($all_id as $id){
                 $data=array('status_id'=>2);
+
+                $reward_data = Rewards::where('id',$id)->first();
+                $project_id = $reward_data->project_id;
+                $respondents = $reward_data->respondent_id;
+
+                //email starts
+                $proj = Projects::where('id',$project_id)->first();
+                $resp = Respondents::where('id',$respondents)->first();
+                
+                if($proj->name!='')
+                {
+                    $to_address = $resp->email;
+                    //$to_address = 'hemanathans1@gmail.com';
+                    $resp_name = $resp->name.' '.$resp->surname;
+                    $proj_name = $proj->name;
+                    $data = ['subject' => 'Rewards Approved','name' => $resp_name,'project' => $proj_name,'type' => 'reward_approve'];
+                
+                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                }
+                //email ends
+
                 $rewards = Rewards::whereIn('id', [$id])->update($data);
             }
             
