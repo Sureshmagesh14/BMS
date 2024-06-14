@@ -760,8 +760,9 @@ class WelcomeController extends Controller
     public function email(Request $request)
     {
         try {
-            $data = ['message' => 'Welcome'];
-
+            
+            $data = ['subject' => 'Welcome','message' => 'test'];
+            
             Mail::to('hemanathans1@gmail.com')->send(new WelcomeEmail($data));
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
