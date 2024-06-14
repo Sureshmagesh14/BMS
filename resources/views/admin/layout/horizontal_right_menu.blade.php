@@ -63,7 +63,7 @@
                     </div>
                 </div>
             </div> -->
-            
+
             <!-- <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -156,12 +156,40 @@
                     <i class="icon-sm" data-feather="settings"></i>
                 </button>
             </div> -->
-            
+
             <div class="dropdown d-inline-block">
+
+                @if (Auth::guard('admin')->user()->role_id == 1)
+                    @php $role='Super User'; @endphp
+                @elseif(Auth::guard('admin')->user()->role_id == 2)
+                    @php $role='User'; @endphp
+                @else
+                    @php $role='Temp'; @endphp
+                @endif
+
+                <span class="badge badge-pill badge-primary p-2"> {{ $role }}</span>
+
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/avatar-4.jpg') }}"
-                        alt="Header Avatar">
+                    {{-- <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/avatar-4.jpg') }}"
+                    alt="Header Avatar"> --}}
+                    @php $first_character = mb_substr(Auth::guard('admin')->user()->name, 0, 1); @endphp
+
+                    <span
+                        class="rounded-circle header-profile-user vi-usr-profile m-auto p-3"><strong>{{ $first_character }}</strong></span>
+
+                    <div class="d-none d-xl-block ps-3">
+                        <div>
+                            @php
+                                $name =
+                                    Auth::guard('admin')->user()->name . ' ' . Auth::guard('admin')->user()->surname;
+                                $out = strlen($name) > 7 ? substr($name, 0, 7) . '...' : $name;
+                            @endphp
+                            <div class="mt-1 small text-muted"><b><a title="{{ $name }}"
+                                        href="#">{{ $out }}</a></b></div>
+                        </div>
+
+                    </div>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <!-- item-->
@@ -169,9 +197,11 @@
                     <a class="dropdown-item" href="#"><i class="uil uil-wallet font-size-16 align-middle mr-1 text-muted"></i> <span class="align-middle" key="t-my-wallet"> My Wallet</span></a>
                     <a class="dropdown-item d-block" href="#"><i class="uil uil-cog font-size-16 align-middle mr-1 text-muted"></i> <span class="align-middle" key="t-settings"> Settings</span> <span class="badge badge-soft-success badge-pill mt-1 ml-2">03</span></a>
                     <a class="dropdown-item" href="#"><i class="uil uil-lock-alt font-size-16 align-middle mr-1 text-muted"></i> <span class="align-middle" key="t-lock-screen"> Lock screen</span></a> -->
-                    <a class="dropdown-item" href="{{ route('signout') }}"><i class="uil uil-sign-out-alt font-size-16 align-middle mr-1 text-muted"></i> <span class="align-middle" key="t-sign-out"> Sign out</span></a>
+                    <a class="dropdown-item" href="{{ route('signout') }}"><i
+                            class="uil uil-sign-out-alt font-size-16 align-middle mr-1 text-muted"></i> <span
+                            class="align-middle" key="t-sign-out"> Sign out</span></a>
                 </div>
             </div>
         </div>
-    </div>
-</header>
+        </div>
+        </header>

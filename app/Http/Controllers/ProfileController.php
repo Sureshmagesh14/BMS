@@ -81,6 +81,14 @@ class ProfileController extends Controller
             $resp_id   = Session::get('resp_id');
             $resp_name = Session::get('resp_name');
             $resp_details = Respondents::select('id','name','surname','date_of_birth','email','mobile','whatsapp')->find($resp_id);
+
+            $get_date = Respondents::select('date_of_birth')->where('id',$resp_id)->first();
+            if($get_date->date_of_birth != null){
+                $get_year = date('Y',strtotime($get_date->date_of_birth));
+            }
+            else{
+                $get_year = date('Y',strtotime(1990));
+            }
            
             $state = DB::table('state')->whereNull('deleted_at')->get();
             $industry_company = DB::table('industry_company')->whereNull('deleted_at')->get();
@@ -106,7 +114,7 @@ class ProfileController extends Controller
             $get_area  = (isset($essential_details['suburb'])) ? DB::table('metropolitan_area')->where('district_id',$essential_details['suburb'])->whereNull('deleted_at')->orderBy('area','ASC')->get() : array();
             
             return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area',
-                'child_details','vehicle_details','vehicle_master'));
+                'child_details','vehicle_details','vehicle_master','get_year'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
