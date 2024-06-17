@@ -488,14 +488,17 @@
                                     $i = 1;
                                 @endphp
                                 <tbody>
-                                    @forelse ($vehicle_data as $i=> $vehicle)
+                                    @forelse ($vehicle_data as  $vehicle)
                                         <tr>
-                                            <td>Vechile {{ $i + 1 }}</td>
+                                            <td>Vechile {{ $i  }}</td>
                                             <td>{{ $vehicle->type ?? '' }}</td>
                                             <td>{{ $vehicle->year ?? '' }}</td>
                                             <td>{{ $vehicle->brand  ?? '' }}</td>
                                             <td>{{ $vehicle->model ?? '' }}</td>
                                         </tr>
+                                        @php
+                                            $i++;
+                                        @endphp
                                     @empty
                                         <tr>
                                             <td colspan="5">
