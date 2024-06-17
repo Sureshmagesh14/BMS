@@ -163,10 +163,10 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Referral Code
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="" name="" value="{{ $refcode }}"
+            <input type="text" class="form-control" id="" name="" value="{{ URL::to('/').'?r='.$refcode }}"
                 disabled>
             <input type="hidden" class="form-control" id="referral_code" name="referral_code"
-                value="{{ $refcode }}">
+                value="{{ URL::to('/').'?r='.$refcode }}">
         </div>
     </div>
 

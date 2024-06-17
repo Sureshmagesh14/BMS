@@ -2,6 +2,11 @@
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
+<style>
+    span.badge.bg-primary {
+        color: white;
+    }
+</style>
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
@@ -27,7 +32,9 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
+                            <span class="badge bg-primary">Primary</span>
                             <div class="mb-0">
+
                                 <div class="text-right">
                                     <a href="#!" data-url="{{ route('respondents.edit', $data->id) }}"
                                         data-size="xl" data-ajax-popup="true" class="btn btn-primary"
@@ -118,8 +125,8 @@
                                             <td>{{ $active_status_id }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Profile Completion</th>
-                                            <td>{{ $data->profile_completion_id }}</td>
+                                            <th>data Completion</th>
+                                            <td>{{ $data->data_completion_id }}</td>
                                         </tr>
                                         <tr>
                                             <th>Opted In</th>
@@ -131,7 +138,9 @@
                                         </tr>
                                         <tr>
                                             <th>Referral Code</th>
-                                            <td><a href="{{ URL::to('/') }}?r={{ $data->referral_code }}">{{ URL::to('/') }}?r={{ $data->referral_code }}</a></td>
+                                            <td><a
+                                                    href="{{ URL::to('/') }}?r={{ $data->referral_code }}">{{ URL::to('/') }}?r={{ $data->referral_code }}</a>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th>Accepted Terms</th>
@@ -159,7 +168,234 @@
                         <!-- end card-body -->
                     </div>
                     <!-- end card -->
+                    <div class="card">
+                        <div class="card-body">
+                            <span class="badge bg-primary">Essential</span>
+                            <div class="mb-0">
+                                @php
+                                    $essential = isset($data->essential_details)
+                                        ? json_decode($data->essential_details)
+                                        : (object) [];
 
+                                @endphp
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th>Relationship Status</th>
+                                            <td>{{ $relationship_status = isset($essential->relationship_status) ? $essential->relationship_status : null }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Gender</th>
+                                            <td>{{ $gender = isset($essential->gender) ? $essential->gender : null }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Ethnic Group / Race</th>
+                                            <td>{{ $ethnic_group = isset($essential->ethnic_group) ? $essential->ethnic_group : null }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Highest Education Level</th>
+                                            <td>{{ $education_level = isset($essential->education_level) ? $essential->education_level : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Employment Status</th>
+                                            <td>{{ $employment_status = isset($essential->employment_status) ? $essential->employment_status : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Industry my company is in</th>
+                                            <td>{{ $industry_my_company = isset($essential->industry_my_company) ? $essential->industry_my_company : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Job Title</th>
+                                            <td>{{ $job_title = isset($essential->job_title) ? $essential->job_title : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Personal Income Per Month</th>
+                                            <td>{{ $personal_income_per_month = isset($essential->personal_income_per_month) ? $essential->personal_income_per_month : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Household Income per month</th>
+                                            <td>{{ $household_income_per_month = isset($essential->household_income_per_month) ? $essential->household_income_per_month : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Province </th>
+                                            <td>{{ $province = isset($essential->province) ? $essential->province : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Metropolitan Area </th>
+                                            <td>{{ $metropolitan_area = isset($essential->suburb) ? $essential->suburb : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Suburb </th>
+                                            <td>{{ $suburb = isset($essential->metropolitan_area) ? $essential->metropolitan_area : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Number of people living in your household </th>
+                                            <td>{{ $no_houehold = isset($essential->no_houehold) ? $essential->no_houehold : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Number of Children</th>
+                                            <td>{{ $no_vehicle = isset($essential->no_vehicle) ? $essential->no_vehicle : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Number of Vehicles</th>
+                                            <td>{{ $no_children = isset($essential->no_children) ? $essential->no_children : null }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- end card-body -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <span class="badge bg-primary">Extended</span>
+                            <table border="1" id="children_table"
+                                class="children_table table table-bordered table-striped table-highlight">
+                                <colgroup>
+                                    <col width="20%">
+                                    <col width="50%">
+                                    <col width="30%">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;">Child</th>
+                                        <th style="text-align: center;">DOB</th>
+                                        <th style="text-align: center;">Gender</th>
+                                    </tr>
+                                </thead>
+                                @php
+                                    $children_data = isset($data->children_data)
+                                        ? json_decode($data->children_data)
+                                        : (object) [];
+                                    $key = 1;
+                                @endphp
+                                <tbody>
+                                    @forelse ($children_data as $key=> $children)
+                                        <tr>
+                                        <tr class="more_tr role_tr" id="children_tr1">
+                                            <td>Child {{ $key + 1 }}</td>
+                                            <td>{{ $children->gender }}</td>
+                                            <td>{{ $children->gender }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3">No Data Found.</td>
+                                        </tr>
+                                    @endforelse
+
+
+
+                                </tbody>
+                            </table>
+
+                            <table border="1" id="vehicle_table"
+                                class="vehicle_table table table-bordered table-striped table-highlight">
+                                <colgroup>
+                                    <col width="20%">
+                                    <col width="20%">
+                                    <col width="20%">
+                                    <col width="20%">
+                                    <col width="20%">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;">Vehicle</th>
+                                        <th style="text-align: center;">Brand</th>
+                                        <th style="text-align: center;">Type of vehicle</th>
+                                        <th style="text-align: center;">Model</th>
+                                        <th style="text-align: center;">Year</th>
+                                    </tr>
+                                </thead>
+                                @php
+                                $vehicle_data = isset($data->vehicle_data)
+                                    ? json_decode($data->vehicle_data)
+                                    : (object) [];
+                                $i = 1;
+                            @endphp
+                                <tbody>
+                                    @forelse ($vehicle_data as $key=> $vehicle)
+                                   <tr>
+                                    <td>Vechile {{$i}}</td>
+                                    <td>{{$vehicle->type}}</td>
+                                    <td>{{$vehicle->year}}</td>
+                                    <td>{{$vehicle->brand}}</td>
+                                    <td>{{$vehicle->model}}</td>
+                                   </tr>
+                                   @empty
+                                   <tr>
+                                       <td colspan="5">No Data Found.</td>
+                                   </tr>
+                               @endforelse
+                                </tbody>
+                            </table>
+                            <div class="mb-0">
+                                @php
+                                    $essential = isset($data->extended_details)
+                                        ? json_decode($data->extended_details)
+                                        : (object) [];
+
+                                @endphp
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th>Which best describes the role in you business / organization?</th>
+                                            <td>{{ $business_org = isset($essential->business_org) ? $essential->business_org : null }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>What is the number of people in your organisation / company?</th>
+                                            <td>{{ $org_company = isset($essential->org_company) ? $essential->org_company : null }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Which bank do you bank with (which is your bank main)</th>
+                                            <td>{{ $bank_main_other = isset($essential->bank_main_other) ? $essential->bank_main_other : null }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Home Language</th>
+                                            <td>{{ $home_lang = isset($essential->home_lang) ? $essential->home_lang : null }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Others</th>
+                                            <td>{{ $home_lang_other = isset($essential->home_lang_other) ? $essential->home_lang_other : null }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- end card-body -->
+                    </div>
                     <!-- rewards start page title -->
                     <div class="row">
                         <div class="col-12">
