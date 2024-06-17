@@ -28,6 +28,7 @@ class Survey extends Model
         'qus_count',
         'avg_completion_time',
         'builderID',
+        'background',
         'created_by'
     ];
     public function questions()

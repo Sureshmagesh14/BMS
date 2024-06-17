@@ -173,11 +173,13 @@ if(isset($bg)){
         }else{
             $urlRedirect = route('user.dashboard');
         } ?>
+        @if($survey->survey_type == 'profile')
         <a class="back_to_profile" href="{{ $urlRedirect }} ">
             <button id="back_to_profile">
                 <span class="ss-primary-action-btn__copy">Back to Profile</span>
             </button>
         </a>
+        @endif
         <?php //echo "<pre>";  print_r($survey); ?>
 @if($survey->survey_type == 'profile')
 <div class="pagination">
@@ -696,7 +698,7 @@ if(isset($bg)){
                                     </div>
                                     <div class="ss_cl_qstn_action disabled {{$question->qus_type}}_action">
                                         <div class="">
-                                            <button data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif"  id="next_button"  class="disabled ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
+                                            <button data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif"  id="next_button"  class="ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
                                                 <svg width="18" height="18" class="mirror--rtl" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M5.66552 13.3716C5.46027 13.1869 5.44363 12.8708 5.62836 12.6655L9.82732 8L5.62836 3.33448C5.44363 3.12922 5.46027 2.81308 5.66552 2.62835C5.87078 2.44362 6.18692 2.46026 6.37165 2.66551L10.8717 7.66551C11.0428 7.85567 11.0428 8.14433 10.8717 8.33448L6.37165 13.3345C6.18692 13.5397 5.87078 13.5564 5.66552 13.3716Z" stroke-width="1"></path>
                                                 </svg>
@@ -961,7 +963,11 @@ if(isset($bg)){
                                                             </div>
                                                         </div>
                                                         <div class="ss-choice-content">
+                                                            @if($choice->text!='')
                                                             <p title="{{$choice->text}}">{{$choice->text}}</p>
+                                                            @else
+                                                            <p title="{{$azRange[$key]}}">{{$azRange[$key]}}</p>
+                                                            @endif
                                                             <div class="ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--bold ss-option-no"
                                                                 aria-label="Press {{$azRange[$key]}} to select">
                                                                 <div class="ss-option-no__index">{{$azRange[$key]}}</div>
@@ -1183,13 +1189,14 @@ if(isset($bg)){
                 }
                 $string_version = implode(',', $accept); 
                     ?>
-            <input id="uploadfile" accet="{{$string_version}}" name="uploadfile" type="file" style="display: none;">
+            <input id="uploadfile" accept="{{$string_version}}" name="uploadfile" type="file" style="display: none;">
 
             @endif
             <input type="text" id="question_id" value="{{$question->id}}" name="question_id"/>
             <input type="text" id="survey_id" value="{{$survey->id}}" name="survey_id"/>
             <input type="text" id="next_qus" name="next_qus"/>
             <input type="text" id="user_ans" name="user_ans"/>
+            <input type="text" id="uploadurl" name="uploadurl"/>
             <input type="text" id="skip_ans" name="skip_ans"/>
             <input type="text" id="device_id" name="device_id"/>
             <input type="text" id="device_name" name="device_name"/>
@@ -1268,6 +1275,22 @@ $('.text-ans-input').change(function(){
         $('#answered').val('no');
     }
 });
+$('.text-ans-input').keyup(function(){
+    if($(this).val()!=''){
+        $('#next_button').removeClass('disabled');
+        $('#answered').val('yes');
+    }else{
+        $('#next_button').addClass('disabled');
+        $('#answered').val('no');
+    }
+});
+$('#dropdownlist').change(function(){
+    if($(this).val()!=''){
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#next_button').addClass('disabled');
+    }
+})
 $('.single_choice_choice').click(function(){
     $(this).toggleClass("active");
     $('.single_choice_choice').not(this).removeClass("active");
@@ -1303,8 +1326,12 @@ $('.likert_choice').click(function(){
     });
     if(enable == 1){
         $('#answered').val('yes');
+        $('#next_button').removeClass('disabled');
+
     }else{
         $('#answered').val('no');
+        $('#next_button').addClass('disabled');
+
     }
 });
 $('.multi_choice_choice').click(function(){
@@ -1319,12 +1346,15 @@ $('.answer-option-rating--icons').click(function(){
     $('.answer-option-rating--icons').each(function(){
         if($(this).hasClass('active')){
             enable=1;
+            
         }
     });
     if(enable == 1){
+        $('#next_button').removeClass('disabled');
         $('#answered').val('yes');
     }else{
         $('#answered').val('no');
+        $('#next_button').addClass('disabled');
     }
 });
 $('#back_editor').click(function(){
@@ -1334,6 +1364,12 @@ $('#back_editor').click(function(){
 $('.ss-answer-option--picture-choice').click(function(){
     $(this).toggleClass("active");
     $('.ss-answer-option--picture-choice').not(this).removeClass("active");
+    if($('.ss-answer-option--picture-choice.active .ss-choice-content p').text() !=''){
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#next_button').addClass('disabled');
+
+    }
 });
 var array = $('#rank_order_value').val();
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -1471,7 +1507,7 @@ $('#next_button').click(function(){
                 submit =1;
             }else{
                 submit = 0;
-                alert('Pls choose answ');
+                alert('Please select an answer');
                 return false;
             }
         });
@@ -1487,11 +1523,13 @@ $('#next_button').click(function(){
             submit=1;
         }
     }
+    // console.log(submit,qusVal);
+    // return false;
     if(submit == 1){
         $('#next_qus').val($(this).data('url'));
         $('#skip_qus').submit();
     }else{
-        alert('Pls choose answ');
+        alert('Please select an answer');
         return false;
     }
 });
@@ -1577,17 +1615,30 @@ dragdropfile.addEventListener('click', async function() {
     $('#uploadfile').click();
 });
 
+$('#uploadfile').change((e)=>{
+    if(e.target.files.length>0){
+        $('#uploadurl').val(e.target.files[0].name);
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#uploadurl').val('');
+        $('#next_button').addClass('disabled');
+    }
+  
+});
 function handleDrop(event) {
     event.preventDefault();
     const files = event.dataTransfer.files;
     if (files) {
-        console.log(files,'filesfiles')
+    $('#uploadurl').val(files[0].name);
       const validFiles = Array.from(files).filter(file => {
         const allowedFormats = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","text/csv",'application/vnd.openxmlformats-officedocument.presentationml.presentation','application/pdf',"audio/mpeg","audio/mp3","audio/wav","audio/aac", 'image/png', 'image/jpeg','image/jpg','audio/mp3','audio/*'];
-        conso
         return allowedFormats.includes(file.type);
       });
-      console.log(validFiles,'validFilesvalidFiles');
+    }
+    if($('#uploadurl').val() != ''){
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#next_button').addClass('disabled');
     }
 }
 
@@ -1638,6 +1689,12 @@ function click_button_camera(){
     
     dataurl.value = image_data_url;
     dataurl_container.style.display = 'block';
+    if(image_data_url!=''){
+        $('#next_button').removeClass('disabled');
+    }else{
+        $('#next_button').addClass('disabled');
+
+    }
 }
 
 </script>
