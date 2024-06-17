@@ -26,45 +26,37 @@
     @endif
     <br><br>
 
-    <div class="btn-group mr-2" role="group" aria-label="First group">
+    <div class="btn-group mr-2 respondents_datatable hided_option" role="group" aria-label="First group" style="display: none;">
         <select name="action_2" id="action_2"
-            class="form-control respondents_datatable hided_option respondents_select_box" style="display:none;">
-            <option value="">Select Action</option>
-            <optgroup label="Extras">
-                <option value="10">Notify All Respondents</option>
-                <option value="11">Un-Assign from Project</option>
-            </optgroup>
-            <optgroup label="Respondent">
-                <option value="1">Status > Activate</option>
-                <option value="2">Status > Deactivate</option>
-                <option value="3">Status > Opt-Out</option>
-                {{-- <option value="4">Export - Simple Database</option>
-                <option value="5">Export - Normal Database</option>
-                <option value="6">Export - Extended Database</option> --}}
-            </optgroup>
-            {{-- <optgroup label="Standalone Actions">
-                <option value="7">Export - Deactivated Respondents</option> --}}
-                {{-- <option value="8">Import - Old Respondents</option> --}}
-                {{-- <option value="9">Updates imports with file</option> --}}
-            {{-- </optgroup> --}}
-        </select>
-
-        {{-- <select name="action_1" id="action_1"
-            class="form-control respondents_datatable show_hided_option respondents_select_box">
-            <option value="">Select Action</option>
-            <option value="7">Export - Deactivated Respondents</option>
+        class="form-control respondents_datatable hided_option respondents_select_box">
+        <option value="">Select Action</option>
+        <optgroup label="Extras">
+            <option value="10">Notify All Respondents</option>
+            <option value="11">Un-Assign from Project</option>
+        </optgroup>
+        <optgroup label="Respondent">
+            <option value="1">Status > Activate</option>
+            <option value="2">Status > Deactivate</option>
+            <option value="3">Status > Opt-Out</option>
+            {{-- <option value="4">Export - Simple Database</option>
+            <option value="5">Export - Normal Database</option>
+            <option value="6">Export - Extended Database</option> --}}
+        </optgroup>
+        {{-- <optgroup label="Standalone Actions">
+            <option value="7">Export - Deactivated Respondents</option> --}}
             {{-- <option value="8">Import - Old Respondents</option> --}}
             {{-- <option value="9">Updates imports with file</option> --}}
-        {{-- </select> --}}
-
+        {{-- </optgroup> --}}
+    </select>
 
         <div class="play-button-container ml-3">
-            <a class="play-button project_play_button">
+            <a class="play-button user_play_button">
                 <div class="play-button__triangle"></div>
             </a>
         </div>
-        
     </div>
+
+   
 
     <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="First group">

@@ -350,7 +350,7 @@
         single_delete("POST", respondent, url, "Deattach Respondent", 'respondents_datatable');
     });
 
-    $(document).on('click', '.project_play_button', function(e) {
+    $(document).on('click', '.user_play_button', function(e) {
         var all_id = [];
         var project_id     = $("#project_id").val();
         var values = $("#respondents_datatable tbody tr").map(function() {
@@ -363,11 +363,10 @@
             }
         }).get();
 
-        console.log(all_id);
 
-        select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $(".hided_option").val();
+        select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $("#action_2").val();
        
-        alert(select_value);
+        // alert(select_value);
 
         if(select_value == 11){
             titles = "Un-Assign from Project";
