@@ -108,11 +108,30 @@ class ProfileController extends Controller
             $essential_details = ($profile != null) ? (($profile->essential_details != null) ? json_decode($profile->essential_details, true) : array()) : array();
             $extended_details  = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
             $child_details     = ($profile != null) ? (($profile->children_data != null) ? json_decode($profile->children_data, true) : array()) : array();
-            $vehicle_details     = ($profile != null) ? (($profile->vehicle_data != null) ? json_decode($profile->vehicle_data, true) : array()) : array();
+            $vehicle_details   = ($profile != null) ? (($profile->vehicle_data != null) ? json_decode($profile->vehicle_data, true) : array()) : array();
 
             $get_suburb = (isset($essential_details['province'])) ? DB::table('district')->where('type',$essential_details['province'])->whereNull('deleted_at')->orderBy('district','ASC')->get() : array();
             $get_area  = (isset($essential_details['suburb'])) ? DB::table('metropolitan_area')->where('district_id',$essential_details['suburb'])->whereNull('deleted_at')->orderBy('area','ASC')->get() : array();
-            
+
+            $check_basic = ($profile != null) ? (($profile->basic_details != null) ? json_decode($profile->basic_details, true) : array()) : array();
+            $check_ess   = ($profile != null) ? (($profile->essential_details != null) ? json_decode($profile->essential_details, true) : array()) : array();
+            $check_ext   = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
+
+            unset($check_ess['employment_status_other'],$check_ess['industry_my_company_other']);
+            unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other']);
+
+            if(count($check_basic) > 0 && count($check_ess) > 0 && count($check_ext) > 0){
+                if(count($check_basic) == count(array_filter($check_basic)) && count($check_ess) == count(array_filter($check_ess)) && count($check_ext) == count(array_filter($check_ext))){
+                    Respondents::where('id',$resp_id)->update(['profile_completion_id' => 1]);
+                }
+                else{
+                    Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+                }
+            }
+            else{
+                Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+            }
+    
             return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area',
                 'child_details','vehicle_details','vehicle_master','get_year'));
         }
@@ -182,7 +201,7 @@ class ProfileController extends Controller
                 'basic_details' => $basic_details,
             );
 
-            if(RespondentProfile::where('id',$resp_id)->doesntExist()){
+            if(RespondentProfile::where('respondent_id',$resp_id)->doesntExist()){
                 RespondentProfile::insert($basic_data);
             }
             else{
@@ -211,7 +230,7 @@ class ProfileController extends Controller
             //     $profile_data['profile_completion'] = 1;
             // }
             
-            if(RespondentProfile::where('id',$resp_id)->doesntExist()){
+            if(RespondentProfile::where('respondent_id',$resp_id)->doesntExist()){
                 RespondentProfile::insert($profile_data);
                 $step_word = ($steps == 2) ? "Essential Details Added" : "Extended Details Added";
             }
@@ -221,6 +240,27 @@ class ProfileController extends Controller
             }
         }
 
+        $profile = RespondentProfile::where('respondent_id',$resp_id)->first();
+
+        $check_basic = ($profile != null) ? (($profile->basic_details != null) ? json_decode($profile->basic_details, true) : array()) : array();
+        $check_ess   = ($profile != null) ? (($profile->essential_details != null) ? json_decode($profile->essential_details, true) : array()) : array();
+        $check_ext   = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
+
+        unset($check_ess['employment_status_other'],$check_ess['industry_my_company_other']);
+        unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other']);
+
+        if(count($check_basic) > 0 && count($check_ess) > 0 && count($check_ext) > 0){
+            if(count($check_basic) == count(array_filter($check_basic)) && count($check_ess) == count(array_filter($check_ess)) && count($check_ext) == count(array_filter($check_ext))){
+                Respondents::where('id',$resp_id)->update(['profile_completion_id' => 1]);
+            }
+            else{
+                Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+            }
+        }
+        else{
+            Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+        }
+       
         return response()->json([
             'status'  => 200,
             'success' => true,
