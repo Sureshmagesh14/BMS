@@ -447,8 +447,8 @@
                                         <tr>
                                         <tr class="more_tr role_tr" id="children_tr1">
                                             <td>Child {{ $key + 1 }}</td>
-                                            <td>{{ $children->gender }}</td>
-                                            <td>{{ $children->gender }}</td>
+                                            <td>{{ $children->date ?? '' }}</td>
+                                            <td>{{ $children->gender ?? '' }}</td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -491,10 +491,10 @@
                                     @forelse ($vehicle_data as $key=> $vehicle)
                                         <tr>
                                             <td>Vechile {{ $i }}</td>
-                                            <td>{{ $vehicle->type }}</td>
-                                            <td>{{ $vehicle->year }}</td>
-                                            <td>{{ $vehicle->brand }}</td>
-                                            <td>{{ $vehicle->model }}</td>
+                                            <td>{{ $vehicle->type ?? '' }}</td>
+                                            <td>{{ $vehicle->year ?? '' }}</td>
+                                            <td>{{ $vehicle->brand  ?? '' }}</td>
+                                            <td>{{ $vehicle->model ?? '' }}</td>
                                         </tr>
                                     @empty
                                         <tr>
