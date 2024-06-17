@@ -75,22 +75,38 @@
 
                                         <tr>
                                             <th>Mobile Number</th>
-                                            <td>+27 {{ $data->mobile }}</td>
+                                            @if (isset($data->mobile))
+                                                @php $mobile='+27 '.$data->mobile;@endphp
+                                            @else
+                                                @php $mobile='';@endphp
+                                            @endif
+                                            <td>{{ $mobile }}</td>
                                         </tr>
 
                                         <tr>
                                             <th>Whatsapp Number</th>
-                                            <td>+27 {{ $data->whatsapp }}</td>
+                                            @if (isset($data->whatsapp))
+                                                @php $whatsapp='+27 '.$data->whatsapp;@endphp
+                                            @else
+                                                @php $whatsapp='';@endphp
+                                            @endif
+                                            <td>{{ $whatsapp }}</td>
                                         </tr>
 
                                         <tr>
                                             <th>Age</th>
-                                            @php
-                                                $dateOfBirth = $data->date_of_birth;
-                                                $today = date('Y-m-d');
-                                                $diff = date_diff(date_create($dateOfBirth), date_create($today));
-                                            @endphp
-                                            <td>{{ $diff->format('%y') }} Years</td>
+                                            @if (isset($data->date_of_birth))
+                                                @php
+                                                    $dateOfBirth = $data->date_of_birth;
+                                                    $today = date('Y-m-d');
+                                                    $diff = date_diff(date_create($dateOfBirth), date_create($today));
+                                                    $date = $diff->format('%y') . ' Years';
+                                                @endphp
+                                            @else
+                                                @php $date='';  @endphp
+                                            @endif
+
+                                            <td>{{ $date }} </td>
                                         </tr>
                                         <tr>
                                             <th>Bank Name</th>
@@ -290,7 +306,7 @@
                                                 );
                                             @endphp
                                             <td>
-                                                {{ $industry_name->company }}
+                                                {{ $industry_name ? $industry_name->company : '' }}
                                             </td>
                                         </tr>
 
@@ -312,8 +328,10 @@
                                                     $personal_income_per_month,
                                                 );
                                             @endphp
-                                            <td>{{ $income_rate->income }}
+                                            <td>
+                                                {{ $income_rate ? $income_rate->income : '' }}
                                             </td>
+
                                         </tr>
 
                                         <tr>
@@ -328,8 +346,10 @@
                                                     $household_income_per_month,
                                                 );
                                             @endphp
-                                            <td>{{ $household_income->income }}
+                                            <td>
+                                                {{ $household_income ? $household_income->income : '' }}
                                             </td>
+
                                         </tr>
 
                                         <tr>
@@ -338,8 +358,10 @@
                                                 $province = isset($essential->province) ? $essential->province : null;
                                                 $province_name = \App\Models\RespondentProfile::province($province);
                                             @endphp
-                                            <td>{{ $province_name->state }}
+                                            <td>
+                                                {{ $province_name ? $province_name->state : '' }}
                                             </td>
+
                                         </tr>
 
                                         <tr>
@@ -348,8 +370,10 @@
                                                 $district = isset($essential->suburb) ? $essential->suburb : null;
                                                 $district_name = \App\Models\RespondentProfile::district($district);
                                             @endphp
-                                            <td>{{ $district_name->district }}
+                                            <td>
+                                                {{ $district_name ? $district_name->district : '' }}
                                             </td>
+
                                         </tr>
 
                                         <tr>
@@ -363,8 +387,10 @@
                                                     $district,
                                                 );
                                             @endphp
-                                            <td>{{ $metropolitan_area_name->area }}
+                                            <td>
+                                                {{ $metropolitan_area_name ? $metropolitan_area_name->area : '' }}
                                             </td>
+
                                         </tr>
 
                                         <tr>
@@ -426,7 +452,9 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="3">No Data Found.</td>
+                                            <td colspan="3">
+                                                <center>No Data Found.</center>
+                                            </td>
                                         </tr>
                                     @endforelse
 
@@ -470,7 +498,9 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5">No Data Found.</td>
+                                            <td colspan="5">
+                                                <center>No Data Found.</center>
+                                            </td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -513,7 +543,9 @@
                                                             'Worker (e.g., Security Guard, Cleaner, Helper, etc.)';
                                                         break;
                                                     case 'other':
-                                                        $business = 'Other';
+                                                        $business = isset($essential->business_org_other)
+                                                            ? $essential->business_org_other
+                                                            : null;
                                                         break;
                                                     default:
                                                         $business = '';
@@ -523,34 +555,7 @@
                                             <td>{{ $business }}
                                             </td>
                                         </tr>
-                                        <select name="extended[org_company]" id="org_company"
-                                            data-select2-id="select2-data-org_company" tabindex="-1"
-                                            class="select2-hidden-accessible" aria-hidden="true">
-                                            <option value="">Select</option>
-                                            <option value="just_me">
-                                                Just Me (Sole Proprietor)</option>
-                                            <option value="2_5">
-                                                2-5 people</option>
-                                            <option value="6_10" selected=""
-                                                data-select2-id="select2-data-24-8w3v">
-                                                6-10 people</option>
-                                            <option value="11_20">
-                                                11-20 people</option>
-                                            <option value="21_30">
-                                                21-30 people</option>
-                                            <option value="31_50">
-                                                31-50 people</option>
-                                            <option value="51_100">
-                                                51-100 people</option>
-                                            <option value="101_250">
-                                                101-250 people</option>
-                                            <option value="251_500">
-                                                251-500 people</option>
-                                            <option value="500_1000">
-                                                500-1000 people</option>
-                                            <option value="more_than_1000">
-                                                More than 1000 people</option>
-                                        </select>
+
                                         <tr>
                                             <th>What is the number of people in your organisation / company?</th>
                                             @php
@@ -604,27 +609,51 @@
                                         <tr>
                                             <th>Which bank do you bank with (which is your bank main)</th>
                                             @php
-                                                $bank_main = isset($essential->bank_main)
-                                                    ? $essential->bank_main
-                                                    : null;
-                                                $bank_name = \App\Models\RespondentProfile::bank(
-                                                    $bank_main
-                                                );
+                                                $bank_main = null; // Initialize $bank_main with null
+
+                                                if (isset($essential->bank_main)) {
+                                                    if (
+                                                        $essential->bank_main == 'other' &&
+                                                        isset($essential->bank_main_other)
+                                                    ) {
+                                                        // If bank_main is 'other', capitalize the other bank name if it exists
+                                                        $bank_main = ucfirst($essential->bank_main_other);
+                                                    } else {
+                                                        // Otherwise, use the provided bank_main value
+                                                        $bank_main = isset($essential->bank_main)
+                                                            ? $essential->bank_main
+                                                            : null;
+                                                        // Assuming \App\Models\RespondentProfile::bank($bank_main) returns an object with 'bank_name' property
+                                                        $bankname = \App\Models\RespondentProfile::bank($bank_main);
+                                                        $bank_main = $bankname ? $bankname->bank_name : null;
+                                                    }
+                                                }
                                             @endphp
-                                            <td>{{ $bank_name->bank_name }}
+                                            <td>
+                                                {{ $bank_main }}
                                             </td>
+
                                         </tr>
                                         <tr>
                                             <th>Home Language</th>
-                                            <td>{{ ucfirst($home_lang = isset($essential->home_lang) ? $essential->home_lang : null) }}
+                                            @php
+
+                                                if (isset($essential->home_lang)) {
+                                                    if ($essential->home_lang == 'other') {
+                                                        $home_lang = isset($essential->home_lang_other)
+                                                            ? ucfirst($essential->home_lang_other)
+                                                            : null;
+                                                    } else {
+                                                        $home_lang = ucfirst($essential->home_lang);
+                                                    }
+                                                } else {
+                                                    $home_lang = null; // or handle the case where $essential->home_lang is not set
+                                                }
+                                            @endphp
+                                            <td>{{ $home_lang }}
                                             </td>
                                         </tr>
 
-                                        <tr>
-                                            <th>Others</th>
-                                            <td>{{ ucfirst($home_lang_other = isset($essential->home_lang_other) ? $essential->home_lang_other : null) }}
-                                            </td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
