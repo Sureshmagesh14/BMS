@@ -587,24 +587,24 @@
                                                 organization?</label>
                                             <select name="extended[business_org]" id="business_org" onchange="show_other(this, 'business_org')">
                                                 <option value="">Select</option>
-                                                <option value="eastern_cape"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'eastern_cape') selected @endif @endisset>
+                                                <option value="owner_director"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'owner_director') selected @endif @endisset>
                                                     Owner / director (CEO, COO, CFO)</option>
-                                                <option value="free_state"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'free_state') selected @endif @endisset>
+                                                <option value="senior_manager"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'senior_manager') selected @endif @endisset>
                                                     Senior Manager</option>
-                                                <option value="gauteng"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'gauteng') selected @endif @endisset>
+                                                <option value="mid_level_manager"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'mid_level_manager') selected @endif @endisset>
                                                     Mid-Level Manager</option>
-                                                <option value="kwazulu"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'kwazulu') selected @endif @endisset>
+                                                <option value="team_leader"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'team_leader') selected @endif @endisset>
                                                     Team leader / Supervisor</option>
-                                                <option value="limpopo"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'limpopo') selected @endif @endisset>
+                                                <option value="general_worker"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'general_worker') selected @endif @endisset>
                                                     General Worker (e.g., Admin, Call Centre Agent, Nurse, Teacher,
                                                     Carer, etc.)</option>
-                                                <option value="mpumalanga"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'mpumalanga') selected @endif @endisset>
+                                                <option value="worker_etc"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'worker_etc') selected @endif @endisset>
                                                     Worker (e.g., Security Guard, Cleaner, Helper, etc.)</option>
                                                 <option value="other"
                                                     @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'other') selected @endif @endisset>
