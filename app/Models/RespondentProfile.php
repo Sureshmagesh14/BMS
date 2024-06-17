@@ -42,4 +42,42 @@ class RespondentProfile extends Model
         return $education;
 
     }
+
+    public static function industry($id){
+
+        $industry=DB::table('industry_company')->where('id',$id)->select('company')->first();
+
+        return $industry;
+    }
+
+    public static function income($id){
+        
+        $income=DB::table('income_per_month')->where('id',$id)->select('income')->first();
+
+        return $income;
+    }
+
+    public static function province($id){
+        
+        $providence=DB::table('state')->where('id',$id)->select('state')->first();
+
+        return $providence;
+    }
+
+    public static function district($id){
+        
+        $providence=DB::table('district')->where('id',$id)->select('district')->first();
+
+        return $providence;
+    }
+
+    public static function metropolitan_area($type,$district_id){
+        
+        $metropolitan_area=DB::table('metropolitan_area')->where('type',$type)->where('district_id',$district_id)->select('area')->first();
+
+        return $metropolitan_area;
+    }
+
+    
+
 }

@@ -62,7 +62,7 @@
 
                                         <tr>
                                             <th>Date Of Birth</th>
-                                            <td>{{ $data->date_of_birth }}</td>
+                                            <td>{{ date('Y-m-d', strtotime($data->date_of_birth)) }}</td>
                                         </tr>
 
                                         <tr>
@@ -72,12 +72,12 @@
 
                                         <tr>
                                             <th>Mobile Number</th>
-                                            <td>{{ $data->mobile }}</td>
+                                            <td>+27 {{ $data->mobile }}</td>
                                         </tr>
 
                                         <tr>
                                             <th>Whatsapp Number</th>
-                                            <td>{{ $data->whatsapp }}</td>
+                                            <td>+27 {{ $data->whatsapp }}</td>
                                         </tr>
 
                                         <tr>
@@ -87,7 +87,7 @@
                                                 $today = date('Y-m-d');
                                                 $diff = date_diff(date_create($dateOfBirth), date_create($today));
                                             @endphp
-                                            <td>{{ $diff->format('%y') }}</td>
+                                            <td>{{ $diff->format('%y') }} Years</td>
                                         </tr>
                                         <tr>
                                             <th>Bank Name</th>
@@ -182,34 +182,110 @@
                                     <tbody>
                                         <tr>
                                             <th>Relationship Status</th>
-                                            <td>{{ $relationship_status = isset($essential->relationship_status) ? $essential->relationship_status : null }}
+                                            <td>{{ ucfirst($relationship_status = isset($essential->relationship_status) ? $essential->relationship_status : null) }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>Gender</th>
-                                            <td>{{ $gender = isset($essential->gender) ? $essential->gender : null }}
+                                            <td>{{ ucfirst($gender = isset($essential->gender) ? $essential->gender : null) }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>Ethnic Group / Race</th>
-                                            <td>{{ $ethnic_group = isset($essential->ethnic_group) ? $essential->ethnic_group : null }}
+                                            <td>{{ ucfirst($ethnic_group = isset($essential->ethnic_group) ? $essential->ethnic_group : null) }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>Highest Education Level</th>
-                                            <td>{{ $education_level = isset($essential->education_level) ? $essential->education_level : null }}
+                                            @php
+                                                $education_level = isset($essential->education_level)
+                                                    ? $essential->education_level
+                                                    : null;
+                                                $education = '';
+                                                switch ($education_level) {
+                                                    case 'matric':
+                                                        $education = 'Matric';
+                                                        break;
+                                                    case 'post_matric_courses':
+                                                        $education = 'Post Matric Courses / Higher Certificate';
+                                                        break;
+                                                    case 'post_matric_diploma':
+                                                        $education = 'Post Matric Diploma';
+                                                        break;
+                                                    case 'ug':
+                                                        $education = 'Undergrad University Degree';
+                                                        break;
+                                                    case 'pg':
+                                                        $education = 'Post Grad Degree - Honours, Masters, PhD, MBA';
+                                                        break;
+                                                    case 'school_no_metric':
+                                                        $education = 'School But No Matric';
+                                                        break;
+                                                    default:
+                                                        $education = '';
+                                                        break;
+                                                }
+                                            @endphp
+                                            <td>{{ $education }}
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <th>Employment Status</th>
-                                            <td>{{ $employment_status = isset($essential->employment_status) ? $essential->employment_status : null }}
+                                            @php
+                                                $employment_status = isset($essential->employment_status)
+                                                    ? $essential->employment_status
+                                                    : null;
+                                                $employment = '';
+                                                switch ($employment_status) {
+                                                    case 'emp_full_time':
+                                                        $employment = 'Employed Full-Time';
+                                                        break;
+                                                    case 'emp_part_time':
+                                                        $employment = 'Employed Part-Time';
+                                                        break;
+                                                    case 'self':
+                                                        $$employment = 'Self-Employed';
+                                                        break;
+                                                    case 'study':
+                                                        $employment = 'Studying Full-Time (Not Working)';
+                                                        break;
+                                                    case 'working_and_studying':
+                                                        $employment = 'Working &amp; Studying';
+                                                        break;
+                                                    case 'home_person':
+                                                        $employment = 'Stay at Home person';
+                                                        break;
+                                                    case 'retired':
+                                                        $employment = 'Retired';
+                                                        break;
+                                                    case 'unemployed':
+                                                        $employment = 'Unemployed';
+                                                        break;
+                                                    case 'other':
+                                                        $employment = 'Other';
+                                                        break;
+                                                    default:
+                                                        $employment = '';
+                                                        break;
+                                                }
+                                            @endphp
+                                            <td>{{ $employment }}
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <th>Industry my company is in</th>
-                                            <td>{{ $industry_my_company = isset($essential->industry_my_company) ? $essential->industry_my_company : null }}
+                                            @php
+                                                $industry_my_company = isset($essential->industry_my_company)
+                                                    ? $essential->industry_my_company
+                                                    : null;
+                                                $industry_name = \App\Models\RespondentProfile::industry(
+                                                    $industry_my_company,
+                                                );
+                                            @endphp
+                                            <td>
+                                                {{ $industry_name->company }}
                                             </td>
                                         </tr>
 
@@ -221,31 +297,63 @@
 
                                         <tr>
                                             <th>Personal Income Per Month</th>
-                                            <td>{{ $personal_income_per_month = isset($essential->personal_income_per_month) ? $essential->personal_income_per_month : null }}
+                                            @php
+                                                $personal_income_per_month = isset(
+                                                    $essential->personal_income_per_month,
+                                                )
+                                                    ? $essential->personal_income_per_month
+                                                    : null;
+                                                $income_rate = \App\Models\RespondentProfile::income(
+                                                    $personal_income_per_month,
+                                                );
+                                            @endphp
+                                            <td>{{ $income_rate->income }}
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <th>Household Income per month</th>
-                                            <td>{{ $household_income_per_month = isset($essential->household_income_per_month) ? $essential->household_income_per_month : null }}
+                                            @php
+                                                $household_income_per_month = isset(
+                                                    $essential->household_income_per_month,
+                                                )
+                                                    ? $essential->household_income_per_month
+                                                    : null;
+                                                $household_income = \App\Models\RespondentProfile::income(
+                                                    $household_income_per_month,
+                                                );
+                                            @endphp
+                                            <td>{{ $household_income->income }}
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <th>Province </th>
-                                            <td>{{ $province = isset($essential->province) ? $essential->province : null }}
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <th>Metropolitan Area </th>
-                                            <td>{{ $metropolitan_area = isset($essential->suburb) ? $essential->suburb : null }}
+                                            @php
+                                                $province = isset($essential->province) ? $essential->province : null;
+                                                $province_name = \App\Models\RespondentProfile::province($province);
+                                            @endphp
+                                            <td>{{ $province_name->state }}
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <th>Suburb </th>
-                                            <td>{{ $suburb = isset($essential->metropolitan_area) ? $essential->metropolitan_area : null }}
+                                            @php
+                                                $district = isset($essential->suburb) ? $essential->suburb : null;
+                                                $district_name = \App\Models\RespondentProfile::district($district);
+                                            @endphp
+                                            <td>{{ $district_name->district }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Metropolitan Area </th>
+                                            @php
+                                                $metropolitan_area = isset($essential->metropolitan_area) ? $essential->metropolitan_area : null;
+                                                $metropolitan_area_name = \App\Models\RespondentProfile::metropolitan_area($province,$district);
+                                            @endphp
+                                            <td>{{ $metropolitan_area_name->area }}
                                             </td>
                                         </tr>
 
@@ -334,25 +442,25 @@
                                     </tr>
                                 </thead>
                                 @php
-                                $vehicle_data = isset($data->vehicle_data)
-                                    ? json_decode($data->vehicle_data)
-                                    : (object) [];
-                                $i = 1;
-                            @endphp
+                                    $vehicle_data = isset($data->vehicle_data)
+                                        ? json_decode($data->vehicle_data)
+                                        : (object) [];
+                                    $i = 1;
+                                @endphp
                                 <tbody>
                                     @forelse ($vehicle_data as $key=> $vehicle)
-                                   <tr>
-                                    <td>Vechile {{$i}}</td>
-                                    <td>{{$vehicle->type}}</td>
-                                    <td>{{$vehicle->year}}</td>
-                                    <td>{{$vehicle->brand}}</td>
-                                    <td>{{$vehicle->model}}</td>
-                                   </tr>
-                                   @empty
-                                   <tr>
-                                       <td colspan="5">No Data Found.</td>
-                                   </tr>
-                               @endforelse
+                                        <tr>
+                                            <td>Vechile {{ $i }}</td>
+                                            <td>{{ $vehicle->type }}</td>
+                                            <td>{{ $vehicle->year }}</td>
+                                            <td>{{ $vehicle->brand }}</td>
+                                            <td>{{ $vehicle->model }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5">No Data Found.</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                             <div class="mb-0">
@@ -381,13 +489,13 @@
                                         </tr>
                                         <tr>
                                             <th>Home Language</th>
-                                            <td>{{ $home_lang = isset($essential->home_lang) ? $essential->home_lang : null }}
+                                            <td>{{ ucfirst($home_lang = isset($essential->home_lang) ? $essential->home_lang : null) }}
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <th>Others</th>
-                                            <td>{{ $home_lang_other = isset($essential->home_lang_other) ? $essential->home_lang_other : null }}
+                                            <td>{{ ucfirst($home_lang_other = isset($essential->home_lang_other) ? $essential->home_lang_other : null) }}
                                             </td>
                                         </tr>
                                     </tbody>
