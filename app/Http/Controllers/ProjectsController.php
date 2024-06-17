@@ -18,6 +18,9 @@ use Exception;
 use Config;
 use App\Mail\WelcomeEmail;
 
+use App\Imports\RespondentsImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class ProjectsController extends Controller
 {
      /**
@@ -787,6 +790,12 @@ class ProjectsController extends Controller
         $repsonse=$app_url.'/survey/view/'.$get_survey->builderID;
 
         return response()->json(['repsonse' => $repsonse], 200);
+    }
+
+    public function respondent_attach_import(Request $request){
+        $project_id = $request->project_id;
+
+        Excel::import(new RespondentsImport,request()->file('file'));
     }
     
 }

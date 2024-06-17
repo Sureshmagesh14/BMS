@@ -125,6 +125,8 @@ Route::group([
     Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
     Route::any('project_action', 'ProjectsController@project_action')->name('project_action');
     Route::any('get_survey_link', 'ProjectsController@get_survey_link')->name('get_survey_link');
+
+    Route::any('respondent_attach_import/{project_id}', 'ProjectsController@respondent_attach_import')->name('respondent_attach_import');
  
 
     /* Respondents MENU*/
