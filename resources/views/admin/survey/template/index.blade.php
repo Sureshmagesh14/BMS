@@ -434,18 +434,25 @@ $getSurveys = App\Models\Survey::where(['folder_id'=>$page])->get();
                                                     <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--black ss-dashboard__list-item-property-value">{{round($completionRate)}} %</h3>
                                                     <a class="ss-button__link ss-button__link--underline color-grey-2 ss-dashboard-list-item__property-info">Completion Rate</a>
                                                 </div>
+                                               
                                         
                                             </div>
                                         </div>
                                         <?php $qus_id=0; ?>
                                         <div class="col-5">
                                             <div class="row no-gutters">
-                                                <div class="col-12 ss-dashboard__list-item-nav d-flex align-items-center justify-content-end flex-shrink-0">
+                                                <div class="col-6 ss-dashboard__list-item-nav d-flex align-items-center justify-content-end flex-shrink-0">
                                                     <div class="d-none d-md-flex align-items-center ss-dashboard-list-item__secondary-actions restore">
-                                                    <a href="{{route('survey.restore',$survey->id)}}" data-html="true"  class="ss-button__link bg-grey-6 p-3 rounded-md" >Restore
-                                                    </a>
+                                                        <a href="{{route('survey.restore',$survey->id)}}" data-html="true"  class="ss-button__link bg-grey-6 p-3 rounded-md" >Restore
+                                                        </a>
                                                     </div>
-                                                    
+                                                </div>
+                                                <div class="col-6 d-none d-md-flex flex-column align-items-center justify-content-center">
+                                                    <a class="ss-button__link bg-grey-6 p-4 rounded-md" spiketip-title="Edit Survey" spiketip-pos="top" href="{{route('survey.builder',[$survey->builderID,0])}}">
+                                                        <svg width="16" height="16" class="" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M12.728 6.68608L11.314 5.27208L2 14.5861V16.0001H3.414L12.728 6.68608ZM14.142 5.27208L15.556 3.85808L14.142 2.44408L12.728 3.85808L14.142 5.27208ZM4.242 18.0001H0V13.7571L13.435 0.322083C13.6225 0.134612 13.8768 0.0292969 14.142 0.0292969C14.4072 0.0292969 14.6615 0.134612 14.849 0.322083L17.678 3.15108C17.8655 3.33861 17.9708 3.59292 17.9708 3.85808C17.9708 4.12325 17.8655 4.37756 17.678 4.56508L4.243 18.0001H4.242Z" fill="#0D1B1E"></path>
+                                                        </svg>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
