@@ -372,6 +372,10 @@
             titles = "Un-Assign from Project";
             select_action("POST", all_id, project_id, "{{ route('project_unassign') }}", 'respondents_datatable', titles, "Are You Want To Un-Assign from Project", "Action");
         }
+        else if(select_value == 10){
+            titles = "Notify Respondent";
+            select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}", 'respondents_datatable', titles, "Are You Want Send Notification", "Action");
+        }
         else if(select_value == "delete_all"){
             multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects Deleted", 'respondents_datatable');
         }
