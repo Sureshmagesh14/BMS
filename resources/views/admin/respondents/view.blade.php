@@ -32,7 +32,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <span class="badge bg-primary">Primary</span>
+
                             <div class="mb-0">
 
                                 <div class="text-right">
@@ -42,6 +42,9 @@
                                         id="create">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                </div>
+                                <div class="col-md-12">
+                                    <h4><span class="badge badge-secondary">Basic</span></h4>
                                 </div>
                                 <table class="table">
                                     <tbody>
@@ -125,7 +128,7 @@
                                             <td>{{ $active_status_id }}</td>
                                         </tr>
                                         <tr>
-                                            <th>data Completion</th>
+                                            <th>Date of Completion</th>
                                             <td>{{ $data->data_completion_id }}</td>
                                         </tr>
                                         <tr>
@@ -170,7 +173,9 @@
                     <!-- end card -->
                     <div class="card">
                         <div class="card-body">
-                            <span class="badge bg-primary">Essential</span>
+                            <div class="col-md-12">
+                                <h4><span class="badge badge-secondary">Essential</span></h4>
+                            </div>
                             <div class="mb-0">
                                 @php
                                     $essential = isset($data->essential_details)
@@ -350,8 +355,13 @@
                                         <tr>
                                             <th>Metropolitan Area </th>
                                             @php
-                                                $metropolitan_area = isset($essential->metropolitan_area) ? $essential->metropolitan_area : null;
-                                                $metropolitan_area_name = \App\Models\RespondentProfile::metropolitan_area($province,$district);
+                                                $metropolitan_area = isset($essential->metropolitan_area)
+                                                    ? $essential->metropolitan_area
+                                                    : null;
+                                                $metropolitan_area_name = \App\Models\RespondentProfile::metropolitan_area(
+                                                    $province,
+                                                    $district,
+                                                );
                                             @endphp
                                             <td>{{ $metropolitan_area_name->area }}
                                             </td>
@@ -383,7 +393,9 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <span class="badge bg-primary">Extended</span>
+                            <div class="col-md-12">
+                                <h4><span class="badge badge-secondary">Extended</span></h4>
+                            </div>
                             <table border="1" id="children_table"
                                 class="children_table table table-bordered table-striped table-highlight">
                                 <colgroup>
@@ -474,17 +486,132 @@
                                     <tbody>
                                         <tr>
                                             <th>Which best describes the role in you business / organization?</th>
-                                            <td>{{ $business_org = isset($essential->business_org) ? $essential->business_org : null }}
+                                            @php
+                                                $business_org = isset($essential->business_org)
+                                                    ? $essential->business_org
+                                                    : null;
+                                                $business = '';
+                                                switch ($business_org) {
+                                                    case 'owner_director':
+                                                        $business = 'Owner / director (CEO, COO, CFO)';
+                                                        break;
+                                                    case 'senior_manager':
+                                                        $business = 'Senior Manager';
+                                                        break;
+                                                    case 'mid_level_manager':
+                                                        $business = 'Mid-Level Manager';
+                                                        break;
+                                                    case 'team_leader':
+                                                        $business = 'Team leader / Supervisor';
+                                                        break;
+                                                    case 'general_worker':
+                                                        $business = 'General Worker (e.g., Admin, Call Centre Agent, Nurse, Teacher,
+                                                Carer, etc.)';
+                                                        break;
+                                                    case 'worker_etc':
+                                                        $business =
+                                                            'Worker (e.g., Security Guard, Cleaner, Helper, etc.)';
+                                                        break;
+                                                    case 'other':
+                                                        $business = 'Other';
+                                                        break;
+                                                    default:
+                                                        $business = '';
+                                                        break;
+                                                }
+                                            @endphp
+                                            <td>{{ $business }}
                                             </td>
                                         </tr>
+                                        <select name="extended[org_company]" id="org_company"
+                                            data-select2-id="select2-data-org_company" tabindex="-1"
+                                            class="select2-hidden-accessible" aria-hidden="true">
+                                            <option value="">Select</option>
+                                            <option value="just_me">
+                                                Just Me (Sole Proprietor)</option>
+                                            <option value="2_5">
+                                                2-5 people</option>
+                                            <option value="6_10" selected=""
+                                                data-select2-id="select2-data-24-8w3v">
+                                                6-10 people</option>
+                                            <option value="11_20">
+                                                11-20 people</option>
+                                            <option value="21_30">
+                                                21-30 people</option>
+                                            <option value="31_50">
+                                                31-50 people</option>
+                                            <option value="51_100">
+                                                51-100 people</option>
+                                            <option value="101_250">
+                                                101-250 people</option>
+                                            <option value="251_500">
+                                                251-500 people</option>
+                                            <option value="500_1000">
+                                                500-1000 people</option>
+                                            <option value="more_than_1000">
+                                                More than 1000 people</option>
+                                        </select>
                                         <tr>
                                             <th>What is the number of people in your organisation / company?</th>
-                                            <td>{{ $org_company = isset($essential->org_company) ? $essential->org_company : null }}
+                                            @php
+                                                $org_company = isset($essential->org_company)
+                                                    ? $essential->org_company
+                                                    : null;
+                                                $org = '';
+                                                switch ($org_company) {
+                                                    case 'just_me':
+                                                        $org = 'Just Me (Sole Proprietor)';
+                                                        break;
+                                                    case '2_5':
+                                                        $org = '2-5 people';
+                                                        break;
+                                                    case '6_10':
+                                                        $org = '6-10 people';
+                                                        break;
+                                                    case '11_20':
+                                                        $org = '11-20 people';
+                                                        break;
+                                                    case '21_30':
+                                                        $org = '21-30 people';
+                                                        break;
+                                                    case '31_50':
+                                                        $org = '31-50 people';
+                                                        break;
+                                                    case '51_100':
+                                                        $org = '51-100 people';
+                                                        break;
+                                                    case '101_250':
+                                                        $org = '101-250 people';
+                                                        break;
+                                                    case '251_500':
+                                                        $org = '251-500 people';
+                                                        break;
+                                                    case '500_1000':
+                                                        $org = '500-1000 people';
+                                                        break;
+
+                                                    case 'more_than_1000':
+                                                        $org = 'More than 1000 people';
+                                                        break;
+                                                    default:
+                                                        $org = '';
+                                                        break;
+                                                }
+                                            @endphp
+                                            <td>{{ $org }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>Which bank do you bank with (which is your bank main)</th>
-                                            <td>{{ $bank_main_other = isset($essential->bank_main_other) ? $essential->bank_main_other : null }}
+                                            @php
+                                                $bank_main = isset($essential->bank_main)
+                                                    ? $essential->bank_main
+                                                    : null;
+                                                $bank_name = \App\Models\RespondentProfile::bank(
+                                                    $bank_main
+                                                );
+                                            @endphp
+                                            <td>{{ $bank_name->bank_name }}
                                             </td>
                                         </tr>
                                         <tr>
