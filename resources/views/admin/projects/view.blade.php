@@ -180,7 +180,7 @@
                         </div>
                         <!-- end card-body -->
                     </div>
-
+                  
                     <!-- Respondent start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -385,4 +385,33 @@
             toastr.info("OOPS! Select the action");
         }
     });
+</script>
+
+@if(Session::has('success'))
+<script>
+
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  	toastr.success("{{ session('success') }}");
+
+</script>
+@endif
+@if(Session::has('error'))
+<script>
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  		toastr.error("{{ session('error') }}");
+</script>
+@endif
+<script>
+    toastr.options = {
+  "closeButton": true,
+  "progressBar": true,
+  };
 </script>
