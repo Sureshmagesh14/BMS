@@ -7,9 +7,9 @@
     
     @if (str_contains(Request::url(), '/admin/projects'))
         <a href="#!" data-url="{{ route('attach_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
-            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attact Respondents') }}"
+            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attach Respondents') }}"
             class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-            Attact Respondents
+            Attach Respondents
         </a>
 
         <a href="#!" data-url="{{ route('import_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
@@ -30,6 +30,10 @@
         <select name="action_2" id="action_2"
             class="form-control respondents_datatable hided_option respondents_select_box" style="display:none;">
             <option value="">Select Action</option>
+            <optgroup label="Extras">
+                <option value="10">Notify All Respondents</option>
+                <option value="11">Un-Assign from Project</option>
+            </optgroup>
             <optgroup label="Respondent">
                 <option value="1">Status > Activate</option>
                 <option value="2">Status > Deactivate</option>
@@ -52,6 +56,14 @@
             {{-- <option value="8">Import - Old Respondents</option> --}}
             {{-- <option value="9">Updates imports with file</option> --}}
         {{-- </select> --}}
+
+
+        <div class="play-button-container ml-3">
+            <a class="play-button project_play_button">
+                <div class="play-button__triangle"></div>
+            </a>
+        </div>
+        
     </div>
 
     <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">

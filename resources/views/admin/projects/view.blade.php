@@ -349,4 +349,41 @@
 
         single_delete("POST", respondent, url, "Deattach Respondent", 'respondents_datatable');
     });
+
+    $(document).on('click', '.project_play_button', function(e) {
+        var all_id = [];
+        var project_id     = $("#project_id").val();
+        var values = $("#respondents_datatable tbody tr").map(function() {
+            var $this = $(this);
+          
+            if ($this.find("[type=checkbox]").is(':checked')) {
+                
+                console.log($this.find("[type=checkbox]").attr('id'));
+                all_id.push($this.find("[type=checkbox]").attr('id'));
+            }
+        }).get();
+
+        console.log(all_id);
+
+        select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $(".hided_option").val();
+       
+        alert(select_value);
+
+        if(select_value == 11){
+            titles = "Un-Assign from Project";
+            select_action("POST", all_id, project_id, "{{ route('project_unassign') }}", 'respondents_datatable', titles, "Are You Want To Un-Assign from Project", "Action");
+        }
+        else if(select_value == "delete_all"){
+            multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects Deleted", 'respondents_datatable');
+        }
+        else if(select_value == "export_all_project"){
+            
+        }
+        else if(select_value == "export_survey_response"){
+            
+        }
+        else{
+            toastr.info("OOPS! Select the action");
+        }
+    });
 </script>
