@@ -307,12 +307,15 @@
                                                     Other</option>
                                             </select>
                                             <input type="text" name="essential[employment_status_other]" id="employment_status_other" class="form-control"
-                                                @if($essential_details['employment_status'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                                @isset($essential_details['employment_status']) 
+                                                    @if($essential_details['employment_status'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                                @else
+                                                    style="display:none;margin-top: 10px;"
+                                                @endisset
                                                 placeholder="Enter Your Option" @isset($essential_details['employment_status_other']) value="{{$essential_details['employment_status_other']}}" @endisset>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
-                                            <label for="industry_my_company">Industry my company is in <span
-                                                    class="star_require">*</span></label>
+                                            <label for="industry_my_company">Industry my company is in <span class="star_require">*</span></label>
                                             <select name="essential[industry_my_company]" id="industry_my_company" required onchange="show_other(this, 'industry_my_company')">
                                                 <option value="">Select</option>
                                                 @foreach ($industry_company as $industry)
@@ -320,11 +323,19 @@
                                                         @isset($essential_details['industry_my_company']) @if ($essential_details['industry_my_company'] == $industry->id) selected @endif @endisset>
                                                         {{ $industry->company }}</option>
                                                 @endforeach
-                                                <option value="other" @if ($essential_details['industry_my_company'] == "other") selected @endif>Other</option>
+                                                <option value="other"
+                                                    @isset($essential_details['industry_my_company'])
+                                                        @if ($essential_details['industry_my_company'] == "other") selected @endif
+                                                    @endisset>Other
+                                                </option>
                                             </select>
 
                                             <input type="text" name="essential[industry_my_company_other]" id="industry_my_company_other" class="form-control" 
-                                                @if($essential_details['industry_my_company'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                                @isset($essential_details['industry_my_company'])
+                                                    @if($essential_details['industry_my_company'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                                @else
+                                                    style="display:none;margin-top: 10px;"
+                                                @endisset
                                                 placeholder="Enter Your Option" @isset($essential_details['industry_my_company_other']) value="{{$essential_details['industry_my_company_other']}}" @endisset>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
@@ -576,24 +587,24 @@
                                                 organization?</label>
                                             <select name="extended[business_org]" id="business_org" onchange="show_other(this, 'business_org')">
                                                 <option value="">Select</option>
-                                                <option value="eastern_cape"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'eastern_cape') selected @endif @endisset>
+                                                <option value="owner_director"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'owner_director') selected @endif @endisset>
                                                     Owner / director (CEO, COO, CFO)</option>
-                                                <option value="free_state"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'free_state') selected @endif @endisset>
+                                                <option value="senior_manager"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'senior_manager') selected @endif @endisset>
                                                     Senior Manager</option>
-                                                <option value="gauteng"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'gauteng') selected @endif @endisset>
+                                                <option value="mid_level_manager"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'mid_level_manager') selected @endif @endisset>
                                                     Mid-Level Manager</option>
-                                                <option value="kwazulu"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'kwazulu') selected @endif @endisset>
+                                                <option value="team_leader"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'team_leader') selected @endif @endisset>
                                                     Team leader / Supervisor</option>
-                                                <option value="limpopo"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'limpopo') selected @endif @endisset>
+                                                <option value="general_worker"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'general_worker') selected @endif @endisset>
                                                     General Worker (e.g., Admin, Call Centre Agent, Nurse, Teacher,
                                                     Carer, etc.)</option>
-                                                <option value="mpumalanga"
-                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'mpumalanga') selected @endif @endisset>
+                                                <option value="worker_etc"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'worker_etc') selected @endif @endisset>
                                                     Worker (e.g., Security Guard, Cleaner, Helper, etc.)</option>
                                                 <option value="other"
                                                     @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'other') selected @endif @endisset>
@@ -601,7 +612,11 @@
                                             </select>
                                             <br>
                                             <input type="text" name="extended[business_org_other]" id="business_org_other" class="form-control" placeholder="Enter Your Option"
-                                                @if($extended_details['business_org'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                                @isset($extended_details['business_org'])
+                                                    @if($extended_details['business_org'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                                @else
+                                                    style="display:none;margin-top: 10px;"
+                                                @endisset
                                                 @isset($extended_details['business_org_other']) value="{{$extended_details['business_org_other']}}" @endisset>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
@@ -660,7 +675,11 @@
                                             </select>
                                             <br>
                                             <input type="text" name="extended[bank_main_other]" id="bank_main_other" class="form-control" placeholder="Enter Your Option"
-                                            @if($extended_details['bank_main'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                            @isset($extended_details['bank_main'])
+                                                @if($extended_details['bank_main'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                            @else
+                                                style="display:none;margin-top: 10px;"
+                                            @endisset
                                             @isset($extended_details['bank_main_other']) value="{{$extended_details['bank_main_other']}}" @endisset>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
@@ -706,7 +725,11 @@
                                             </select>
                                             <br>
                                             <input type="text" name="extended[home_lang_other]" id="home_lang_other" class="form-control" placeholder="Enter Your Option"
-                                            @if($extended_details['home_lang'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                            @isset($extended_details['home_lang'])
+                                                @if($extended_details['home_lang'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                            @else
+                                                style="display:none;margin-top: 10px;"
+                                            @endisset
                                             @isset($extended_details['home_lang_other']) value="{{$extended_details['home_lang_other']}}" @endisset>
                                         </div>
                                     </div>
@@ -939,7 +962,7 @@
                         '<select name="vehicle[year_{{ $vehicle_key }}][]" id="year_{{ $vehicle_key }}" class="form-control vehicle_year">'+
                             '<option value="">Select Year</option>'+
                             '@for ($year_drop = date("Y"); $year_drop >= $get_year; $year_drop--)'+
-                                '<option value="{{$year_drop}}" @if($year_drop == $vehicle["year"]) selected @endif>{{$year_drop}}</option>'+
+                                '<option value="{{$year_drop}}">{{$year_drop}}</option>'+
                             '@endfor'+
                         '</select>' +
                         '</td>' +

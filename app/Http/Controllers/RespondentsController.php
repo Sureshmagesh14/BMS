@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Models\RespondentProfile;
 class RespondentsController extends Controller
 {
     /**
@@ -130,7 +131,20 @@ class RespondentsController extends Controller
     {
 
         try {
-            $data = Respondents::find($id);
+            $data = Respondents::leftJoin('respondent_profile', function ($join) {
+                $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
+            })
+            ->where('respondents.id',$id)
+            ->first([
+                'respondents.*',
+                'respondent_profile.basic_details',
+                'respondent_profile.essential_details',
+                'respondent_profile.extended_details',
+                'respondent_profile.children_data',
+                'respondent_profile.vehicle_data',
+                'respondent_profile.updated_at',
+            ]);
+          
             return view('admin.respondents.view', compact('data'));
 
         } catch (Exception $e) {

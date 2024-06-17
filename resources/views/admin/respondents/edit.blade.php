@@ -158,17 +158,22 @@
     @php
         $refcode = \App\Models\Respondents::randomPassword(); #function call
     @endphp
+     @if ($respondents->referral_code != null)
+        @php $share_link=$respondents->referral_code; @endphp
+    @else
+        @php $share_link=$refcode; @endphp
+    @endif
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Referral Code
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="" name="" value="{{ $refcode }}"
+            <input type="text" class="form-control" id="" name="" value="{{ URL::to('/').'?r='.$share_link }}"
                 disabled>
             <input type="hidden" class="form-control" id="referral_code" name="referral_code"
-                value="{{ $respondents->referral_code }}">
+                value="{{ URL::to('/').'?r='.$share_link }}">
         </div>
     </div>
-
+    
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Accepted Terms *
         </label>

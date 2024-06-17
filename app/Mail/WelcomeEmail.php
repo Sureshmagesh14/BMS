@@ -43,6 +43,15 @@ class WelcomeEmail extends Mailable
                 ->subject($this->data['subject'])
                 ->with(['project' => $this->data['project'],'name' => $this->data['name']]);
 
+        }elseif ($this->data['type'] == 'project_notification') {
+            //completed
+
+            return $this->view('mail.notify_survey')
+                ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->replyTo(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->subject($this->data['subject'])
+                ->with(['project' => $this->data['project'],'name' => $this->data['name'],'reward' => $this->data['reward'],'survey_duration' => $this->data['survey_duration']]);
+
         }elseif ($this->data['type'] == 'reward_approve') {
             //completed
 

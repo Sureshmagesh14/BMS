@@ -1,9 +1,9 @@
 <div class="text-right">
     @if (str_contains(Request::url(), '/admin/respondents'))
         <a href="#!" data-url="{{ route('attach_projects', ['respondent_id' => $respondent_id]) }}" data-size="xl"
-            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attact Respondents') }}"
+            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attach Respondents') }}"
             class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-            Attact Projects
+            Attach Projects
         </a>
     @else
         <a href="#!" data-url="{{ route('projects.create') }}" data-size="xl" data-ajax-popup="true"
