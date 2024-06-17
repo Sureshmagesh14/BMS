@@ -22,11 +22,13 @@ button#back_to_profile {
 </head>
 
 <body>
-<a class="back_to_profile" href="{{ route('user.dashboard') }}">
+@if($survey->survey_type == 'profile')
+    <a class="back_to_profile" href="{{ route('user.dashboard') }}">
         <button id="back_to_profile">
             <span class="ss-primary-action-btn__copy">Back to Profile</span>
         </button>
     </a>
+    @endif
     <div class="surveysparrow-survey-container--classic-form welcome-page">
         <div
             class="ss-fp-section surveysparrow-survey-form-wrapper--centered ss-survey-background d-flex fx-column fx-jc--center fx-ai--center">

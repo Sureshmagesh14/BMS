@@ -164,11 +164,13 @@ if(isset($bg)){
  ?>
 <body style="{{$stylebackground}}">
     <div class="surveybackground">
+    @if($survey->survey_type == 'profile')
         <a class="back_to_profile" href="{{ route('user.dashboard') }}">
             <button id="back_to_profile">
                 <span class="ss-primary-action-btn__copy">Back to Profile</span>
             </button>
         </a>
+        @endif
         <?php //echo "<pre>";  print_r($survey); ?>
 
 <?php $surveyCompleted =   \App\Models\SurveyResponse::where(['survey_id'=>$survey->id,'response_user_id'=>\Auth::user()->id])->where('answer','!=','thankyou_submitted')->get();  

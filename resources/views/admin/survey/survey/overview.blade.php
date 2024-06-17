@@ -82,7 +82,7 @@
                     </div>
                     <div class="desc-content-1">
                         <div class="grid grid-nogutter row">
-                            <div class="col-3 wmb--md">
+                            <div class="col-2 wmb--md">
                                 <div class="fx-row fx-ai--start" style="font-family: &quot;Source Sans Pro&quot;;"><svg width="24" height="24" viewBox="0 0 90 78" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M80.5217 1.60869H9.47826C5.34813 1.60869 2 4.95682 2 9.08695V68.913C2 73.0432 5.34813 76.3913 9.47826 76.3913H80.5217C84.6519 76.3913 88 73.0432 88 68.913V9.08695C88 4.95682 84.6519 1.60869 80.5217 1.60869Z" stroke="#63686F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
                                         <path d="M2 20.3043H88" stroke="#63686F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -105,12 +105,19 @@
                                 }else{
                                     $started_count = $survey->started_count;
                                 }
-                                if($survey->completed_count > 0){
+                                if($survey->completed_count > 0 && $started_count!=0){
                                         $completionRate = ($survey->completed_count / $started_count) * 100; 
                                 }else{
                                     $completionRate = 0;
-                                }  ?>
-                            <div class="col-3 wmb--md">
+                                } 
+                               
+                                $partially_completed =(int)$started_count - (int)$survey->completed_count;
+                                if($survey->started_count == 0){
+                                    $survey->completed_count = 0;
+                                    $partially_completed =0;
+                                }
+                                ?>
+                            <div class="col-2 wmb--md">
                                 <div class="fx-row fx-ai--start" style="font-family: &quot;Source Sans Pro&quot;;"><svg height="24" width="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M7.60594 19.1941C5.9894 18.7726 4.5126 17.9322 3.32449 16.7578C2.13637 15.5834 1.27896 14.1165 0.83872 12.5049C0.398485 10.8934 0.390997 9.19424 0.817011 7.57888C1.24303 5.96353 2.08748 4.48907 3.26519 3.30423C4.44291 2.11939 5.91225 1.26607 7.52501 0.830319C9.13777 0.394573 10.8369 0.391817 12.4511 0.822328C14.0652 1.25284 15.5373 2.10139 16.7189 3.28241C17.9005 4.46342 18.7497 5.93513 19.1809 7.54909" stroke="#63686F" stroke-linecap="round"></path>
                                         <path d="M6.8365 14.5002C6.18401 14.041 5.63925 13.4453 5.24001 12.7545C4.84077 12.0637 4.59661 11.2943 4.52448 10.4997C4.45234 9.70507 4.55396 8.90428 4.82227 8.15287C5.09059 7.40146 5.51918 6.71742 6.07831 6.14822C6.63744 5.57902 7.31372 5.13829 8.06022 4.8566C8.80672 4.57492 9.60557 4.45902 10.4013 4.51696C11.1971 4.5749 11.9708 4.80529 12.6686 5.19213C13.3664 5.57898 13.9717 6.11302 14.4425 6.75721" stroke="#63686F" stroke-linecap="round"></path>
@@ -125,6 +132,19 @@
                                 </div>
                             </div>
                             <div class="col-3 wmb--md">
+                                <div class="fx-row fx-ai--start" style="font-family: &quot;Source Sans Pro&quot;;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18 6.99902L11 16.499L6 12.499" stroke="#63686F" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M12 23.499C18.3513 23.499 23.5 18.3503 23.5 11.999C23.5 5.64775 18.3513 0.499023 12 0.499023C5.64873 0.499023 0.5 5.64775 0.5 11.999C0.5 18.3503 5.64873 23.499 12 23.499Z" stroke="#63686F" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <div class="fx-colum ml--lg">
+                                        <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--grey mb--xs">Partially Completed</h3>
+                                        <div class="fx-row fx-ai--end">
+                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: &quot;Source Serif Pro&quot;;">{{$partially_completed}}</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2 wmb--md">
                                 <div class="fx-row fx-ai--start" style="font-family: &quot;Source Sans Pro&quot;;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M18 6.99902L11 16.499L6 12.499" stroke="#63686F" stroke-linecap="round" stroke-linejoin="round"></path>
                                         <path d="M12 23.499C18.3513 23.499 23.5 18.3503 23.5 11.999C23.5 5.64775 18.3513 0.499023 12 0.499023C5.64873 0.499023 0.5 5.64775 0.5 11.999C0.5 18.3503 5.64873 23.499 12 23.499Z" stroke="#63686F" stroke-linecap="round" stroke-linejoin="round"></path>
