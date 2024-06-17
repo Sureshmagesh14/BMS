@@ -180,7 +180,7 @@
                         </div>
                         <!-- end card-body -->
                     </div>
-
+                  
                     <!-- Respondent start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -349,4 +349,73 @@
 
         single_delete("POST", respondent, url, "Deattach Respondent", 'respondents_datatable');
     });
+
+    $(document).on('click', '.user_play_button', function(e) {
+        var all_id = [];
+        var project_id     = $("#project_id").val();
+        var values = $("#respondents_datatable tbody tr").map(function() {
+            var $this = $(this);
+          
+            if ($this.find("[type=checkbox]").is(':checked')) {
+                
+                console.log($this.find("[type=checkbox]").attr('id'));
+                all_id.push($this.find("[type=checkbox]").attr('id'));
+            }
+        }).get();
+
+
+        select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $("#action_2").val();
+       
+        // alert(select_value);
+
+        if(select_value == 11){
+            titles = "Un-Assign from Project";
+            select_action("POST", all_id, project_id, "{{ route('project_unassign') }}", 'respondents_datatable', titles, "Are You Want To Un-Assign from Project", "Action");
+        }
+        else if(select_value == 10){
+            titles = "Notify Respondent";
+            select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}", 'respondents_datatable', titles, "Are You Want Send Notification", "Action");
+        }
+        else if(select_value == "delete_all"){
+            multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects Deleted", 'respondents_datatable');
+        }
+        else if(select_value == "export_all_project"){
+            
+        }
+        else if(select_value == "export_survey_response"){
+            
+        }
+        else{
+            toastr.info("OOPS! Select the action");
+        }
+    });
+</script>
+
+@if(Session::has('success'))
+<script>
+
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  	toastr.success("{{ session('success') }}");
+
+</script>
+@endif
+@if(Session::has('error'))
+<script>
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  		toastr.error("{{ session('error') }}");
+</script>
+@endif
+<script>
+    toastr.options = {
+  "closeButton": true,
+  "progressBar": true,
+  };
 </script>
