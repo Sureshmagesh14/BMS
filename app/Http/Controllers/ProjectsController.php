@@ -621,6 +621,9 @@ class ProjectsController extends Controller
             throw new Exception($e->getMessage());
         }   
     }
+    public function project_unassign(Request $request){
+        dd($request);
+    }
 
     public function projects_multi_delete(Request $request){
         try {
