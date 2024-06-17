@@ -78,6 +78,13 @@ class RespondentProfile extends Model
         return $metropolitan_area;
     }
 
-    
+    public static function bank($bank_id){
+        
+        $banks = DB::table('banks')->whereNull('deleted_at')->where('id',$bank_id)->where('active',1)->first();
 
+        return $banks;
+    }
+
+    
+   
 }
