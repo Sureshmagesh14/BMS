@@ -5,7 +5,7 @@ use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Projects;
 use App\Models\Project_respondent;
-
+use Illuminate\Support\Facades\Mail;
 use App\Models\Users;
 use App\Models\Respondents;
 use DB;
@@ -624,8 +624,66 @@ class ProjectsController extends Controller
             throw new Exception($e->getMessage());
         }   
     }
+
+    public function notify_respondent(Request $request){
+       
+        try {
+            $resp_id = $request->all_id;       
+        
+            foreach ($resp_id as $key => $id) {
+                $project_id = $request->value;
+
+                $proj = Projects::where('id',$project_id)->first();
+                $resp = Respondents::where('id',$id)->first();
+
+                //email starts
+                if($proj->name!='')
+                {
+                    $to_address = $resp->email;
+                    //$to_address = 'hemanathans1@gmail.com';
+                    $resp_name = $resp->name.' '.$resp->surname;
+                    $proj_name = $proj->name;
+                    $survey_duration = $proj->survey_duration;
+                    $reward = $proj->reward;
+
+                    $data = ['subject' => 'UPCOMING MARKET RESEARCH - DO YOU QUALIFY?','name' => $resp_name,'project' => $proj_name,'reward' => $reward,'survey_duration' => $survey_duration,'type' => 'project_notification'];
+                
+                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                }
+                //email ends
+            }
+            return response()->json([
+                'text_status' => true,
+                'status' => 200,
+                'message' => 'Project Notification Sent Successfully.',
+            ]);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public function project_unassign(Request $request){
-        dd($request);
+       
+        try {
+            $resp_id = $request->all_id;       
+        
+            foreach ($resp_id as $key => $id) {
+                $project_id = $request->value;
+
+                if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $id)->exists()){
+                    Project_respondent::where('project_id', $project_id)->where('respondent_id', $id)->delete();
+                }
+            }
+            return response()->json([
+                'text_status' => true,
+                'status' => 200,
+                'message' => 'Project Un-Assigned Successfully.',
+            ]);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     public function projects_multi_delete(Request $request){
