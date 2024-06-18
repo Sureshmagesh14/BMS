@@ -712,7 +712,7 @@
                                                     Tswana</option>
                                                 <option value="venda"
                                                     @isset($extended_details['home_lang']) @if ($extended_details['home_lang'] == 'venda') selected @endif @endisset>
-                                                    Venḓa</option>
+                                                    Venda</option>
                                                 <option value="xhosa"
                                                     @isset($extended_details['home_lang']) @if ($extended_details['home_lang'] == 'xhosa') selected @endif @endisset>
                                                     Xhosa</option>
