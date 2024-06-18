@@ -77,7 +77,8 @@ class ProjectsController extends Controller
                'user'=> 'required',
                'status_id'=> 'required',
                'type_id'=> 'required',
-               'survey_duration'=> 'required',
+                'project_name_resp'=> 'required',
+            //    'survey_duration'=> 'required',
                'published_date'=> 'required',
                'access_id'=> 'required',
 
@@ -104,8 +105,9 @@ class ProjectsController extends Controller
                 $projects->status_id = $request->input('status_id');
                 $projects->description = $request->input('description');
                 $projects->description1 = $request->input('description1');
-                $projects->description2 = $request->input('description2');
-                $projects->survey_duration = $request->input('survey_duration');
+                // $projects->description2 = $request->input('description2');
+                // $projects->survey_duration = $request->input('survey_duration');
+                $projects->project_name_resp = $request->input('project_name_resp');
                 $projects->published_date = $request->input('published_date');
                 $projects->closing_date = $request->input('closing_date');
                 $projects->access_id = $request->input('access_id');
@@ -222,8 +224,9 @@ class ProjectsController extends Controller
                 'name'=> 'required',
                 'user'=> 'required',
                 'status_id'=> 'required',
+                'project_name_resp'=> 'required',
                 'type_id'=> 'required',
-                'survey_duration'=> 'required',
+                // 'survey_duration'=> 'required',
                 'published_date'=> 'required',
                 'access_id'=> 'required',
             ]);
@@ -252,8 +255,9 @@ class ProjectsController extends Controller
                     $projects->status_id = $request->input('status_id');
                     $projects->description = $request->input('description');
                     $projects->description1 = $request->input('description1');
-                    $projects->description2 = $request->input('description2');
-                    $projects->survey_duration = $request->input('survey_duration');
+                    $projects->project_name_resp = $request->input('project_name_resp');
+                    // $projects->description2 = $request->input('description2');
+                    // $projects->survey_duration = $request->input('survey_duration');
                     $projects->published_date = $request->input('published_date');
                     $projects->closing_date = $request->input('closing_date');
                     $projects->access_id = $request->input('access_id');
@@ -359,16 +363,14 @@ class ProjectsController extends Controller
                         return $all_data->client;
                     })  
                     ->addColumn('name', function ($all_data) {
-                        return $all_data->description;
+                        return $all_data->name;
                     }) 
                     ->addColumn('creator', function ($all_data) {
                         $get_name=Projects::get_user_name($all_data->user_id);
                         return $get_name->name.''.$get_name->lname;
                     })
                     ->addColumn('type', function ($all_data) {
-                        if($all_data->type_id==1){
-                            return 'Pre-Screener';
-                        }else if($all_data->type_id==2){
+                        if($all_data->type_id==2){
                             return 'Pre-Task';
                         }else if($all_data->type_id==3){
                             return 'Paid  survey';
@@ -385,7 +387,12 @@ class ProjectsController extends Controller
                         return $all_data->project_link;
                     })
                     ->addColumn('created', function ($all_data) {
-                        return date("M j, Y, g:i A", strtotime($all_data->created_at));
+                        if(isset($all_data->created_at)){
+                            $created_at=date("Y-m-d, g:i A", strtotime($all_data->created_at));
+                        }else{
+                            $created_at='-';
+                        }
+                        return $created_at;
                     })
                     ->addColumn('status', function ($all_data) {
                         if($all_data->status_id==1){
