@@ -69,6 +69,7 @@ Route::group([
     'middleware' => 'admin',
 ], function () {
     Route::any('dashboard', 'Auth\AdminLoginController@admin_dashboard')->name('admin.dashboard');
+    Route::any('get_activity_data', 'Auth\AdminLoginController@get_activity_data')->name('get_activity_data');
     Route::get('signout', 'Auth\AdminLoginController@signOut')->name('signout');
     Route::any('export_index', 'ExportController@export_index')->name('admin.export');
     Route::post('export_all', 'ExportController@export_all')->name('export_all');
