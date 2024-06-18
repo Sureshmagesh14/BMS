@@ -911,5 +911,37 @@ class ProjectsController extends Controller
         }
         
     }
+
+    
+    public function projects_seach_result(Request $request){
+        try {
+            $searchValue = $request['q'];
+            
+            if($request->filled('q')){
+                $respondents_data = Respondents::search($searchValue)
+                ->query(function ($query) {
+                    $query->where('deleted_at', '=', NULL);
+                })
+                ->orderBy('id','ASC')
+                ->get();
+            }
+
+            $respondents = array();
+            if(count($respondents_data) > 0){
+                foreach($respondents_data as $resp){
+                    $setUser = [
+                        'id' => $resp->id,
+                        'name' => $resp->name . ' - ' . $resp->surname,
+                    ];
+                    $respondents[] = $setUser;
+                }
+            }
+
+            echo json_encode($respondents);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
     
 }

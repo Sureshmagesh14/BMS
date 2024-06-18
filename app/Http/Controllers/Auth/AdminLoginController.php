@@ -219,14 +219,39 @@ class AdminLoginController extends Controller
                         ->where('user_events.type', 'respondent');
                 }, 'deactCount');
     
+           
             // Apply filters based on DataTables search input
-            if (!empty($request->input('search.value'))) {
-                $searchValue = $request->input('search.value');
-                $query->where(function ($query) use ($searchValue) {
-                    $query->where('u.name', 'like', '%' . $searchValue . '%')
-                          ->orWhere('u.surname', 'like', '%' . $searchValue . '%');
+            // if (!empty($request->input('year')) || !empty($request->input('month'))) {
+            //     $year = $request->input('year');
+            //     $month = $request->input('month');
+            //     $query->where(function ($query) use ($year,$month) {
+            //         $query->orWhere('user_events.year','=',$year)
+            //                   ->orWhere('user_events.month','=',$month);
+            //     });
+            // }
+
+            if ($request->filled('year') || $request->filled('month')) {
+                $year = $request->input('year');
+                $month = $request->input('month');
+                
+                $query->whereExists(function ($subQuery) use ($year, $month) {
+                    $subQuery->select(DB::raw(1))
+                             ->from('user_events')
+                             ->whereColumn('user_events.user_id', 'u.id')
+                             ->where(function ($query) use ($year, $month) {
+                                 if (!empty($year)) {
+                                     $query->whereYear('user_events.created_at', '=', $year);
+                                 }
+                                 if (!empty($month)) {
+                                     $query->orWhereMonth('user_events.created_at', '=', $month);
+                                 }
+                             });
                 });
             }
+            
+
+              
+        
     
             // Count total records before pagination
             $totalRecords = $query->count();

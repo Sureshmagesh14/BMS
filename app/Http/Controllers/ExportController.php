@@ -609,7 +609,8 @@ class ExportController extends Controller
             }
             else if ($module == 'Rewards') {
                 $respondents = $request->respondents;
-
+                $projects = $request->projects;
+                
                 if($type_method == 'Individual'){
 
                     $all_datas = Respondents::leftJoin('rewards', function ($join) {
@@ -627,12 +628,28 @@ class ExportController extends Controller
                         'respondents.email',
                         'rewards.status_id',
                     ]);
-                }
-                else{
+                }else if($type_method == 'All'){
                     $all_datas = Respondents::leftJoin('rewards', function ($join) {
                         $join->on('rewards.respondent_id', '=', 'respondents.id');
                     })
                     ->get([
+                        'respondents.id',
+                        'respondents.name',
+                        'respondents.surname',
+                        'respondents.mobile',
+                        'respondents.whatsapp',
+                        'respondents.email',
+                        'rewards.status_id',
+                    ]);
+                }
+                else{
+                    $all_datas = Respondents::leftJoin('rewards', function ($join) {
+                        $join->on('rewards.respondent_id', '=', 'respondents.id');
+                    });
+                    if($projects != ""){
+                        $all_datas = $all_datas->whereIn('rewards.project_id', [$projects]);
+                    }
+                    $all_datas = $all_datas->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -686,6 +703,171 @@ class ExportController extends Controller
 
                 $fileName = $module . "_" . date('ymd') . "." . $type;
 
+            }else if ($module == 'Survey') {
+                
+                $sheet->getColumnDimension('Y')->setAutoSize(true);
+                $sheet->getColumnDimension('Z')->setAutoSize(true);
+                $sheet->getColumnDimension('AA')->setAutoSize(true);
+                $sheet->getColumnDimension('AB')->setAutoSize(true);
+                $sheet->getColumnDimension('AC')->setAutoSize(true);
+                $sheet->getColumnDimension('AD')->setAutoSize(true);
+                $sheet->getColumnDimension('AE')->setAutoSize(true);
+                $sheet->getColumnDimension('AF')->setAutoSize(true);
+                $sheet->getColumnDimension('AG')->setAutoSize(true);
+                $sheet->getColumnDimension('AH')->setAutoSize(true);
+                $sheet->getColumnDimension('AI')->setAutoSize(true);
+                $sheet->getColumnDimension('AJ')->setAutoSize(true);
+                $sheet->getColumnDimension('AK')->setAutoSize(true);
+                $sheet->getColumnDimension('AL')->setAutoSize(true);
+                $sheet->getColumnDimension('AM')->setAutoSize(true);
+                $sheet->getColumnDimension('AN')->setAutoSize(true);
+                $sheet->getColumnDimension('AO')->setAutoSize(true);
+                $sheet->getColumnDimension('AP')->setAutoSize(true);
+                
+                $sheet->setCellValue('A1', 'PID');
+                $sheet->setCellValue('B1', 'First Name');
+                $sheet->setCellValue('C1', 'Last Name');
+                $sheet->setCellValue('D1', 'Mobile Number');
+                $sheet->setCellValue('E1', 'WA Number');
+                $sheet->setCellValue('F1', 'Email');
+                $sheet->setCellValue('G1', 'Age');
+                $sheet->setCellValue('H1', 'Relationship status');
+                $sheet->setCellValue('I1', 'Ethnic Group / Race');
+                $sheet->setCellValue('J1', 'Gender');
+                $sheet->setCellValue('K1', 'Highest Education Level');
+                $sheet->setCellValue('L1', 'Employment Status');
+                $sheet->setCellValue('M1', 'Industry my company is in');
+                $sheet->setCellValue('N1', 'Job Title');
+                $sheet->setCellValue('O1', 'Personal Income per month');
+                $sheet->setCellValue('P1', 'HHI per month');
+                $sheet->setCellValue('Q1', 'Province');
+                $sheet->setCellValue('R1', 'Suburb');
+                $sheet->setCellValue('S1', 'Metropolitan Area');
+                $sheet->setCellValue('T1', 'No. of people living in your household');
+                $sheet->setCellValue('U1', 'Number of children');
+                $sheet->setCellValue('V1', 'Number of vehicles');
+                $sheet->setCellValue('W1', 'Which best describes the role in you business / organization?');
+                $sheet->setCellValue('X1', 'What is the number of people in your organisation / company?');
+                $sheet->setCellValue('Y1', 'Which bank do you bank with (which is your bank main)');
+                $sheet->setCellValue('Z1', 'Home Language');
+                $sheet->setCellValue('AA1', 'Child 1 - Birth Year');
+                $sheet->setCellValue('AB1', 'Child 1 - Gender');
+                $sheet->setCellValue('AC1', 'Child 2 - Birth Year');
+                $sheet->setCellValue('AD1', 'Child 2 - Gender');
+                $sheet->setCellValue('AE1', 'Child 3 - Birth Year');
+                $sheet->setCellValue('AF1', 'Child 3 - Gender');
+                $sheet->setCellValue('AE1', 'Child 4 - Birth Year');
+                $sheet->setCellValue('AF1', 'Child 4 - Gender');
+                $sheet->setCellValue('AG1', 'Car 1 - Brand');
+                $sheet->setCellValue('AH1', 'Car 1 - Model');
+                $sheet->setCellValue('AI1', 'Car 2 - Brand');
+                $sheet->setCellValue('AJ1', 'Car 2 - Model');
+                $sheet->setCellValue('AK1', 'Car 3 - Brand');
+                $sheet->setCellValue('AL1', 'Car 3 - Model');
+                $sheet->setCellValue('AM1', 'Car 4 - Brand');
+                $sheet->setCellValue('AN1', 'Car 4 - Model');
+                $sheet->setCellValue('AO1', 'Opted in');
+                $sheet->setCellValue('AP1', 'Last Updated');
+
+                $sheet->getStyle('A1:AP1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                $sheet->getStyle('A1:AP1')->applyFromArray($styleArray);
+
+                $rows = 2;
+                $i = 1;
+              
+                foreach ($all_datas as $all_data) {
+                    $basic = json_decode($all_data->basic_details);
+                    $essential = json_decode($all_data->essential_details);
+                    $extended  = json_decode($all_data->extended_details);
+
+                    $sheet->setCellValue('A' . $rows, $all_data->id);
+                    $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
+                    $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
+                    $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
+                    $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
+                    $sheet->setCellValue('F' . $rows, $basic->email ?? '');
+
+                    $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+
+                    $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
+                    $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
+                   
+                    $p_income = DB::table('income_per_month')->where('id',$essential->personal_income_per_month)->first();
+                    $h_income = DB::table('income_per_month')->where('id',$essential->household_income_per_month)->first();
+                    $personal_income = ($p_income != null) ? $p_income->income : '-';
+                    $household_income = ($h_income != null) ? $h_income->income : '-';
+
+                    $sheet->setCellValue('G' . $rows, $year);
+                    $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
+                    $sheet->setCellValue('I' . $rows, $essential->ethnic_group ?? '');
+                    $sheet->setCellValue('J' . $rows, $essential->gender ?? '');
+                    $sheet->setCellValue('K' . $rows, $essential->education_level ?? '');
+                    $sheet->setCellValue('L' . $rows, $employment_status ?? '');
+                    $sheet->setCellValue('M' . $rows, $industry_my_company ?? '');
+                    $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
+                    $sheet->setCellValue('O' . $rows, $personal_income ?? '');
+                    $sheet->setCellValue('P' . $rows, $household_income ?? '');
+
+                    $state = DB::table('state')->where('id', $essential->province)->first();
+                    $district = DB::table('district')->where('id', $essential->suburb)->first();
+
+                    $get_state = ($state != null) ? $state->state : '-';
+                    $get_district = ($district != null) ? $district->district : '-';
+
+                    $sheet->setCellValue('Q' . $rows, $get_state ?? '');
+                    $sheet->setCellValue('R' . $rows, $get_district ?? '');
+                    $sheet->setCellValue('S' . $rows, $essential->metropolitan_area ?? '');
+                    $sheet->setCellValue('T' . $rows, $essential->no_houehold ?? '');
+                    $sheet->setCellValue('U' . $rows, $essential->no_children ?? '');
+                    $sheet->setCellValue('V' . $rows, $essential->no_vehicle ?? '');
+
+                    $business_org = ($extended->business_org == 'other') ? $extended->business_org_other : $extended->business_org;
+                    $home_lang    = ($extended->home_lang == 'other') ? $extended->home_lang_other : $extended->home_lang;
+
+                    $banks = DB::table('banks')->where('id',$extended->bank_main)->where('active',1)->first();
+                    $bank_main = ($extended->bank_main == 'other') ? $extended->bank_main_other : $banks->bank_name;
+                        
+                    $sheet->setCellValue('W' . $rows, $business_org ?? '');
+                    $sheet->setCellValue('X' . $rows, $extended->org_company ?? '');
+                    $sheet->setCellValue('Y' . $rows, $bank_main ?? '');
+                    $sheet->setCellValue('Z' . $rows, $home_lang ?? '');
+
+                    $children_data = json_decode($all_data->children_data);
+                    $vehicle_data = json_decode($all_data->vehicle_data);
+
+                    $new_alpha = 'AA';
+                    foreach($children_data as $children){
+                        $sheet->setCellValue($new_alpha.$rows, $children->date ?? '');
+                        $new_alpha++;
+                        $sheet->setCellValue($new_alpha.$rows, $children->gender ?? '');
+                        $new_alpha++;
+                    }
+
+                    $vehicle_alpha = 'AG';
+                    foreach($vehicle_data as $vehicle){
+                        $get_vehicle = DB::table('vehicle_master')->where('id',$vehicle->brand)->first();
+                        $vehicle_name = ($get_vehicle != null) ? $get_vehicle->vehicle_name : '-';
+                        $sheet->setCellValue($vehicle_alpha.$rows, $vehicle_name ?? '');
+                        $vehicle_alpha++;
+                        $sheet->setCellValue($vehicle_alpha.$rows, $vehicle->model ?? '');
+                        $vehicle_alpha++;
+                    }
+
+                    $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
+                    $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
+                   
+                    $sheet->setCellValue('AO' . $rows, $opted_in);
+                    $sheet->setCellValue('AP' . $rows, $updated_at);
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':AP' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':AP' . $rows)->getAlignment()->setIndent(1);
+                }
+                $rows++;
+                $i++;
+            
+
+                $fileName = $module . "_" . $resp_type . "_" . date('ymd') . "." . $type;
             }
             else if ($module == 'Projects') {
                 $all_datas = Projects::leftJoin('users', function ($join) {
