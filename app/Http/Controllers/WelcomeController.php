@@ -9,6 +9,7 @@ use App\Models\Respondents;
 use App\Models\RespondentProfile;
 use App\Models\Rewards;
 use App\Models\Users;
+use App\Models\Projects;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -173,7 +174,7 @@ class WelcomeController extends Controller
                 $percent2 = $resp_datas->essential_details;
                 $json_array  = json_decode($percent2, true);
                 $tot_count  = count($json_array);
-
+                
                 $fill_count =0;
                 foreach ($json_array as $key => $value) {
                     if (!strlen($value)) {
@@ -196,7 +197,7 @@ class WelcomeController extends Controller
                 $percent3 = $resp_datas->extended_details;
                 $json_array  = json_decode($percent3, true);
                 $tot_count  = count($json_array);
-
+              
                 $fill_count =0;
                 foreach ($json_array as $key => $value) {
                     if (!strlen($value)) {
@@ -234,6 +235,7 @@ class WelcomeController extends Controller
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', $id)
                 ->where('projects.closing_date', '<', Carbon::now())->get();
+            
 
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
@@ -281,6 +283,42 @@ class WelcomeController extends Controller
 
             return view('user.user-dashboard', compact('data', 'get_respondent', 'get_completed_survey', 'percentage','completed'));
             //}
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    
+    public function share_project(Request $request)
+    {
+        try {
+            $id=$request->id;
+            $resp_id = Session::get('resp_id');
+            $resp_name = Session::get('resp_name');
+            $get_res_phone = Respondents::select('whatsapp')->where('id', Session::get('resp_id'))->first();
+
+            $data = Respondents::find($resp_id);
+          
+            $res = DB::table('projects')->select('projects.id', 'survey.builderID','projects.access_id')
+                    ->join('survey', 'survey.id', 'projects.survey_link')
+                    ->where('projects.id',$id)->first();
+        
+            $ref_code = $data->referral_code;
+
+            if($res->access_id==2){
+                //access_id 2 assigned
+                if(Project_respondent::where('project_id', $id)->where('respondent_id', $resp_id)->exists()){
+                    
+                }else{
+                    return redirect('dashboard')->with('successMsg', 'Project not assigned');
+                }
+            }
+            
+            // if($request->user()->profile_completion_id==0){
+            //     return view('user.update-profile');
+            // }else{
+            return view('user.user-share_project', compact('data', 'ref_code', 'get_res_phone','res'));
+            //}
+
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

@@ -63,11 +63,11 @@
                 <input type="checkbox" class="select_all" id="inlineForm-customCheck">
             </th>
             <th>#</th>
-            <th>Number/Code</th>
-            <th>Client</th>
-            <th>Name</th>
+            <th>Project Number</th>
+            <th>Client Name</th>
+            <th>Project Name</th>
             <th>Creator</th>
-            <th>Type</th>
+            <th>Survey Type</th>
             <th>Reward Amount</th>
             <th>Project Link</th>
             <th>Created</th>
