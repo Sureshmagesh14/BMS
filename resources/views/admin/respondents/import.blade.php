@@ -1,3 +1,7 @@
+
+<style>
+    label#import_excel-error { width: 100%; }
+</style>
 <form method="POST" action="{{ route('respondent_attach_import',['project_id' => $project_id]) }}" id="attach_respondents_form" class="validation" enctype="multipart/form-data">
     @csrf
 
@@ -9,15 +13,18 @@
             <input type="hidden" name="project_id" id="project_id" value="@if($projects != null) {{ $projects->id }} @endif">
         </div>
     </div>
-
+   
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Respondents *</label>
         <div class="col-md-10">
             <input type="hidden" id="project_id" value="{{$project_id}}" name="project_id">
-            <input type="file" name="file" id="import_excel" required>
+            <input type="file" name="file" id="import_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
         </div>
     </div>
-
+    <span>Note: Upload a CSV of your Respondents Information. The following fields are required in the
+        CSV: <strong>Profile ID</strong></span><br>
+        <a href="{{ asset('public/import/respondents/resp import csv.csv') }}">Click to
+            download sample CSV file.</a>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary" id="attach_respondents_button">Import Respondent</button>
