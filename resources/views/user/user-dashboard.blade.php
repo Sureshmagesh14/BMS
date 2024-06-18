@@ -79,6 +79,9 @@
             </div>
         @endif
 
+        @if(Session::has('successMsg'))
+    <div class="alert alert-danger"> {{ Session::get('successMsg') }}</div>
+  @endif
 
         <div class="alert alert-danger bs-alert-old-docs text-center alert_message" style="display: none;"></div>
         <div class="row justify-content-center py-5 m-auto">
@@ -194,9 +197,17 @@
                                             <td> Profile Incomple </td>
                                         @else
                                             @if ($get_link != null)
-                                                <td><a target="_blank"
-                                                        href="{{ url('survey/view', $get_link->builderID) }}"
-                                                        class="btn btn-yellow">START</a></td>
+                                                <td>
+
+                                                    <div class="social-icons text-md-end text-lg-end text-sm-start">
+                                                    
+                                                    <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #005dd5;"></i></a>
+                                                    @if($res->access_id==1)
+                                                    <a href="{{ url('share_project', $res->id) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #005dd5;"></i></a>
+                                                    @endif
+                                                    </div>
+
+                                                    </td>
                                             @else
                                                 <td>No Survey</td>
                                             @endif
