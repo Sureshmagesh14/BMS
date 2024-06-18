@@ -65,6 +65,18 @@
                                             <option value="Cashout">Cashout</option>
                                             <option value="Team Activity">Team Activity</option>
                                             <option value="Internal Reports">Internal Reports</option>
+                                            <option value="Survey">Survey</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row methods">
+                                    <label class="col-md-2 col-form-label">Choose</label>
+                                    <div class="col-md-10">
+                                        <select name="methods" id="methods" class="form-control">
+                                            <option value="">Select</option>
+                                            <option value="respondents_type">Respondents</option>
+                                            <option value="projects_type">Projects</option>
                                         </select>
                                     </div>
                                 </div>
@@ -144,6 +156,15 @@
                                             <label class="custom-control-label" for="All">All</label>
                                         </div>
 
+                                    </div>
+                                </div>
+
+                                <div class="form-group row projects">
+                                    <label class="col-md-2 col-form-label">Projects</label>
+                                    <div class="col-md-10">
+
+                                        <input class="form-control" type="text" id="projects"
+                                            name="projects[]" value="{{ request()->get('q') }}">
                                     </div>
                                 </div>
 
@@ -249,6 +270,7 @@
                     $(".show_resp_status").hide();
                     $(".show_resp_type").hide();
                     $(".show_user").hide();
+                    $(".projects").hide();
                     $(".report_type").hide();
                     $(".respondents").hide();
                     $(".show_year").hide();
@@ -256,6 +278,7 @@
                     $(".show_role").hide();
                     $(".show_action").hide();
                     $(".show_pro_type").hide();
+                    $(".methods").hide();
                     $("#module").val("");
                     $("#year").val("");
                     $("#month").val("");
@@ -268,6 +291,19 @@
                         }
                     });
 
+                    
+                    $('#methods').on('change', function() {
+                        if (this.value == 'projects_type') {
+                            $(".projects").show();
+                            $(".report_type").hide();
+                            $(".respondents").hide();
+                        } else{
+                            $(".projects").hide();
+                            $(".report_type").show();
+                            $(".respondents").show();
+                        }
+                    });
+
                     $('#module').on('change', function() {
                         if (this.value == 'Respondents') {
                             $(".show_year").hide();
@@ -276,12 +312,14 @@
                             $(".show_action").hide();
                             $(".show_resp").show();
                             $(".show_resp_status").hide();
+                            $(".projects").hide();
                             $(".show_resp_type").hide();
                             $(".show_pro_type").hide();
                             $(".show_user").hide();
                             $(".respondents").show();
                             $(".report_type").show();
                             $(".date_range").show();
+                            $(".methods").hide();
                         } else if (this.value == 'Respondents info') {
                             $(".show_year").hide();
                             $(".show_month").hide();
@@ -294,32 +332,38 @@
                             $(".report_type").show();
                             $(".respondents").hide();
                             $(".date_range").hide(); 
+                            $(".projects").hide();
                             $(".show_pro_type").hide();
+                            $(".methods").hide();
 
                         } else if ((this.value == 'Cashout')) {
                             $(".show_year").hide();
                             $(".show_month").hide();
                             $(".show_role").hide();
                             $(".show_action").hide();
+                            $(".projects").hide();
                             $(".show_resp").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
                             $(".respondents").show();
                             $(".report_type").show();
+                            $(".methods").hide();
                             $(".show_pro_type").hide();
                             $(".date_range").show();
                         } else if (this.value == 'Rewards') {
+                            $(".methods").show();
                             $(".show_year").hide();
                             $(".show_month").hide();
+                            $(".report_type").hide();
                             $(".show_role").hide();
                             $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
-                            $(".respondents").show();
-                            $(".report_type").show(); 
+                            $(".respondents").hide();
+                            $(".projects").hide();
                             $(".show_pro_type").hide();
                             $(".date_range").hide();
                         } else if (this.value == 'Team Activity') {
@@ -335,6 +379,8 @@
                             $(".show_pro_type").hide();
                             $(".report_type").show();
                             $(".date_range").show();
+                            $(".projects").hide();
+                            $(".methods").hide();
                         } else if (this.value == 'Internal Reports') {
                             $(".show_year").show();
                             $(".show_month").show();
@@ -348,8 +394,11 @@
                             $(".report_type").hide();
                             $(".show_pro_type").show();
                             $(".date_range").hide();
+                            $(".methods").hide();
+                            $(".projects").hide();
                         } else {
                             $(".show_user").hide();
+                            $(".projects").hide();
                             $(".show_year").hide();
                             $(".show_month").hide();
                             $(".show_role").hide();
@@ -363,6 +412,7 @@
                             $(".show_month").hide();
                             $(".show_pro_type").show();
                             $(".date_range").show();
+                            $(".methods").hide();
                         }
                     });
 
@@ -376,6 +426,24 @@
                         deleteText: "&#215;",
                         minChars: 2,
                         tokenLimit: 20,
+                        zindex: 9999,
+                        animateDropdown: false,
+                        resultsLimit: 20,
+                        deleteText: "&times;",
+                        preventDuplicates: true,
+                        theme: "bootstrap"
+                    });
+
+                    $("#projects").tokenInput("{{ route('project_seach_result') }}", {
+                        propertyToSearch: "name",
+                        tokenValue: "id",
+                        tokenDelimiter: ",",
+                        hintText: "{{ __('Search Project... By(ID, Name, Client)') }}",
+                        noResultsText: "{{ __('Project not found.') }}",
+                        searchingText: "{{ __('Searching...') }}",
+                        deleteText: "&#215;",
+                        minChars: 2,
+                        tokenLimit: 1,
                         zindex: 9999,
                         animateDropdown: false,
                         resultsLimit: 20,
