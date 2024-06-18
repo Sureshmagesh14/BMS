@@ -2,7 +2,7 @@
     <input type="hidden" id="id" name="id" value="{{ $projects->id }}">
     @csrf
     <div class="form-group row">
-        <label for="example-text-input" class="col-md-2 col-form-label">Name / Code *</label>
+        <label for="example-text-input" class="col-md-2 col-form-label">Project Number *</label>
         <div class="col-md-10">
             <input type="text" class="form-control" id="number" name="number" value="{{ $projects->number }}"
                 required>
@@ -10,7 +10,7 @@
     </div>
 
     <div class="form-group row">
-        <label for="example-text-input" class="col-md-2 col-form-label">Client *
+        <label for="example-text-input" class="col-md-2 col-form-label">Client Name *
         </label>
         <div class="col-md-10">
             <input type="text" class="form-control" id="client" name="client" value="{{ $projects->client }}"
@@ -20,7 +20,7 @@
 
 
     <div class="form-group row">
-        <label for="example-text-input" class="col-md-2 col-form-label">Name *</label>
+        <label for="example-text-input" class="col-md-2 col-form-label">Project Name *</label>
         <div class="col-md-10">
             <input type="text" class="form-control" id="name" name="name" value="{{ $projects->name }}"
                 required>
@@ -43,16 +43,16 @@
 
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Type *
+        <label for="example-search-input" class="col-md-2 col-form-label">Survey Type *
         </label>
         <div class="col-md-10">
             <select id="type_id" name="type_id" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
-                <option @if ($projects->type_id == 1) selected @endif value="1">
+                {{-- <option @if ($projects->type_id == 1) selected @endif value="1">
                     Pre-Screener
-                </option>
+                </option> --}}
                 <option @if ($projects->type_id == 2) selected @endif value="2">
                     Pre-Task
                 </option>
@@ -95,6 +95,16 @@
     </div>
 
     <div class="form-group row">
+        <label for="example-search-input" class="col-md-2 col-form-label">Project Name for Respondents *
+
+        </label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="project_name_resp" name="project_name_resp"
+                value="{{ $projects->project_name_resp }}" required>
+        </div>
+    </div>
+
+    <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Status *
         </label>
         <div class="col-md-10">
@@ -119,7 +129,7 @@
     </div>
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Description
+        <label for="example-search-input" class="col-md-2 col-form-label">Email Subject
         </label>
         <div class="col-md-10">
             <textarea class="form-control" name="description" id="description">{{ $projects->description }}</textarea>
@@ -134,7 +144,9 @@
         </div>
     </div>
 
-    <div class="form-group row">
+ 
+
+    {{-- <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Email Description 2 (Pre-task only)
 
         </label>
@@ -142,7 +154,7 @@
             <input type="text" class="form-control" id="description2" name="description2"
                 value="{{ $projects->description2 }}">
         </div>
-    </div>
+    </div> --}}
 
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Survey Duration (Minutes) *</label>
@@ -186,7 +198,7 @@
                     Shareable
                 </option>
                 <option @if ($projects->access_id == 2) selected @endif value="2">
-                    Assigned
+                    Unique
                 </option>
             </select>
         </div>

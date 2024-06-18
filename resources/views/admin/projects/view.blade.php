@@ -63,11 +63,16 @@
                                             <td>{{$data->id}}</td>
                                         </tr>
                                         <tr>
-                                            <th>Number / Code</th>
+                                            <th>Project Number</th>
                                             <td>{{$data->number}}</td>
                                         </tr>
+
                                         <tr>
-                                            <th>Client</th>
+                                            <th>Project Name</th>
+                                            <td>{{$data->name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Client Name</th>
                                             <td>{{$data->client}}</td>
                                         </tr>
                                         <tr>
@@ -78,18 +83,16 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Type</th>
+                                            <th>Survey Type</th>
                                             <td>
-                                                @if($data->status_id==1)   
-                                                Pre-Screener
-                                                @elseif($data->status_id==2)  
+                                                @if($data->status_id==2)  
                                                 Pre-Task
                                                 @elseif($data->status_id==3)  
                                                 Paid survey
                                                 @elseif($data->status_id==4)  
                                                 Unpaid survey
-                                                
-                                                @endif</td>
+                                                @endif
+                                            </td>
                                         </tr>
 
                                       
@@ -98,9 +101,15 @@
                                             <td>{{$data->reward}}</td>
                                         </tr>
                                         <tr>
-                                            <th>Project Link</th>
-                                            <td>{{$data->project_link}}</td>
+                                            <th>Project Name for Respondents</th>
+                                            <td>{{$data->project_name_resp}}</td>
                                         </tr>
+
+                                        <tr>
+                                            <th>Email Description 1</th>
+                                            <td>{{$data->description1}}</td>
+                                        </tr>
+
                                         <tr>
                                             <th>Status</th>
                                             <td>
@@ -116,7 +125,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Description</th>
+                                            <th>Email Subject</th>
                                             <td>{{$data->description}}</td>
                                         </tr>
                                         <tr>
@@ -124,15 +133,15 @@
                                             <td>{{$data->description1}}</td>
                                         </tr>
                             
-                                        <tr>
+                                        {{-- <tr>
                                             <th>Email Description 2 (Pre-task only)</th>
                                             <td>{{$data->description2}}</td>
-                                        </tr>
+                                        </tr> --}}
                                         
-                                        <tr>
+                                        {{-- <tr>
                                             <th>Survey Duration (Minutes)</th>
                                             <td>{{$data->survey_duration}}</td>
-                                        </tr>
+                                        </tr> --}}
                                         
                                         <tr>
                                             <th>Live Date</th>
@@ -146,7 +155,7 @@
                                             <th>Accessibility</th>
                                             <td>
                                                 @if($data->access_id==1) Shareable
-                                                @else Assigned @endif
+                                                @else Unique @endif
                                             </td>
                                         </tr>
                                         <tr>
