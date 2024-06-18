@@ -46,11 +46,15 @@ Route::any('opt_out', 'WelcomeController@opt_out')->middleware(['auth', 'verifie
 Route::any('cashout_sent', 'WelcomeController@cashout_sent')->middleware(['auth', 'verified'])->name('cashout_sent');
 Route::any('cashout_form', 'WelcomeController@cashout_form')->middleware(['auth', 'verified'])->name('cashout_form');
 Route::any('cashouts', 'WelcomeController@user_cashout')->middleware(['auth', 'verified'])->name('user.cashouts');
+Route::any('change_profile', 'WelcomeController@change_profile')->middleware(['auth', 'verified'])->name('user.change_profile');
+Route::post('image_update', 'WelcomeController@image_update')->middleware(['auth', 'verified'])->name('user.image_update');
 
 Route::any('updateprofile_wizard', 'ProfileController@updateprofile_wizard')->middleware(['auth', 'verified'])->name('updateprofile_wizard');
 Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'verified'])->name('get_suburb');
 Route::any('get_area', 'ProfileController@get_area')->middleware(['auth', 'verified'])->name('get_area');
 Route::any('profile_save', 'ProfileController@profile_save')->middleware(['auth', 'verified'])->name('profile_save');
+
+Route::any('createFile', 'WelcomeController@createFile')->name('createFile');
 
 /* USERS */
 Route::middleware('auth')->group(function () {
@@ -120,6 +124,13 @@ Route::group([
     Route::any('project_attach_store', 'ProjectsController@project_attach_store')->name('project_attach_store');
     Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
     Route::any('project_action', 'ProjectsController@project_action')->name('project_action');
+    Route::any('project_unassign', 'ProjectsController@project_unassign')->name('project_unassign');    
+    Route::any('notify_respondent', 'ProjectsController@notify_respondent')->name('notify_respondent');    
+    
+    Route::any('get_survey_link', 'ProjectsController@get_survey_link')->name('get_survey_link');
+
+    Route::any('respondent_attach_import/{project_id}', 'ProjectsController@respondent_attach_import')->name('respondent_attach_import');
+ 
 
     /* Respondents MENU*/
     Route::resource('respondents', 'RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
@@ -137,6 +148,11 @@ Route::group([
     Route::any('deattach_respondent/{respondent_id}/{project_id}', 'RespondentsController@deattach_respondent')->name('deattach_respondent');
     Route::any('user_respondent_id_check', 'RespondentsController@user_respondent_id_check')->name('user_respondent_id_check');
     Route::any('get_user_survey', 'RespondentsController@get_user_survey')->name('get_user_survey');
+    Route::any('respondents_multi_delete', 'RespondentsController@respondents_multi_delete')->name('respondents_multi_delete');
+    Route::any('get_branch_code', 'RespondentsController@get_branch_code')->name('get_branch_code');
+    Route::any('import_respondents/{project_id}', 'RespondentsController@import_respondents')->name('import_respondents');
+    Route::any('upload_respondent', 'RespondentsController@upload_respondent')->name('upload_respondent');
+    
 
     /* Tags (or) Pannels MENU*/
     Route::resource('tags', 'TagsController')->name('index', 'tags.index')->name('destroy', 'tags.destroy')
@@ -181,11 +197,14 @@ Route::group([
     Route::get('get_all_networks', 'NetworkController@get_all_networks')->name('get_all_networks');
     Route::any('networks_multi_delete', 'NetworkController@networks_multi_delete')->name('networks_multi_delete');
 
+    
+
     /* Contents MENU*/
     Route::resource('contents', 'ContentsController')->name('index', 'contents.index')->name('destroy', 'contents.destroy')
         ->name('create', 'contents.create')->name('show', 'contents.show')->name('update', 'contents.update');
     Route::get('contents_datatable', 'ContentsController@contents_datatable')->name('contents_datatable');
     Route::any('contents_multi_delete', 'ContentsController@contents_multi_delete')->name('contents_multi_delete');
+    Route::any('check_content_duplicate', 'ContentsController@check_content_duplicate')->name('check_content_duplicate');
 
     Route::get('inner_module', 'CommonAdminController@inner_module')->name('inner_module');
 

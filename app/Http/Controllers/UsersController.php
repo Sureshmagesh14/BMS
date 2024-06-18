@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Illuminate\Support\Facades\Hash;
+use Config;
 class UsersController extends Controller
 {
      /**
@@ -256,9 +257,18 @@ class UsersController extends Controller
             if ($request->ajax()) {
 
                 $token = csrf_token();
-            
+                $role = $request->role;
+                $status = $request->status;
                 
-                $all_datas = Users::withoutTrashed()->latest()->get();
+                $all_datas = Users::withoutTrashed();
+                if($role != null){
+                    $all_datas->where('users.role_id',$role);
+                }
+
+                if($status != null){
+                    $all_datas->where('users.status_id',$status);
+                }
+                $all_datas=$all_datas->latest()->get();
                 
                 return Datatables::of($all_datas)
                 ->addColumn('select_all', function ($all_data) {
@@ -283,7 +293,7 @@ class UsersController extends Controller
                 })  
                 ->addColumn('role_id', function ($all_data) {
                     if($all_data->role_id==1){
-                        return 'Admin';
+                        return 'Super User';
                     }else if($all_data->role_id==2){
                         return 'User';
                     }else if($all_data->role_id==3){
@@ -294,7 +304,8 @@ class UsersController extends Controller
                    
                 })
                 ->addColumn('share_link', function ($all_data) {
-                    return $all_data->share_link;
+                    $url= Config::get('constants.url').'/?r='.$all_data->share_link;
+                    return '<a rel="noopener" target="_blank" href="'.$url.'">'.$url.'</a>';
                 })  
                 ->addColumn('status_id', function ($all_data) {
                    
@@ -310,20 +321,6 @@ class UsersController extends Controller
                     $edit_route = route("users.edit",$all_data->id);
                     $view_route = route("users.show",$all_data->id);
 
-                    // $design = '<div class="">
-                    //     <div class="btn-group mr-2 mb-2 mb-sm-0 gap">
-                    //         <a href="'.$view_route.'" class="rounded btn btn-primary waves-light waves-effect">
-                    //             <i class="fa fa-eye"></i>
-                    //         </a>
-                    //         <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                    //             data-bs-original-title="Edit Project" class="rounded btn btn-primary waves-light waves-effect">
-                    //             <i class="fa fa-edit"></i>
-                    //         </a>
-                    //         <button type="button" id="delete_users" data-id="'.$all_data->id.'" class="rounded btn btn-primary waves-light waves-effect">
-                    //             <i class="far fa-trash-alt"></i>
-                    //         </button>
-                    //     </div>
-                    // </div>';
 
                     $design = '<div class="col-md-2">
                             <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"

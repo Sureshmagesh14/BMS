@@ -1,6 +1,6 @@
 <div class="text-right">
-    <div class="btn-group mr-2" role="group" aria-label="First group" >
-        <select name="action_2" id="action_2" class="form-control cashout_table hided_option cashout_select_box" style="display:none;">
+    <div class="btn-group mr-2 cashout_table hided_option" role="group" aria-label="First group" style="display: none;">
+        <select name="action_2" id="action_2" class="form-control cashout_select_box">
             <option value="">Select Action</option>
             <optgroup label="Cash Out">
                 <option value="5">EFT > Approve & Process</option>
@@ -9,17 +9,17 @@
                 <option value="0">Status > Failed</option>
                 <option value="delete_all">Delete Cash Outs</option>
             </optgroup>
-            <optgroup label="Standalone Actions">
-                <option value="export">Export - Airtime Cash Outs</option>
+            {{-- <optgroup label="Standalone Actions">
+                <option value="export">Export - Airtime Cash Outs</option> --}}
                 {{-- <option value="7">Airtime - Status > Complete by Import</option> --}}
-            </optgroup>
+            {{-- </optgroup> --}}
         </select>
 
-        <select name="action_1" id="action_1" class="form-control cashout_table show_hided_option cashout_select_box">
+        {{-- <select name="action_1" id="action_1" class="form-control cashout_table show_hided_option cashout_select_box">
             <option value="">Select Action</option>
             <option value="export">Export - Airtime Cash Outs</option>
             {{-- <option value="7">Airtime - Status > Complete by Import</option> --}}
-        </select>
+        {{-- </select> --}}
 
         <div class="play-button-container ml-3">
             <a class="play-button cashout_play_button">

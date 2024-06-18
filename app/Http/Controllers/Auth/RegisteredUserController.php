@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Session;
+use App\Models\Contents;
 
 class RegisteredUserController extends Controller
 {
@@ -24,8 +25,10 @@ class RegisteredUserController extends Controller
      * Display the registration view.
      */
     public function create(): View
+    
     {
-        return view('auth.register');
+        $content=Contents::where('type_id',2)->first();
+        return view('auth.register',compact('content'));
     }
 
     /**
@@ -43,7 +46,6 @@ class RegisteredUserController extends Controller
             'whatsapp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . Respondents::class],
             'date_of_birth' => ['required', 'string', 'max:255'],
-            'id_passport' => ['required', 'string', 'max:255'],
             'password_register' => ['required', Rules\Password::defaults()->min(6)],
         ]);
         $ref_code = substr(md5(time()), 0, 8);
@@ -63,14 +65,18 @@ class RegisteredUserController extends Controller
 
         $id = DB::getPdo()->lastInsertId();
         //email starts
-        // $data = ['message' => 'Welcome','id'=>$id];
-      
-        // if ($id != null) {
-        //     $get_email = Respondents::where('id', $id)->first();
+        
+        if ($id != null) {
 
-        //     Mail::to($get_email->email)->send(new WelcomeEmail($data));
-        // }
-        //email ends
+            $get_email = Respondents::where('id', $id)->first();
+            $to_address = $get_email->email;
+            //$to_address = 'hemanathans1@gmail.com';
+
+            $data = ['subject' => 'New account created','type' => 'new_register'];
+
+            Mail::to($to_address)->send(new WelcomeEmail($data));
+        }
+        //email ends 
         if (session()->has('refer_id')) {
 
             $referred_respondent_id = session()->get('refer_id');
@@ -80,6 +86,16 @@ class RegisteredUserController extends Controller
                 'referred_respondent_id' => $referred_respondent_id,
             ]);
             Session::forget('refer_id');
+        }
+        if (session()->has('u_refer_id')) {
+
+            $referred_respondent_id = session()->get('u_refer_id');
+
+            $userInfo = Respondent_referrals::create([
+                'respondent_id' => $user->id,
+                'user_id' => $referred_respondent_id,
+            ]);
+            Session::forget('u_refer_id');
         }
 
         event(new Registered($user));

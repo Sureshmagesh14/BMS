@@ -28,7 +28,7 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">RSA ID / Passport </label>
         <div class="col-md-10">
-            <input type="date" class="form-control" id="id_passport" name="id_passport"
+            <input type="name" class="form-control" id="id_passport" name="id_passport"
                 value="{{ $respondents->id_passport }}">
         </div>
     </div>
@@ -39,7 +39,10 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Mobile Number
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="mobile" name="mobile" value="{{ $respondents->mobile }}" maxlength="16">
+            <div class="input-group">
+                <div class="input-group-text">+27</div>
+                <input type="text" class="form-control" id="mobile" name="mobile" value="{{ $respondents->mobile }}"  maxlength="16">
+            </div>
         </div>
     </div>
 
@@ -48,8 +51,10 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Whatsapp Number
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="whatsapp" name="whatsapp"
-                value="{{ $respondents->whatsapp }}" maxlength="16">
+            <div class="input-group">
+                <div class="input-group-text">+27</div>
+                <input type="text" class="form-control" id="whatsapp" name="whatsapp" value="{{ $respondents->whatsapp }}"  maxlength="16">
+            </div>
         </div>
     </div>
 
@@ -68,8 +73,16 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Bank Name
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="bank_name" name="bank_name"
-                value="{{ $respondents->bank_name }}">
+            <select id="bank_name" name="bank_name" class="w-full form-control form-select" required>
+                <option value="" selected="selected" disabled="disabled">
+                    Choose an option
+                </option>
+                @foreach ($banks as $bank)
+                <option value="{{$bank->id}}" @if($bank->id==$respondents->bank_name) selected @endif>
+                    {{$bank->bank_name}}
+                </option>
+                @endforeach
+            </select>
         </div>
     </div>
 
@@ -77,8 +90,8 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Branch Code
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="branch_code" name="branch_code"
-                value="{{ $respondents->branch_code }}">
+            <input type="text" class="form-control" id="branch_code"  value="{{ $respondents->branch_code }}" readonly>
+            <input type="hidden" class="form-control" id="branch" name="branch_code"  value="{{ $respondents->branch_code }}">
         </div>
     </div>
 
@@ -127,10 +140,10 @@
     </div>
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Password *
+        <label for="example-search-input" class="col-md-2 col-form-label">Password
         </label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="password" name="password">
         </div>
     </div>
 
@@ -145,17 +158,22 @@
     @php
         $refcode = \App\Models\Respondents::randomPassword(); #function call
     @endphp
+     @if ($respondents->referral_code != null)
+        @php $share_link=$respondents->referral_code; @endphp
+    @else
+        @php $share_link=$refcode; @endphp
+    @endif
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Referral Code
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="" name="" value="{{ $refcode }}"
+            <input type="text" class="form-control" id="" name="" value="{{ URL::to('/').'?r='.$share_link }}"
                 disabled>
             <input type="hidden" class="form-control" id="referral_code" name="referral_code"
-                value="{{ $respondents->referral_code }}">
+                value="{{ URL::to('/').'?r='.$share_link }}">
         </div>
     </div>
-
+    
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Accepted Terms *
         </label>
@@ -245,5 +263,26 @@
                 }
             });
         }
+    });
+    $("#bank_name").change(function() {
+        var bank_id = this.value;
+        $.ajax({
+
+            type: "GET",
+            url: "{{ route('get_branch_code') }}",
+            data: {
+                "bank_id": bank_id,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                $("#branch_code").val(data.repsonse);
+                $("#branch").val(data.repsonse);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
     });
 </script>

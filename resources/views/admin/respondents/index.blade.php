@@ -72,6 +72,8 @@
                 "ordering": true,
                 "processing": true,
                 "serverSide": true,
+                "iDisplayLength": 100,
+                "lengthMenu": [[100, "All", 50, 25], [100, "All", 50, 25]],     
                 dom: 'lfrtip',
                 "ajax": {
                     "url": "{{ route('get_all_respond') }}",
@@ -141,6 +143,6 @@
                 }
             }).get();
 
-            multi_delete("POST", all_id, "{{ route('networks_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
+            multi_delete("POST", all_id, "{{ route('respondents_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
         });
     </script>

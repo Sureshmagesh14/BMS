@@ -28,9 +28,18 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
+                            
                             <div class="mb-0">
                                 <div class="text-right">
 
+                                    <div class="btn-group mr-2" >
+                                      
+                                        <a href="#!" data-url="{{ route('projects.edit', $data->id) }}" data-size="xl"
+                                            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="Edit Projects"
+                                            data-bs-toggle="tooltip" id="create">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
                                     <div class="btn-group mr-2" role="group" aria-label="First group" >
                                       
                                         <input type="hidden" name="project_id" id="project_id" value="{{$data->id}}">
@@ -63,12 +72,27 @@
                                         </tr>
                                         <tr>
                                             <th>Creator</th>
-                                            <td>{{$data->user_id}}</td>
+                                            <td>
+                                                @php $name_r=\App\Models\Projects::get_user_name($data->user_id); @endphp
+                                                {{$name_r->name}}   {{$name_r->lname}}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th>Type</th>
-                                            <td>{{$data->user_id}}</td>
+                                            <td>
+                                                @if($data->status_id==1)   
+                                                Pre-Screener
+                                                @elseif($data->status_id==2)  
+                                                Pre-Task
+                                                @elseif($data->status_id==3)  
+                                                Paid survey
+                                                @elseif($data->status_id==4)  
+                                                Unpaid survey
+                                                
+                                                @endif</td>
                                         </tr>
+
+                                      
                                         <tr>
                                             <th>Reward Amount (R)</th>
                                             <td>{{$data->reward}}</td>
@@ -80,10 +104,15 @@
                                         <tr>
                                             <th>Status</th>
                                             <td>
-                                                @if($data->status_id==1) Pending
-                                                @elseif($data->status_id==2) Active
-                                                @elseif($data->status_id==3) Completed
-                                                @elseif($data->status_id==4) Cancelled @endif
+                                                @if($data->status_id==1) 
+                                                Pending
+                                                @elseif($data->status_id==2) 
+                                                Active
+                                                @elseif($data->status_id==3) 
+                                                Completed
+                                                @elseif($data->status_id==4) 
+                                                Cancelled 
+                                                @endif
                                             </td>
                                         </tr>
                                         <tr>
@@ -122,7 +151,11 @@
                                         </tr>
                                         <tr>
                                             <th>Survey Link</th>
-                                            <td>{{$data->survey_link}}</td>
+                                            @php $survey_link=\App\Models\Projects::get_survey($data->survey_link); @endphp
+                                         
+                                            <td><a title="{{$survey_link->title ?? ''}}" class="btn btn-yellow" target="_blank"
+                                                href="{{ url('survey/view', $survey_link->builderID ?? '') }}">{{url('survey/view', $survey_link->builderID ?? '') }}</a>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -147,7 +180,7 @@
                         </div>
                         <!-- end card-body -->
                     </div>
-
+                  
                     <!-- Respondent start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -316,4 +349,73 @@
 
         single_delete("POST", respondent, url, "Deattach Respondent", 'respondents_datatable');
     });
+
+    $(document).on('click', '.user_play_button', function(e) {
+        var all_id = [];
+        var project_id     = $("#project_id").val();
+        var values = $("#respondents_datatable tbody tr").map(function() {
+            var $this = $(this);
+          
+            if ($this.find("[type=checkbox]").is(':checked')) {
+                
+                console.log($this.find("[type=checkbox]").attr('id'));
+                all_id.push($this.find("[type=checkbox]").attr('id'));
+            }
+        }).get();
+
+
+        select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $("#action_2").val();
+       
+        // alert(select_value);
+
+        if(select_value == 11){
+            titles = "Un-Assign from Project";
+            select_action("POST", all_id, project_id, "{{ route('project_unassign') }}", 'respondents_datatable', titles, "Are You Want To Un-Assign from Project", "Action");
+        }
+        else if(select_value == 10){
+            titles = "Notify Respondent";
+            select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}", 'respondents_datatable', titles, "Are You Want Send Notification", "Action");
+        }
+        else if(select_value == "delete_all"){
+            multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects Deleted", 'respondents_datatable');
+        }
+        else if(select_value == "export_all_project"){
+            
+        }
+        else if(select_value == "export_survey_response"){
+            
+        }
+        else{
+            toastr.info("OOPS! Select the action");
+        }
+    });
+</script>
+
+@if(Session::has('success'))
+<script>
+
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  	toastr.success("{{ session('success') }}");
+
+</script>
+@endif
+@if(Session::has('error'))
+<script>
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  		toastr.error("{{ session('error') }}");
+</script>
+@endif
+<script>
+    toastr.options = {
+  "closeButton": true,
+  "progressBar": true,
+  };
 </script>

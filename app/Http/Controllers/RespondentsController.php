@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Respondents;
 use App\Models\Projects;
+use App\Models\Banks;
 use App\Models\Project_respondent;
 use DB;
 use Exception;
@@ -16,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Models\RespondentProfile;
 class RespondentsController extends Controller
 {
     /**
@@ -36,8 +38,8 @@ class RespondentsController extends Controller
     public function create()
     {
         try {
-
-            $returnHTML = view('admin.respondents.create')->render();
+            $banks=Banks::where('active','=',1)->orderBy('bank_name', 'ASC')->get();
+            $returnHTML = view('admin.respondents.create',compact('banks'))->render();
 
             return response()->json(
                 [
@@ -92,14 +94,23 @@ class RespondentsController extends Controller
                 $respondents->save();
                 $respondents->id;
                 app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
+                $ref=array('respondent_id'=>$respondents->id,'user_id'=>Auth::guard('admin')->user()->id,'created_at'=>date("Y-m-d H:i:s A"));
+                DB::table('respondent_referrals')->insert($ref);
+         
+
                 //email starts
-                // $data = $respondents->id;
-                // if($data!=null){
-                //     $get_email=DB::where('id',$data)->first();
-                    
-                //     Mail::to($get_email->email)->send(new WelcomeEmail($data));
-                // }
-                //email ends
+                $id =$respondents->id;
+                if ($id != null) {
+
+                    $get_email = Respondents::where('id', $id)->first();
+                    $to_address = $get_email->email;
+                    //$to_address = 'hemanathans1@gmail.com';
+
+                    $data = ['subject' => 'New account created','type' => 'new_register'];
+
+                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                }
+                //email ends 
               
                 return response()->json([
                     'status' => 200,
@@ -120,7 +131,20 @@ class RespondentsController extends Controller
     {
 
         try {
-            $data = Respondents::find($id);
+            $data = Respondents::leftJoin('respondent_profile', function ($join) {
+                $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
+            })
+            ->where('respondents.id',$id)
+            ->first([
+                'respondents.*',
+                'respondent_profile.basic_details',
+                'respondent_profile.essential_details',
+                'respondent_profile.extended_details',
+                'respondent_profile.children_data',
+                'respondent_profile.vehicle_data',
+                'respondent_profile.updated_at',
+            ]);
+          
             return view('admin.respondents.view', compact('data'));
 
         } catch (Exception $e) {
@@ -137,7 +161,8 @@ class RespondentsController extends Controller
 
             $respondents = Respondents::find($id);
             if ($respondents) {
-                $returnHTML = view('admin.respondents.edit', compact('respondents'))->render();
+                $banks=Banks::where('active','=',1)->orderBy('bank_name', 'ASC')->get();
+                $returnHTML = view('admin.respondents.edit', compact('respondents','banks'))->render();
                 return response()->json(
                     [
                         'success' => true,
@@ -163,7 +188,9 @@ class RespondentsController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
+                'email' => 'required',
+                'active_status_id' => 'required',
+                'accept_terms'=> 'required',
             ]);
 
             if ($validator->fails()) {
@@ -172,10 +199,10 @@ class RespondentsController extends Controller
                     'errors' => $validator->messages(),
                 ]);
             } else {
-
+// dd($request->id);
                 $respondents = Respondents::find($request->id);
                 if ($respondents) {
-                    $respondents = new Respondents;
+                 
                     $respondents->name = $request->input('name');
                     $respondents->surname = $request->input('surname');
                     $respondents->date_of_birth = $request->input('date_of_birth');
@@ -240,6 +267,25 @@ class RespondentsController extends Controller
             throw new Exception($e->getMessage());
         }
 
+    }
+
+    public function respondents_multi_delete(Request $request){
+        try {
+            $all_id = $request->all_id;
+            foreach($all_id as $id){
+                $contents = Respondents::find($id);
+                $contents->delete();
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Respondents Deleted Successfully'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     public function get_all_respondents(Request $request)
@@ -454,42 +500,55 @@ class RespondentsController extends Controller
                     $nestedData['id_show'] = '<a href="'.$view_route.'" class="rounded waves-light waves-effect">
                         '.$post->id.'
                     </a>';
-
-                    $nestedData['options'] = '<div class="col-md-2">
-                        <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
-                            title="Action" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-tasks" aria-hidden="true"></i>
-                            <i class="mdi mdi-chevron-down"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-center">
-                            <li class="list-group-item">
-                                <a href="'.$view_route.'" class="rounded waves-light waves-effect">
-                                    <i class="fa fa-eye"></i> View
+                    if (Auth::guard('admin')->user()->role_id == 1 || Auth::guard('admin')->user()->id == $post->id) {
+                        $nestedData['options'] = '<div class="col-md-2">
+                            <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                                title="Action" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-tasks" aria-hidden="true"></i>
+                                <i class="mdi mdi-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-center">';
+                    
+                        // View option
+                        $nestedData['options'] .= '<li class="list-group-item">
+                            <a href="' . $view_route . '" class="rounded waves-light waves-effect">
+                                <i class="fa fa-eye"></i> View
+                            </a>
+                        </li>';
+                    
+                        // Additional options based on conditions
+                        if (str_contains(url()->previous(), '/admin/projects')) {
+                            // If coming from projects page
+                            $nestedData['options'] .= '<li class="list-group-item">
+                                <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
+                                    <i class="far fa-trash-alt"></i> De-attach
                                 </a>
                             </li>';
-                            if (str_contains(url()->previous(), '/admin/projects')){
-
-                                $nestedData['options'] .= '<li class="list-group-item">
-                                    <a id="deattach_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
-                                        <i class="far fa-trash-alt"></i> De-attach
-                                    </a>
-                                </li>';
-                            }
-                            else{
-                                $nestedData['options'] .= '<li class="list-group-item">
-                                    <a data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                        data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
-                                        <i class="fa fa-edit"></i> Edit
-                                    </a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="#!" id="delete_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
-                                        <i class="far fa-trash-alt"></i> Delete
-                                    </a>
-                                </li>';
-                            }
+                        } else {
+                            // If not coming from projects page
+                            $nestedData['options'] .= '<li class="list-group-item">
+                                <a data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true"
+                                    data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#!" id="delete_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
+                                    <i class="far fa-trash-alt"></i> Delete
+                                </a>
+                            </li>';
+                        }
+                    
+                        // Close dropdown menu and div
                         $nestedData['options'] .= '</ul>
-                    </div>';
+                        </div>';
+                    } else {
+                        // If user doesn't have permission, set options to empty string or handle accordingly
+                        $nestedData['options'] = '-';
+                    }
+                    
+
+                 
                     $data[] = $nestedData;
                     $i++;
                 }
@@ -743,6 +802,42 @@ class RespondentsController extends Controller
         }
     }
 
+    public function import_respondents(Request $request){
+        try {
+            $project_id = $request->project_id;
+            $projects = Projects::select('projects.id','projects.name')->where('projects.id',$project_id)->first();
+
+            $returnHTML = view('admin.respondents.import', compact('projects','project_id'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function upload_respondent(Request $request){
+        $import_excel = $request->import_excel;
+        
+        $kilobyte  = 1024;
+        $megabyte  = $kilobyte * 1024;
+        $size      = $_FILES["import_excel"]['size'];
+        $filename  = $_FILES["file"]["name"];
+        $sizein_mb = round($size / $megabyte,2);
+
+        if($sizein_mb <= 5){
+
+        }
+        else{
+            return redirect()->back()->withErrors("Please Upload Less than 5mb");
+        }
+    }
+
     public function respondent_seach_result(Request $request){
         try {
             $searchValue = $request['q'];
@@ -789,14 +884,24 @@ class RespondentsController extends Controller
             else{
                 Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $respondents]);
                 $projects=Projects::select('name')->where('id',$project_id)->first();
-                   //email starts
-                // $data = ['message' => 'Welcome','respondents'=>$respondents,'projects'=>$projects];
-                // if ($respondents != null) {
-                //     $get_email = Respondents::where('id', $respondents)->first();
-        
-                //     Mail::to($get_email->email)->send(new Respondentprojectmail($data));
-                // }
-                // //email ends
+
+                 //email starts
+                 $proj = Projects::where('id',$project_id)->first();
+                 $resp = Respondents::where('id',$respondents)->first();
+                 
+                 if($proj->name!='')
+                 {
+                    $to_address = $resp->email;
+                    //$to_address = 'hemanathans1@gmail.com';
+                    $resp_name = $resp->name.' '.$resp->surname;
+                    $proj_name = $proj->name;
+
+                    $data = ['subject' => 'New Survey Assigned','name' => $resp_name,'project' => $proj_name,'type' => 'new_project'];
+                
+                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                 }
+                //email ends
+                
 
                 return response()->json([
                     'text_status' => true,
@@ -952,6 +1057,13 @@ class RespondentsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-   
+    public function get_branch_code(Request $request){
+        $bank_id = $request->bank_id;
+        $branch_code=Banks::where('id',$bank_id)->first();
+        $repsonse=$branch_code->branch_code;
 
+        return response()->json(['repsonse' => $repsonse], 200);
+    }
+   
+    
 }

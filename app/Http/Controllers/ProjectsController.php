@@ -5,7 +5,7 @@ use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Projects;
 use App\Models\Project_respondent;
-
+use Illuminate\Support\Facades\Mail;
 use App\Models\Users;
 use App\Models\Respondents;
 use DB;
@@ -15,6 +15,11 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Exception;
+use Config;
+use App\Mail\WelcomeEmail;
+
+use App\Imports\RespondentsImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProjectsController extends Controller
 {
@@ -38,7 +43,7 @@ class ProjectsController extends Controller
     {
         try {
             $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
-            $survey_title=DB::table('survey')->select('title','id')->where('survey_type','=','survey')->get();
+            $survey_title=DB::table('survey')->select('title','id')->where('survey_type','=','survey')->orderBy('id', 'DESC')->get();
             $returnHTML = view('admin.projects.create',compact('users','survey_title'))->render();
 
             return response()->json(
@@ -149,7 +154,7 @@ class ProjectsController extends Controller
             if($projects)
             {
                 $users = Users::withoutTrashed()->select('id','name','surname')->latest()->get();
-                $survey_title=DB::table('survey')->select('title','id')->where('survey_type','=','survey')->get();
+                $survey_title=DB::table('survey')->select('title','id')->where('survey_type','=','survey')->orderBy('id', 'DESC')->get();
                 $returnHTML = view('admin.projects.edit',compact('projects','users','survey_title'))->render();
                 
                 return response()->json(
@@ -357,7 +362,8 @@ class ProjectsController extends Controller
                         return $all_data->description;
                     }) 
                     ->addColumn('creator', function ($all_data) {
-                        return $all_data->uname;
+                        $get_name=Projects::get_user_name($all_data->user_id);
+                        return $get_name->name.''.$get_name->lname;
                     })
                     ->addColumn('type', function ($all_data) {
                         if($all_data->type_id==1){
@@ -619,6 +625,67 @@ class ProjectsController extends Controller
         }   
     }
 
+    public function notify_respondent(Request $request){
+       
+        try {
+            $resp_id = $request->all_id;       
+        
+            foreach ($resp_id as $key => $id) {
+                $project_id = $request->value;
+
+                $proj = Projects::where('id',$project_id)->first();
+                $resp = Respondents::where('id',$id)->first();
+
+                //email starts
+                if($proj->name!='')
+                {
+                    $to_address = $resp->email;
+                    //$to_address = 'hemanathans1@gmail.com';
+                    $resp_name = $resp->name.' '.$resp->surname;
+                    $proj_name = $proj->name;
+                    $survey_duration = $proj->survey_duration;
+                    $reward = $proj->reward;
+
+                    $data = ['subject' => 'UPCOMING MARKET RESEARCH - DO YOU QUALIFY?','name' => $resp_name,'project' => $proj_name,'reward' => $reward,'survey_duration' => $survey_duration,'type' => 'project_notification'];
+                
+                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                }
+                //email ends
+            }
+            return response()->json([
+                'text_status' => true,
+                'status' => 200,
+                'message' => 'Project Notification Sent Successfully.',
+            ]);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function project_unassign(Request $request){
+       
+        try {
+            $resp_id = $request->all_id;       
+        
+            foreach ($resp_id as $key => $id) {
+                $project_id = $request->value;
+
+                if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $id)->exists()){
+                    Project_respondent::where('project_id', $project_id)->where('respondent_id', $id)->delete();
+                }
+            }
+            return response()->json([
+                'text_status' => true,
+                'status' => 200,
+                'message' => 'Project Un-Assigned Successfully.',
+            ]);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public function projects_multi_delete(Request $request){
         try {
             $all_id = $request->all_id;
@@ -728,6 +795,23 @@ class ProjectsController extends Controller
             else{
                 Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $respondents]);
 
+                $proj = Projects::where('id',$project_id)->first();
+                $resp = Respondents::where('id',$respondents)->first();
+
+                //email starts
+                if($proj->name!='')
+                {
+                    $to_address = $resp->email;
+                    //$to_address = 'hemanathans1@gmail.com';
+                    $resp_name = $resp->name.' '.$resp->surname;
+                    $proj_name = $proj->name;
+
+                    $data = ['subject' => 'New Survey Assigned','name' => $resp_name,'project' => $proj_name,'type' => 'new_project'];
+                
+                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                }
+                //email ends
+
                 return response()->json([
                     'text_status' => true,
                     'status' => 200,
@@ -759,4 +843,73 @@ class ProjectsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+
+    public function get_survey_link(Request $request){
+        $survey_id = $request->survey_id;
+        $app_url=config('app.url'); 
+        $get_survey=Projects::get_survey($survey_id);
+        $repsonse=$app_url.'/survey/view/'.$get_survey->builderID;
+
+        return response()->json(['repsonse' => $repsonse], 200);
+    }
+
+    public function respondent_attach_import(Request $request){
+        $project_id = $request->project_id;
+        $file = $request->file('file');
+
+        // File Details 
+        $filename = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+        $tempPath = $file->getRealPath();
+        $fileSize = $file->getSize();
+        $mimeType = $file->getMimeType();
+
+        // Valid File Extensions
+        $valid_extension = array("csv");
+        if(in_array(strtolower($extension),$valid_extension)){
+            // File upload location
+            $location = 'uploads/csv/'.$project_id;
+            // Upload file
+            $file->move($location,$filename);
+            // Import CSV to Database
+            $filepath = public_path($location."/".$filename);
+
+            $file = fopen($filepath,"r");
+
+            $importData_arr = array();
+            $i = 0;
+            $col=1;
+            while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                $num = count($filedata);
+                // Skip first row (Remove below comment if you want to skip the first row)
+                if($i == 0){
+                    $i++;
+                    continue;
+                }
+
+                if($num == $col){
+                    for ($c=0; $c < $num; $c++) {
+                        $set_array = array('respondent_id' => $filedata [$c],'project_id' => $project_id);
+                        array_push($importData_arr,$set_array);
+                    }
+                    $i++;
+                }
+                else{
+                    return redirect()->back()->with('error','Column mismatched!');
+                    break;
+                }
+            }
+            fclose($file);
+            
+            Project_respondent::insert($importData_arr);
+
+            return redirect()->back()->with('success','Attached Successfully');
+            
+        }
+        else{
+            return redirect()->back()->with('error','Invalid File Extension, Please Upload CSV File Format');
+        }
+        
+    }
+    
 }

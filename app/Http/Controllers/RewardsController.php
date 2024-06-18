@@ -69,7 +69,7 @@ class RewardsController extends Controller
                     ->addColumn('id_show', function ($all_data) {
                         $view_route = route("view_rewards",$all_data->id);
                         return '<a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                            data-bs-original-title="View Internal Reports" class="waves-light waves-effect">
+                            data-bs-original-title="View Rewards" class="waves-light waves-effect">
                             '.$all_data->id.'
                         </a>';
                     })
@@ -100,7 +100,7 @@ class RewardsController extends Controller
                         return '<div class="">
                             <div class="btn-group mr-2 mb-2 mb-sm-0">
                                 <a href="#!" data-url="'.$view_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                    data-bs-original-title="View Internal Reports" class="btn btn-primary waves-light waves-effect">
+                                    data-bs-original-title="View Rewards" class="btn btn-primary waves-light waves-effect">
                                     <i class="fa fa-eye"></i>
                                 </a>
                             </div>
@@ -279,6 +279,27 @@ class RewardsController extends Controller
             $all_id = $request->all_id;
             foreach($all_id as $id){
                 $data=array('status_id'=>2);
+
+                $reward_data = Rewards::where('id',$id)->first();
+                $project_id = $reward_data->project_id;
+                $respondents = $reward_data->respondent_id;
+
+                //email starts
+                $proj = Projects::where('id',$project_id)->first();
+                $resp = Respondents::where('id',$respondents)->first();
+                
+                if($proj->name!='')
+                {
+                    $to_address = $resp->email;
+                    //$to_address = 'hemanathans1@gmail.com';
+                    $resp_name = $resp->name.' '.$resp->surname;
+                    $proj_name = $proj->name;
+                    $data = ['subject' => 'Rewards Approved','name' => $resp_name,'project' => $proj_name,'type' => 'reward_approve'];
+                
+                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                }
+                //email ends
+
                 $rewards = Rewards::whereIn('id', [$id])->update($data);
             }
             
