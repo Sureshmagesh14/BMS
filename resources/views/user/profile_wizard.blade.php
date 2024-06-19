@@ -312,7 +312,7 @@
                                                 @else
                                                     style="display:none;margin-top: 10px;"
                                                 @endisset
-                                                placeholder="Enter Your Option" @isset($essential_details['employment_status_other']) value="{{$essential_details['employment_status_other']}}" @endisset>
+                                                placeholder="Please specify" @isset($essential_details['employment_status_other']) value="{{$essential_details['employment_status_other']}}" @endisset>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="industry_my_company">Industry my company is in <span class="star_require">*</span></label>
@@ -336,7 +336,7 @@
                                                 @else
                                                     style="display:none;margin-top: 10px;"
                                                 @endisset
-                                                placeholder="Enter Your Option" @isset($essential_details['industry_my_company_other']) value="{{$essential_details['industry_my_company_other']}}" @endisset>
+                                                placeholder="Please specify" @isset($essential_details['industry_my_company_other']) value="{{$essential_details['industry_my_company_other']}}" @endisset>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
                                             <label for="job_title">Job Title <span
@@ -611,7 +611,7 @@
                                                     Other</option>
                                             </select>
                                             <br>
-                                            <input type="text" name="extended[business_org_other]" id="business_org_other" class="form-control" placeholder="Enter Your Option"
+                                            <input type="text" name="extended[business_org_other]" id="business_org_other" class="form-control" placeholder="Please specify"
                                                 @isset($extended_details['business_org'])
                                                     @if($extended_details['business_org'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
                                                 @else
@@ -674,7 +674,7 @@
                                                     Other</option>
                                             </select>
                                             <br>
-                                            <input type="text" name="extended[bank_main_other]" id="bank_main_other" class="form-control" placeholder="Enter Your Option"
+                                            <input type="text" name="extended[bank_main_other]" id="bank_main_other" class="form-control" placeholder="Please specify"
                                             @isset($extended_details['bank_main'])
                                                 @if($extended_details['bank_main'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
                                             @else
@@ -724,7 +724,7 @@
                                                     Other</option>
                                             </select>
                                             <br>
-                                            <input type="text" name="extended[home_lang_other]" id="home_lang_other" class="form-control" placeholder="Enter Your Option"
+                                            <input type="text" name="extended[home_lang_other]" id="home_lang_other" class="form-control" placeholder="Please specify"
                                             @isset($extended_details['home_lang'])
                                                 @if($extended_details['home_lang'] == "other") style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
                                             @else

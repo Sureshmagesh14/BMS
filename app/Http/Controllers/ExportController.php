@@ -252,8 +252,18 @@ class ExportController extends Controller
 
                         $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
 
-                        $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
-                        $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
+                        $employment_status = null; // Initialize $employment_status to null
+
+                        if ($essential && isset($essential->employment_status)) {
+                            $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
+                        }
+                        
+                        $industry_my_company = null; // Initialize $industry_my_company to null
+
+                        if ($essential && isset($essential->industry_my_company)) {
+                            $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
+                        }
+
                        
                         $sheet->setCellValue('G' . $rows, $year);
                         $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
@@ -266,8 +276,22 @@ class ExportController extends Controller
                         $sheet->setCellValue('O' . $rows, $essential->personal_income_per_month ?? '');
                         $sheet->setCellValue('P' . $rows, $essential->job_title ?? '');
 
-                        $state = DB::table('state')->where('id', $essential->province)->first();
-                        $district = DB::table('district')->where('id', $essential->suburb)->first();
+                        $state = null; // Initialize $state to null
+
+                        if ($essential && isset($essential->province)) {
+                            $state = DB::table('state')
+                                        ->where('id', $essential->province)
+                                        ->first();
+                        }
+                        
+                        $district = null; // Initialize $district to null
+
+                        if ($essential && isset($essential->suburb)) {
+                            $district = DB::table('district')
+                                          ->where('id', $essential->suburb)
+                                          ->first();
+                        }
+                        
 
                         $get_state = ($state != null) ? $state->state : '-';
                         $get_district = ($district != null) ? $district->district : '-';
@@ -375,11 +399,25 @@ class ExportController extends Controller
 
                         $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
 
-                        $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
-                        $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
+                        $employment_status = isset($essential) && $essential->employment_status == 'other' ? $essential->employment_status_other : ($essential ? $essential->employment_status : null);
+                        $industry_my_company = isset($essential) && $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : ($essential ? $essential->industry_my_company : null);
+                        
                        
-                        $p_income = DB::table('income_per_month')->where('id',$essential->personal_income_per_month)->first();
-                        $h_income = DB::table('income_per_month')->where('id',$essential->household_income_per_month)->first();
+                        $p_income = null; // Initialize $p_income to null
+
+                        if ($essential && isset($essential->personal_income_per_month)) {
+                            $p_income = DB::table('income_per_month')
+                                            ->where('id', $essential->personal_income_per_month)
+                                            ->first();
+                        }
+                        $h_income = null; // Initialize $h_income to null
+
+                        if ($essential && isset($essential->household_income_per_month)) {
+                            $h_income = DB::table('income_per_month')
+                                            ->where('id', $essential->household_income_per_month)
+                                            ->first();
+                        }
+                        
                         $personal_income = ($p_income != null) ? $p_income->income : '-';
                         $household_income = ($h_income != null) ? $h_income->income : '-';
 
@@ -394,8 +432,21 @@ class ExportController extends Controller
                         $sheet->setCellValue('O' . $rows, $personal_income ?? '');
                         $sheet->setCellValue('P' . $rows, $household_income ?? '');
 
-                        $state = DB::table('state')->where('id', $essential->province)->first();
-                        $district = DB::table('district')->where('id', $essential->suburb)->first();
+                        $state = null; // Initialize $state to null
+
+                        if ($essential && isset($essential->province)) {
+                            $state = DB::table('state')
+                                        ->where('id', $essential->province)
+                                        ->first();
+                        }
+                        $district = null; // Initialize $district to null
+
+                        if ($essential && isset($essential->suburb)) {
+                            $district = DB::table('district')
+                                        ->where('id', $essential->suburb)
+                                        ->first();
+                        }
+
 
                         $get_state = ($state != null) ? $state->state : '-';
                         $get_district = ($district != null) ? $district->district : '-';
@@ -407,11 +458,35 @@ class ExportController extends Controller
                         $sheet->setCellValue('U' . $rows, $essential->no_children ?? '');
                         $sheet->setCellValue('V' . $rows, $essential->no_vehicle ?? '');
 
-                        $business_org = ($extended->business_org == 'other') ? $extended->business_org_other : $extended->business_org;
-                        $home_lang    = ($extended->home_lang == 'other') ? $extended->home_lang_other : $extended->home_lang;
+                        $business_org = null; // Initialize $business_org to null
 
-                        $banks = DB::table('banks')->where('id',$extended->bank_main)->where('active',1)->first();
-                        $bank_main = ($extended->bank_main == 'other') ? $extended->bank_main_other : $banks->bank_name;
+                        if ($extended && isset($extended->business_org)) {
+                            $business_org = $extended->business_org == 'other' ? $extended->business_org_other : $extended->business_org;
+                        }
+                        
+                        $home_lang = null; // Initialize $home_lang to null
+
+                        if ($extended && isset($extended->home_lang)) {
+                            $home_lang = $extended->home_lang == 'other' ? $extended->home_lang_other : $extended->home_lang;
+                        }
+                        
+
+                        $bank_main = null; // Initialize $bank_main to null
+
+                        if ($extended && isset($extended->bank_main)) {
+                            if ($extended->bank_main == 'other') {
+                                $bank_main = $extended->bank_main_other;
+                            } else {
+                                $banks = DB::table('banks')
+                                            ->where('id', $extended->bank_main)
+                                            ->where('active', 1)
+                                            ->first();
+                                if ($banks) {
+                                    $bank_main = $banks->bank_name;
+                                }
+                            }
+                        }
+                        
                             
                         $sheet->setCellValue('W' . $rows, $business_org ?? '');
                         $sheet->setCellValue('X' . $rows, $extended->org_company ?? '');

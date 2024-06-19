@@ -80,6 +80,7 @@ class RegisteredUserController extends Controller
         if (session()->has('refer_id')) {
 
             $referred_respondent_id = session()->get('refer_id');
+           
 
             $userInfo = Respondent_referrals::create([
                 'respondent_id' => $user->id,
@@ -90,11 +91,18 @@ class RegisteredUserController extends Controller
         if (session()->has('u_refer_id')) {
 
             $referred_respondent_id = session()->get('u_refer_id');
+            $get_role = null; // Initialize $get_role to null
 
+            if (!is_null($referred_respondent_id)) {
+                $get_role = DB::table('users')
+                                ->where('id', $referred_respondent_id)
+                                ->first();
+            }
             $userInfo = Respondent_referrals::create([
                 'respondent_id' => $user->id,
                 'user_id' => $referred_respondent_id,
             ]);
+            app('App\Http\Controllers\InternalReportController')->call_activity($get_role->role_id,$referred_respondent_id,'created','respondent');
             Session::forget('u_refer_id');
         }
 
@@ -105,3 +113,5 @@ class RegisteredUserController extends Controller
         return redirect(RouteServiceProvider::HOME);
     }
 }
+
+
