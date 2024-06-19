@@ -127,9 +127,17 @@ class WelcomeController extends Controller
             $id = Session::get('resp_id');
             $data = Respondents::find($id);
 
-            $pdata = DB::select("SELECT t1.id,t1.qus_count,sum(if(t2.id is not null,1,0)) as ans_count FROM survey t1 LEFT JOIN survey_response t2 ON t1.id = t2.survey_id WHERE t1.survey_type='profile' AND t2.skip IS NULL GROUP BY t1.id;");
+            $pdata = DB::table('survey as t1')
+            ->select('t1.id', 't1.qus_count', DB::raw('SUM(IF(t2.id IS NOT NULL, 1, 0)) AS ans_count'))
+            ->leftJoin('survey_response as t2', 't1.id', '=', 't2.survey_id')
+            ->where('t1.survey_type', 'profile')
+            ->whereNull('t2.skip')
+            ->groupBy('t1.id', 't1.qus_count')
+            ->get();
+        
 
             $tot_rows = count($pdata);
+         
             $ans_c = 0;
             foreach ($pdata as $key => $value) {
                 $qus_count = $value->qus_count;
@@ -152,7 +160,7 @@ class WelcomeController extends Controller
                 $percent1 = $resp_datas->basic_details;
                 $json_array  = json_decode($percent1, true);
                 $tot_count  = count($json_array);
-
+             
                 $fill_count =0;
                 foreach ($json_array as $key => $value) {
                     if (!strlen($value)) {
@@ -172,9 +180,11 @@ class WelcomeController extends Controller
             if(isset($resp_datas->essential_details) && ($resp_datas->essential_details!='')){
 
                 $percent2 = $resp_datas->essential_details;
-                $json_array  = json_decode($percent2, true);
-                $tot_count  = count($json_array);
                 
+                $json_array  = json_decode($percent2, true);
+                unset($json_array['employment_status_other'],$json_array['industry_my_company_other']);
+                $tot_count  = count($json_array);
+              
                 $fill_count =0;
                 foreach ($json_array as $key => $value) {
                     if (!strlen($value)) {
@@ -196,8 +206,10 @@ class WelcomeController extends Controller
 
                 $percent3 = $resp_datas->extended_details;
                 $json_array  = json_decode($percent3, true);
+                unset($json_array['bank_main_other'],$json_array['home_lang_other'], $json_array['business_org_other']);
+
                 $tot_count  = count($json_array);
-              
+           
                 $fill_count =0;
                 foreach ($json_array as $key => $value) {
                     if (!strlen($value)) {
