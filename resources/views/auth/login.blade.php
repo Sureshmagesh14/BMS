@@ -24,8 +24,13 @@
     .image-cover{
         object-fit: cover;
     }
+    @media only screen and (max-width: 600px) {
+        .login .w-75{
+            width: 100% !important;
+        }
+    }
 </style>
-<div class="container-fluid vh-90">
+<div class="container-fluid vh-90 login">
     <div class="row">
         <div class="col-md-6 d-none-mobile">
             <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}" class="img-fluid vh-90 w-100 image-cover"
