@@ -6,6 +6,7 @@ use App\Models\UserEvents;
 use App\Models\Users;
 use Exception;
 use Illuminate\Http\Request;
+use DB;
 
 class InternalReportController extends Controller
 {
@@ -24,43 +25,30 @@ class InternalReportController extends Controller
         }
     }
 
-    public static function call_activity($role, $auth_id, $action, $type)
+    public  function call_activity($role, $auth_id, $action, $type)
     {
 
-        $get_month = UserEvents::where('user_id', $auth_id)->where('action', $action)->where('month', date('M'))->first();
+       // Get the current month in lowercase (e.g., "january", "february")
+    $currentMonth = strtolower(now()->format('F'));
 
-        if ($get_month == null) {
-
-            $ins_data = array(
-                'role' => $role,
-                'user_id' => $auth_id,
-                'action' => $action,
-                'type' => $type,
-                'month' => date('M'),
-                'year' => date('Y'),
-                'created_at' => date('Y-m-d H:i:s'),
-                'count' => 0,
-            );
-
-            $task = UserEvents::Insert($ins_data);
-
-        } else {
-            $get_month = UserEvents::where('user_id', $auth_id)->where('action', $action)->where('month', date('M'))->first();
-            $count = $get_month->count + 1;
-            $ins_data = array(
-                'role' => $role,
-                'user_id' => $auth_id,
-                'action' => $action,
-                'type' => $type,
-                'month' => date('M'),
-                'year' => date('Y'),
-                'updated_at' => date('Y-m-d H:i:s'),
-                'count' => $count,
-            );
-            $task = UserEvents::where('user_id', $auth_id)->where('action', $action)->where('month', date('M'))->update($ins_data);
-        }
-
-        return $task;
+    // Find or create a record in UserEvents for the current month and action
+    $userEvent = UserEvents::updateOrCreate(
+        [
+            'user_id' => $auth_id,
+            'action' => $action,
+            'month' => $currentMonth,
+        ],
+        [
+            'role' => $role,
+            'type' => $type,
+            'year' => now()->year,
+            'count' => DB::raw('count + 1'), // Increment count by 1
+            'created_at' => now(), // Automatically set creation time
+            'updated_at' => now(), // Automatically set update time
+        ]
+    );
+// dd($userEvent);
+        return $userEvent;
     }
 
     /**
