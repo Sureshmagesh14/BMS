@@ -481,6 +481,7 @@ class SurveyController extends Controller
                         $TBSfilename='small-logo.png';
                     }
                 }
+                
               
                 $json=[
                     'welcome_imagesubtitle'=>$request->welcome_imagesubtitle,'welcome_btn'=>$request->welcome_btn,
@@ -529,7 +530,7 @@ class SurveyController extends Controller
                     'tbs_logo'=>$request->tbs_logo,
                     'tbs_logo_url'=>$TBSfilename
                 ];
-                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->thankyou_title,'qus_ans'=>json_encode($json)]);
+                $updateQus=Questions::where(['id'=>$id])->update(['question_description'=>$request->question_description,'question_name'=>$request->thankyou_title,'qus_ans'=>json_encode($json),'survey_thankyou_page'=>$request->survey_thankyou_page]);
               break;
             case 'upload':
                 $json=[
@@ -959,6 +960,7 @@ class SurveyController extends Controller
         $surveyres->deleted_at=0;
         $surveyController = new SurveyController;
         $quotacheck = $surveyController->checkquota($survey_id,$question_id,$user_ans);
+       
         if($quotacheck == 'limitavailable'){
             $surveyres->save();
         }else{
@@ -966,6 +968,7 @@ class SurveyController extends Controller
             $redirection_qus = SurveyTemplate::find($quotacheck);
             return view('admin.survey.limitexceed', compact('survey', 'redirection_qus'));
         }
+       
         if($qus_check){
             $next_qus_loop = '';
             $skip_logic = json_decode($qus_check->skip_logic);
@@ -1053,10 +1056,10 @@ class SurveyController extends Controller
             ->where(['survey_id' => $survey_id])
             ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
             ->first();
-       
         if (!$next_qus) {
             return self::handleSurveyCompletion($survey_id, $other_details);
         }
+
 
         $display_logic = json_decode($next_qus->display_logic);
         if ($display_logic !== null) {
@@ -1481,7 +1484,7 @@ class SurveyController extends Controller
         $surveyRec = Survey::find($survey_id);
         Survey::where(['id' => $survey_id])->increment('completed_count');
     
-        $next_qus = Questions::where(['survey_id' => $survey_id, 'qus_type' => 'thank_you'])->first();
+        $next_qus = Questions::where(['survey_id' => $survey_id, 'qus_type' => 'thank_you','survey_thankyou_page'=>1])->first();
         if ($next_qus) {
             self::saveSurveyResponse($survey_id, $next_qus->id, $other_details, 'thankyou_submitted');
             self::updateProjectCompletion($surveyRec, Auth::user()->id);
@@ -2018,14 +2021,13 @@ class SurveyController extends Controller
         }
     
         $surveyquotas = SurveyQuotas::where(['survey_id' => $survey_id, 'question_id' => $current_question_id])->get();
-    
+   
         if ($surveyquotas->isEmpty()) {
             return "limitavailable";
         }
-    
+     
         foreach ($surveyquotas as $quota) {
             $question_id_parts = explode('_', $quota->question_id);
-    
             if (is_array($question_id_parts) && count($question_id_parts) > 0) {
                 $checkresponses = SurveyResponse::with('questions')
                     ->where(['survey_id' => $survey->id, 'question_id' => $question_id_parts[0]])
@@ -2119,7 +2121,7 @@ class SurveyController extends Controller
                         }
                         break;
                 }
-    
+             
                 // If the current user's answer matches the quota criteria
                 if ($quota_match) {
                     foreach ($checkresponses as $userResp) {
@@ -2231,15 +2233,17 @@ class SurveyController extends Controller
                                 break;
                         }
                     }
-    
                     // If the quota limit is reached, return the redirection question
-                    if ($limit >= (int)$quota->quota_limit) {
+                    if ($limit > (int)$quota->quota_limit) {
+       
                         return $quota->redirection_qus;
                     }
+                }else{
+
+                    return "limitavailable";
                 }
             }
         }
-    
         // If no quotas are reached, proceed to the next question
         return "limitavailable";
     }
