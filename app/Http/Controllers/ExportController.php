@@ -1195,7 +1195,7 @@ class ExportController extends Controller
                 $writer = new Xls($spreadsheet);
             }
             
-            $writer->save("../public/" . $fileName);
+            $writer->save("../public/" . $fileName); 
 
             header("Content-Type: application/vnd.ms-excel");
             return redirect(url('/') . "/" . $fileName);
