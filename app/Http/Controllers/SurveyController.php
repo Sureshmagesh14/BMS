@@ -969,6 +969,7 @@ class SurveyController extends Controller
         if($qus_check){
             $next_qus_loop = '';
             $skip_logic = json_decode($qus_check->skip_logic);
+            
            
             if($skip_logic!=null){
                 if($skip_logic->jump_type!=''){
@@ -1071,7 +1072,7 @@ class SurveyController extends Controller
         }
     }
 
-    private static function processSkipLogic($display_logic, $response_user_id, $survey_id, $next_qus)
+    private static function processSkipLogicold($display_logic, $response_user_id, $survey_id, $next_qus)
     {
         $push_jump = [];
         $display_qus_choice_display = json_decode($display_logic->display_qus_choice_skip); 
@@ -1083,7 +1084,7 @@ class SurveyController extends Controller
                 $logic = $logic_type_value_display[$k];
                 $logicv = $logic_type_value_option_display[$k];
                 $cond = $display_qus_choice_andor_display[$k];
-
+                
                 $qusID = explode("_", $display);
                 if($qusID[0] != ''){
                     $qus_typeData = Questions::find($qusID[0]);
@@ -1095,18 +1096,8 @@ class SurveyController extends Controller
                     $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0]])->orderBy("id", "desc")->first();
                     list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
                     if (self::evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped,$qusID)) {
-                        // if ($cond == 'or') {
-                        //     array_push($push_jump, "or");
-                        // }else{
-                        //     array_push($push_jump, "and");
-                        // }
                         array_push($push_jump, "pass");
                     } else {
-                        // if ($cond == 'or') {
-                        //     array_push($push_jump, "and");
-                        // } else {
-                        //     array_push($push_jump, "or");
-                        // }
                         array_push($push_jump, "fail");
                     }
                 }else{
@@ -1120,10 +1111,10 @@ class SurveyController extends Controller
         return self::checkSkipLogicConditions($display_logic, $push_jump);
     }
 
-    private static function checkSkipLogicConditions($display_logic, $push_jump)
+    private static function checkSkipLogicConditionsold($display_logic, $push_jump)
     {
         $display_qus_choice_andor_display = json_decode($display_logic->display_qus_choice_andor_skip);
-    
+       
         // Check if display_qus_choice_andor_display only contains 'or'
         $only_or = true;
         foreach ($display_qus_choice_andor_display as $condition) {
@@ -1135,12 +1126,13 @@ class SurveyController extends Controller
                 break;
             }
         }
-    
+       
         // If it only contains 'or', check if push_jump has at least one 'pass'
         if ($only_or) {
             foreach ($push_jump as $result) {
                 if ($result === 'pass') {
                     return true;
+                    
                 }
             }
             return false;
@@ -1161,7 +1153,7 @@ class SurveyController extends Controller
                 $and_condition_met = false;
             }
         }
-    
+       
         if ($or_condition_met) {
             return true;
         }
@@ -1169,7 +1161,99 @@ class SurveyController extends Controller
         return $and_condition_met;
     }
     
-
+    private static function processSkipLogic($display_logic, $response_user_id, $survey_id, $next_qus)
+    {
+        $push_jump = [];
+        $display_qus_choice_display = json_decode($display_logic->display_qus_choice_skip); 
+        $logic_type_value_display = json_decode($display_logic->skiplogic_type_value_skip); 
+        $logic_type_value_option_display = json_decode($display_logic->logic_type_value_option_skip); 
+        $display_qus_choice_andor_display = json_decode($display_logic->display_qus_choice_andor_skip); 
+    
+        if(count($display_qus_choice_display) > 0 && count($logic_type_value_display) > 0) {
+            foreach ($display_qus_choice_display as $k => $display) {
+                $logic = $logic_type_value_display[$k];
+                $logicv = $logic_type_value_option_display[$k];
+                $cond = $display_qus_choice_andor_display[$k];
+                
+                $qusID = explode("_", $display);
+                if($qusID[0] != ''){
+                    $qus_typeData = Questions::find($qusID[0]);
+                    $qusvalue_display = json_decode($qus_typeData->qus_ans);
+    
+                    $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
+    
+                    $ans = self::getAnswerValue($resp_logic_type_display_value, $logicv);
+                    $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0]])->orderBy("id", "desc")->first();
+                    list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
+    
+                    // Include logic type in push_jump
+                    if (self::evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped, $qusID)) {
+                        array_push($push_jump, ["result" => "pass", "logic" => $logic]);
+                    } else {
+                        array_push($push_jump, ["result" => "fail", "logic" => $logic]);
+                    }
+                } else {
+                    return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
+                }
+            }
+        } else {
+            return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
+        }
+    
+        return self::checkSkipLogicConditions($display_logic, $push_jump);
+    }
+    private static function checkSkipLogicConditions($display_logic, $push_jump)
+    {
+        $display_qus_choice_andor_display = json_decode($display_logic->display_qus_choice_andor_skip);
+    
+        // Check if display_qus_choice_andor_display only contains 'or'
+        $only_or = true;
+        foreach ($display_qus_choice_andor_display as $condition) {
+            if ($condition == '') {
+                $condition = 'or';
+            }
+            if ($condition !== 'or') {
+                $only_or = false;
+                break;
+            }
+        }
+    
+        // If it only contains 'or', check if push_jump has at least one 'pass'
+        if ($only_or) {
+            foreach ($push_jump as $result) {
+                if ($result['result'] === 'pass' && in_array($result['logic'], ['isSelected', 'isAnswered', 'contains', 'startsWith', 'endsWith', 'equalsString', 'equalToForScale'])) {
+                    return true;
+                } elseif ($result['result'] === 'fail' && in_array($result['logic'], ['isNotSelected', 'isNotAnswered', 'doesNotContain', 'notEqualTo', 'notEqualToForScale'])) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    
+        // If it doesn't only contain 'or', implement the original logic
+        $and_condition_met = true;
+        $or_condition_met = false;
+        $length = min(count($display_qus_choice_andor_display), count($push_jump));
+    
+        for ($i = 0; $i < $length; $i++) {
+            $display_condition = $display_qus_choice_andor_display[$i];
+            $push_condition = $push_jump[$i]['result'];
+            $logic_type = $push_jump[$i]['logic'];
+    
+            if ($display_condition == 'or' && $push_condition == 'fail' && in_array($logic_type, ['isNotSelected', 'isNotAnswered', 'doesNotContain', 'notEqualTo', 'notEqualToForScale'])) {
+                $or_condition_met = true;
+            } elseif ($display_condition == 'and' && $push_condition == 'fail' && in_array($logic_type, ['isSelected', 'isAnswered', 'contains', 'startsWith', 'endsWith', 'equalsString', 'equalToForScale'])) {
+                $and_condition_met = false;
+            }
+        }
+    
+        if ($or_condition_met) {
+            return true;
+        }
+    
+        return $and_condition_met;
+    }
+        
    
 
    
