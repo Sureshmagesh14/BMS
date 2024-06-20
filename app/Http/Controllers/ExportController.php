@@ -771,7 +771,8 @@ class ExportController extends Controller
 
                 $fileName = $module . "_" . date('ymd') . "." . $type;
 
-            }else if ($module == 'Survey') {
+            }
+            else if ($module == 'Survey') {
                 
                 $sheet->getColumnDimension('Y')->setAutoSize(true);
                 $sheet->getColumnDimension('Z')->setAutoSize(true);
@@ -900,8 +901,8 @@ class ExportController extends Controller
                     $sheet->setCellValue('Y' . $rows, $bank_main ?? '');
                     $sheet->setCellValue('Z' . $rows, $home_lang ?? '');
 
-                    $children_data = json_decode($all_data->children_data);
-                    $vehicle_data = json_decode($all_data->vehicle_data);
+                    $children_data = json_decode($all_data->children_data, true);
+                    $vehicle_data = json_decode($all_data->vehicle_data, true);
 
                     $new_alpha = 'AA';
                     foreach($children_data as $children){
@@ -930,9 +931,10 @@ class ExportController extends Controller
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                     $sheet->getStyle('C' . $rows . ':AP' . $rows)->applyFromArray($styleArray2);
                     $sheet->getStyle('C' . $rows . ':AP' . $rows)->getAlignment()->setIndent(1);
+                    $rows++;
+                    $i++;
                 }
-                $rows++;
-                $i++;
+                
             
 
                 $fileName = $module . "_" . $resp_type . "_" . date('ymd') . "." . $type;
