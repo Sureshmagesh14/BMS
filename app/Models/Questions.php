@@ -24,7 +24,7 @@ class Questions extends Model
         'question_name',
         'question_description',
         'qus_template',
-        'qus_type',
+        'qus_type','survey_thankyou_page',
         'qus_ans', 'created_by'
     ];
 
