@@ -20,6 +20,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Excel;
 use Illuminate\Support\Facades\Storage;
+use Exception;
 
 // Word Cloud 
 use Artesaos\SEOTools\Facades\SEOTools;
@@ -665,7 +666,6 @@ class SurveyController extends Controller
                     $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
                     if(count($surveyQus)<=0){
                         return view('admin.survey.noquserror', compact('survey'));
-        
                     }else{
                         return view('admin.survey.response', compact('survey','question','question1','questionsset'));
                     }
@@ -684,6 +684,7 @@ class SurveyController extends Controller
     }
    
     public function startsurvey(Request $request, $id,$qus){
+      
         // Check User already taken the survey 
         $response_user_id =  Auth::user()->id;
        
@@ -741,15 +742,23 @@ class SurveyController extends Controller
         $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
         // Check Survey has question or not 
         $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
-        
         if(count($surveyQus)<=0){
             return view('admin.survey.noquserror', compact('survey'));
-
         }else{
             if($qus == 0){
                 return view('admin.survey.thankyoudefault', compact('survey'));
             }else{
-                return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+                if($question){
+                    if($question->qus_type =='thank_you' && $question->question_name ==''){
+                        return view('admin.survey.thankyoudefault', compact('survey'));
+
+                    }else{
+                        return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+                    }
+
+                }else{
+                    return view('admin.survey.thankyoudefault', compact('survey'));
+                }
             }
         }
 
@@ -888,27 +897,34 @@ class SurveyController extends Controller
         $surveyres->skip=$skip_ans;
         $surveyres->deleted_at=0;
         $surveyController = new SurveyController;
-        $checkquota = $surveyController->checkquota($survey_id,$question_id,$user_ans);
-        if($checkquota == 'limitavailable'){
+        $quotacheck = $surveyController->checkquota($survey_id,$question_id,$user_ans);
+        if($quotacheck == 'limitavailable'){
             $surveyres->save();
         }else{
             $survey = Survey::where(['id'=>$survey_id])->first();
-            $redirection_qus = SurveyTemplate::find($checkquota);
+            $redirection_qus = SurveyTemplate::find($quotacheck);
             return view('admin.survey.limitexceed', compact('survey', 'redirection_qus'));
         }
-       
         if($qus_check){
             $next_qus_loop = '';
             $skip_logic = json_decode($qus_check->skip_logic);
+           
             if($skip_logic!=null){
                 if($skip_logic->jump_type!=''){
                     $skip_logic = json_decode($qus_check->skip_logic);
                     if ($skip_logic !== null) {
-                        if (self::processSkipLogic($skip_logic, $response_user_id,$survey_id,$qus_check)) {
-                            return redirect()->route('survey.startsurvey', [$survey_id, $skip_logic->jump_type]);
-                        } else {
-                            return self::loopNextQuestion($qus_check->id, $survey_id, $other_details);
+                        $display_qus_choice_display = json_decode($skip_logic->display_qus_choice_skip); 
+                        $logic_type_value_display = json_decode($skip_logic->skiplogic_type_value_skip); 
+                        if(count($display_qus_choice_display) > 0 && count($logic_type_value_display) > 0) {
+                            if (self::processSkipLogic($skip_logic, $response_user_id,$survey_id,$qus_check)) {
+                                return redirect()->route('survey.startsurvey', [$survey_id, $skip_logic->jump_type]);
+                            } else {
+                                return $surveyController->displaynextQus($question_id,$survey_id,$other_details);
+                            }
+                        }else{
+                            return $surveyController->displaynextQus($question_id,$survey_id,$other_details);
                         }
+                      
                     } else {
                         return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
                     }
@@ -922,21 +938,10 @@ class SurveyController extends Controller
                 $next_qus_loop ='yes';
             }
         }
-        
+       
+       
         if($next_qus_loop == 'yes'){
             return $surveyController->displaynextQus($question_id,$survey_id,$other_details);
-
-            // $surveyController = new SurveyController;
-            // $checkquota = $surveyController->checkquota($survey_id,$question_id);
-           
-            // if($checkquota == 'limitavailable'){
-            //     return $surveyController->displaynextQus($question_id,$survey_id,$other_details);
-            // }else{
-            //     $survey = Survey::where(['id'=>$survey_id])->first();
-            //     $redirection_qus = SurveyTemplate::find($checkquota);
-            //     return view('admin.survey.limitexceed', compact('survey', 'redirection_qus'));
-            // }
-           
         }else{
             // Update Survey Completion 
             $surveyRec=Survey::where(['id'=>$survey_id])->first();
@@ -965,7 +970,6 @@ class SurveyController extends Controller
                         Project_respondent::where('project_id', $project->id)->where('respondent_id', $response_user_id)->update(['is_frontend_complete'=>1]);
                     }
                 }
-
                 return redirect()->route('survey.endsurvey',[$survey_id,$next_qus->id]);
             }else{
                 if($surveyRec->survey_type == 'survey'){
@@ -987,16 +991,18 @@ class SurveyController extends Controller
             ->where(['survey_id' => $survey_id])
             ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
             ->first();
-    
+       
         if (!$next_qus) {
             return self::handleSurveyCompletion($survey_id, $other_details);
         }
-    
+
         $display_logic = json_decode($next_qus->display_logic);
         if ($display_logic !== null) {
-            if (self::processDisplayLogic($display_logic, $response_user_id,$survey_id,$next_qus)) {
+            if (self::processDisplayLogic($display_logic, $response_user_id,$survey_id,$next_qus)) {        
                 return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
             } else {
+                $surveyController = new SurveyController;
+                return $surveyController->displaynextQus($next_qus->id,$survey_id,$other_details);
                 return self::loopNextQuestion($next_qus->id, $survey_id, $other_details);
             }
         } else {
@@ -1006,9 +1012,7 @@ class SurveyController extends Controller
 
     private static function processSkipLogic($display_logic, $response_user_id, $survey_id, $next_qus)
     {
-        $jump_to = 0;
         $push_jump = [];
-
         $display_qus_choice_display = json_decode($display_logic->display_qus_choice_skip); 
         $logic_type_value_display = json_decode($display_logic->skiplogic_type_value_skip); 
         $logic_type_value_option_display = json_decode($display_logic->logic_type_value_option_skip); 
@@ -1020,29 +1024,32 @@ class SurveyController extends Controller
                 $cond = $display_qus_choice_andor_display[$k];
 
                 $qusID = explode("_", $display);
-                $qus_typeData = Questions::find($qusID[0]);
-                $qusvalue_display = json_decode($qus_typeData->qus_ans);
+                if($qusID[0] != ''){
+                    $qus_typeData = Questions::find($qusID[0]);
+                    $qusvalue_display = json_decode($qus_typeData->qus_ans);
 
-                $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
+                    $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
 
-                $ans = self::getAnswerValue($resp_logic_type_display_value, $logicv);
-                $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0]])->orderBy("id", "desc")->first();
-                list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
-
-                if (self::evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped)) {
-                    // if ($cond == 'or') {
-                    //     array_push($push_jump, "or");
-                    // }else{
-                    //     array_push($push_jump, "and");
-                    // }
-                    array_push($push_jump, "pass");
-                } else {
-                    // if ($cond == 'or') {
-                    //     array_push($push_jump, "and");
-                    // } else {
-                    //     array_push($push_jump, "or");
-                    // }
-                    array_push($push_jump, "fail");
+                    $ans = self::getAnswerValue($resp_logic_type_display_value, $logicv);
+                    $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0]])->orderBy("id", "desc")->first();
+                    list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
+                    if (self::evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped,$qusID)) {
+                        // if ($cond == 'or') {
+                        //     array_push($push_jump, "or");
+                        // }else{
+                        //     array_push($push_jump, "and");
+                        // }
+                        array_push($push_jump, "pass");
+                    } else {
+                        // if ($cond == 'or') {
+                        //     array_push($push_jump, "and");
+                        // } else {
+                        //     array_push($push_jump, "or");
+                        // }
+                        array_push($push_jump, "fail");
+                    }
+                }else{
+                    return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
                 }
             }
         } else {
@@ -1120,31 +1127,34 @@ class SurveyController extends Controller
                 $logic = $logic_type_value_display[$k];
                 $logicv = $logic_type_value_option_display[$k];
                 $cond = $display_qus_choice_andor_display[$k];
-
                 $qusID = explode("_", $display);
-                $qus_typeData = Questions::find($qusID[0]);
-                $qusvalue_display = json_decode($qus_typeData->qus_ans);
-
-                $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
-
-                $ans = self::getAnswerValue($resp_logic_type_display_value, $logicv);
-                $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0]])->orderBy("id", "desc")->first();
-                list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
-
-                if (self::evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped)) {
-                    // if ($cond == 'or') {
-                    //     array_push($push_jump, "or");
-                    // }else{
-                    //     array_push($push_jump, "and");
-                    // }
-                    array_push($push_jump, "pass");
-                } else {
-                    // if ($cond == 'or') {
-                    //     array_push($push_jump, "and");
-                    // } else {
-                    //     array_push($push_jump, "or");
-                    // }
-                    array_push($push_jump, "fail");
+                if($qusID[0] != ''){
+                    $qus_typeData = Questions::find($qusID[0]);
+                    $qusvalue_display = json_decode($qus_typeData->qus_ans);
+    
+                    $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
+    
+                    $ans = self::getAnswerValue($resp_logic_type_display_value, $logicv);
+                    $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0]])->orderBy("id", "desc")->first();
+                    list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
+    
+                    if (self::evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped,$qusID)) {
+                        // if ($cond == 'or') {
+                        //     array_push($push_jump, "or");
+                        // }else{
+                        //     array_push($push_jump, "and");
+                        // }
+                        array_push($push_jump, "pass");
+                    } else {
+                        // if ($cond == 'or') {
+                        //     array_push($push_jump, "and");
+                        // } else {
+                        //     array_push($push_jump, "or");
+                        // }
+                        array_push($push_jump, "fail");
+                    }
+                }else{
+                    return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
                 }
             }
         } else {
@@ -1246,13 +1256,13 @@ class SurveyController extends Controller
         return ['', '', ''];
     }
     
-    private static function evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped)
+    private static function evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped,$qusID)
     {
         switch ($logic) {
             case 'isSelected':
-                return self::evaluateIsSelected($qus_type, $ans, $user_answered);
+                return self::evaluateIsSelected($qus_type, $ans, $user_answered,$qusID);
             case 'isNotSelected':
-                return self::evaluateIsNotSelected($qus_type, $ans, $user_answered);
+                return self::evaluateIsNotSelected($qus_type, $ans, $user_answered,$qusID);
             case 'isAnswered':
                 return $user_answered !== '';
             case 'isNotAnswered':
@@ -1282,7 +1292,7 @@ class SurveyController extends Controller
         }
     }
     
-    private static function evaluateIsSelected($qus_type, $ans, $user_answered)
+    private static function evaluateIsSelected($qus_type, $ans, $user_answered,$qusID)
     {
         if ($qus_type == 'matrix_qus') {
             $user_answered = json_decode($user_answered);
@@ -1294,7 +1304,7 @@ class SurveyController extends Controller
         }
     }
     
-    private static function evaluateIsNotSelected($qus_type, $ans, $user_answered)
+    private static function evaluateIsNotSelected($qus_type, $ans, $user_answered,$qusID)
     {
         if ($qus_type == 'matrix_qus') {
             $user_answered = json_decode($user_answered);
@@ -1315,15 +1325,7 @@ class SurveyController extends Controller
     
         if ($next_question) {
             $surveyController = new SurveyController;
-            
-            // if ($surveyController->checkquota($survey_id,$next_question->id) == 'limitavailable') {
-                return $surveyController->displayNextQus($next_question->id, $survey_id, $other_details);
-            // }else{
-            //     $survey = Survey::where(['id'=>$survey_id])->first();
-            //     $redirection_qus = SurveyTemplate::find($checkquota);
-            //     return view('admin.survey.limitexceed', compact('survey', 'redirection_qus'));
-            // }
-           
+            return $surveyController->displayNextQus($next_question->id, $survey_id, $other_details);
         } else {
             return self::handleSurveyCompletion($survey_id, $other_details);
         }
@@ -2097,182 +2099,6 @@ class SurveyController extends Controller
         return "limitavailable";
     }
     
-
-    public function checkquota11($survey_id,$question_id,$user_ans)
-    {
-        $survey = Survey::find($survey_id);
-        if (!$survey) {
-            return "Survey not found.";
-        }
-
-        $surveyquotas = SurveyQuotas::where(['survey_id' => $survey_id,'question_id'=>$question_id])->get();
-
-        if ($surveyquotas->isEmpty()) {
-            return "limitavailable";
-        }
-
-        foreach ($surveyquotas as $quota) {
-        
-            $question_id_parts = explode('_', $quota->question_id);
-
-            if (is_array($question_id_parts) && count($question_id_parts) > 0) {
-                $checkresponses = SurveyResponse::with('questions')
-                    ->where(['survey_id' => $survey->id, 'question_id' => $question_id_parts[0]])
-                    ->get();
-
-                $limit = 0;
-
-                foreach ($checkresponses as $userResp) {
-                    $ques = Questions::find($userResp->question_id);
-                    if (!$ques) continue;
-
-                    $user_answered = $userResp->answer ?? $user_ans;
-                    $user_skipped = $userResp->skip ?? '';
-                    $qus_type = $userResp->questions[0]->qus_type ?? '';
-
-                    switch ($quota->option_type) {
-                        case 'isSelected':
-                            if ($qus_type == 'matrix_qus') {
-                                $user_answered = json_decode($user_answered, true);
-                                if (isset($user_answered[$question_id_parts[1]]) && 
-                                    $user_answered[$question_id_parts[1]]['key'] == $question_id_parts[1] &&
-                                    $quota->option_value == $user_answered[$question_id_parts[1]]['ans']) {
-                                    $limit++;
-                                }
-                            } elseif ($qus_type == 'multi_choice') {
-                                $user_answered = explode(",", $user_answered);
-                                if (in_array($quota->option_value, $user_answered)) {
-                                    $limit++;
-                                }
-                            } else {
-                                if ($user_answered == $quota->option_value) {
-                                    $limit++;
-                                }
-                            }
-                            break;
-                            case 'isNotSelected':
-                                if($qus_type == 'matrix_qus'){
-                                    $user_answered=json_decode($user_answered);
-                                    if($user_answered[$question_id[1]]->key == $question_id[1]){
-                                        if($quota->option_value != $user_answered[$question_id[1]]->ans){
-                                            $limit++;
-                                        }
-                                    }
-                                }
-                                else if($qus_type == 'multi_choice'){
-                                    $user_answered =  explode(",",$user_answered);
-                                    if (!in_array($quota->option_value, $user_answered)) { 
-                                        $limit++;
-                                    }
-                                }
-                                else if($qus_type != 'matrix_qus' && $qus_type != 'multi_choice'){
-                                    if ($user_answered != $quota->option_value) { 
-                                        $limit++;
-                                    }
-                                }
-                                break;
-
-                            case 'isAnswered':
-                                if($user_answered !=''){
-                                    $limit++;
-                                }
-                                break;
-
-                            case 'isNotAnswered':
-                                if($user_skipped == 'yes'){
-                                    $limit++;
-                                }
-                                break;
-
-
-                            case 'contains':
-                            
-                                if (str_contains($user_answered, $quota->option_value)) { 
-                                    $limit++;
-                                }
-                                break;
-
-
-                            case 'doesNotContain':
-                                if (!str_contains($user_answered, $quota->option_value)) { 
-                                    $limit++;
-                                }
-                                break;
-
-                            case 'startsWith':
-                                if (str_starts_with($user_answered, $quota->option_value)) { 
-                                    $limit++;
-                                }
-                                break;
-
-                            case 'endsWith':
-                                if (str_ends_with($user_answered, $quota->option_value)) { 
-                                    $limit++;
-                                }
-                                break;
-
-                            case 'equalsString':
-                                if ($user_answered == $quota->option_value) { 
-                                    $limit++;
-                                }
-                                break;
-
-                            case 'notEqualTo':
-                                if ($user_answered != $quota->option_value) { 
-                                    $limit++;
-                                }
-                                break;
-
-                            case 'lessThanForScale':
-                                $ans = (int)$quota->option_value;
-                                $user_answered = (int)$user_answered;
-                                if ($user_answered < $ans) {
-                                    $limit++;
-                                }
-                                break;
-
-                            case 'greaterThanForScale':
-                                $ans = (int)$quota->option_value;
-                                $user_answered = (int)$user_answered;
-                                if ($user_answered > $ans) {
-                                    $limit++;
-                                }
-                                break;
-
-                            case 'equalToForScale':
-                                $ans = (int)$quota->option_value;
-                                $user_answered = (int)$user_answered;
-                                if ($user_answered == $ans) {
-                                    $limit++;
-                                }
-                                break;
-
-                            case 'notEqualToForScale':
-                                $ans = (int)$quota->option_value;
-                                $user_answered = (int)$user_answered;
-                                if ($user_answered != $ans) {
-                                    $limit++;
-                                }
-                                break;
-
-                    }
-                }
-                echo $limit;
-                echo "<br>".$quota->quota_limit;
-                exit;
-
-                if ($limit <= (int)$quota->quota_limit) {
-                    return "limitavailable";
-                } else {
-                
-                    return $quota->redirection_qus;
-                }
-            }
-        }
-
-        return "limitavailable";
-    }
-
         // Get qus type
     function Qustype($type){
         $questionTypes=['welcome_page'=>'Welcome Page','single_choice'=>'Single Choice','multi_choice'=>'Multi Choice','open_qus'=>'Open Questions','likert'=>'Likert scale','rankorder'=>'Rank Order','rating'=>'Rating','dropdown'=>'Dropdown','picturechoice'=>'Picture Choice','photo_capture'=>'Photo Capture','email'=>'Email','upload'=>'Upload','matrix_qus'=>'Matrix Question','thank_you'=>'Thank You Page',];
