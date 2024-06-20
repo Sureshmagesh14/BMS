@@ -995,12 +995,14 @@ class SurveyController extends Controller
         if (!$next_qus) {
             return self::handleSurveyCompletion($survey_id, $other_details);
         }
-    
+
         $display_logic = json_decode($next_qus->display_logic);
         if ($display_logic !== null) {
-            if (self::processDisplayLogic($display_logic, $response_user_id,$survey_id,$next_qus)) {
+            if (self::processDisplayLogic($display_logic, $response_user_id,$survey_id,$next_qus)) {        
                 return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
             } else {
+                $surveyController = new SurveyController;
+                return $surveyController->displaynextQus($next_qus->id,$survey_id,$other_details);
                 return self::loopNextQuestion($next_qus->id, $survey_id, $other_details);
             }
         } else {
@@ -1022,29 +1024,32 @@ class SurveyController extends Controller
                 $cond = $display_qus_choice_andor_display[$k];
 
                 $qusID = explode("_", $display);
-                $qus_typeData = Questions::find($qusID[0]);
-                $qusvalue_display = json_decode($qus_typeData->qus_ans);
+                if($qusID[0] != ''){
+                    $qus_typeData = Questions::find($qusID[0]);
+                    $qusvalue_display = json_decode($qus_typeData->qus_ans);
 
-                $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
+                    $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
 
-                $ans = self::getAnswerValue($resp_logic_type_display_value, $logicv);
-                $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0]])->orderBy("id", "desc")->first();
-                list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
-
-                if (self::evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped,$qusID)) {
-                    // if ($cond == 'or') {
-                    //     array_push($push_jump, "or");
-                    // }else{
-                    //     array_push($push_jump, "and");
-                    // }
-                    array_push($push_jump, "pass");
-                } else {
-                    // if ($cond == 'or') {
-                    //     array_push($push_jump, "and");
-                    // } else {
-                    //     array_push($push_jump, "or");
-                    // }
-                    array_push($push_jump, "fail");
+                    $ans = self::getAnswerValue($resp_logic_type_display_value, $logicv);
+                    $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0]])->orderBy("id", "desc")->first();
+                    list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
+                    if (self::evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped,$qusID)) {
+                        // if ($cond == 'or') {
+                        //     array_push($push_jump, "or");
+                        // }else{
+                        //     array_push($push_jump, "and");
+                        // }
+                        array_push($push_jump, "pass");
+                    } else {
+                        // if ($cond == 'or') {
+                        //     array_push($push_jump, "and");
+                        // } else {
+                        //     array_push($push_jump, "or");
+                        // }
+                        array_push($push_jump, "fail");
+                    }
+                }else{
+                    return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
                 }
             }
         } else {
@@ -1122,31 +1127,34 @@ class SurveyController extends Controller
                 $logic = $logic_type_value_display[$k];
                 $logicv = $logic_type_value_option_display[$k];
                 $cond = $display_qus_choice_andor_display[$k];
-
                 $qusID = explode("_", $display);
-                $qus_typeData = Questions::find($qusID[0]);
-                $qusvalue_display = json_decode($qus_typeData->qus_ans);
-
-                $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
-
-                $ans = self::getAnswerValue($resp_logic_type_display_value, $logicv);
-                $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0]])->orderBy("id", "desc")->first();
-                list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
-
-                if (self::evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped,$qusID)) {
-                    // if ($cond == 'or') {
-                    //     array_push($push_jump, "or");
-                    // }else{
-                    //     array_push($push_jump, "and");
-                    // }
-                    array_push($push_jump, "pass");
-                } else {
-                    // if ($cond == 'or') {
-                    //     array_push($push_jump, "and");
-                    // } else {
-                    //     array_push($push_jump, "or");
-                    // }
-                    array_push($push_jump, "fail");
+                if($qusID[0] != ''){
+                    $qus_typeData = Questions::find($qusID[0]);
+                    $qusvalue_display = json_decode($qus_typeData->qus_ans);
+    
+                    $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
+    
+                    $ans = self::getAnswerValue($resp_logic_type_display_value, $logicv);
+                    $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0]])->orderBy("id", "desc")->first();
+                    list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
+    
+                    if (self::evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped,$qusID)) {
+                        // if ($cond == 'or') {
+                        //     array_push($push_jump, "or");
+                        // }else{
+                        //     array_push($push_jump, "and");
+                        // }
+                        array_push($push_jump, "pass");
+                    } else {
+                        // if ($cond == 'or') {
+                        //     array_push($push_jump, "and");
+                        // } else {
+                        //     array_push($push_jump, "or");
+                        // }
+                        array_push($push_jump, "fail");
+                    }
+                }else{
+                    return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
                 }
             }
         } else {
