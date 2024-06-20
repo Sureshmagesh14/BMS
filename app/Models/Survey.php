@@ -29,6 +29,7 @@ class Survey extends Model
         'avg_completion_time',
         'builderID',
         'background',
+        'shareable_type',
         'created_by'
     ];
     public function questions()
