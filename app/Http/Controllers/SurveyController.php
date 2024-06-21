@@ -968,11 +968,6 @@ class SurveyController extends Controller
             $redirection_qus = SurveyTemplate::find($quotacheck);
             return view('admin.survey.limitexceed', compact('survey', 'redirection_qus'));
         }
-       
-    //    echo "<pre>";
-    //    print_r($qus_check);
-    //    exit;
-       
         if($qus_check){
             $next_qus_loop = '';
             $skip_logic = json_decode($qus_check->skip_logic);
