@@ -84,6 +84,9 @@
             <div class="row">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7debc152c6eeee0596549bcf39790075b9d9896f
                 <div class="col-12 text-right">
                     <div class="btn-group dropdown-filter">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -138,6 +141,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
+<<<<<<< HEAD
 =======
 
 =======
@@ -201,6 +205,8 @@
 >>>>>>> 7fac792 (changes)
 =======
 >>>>>>> e0408ee (changes)
+=======
+>>>>>>> 7debc152c6eeee0596549bcf39790075b9d9896f
                             <table id="user_events" class="table dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
@@ -215,12 +221,15 @@
                             </table>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 
 >>>>>>> 7fac792 (changes)
 =======
 >>>>>>> e0408ee (changes)
+=======
+>>>>>>> 7debc152c6eeee0596549bcf39790075b9d9896f
                         </div>
                     </div>
                 </div>
