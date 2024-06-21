@@ -631,6 +631,9 @@ class ProjectsController extends Controller
             throw new Exception($e->getMessage());
         }   
     }
+    public function project_unassign(Request $request){
+        dd($request);
+    }
 
     public function notify_respondent(Request $request){
        
