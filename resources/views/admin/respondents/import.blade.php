@@ -2,7 +2,6 @@
 <style>
     label#import_excel-error { width: 100%; }
 </style>
-
 <form method="POST" action="{{ route('respondent_attach_import',['project_id' => $project_id]) }}" id="attach_respondents_form" class="validation" enctype="multipart/form-data">
     @csrf
 
