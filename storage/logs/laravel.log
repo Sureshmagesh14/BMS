@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 [2024-06-17 09:21:46] local.ERROR: Barryvdh\Debugbar\Controllers\BaseController::__construct(): Argument #1 ($request) must be of type Illuminate\Http\Request, Illuminate\Http\Request given {"exception":"[object] (TypeError(code: 0): Barryvdh\\Debugbar\\Controllers\\BaseController::__construct(): Argument #1 ($request) must be of type Illuminate\\Http\\Request, Illuminate\\Http\\Request given at C:\\wamp64\\www\\bms_new\\vendor\\barryvdh\\laravel-debugbar\\src\\Controllers\\BaseController.php:17)
 [stacktrace]
@@ -667,3 +668,5 @@
 #51 {main}
 "} 
 >>>>>>> 71c9b1e (Display & Skip Logic Fix)
+=======
+>>>>>>> aa9fd8a (chhfghfgh)
