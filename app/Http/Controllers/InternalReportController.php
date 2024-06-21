@@ -37,6 +37,7 @@ class InternalReportController extends Controller
             'user_id' => $auth_id,
             'action' => $action,
             'month' => $currentMonth,
+            'year' => now()->year,
         ],
         [
             'role' => $role,
