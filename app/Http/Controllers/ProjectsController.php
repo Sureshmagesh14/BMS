@@ -950,5 +950,22 @@ class ProjectsController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function get_project_status(Request $request){
+
+
+        $get_previous=Projects::where('id',$request->edit_id)->first();
+        if($get_previous->status_id==3){
+            return response()->json(['repsonse' => 400]);
+        }else{
+            $status=array('status_id'=>$request->get_status);
+
+            Projects::where('id',$request->edit_id)->update($status);
+
+            return response()->json(['repsonse' => 200]);
+        }
+    
+        
+    }
     
 }
