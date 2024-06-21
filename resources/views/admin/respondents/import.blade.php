@@ -1,10 +1,8 @@
-<<<<<<< HEAD
 
 <style>
     label#import_excel-error { width: 100%; }
 </style>
-=======
->>>>>>> 1bb680f (chhfghfgh)
+
 <form method="POST" action="{{ route('respondent_attach_import',['project_id' => $project_id]) }}" id="attach_respondents_form" class="validation" enctype="multipart/form-data">
     @csrf
 
@@ -21,11 +19,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Respondents *</label>
         <div class="col-md-10">
             <input type="hidden" id="project_id" value="{{$project_id}}" name="project_id">
-<<<<<<< HEAD
             <input type="file" name="file" id="import_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
-=======
-            <input type="file" name="file" id="import_excel" required>
->>>>>>> 1bb680f (chhfghfgh)
         </div>
     </div>
     <span>Note: Upload a CSV of your Respondents Information. The following fields are required in the
