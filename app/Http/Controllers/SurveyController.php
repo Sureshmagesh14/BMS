@@ -1059,7 +1059,6 @@ class SurveyController extends Controller
             return self::handleSurveyCompletion($survey_id, $other_details);
         }
 
-
         $display_logic = json_decode($next_qus->display_logic);
         if ($display_logic !== null) {
             if (self::processDisplayLogic($display_logic, $response_user_id,$survey_id,$next_qus)) {        
