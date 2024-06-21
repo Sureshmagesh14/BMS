@@ -865,6 +865,7 @@ class ProjectsController extends Controller
 
     public function respondent_attach_import(Request $request){
         $project_id = $request->project_id;
+<<<<<<< HEAD
         $file = $request->file('file');
 
         // File Details 
@@ -952,6 +953,10 @@ class ProjectsController extends Controller
         catch (Exception $e) {
             return $e->getMessage();
         }
+=======
+
+        Excel::import(new RespondentsImport,request()->file('file'));
+>>>>>>> 1bb680f (chhfghfgh)
     }
     
 }
