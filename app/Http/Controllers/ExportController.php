@@ -602,6 +602,10 @@ class ExportController extends Controller
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
                         // $sheet->setCellValue('I' . $rows, $all_data->created_by);
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                         $i++;
                     }
@@ -669,6 +673,10 @@ class ExportController extends Controller
                     $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':P' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':P' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
                     $i++;
                 }
@@ -764,7 +772,10 @@ class ExportController extends Controller
                     }
 
                     $sheet->setCellValue('G' . $rows, $status);
-
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':F' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':F' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
                     $i++;
                 }

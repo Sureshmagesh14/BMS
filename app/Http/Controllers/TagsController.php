@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Tags;
+use App\Models\Respondents;
+use App\Models\RespondentTags;
 use DB;
 use Yajra\DataTables\DataTables;
 use Exception;
@@ -221,7 +223,20 @@ class TagsController extends Controller
         try {
             if ($request->ajax()) {
                 $token = csrf_token();
-                $all_datas =Tags::latest()->get();
+                $all_datas = DB::table('tags');
+
+                if ($request->filled('id') && $request->input('inside_form') == 'respondents') {
+                    $respondentId = $request->input('id');
+                    $all_datas->join('respondent_tag', function ($join) use ($respondentId) {
+                        $join->on('respondent_tag.tag_id', '=', 'tags.id')
+                             ->where('respondent_tag.respondent_id', '=', $respondentId);
+                    });
+                }
+                
+                $all_datas = $all_datas->orderBy('tags.id', 'desc')
+                                       ->get();
+                
+                
                 
                 return Datatables::of($all_datas)
                     ->addColumn('select_all', function ($all_data) {
@@ -310,4 +325,183 @@ class TagsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+
+    public function attach_tags(Request $request){
+        try {
+            $respondent_id = $request->respondent_id;
+
+            $respondents = Respondents::select('respondents.id','respondents.name','respondents.surname')->where('respondents.id',$respondent_id)->first();
+           
+            $returnHTML = view('admin.tags.attach', compact('respondents'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function tags_seach_result(Request $request){
+        try {
+            $searchValue = $request['q'];
+            
+            if($request->filled('q')){
+                $tags_data = Tags::search($searchValue)
+                ->query(function ($query) {
+                    $query->where('deleted_at', '=', NULL);
+                })
+                ->orderBy('id','ASC')
+                ->get();
+            }
+
+            $tags = array();
+            if(count($tags_data) > 0){
+                foreach($tags_data as $resp){
+                    $setUser = [
+                        'id' => $resp->id,
+                        'name' => $resp->name,
+                        'colour' => $resp->colour,
+                    ];
+                    $tags[] = $setUser;
+                }
+            }
+
+            echo json_encode($tags);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function tags_attach_store(Request $request){
+        try {
+            $tag_id  = $request->tag_id;
+            $respondents = $request->respondents;
+
+            if(RespondentTags::where('tag_id', $tag_id)->where('respondent_id', $respondents)->exists()){
+
+                RespondentTags::update(['updated_at' => date("Y-m-d h:i:s")]);
+
+                return response()->json([
+                    'text_status' => false,
+                    'status' => 200,
+                    'message' => 'Panel Already Attached.',
+                ]);
+            }
+            else{
+                RespondentTags::insert(['tag_id' => $tag_id, 'respondent_id' => $respondents, 'created_at' => date("Y-m-d h:i:s")]);
+
+                // $proj = Projects::where('id',$project_id)->first();
+                // $resp = Respondents::where('id',$respondents)->first();
+
+                //email starts
+                // if($proj->name!='')
+                // {
+                //     $to_address = $resp->email;
+                //     //$to_address = 'hemanathans1@gmail.com';
+                //     $resp_name = $resp->name.' '.$resp->surname;
+                //     $proj_name = $proj->name;
+
+                //     $data = ['subject' => 'New Survey Assigned','name' => $resp_name,'project' => $proj_name,'type' => 'new_project'];
+                
+                //     Mail::to($to_address)->send(new WelcomeEmail($data));
+                // }
+                //email ends
+
+                return response()->json([
+                    'text_status' => true,
+                    'status' => 200,
+                    'message' => 'Project Attached Successfully.',
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function import_tags(Request $request){
+        try {
+         
+            $project_id = $request->respondent_id;
+            $projects = Tags::select('tags.id','tags.name')->where('tags.id',$project_id)->first();
+
+            $returnHTML = view('admin.tags.import', compact('projects','project_id'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function tags_attach_import(Request $request){
+        $project_id = $request->respondent_id;
+        $file = $request->file('file');
+
+        // File Details 
+        $filename = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+        $tempPath = $file->getRealPath();
+        $fileSize = $file->getSize();
+        $mimeType = $file->getMimeType();
+
+        // Valid File Extensions
+        $valid_extension = array("csv");
+        if(in_array(strtolower($extension),$valid_extension)){
+            // File upload location
+            $location = 'uploads/csv/'.$project_id;
+            // Upload file
+            $file->move($location,$filename);
+            // Import CSV to Database
+            $filepath = public_path($location."/".$filename);
+
+            $file = fopen($filepath,"r");
+
+            $importData_arr = array();
+            $i = 0;
+            $col=1;
+            while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                $num = count($filedata);
+                // Skip first row (Remove below comment if you want to skip the first row)
+                if($i == 0){
+                    $i++;
+                    continue;
+                }
+
+                if($num == $col){
+                    for ($c=0; $c < $num; $c++) {
+                        $set_array = array('respondent_id' => $filedata [$c],'tag_id' => $project_id);
+                        array_push($importData_arr,$set_array);
+                    }
+                    $i++;
+                }
+                else{
+                    return redirect()->back()->with('error','Column mismatched!');
+                    break;
+                }
+            }
+            fclose($file);
+            
+            RespondentTags::insert($importData_arr);
+
+            return redirect()->back()->with('success','Attached Successfully');
+            
+        }
+        else{
+            return redirect()->back()->with('error','Invalid File Extension, Please Upload CSV File Format');
+        }
+        
+    }
+
 }
