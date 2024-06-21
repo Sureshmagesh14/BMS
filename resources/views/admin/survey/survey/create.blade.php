@@ -8,11 +8,21 @@
     </div>
     <br>
         <div>
-            {!! Form::label('survey_type', 'Folder Type') !!}<span class="text-danger pl-1">*</span>
+            {!! Form::label('survey_type', 'Survey Type') !!}<span class="text-danger pl-1">*</span>
             <br>
             <div class="options">
                 {{ Form::radio('survey_type', 'survey' , true,['class'=>'survey_type']) }}&nbsp;&nbsp;&nbsp;{{ __('Survey') }} &nbsp;&nbsp;&nbsp;
                 {{ Form::radio('survey_type', 'profile' , false,['class'=>'survey_type']) }}&nbsp;&nbsp;&nbsp;{{ __('Profile') }}</div>
+        </div>
+    <br>
+    <br>
+        <div>
+            {!! Form::label('shareable_type', 'Shareable Type') !!}<span class="text-danger pl-1">*</span>
+            <br>
+            <div class="options">
+                {{ Form::radio('shareable_type', 'noshare' , true,['class'=>'shareable_type']) }}&nbsp;&nbsp;&nbsp;{{ __('Not Shareable') }} &nbsp;&nbsp;&nbsp;
+                {{ Form::radio('shareable_type', 'share' , false,['class'=>'shareable_type']) }}&nbsp;&nbsp;&nbsp;{{ __('Shareable') }}
+                </div>
         </div>
     <br>
    
@@ -64,7 +74,7 @@
 .select2-container--default .select2-results__option[aria-selected=true]:hover,.select2-container--default .select2-results__option--highlighted[aria-selected]{
     background-color:#448E97 !important;
 }
-input.survey_type{
+input.survey_type, input.shareable_type{
     accent-color: #448E97;
 }
 
