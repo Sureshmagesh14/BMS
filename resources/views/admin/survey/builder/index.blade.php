@@ -2147,7 +2147,10 @@ $('#survey_thankyou_page').change(function () {
         $('#upload_image').val(0);
     }
   });
-  
+  $('input, select, textarea').on('change', function() {
+        // Perform any validation or pre-submit actions here
+       $('#update_qus').click();
+    });
   
 </script>
 
