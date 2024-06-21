@@ -82,6 +82,7 @@
             </div>
 
             <div class="row">
+<<<<<<< HEAD
                 <div class="col-12 text-right">
                     <div class="btn-group dropdown-filter">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -136,6 +137,32 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
+=======
+
+                <div class="col-12 text-right">
+                    <select id="year">
+                        @for ($i = date('Y'); $i >= date('Y') - 10; $i--)
+                            <option value="{{ $i }}">{{ $i }}</option>
+                        @endfor
+                    </select>
+
+                    <select name="month" id="month" size='1'>
+                        @for ($i = 0; $i < 12; $i++)
+                            @php
+                                $time = strtotime(sprintf('%d months', $i));
+                                $label = date('F', $time);
+                                $value = date('n', $time);
+                            @endphp
+                            <option value='{{ $value }}'>{{ $label }}</option>
+                        @endfor
+                    </select>
+                    <button type="submit" class="btn btn-default btn-primary" onclick="banks_table();">Submit</button>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+
+>>>>>>> 7fac792 (changes)
                             <table id="user_events" class="table dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
@@ -148,6 +175,11 @@
                                 </thead>
                                 <tbody></tbody>
                             </table>
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 7fac792 (changes)
                         </div>
                     </div>
                 </div>
