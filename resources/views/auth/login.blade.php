@@ -103,6 +103,12 @@
     @endforeach
 @endif
 
+@if (Session::has('status'))
+    <script>
+        toastr.success("{{ session('status') }}");
+    </script>
+@endif
+
 <script>
     $(function() {
         $('#login_table').validate({
