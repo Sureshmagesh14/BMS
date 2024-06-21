@@ -897,6 +897,9 @@ class SurveyController extends Controller
             return view('admin.survey.limitexceed', compact('survey', 'redirection_qus'));
         }
        
+    //    echo "<pre>";
+    //    print_r($qus_check);
+    //    exit;
        
         if($qus_check){
             $next_qus_loop = '';
@@ -909,7 +912,9 @@ class SurveyController extends Controller
                         if (self::processSkipLogic($skip_logic, $response_user_id,$survey_id,$qus_check)) {
                             return redirect()->route('survey.startsurvey', [$survey_id, $skip_logic->jump_type]);
                         } else {
-                            return self::loopNextQuestion($qus_check->id, $survey_id, $other_details);
+                            return $surveyController->displaynextQus($question_id,$survey_id,$other_details);
+
+                            // return self::loopNextQuestion($question_id, $survey_id, $other_details);
                         }
                     } else {
                         return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
@@ -924,11 +929,8 @@ class SurveyController extends Controller
                 $next_qus_loop ='yes';
             }
         }
-        // echo "<pre>";
-        // print_r($qus_check);
-        // echo $next_qus_loop;
-        // exit;
-        
+       
+       
         if($next_qus_loop == 'yes'){
             return $surveyController->displaynextQus($question_id,$survey_id,$other_details);
         }else{
@@ -981,6 +983,9 @@ class SurveyController extends Controller
             ->where(['survey_id' => $survey_id])
             ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
             ->first();
+        // echo "<pre>";
+        // print_r($next_qus);
+        // exit;
     
         if (!$next_qus) {
             return self::handleSurveyCompletion($survey_id, $other_details);
