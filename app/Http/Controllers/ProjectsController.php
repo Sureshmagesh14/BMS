@@ -1012,10 +1012,6 @@ class ProjectsController extends Controller
             return $e->getMessage();
         }
 =======
-
-        Excel::import(new RespondentsImport,request()->file('file'));
->>>>>>> 1bb680f (chhfghfgh)
-=======
         $file = $request->file('file');
 
         // File Details 
@@ -1072,6 +1068,8 @@ class ProjectsController extends Controller
         }
         
 >>>>>>> eb5d51a (chhfghfgh)
+=======
+>>>>>>> c091df4 (cahnges)
     }
     
 }

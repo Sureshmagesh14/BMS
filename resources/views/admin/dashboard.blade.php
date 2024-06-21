@@ -156,18 +156,18 @@
                             <div class="card p-2" style="max-height: 300px; overflow-y: auto;">
                                 <ul class="list-unstyled">
                                     <li class="mb-2">
-                                        <h5>Type Filter</h5>
-                                        <select name="type_filter" id="type_filter" class="form-control" onchange="cashout_type(this)">
-                                            <option value="">Select Type</option>
+                                        <h5>Year Filter</h5>
+                                        <select name="type_filter" id="type_filter" class="form-control" onchange="select_year(this);">
+                                            <option value="">Select Year</option>
                                             @for ($i = date('Y'); $i >= date('Y') - 10; $i--)
                                                 <option value="{{ $i }}">{{ $i }}</option>
                                             @endfor
                                         </select>
                                     </li>
                                     <li class="mb-2">
-                                        <h5>Status Filter</h5>
-                                        <select name="status_filter" id="status_filter" class="form-control" onchange="cashout_status(this)">
-                                            <option value="">Select Status</option>
+                                        <h5>Month Filter</h5>
+                                        <select name="status_filter" id="status_filter" class="form-control" onchange="select_month(this);">
+                                            <option value="">Select Month</option>
                                             @php
                                                 // Get current month and year
                                                 $currentMonth = date('n');
@@ -183,7 +183,7 @@
                                                 ksort($months);
                                             @endphp
                                             @foreach ($months as $value => $label)
-                                                <option value="{{ $value }}">{{ $label }}</option>
+                                                <option value="{{ $label }}">{{ $label }}</option>
                                             @endforeach
                                         </select>
                                         
