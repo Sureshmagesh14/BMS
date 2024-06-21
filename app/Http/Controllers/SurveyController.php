@@ -2242,6 +2242,16 @@ class SurveyController extends Controller
 
                     return "limitavailable";
                 }
+                echo $limit;
+                echo "<br>".$quota->quota_limit;
+                exit;
+
+                if ($limit <= (int)$quota->quota_limit) {
+                    return "limitavailable";
+                } else {
+                
+                    return $quota->redirection_qus;
+                }
             }
         }
         // If no quotas are reached, proceed to the next question
