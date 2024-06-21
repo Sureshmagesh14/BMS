@@ -43,7 +43,6 @@
     </div>
 </main>
 <!-- main ends -->
-
 @include('user.layout.forgot-footer')
 <script>
     $(function() {
