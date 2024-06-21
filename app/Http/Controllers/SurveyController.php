@@ -969,6 +969,9 @@ class SurveyController extends Controller
             return view('admin.survey.limitexceed', compact('survey', 'redirection_qus'));
         }
        
+    //    echo "<pre>";
+    //    print_r($qus_check);
+    //    exit;
        
         if($qus_check){
             $next_qus_loop = '';
