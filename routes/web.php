@@ -127,6 +127,8 @@ Route::group([
     Route::any('project_unassign', 'ProjectsController@project_unassign')->name('project_unassign');    
     
     Route::any('get_survey_link', 'ProjectsController@get_survey_link')->name('get_survey_link');
+
+    Route::any('respondent_attach_import/{project_id}', 'ProjectsController@respondent_attach_import')->name('respondent_attach_import');
  
 
     /* Respondents MENU*/

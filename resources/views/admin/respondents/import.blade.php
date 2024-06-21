@@ -1,5 +1,7 @@
-<form method="POST" action="{{ route('upload_respondent') }}" id="attach_respondents_form" class="validation" enctype="multipart/form-data">
+<form method="POST" action="{{ route('respondent_attach_import',['project_id' => $project_id]) }}" id="attach_respondents_form" class="validation" enctype="multipart/form-data">
     @csrf
+
+    {{-- upload_respondent -> this a route --}}
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Project</label>
         <div class="col-md-10">
@@ -12,7 +14,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Respondents *</label>
         <div class="col-md-10">
             <input type="hidden" id="project_id" value="{{$project_id}}" name="project_id">
-            <input type="file" name="import_excel" id="import_excel" required>
+            <input type="file" name="file" id="import_excel" required>
         </div>
     </div>
 
