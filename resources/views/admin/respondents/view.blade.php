@@ -663,6 +663,24 @@
                         </div>
                         <!-- end card-body -->
                     </div>
+
+                      <!-- cashout start page title -->
+                      <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">Cashouts</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- cashout end page title -->
+                    <div class="card">
+                        <div class="card-body">
+                            @include('admin.table_components.cash_outs_table')
+                        </div>
+                        <!-- end card-body -->
+                    </div>
+                    <!-- cashout end page title -->
+
                     <!-- rewards start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -680,7 +698,7 @@
                     </div>
                     <!-- rewards end page title -->
 
-                    <!-- rewards start page title -->
+                    <!-- project start page title -->
                     <div class="row">
                         <div class="col-12">
                             <div class="page-title-box d-flex align-items-center justify-content-between">
@@ -688,7 +706,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- rewards end page title -->
+                    <!-- project end page title -->
                     <div class="card">
                         <div class="card-body">
                             @include('admin.table_components.projects_table', [
@@ -697,7 +715,26 @@
                         </div>
                         <!-- end card-body -->
                     </div>
-                    <!-- rewards end page title -->
+                    <!-- project end page title -->
+
+                    <!-- panel start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">Panel</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- panel end page title -->
+                    <div class="card">
+                        <div class="card-body">
+                            @include('admin.table_components.tags_table', [
+                                'respondent_id' => $data->id,
+                            ])
+                        </div>
+                        <!-- end card-body -->
+                    </div>
+
 
                 </div> <!-- end col -->
             </div> <!-- end row -->
@@ -715,10 +752,13 @@
 
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
-
+    type = ''; status = '';
     $(document).ready(function() {
+     
         rewards_table();
         projects_table();
+        cashout_table(type, status);
+        tags_table();
     });
 
     /* Rewards Inner Page */
@@ -918,6 +958,88 @@
             ]
         });
     }
+
+    function cashout_type(get_this){
+            type = $(get_this).val();
+            cashout_table(type, status);
+        }
+
+        function cashout_status(get_this){
+            status = $(get_this).val();
+            cashout_table(type, status);
+        }
+
+        function cashout_table(type, status) {
+            $('#cashout_table').dataTable().fnDestroy();
+            $('#cashout_table').DataTable({
+                searching: true,
+                ordering: true,
+                dom: 'lfrtip',
+                info: true,
+                iDisplayLength: 10,
+                lengthMenu: [
+                    [10, 50, 100, -1],
+                    [10, 50, 100, "All"]
+                ],
+                ajax: {
+                    url: "{{ route('get_all_cashouts') }}",
+                    data: {
+                        _token: tempcsrf,
+                        type: type,
+                        status: status,
+                        id: '{{ $data->id }}',
+                        inside_form: 'respondents',
+                    },
+                    error: function(xhr, error, thrown) {
+                        alert("undefind error")
+                    }
+                },
+                columns: [
+                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
+                    { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
+                    { data: 'type_id',name: 'type_id',orderable: true,searchable: true },
+                    { data: 'status_id',name: 'status_id',orderable: true,searchable: true },
+                    { data: 'amount',name: 'amount',orderable: true,searchable: true },
+                    { data: 'respondent_id',name: 'respondent_id',orderable: true,searchable: true },
+                    { data: 'action',name: 'action',orderable: true,searchable: true }
+                ]
+            });
+        }
+
+        function tags_table() {
+            $('#tags_table').dataTable().fnDestroy();
+            $('#tags_table').DataTable({
+                searching: true,
+                ordering: true,
+                dom: 'lfrtip',
+                info: true,
+                iDisplayLength: 10,
+                lengthMenu: [
+                    [10, 50, 100, -1],
+                    [10, 50, 100, "All"]
+                ],
+                ajax: {
+                    url: "{{ route('get_all_tags') }}",
+                    data: {
+                        _token: tempcsrf,
+                        id: '{{ $data->id }}',
+                        inside_form: 'respondents',
+                    },
+                    error: function(xhr, error, thrown) {
+                        alert("undefind error");
+                    }
+                },
+                columns: [
+                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
+                    { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
+                    { data: 'name',name: 'name',orderable: true,searchable: true },
+                    { data: 'colour',name: 'colour',orderable: true,searchable: true },
+                    { data: 'action',name: 'action',orderable: false,searchable: false }
+                ]
+            });
+        }
+
+      
 
     $(document).on('click', '#deattach_projects', function(e) {
         e.preventDefault();
