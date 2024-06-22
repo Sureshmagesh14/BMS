@@ -28,7 +28,7 @@
     margin-bottom: 0.5rem;
     margin-left: 0.5rem;
 }
-#tbs_logo{
+#tbs_logo,#survey_thankyou_page{
     margin-bottom: 0.5rem;
     margin-left: 0.5rem;
 }
@@ -430,6 +430,7 @@
                                  if(isset($qusvalue->tbs_logo)){
                                     $tbs_logo=1;
                                  }
+
                                   ?>
                                
                                 {{ Form::label('thankyou_template', __('Thankyou Template'),['class'=>'form-label']) }}
@@ -444,6 +445,11 @@
                             <div class="tbs_logo">
                                 {{ Form::label('tbs_logo', __('Enable TBS Logo'),['class'=>'form-label']) }}
                                 <input type="checkbox" @if($tbs_logo==1) checked @endif name="tbs_logo" id="tbs_logo" value="{{$tbs_logo}}"> 
+                            </div>
+                            <br>
+                            <div class="tbs_logo">
+                                {{ Form::label('survey_thankyou_page', __('Default Survey Thank you Page'),['class'=>'form-label']) }}
+                                <input type="checkbox" @if($currentQus->survey_thankyou_page==1) checked @endif name="survey_thankyou_page" id="survey_thankyou_page" value="{{$currentQus->survey_thankyou_page}}"> 
                             </div>
 
                             <div>
@@ -2097,7 +2103,15 @@ $('#tbs_logo').change(function () {
         $('#tbs_logo').val(0);
     }
     
-  });
+});
+$('#survey_thankyou_page').change(function () {
+    if($('#survey_thankyou_page').prop('checked')){
+        $('#survey_thankyou_page').val(1)
+    }else{
+        $('#survey_thankyou_page').val(0);
+    }
+    
+});
   $('#qus_required').change(function () {
     if($('#qus_required').prop('checked')){
         $('#qus_required').val(1)
@@ -2133,7 +2147,10 @@ $('#tbs_logo').change(function () {
         $('#upload_image').val(0);
     }
   });
-  
+  $('input, select, textarea').on('change', function() {
+        // Perform any validation or pre-submit actions here
+       $('#update_qus').click();
+    });
   
 </script>
 

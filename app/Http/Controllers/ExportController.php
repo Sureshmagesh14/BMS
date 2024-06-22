@@ -135,38 +135,29 @@ class ExportController extends Controller
 
             $respondents = ($request->respondents != null) ? implode(',', array_filter($request->respondents)) : null;
 
-            if($type_method == 'Individual'){
-                $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                    $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
-                })
-                ->whereIn('respondents.id', [$respondents])
-                ->get([
-                    'respondents.id',
-                    'respondents.opted_in',
-                    'respondent_profile.basic_details',
-                    'respondent_profile.essential_details',
-                    'respondent_profile.extended_details',
-                    'respondent_profile.children_data',
-                    'respondent_profile.vehicle_data',
-                    'respondent_profile.updated_at',
-                ]);
-            }
-            else{
-                $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                    $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
-                })
-                ->where('active_status_id',1)
-                ->get([
-                    'respondents.id',
-                    'respondents.opted_in',
-                    'respondent_profile.basic_details',
-                    'respondent_profile.essential_details',
-                    'respondent_profile.extended_details',
-                    'respondent_profile.children_data',
-                    'respondent_profile.vehicle_data',
-                    'respondent_profile.updated_at',
-                ]);
-            }
+            $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
+                $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
+            })
+            ->when($type_method == 'Individual', function ($query) use ($respondents) {
+                $query->whereIn('respondents.id', [$respondents]);
+            })
+            ->when($type_method != 'Individual', function ($query) {
+                $query->where('active_status_id', 1);
+            })
+            ->select([
+                'respondents.id',
+                'respondents.opted_in',
+                \DB::raw('COALESCE(respondent_profile.basic_details, "") AS basic_details'),
+                \DB::raw('COALESCE(respondent_profile.essential_details, "") AS essential_details'),
+                \DB::raw('COALESCE(respondent_profile.extended_details, "") AS extended_details'),
+                \DB::raw('COALESCE(respondent_profile.children_data, "") AS children_data'),
+                \DB::raw('COALESCE(respondent_profile.vehicle_data, "") AS vehicle_data'),
+                'respondent_profile.updated_at',
+            ])
+            ->get()
+            ->unique('id'); // Ensure uniqueness based on respondents.id
+        
+        
            
             if ($module == 'Respondents info') {
                 if($resp_type == 'simple'){
@@ -205,6 +196,7 @@ class ExportController extends Controller
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
                     }
                 }
                 else if ($resp_type == 'essential') {
@@ -311,6 +303,7 @@ class ExportController extends Controller
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':W' . $rows)->applyFromArray($styleArray2);
                         $sheet->getStyle('C' . $rows . ':W' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
                     }
 
                 }
@@ -493,8 +486,8 @@ class ExportController extends Controller
                         $sheet->setCellValue('Y' . $rows, $bank_main ?? '');
                         $sheet->setCellValue('Z' . $rows, $home_lang ?? '');
 
-                        $children_data = json_decode($all_data->children_data);
-                        $vehicle_data = json_decode($all_data->vehicle_data);
+                        $children_data = json_decode($all_data->children_data, true);
+                        $vehicle_data = json_decode($all_data->vehicle_data, true);
 
                         $new_alpha = 'AA';
                         foreach($children_data as $children){
@@ -523,9 +516,9 @@ class ExportController extends Controller
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':AP' . $rows)->applyFromArray($styleArray2);
                         $sheet->getStyle('C' . $rows . ':AP' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
+                        $i++;
                     }
-                    $rows++;
-                    $i++;
                 }
 
                 $fileName = $module . "_" . $resp_type . "_" . date('ymd') . "." . $type;
@@ -609,6 +602,10 @@ class ExportController extends Controller
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
                         // $sheet->setCellValue('I' . $rows, $all_data->created_by);
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                         $i++;
                     }
@@ -676,6 +673,10 @@ class ExportController extends Controller
                     $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':P' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':P' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
                     $i++;
                 }
@@ -771,14 +772,18 @@ class ExportController extends Controller
                     }
 
                     $sheet->setCellValue('G' . $rows, $status);
-
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':F' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':F' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
                     $i++;
                 }
 
                 $fileName = $module . "_" . date('ymd') . "." . $type;
 
-            }else if ($module == 'Survey') {
+            }
+            else if ($module == 'Survey') {
                 
                 $sheet->getColumnDimension('Y')->setAutoSize(true);
                 $sheet->getColumnDimension('Z')->setAutoSize(true);
@@ -907,8 +912,8 @@ class ExportController extends Controller
                     $sheet->setCellValue('Y' . $rows, $bank_main ?? '');
                     $sheet->setCellValue('Z' . $rows, $home_lang ?? '');
 
-                    $children_data = json_decode($all_data->children_data);
-                    $vehicle_data = json_decode($all_data->vehicle_data);
+                    $children_data = json_decode($all_data->children_data, true);
+                    $vehicle_data = json_decode($all_data->vehicle_data, true);
 
                     $new_alpha = 'AA';
                     foreach($children_data as $children){
@@ -937,9 +942,10 @@ class ExportController extends Controller
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                     $sheet->getStyle('C' . $rows . ':AP' . $rows)->applyFromArray($styleArray2);
                     $sheet->getStyle('C' . $rows . ':AP' . $rows)->getAlignment()->setIndent(1);
+                    $rows++;
+                    $i++;
                 }
-                $rows++;
-                $i++;
+                
             
 
                 $fileName = $module . "_" . $resp_type . "_" . date('ymd') . "." . $type;
@@ -1071,118 +1077,83 @@ class ExportController extends Controller
                 $fileName = $module . "_" . date('ymd') . "." . $type;
             }
             else if ($module == 'Team Activity') {
-               
-                if($type_method == 'Individual'){
-                    $all_datas = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc");
-                        if($respondents != ""){
-                            $all_datas = $all_datas->whereIn('user_events.user_id', [$respondents]);
-                        }
-                        if($from != null && $to != null){
-                            $all_datas = $all_datas->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $all_datas = $all_datas->where('type', '=', 'respondent')->get();
-
-                    $total_created = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc");
-                        if($respondents != ""){
-                            $total_created = $total_created->whereIn('user_events.user_id', [$respondents]);
-                        }
-                        if($from != null && $to != null){
-                            $total_created = $total_created->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                    $total_created = $total_created->where("user_events.action", "created")
-                        ->where('type', '=', 'respondent')
-                        ->get()
-                        ->count();
-
-                    $total_deactivated = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc");
-                        if($respondents != ""){
-                            $total_deactivated = $total_deactivated->whereIn('user_events.user_id', [$respondents]);
-                        }
-                        if($from != null && $to != null){
-                            $total_deactivated = $total_deactivated->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                    $total_deactivated = $total_deactivated->where("user_events.action", "deleted")->where('type', '=', 'respondent')->get()->count();
-
-                    $total_blacklisted = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc");
-                        if($respondents != ""){
-                            $total_blacklisted = $total_blacklisted->whereIn('user_events.user_id', [$respondents]);
-                        }
-                        if($from != null && $to != null){
-                            $total_blacklisted = $total_blacklisted->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $total_blacklisted = $total_blacklisted->where("user_events.action", "deactivated")->where('type', '=', 'respondent')->get()->count();
+                // Build the base query
+                $query = UserEvents::select('users.name', 'users.surname', 'user_events.user_id')
+                                ->join('users', 'user_events.user_id', 'users.id')
+                                ->where('user_events.type', '=', 'respondent');
+            
+                // Apply filters if provided
+                if ($respondents != "") {
+                    $query->whereIn('user_events.user_id', [$respondents]);
                 }
-                else{
-                    $all_datas = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->where('type', '=', 'respondent');
-                        if($from != null && $to != null){
-                            $all_datas = $all_datas->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $all_datas = $all_datas->get();
-
-                    $total_created = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->where("user_events.action", "created")
-                        ->where('type', '=', 'respondent');
-                        if($from != null && $to != null){
-                            $total_created = $total_created->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $total_created = $total_created->get()->count();
-
-                    $total_deactivated = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->where("user_events.action", "deleted")
-                        ->where('type', '=', 'respondent');
-                        if($from != null && $to != null){
-                            $total_deactivated = $total_deactivated->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $total_deactivated = $total_deactivated->get()->count();
-
-                    $total_blacklisted = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->where("user_events.action", "deactivated")
-                        ->where('type', '=', 'respondent');
-                        if($from != null && $to != null){
-                            $total_blacklisted = $total_blacklisted->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $total_blacklisted = $total_blacklisted->get()->count();
+            
+                if ($from != null && $to != null) {
+                    $query->whereDate('user_events.created_at', '>=', $from)
+                          ->whereDate('user_events.created_at', '<=', $to);
                 }
-
+            
+                // Group by user_id to avoid duplication
+                $query->groupBy('user_events.user_id', 'users.name', 'users.surname');
+            
+                // Fetch all data
+                $all_datas = $query->orderBy("users.name")->get();
+            
                 $sheet->setCellValue('A1', 'Name of team member');
                 $sheet->setCellValue('B1', 'Total recruited respondents');
                 $sheet->setCellValue('C1', 'Total deactivated respondents');
                 $sheet->setCellValue('D1', 'Total blacklisted respondents');
-
+            
                 $sheet->getStyle('A1:D1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
                 $sheet->getStyle('A1:D1')->applyFromArray($styleArray);
-
+            
                 $rows = 2;
-                $i = 1;
-                foreach ($all_datas as $all_data) {
-                    $sheet->setCellValue('A' . $rows, $all_data->name . " " . $all_data->surname);
+                foreach ($all_datas as $data) {
+                    // Count total recruited respondents for this specific user
+                    $total_created = UserEvents::where('user_id', $data->user_id)
+                                                ->where('action', 'created')
+                                                ->where('type', 'respondent');
+                    if ($from != null && $to != null) {
+                        $total_created->whereDate('created_at', '>=', $from)
+                                      ->whereDate('created_at', '<=', $to);
+                    }
+                    $total_created = $total_created->count();
+            
+                    // Count total deactivated respondents for this specific user
+                    $total_deactivated = UserEvents::where('user_id', $data->user_id)
+                                                    ->where('action', 'deleted')
+                                                    ->where('type', 'respondent');
+                    if ($from != null && $to != null) {
+                        $total_deactivated->whereDate('created_at', '>=', $from)
+                                          ->whereDate('created_at', '<=', $to);
+                    }
+                    $total_deactivated = $total_deactivated->count();
+            
+                    // Count total blacklisted respondents for this specific user
+                    $total_blacklisted = UserEvents::where('user_id', $data->user_id)
+                                                    ->where('action', 'deactivated')
+                                                    ->where('type', 'respondent');
+                    if ($from != null && $to != null) {
+                        $total_blacklisted->whereDate('created_at', '>=', $from)
+                                          ->whereDate('created_at', '<=', $to);
+                    }
+                    $total_blacklisted = $total_blacklisted->count();
+            
+                    // Set values for each row
+                    $sheet->setCellValue('A' . $rows, $data->name . " " . $data->surname);
                     $sheet->setCellValue('B' . $rows, $total_created);
                     $sheet->setCellValue('C' . $rows, $total_deactivated);
                     $sheet->setCellValue('D' . $rows, $total_blacklisted);
-
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':D' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':D' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
-                    $i++;
                 }
-
+            
                 $fileName = $module . "_" . date('ymd') . "." . $type;
             }
+            
+            
 
             if ($type == 'xlsx') {
                 $writer = new Xlsx($spreadsheet);
@@ -1191,7 +1162,7 @@ class ExportController extends Controller
                 $writer = new Xls($spreadsheet);
             }
             
-            $writer->save("../public/" . $fileName);
+            $writer->save("../public/" . $fileName); 
 
             header("Content-Type: application/vnd.ms-excel");
             return redirect(url('/') . "/" . $fileName);

@@ -174,7 +174,7 @@
                             <tbody>
                                 @foreach ($get_respondent as $res)
                                     <tr>
-                                        <td>{{ $res->name }}</td>
+                                        <td>{{ ($res->project_name_resp != null) ? $res->project_name_resp : $res->name }}</td>
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                         <td title="{{ $res->description }}">
 
@@ -311,7 +311,7 @@
                             <tbody>
                                 @foreach ($get_completed_survey as $res)
                                     <tr>
-                                        <td>{{ $res->name }}</td>
+                                        <td>{{ ($res->project_name_resp != null) ? $res->project_name_resp : $res->name }}</td>
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                         <td title="{{ $res->description }}">
 
