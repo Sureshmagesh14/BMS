@@ -87,6 +87,9 @@
         .col-sm-12{
             width: 100% !important;
         }
+        .wizard>.content {
+            overflow: auto;
+        }
     }
 
 </style>
@@ -185,7 +188,7 @@
                                 <h2>Essential Details</h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
-                                        <div class="col-6 col-sm-4">
+                                        <div class="col-6 col-md-6 col-sm-12">
                                             <label for="relationship_status">Relationship Status <span
                                                     class="star_require">*</span></label>
                                             <select name="essential[relationship_status]" id="relationship_status"
@@ -211,7 +214,7 @@
                                                     Widowed</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4">
+                                        <div class="col-6  col-md-6 col-sm-12">
                                             <label for="gender">Gender <span class="star_require">*</span></label>
                                             <select name="essential[gender]" id="gender" required>
                                                 <option value="">Select</option>
@@ -232,7 +235,7 @@
                                                     Other</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4">
+                                        <div class="col-6  col-md-6 col-sm-12">
                                             <label for="ethnic_group">Ethnic Group / Race <span
                                                     class="star_require">*</span></label>
                                             <select name="essential[ethnic_group]" id="ethnic_group" required>
@@ -443,7 +446,7 @@
                                 <h2>Extended Details</h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
-                                        <div class="col-6 col-sm-5">
+                                        <div class="col-6 col-md-6 col-sm-12 overflow-auto">
                                             <table border="1" id="children_table"
                                                 class="children_table table table-bordered table-striped table-highlight">
                                                 <colgroup>
@@ -492,7 +495,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div class="col-6 col-sm-7">
+                                        <div class="col-6 col-md-6 col-sm-12 overflow-auto">
                                             <table border="1" id="vehicle_table"
                                                 class="vehicle_table table table-bordered table-striped table-highlight">
                                                 <colgroup>
