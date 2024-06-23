@@ -346,6 +346,27 @@ class TagsController extends Controller
         }
     }
 
+    public function attach_resp_tags(Request $request){
+        try {
+            $tags_id = $request->tags_id;
+           
+
+            $tags = Tags::where('id',$tags_id)->first();
+           
+            $returnHTML = view('admin.tags.attach_tags', compact('tags_id','tags'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function tags_seach_result(Request $request){
         try {
             $searchValue = $request['q'];

@@ -190,6 +190,8 @@
                         "searching": false,
                         "serverSide": true,
                         "deferRender": true,
+                        "iDisplayLength": 100,
+                        "lengthMenu": [[100, "All", 50, 25], [100, "All", 50, 25]],
                         dom: 'lfrtip',
                         "ajax": {
                             "url": "{{ route('get_activity_data') }}",
