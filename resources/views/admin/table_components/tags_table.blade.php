@@ -8,28 +8,53 @@
                 <option value="respondents">Export - Respondents</option>
             </optgroup>
             <optgroup label="Standalone Actions"> --}}
-                {{-- <option value="2">Import - Respondents</option> --}}
-                {{-- <option value="panels">Export - Pannels</option>
+        {{-- <option value="2">Import - Respondents</option> --}}
+        {{-- <option value="panels">Export - Pannels</option>
             </optgroup>
         </select> --}}
 
         {{-- <select name="action_1" id="action_1" class="form-control tags_table show_hided_option tags_select_box">
             <option value="">Select Action</option> --}}
-            {{-- <option value="2">Import - Respondents</option> --}}
-            {{-- <option value="panels">Export - Pannels</option>
+        {{-- <option value="2">Import - Respondents</option> --}}
+        {{-- <option value="panels">Export - Pannels</option>
         </select> --}}
     </div>
 
 
 
     @if (Auth::guard('admin')->user()->role_id == 1)
-        <div class="btn-group mr-2" role="group" aria-label="Second group">
+
+        @if (str_contains(Request::url(), '/admin/respondents'))
+
+        @isset($respondent_id)
+        @php $respondent_id = $respondent_id; @endphp
+        @else
+            @php $respondent_id = '0'; @endphp
+        @endisset
+
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <a href="#!" data-url="{{ route('attach_tags', ['respondent_id' => $respondent_id]) }}"  data-size="xl" data-ajax-popup="true" class="btn btn-primary mr-2"
+                    data-bs-original-title="{{ __('Attach Panel') }}" class="btn btn-primary" data-size="xl"
+                    data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                    Attach Panels
+                </a>
+                
+                <a href="#!" data-url="{{ route('import_tags', ['respondent_id' => $respondent_id]) }}" data-size="xl" data-ajax-popup="true" class="btn btn-primary"
+                    data-bs-original-title="{{ __('Import - Respondents to Project') }}" class="btn btn-primary"
+                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                    Import Panels
+                </a>
+            </div>
+        @else
             <a href="#!" data-url="{{ route('tags.create') }}" data-size="xl" data-ajax-popup="true"
                 class="btn btn-primary" data-bs-original-title="{{ __('Create Pannel') }}" class="btn btn-primary"
                 data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
                 Create Panels
             </a>
-        </div>
+        @endif
+        <br><br>
+
+
 
         <div class="btn-group tags_table hided_option" role="group" aria-label="Third group" style="display: none;">
             <div class="btn-group dropdown-filter">
@@ -59,7 +84,7 @@
         </div>
     @endif
 </div>
-</div>
+
 
 <h4 class="card-title"> </h4>
 <p class="card-title-desc"></p>

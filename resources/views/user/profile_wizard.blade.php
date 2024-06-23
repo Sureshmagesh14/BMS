@@ -383,7 +383,7 @@
                                             </select>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
-                                            <label for="suburb">Suburb <span class="star_require">*</span></label>
+                                            <label for="metropolitan_area">Metropolitan Area <span class="star_require">*</span></label>
                                             <select name="essential[suburb]" id="suburb" required>
                                                 <option value="">Select</option>
                                                 @foreach ($get_suburb as $suburb)
@@ -394,8 +394,7 @@
                                             </select>
                                         </div>
                                         <div class="col-6 col-sm-4 mt-3">
-                                            <label for="metropolitan_area">Metropolitan Area <span
-                                                    class="star_require">*</span></label>
+                                            <label for="suburb">Suburb <span class="star_require">*</span></label>
                                             <input type="text" name="essential[metropolitan_area]"
                                                 id="metropolitan_area" class="form-control" required
                                                 @isset($essential_details['metropolitan_area']) value ="{{ $essential_details['metropolitan_area'] }}" @endisset>
@@ -454,35 +453,55 @@
                                                 </thead>
                                                 <tbody>
                                                     @php $child_key = 1; @endphp
-                                                    @foreach ($child_details as $child)
-                                                        <tr class="more_tr role_tr"
-                                                            id="children_tr{{ $child_key }}">
-                                                            <td>
-                                                                <lable>Child {{ $child_key }}</lable>
-                                                            </td>
-                                                            <td>
-                                                                <input type="date"
-                                                                    id="children_child_{{ $child_key }}"
-                                                                    class="form-control child_age"
-                                                                    name="children[dob_{{ $child_key }}][]"
-                                                                    value="{{ $child['date'] }}">
-                                                            </td>
-                                                            <td>
-                                                                <select id="gender_{{ $child_key }}"
-                                                                    class="form-control child_gender"
-                                                                    name="children[gender_{{ $child_key }}][]">
-                                                                    <option value="">Select</option>
-                                                                    <option value="male"
-                                                                        @if ($child['gender'] == 'male') selected @endif>
-                                                                        Male</option>
-                                                                    <option value="female"
-                                                                        @if ($child['gender'] == 'female') selected @endif>
-                                                                        Female</option>
-                                                                </select>
-                                                            </td>
-                                                        </tr>
-                                                        @php $child_key++; @endphp
-                                                    @endforeach
+                                                    @if($children_set == 0)
+                                                        @foreach ($child_details as $child)
+                                                            <tr class="more_tr role_tr"
+                                                                id="children_tr{{ $child_key }}">
+                                                                <td>
+                                                                    <lable>Child {{ $child_key }}</lable>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text"
+                                                                        id="children_child_{{ $child_key }}"
+                                                                        class="form-control child_age"
+                                                                        name="children[dob_{{ $child_key }}][]"
+                                                                        value="{{ $child['date'] }}">
+                                                                </td>
+                                                                <td>
+                                                                    <select id="gender_{{ $child_key }}"
+                                                                        class="form-control child_gender"
+                                                                        name="children[gender_{{ $child_key }}][]">
+                                                                        <option value="">Select</option>
+                                                                        <option value="male"
+                                                                            @if ($child['gender'] == 'male') selected @endif>
+                                                                            Male</option>
+                                                                        <option value="female"
+                                                                            @if ($child['gender'] == 'female') selected @endif>
+                                                                            Female</option>
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                            @php $child_key++; @endphp
+                                                        @endforeach
+                                                    @else
+                                                        @for($child_i = 1; $child_i <= $children_set; $child_i++)
+                                                            <tr class="more_tr role_tr" id="children_tr{{ $child_i }}">
+                                                                <td>
+                                                                    <lable>Child {{ $child_i }}</lable>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" id="children_child_{{ $child_i }}" class="form-control child_age" name="children[dob_{{ $child_key }}][]">
+                                                                </td>
+                                                                <td>
+                                                                    <select id="gender_{{ $child_i }}" class="form-control child_gender" name="children[gender_{{ $child_i }}][]">
+                                                                        <option value="">Select</option>
+                                                                        <option value="male">Male</option>
+                                                                        <option value="female">Female</option>
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                        @endfor
+                                                    @endif
                                                 </tbody>
                                             </table>
                                         </div>
@@ -507,77 +526,113 @@
                                                 </thead>
                                                 <tbody>
                                                     @php $vehicle_key = 1; @endphp
-                                                    @foreach ($vehicle_details as $vehicle)
-                                                        <tr class="more_tr role_tr"
-                                                            id="children_tr{{ $child_key }}">
-                                                        <tr class="more_tr role_tr"
-                                                            id="vehicle_tr{{ $vehicle_key }}">
-                                                            <td>
-                                                                <lable>Vehicle {{ $vehicle_key }}</lable>
-                                                            </td>
-                                                            <td>
-                                                                <select class="form-control vehicle_brand"
-                                                                    id="brand_{{ $vehicle_key }}"
-                                                                    name="vehicle[brand_{{ $vehicle_key }}][]">
-                                                                    @foreach ($vehicle_master as $veh)
-                                                                        <option
-                                                                            @if ($veh->id == $vehicle['brand']) selected @endif
-                                                                            value="{{ $veh->id }}">
-                                                                            {{ $veh->vehicle_name }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <select class="form-control vehicle_type"
-                                                                    id="type_{{ $vehicle_key }}"
-                                                                    name="vehicle[type_{{ $vehicle_key }}][]">
-                                                                    <option value="sedan"
-                                                                        @isset($vehicle['type']) @if ('sedan' == $vehicle['type']) selected @endif @endisset>
-                                                                        Sedan</option>
-                                                                    <option value="coupe"
-                                                                        @isset($vehicle['type']) @if ('coupe' == $vehicle['type']) selected @endif @endisset>
-                                                                        Coupe</option>
-                                                                    <option value="sports_car"
-                                                                        @isset($vehicle['type']) @if ('sports_car' == $vehicle['type']) selected @endif @endisset>
-                                                                        Sports Car</option>
-                                                                    <option value="wagon"
-                                                                        @isset($vehicle['type']) @if ('wagon' == $vehicle['type']) selected @endif @endisset>
-                                                                        Station Wagon</option>
-                                                                    <option value="hatchback"
-                                                                        @isset($vehicle['type']) @if ('hatchback' == $vehicle['type']) selected @endif @endisset>
-                                                                        Hatchback</option>
-                                                                    <option value="convertible"
-                                                                        @isset($vehicle['type']) @if ('convertible' == $vehicle['type']) selected @endif @endisset>
-                                                                        Convertible</option>
-                                                                    <option value="suv"
-                                                                        @isset($vehicle['type']) @if ('suv' == $vehicle['type']) selected @endif @endisset>
-                                                                        SPORT-UTILITY VEHICLE (SUV)</option>
-                                                                    <option value="minivan"
-                                                                        @isset($vehicle['type']) @if ('minivan' == $vehicle['type']) selected @endif @endisset>
-                                                                        Minivan</option>
-                                                                    <option value="pickup_tuck"
-                                                                        @isset($vehicle['type']) @if ('pickup_tuck' == $vehicle['type']) selected @endif @endisset>
-                                                                        Pickup Truck</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" value="{{ $vehicle['model'] }}"
-                                                                    id="model_{{ $vehicle_key }}"
-                                                                    class="form-control vehicle_model"
-                                                                    name="vehicle[model_{{ $vehicle_key }}][]">
-                                                            </td>
-                                                            <td>
-                                                                <select name="vehicle[year_{{ $vehicle_key }}][]" id="year_{{ $vehicle_key }}" class="form-control vehicle_year">
-                                                                    <option value="">Select Year</option>
-                                                                    @for ($year_drop = date('Y'); $year_drop >= $get_year; $year_drop--)
-                                                                        <option value="{{$year_drop}}" @if($year_drop == $vehicle['year']) selected @endif>{{$year_drop}}</option>
-                                                                    @endfor
-                                                                </select>
-                                                            </td>
-                                                        </tr>
-                                                        </tr>
-                                                        @php $vehicle_key++; @endphp
-                                                    @endforeach
+                                                    @if($vehicle_set == 0)
+                                                        @foreach ($vehicle_details as $vehicle)
+                                                            <tr class="more_tr role_tr" id="vehicle_tr{{ $vehicle_key }}">
+                                                                <td>
+                                                                    <lable>Vehicle {{ $vehicle_key }}</lable>
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-control vehicle_brand"
+                                                                        id="brand_{{ $vehicle_key }}"
+                                                                        name="vehicle[brand_{{ $vehicle_key }}][]">
+                                                                        @foreach ($vehicle_master as $veh)
+                                                                            <option
+                                                                                @if ($veh->id == $vehicle['brand']) selected @endif
+                                                                                value="{{ $veh->id }}">
+                                                                                {{ $veh->vehicle_name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-control vehicle_type"
+                                                                        id="type_{{ $vehicle_key }}"
+                                                                        name="vehicle[type_{{ $vehicle_key }}][]">
+                                                                        <option value="sedan"
+                                                                            @isset($vehicle['type']) @if ('sedan' == $vehicle['type']) selected @endif @endisset>
+                                                                            Sedan</option>
+                                                                        <option value="coupe"
+                                                                            @isset($vehicle['type']) @if ('coupe' == $vehicle['type']) selected @endif @endisset>
+                                                                            Coupe</option>
+                                                                        <option value="sports_car"
+                                                                            @isset($vehicle['type']) @if ('sports_car' == $vehicle['type']) selected @endif @endisset>
+                                                                            Sports Car</option>
+                                                                        <option value="wagon"
+                                                                            @isset($vehicle['type']) @if ('wagon' == $vehicle['type']) selected @endif @endisset>
+                                                                            Station Wagon</option>
+                                                                        <option value="hatchback"
+                                                                            @isset($vehicle['type']) @if ('hatchback' == $vehicle['type']) selected @endif @endisset>
+                                                                            Hatchback</option>
+                                                                        <option value="convertible"
+                                                                            @isset($vehicle['type']) @if ('convertible' == $vehicle['type']) selected @endif @endisset>
+                                                                            Convertible</option>
+                                                                        <option value="suv"
+                                                                            @isset($vehicle['type']) @if ('suv' == $vehicle['type']) selected @endif @endisset>
+                                                                            SPORT-UTILITY VEHICLE (SUV)</option>
+                                                                        <option value="minivan"
+                                                                            @isset($vehicle['type']) @if ('minivan' == $vehicle['type']) selected @endif @endisset>
+                                                                            Minivan</option>
+                                                                        <option value="pickup_tuck"
+                                                                            @isset($vehicle['type']) @if ('pickup_tuck' == $vehicle['type']) selected @endif @endisset>
+                                                                            Pickup Truck</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" value="{{ $vehicle['model'] }}"
+                                                                        id="model_{{ $vehicle_key }}"
+                                                                        class="form-control vehicle_model"
+                                                                        name="vehicle[model_{{ $vehicle_key }}][]">
+                                                                </td>
+                                                                <td>
+                                                                    <select name="vehicle[year_{{ $vehicle_key }}][]" id="year_{{ $vehicle_key }}" class="form-control vehicle_year">
+                                                                        <option value="">Select Year</option>
+                                                                        @for ($year_drop = date('Y'); $year_drop >= $get_year; $year_drop--)
+                                                                            <option value="{{$year_drop}}" @if($year_drop == $vehicle['year']) selected @endif>{{$year_drop}}</option>
+                                                                        @endfor
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                            @php $vehicle_key++; @endphp
+                                                        @endforeach
+                                                    @else
+                                                        @for($vehicle_i = 1; $vehicle_i <= $vehicle_set; $vehicle_i++)
+                                                            <tr class="more_tr role_tr" id="vehicle_tr{{ $vehicle_i }}">
+                                                                <td><lable>Vehicle {{ $vehicle_i }}</lable></td>
+                                                                <td>
+                                                                    <select class="form-control vehicle_brand" id="brand_{{ $vehicle_i }}"
+                                                                        name="vehicle[brand_{{ $vehicle_i }}][]">
+                                                                        @foreach ($vehicle_master as $veh)
+                                                                            <option>{{ $veh->vehicle_name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-control vehicle_type" id="type_{{ $vehicle_i }}" name="vehicle[type_{{ $vehicle_i }}][]">
+                                                                        <option value="sedan">Sedan</option>
+                                                                        <option value="coupe">Coupe</option>
+                                                                        <option value="sports_car">Sports Car</option>
+                                                                        <option value="wagon">Station Wagon</option>
+                                                                        <option value="hatchback">Hatchback</option>
+                                                                        <option value="convertible">Convertible</option>
+                                                                        <option value="suv">SPORT-UTILITY VEHICLE (SUV)</option>
+                                                                        <option value="minivan">Minivan</option>
+                                                                        <option value="pickup_tuck">Pickup Truck</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" id="model_{{ $vehicle_i }}" class="form-control vehicle_model" name="vehicle[model_{{ $vehicle_i }}][]">
+                                                                </td>
+                                                                <td>
+                                                                    <select name="vehicle[year_{{ $vehicle_i }}][]" id="year_{{ $vehicle_i }}" class="form-control vehicle_year">
+                                                                        <option value="">Select Year</option>
+                                                                        @for ($year_drop = date('Y'); $year_drop >= $get_year; $year_drop--)
+                                                                            <option value="{{$year_drop}}">{{$year_drop}}</option>
+                                                                        @endfor
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                        @endfor
+                                                    @endif
                                                 </tbody>
                                             </table>
                                         </div>
@@ -902,7 +957,7 @@
                         '<lable>Child ' + child + '</lable>' +
                         '</td>' +
                         '<td>' +
-                        '<input type="date" id="children_child_' + child +
+                        '<input type="text" id="children_child_' + child +
                         '" class="form-control child_age" name="children[dob_' + child + '][]">' +
                         '</td>' +
                         '<td>' +
@@ -916,6 +971,13 @@
                         '</tr>';
                 }
                 scroll_div.append(append_html);
+
+                $('.child_age').inputmask("yyyy/mm/dd", {
+                    "placeholder": "YYYY/MM/DD",
+                    onincomplete: function() {
+                        $(this).val('');
+                    }
+                });
             }
         });
 
@@ -1072,7 +1134,6 @@
     }
 
     $(document).ready(function() {
-        $('#nav_profile').addClass('active');
         $('#date_of_birth').inputmask("yyyy/mm/dd", {
             "placeholder": "YYYY/MM/DD",
             onincomplete: function() {
@@ -1080,6 +1141,7 @@
             }
         });
     });
+
     $(document).ready(function() {
         $("#profile_wizard_form").validate({
             rules: {
@@ -1129,6 +1191,13 @@
         $('select.select2-hidden-accessible').on("change", function(e) {
             $(this).valid();
 
+        });
+
+        $('.child_age').inputmask("yyyy/mm/dd", {
+            "placeholder": "YYYY/MM/DD",
+            onincomplete: function() {
+                $(this).val('');
+            }
         });
     });
 </script>

@@ -1,4 +1,3 @@
-
 @include('admin.layout.header')
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
@@ -28,142 +27,152 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            
+
                             <div class="mb-0">
                                 <div class="text-right">
 
-                                    <div class="btn-group mr-2" >
-                                      
-                                        <a href="#!" data-url="{{ route('projects.edit', $data->id) }}" data-size="xl"
-                                            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="Edit Projects"
-                                            data-bs-toggle="tooltip" id="create">
+                                    <div class="btn-group mr-2">
+
+                                        <a href="#!" data-url="{{ route('projects.edit', $data->id) }}"
+                                            data-size="xl" data-ajax-popup="true" class="btn btn-primary"
+                                            data-bs-original-title="Edit Projects" data-bs-toggle="tooltip"
+                                            id="create">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     </div>
-                                    <div class="btn-group mr-2" role="group" aria-label="First group" >
-                                      
-                                        <input type="hidden" name="project_id" id="project_id" value="{{$data->id}}">
-                                        <select name="action_1" id="action_1" class="form-control projects_table show_hided_option select_box">
+                                    <div class="btn-group mr-2" role="group" aria-label="First group">
+
+                                        <input type="hidden" name="project_id" id="project_id"
+                                            value="{{ $data->id }}">
+                                        <select name="action_1" id="action_1"
+                                            class="form-control projects_table show_hided_option select_box">
                                             <option value="">Select Action</option>
-                                            <option value="6">Update</option>
-                                            <option value="6">Deleted</option>
-                                            <option value="6">Deactivated</option>
-                                            <option value="6">Activated</option>
-                                            <option value="6">Share URL</option>
+                                            <option value="3">
+                                                Status &gt; Complete
+                                            </option>
+                                            <option value="4">
+                                                Project Complete &amp; Reward
+                                            </option>
                                         </select>
                                     </div>
-                                
-                               
-                                   
+
+
+
                                 </div>
                                 <table class="table">
                                     <tbody>
                                         <tr>
                                             <th>ID</th>
-                                            <td>{{$data->id}}</td>
+                                            <input type="hidden" name="edit_id" id="edit_id"
+                                                value="{{ $data->id }}">
+                                            <td>{{ $data->id }}</td>
                                         </tr>
                                         <tr>
                                             <th>Project Number</th>
-                                            <td>{{$data->number}}</td>
+                                            <td>{{ $data->number }}</td>
                                         </tr>
 
                                         <tr>
                                             <th>Project Name</th>
-                                            <td>{{$data->name}}</td>
+                                            <td>{{ $data->name }}</td>
                                         </tr>
                                         <tr>
                                             <th>Client Name</th>
-                                            <td>{{$data->client}}</td>
+                                            <td>{{ $data->client }}</td>
                                         </tr>
                                         <tr>
                                             <th>Creator</th>
                                             <td>
                                                 @php $name_r=\App\Models\Projects::get_user_name($data->user_id); @endphp
-                                                {{$name_r->name}}   {{$name_r->lname}}
+                                                {{ $name_r->name }} {{ $name_r->lname }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>Survey Type</th>
                                             <td>
-                                                @if($data->status_id==2)  
-                                                Pre-Task
-                                                @elseif($data->status_id==3)  
-                                                Paid survey
-                                                @elseif($data->status_id==4)  
-                                                Unpaid survey
+                                                @if ($data->status_id == 2)
+                                                    Pre-Task
+                                                @elseif($data->status_id == 3)
+                                                    Paid survey
+                                                @elseif($data->status_id == 4)
+                                                    Unpaid survey
                                                 @endif
                                             </td>
                                         </tr>
 
-                                      
+
                                         <tr>
                                             <th>Reward Amount (R)</th>
-                                            <td>{{$data->reward}}</td>
+                                            <td>{{ $data->reward }}</td>
                                         </tr>
                                         <tr>
                                             <th>Project Name for Respondents</th>
-                                            <td>{{$data->project_name_resp}}</td>
+                                            <td>{{ $data->project_name_resp }}</td>
                                         </tr>
 
                                         <tr>
                                             <th>Email Description 1</th>
-                                            <td>{{$data->description1}}</td>
+                                            <td>{{ $data->description1 }}</td>
                                         </tr>
 
                                         <tr>
                                             <th>Status</th>
                                             <td>
-                                                @if($data->status_id==1) 
-                                                Pending
-                                                @elseif($data->status_id==2) 
-                                                Active
-                                                @elseif($data->status_id==3) 
-                                                Completed
-                                                @elseif($data->status_id==4) 
-                                                Cancelled 
+                                                @if ($data->status_id == 1)
+                                                    Pending
+                                                @elseif($data->status_id == 2)
+                                                    Active
+                                                @elseif($data->status_id == 3)
+                                                    Completed
+                                                @elseif($data->status_id == 4)
+                                                    Cancelled
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>Email Subject</th>
-                                            <td>{{$data->description}}</td>
+                                            <td>{{ $data->description }}</td>
                                         </tr>
                                         <tr>
                                             <th>Email Description 1</th>
-                                            <td>{{$data->description1}}</td>
+                                            <td>{{ $data->description1 }}</td>
                                         </tr>
-                            
+
                                         {{-- <tr>
                                             <th>Email Description 2 (Pre-task only)</th>
                                             <td>{{$data->description2}}</td>
                                         </tr> --}}
-                                        
+
                                         {{-- <tr>
                                             <th>Survey Duration (Minutes)</th>
                                             <td>{{$data->survey_duration}}</td>
                                         </tr> --}}
-                                        
+
                                         <tr>
                                             <th>Live Date</th>
-                                            <td>{{$data->published_date}}</td>
+                                            <td>{{ $data->published_date }}</td>
                                         </tr>
                                         <tr>
                                             <th>Closing Date</th>
-                                            <td>{{$data->closing_date}}</td>
+                                            <td>{{ $data->closing_date }}</td>
                                         </tr>
                                         <tr>
                                             <th>Accessibility</th>
                                             <td>
-                                                @if($data->access_id==1) Shareable
-                                                @else Unique @endif
+                                                @if ($data->access_id == 1)
+                                                    Shareable
+                                                @else
+                                                    Unique
+                                                @endif
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>Survey Link</th>
                                             @php $survey_link=\App\Models\Projects::get_survey($data->survey_link); @endphp
-                                         
-                                            <td><a title="{{$survey_link->title ?? ''}}" class="btn btn-yellow" target="_blank"
-                                                href="{{ url('survey/view', $survey_link->builderID ?? '') }}">{{url('survey/view', $survey_link->builderID ?? '') }}</a>
+
+                                            <td><a title="{{ $survey_link->title ?? '' }}" class="btn btn-yellow"
+                                                    target="_blank"
+                                                    href="{{ url('survey/view', $survey_link->builderID ?? '') }}">{{ url('survey/view', $survey_link->builderID ?? '') }}</a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -189,7 +198,7 @@
                         </div>
                         <!-- end card-body -->
                     </div>
-                  
+
                     <!-- Respondent start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -201,7 +210,9 @@
                     <!-- Respondent end page title -->
                     <div class="card">
                         <div class="card-body">
-                            @include('admin.table_components.respondents_table', ['project_id' => $data->id])
+                            @include('admin.table_components.respondents_table', [
+                                'project_id' => $data->id,
+                            ])
                         </div>
                         <!-- end card-body -->
                     </div>
@@ -252,15 +263,54 @@
                     alert("undefind error")
                 }
             },
-            columns: [
-                { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
-                { data: 'points',name: 'points',orderable: true,searchable: true },
-                { data: 'status_id',name: 'status_id',orderable: true,searchable: true },
-                { data: 'respondent_id',name: 'respondent_id',orderable: true,searchable: true },
-                { data: 'user_id',name: 'user_id',orderable: true,searchable: true },
-                { data: 'project_id',name: 'project_id',orderable: true,searchable: true },
-                { data: 'action',name: 'action',orderable: false,searchable: false }
+            columns: [{
+                    data: 'select_all',
+                    name: 'select_all',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'id_show',
+                    name: 'id_show',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'points',
+                    name: 'points',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'status_id',
+                    name: 'status_id',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'respondent_id',
+                    name: 'respondent_id',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'user_id',
+                    name: 'user_id',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'project_id',
+                    name: 'project_id',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
             ]
         });
     }
@@ -269,15 +319,50 @@
         var all_id = [];
         values = $(this).val();
 
-        if(values == 2){
+        if (values == 2) {
             var values = $("#user_table tbody tr").map(function() {
                 var $this = $(this);
                 if ($this.find("[type=checkbox]").is(':checked')) {
                     all_id.push($this.find("[type=checkbox]").attr('id'));
                 }
             }).get();
-            multi_delete("POST", all_id, "{{ route('rewards_multi_delete') }}", "Rewards Deleted", 'rewards_table');
+            multi_delete("POST", all_id, "{{ route('rewards_multi_delete') }}", "Rewards Deleted",
+                'rewards_table');
         }
+    });
+    $("#action_1").change(function() {
+        var get_status = this.value;
+        console.log("kj",get_status);
+        var edit_id = $('#edit_id').val();
+        $.ajax({
+
+            type: "GET",
+            url: "{{ route('get_project_status') }}",
+            data: {
+                "get_status": get_status,
+                "edit_id": edit_id,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                console.log("fgh", data.repsonse);
+
+                if(data.repsonse==400){
+                    toastr.info("Status Already Changed!");
+                }else{
+                    toastr.success("Status Changed Successfully");
+                }
+               
+                setTimeout(function() {
+                    location.reload();
+                }, 1000);
+
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
     });
 
     function view_details(id) {
@@ -303,23 +388,52 @@
                 "dataType": "json",
                 "type": "POST"
             },
-            "columns": [
-                { "data": "select_all" },
-                { "data": "id_show" },
-                { "data": "name" },
-                { "data": "surname" },
-                { "data": "mobile" },
-                { "data": "whatsapp" },
-                { "data": "email" },
-                { "data": "date_of_birth" },
-                { "data": "race" },
-                { "data": "status" },
-                { "data": "profile_completion" },
-                { "data": "inactive_until" },
-                { "data": "opeted_in" },
-                { "data": "options" }
+            "columns": [{
+                    "data": "select_all"
+                },
+                {
+                    "data": "id_show"
+                },
+                {
+                    "data": "name"
+                },
+                {
+                    "data": "surname"
+                },
+                {
+                    "data": "mobile"
+                },
+                {
+                    "data": "whatsapp"
+                },
+                {
+                    "data": "email"
+                },
+                {
+                    "data": "date_of_birth"
+                },
+                {
+                    "data": "race"
+                },
+                {
+                    "data": "status"
+                },
+                {
+                    "data": "profile_completion"
+                },
+                {
+                    "data": "inactive_until"
+                },
+                {
+                    "data": "opeted_in"
+                },
+                {
+                    "data": "options"
+                }
             ],
-            "order": [[1, "asc"]],
+            "order": [
+                [1, "asc"]
+            ],
             stateSave: false,
         });
     }
@@ -344,15 +458,17 @@
             }
         }).get();
 
-        multi_delete("POST", all_id, "{{ route('networks_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
+        multi_delete("POST", all_id, "{{ route('networks_multi_delete') }}", "Respondents Deleted",
+            'respondents_datatable');
     });
 
     $(document).on('click', '#deattach_respondents', function(e) {
         e.preventDefault();
-        project_id     = $("#project_id").val();
+        project_id = $("#project_id").val();
         var respondent = $(this).data("id");
 
-        var url = "{{ route('deattach_respondent', ['respondent_id' => ':respondent_id', 'project_id' => ':project_id']) }}";
+        var url =
+            "{{ route('deattach_respondent', ['respondent_id' => ':respondent_id', 'project_id' => ':project_id']) }}";
         url = url.replace(':respondent_id', respondent);
         url = url.replace(':project_id', project_id);
 
@@ -361,12 +477,12 @@
 
     $(document).on('click', '.user_play_button', function(e) {
         var all_id = [];
-        var project_id     = $("#project_id").val();
+        var project_id = $("#project_id").val();
         var values = $("#respondents_datatable tbody tr").map(function() {
             var $this = $(this);
-          
+
             if ($this.find("[type=checkbox]").is(':checked')) {
-                
+
                 console.log($this.find("[type=checkbox]").attr('id'));
                 all_id.push($this.find("[type=checkbox]").attr('id'));
             }
@@ -374,57 +490,51 @@
 
 
         select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $("#action_2").val();
-       
+
         // alert(select_value);
 
-        if(select_value == 11){
+        if (select_value == 11) {
             titles = "Un-Assign from Project";
-            select_action("POST", all_id, project_id, "{{ route('project_unassign') }}", 'respondents_datatable', titles, "Are You Want To Un-Assign from Project", "Action");
-        }
-        else if(select_value == 10){
+            select_action("POST", all_id, project_id, "{{ route('project_unassign') }}",
+                'respondents_datatable', titles, "Are You Want To Un-Assign from Project", "Action");
+        } else if (select_value == 10) {
             titles = "Notify Respondent";
-            select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}", 'respondents_datatable', titles, "Are You Want Send Notification", "Action");
-        }
-        else if(select_value == "delete_all"){
-            multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects Deleted", 'respondents_datatable');
-        }
-        else if(select_value == "export_all_project"){
-            
-        }
-        else if(select_value == "export_survey_response"){
-            
-        }
-        else{
+            select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}",
+                'respondents_datatable', titles, "Are You Want Send Notification", "Action");
+        } else if (select_value == "delete_all") {
+            multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects Deleted",
+                'respondents_datatable');
+        } else if (select_value == "export_all_project") {
+
+        } else if (select_value == "export_survey_response") {
+
+        } else {
             toastr.info("OOPS! Select the action");
         }
     });
 </script>
 
-@if(Session::has('success'))
-<script>
-
-  toastr.options =
-  {
-  	"closeButton" : true,
-  	"progressBar" : true
-  }
-  	toastr.success("{{ session('success') }}");
-
-</script>
+@if (Session::has('success'))
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true
+        }
+        toastr.success("{{ session('success') }}");
+    </script>
 @endif
-@if(Session::has('error'))
-<script>
-  toastr.options =
-  {
-  	"closeButton" : true,
-  	"progressBar" : true
-  }
-  		toastr.error("{{ session('error') }}");
-</script>
+@if (Session::has('error'))
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true
+        }
+        toastr.error("{{ session('error') }}");
+    </script>
 @endif
 <script>
     toastr.options = {
-  "closeButton": true,
-  "progressBar": true,
-  };
+        "closeButton": true,
+        "progressBar": true,
+    };
 </script>

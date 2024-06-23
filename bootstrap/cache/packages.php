@@ -25,17 +25,6 @@
       'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
     ),
   ),
-  'codedredd/laravel-soap' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'CodeDredd\\Soap\\SoapServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'SOAP' => 'SoapFacade',
-    ),
-  ),
   'laravel/breeze' => 
   array (
     'providers' => 
