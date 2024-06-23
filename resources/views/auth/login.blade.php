@@ -39,15 +39,15 @@
         <div class="col-md-6 col-sm-12">
             <div class="rightside text-center">
                 <img src="{{ asset('user/images/small-logo.png') }}" class="img-fluid w-50 m-auto mb-4" alt="" />
-                <h2 class="vi-common-clr vi-welcome-size fw-bolder">Welcome!</h2>
+                <h2 class="vi-common-clr vi-welcome-size fw-bolder">Welcome Back</h2>
 
-                <p>Login with Username or Mobile</p>
+                <p>Login with your email address</p>
                 <form method="POST" id="login_table" action="{{ route('login') }}">
                     @csrf
                     <div class="my-3  w-75 m-auto">
-                        <label class="email-start vi-common-clr" for="email">Username</label>
+                        <label class="email-start vi-common-clr" for="email">Email Address</label>
                         <input type="text" class="form-control vi-border-clr vi-cs-textbox" name="email"
-                            id="email" placeholder="Enter Your Username Or Mobile"/>
+                            id="email" placeholder="Enter Your Email Address"/>
                     </div>
                     <div class="my-3 w-75 m-auto">
                         <label class="pass-start vi-common-clr" for="email text-start">Password</label>
@@ -58,8 +58,7 @@
                     </div>
                     @if (Route::has('password.request'))
                         <div class="forgetpass me-5">
-                            <a href="{{ route('password.request') }}" class="nav-link text-end me-5 my-2">Forgot your
-                                Username/Password?</a>
+                            <a href="{{ route('password.request') }}" class="nav-link text-end me-5 my-2">Forgot Password?</a>
                         </div>
                     @endif
                     <div class="mobile-space">
