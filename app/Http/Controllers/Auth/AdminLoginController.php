@@ -116,7 +116,30 @@ class AdminLoginController extends Controller
                 $from = date("2023-m-01");
                 $to = date("2023-12-d");
                 
-                $all_datas = DB::select("select u.id,u.name,u.surname, (select count(*) from user_events e where e.user_id = u.id AND e.action='created' AND e.type='respondent' ) as createCount, (select count(*) from user_events e where e.user_id = u.id AND e.action='updated' AND e.type='respondent' ) as updateCount, (select count(*) from user_events e where e.user_id = u.id AND e.action='deactivated' AND e.type='respondent' ) as deactCount from users u;");
+                $all_datas = DB::table('users as u')
+                ->select('u.id', 'u.name', 'u.surname')
+                ->selectSub(function ($query) {
+                    $query->select(DB::raw('count(*)'))
+                          ->from('user_events')
+                          ->whereColumn('user_events.user_id', 'u.id')
+                          ->where('user_events.action', '=', 'created')
+                          ->where('user_events.type', '=', 'respondent');
+                }, 'createCount')
+                ->selectSub(function ($query) {
+                    $query->select(DB::raw('count(*)'))
+                          ->from('user_events')
+                          ->whereColumn('user_events.user_id', 'u.id')
+                          ->where('user_events.action', '=', 'updated')
+                          ->where('user_events.type', '=', 'respondent');
+                }, 'updateCount')
+                ->selectSub(function ($query) {
+                    $query->select(DB::raw('count(*)'))
+                          ->from('user_events')
+                          ->whereColumn('user_events.user_id', 'u.id')
+                          ->where('user_events.action', '=', 'deactivated')
+                          ->where('user_events.type', '=', 'respondent');
+                }, 'deactCount')
+                ->get();
                 
                 // $all_datas = DUsers::select('users.id','users.name', 'users.surname', 'user_events.*')
                 // ->join('user_events', 'user_events.user_id', 'users.id')
@@ -140,23 +163,23 @@ class AdminLoginController extends Controller
                 //$total_created = $total_created->groupBy('user_events.user_id');
                 //$total_created = $total_created->get()->count();
                 
-                $dashboard_data = array();
-                foreach ($all_datas as $all_data) {
+                // $dashboard_data = array();
+                // foreach ($all_datas as $all_data) {
 
-                    $newdata =  array (
-                        'id' => $all_data->id,
-                        'name' => $all_data->name . " " . $all_data->surname,
-                        'createCount' => $all_data->createCount,
-                        'updateCount' => $all_data->updateCount,
-                        'deactCount' => $all_data->deactCount,
-                    );
+                //     $newdata =  array (
+                //         'id' => $all_data->id,
+                //         'name' => $all_data->name . " " . $all_data->surname,
+                //         'createCount' => $all_data->createCount,
+                //         'updateCount' => $all_data->updateCount,
+                //         'deactCount' => $all_data->deactCount,
+                //     );
 
-                    array_push($dashboard_data, $newdata);
-                }
+                //     array_push($dashboard_data, $newdata);
+                // }
 
                 //dd($dashboard_data);
-
-                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val','black_val','pending_val','complete','incomplete','tot','comp_per','incomp_per','act_per','dec_per','unsub_pre','pen_per','bla_per','share_link','dashboard_data'));
+                $dashboard_data='';
+;                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val','black_val','pending_val','complete','incomplete','tot','comp_per','incomp_per','act_per','dec_per','unsub_pre','pen_per','bla_per','share_link','dashboard_data'));
                 
                 return redirect("/")->withSuccess('You are not allowed to access');
             }
@@ -168,6 +191,90 @@ class AdminLoginController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+
+    public function get_activity_data(Request $request) {
+        if ($request->ajax()) {
+            // Base query
+            $query = DB::table('users as u')
+                ->select('u.id', DB::raw('CONCAT(u.name, " ", u.surname) AS full_name'))
+                ->selectSub(function ($query) {
+                    $query->select(DB::raw('count(*)'))
+                        ->from('user_events')
+                        ->whereColumn('user_events.user_id', 'u.id')
+                        ->where('user_events.action', 'created')
+                        ->where('user_events.type', 'respondent');
+                }, 'createCount')
+                ->selectSub(function ($query) {
+                    $query->select(DB::raw('count(*)'))
+                        ->from('user_events')
+                        ->whereColumn('user_events.user_id', 'u.id')
+                        ->where('user_events.action', 'updated')
+                        ->where('user_events.type', 'respondent');
+                }, 'updateCount')
+                ->selectSub(function ($query) {
+                    $query->select(DB::raw('count(*)'))
+                        ->from('user_events')
+                        ->whereColumn('user_events.user_id', 'u.id')
+                        ->where('user_events.action', 'deactivated')
+                        ->where('user_events.type', 'respondent');
+                }, 'deactCount');
+    
+           
+            // Apply filters based on DataTables search input
+            // if (!empty($request->input('year')) || !empty($request->input('month'))) {
+            //     $year = $request->input('year');
+            //     $month = $request->input('month');
+            //     $query->where(function ($query) use ($year,$month) {
+            //         $query->orWhere('user_events.year','=',$year)
+            //                   ->orWhere('user_events.month','=',$month);
+            //     });
+            // }
+
+            if ($request->filled('year') || $request->filled('month')) {
+                $year = $request->input('year');
+                $month = $request->input('month');
+                
+                $query->whereExists(function ($subQuery) use ($year, $month) {
+                    $subQuery->select(DB::raw(1))
+                             ->from('user_events')
+                             ->whereColumn('user_events.user_id', 'u.id')
+                             ->where(function ($query) use ($year, $month) {
+                                 if (!empty($year)) {
+                                     $query->whereYear('user_events.created_at', '=', $year);
+                                 }
+                                 if (!empty($month)) {
+                                     $query->orWhereMonth('user_events.created_at', '=', $month);
+                                 }
+                             });
+                });
+            }
+            
+
+              
+        
+    
+            // Count total records before pagination
+            $totalRecords = $query->count();
+    
+            // Ordering and pagination
+            $query->offset($request->input('start'))
+                  ->limit($request->input('length'));
+    
+            // Get data
+            $data = $query->get();
+    
+            // Prepare JSON response for DataTables
+            $json_data = [
+                "draw" => intval($request->input('draw')),
+                "recordsTotal" => $totalRecords,
+                "recordsFiltered" => $totalRecords, // For simplicity, assuming no search filter on server
+                "data" => $data,
+            ];
+    
+            return response()->json($json_data);
+        }
+    }
+    
 
     public function signOut(){
         try {

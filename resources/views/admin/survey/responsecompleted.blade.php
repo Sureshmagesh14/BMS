@@ -164,11 +164,13 @@ if(isset($bg)){
  ?>
 <body style="{{$stylebackground}}">
     <div class="surveybackground">
+    @if($survey->survey_type == 'profile')
         <a class="back_to_profile" href="{{ route('user.dashboard') }}">
             <button id="back_to_profile">
                 <span class="ss-primary-action-btn__copy">Back to Profile</span>
             </button>
         </a>
+        @endif
         <?php //echo "<pre>";  print_r($survey); ?>
 
 <?php $surveyCompleted =   \App\Models\SurveyResponse::where(['survey_id'=>$survey->id,'response_user_id'=>\Auth::user()->id])->where('answer','!=','thankyou_submitted')->get();  
@@ -195,122 +197,124 @@ if($respone){
 }else{
     $output = '-';
 }
-if($qus->qus_type == 'likert'){
-    $qusvalue = json_decode($qus->qus_ans);
-    $left_label='Least Likely';
-    $middle_label='Netural';
-    $right_label='Most Likely';
-    $likert_range = 10;
-    if(isset($qusvalue->right_label)){
-        $right_label=$qusvalue->right_label;
-    }
-    if(isset($qusvalue->middle_label)){
-        $middle_label=$qusvalue->middle_label;
-    }
-    if(isset($qusvalue->likert_range)){
-        $likert_range=$qusvalue->likert_range;
-    }
-    if(isset($qusvalue->left_label)){
-        $left_label=$qusvalue->left_label;
-    }
-    $output = intval($output);
-    $likert_label = $output;
-    if($likert_range <= 4 && $output <= 4){
-        if($output == 1 || $output == 2){
-            $likert_label = $left_label;
-        }else{
-            $likert_label = $right_label;
+if(isset($qus)){
+    if($qus->qus_type == 'likert'){
+        $qusvalue = json_decode($qus->qus_ans);
+        $left_label='Least Likely';
+        $middle_label='Netural';
+        $right_label='Most Likely';
+        $likert_range = 10;
+        if(isset($qusvalue->right_label)){
+            $right_label=$qusvalue->right_label;
         }
-    }else if($likert_range >= 5 && $output >=5){
-        if($likert_range == 5){
+        if(isset($qusvalue->middle_label)){
+            $middle_label=$qusvalue->middle_label;
+        }
+        if(isset($qusvalue->likert_range)){
+            $likert_range=$qusvalue->likert_range;
+        }
+        if(isset($qusvalue->left_label)){
+            $left_label=$qusvalue->left_label;
+        }
+        $output = intval($output);
+        $likert_label = $output;
+        if($likert_range <= 4 && $output <= 4){
             if($output == 1 || $output == 2){
                 $likert_label = $left_label;
-            }else if($output == 3){
-                $likert_label = $middle_label;
-            }else if($output == 4 || $output == 5){
+            }else{
                 $likert_label = $right_label;
             }
-        }else if($likert_range == 6){
-            if($output == 1 || $output == 2){
-                $likert_label = $left_label;
-            }else if($output == 3 || $output == 4){
-                $likert_label = $middle_label;
-            }else if($output == 5 || $output == 6){
-                $likert_label = $right_label;
-            }
-        }else if($likert_range == 7){
-            if($output == 1 || $output == 2){
-                $likert_label = $left_label;
-            }else if($output == 3 || $output == 4 || $output == 5){
-                $likert_label = $middle_label;
-            }else if($output == 6 || $output == 7){
-                $likert_label = $right_label;
-            }
-        }else if($likert_range == 8){
-            if($output == 1 || $output == 2 || $output == 3){
-                $likert_label = $left_label;
-            }else if($output == 4 || $output == 5){
-                $likert_label = $middle_label;
-            }else if($output == 6 || $output == 7 || $output == 8){
-                $likert_label = $right_label;
-            }
-        }else if($likert_range == 9){
-            if($output == 1 || $output == 2 || $output == 3){
-                $likert_label = $left_label;
-            }else if($output == 4 || $output == 5 || $output == 6){
-                $likert_label = $middle_label;
-            }else if($output == 7 || $output == 8 || $output == 9){
-                $likert_label = $right_label;
-            }
-        }else if($likert_range == 10){
-            if($output == 1 || $output == 2 || $output == 3){
-                $likert_label = $left_label;
-            }else if($output == 4 || $output == 5 || $output == 6 || $output == 7){
-                $likert_label = $middle_label;
-            }else if($output == 8 || $output == 9 || $output == 10){
-                $likert_label = $right_label;
+        }else if($likert_range >= 5 && $output >=5){
+            if($likert_range == 5){
+                if($output == 1 || $output == 2){
+                    $likert_label = $left_label;
+                }else if($output == 3){
+                    $likert_label = $middle_label;
+                }else if($output == 4 || $output == 5){
+                    $likert_label = $right_label;
+                }
+            }else if($likert_range == 6){
+                if($output == 1 || $output == 2){
+                    $likert_label = $left_label;
+                }else if($output == 3 || $output == 4){
+                    $likert_label = $middle_label;
+                }else if($output == 5 || $output == 6){
+                    $likert_label = $right_label;
+                }
+            }else if($likert_range == 7){
+                if($output == 1 || $output == 2){
+                    $likert_label = $left_label;
+                }else if($output == 3 || $output == 4 || $output == 5){
+                    $likert_label = $middle_label;
+                }else if($output == 6 || $output == 7){
+                    $likert_label = $right_label;
+                }
+            }else if($likert_range == 8){
+                if($output == 1 || $output == 2 || $output == 3){
+                    $likert_label = $left_label;
+                }else if($output == 4 || $output == 5){
+                    $likert_label = $middle_label;
+                }else if($output == 6 || $output == 7 || $output == 8){
+                    $likert_label = $right_label;
+                }
+            }else if($likert_range == 9){
+                if($output == 1 || $output == 2 || $output == 3){
+                    $likert_label = $left_label;
+                }else if($output == 4 || $output == 5 || $output == 6){
+                    $likert_label = $middle_label;
+                }else if($output == 7 || $output == 8 || $output == 9){
+                    $likert_label = $right_label;
+                }
+            }else if($likert_range == 10){
+                if($output == 1 || $output == 2 || $output == 3){
+                    $likert_label = $left_label;
+                }else if($output == 4 || $output == 5 || $output == 6 || $output == 7){
+                    $likert_label = $middle_label;
+                }else if($output == 8 || $output == 9 || $output == 10){
+                    $likert_label = $right_label;
+                }
             }
         }
-    }
-    $tempresult = [$qus->question_name => $likert_label];
-    $result = $likert_label;
+        $tempresult = [$qus->question_name => $likert_label];
+        $result = $likert_label;
 
-}
-else if($qus->qus_type == 'matrix_qus'){
-    if($output=='Skip'){
-        $qusvalue = json_decode($qus->qus_ans); 
-        $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
-        foreach($exiting_qus_matrix as $op){
-            $result ='Skip'; 
+    }
+    else if($qus->qus_type == 'matrix_qus'){
+        if($output=='Skip'){
+            $qusvalue = json_decode($qus->qus_ans); 
+            $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
+            foreach($exiting_qus_matrix as $op){
+                $result ='Skip'; 
+            }
+        }else{
+            $output = json_decode($output);
+            foreach($output as $op){
+                $tempresult = [$op->qus =>$op->ans];
+                $result =$op->ans; 
+            }
         }
-    }else{
-        $output = json_decode($output);
+        
+    }else if($qus->qus_type == 'rankorder'){
+        $output = json_decode($output,true);
+        $ordering = [];
         foreach($output as $op){
-            $tempresult = [$op->qus =>$op->ans];
-            $result =$op->ans; 
+            array_push($ordering,$op['id']);
         }
+        $tempresult = [$qus->question_name =>implode(',',$ordering)];
+        $result=implode(',',$ordering);
+    }else if($qus->qus_type == 'photo_capture'){
+        $img = "<a target='_blank' href='$output'><img class='photo_capture' src='$output'/></a>";
+        $tempresult = [$qus->question_name =>$img];
+        $result=$img;
+    }else if($qus->qus_type=='upload'){
+        $output1=asset('uploads/survey/'.$output);
+        $img = "<a target='_blank' href='$output1'>".$output."</a>";
+        $tempresult = [$qus->question_name =>$img];
+        $result=$img;
+    }else{
+        $tempresult = [$qus->question_name =>$output];
+        $result=$output;
     }
-    
-}else if($qus->qus_type == 'rankorder'){
-    $output = json_decode($output,true);
-    $ordering = [];
-    foreach($output as $op){
-        array_push($ordering,$op['id']);
-    }
-    $tempresult = [$qus->question_name =>implode(',',$ordering)];
-    $result=implode(',',$ordering);
-}else if($qus->qus_type == 'photo_capture'){
-    $img = "<a target='_blank' href='$output'><img class='photo_capture' src='$output'/></a>";
-    $tempresult = [$qus->question_name =>$img];
-    $result=$img;
-}else if($qus->qus_type=='upload'){
-    $output1=asset('uploads/survey/'.$output);
-    $img = "<a target='_blank' href='$output1'>".$output."</a>";
-    $tempresult = [$qus->question_name =>$img];
-    $result=$img;
-}else{
-    $tempresult = [$qus->question_name =>$output];
-    $result=$output;
 }
 ?>
     @if(isset($question))

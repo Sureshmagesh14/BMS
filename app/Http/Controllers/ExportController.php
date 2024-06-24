@@ -135,38 +135,29 @@ class ExportController extends Controller
 
             $respondents = ($request->respondents != null) ? implode(',', array_filter($request->respondents)) : null;
 
-            if($type_method == 'Individual'){
-                $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                    $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
-                })
-                ->whereIn('respondents.id', [$respondents])
-                ->get([
-                    'respondents.id',
-                    'respondents.opted_in',
-                    'respondent_profile.basic_details',
-                    'respondent_profile.essential_details',
-                    'respondent_profile.extended_details',
-                    'respondent_profile.children_data',
-                    'respondent_profile.vehicle_data',
-                    'respondent_profile.updated_at',
-                ]);
-            }
-            else{
-                $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                    $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
-                })
-                ->where('active_status_id',1)
-                ->get([
-                    'respondents.id',
-                    'respondents.opted_in',
-                    'respondent_profile.basic_details',
-                    'respondent_profile.essential_details',
-                    'respondent_profile.extended_details',
-                    'respondent_profile.children_data',
-                    'respondent_profile.vehicle_data',
-                    'respondent_profile.updated_at',
-                ]);
-            }
+            $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
+                $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
+            })
+            ->when($type_method == 'Individual', function ($query) use ($respondents) {
+                $query->whereIn('respondents.id', [$respondents]);
+            })
+            ->when($type_method != 'Individual', function ($query) {
+                $query->where('active_status_id', 1);
+            })
+            ->select([
+                'respondents.id',
+                'respondents.opted_in',
+                \DB::raw('COALESCE(respondent_profile.basic_details, "") AS basic_details'),
+                \DB::raw('COALESCE(respondent_profile.essential_details, "") AS essential_details'),
+                \DB::raw('COALESCE(respondent_profile.extended_details, "") AS extended_details'),
+                \DB::raw('COALESCE(respondent_profile.children_data, "") AS children_data'),
+                \DB::raw('COALESCE(respondent_profile.vehicle_data, "") AS vehicle_data'),
+                'respondent_profile.updated_at',
+            ])
+            ->get()
+            ->unique('id'); // Ensure uniqueness based on respondents.id
+        
+        
            
             if ($module == 'Respondents info') {
                 if($resp_type == 'simple'){
@@ -205,6 +196,7 @@ class ExportController extends Controller
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
                     }
                 }
                 else if ($resp_type == 'essential') {
@@ -252,8 +244,18 @@ class ExportController extends Controller
 
                         $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
 
-                        $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
-                        $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
+                        $employment_status = null; // Initialize $employment_status to null
+
+                        if ($essential && isset($essential->employment_status)) {
+                            $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
+                        }
+                        
+                        $industry_my_company = null; // Initialize $industry_my_company to null
+
+                        if ($essential && isset($essential->industry_my_company)) {
+                            $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
+                        }
+
                        
                         $sheet->setCellValue('G' . $rows, $year);
                         $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
@@ -266,8 +268,22 @@ class ExportController extends Controller
                         $sheet->setCellValue('O' . $rows, $essential->personal_income_per_month ?? '');
                         $sheet->setCellValue('P' . $rows, $essential->job_title ?? '');
 
-                        $state = DB::table('state')->where('id', $essential->province)->first();
-                        $district = DB::table('district')->where('id', $essential->suburb)->first();
+                        $state = null; // Initialize $state to null
+
+                        if ($essential && isset($essential->province)) {
+                            $state = DB::table('state')
+                                        ->where('id', $essential->province)
+                                        ->first();
+                        }
+                        
+                        $district = null; // Initialize $district to null
+
+                        if ($essential && isset($essential->suburb)) {
+                            $district = DB::table('district')
+                                          ->where('id', $essential->suburb)
+                                          ->first();
+                        }
+                        
 
                         $get_state = ($state != null) ? $state->state : '-';
                         $get_district = ($district != null) ? $district->district : '-';
@@ -287,6 +303,7 @@ class ExportController extends Controller
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':W' . $rows)->applyFromArray($styleArray2);
                         $sheet->getStyle('C' . $rows . ':W' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
                     }
 
                 }
@@ -375,11 +392,25 @@ class ExportController extends Controller
 
                         $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
 
-                        $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
-                        $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
+                        $employment_status = isset($essential) && $essential->employment_status == 'other' ? $essential->employment_status_other : ($essential ? $essential->employment_status : null);
+                        $industry_my_company = isset($essential) && $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : ($essential ? $essential->industry_my_company : null);
+                        
                        
-                        $p_income = DB::table('income_per_month')->where('id',$essential->personal_income_per_month)->first();
-                        $h_income = DB::table('income_per_month')->where('id',$essential->household_income_per_month)->first();
+                        $p_income = null; // Initialize $p_income to null
+
+                        if ($essential && isset($essential->personal_income_per_month)) {
+                            $p_income = DB::table('income_per_month')
+                                            ->where('id', $essential->personal_income_per_month)
+                                            ->first();
+                        }
+                        $h_income = null; // Initialize $h_income to null
+
+                        if ($essential && isset($essential->household_income_per_month)) {
+                            $h_income = DB::table('income_per_month')
+                                            ->where('id', $essential->household_income_per_month)
+                                            ->first();
+                        }
+                        
                         $personal_income = ($p_income != null) ? $p_income->income : '-';
                         $household_income = ($h_income != null) ? $h_income->income : '-';
 
@@ -394,8 +425,21 @@ class ExportController extends Controller
                         $sheet->setCellValue('O' . $rows, $personal_income ?? '');
                         $sheet->setCellValue('P' . $rows, $household_income ?? '');
 
-                        $state = DB::table('state')->where('id', $essential->province)->first();
-                        $district = DB::table('district')->where('id', $essential->suburb)->first();
+                        $state = null; // Initialize $state to null
+
+                        if ($essential && isset($essential->province)) {
+                            $state = DB::table('state')
+                                        ->where('id', $essential->province)
+                                        ->first();
+                        }
+                        $district = null; // Initialize $district to null
+
+                        if ($essential && isset($essential->suburb)) {
+                            $district = DB::table('district')
+                                        ->where('id', $essential->suburb)
+                                        ->first();
+                        }
+
 
                         $get_state = ($state != null) ? $state->state : '-';
                         $get_district = ($district != null) ? $district->district : '-';
@@ -407,19 +451,43 @@ class ExportController extends Controller
                         $sheet->setCellValue('U' . $rows, $essential->no_children ?? '');
                         $sheet->setCellValue('V' . $rows, $essential->no_vehicle ?? '');
 
-                        $business_org = ($extended->business_org == 'other') ? $extended->business_org_other : $extended->business_org;
-                        $home_lang    = ($extended->home_lang == 'other') ? $extended->home_lang_other : $extended->home_lang;
+                        $business_org = null; // Initialize $business_org to null
 
-                        $banks = DB::table('banks')->where('id',$extended->bank_main)->where('active',1)->first();
-                        $bank_main = ($extended->bank_main == 'other') ? $extended->bank_main_other : $banks->bank_name;
+                        if ($extended && isset($extended->business_org)) {
+                            $business_org = $extended->business_org == 'other' ? $extended->business_org_other : $extended->business_org;
+                        }
+                        
+                        $home_lang = null; // Initialize $home_lang to null
+
+                        if ($extended && isset($extended->home_lang)) {
+                            $home_lang = $extended->home_lang == 'other' ? $extended->home_lang_other : $extended->home_lang;
+                        }
+                        
+
+                        $bank_main = null; // Initialize $bank_main to null
+
+                        if ($extended && isset($extended->bank_main)) {
+                            if ($extended->bank_main == 'other') {
+                                $bank_main = $extended->bank_main_other;
+                            } else {
+                                $banks = DB::table('banks')
+                                            ->where('id', $extended->bank_main)
+                                            ->where('active', 1)
+                                            ->first();
+                                if ($banks) {
+                                    $bank_main = $banks->bank_name;
+                                }
+                            }
+                        }
+                        
                             
                         $sheet->setCellValue('W' . $rows, $business_org ?? '');
                         $sheet->setCellValue('X' . $rows, $extended->org_company ?? '');
                         $sheet->setCellValue('Y' . $rows, $bank_main ?? '');
                         $sheet->setCellValue('Z' . $rows, $home_lang ?? '');
 
-                        $children_data = json_decode($all_data->children_data);
-                        $vehicle_data = json_decode($all_data->vehicle_data);
+                        $children_data = json_decode($all_data->children_data, true);
+                        $vehicle_data = json_decode($all_data->vehicle_data, true);
 
                         $new_alpha = 'AA';
                         foreach($children_data as $children){
@@ -448,9 +516,9 @@ class ExportController extends Controller
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':AP' . $rows)->applyFromArray($styleArray2);
                         $sheet->getStyle('C' . $rows . ':AP' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
+                        $i++;
                     }
-                    $rows++;
-                    $i++;
                 }
 
                 $fileName = $module . "_" . $resp_type . "_" . date('ymd') . "." . $type;
@@ -534,6 +602,10 @@ class ExportController extends Controller
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
                         // $sheet->setCellValue('I' . $rows, $all_data->created_by);
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                         $i++;
                     }
@@ -601,6 +673,10 @@ class ExportController extends Controller
                     $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':P' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':P' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
                     $i++;
                 }
@@ -609,7 +685,8 @@ class ExportController extends Controller
             }
             else if ($module == 'Rewards') {
                 $respondents = $request->respondents;
-
+                $projects = $request->projects;
+                
                 if($type_method == 'Individual'){
 
                     $all_datas = Respondents::leftJoin('rewards', function ($join) {
@@ -627,12 +704,28 @@ class ExportController extends Controller
                         'respondents.email',
                         'rewards.status_id',
                     ]);
-                }
-                else{
+                }else if($type_method == 'All'){
                     $all_datas = Respondents::leftJoin('rewards', function ($join) {
                         $join->on('rewards.respondent_id', '=', 'respondents.id');
                     })
                     ->get([
+                        'respondents.id',
+                        'respondents.name',
+                        'respondents.surname',
+                        'respondents.mobile',
+                        'respondents.whatsapp',
+                        'respondents.email',
+                        'rewards.status_id',
+                    ]);
+                }
+                else{
+                    $all_datas = Respondents::leftJoin('rewards', function ($join) {
+                        $join->on('rewards.respondent_id', '=', 'respondents.id');
+                    });
+                    if($projects != ""){
+                        $all_datas = $all_datas->whereIn('rewards.project_id', [$projects]);
+                    }
+                    $all_datas = $all_datas->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -679,13 +772,183 @@ class ExportController extends Controller
                     }
 
                     $sheet->setCellValue('G' . $rows, $status);
-
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':F' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':F' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
                     $i++;
                 }
 
                 $fileName = $module . "_" . date('ymd') . "." . $type;
 
+            }
+            else if ($module == 'Survey') {
+                
+                $sheet->getColumnDimension('Y')->setAutoSize(true);
+                $sheet->getColumnDimension('Z')->setAutoSize(true);
+                $sheet->getColumnDimension('AA')->setAutoSize(true);
+                $sheet->getColumnDimension('AB')->setAutoSize(true);
+                $sheet->getColumnDimension('AC')->setAutoSize(true);
+                $sheet->getColumnDimension('AD')->setAutoSize(true);
+                $sheet->getColumnDimension('AE')->setAutoSize(true);
+                $sheet->getColumnDimension('AF')->setAutoSize(true);
+                $sheet->getColumnDimension('AG')->setAutoSize(true);
+                $sheet->getColumnDimension('AH')->setAutoSize(true);
+                $sheet->getColumnDimension('AI')->setAutoSize(true);
+                $sheet->getColumnDimension('AJ')->setAutoSize(true);
+                $sheet->getColumnDimension('AK')->setAutoSize(true);
+                $sheet->getColumnDimension('AL')->setAutoSize(true);
+                $sheet->getColumnDimension('AM')->setAutoSize(true);
+                $sheet->getColumnDimension('AN')->setAutoSize(true);
+                $sheet->getColumnDimension('AO')->setAutoSize(true);
+                $sheet->getColumnDimension('AP')->setAutoSize(true);
+                
+                $sheet->setCellValue('A1', 'PID');
+                $sheet->setCellValue('B1', 'First Name');
+                $sheet->setCellValue('C1', 'Last Name');
+                $sheet->setCellValue('D1', 'Mobile Number');
+                $sheet->setCellValue('E1', 'WA Number');
+                $sheet->setCellValue('F1', 'Email');
+                $sheet->setCellValue('G1', 'Age');
+                $sheet->setCellValue('H1', 'Relationship status');
+                $sheet->setCellValue('I1', 'Ethnic Group / Race');
+                $sheet->setCellValue('J1', 'Gender');
+                $sheet->setCellValue('K1', 'Highest Education Level');
+                $sheet->setCellValue('L1', 'Employment Status');
+                $sheet->setCellValue('M1', 'Industry my company is in');
+                $sheet->setCellValue('N1', 'Job Title');
+                $sheet->setCellValue('O1', 'Personal Income per month');
+                $sheet->setCellValue('P1', 'HHI per month');
+                $sheet->setCellValue('Q1', 'Province');
+                $sheet->setCellValue('R1', 'Suburb');
+                $sheet->setCellValue('S1', 'Metropolitan Area');
+                $sheet->setCellValue('T1', 'No. of people living in your household');
+                $sheet->setCellValue('U1', 'Number of children');
+                $sheet->setCellValue('V1', 'Number of vehicles');
+                $sheet->setCellValue('W1', 'Which best describes the role in you business / organization?');
+                $sheet->setCellValue('X1', 'What is the number of people in your organisation / company?');
+                $sheet->setCellValue('Y1', 'Which bank do you bank with (which is your bank main)');
+                $sheet->setCellValue('Z1', 'Home Language');
+                $sheet->setCellValue('AA1', 'Child 1 - Birth Year');
+                $sheet->setCellValue('AB1', 'Child 1 - Gender');
+                $sheet->setCellValue('AC1', 'Child 2 - Birth Year');
+                $sheet->setCellValue('AD1', 'Child 2 - Gender');
+                $sheet->setCellValue('AE1', 'Child 3 - Birth Year');
+                $sheet->setCellValue('AF1', 'Child 3 - Gender');
+                $sheet->setCellValue('AE1', 'Child 4 - Birth Year');
+                $sheet->setCellValue('AF1', 'Child 4 - Gender');
+                $sheet->setCellValue('AG1', 'Car 1 - Brand');
+                $sheet->setCellValue('AH1', 'Car 1 - Model');
+                $sheet->setCellValue('AI1', 'Car 2 - Brand');
+                $sheet->setCellValue('AJ1', 'Car 2 - Model');
+                $sheet->setCellValue('AK1', 'Car 3 - Brand');
+                $sheet->setCellValue('AL1', 'Car 3 - Model');
+                $sheet->setCellValue('AM1', 'Car 4 - Brand');
+                $sheet->setCellValue('AN1', 'Car 4 - Model');
+                $sheet->setCellValue('AO1', 'Opted in');
+                $sheet->setCellValue('AP1', 'Last Updated');
+
+                $sheet->getStyle('A1:AP1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                $sheet->getStyle('A1:AP1')->applyFromArray($styleArray);
+
+                $rows = 2;
+                $i = 1;
+              
+                foreach ($all_datas as $all_data) {
+                    $basic = json_decode($all_data->basic_details);
+                    $essential = json_decode($all_data->essential_details);
+                    $extended  = json_decode($all_data->extended_details);
+
+                    $sheet->setCellValue('A' . $rows, $all_data->id);
+                    $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
+                    $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
+                    $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
+                    $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
+                    $sheet->setCellValue('F' . $rows, $basic->email ?? '');
+
+                    $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+
+                    $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
+                    $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
+                   
+                    $p_income = DB::table('income_per_month')->where('id',$essential->personal_income_per_month)->first();
+                    $h_income = DB::table('income_per_month')->where('id',$essential->household_income_per_month)->first();
+                    $personal_income = ($p_income != null) ? $p_income->income : '-';
+                    $household_income = ($h_income != null) ? $h_income->income : '-';
+
+                    $sheet->setCellValue('G' . $rows, $year);
+                    $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
+                    $sheet->setCellValue('I' . $rows, $essential->ethnic_group ?? '');
+                    $sheet->setCellValue('J' . $rows, $essential->gender ?? '');
+                    $sheet->setCellValue('K' . $rows, $essential->education_level ?? '');
+                    $sheet->setCellValue('L' . $rows, $employment_status ?? '');
+                    $sheet->setCellValue('M' . $rows, $industry_my_company ?? '');
+                    $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
+                    $sheet->setCellValue('O' . $rows, $personal_income ?? '');
+                    $sheet->setCellValue('P' . $rows, $household_income ?? '');
+
+                    $state = DB::table('state')->where('id', $essential->province)->first();
+                    $district = DB::table('district')->where('id', $essential->suburb)->first();
+
+                    $get_state = ($state != null) ? $state->state : '-';
+                    $get_district = ($district != null) ? $district->district : '-';
+
+                    $sheet->setCellValue('Q' . $rows, $get_state ?? '');
+                    $sheet->setCellValue('R' . $rows, $get_district ?? '');
+                    $sheet->setCellValue('S' . $rows, $essential->metropolitan_area ?? '');
+                    $sheet->setCellValue('T' . $rows, $essential->no_houehold ?? '');
+                    $sheet->setCellValue('U' . $rows, $essential->no_children ?? '');
+                    $sheet->setCellValue('V' . $rows, $essential->no_vehicle ?? '');
+
+                    $business_org = ($extended->business_org == 'other') ? $extended->business_org_other : $extended->business_org;
+                    $home_lang    = ($extended->home_lang == 'other') ? $extended->home_lang_other : $extended->home_lang;
+
+                    $banks = DB::table('banks')->where('id',$extended->bank_main)->where('active',1)->first();
+                    $bank_main = ($extended->bank_main == 'other') ? $extended->bank_main_other : $banks->bank_name;
+                        
+                    $sheet->setCellValue('W' . $rows, $business_org ?? '');
+                    $sheet->setCellValue('X' . $rows, $extended->org_company ?? '');
+                    $sheet->setCellValue('Y' . $rows, $bank_main ?? '');
+                    $sheet->setCellValue('Z' . $rows, $home_lang ?? '');
+
+                    $children_data = json_decode($all_data->children_data, true);
+                    $vehicle_data = json_decode($all_data->vehicle_data, true);
+
+                    $new_alpha = 'AA';
+                    foreach($children_data as $children){
+                        $sheet->setCellValue($new_alpha.$rows, $children->date ?? '');
+                        $new_alpha++;
+                        $sheet->setCellValue($new_alpha.$rows, $children->gender ?? '');
+                        $new_alpha++;
+                    }
+
+                    $vehicle_alpha = 'AG';
+                    foreach($vehicle_data as $vehicle){
+                        $get_vehicle = DB::table('vehicle_master')->where('id',$vehicle->brand)->first();
+                        $vehicle_name = ($get_vehicle != null) ? $get_vehicle->vehicle_name : '-';
+                        $sheet->setCellValue($vehicle_alpha.$rows, $vehicle_name ?? '');
+                        $vehicle_alpha++;
+                        $sheet->setCellValue($vehicle_alpha.$rows, $vehicle->model ?? '');
+                        $vehicle_alpha++;
+                    }
+
+                    $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
+                    $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
+                   
+                    $sheet->setCellValue('AO' . $rows, $opted_in);
+                    $sheet->setCellValue('AP' . $rows, $updated_at);
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':AP' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':AP' . $rows)->getAlignment()->setIndent(1);
+                    $rows++;
+                    $i++;
+                }
+                
+            
+
+                $fileName = $module . "_" . $resp_type . "_" . date('ymd') . "." . $type;
             }
             else if ($module == 'Projects') {
                 $all_datas = Projects::leftJoin('users', function ($join) {
@@ -814,118 +1077,83 @@ class ExportController extends Controller
                 $fileName = $module . "_" . date('ymd') . "." . $type;
             }
             else if ($module == 'Team Activity') {
-               
-                if($type_method == 'Individual'){
-                    $all_datas = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc");
-                        if($respondents != ""){
-                            $all_datas = $all_datas->whereIn('user_events.user_id', [$respondents]);
-                        }
-                        if($from != null && $to != null){
-                            $all_datas = $all_datas->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $all_datas = $all_datas->where('type', '=', 'respondent')->get();
-
-                    $total_created = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc");
-                        if($respondents != ""){
-                            $total_created = $total_created->whereIn('user_events.user_id', [$respondents]);
-                        }
-                        if($from != null && $to != null){
-                            $total_created = $total_created->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                    $total_created = $total_created->where("user_events.action", "created")
-                        ->where('type', '=', 'respondent')
-                        ->get()
-                        ->count();
-
-                    $total_deactivated = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc");
-                        if($respondents != ""){
-                            $total_deactivated = $total_deactivated->whereIn('user_events.user_id', [$respondents]);
-                        }
-                        if($from != null && $to != null){
-                            $total_deactivated = $total_deactivated->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                    $total_deactivated = $total_deactivated->where("user_events.action", "deleted")->where('type', '=', 'respondent')->get()->count();
-
-                    $total_blacklisted = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc");
-                        if($respondents != ""){
-                            $total_blacklisted = $total_blacklisted->whereIn('user_events.user_id', [$respondents]);
-                        }
-                        if($from != null && $to != null){
-                            $total_blacklisted = $total_blacklisted->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $total_blacklisted = $total_blacklisted->where("user_events.action", "deactivated")->where('type', '=', 'respondent')->get()->count();
+                // Build the base query
+                $query = UserEvents::select('users.name', 'users.surname', 'user_events.user_id')
+                                ->join('users', 'user_events.user_id', 'users.id')
+                                ->where('user_events.type', '=', 'respondent');
+            
+                // Apply filters if provided
+                if ($respondents != "") {
+                    $query->whereIn('user_events.user_id', [$respondents]);
                 }
-                else{
-                    $all_datas = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->where('type', '=', 'respondent');
-                        if($from != null && $to != null){
-                            $all_datas = $all_datas->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $all_datas = $all_datas->get();
-
-                    $total_created = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->where("user_events.action", "created")
-                        ->where('type', '=', 'respondent');
-                        if($from != null && $to != null){
-                            $total_created = $total_created->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $total_created = $total_created->get()->count();
-
-                    $total_deactivated = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->where("user_events.action", "deleted")
-                        ->where('type', '=', 'respondent');
-                        if($from != null && $to != null){
-                            $total_deactivated = $total_deactivated->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $total_deactivated = $total_deactivated->get()->count();
-
-                    $total_blacklisted = UserEvents::select('users.name', 'users.surname', 'user_events.*')
-                        ->join('users', 'user_events.user_id', 'users.id')
-                        ->orderby("user_events.id", "desc")
-                        ->where("user_events.action", "deactivated")
-                        ->where('type', '=', 'respondent');
-                        if($from != null && $to != null){
-                            $total_blacklisted = $total_blacklisted->whereDate('user_events.created_at', '>=', $from)->whereDate('user_events.created_at', '<=', $to);
-                        }
-                        $total_blacklisted = $total_blacklisted->get()->count();
+            
+                if ($from != null && $to != null) {
+                    $query->whereDate('user_events.created_at', '>=', $from)
+                          ->whereDate('user_events.created_at', '<=', $to);
                 }
-
+            
+                // Group by user_id to avoid duplication
+                $query->groupBy('user_events.user_id', 'users.name', 'users.surname');
+            
+                // Fetch all data
+                $all_datas = $query->orderBy("users.name")->get();
+            
                 $sheet->setCellValue('A1', 'Name of team member');
                 $sheet->setCellValue('B1', 'Total recruited respondents');
                 $sheet->setCellValue('C1', 'Total deactivated respondents');
                 $sheet->setCellValue('D1', 'Total blacklisted respondents');
-
+            
                 $sheet->getStyle('A1:D1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
                 $sheet->getStyle('A1:D1')->applyFromArray($styleArray);
-
+            
                 $rows = 2;
-                $i = 1;
-                foreach ($all_datas as $all_data) {
-                    $sheet->setCellValue('A' . $rows, $all_data->name . " " . $all_data->surname);
+                foreach ($all_datas as $data) {
+                    // Count total recruited respondents for this specific user
+                    $total_created = UserEvents::where('user_id', $data->user_id)
+                                                ->where('action', 'created')
+                                                ->where('type', 'respondent');
+                    if ($from != null && $to != null) {
+                        $total_created->whereDate('created_at', '>=', $from)
+                                      ->whereDate('created_at', '<=', $to);
+                    }
+                    $total_created = $total_created->count();
+            
+                    // Count total deactivated respondents for this specific user
+                    $total_deactivated = UserEvents::where('user_id', $data->user_id)
+                                                    ->where('action', 'deleted')
+                                                    ->where('type', 'respondent');
+                    if ($from != null && $to != null) {
+                        $total_deactivated->whereDate('created_at', '>=', $from)
+                                          ->whereDate('created_at', '<=', $to);
+                    }
+                    $total_deactivated = $total_deactivated->count();
+            
+                    // Count total blacklisted respondents for this specific user
+                    $total_blacklisted = UserEvents::where('user_id', $data->user_id)
+                                                    ->where('action', 'deactivated')
+                                                    ->where('type', 'respondent');
+                    if ($from != null && $to != null) {
+                        $total_blacklisted->whereDate('created_at', '>=', $from)
+                                          ->whereDate('created_at', '<=', $to);
+                    }
+                    $total_blacklisted = $total_blacklisted->count();
+            
+                    // Set values for each row
+                    $sheet->setCellValue('A' . $rows, $data->name . " " . $data->surname);
                     $sheet->setCellValue('B' . $rows, $total_created);
                     $sheet->setCellValue('C' . $rows, $total_deactivated);
                     $sheet->setCellValue('D' . $rows, $total_blacklisted);
-
+                    $sheet->getRowDimension($rows)->setRowHeight(20);
+                    $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                    $sheet->getStyle('C' . $rows . ':D' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':D' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
-                    $i++;
                 }
-
+            
                 $fileName = $module . "_" . date('ymd') . "." . $type;
             }
+            
+            
 
             if ($type == 'xlsx') {
                 $writer = new Xlsx($spreadsheet);
@@ -934,7 +1162,7 @@ class ExportController extends Controller
                 $writer = new Xls($spreadsheet);
             }
             
-            $writer->save("../public/" . $fileName);
+            $writer->save("../public/" . $fileName); 
 
             header("Content-Type: application/vnd.ms-excel");
             return redirect(url('/') . "/" . $fileName);

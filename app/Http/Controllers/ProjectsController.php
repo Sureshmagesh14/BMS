@@ -18,6 +18,9 @@ use Exception;
 use Config;
 use App\Mail\WelcomeEmail;
 
+use App\Imports\RespondentsImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class ProjectsController extends Controller
 {
      /**
@@ -74,7 +77,8 @@ class ProjectsController extends Controller
                'user'=> 'required',
                'status_id'=> 'required',
                'type_id'=> 'required',
-               'survey_duration'=> 'required',
+                'project_name_resp'=> 'required',
+            //    'survey_duration'=> 'required',
                'published_date'=> 'required',
                'access_id'=> 'required',
 
@@ -101,8 +105,9 @@ class ProjectsController extends Controller
                 $projects->status_id = $request->input('status_id');
                 $projects->description = $request->input('description');
                 $projects->description1 = $request->input('description1');
-                $projects->description2 = $request->input('description2');
-                $projects->survey_duration = $request->input('survey_duration');
+                // $projects->description2 = $request->input('description2');
+                // $projects->survey_duration = $request->input('survey_duration');
+                $projects->project_name_resp = $request->input('project_name_resp');
                 $projects->published_date = $request->input('published_date');
                 $projects->closing_date = $request->input('closing_date');
                 $projects->access_id = $request->input('access_id');
@@ -219,8 +224,9 @@ class ProjectsController extends Controller
                 'name'=> 'required',
                 'user'=> 'required',
                 'status_id'=> 'required',
+                'project_name_resp'=> 'required',
                 'type_id'=> 'required',
-                'survey_duration'=> 'required',
+                // 'survey_duration'=> 'required',
                 'published_date'=> 'required',
                 'access_id'=> 'required',
             ]);
@@ -249,8 +255,9 @@ class ProjectsController extends Controller
                     $projects->status_id = $request->input('status_id');
                     $projects->description = $request->input('description');
                     $projects->description1 = $request->input('description1');
-                    $projects->description2 = $request->input('description2');
-                    $projects->survey_duration = $request->input('survey_duration');
+                    $projects->project_name_resp = $request->input('project_name_resp');
+                    // $projects->description2 = $request->input('description2');
+                    // $projects->survey_duration = $request->input('survey_duration');
                     $projects->published_date = $request->input('published_date');
                     $projects->closing_date = $request->input('closing_date');
                     $projects->access_id = $request->input('access_id');
@@ -356,16 +363,14 @@ class ProjectsController extends Controller
                         return $all_data->client;
                     })  
                     ->addColumn('name', function ($all_data) {
-                        return $all_data->description;
+                        return $all_data->name;
                     }) 
                     ->addColumn('creator', function ($all_data) {
                         $get_name=Projects::get_user_name($all_data->user_id);
                         return $get_name->name.''.$get_name->lname;
                     })
                     ->addColumn('type', function ($all_data) {
-                        if($all_data->type_id==1){
-                            return 'Pre-Screener';
-                        }else if($all_data->type_id==2){
+                        if($all_data->type_id==2){
                             return 'Pre-Task';
                         }else if($all_data->type_id==3){
                             return 'Paid  survey';
@@ -382,7 +387,12 @@ class ProjectsController extends Controller
                         return $all_data->project_link;
                     })
                     ->addColumn('created', function ($all_data) {
-                        return date("M j, Y, g:i A", strtotime($all_data->created_at));
+                        if(isset($all_data->created_at)){
+                            $created_at=date("Y-m-d, g:i A", strtotime($all_data->created_at));
+                        }else{
+                            $created_at='-';
+                        }
+                        return $created_at;
                     })
                     ->addColumn('status', function ($all_data) {
                         if($all_data->status_id==1){
@@ -848,6 +858,114 @@ class ProjectsController extends Controller
         $repsonse=$app_url.'/survey/view/'.$get_survey->builderID;
 
         return response()->json(['repsonse' => $repsonse], 200);
+    }
+
+    public function respondent_attach_import(Request $request){
+        $project_id = $request->project_id;
+        $file = $request->file('file');
+
+        // File Details 
+        $filename = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+        $tempPath = $file->getRealPath();
+        $fileSize = $file->getSize();
+        $mimeType = $file->getMimeType();
+
+        // Valid File Extensions
+        $valid_extension = array("csv");
+        if(in_array(strtolower($extension),$valid_extension)){
+            // File upload location
+            $location = 'uploads/csv/'.$project_id;
+            // Upload file
+            $file->move($location,$filename);
+            // Import CSV to Database
+            $filepath = public_path($location."/".$filename);
+
+            $file = fopen($filepath,"r");
+
+            $importData_arr = array();
+            $i = 0;
+            $col=1;
+            while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                $num = count($filedata);
+                // Skip first row (Remove below comment if you want to skip the first row)
+                if($i == 0){
+                    $i++;
+                    continue;
+                }
+
+                if($num == $col){
+                    for ($c=0; $c < $num; $c++) {
+                        $set_array = array('respondent_id' => $filedata [$c],'project_id' => $project_id);
+                        array_push($importData_arr,$set_array);
+                    }
+                    $i++;
+                }
+                else{
+                    return redirect()->back()->with('error','Column mismatched!');
+                    break;
+                }
+            }
+            fclose($file);
+            
+            Project_respondent::insert($importData_arr);
+
+            return redirect()->back()->with('success','Attached Successfully');
+            
+        }
+        else{
+            return redirect()->back()->with('error','Invalid File Extension, Please Upload CSV File Format');
+        }
+        
+    }
+
+    
+    public function projects_seach_result(Request $request){
+        try {
+            $searchValue = $request['q'];
+            
+            if($request->filled('q')){
+                $respondents_data = Respondents::search($searchValue)
+                ->query(function ($query) {
+                    $query->where('deleted_at', '=', NULL);
+                })
+                ->orderBy('id','ASC')
+                ->get();
+            }
+
+            $respondents = array();
+            if(count($respondents_data) > 0){
+                foreach($respondents_data as $resp){
+                    $setUser = [
+                        'id' => $resp->id,
+                        'name' => $resp->name . ' - ' . $resp->surname,
+                    ];
+                    $respondents[] = $setUser;
+                }
+            }
+
+            echo json_encode($respondents);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function get_project_status(Request $request){
+
+
+        $get_previous=Projects::where('id',$request->edit_id)->first();
+        if($get_previous->status_id==3){
+            return response()->json(['repsonse' => 400]);
+        }else{
+            $status=array('status_id'=>$request->get_status);
+
+            Projects::where('id',$request->edit_id)->update($status);
+
+            return response()->json(['repsonse' => 200]);
+        }
+    
+        
     }
     
 }

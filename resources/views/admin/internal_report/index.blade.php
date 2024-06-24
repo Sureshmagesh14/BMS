@@ -52,41 +52,6 @@
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
 
-        $(document).ready(function() {
-            banks_table();
-        });
-
-        function banks_table() {
-            $('#banks_table').dataTable().fnDestroy();
-            $('#banks_table').DataTable({
-                searching: true,
-                ordering: true,
-                dom: 'lfrtip',
-                info: true,
-                iDisplayLength: 10,
-                lengthMenu: [
-                    [10, 50, 100, -1],
-                    [10, 50, 100, "All"]
-                ],
-                ajax: {
-                    url: "{{ route('get_all_banks') }}",
-                    data: {
-                        _token: tempcsrf,
-                    },
-                    error: function(xhr, error, thrown) {
-                        alert("undefind error");
-                    }
-                },
-                columns: [
-                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                    { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
-                    { data: 'bank_name',name: 'bank_name',orderable: true,searchable: true },
-                    { data: 'branch_code',name: 'branch_code',orderable: true,searchable: true },
-                    { data: 'active',name: 'active',orderable: false,searchable: false },
-                    { data: 'action',name: 'action',orderable: false,searchable: false }
-                ]
-            });
-        }
 
         users = ''; roles = ''; action = ''; type = ''; year = ''; month = '';
         $(document).ready(function() {
@@ -130,6 +95,7 @@
                 "ordering": true,
                 "processing": true,
                 "serverSide": true,
+                "deferRender": true,
                 dom: 'lfrtip',
                 "ajax": {
                     "url": "{{ route('user-events-show') }}",

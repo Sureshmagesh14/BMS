@@ -500,42 +500,55 @@ class RespondentsController extends Controller
                     $nestedData['id_show'] = '<a href="'.$view_route.'" class="rounded waves-light waves-effect">
                         '.$post->id.'
                     </a>';
-
-                    $nestedData['options'] = '<div class="col-md-2">
-                        <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
-                            title="Action" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-tasks" aria-hidden="true"></i>
-                            <i class="mdi mdi-chevron-down"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-center">
-                            <li class="list-group-item">
-                                <a href="'.$view_route.'" class="rounded waves-light waves-effect">
-                                    <i class="fa fa-eye"></i> View
+                    if (Auth::guard('admin')->user()->role_id == 1 || Auth::guard('admin')->user()->id == $post->id) {
+                        $nestedData['options'] = '<div class="col-md-2">
+                            <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                                title="Action" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-tasks" aria-hidden="true"></i>
+                                <i class="mdi mdi-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-center">';
+                    
+                        // View option
+                        $nestedData['options'] .= '<li class="list-group-item">
+                            <a href="' . $view_route . '" class="rounded waves-light waves-effect">
+                                <i class="fa fa-eye"></i> View
+                            </a>
+                        </li>';
+                    
+                        // Additional options based on conditions
+                        if (str_contains(url()->previous(), '/admin/projects')) {
+                            // If coming from projects page
+                            $nestedData['options'] .= '<li class="list-group-item">
+                                <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
+                                    <i class="far fa-trash-alt"></i> De-attach
                                 </a>
                             </li>';
-                            if (str_contains(url()->previous(), '/admin/projects')){
-
-                                $nestedData['options'] .= '<li class="list-group-item">
-                                    <a id="deattach_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
-                                        <i class="far fa-trash-alt"></i> De-attach
-                                    </a>
-                                </li>';
-                            }
-                            else{
-                                $nestedData['options'] .= '<li class="list-group-item">
-                                    <a data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                        data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
-                                        <i class="fa fa-edit"></i> Edit
-                                    </a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="#!" id="delete_respondents" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
-                                        <i class="far fa-trash-alt"></i> Delete
-                                    </a>
-                                </li>';
-                            }
+                        } else {
+                            // If not coming from projects page
+                            $nestedData['options'] .= '<li class="list-group-item">
+                                <a data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true"
+                                    data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#!" id="delete_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
+                                    <i class="far fa-trash-alt"></i> Delete
+                                </a>
+                            </li>';
+                        }
+                    
+                        // Close dropdown menu and div
                         $nestedData['options'] .= '</ul>
-                    </div>';
+                        </div>';
+                    } else {
+                        // If user doesn't have permission, set options to empty string or handle accordingly
+                        $nestedData['options'] = '-';
+                    }
+                    
+
+                 
                     $data[] = $nestedData;
                     $i++;
                 }
@@ -1051,5 +1064,6 @@ class RespondentsController extends Controller
 
         return response()->json(['repsonse' => $repsonse], 200);
     }
+   
     
 }

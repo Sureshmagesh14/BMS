@@ -70,6 +70,7 @@ Route::group([
     'middleware' => 'admin',
 ], function () {
     Route::any('dashboard', 'Auth\AdminLoginController@admin_dashboard')->name('admin.dashboard');
+    Route::any('get_activity_data', 'Auth\AdminLoginController@get_activity_data')->name('get_activity_data');
     Route::get('signout', 'Auth\AdminLoginController@signOut')->name('signout');
     Route::any('export_index', 'ExportController@export_index')->name('admin.export');
     Route::post('export_all', 'ExportController@export_all')->name('export_all');
@@ -126,9 +127,12 @@ Route::group([
     Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
     Route::any('project_action', 'ProjectsController@project_action')->name('project_action');
     Route::any('project_unassign', 'ProjectsController@project_unassign')->name('project_unassign');    
-    Route::any('notify_respondent', 'ProjectsController@notify_respondent')->name('notify_respondent');    
+    Route::any('notify_respondent', 'ProjectsController@notify_respondent')->name('notify_respondent');  
+    Route::any('get_project_status', 'ProjectsController@get_project_status')->name('get_project_status'); 
+      
     
     Route::any('get_survey_link', 'ProjectsController@get_survey_link')->name('get_survey_link');
+
  
 
     /* Respondents MENU*/
@@ -159,6 +163,12 @@ Route::group([
     Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
     Route::any('tags_export', 'TagsController@tags_export')->name('tags_export');
     Route::any('tags_multi_delete', 'TagsController@tags_multi_delete')->name('tags_multi_delete');
+    Route::any('attach_tags/{respondent_id}', 'TagsController@attach_tags')->name('attach_tags');
+    Route::any('tags_seach_result', 'TagsController@tags_seach_result')->name('tags_seach_result');
+    Route::any('tags_attach_store', 'TagsController@tags_attach_store')->name('tags_attach_store');
+    Route::any('import_tags/{respondent_id}', 'TagsController@import_tags')->name('import_tags');
+    Route::any('respondent_attach_import/{respondent_id}', 'TagsController@respondent_attach_import')->name('respondent_attach_import');
+    Route::any('tags_attach_import/{respondent_id}', 'TagsController@tags_attach_import')->name('tags_attach_import');
 
     /* Rewards MENU*/
     Route::resource('rewards', 'RewardsController')->name('index', 'rewards.index')->name('destroy', 'rewards.destroy')
@@ -224,6 +234,7 @@ Route::group([
     Route::get('/survey/edit/{id}', ['as' => 'survey.edit', 'uses' => 'SurveyController@editSurvey']);
     Route::post('/survey/update/{id}', ['as' => 'survey.update', 'uses' => 'SurveyController@updateSurvey']);
     Route::get('/survey/delete/{id}', ['as' => 'survey.delete', 'uses' => 'SurveyController@deleteSurvey']);
+    Route::get('/survey/restore/{id}', ['as' => 'survey.restore', 'uses' => 'SurveyController@restoreSurvey']);
 
     /* Survey Template Routings*/
     Route::get('/survey/template/{id}', ['as' => 'survey.template', 'uses' => 'SurveyController@templateList']);
