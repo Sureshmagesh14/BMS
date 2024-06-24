@@ -130,4 +130,6 @@
 
             single_delete("DELETE", id, url, "Pannel Deleted", 'tags_table');
         });
+
+        
     </script>

@@ -377,43 +377,42 @@ class ExportController extends Controller
 
                     $rows = 2;
                     $i = 1;
-                  
+                    
                     foreach ($all_datas as $all_data) {
                         $basic = json_decode($all_data->basic_details);
                         $essential = json_decode($all_data->essential_details);
-                        $extended  = json_decode($all_data->extended_details);
-
+                        $extended = json_decode($all_data->extended_details);
+                    
                         $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
                         $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
                         $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
                         $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
-
+                    
                         $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
-
+                    
                         $employment_status = isset($essential) && $essential->employment_status == 'other' ? $essential->employment_status_other : ($essential ? $essential->employment_status : null);
                         $industry_my_company = isset($essential) && $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : ($essential ? $essential->industry_my_company : null);
-                        
-                       
+                    
                         $p_income = null; // Initialize $p_income to null
-
+                    
                         if ($essential && isset($essential->personal_income_per_month)) {
                             $p_income = DB::table('income_per_month')
                                             ->where('id', $essential->personal_income_per_month)
                                             ->first();
                         }
                         $h_income = null; // Initialize $h_income to null
-
+                    
                         if ($essential && isset($essential->household_income_per_month)) {
                             $h_income = DB::table('income_per_month')
                                             ->where('id', $essential->household_income_per_month)
                                             ->first();
                         }
-                        
+                    
                         $personal_income = ($p_income != null) ? $p_income->income : '-';
                         $household_income = ($h_income != null) ? $h_income->income : '-';
-
+                    
                         $sheet->setCellValue('G' . $rows, $year);
                         $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
                         $sheet->setCellValue('I' . $rows, $essential->ethnic_group ?? '');
@@ -424,48 +423,46 @@ class ExportController extends Controller
                         $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
                         $sheet->setCellValue('O' . $rows, $personal_income ?? '');
                         $sheet->setCellValue('P' . $rows, $household_income ?? '');
-
+                    
                         $state = null; // Initialize $state to null
-
+                    
                         if ($essential && isset($essential->province)) {
                             $state = DB::table('state')
                                         ->where('id', $essential->province)
                                         ->first();
                         }
                         $district = null; // Initialize $district to null
-
+                    
                         if ($essential && isset($essential->suburb)) {
                             $district = DB::table('district')
                                         ->where('id', $essential->suburb)
                                         ->first();
                         }
-
-
+                    
                         $get_state = ($state != null) ? $state->state : '-';
                         $get_district = ($district != null) ? $district->district : '-';
-
+                    
                         $sheet->setCellValue('Q' . $rows, $get_state ?? '');
                         $sheet->setCellValue('R' . $rows, $get_district ?? '');
                         $sheet->setCellValue('S' . $rows, $essential->metropolitan_area ?? '');
                         $sheet->setCellValue('T' . $rows, $essential->no_houehold ?? '');
                         $sheet->setCellValue('U' . $rows, $essential->no_children ?? '');
                         $sheet->setCellValue('V' . $rows, $essential->no_vehicle ?? '');
-
+                    
                         $business_org = null; // Initialize $business_org to null
-
+                    
                         if ($extended && isset($extended->business_org)) {
                             $business_org = $extended->business_org == 'other' ? $extended->business_org_other : $extended->business_org;
                         }
-                        
+                    
                         $home_lang = null; // Initialize $home_lang to null
-
+                    
                         if ($extended && isset($extended->home_lang)) {
                             $home_lang = $extended->home_lang == 'other' ? $extended->home_lang_other : $extended->home_lang;
                         }
-                        
-
+                    
                         $bank_main = null; // Initialize $bank_main to null
-
+                    
                         if ($extended && isset($extended->bank_main)) {
                             if ($extended->bank_main == 'other') {
                                 $bank_main = $extended->bank_main_other;
@@ -479,37 +476,41 @@ class ExportController extends Controller
                                 }
                             }
                         }
-                        
-                            
+                    
                         $sheet->setCellValue('W' . $rows, $business_org ?? '');
                         $sheet->setCellValue('X' . $rows, $extended->org_company ?? '');
                         $sheet->setCellValue('Y' . $rows, $bank_main ?? '');
                         $sheet->setCellValue('Z' . $rows, $home_lang ?? '');
-
-                        $children_data = json_decode($all_data->children_data, true);
-                        $vehicle_data = json_decode($all_data->vehicle_data, true);
-
+                    
+                        // Handle $children_data
                         $new_alpha = 'AA';
-                        foreach($children_data as $children){
-                            $sheet->setCellValue($new_alpha.$rows, $children->date ?? '');
-                            $new_alpha++;
-                            $sheet->setCellValue($new_alpha.$rows, $children->gender ?? '');
-                            $new_alpha++;
+                        if (!empty($children_data) && is_array($children_data)) {
+                            foreach ($children_data as $children) {
+                                $sheet->setCellValue($new_alpha . $rows, $children['date'] ?? '');
+                                $new_alpha++;
+                                $sheet->setCellValue($new_alpha . $rows, $children['gender'] ?? '');
+                                $new_alpha++;
+                            }
                         }
-
+                    
+                        // Handle $vehicle_data
                         $vehicle_alpha = 'AG';
-                        foreach($vehicle_data as $vehicle){
-                            $get_vehicle = DB::table('vehicle_master')->where('id',$vehicle->brand)->first();
-                            $vehicle_name = ($get_vehicle != null) ? $get_vehicle->vehicle_name : '-';
-                            $sheet->setCellValue($vehicle_alpha.$rows, $vehicle_name ?? '');
-                            $vehicle_alpha++;
-                            $sheet->setCellValue($vehicle_alpha.$rows, $vehicle->model ?? '');
-                            $vehicle_alpha++;
+                        if (!empty($vehicle_data) && is_array($vehicle_data)) {
+                            foreach ($vehicle_data as $vehicle) {
+                                if (is_object($vehicle) && isset($vehicle->brand)) {
+                                    $get_vehicle = DB::table('vehicle_master')->where('id', $vehicle->brand)->first();
+                                    $vehicle_name = ($get_vehicle != null) ? $get_vehicle->vehicle_name : '-';
+                                    $sheet->setCellValue($vehicle_alpha . $rows, $vehicle_name ?? '');
+                                    $vehicle_alpha++;
+                                    $sheet->setCellValue($vehicle_alpha . $rows, $vehicle->model ?? '');
+                                    $vehicle_alpha++;
+                                }
+                            }
                         }
-
+                    
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
-                       
+                    
                         $sheet->setCellValue('AO' . $rows, $opted_in);
                         $sheet->setCellValue('AP' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
@@ -519,6 +520,7 @@ class ExportController extends Controller
                         $rows++;
                         $i++;
                     }
+                    
                 }
 
                 $fileName = $module . "_" . $resp_type . "_" . date('ymd') . "." . $type;

@@ -4,7 +4,7 @@
     @else
         @php $projects_id = '0'; @endphp
     @endisset
-    
+
     @if (str_contains(Request::url(), '/admin/projects'))
         <a href="#!" data-url="{{ route('attach_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
             data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attach Respondents') }}"
@@ -13,41 +13,45 @@
         </a>
 
         <a href="#!" data-url="{{ route('import_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
-            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Import - Respondents to Project') }}"
-            class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+            data-ajax-popup="true" class="btn btn-primary"
+            data-bs-original-title="{{ __('Import - Respondents to Project') }}" class="btn btn-primary" data-size="xl"
+            data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
             Import Respondents
         </a>
-    @else
+    @elseif (str_contains(Request::url(), '/admin/respondents'))
         <a href="#!" data-url="{{ route('respondents.create') }}" data-size="xl" data-ajax-popup="true"
             class="btn btn-primary" data-bs-original-title="{{ __('Create Respondents') }}" class="btn btn-primary"
             data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
             Create Respondents
         </a>
+    @else
+   
     @endif
     <br><br>
 
-    <div class="btn-group mr-2 respondents_datatable hided_option" role="group" aria-label="First group" style="display: none;">
+    <div class="btn-group mr-2 respondents_datatable hided_option" role="group" aria-label="First group"
+        style="display: none;">
         <select name="action_2" id="action_2"
-        class="form-control respondents_datatable hided_option respondents_select_box">
-        <option value="">Select Action</option>
-        <optgroup label="Extras">
-            <option value="10">Notify All Respondents</option>
-            <option value="11">Un-Assign from Project</option>
-        </optgroup>
-        <optgroup label="Respondent">
-            <option value="1">Status > Activate</option>
-            <option value="2">Status > Deactivate</option>
-            <option value="3">Status > Opt-Out</option>
-            {{-- <option value="4">Export - Simple Database</option>
+            class="form-control respondents_datatable hided_option respondents_select_box">
+            <option value="">Select Action</option>
+            <optgroup label="Extras">
+                <option value="10">Notify All Respondents</option>
+                <option value="11">Un-Assign from Project</option>
+            </optgroup>
+            <optgroup label="Respondent">
+                <option value="1">Status > Activate</option>
+                <option value="2">Status > Deactivate</option>
+                <option value="3">Status > Opt-Out</option>
+                {{-- <option value="4">Export - Simple Database</option>
             <option value="5">Export - Normal Database</option>
             <option value="6">Export - Extended Database</option> --}}
-        </optgroup>
-        {{-- <optgroup label="Standalone Actions">
+            </optgroup>
+            {{-- <optgroup label="Standalone Actions">
             <option value="7">Export - Deactivated Respondents</option> --}}
             {{-- <option value="8">Import - Old Respondents</option> --}}
             {{-- <option value="9">Updates imports with file</option> --}}
-        {{-- </optgroup> --}}
-    </select>
+            {{-- </optgroup> --}}
+        </select>
 
         <div class="play-button-container ml-3">
             <a class="play-button user_play_button">
@@ -56,7 +60,7 @@
         </div>
     </div>
 
-   
+
 
     <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -165,4 +169,3 @@
     <tbody>
     </tbody>
 </table>
-

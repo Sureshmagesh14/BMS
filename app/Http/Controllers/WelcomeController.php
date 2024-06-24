@@ -237,11 +237,19 @@ class WelcomeController extends Controller
 
             $completed=[$percent1,$percent2,$percent3];
 
-            $get_respondent = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+            $get_other_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)->get();
+                ->where('resp.is_frontend_complete', 0)
+                ->where('projects.type_id','!=', 3)->get();
+
+            $get_paid_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+                ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
+                ->where('resp.respondent_id', '=', $id)
+                ->where('projects.closing_date', '>=', Carbon::now())
+                ->where('resp.is_frontend_complete', 0)
+                ->where('projects.type_id', 3)->get();
 
             $get_completed_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
@@ -293,7 +301,7 @@ class WelcomeController extends Controller
                 }
             }
 
-            return view('user.user-dashboard', compact('data', 'get_respondent', 'get_completed_survey', 'percentage','completed'));
+            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -430,11 +438,21 @@ class WelcomeController extends Controller
             $resp_name = Session::get('resp_name');
 
             $data = Groups::where('id', $up_id)->first();
+            $profile_data = Respondents::find($resp_id);
 
-            $get_respondent = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+            $get_other_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $resp_id)
-                ->where('resp.is_frontend_complete', 0)->get();
+                ->where('projects.closing_date', '>=', Carbon::now())
+                ->where('resp.is_frontend_complete', 0)
+                ->where('projects.type_id','!=', 3)->get();
+
+            $get_paid_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+                ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
+                ->where('resp.respondent_id', '=', $resp_id)
+                ->where('projects.closing_date', '>=', Carbon::now())
+                ->where('resp.is_frontend_complete', 0)
+                ->where('projects.type_id', 3)->get();
 
             $get_completed_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
@@ -444,7 +462,7 @@ class WelcomeController extends Controller
             // if($request->user()->profile_completion_id==0){
             //      return view('user.update-profile');
             // }else{
-            return view('user.user-surveys', compact('data', 'get_respondent', 'get_completed_survey'));
+            return view('user.user-surveys', compact('data','profile_data', 'get_other_survey', 'get_paid_survey', 'get_completed_survey'));
             //}
 
         } catch (Exception $e) {

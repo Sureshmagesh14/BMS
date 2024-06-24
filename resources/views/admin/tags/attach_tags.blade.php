@@ -1,17 +1,17 @@
 <form id="attach_tags_form" class="validation">
     @csrf
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Respondent</label>
+        <label for="example-search-input" class="col-md-2 col-form-label">Panel</label>
         <div class="col-md-10">
-            <input disabled class="form-control" type="text" name="project" id="project" value="@if($respondents != null) {{ $respondents->name }} {{ $respondents->surname }} @endif">
-            <input type="hidden" name="respondents" id="respondents" value="@if($respondents != null) {{ $respondents->id }} @endif">
+            <input disabled class="form-control" type="text" name="project" id="project" value="@if($tags != null) {{ $tags->name }} @endif">
+            <input type="hidden" name="tag_id" id="" value="@if($tags != null) {{ $tags->id }} @endif">
         </div>
     </div>
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Panel *</label>
+        <label for="example-search-input" class="col-md-2 col-form-label">Respondents *</label>
         <div class="col-md-10">
-            <input class="form-control" type="text" id="tag_id" name="tag_id" value="{{ request()->get('q') }}" required>
+            <input class="form-control" type="text" id="respondents" name="respondents" value="{{ request()->get('q') }}" required>
         </div>
     </div>
 
@@ -22,12 +22,12 @@
 </form>
 
 <script>
-    $("#tag_id").tokenInput("{{ route('tags_seach_result') }}", {
+    $("#respondents").tokenInput("{{ route('respondent_seach_result') }}", {
         propertyToSearch: "name",
         tokenValue: "id",
         tokenDelimiter: ",",
-        hintText: "{{ __('Search Panel... By(ID, Name)') }}",
-        noResultsText: "{{ __('Panel not found.') }}",
+        hintText: "{{ __('Search Respondent... By(ID, Name, Surname, Mobile)') }}",
+        noResultsText: "{{ __('Respondent not found.') }}",
         searchingText: "{{ __('Searching...') }}",
         deleteText: "&#215;",
         minChars: 2,
@@ -41,7 +41,7 @@
     });
 
     $('#attach_tags_form').validate({
-        ignore: ':hidden:not("#projects")'
+        ignore: ':hidden:not("#respondents")'
     });
     
     $("#attach_tags_button").click(function() {
@@ -52,7 +52,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: "{{ route('respondent_to_panel_attach_import') }}",
+                url: "{{ route('tags_attach_store') }}",
                 data: data,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -68,9 +68,7 @@
                     }
 
                     $("#commonModal").modal('hide');
-                    setTimeout(function() {
-                        location.reload();
-                    }, 1000);
+                    respondents_datatable();
                 },
                 complete: function(response) {
                     $('#attach_tags_button').html('Attach');
