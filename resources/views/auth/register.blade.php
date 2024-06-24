@@ -126,7 +126,7 @@
             <div class="rightside text-center">
 
                 <p>Let's get you started</p>
-                <h3>Join our Database</h3>
+                <!-- <h3>Join our Database</h3> -->
                 <form method="POST" id="reg_table" action="{{ route('register') }}">
                     @csrf
                     <div class="first-row d-md-flex mt-5">

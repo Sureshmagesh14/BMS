@@ -33,7 +33,7 @@
         <div class="col-md-6 ">
             <div class="text-center">
                 <p>Let's get you started</p>
-                <h3>Join our Database</h3>
+                <!-- <h3>Join our Database</h3> -->
 
                 <form id="users_form" class="validation">
                 @csrf

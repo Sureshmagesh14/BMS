@@ -31,13 +31,14 @@
         margin-bottom: 0.5rem !important;
     }
 </style>
-<section class="bg-greybg vh-100">
+<section class="bg-greybg">
     <div class="container">
         <div class="row align-items-center justify-content-center pt-5">
 
             <div class="bg-white my-2 w-100">
                 <h4 class="d-flex align-items-center justify-content-around">
-                    <span class="small-font-sm">Current Survey</span>
+                    <span class="small-font-sm"> Your Paid 
+Online Surveys</span>
                 </h4>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTable" id="current_survey"
@@ -73,12 +74,51 @@
                     </table>
                 </div>
             </div>
-
+            <br>
+            <div class="bg-white my-2 w-100">
+                <h4 class="d-flex align-items-center justify-content-around">
+                    <span class="small-font-sm">See If You Qualify 
+for Other Research</span>
+                </h4>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTable" id="current_survey1"
+                        style="width: 100%;" aria-describedby="current_survey1">
+                        <thead>
+                            <tr>
+                                <th>NAME </th>
+                                <th>DATE </th>
+                                <th>TASK </th>
+                                <th>AMOUNT </th>
+                                <th>ACTION </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($get_respondent as $res)
+                                <tr>
+                                    <td>{{ $res->name }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                    <td title="{{ $res->description }}">
+                                        {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
+                                    </td>
+                                    <td>{{ $res->reward }}</td>
+                                    @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
+                                    @if ($get_link != null)
+                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
+                                                class="btn btn-yellow">DETAIL</a></td>
+                                    @else
+                                        <td>No Survey</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <br>
 
             <div class="bg-white my-2 w-100">
                 <h4 class="d-flex align-items-center justify-content-around">
-                    <span class="small-font-sm">Completed Survey</span>
+                    <span class="small-font-sm"> Your Survey History</span>
                 </h4>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTable" id="completed_survey"
@@ -139,10 +179,15 @@
         $('#current_survey').DataTable({
             responsive: true,
             "oLanguage": {
-                "sEmptyTable": "No Current Survey Found"
+                "sEmptyTable": "No Paid Online Surveys Found"
             }
         });
-
+        $('#current_survey1').DataTable({
+            responsive: true,
+            "oLanguage": {
+                "sEmptyTable": "No Qualify for Other Research Found"
+            }
+        });
         $('#completed_survey').DataTable({
             responsive: true,
             "oLanguage": {

@@ -4,8 +4,10 @@
 <section class="bg-greybg vh-100">
     <div class="container">
         <div class="row justify-content-center">
-
-            <div class="col-md-3 " style="margin-top: 5% !important;">
+            <div class="col-md-6 my-auto">
+            <img src="{{ asset('assets/images/Rewards Page Photo.jpg    ') }}" class="img-fluid" alt="">
+            </div>
+            <div class="col-md-3" style=""> <!-- margin-top: 5% !important; -->
                 <div class="position-relative text-center vi-gift-box">
                     <img src="{{ asset('assets/images/gift box.png') }}" class="img-fluid" alt="">
                 </div>
@@ -21,9 +23,12 @@
                             data-bs-original-title="{{ __('Create Banks') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
                             Request Cash Out
                         </button>
-
-                        <p class="very-sm-text mt-3" style="text-align: left;">* Points value automatically change to Monetary value</p>
-                        <p class="very-sm-text mt-3" style="text-align: left;">* Cash Outs not made expire at the end of the year and will not be re-rewarded!</p>
+                        
+                        <p class="very-sm-text mt-3" style="text-align: left;">* Minimum Cash Out is 400 points = R40</p>
+                        <p class="very-sm-text mt-3" style="text-align: left;">*  Cash Outs expire one year after they are rewarded</p>
+                        <p class="very-sm-text mt-3" style="text-align: left;">*  Full details on T’s and C’s available below.</p>
+                        <!-- <p class="very-sm-text mt-3" style="text-align: left;">* Points value automatically change to Monetary value</p> -->
+                        <!-- <p class="very-sm-text mt-3" style="text-align: left;">* Cash Outs not made expire at the end of the year and will not be re-rewarded!</p> -->
                     @else
                         <h2 class="yelow-clr h1 fw-bolder mt-5"> @if($get_cashout->type_id == 1) Pending @elseif($get_cashout->type_id == 2)Processing @endif</h2>
                         <h5>@if($get_cashout->amount != 0){{$get_cashout->amount / 10}} ZAR @endif</h5>
