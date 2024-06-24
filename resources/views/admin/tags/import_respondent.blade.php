@@ -2,27 +2,27 @@
 <style>
     label#import_excel-error { width: 100%; }
 </style>
-<form method="POST" action="{{ route('tags_attach_import',['respondent_id' => $respondent_id]) }}" id="attach_respondents_form" class="validation" enctype="multipart/form-data">
+<form method="POST" action="{{ route('tags_resp_attach_import',['panel_id' => $tag_id]) }}" id="attach_respondents_form" class="validation" enctype="multipart/form-data">
     @csrf
 
     {{-- upload_respondent -> this a route --}}
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Respondent</label>
+        <label for="example-search-input" class="col-md-2 col-form-label">Panel</label>
         <div class="col-md-10">
-            <input disabled class="form-control" type="text" name="project" id="project" value="@if($fullName != null) {{ $fullName}} @endif">
-            <input type="hidden" name="respondent_id" id="respondent_id" value="@if($fullName != null) {{$respondent_id}} @endif">
+            <input disabled class="form-control" type="text" name="" id="" value="@if($tags != null) {{ $tags->name}} @endif">
+            <input type="hidden" name="tag_id" id="tag_id" value="@if($tags != null) {{$tags->id}} @endif">
         </div>
     </div>
    
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Panel *</label>
+        <label for="example-search-input" class="col-md-2 col-form-label">Respondent *</label>
         <div class="col-md-10">
             <input type="file" name="file" id="import_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
         </div>
     </div>
     <span>Note: Upload a CSV of your Respondents Information. The following fields are required in the
-        CSV: <strong>Panel ID</strong></span><br>
-        <a href="{{ asset('public/import/respondents/resp import csv.csv') }}">Click to
+        CSV: <strong>Profile ID</strong></span><br>
+        <a href="{{ asset('public/import/panel/panel import csv.csv') }}">Click to
             download sample CSV file.</a>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>

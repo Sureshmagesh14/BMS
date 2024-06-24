@@ -490,10 +490,10 @@
                                 <tbody>
                                     @forelse ($vehicle_data as  $vehicle)
                                         <tr>
-                                            <td>Vechile {{ $i  }}</td>
+                                            <td>Vechile {{ $i }}</td>
                                             <td>{{ $vehicle->type ?? '' }}</td>
                                             <td>{{ $vehicle->year ?? '' }}</td>
-                                            <td>{{ $vehicle->brand  ?? '' }}</td>
+                                            <td>{{ $vehicle->brand ?? '' }}</td>
                                             <td>{{ $vehicle->model ?? '' }}</td>
                                         </tr>
                                         @php
@@ -664,8 +664,8 @@
                         <!-- end card-body -->
                     </div>
 
-                      <!-- cashout start page title -->
-                      <div class="row">
+                    <!-- cashout start page title -->
+                    <div class="row">
                         <div class="col-12">
                             <div class="page-title-box d-flex align-items-center justify-content-between">
                                 <h4 class="mb-0">Cashouts</h4>
@@ -752,9 +752,10 @@
 
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
-    type = ''; status = '';
+    type = '';
+    status = '';
     $(document).ready(function() {
-     
+
         rewards_table();
         projects_table();
         cashout_table(type, status);
@@ -959,87 +960,145 @@
         });
     }
 
-    function cashout_type(get_this){
-            type = $(get_this).val();
-            cashout_table(type, status);
-        }
+    function cashout_type(get_this) {
+        type = $(get_this).val();
+        cashout_table(type, status);
+    }
 
-        function cashout_status(get_this){
-            status = $(get_this).val();
-            cashout_table(type, status);
-        }
+    function cashout_status(get_this) {
+        status = $(get_this).val();
+        cashout_table(type, status);
+    }
 
-        function cashout_table(type, status) {
-            $('#cashout_table').dataTable().fnDestroy();
-            $('#cashout_table').DataTable({
-                searching: true,
-                ordering: true,
-                dom: 'lfrtip',
-                info: true,
-                iDisplayLength: 10,
-                lengthMenu: [
-                    [10, 50, 100, -1],
-                    [10, 50, 100, "All"]
-                ],
-                ajax: {
-                    url: "{{ route('get_all_cashouts') }}",
-                    data: {
-                        _token: tempcsrf,
-                        type: type,
-                        status: status,
-                        id: '{{ $data->id }}',
-                        inside_form: 'respondents',
-                    },
-                    error: function(xhr, error, thrown) {
-                        alert("undefind error")
-                    }
+    function cashout_table(type, status) {
+        $('#cashout_table').dataTable().fnDestroy();
+        $('#cashout_table').DataTable({
+            searching: true,
+            ordering: true,
+            dom: 'lfrtip',
+            info: true,
+            iDisplayLength: 10,
+            lengthMenu: [
+                [10, 50, 100, -1],
+                [10, 50, 100, "All"]
+            ],
+            ajax: {
+                url: "{{ route('get_all_cashouts') }}",
+                data: {
+                    _token: tempcsrf,
+                    type: type,
+                    status: status,
+                    id: '{{ $data->id }}',
+                    inside_form: 'respondents',
                 },
-                columns: [
-                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                    { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
-                    { data: 'type_id',name: 'type_id',orderable: true,searchable: true },
-                    { data: 'status_id',name: 'status_id',orderable: true,searchable: true },
-                    { data: 'amount',name: 'amount',orderable: true,searchable: true },
-                    { data: 'respondent_id',name: 'respondent_id',orderable: true,searchable: true },
-                    { data: 'action',name: 'action',orderable: true,searchable: true }
-                ]
-            });
-        }
-
-        function tags_table() {
-            $('#tags_table').dataTable().fnDestroy();
-            $('#tags_table').DataTable({
-                searching: true,
-                ordering: true,
-                dom: 'lfrtip',
-                info: true,
-                iDisplayLength: 10,
-                lengthMenu: [
-                    [10, 50, 100, -1],
-                    [10, 50, 100, "All"]
-                ],
-                ajax: {
-                    url: "{{ route('get_all_tags') }}",
-                    data: {
-                        _token: tempcsrf,
-                        id: '{{ $data->id }}',
-                        inside_form: 'respondents',
-                    },
-                    error: function(xhr, error, thrown) {
-                        alert("undefind error");
-                    }
+                error: function(xhr, error, thrown) {
+                    alert("undefind error")
+                }
+            },
+            columns: [{
+                    data: 'select_all',
+                    name: 'select_all',
+                    orderable: false,
+                    searchable: false
                 },
-                columns: [
-                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                    { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
-                    { data: 'name',name: 'name',orderable: true,searchable: true },
-                    { data: 'colour',name: 'colour',orderable: true,searchable: true },
-                    { data: 'action',name: 'action',orderable: false,searchable: false }
-                ]
-            });
-        }
+                {
+                    data: 'id_show',
+                    name: 'id_show',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'type_id',
+                    name: 'type_id',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'status_id',
+                    name: 'status_id',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'amount',
+                    name: 'amount',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'respondent_id',
+                    name: 'respondent_id',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: true,
+                    searchable: true
+                }
+            ]
+        });
+    }
 
-      
+    function tags_table() {
+        $('#tags_table').dataTable().fnDestroy();
+        $('#tags_table').DataTable({
+            searching: true,
+            ordering: true,
+            dom: 'lfrtip',
+            info: true,
+            iDisplayLength: 10,
+            lengthMenu: [
+                [10, 50, 100, -1],
+                [10, 50, 100, "All"]
+            ],
+            ajax: {
+                url: "{{ route('get_all_tags') }}",
+                data: {
+                    _token: tempcsrf,
+                    id: '{{ $data->id }}',
+                    inside_form: 'respondents',
+                },
+                error: function(xhr, error, thrown) {
+                    alert("undefind error");
+                }
+            },
+            columns: [{
+                    data: 'select_all',
+                    name: 'select_all',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'id_show',
+                    name: 'id_show',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'name',
+                    name: 'name',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'colour',
+                    name: 'colour',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
+            ]
+        });
+    }
+
+
 
     $(document).on('click', '#deattach_projects', function(e) {
         e.preventDefault();
@@ -1054,3 +1113,22 @@
         single_delete("POST", respondent, url, "Deattach Project", 'projects_table');
     });
 </script>
+@if (count($errors) > 0)
+    @foreach ($errors->all() as $message)
+        <script>
+            toastr.error("{{ $message }}");
+        </script>
+    @endforeach
+@endif
+
+@if (Session::has('success'))
+    <script>
+        toastr.success("{{ session('success') }}");
+    </script>
+@endif
+
+@if (Session::has('error'))
+    <script>
+        toastr.error("{{ session('error') }}");
+    </script>
+@endif

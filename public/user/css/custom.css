@@ -1,4 +1,4 @@
-@font-face {
+/* @font-face {
   font-family: 'Poppins-Light';
   src: url('../fonts/Poppins-Light.ttf');
 }
@@ -6,6 +6,16 @@
 @font-face {
   font-family: 'Quicksand';
   src: url('../fonts/Quicksand_Bold.ttf');
+} */
+
+@font-face {
+  font-family: 'Barlow';
+  src: url('../fonts/BarlowCondensed-SemiBold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+*{
+  font-family: 'Barlow' !important;
 }
 
 tr{
@@ -21,9 +31,9 @@ tr{
 
 /* @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap'); */
 
-* {
+/* * {
   font-family: 'Poppins-Light';
-}
+} */
 
 
 /* *{

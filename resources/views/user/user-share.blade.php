@@ -10,7 +10,9 @@
             </div>
             <div class="col-md-4 bg-white p-5">
                 <div class="qr-code text-center">
-                    <h4 class="text-center">GET PAID FOR YOUR OPINION</h4>
+                    <!-- <h4 class="text-center">GET PAID FOR YOUR OPINION</h4> -->
+                    <h4 class="text-center">Share with your friends and family</h4>
+                    <h4 class="text-center">It's free to join</h4>
                     <div class="visible-print text-center">
                         {!! QrCode::size(250)->generate(URL::to('/') . $ref_code) !!}
                     </div>

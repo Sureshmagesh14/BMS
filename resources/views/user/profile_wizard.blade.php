@@ -83,6 +83,15 @@
     .star_require {
         color: red;
     }
+    @media only screen and (max-width: 600px) {
+        .col-sm-12{
+            width: 100% !important;
+        }
+        .wizard>.content {
+            overflow: auto;
+        }
+    }
+
 </style>
 
 <section class="bg-greybg">
@@ -104,7 +113,7 @@
                                             <input type="hidden" name="unique_id" class="form-control unique_id"
                                                 id="get_unique_id" value="{{ $pid }}">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="first_name">First Name <span
                                                     class="star_require">*</span></label><br>
                                             <input type="text" value="{{ $resp_details->name }}" disabled
@@ -113,12 +122,12 @@
                                             <input type="hidden" class="form-control" id="first_name"
                                                 name="basic[first_name]" value="{{ $resp_details->name }}" required>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="last_name">Last Name <span class="star_require">*</span></label>
                                             <input type="text" class="form-control" id="last_name"
                                                 name="basic[last_name]" value="{{ $resp_details->surname }}" required>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="mobile_number">Mobile Number <span
                                                     class="star_require">*</span></label>
                                             <div class="input-group mb-2">
@@ -131,7 +140,7 @@
                                                     value="{{ $resp_details->mobile }}" maxlength="16" required>
                                             </div>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="whatsapp_number">Whats App Number <span
                                                     class="star_require">*</span></label>
                                             <div class="input-group mb-2">
@@ -144,12 +153,12 @@
                                                     value="{{ $resp_details->whatsapp }}" maxlength="16" required>
                                             </div>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="email">Email <span class="star_require">*</span></label>
                                             <input type="email" class="form-control" id="email"
                                                 name="basic[email]" value="{{ $resp_details->email }}" required>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="date_of_birth">Date of Birth <span
                                                     class="star_require">*</span></label><br>
                                             <input type="text" value="{{ $resp_details->date_of_birth }}" disabled
@@ -179,7 +188,7 @@
                                 <h2>Essential Details</h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
-                                        <div class="col-6 col-sm-4">
+                                        <div class="col-6 col-md-6 col-sm-12">
                                             <label for="relationship_status">Relationship Status <span
                                                     class="star_require">*</span></label>
                                             <select name="essential[relationship_status]" id="relationship_status"
@@ -205,7 +214,7 @@
                                                     Widowed</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4">
+                                        <div class="col-6  col-md-6 col-sm-12">
                                             <label for="gender">Gender <span class="star_require">*</span></label>
                                             <select name="essential[gender]" id="gender" required>
                                                 <option value="">Select</option>
@@ -226,7 +235,7 @@
                                                     Other</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4">
+                                        <div class="col-6  col-md-6 col-sm-12">
                                             <label for="ethnic_group">Ethnic Group / Race <span
                                                     class="star_require">*</span></label>
                                             <select name="essential[ethnic_group]" id="ethnic_group" required>
@@ -248,7 +257,7 @@
                                                     White</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="education_level">Highest Education Level <span
                                                     class="star_require">*</span></label>
                                             <select name="essential[education_level]" id="education_level" required>
@@ -273,7 +282,7 @@
                                                     School But No Matric</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="employment_status">Employment Status <span
                                                     class="star_require">*</span></label>
                                             <select name="essential[employment_status]" id="employment_status" required onchange="show_other(this, 'employment_status')">
@@ -314,7 +323,7 @@
                                                 @endisset
                                                 placeholder="Please specify" @isset($essential_details['employment_status_other']) value="{{$essential_details['employment_status_other']}}" @endisset>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="industry_my_company">Industry my company is in <span class="star_require">*</span></label>
                                             <select name="essential[industry_my_company]" id="industry_my_company" required onchange="show_other(this, 'industry_my_company')">
                                                 <option value="">Select</option>
@@ -338,14 +347,14 @@
                                                 @endisset
                                                 placeholder="Please specify" @isset($essential_details['industry_my_company_other']) value="{{$essential_details['industry_my_company_other']}}" @endisset>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="job_title">Job Title <span
                                                     class="star_require">*</span></label>
                                             <input type="text" class="form-control" id="job_title"
                                                 name="essential[job_title]" required
                                                 @isset($essential_details['job_title']) value ="{{ $essential_details['job_title'] }}" @endisset>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="personal_income_per_month">Personal Income Per Month <span
                                                     class="star_require">*</span></label>
                                             <select name="essential[personal_income_per_month]"
@@ -358,7 +367,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="household_income_per_month">Household Income per month <span
                                                     class="star_require">*</span></label>
                                             <select name="essential[household_income_per_month]"
@@ -371,7 +380,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="province">Province <span class="star_require">*</span></label>
                                             <select name="essential[province]" id="province" required>
                                                 <option value="">Select</option>
@@ -382,7 +391,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="metropolitan_area">Metropolitan Area <span class="star_require">*</span></label>
                                             <select name="essential[suburb]" id="suburb" required>
                                                 <option value="">Select</option>
@@ -393,7 +402,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="suburb">Suburb <span class="star_require">*</span></label>
                                             <input type="text" name="essential[metropolitan_area]"
                                                 id="metropolitan_area" class="form-control" required
@@ -406,7 +415,7 @@
                                                 </select> --}}
                                         </div>
 
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="no_houehold">Number of people living in your household <span
                                                     class="star_require">*</span></label>
                                             <input type="number" name="essential[no_houehold]" id="no_houehold"
@@ -414,7 +423,7 @@
                                                 @isset($essential_details['no_houehold']) value ="{{ $essential_details['no_houehold'] }}" @endisset
                                                 min="0">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="no_children">Number of Children <span
                                                     class="star_require">*</span></label>
                                             <input type="number" name="essential[no_children]" id="no_children"
@@ -422,7 +431,7 @@
                                                 @isset($essential_details['no_children']) value ="{{ $essential_details['no_children'] }}" @endisset
                                                 min="0" max="10">
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="no_vehicle">Number of Vehicles <span
                                                     class="star_require">*</span></label>
                                             <input type="number" name="essential[no_vehicle]" id="no_vehicle"
@@ -436,7 +445,7 @@
                                 <h2>Extended Details</h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
-                                        <div class="col-6 col-sm-5">
+                                        <div class="col-6 col-md-6 col-sm-12 overflow-auto">
                                             <table border="1" id="children_table"
                                                 class="children_table table table-bordered table-striped table-highlight">
                                                 <colgroup>
@@ -505,7 +514,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div class="col-6 col-sm-7">
+                                        <div class="col-6 col-md-6 col-sm-12 overflow-auto">
                                             <table border="1" id="vehicle_table"
                                                 class="vehicle_table table table-bordered table-striped table-highlight">
                                                 <colgroup>
@@ -637,7 +646,7 @@
                                             </table>
                                         </div>
 
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="business_org">Which best describes the role in you business /
                                                 organization?</label>
                                             <select name="extended[business_org]" id="business_org" onchange="show_other(this, 'business_org')">
@@ -674,7 +683,7 @@
                                                 @endisset
                                                 @isset($extended_details['business_org_other']) value="{{$extended_details['business_org_other']}}" @endisset>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="org_company">What is the number of people in your organisation
                                                 / company?</label>
                                             <select name="extended[org_company]" id="org_company">
@@ -714,7 +723,7 @@
                                                     More than 1000 people</option>
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="bank_main">Which bank do you bank with (which is your bank
                                                 main)</label>
                                             <select name="extended[bank_main]" id="bank_main" onchange="show_other(this, 'bank_main')">
@@ -737,7 +746,7 @@
                                             @endisset
                                             @isset($extended_details['bank_main_other']) value="{{$extended_details['bank_main_other']}}" @endisset>
                                         </div>
-                                        <div class="col-6 col-sm-4 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="home_lang">Home Language</label>
                                             <select name="extended[home_lang]" id="home_lang" onchange="show_other(this, 'home_lang')">
                                                 <option value="">Select</option>

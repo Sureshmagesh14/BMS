@@ -227,7 +227,13 @@ class ProfileGroupController extends Controller
 		
         try {
             if ($request->ajax()) {
-                $all_datas = Groups::get();
+                $type = $request->type;
+                if ($type != null) {
+                    $all_datas = Groups::where('type_id',$type)->get();
+                }else{
+                    $all_datas = Groups::get();
+                }
+               
         
                 
                 return Datatables::of($all_datas)
