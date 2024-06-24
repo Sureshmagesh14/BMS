@@ -74,6 +74,12 @@
                     data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
                     Attach Panel
                 </a>
+
+                <a href="#!" data-url="{{ route('import_resp_tags', ['panel_id' => $data->id]) }}" data-size="xl" data-ajax-popup="true" class="btn btn-primary"
+                    data-bs-original-title="{{ __('Import - Respondents to Panels') }}" class="btn btn-primary"
+                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                    Import Panels
+                </a>
             </div>
             <br>
             <div class="row">
@@ -244,3 +250,22 @@
             'respondents_datatable');
     });
 </script>
+@if (count($errors) > 0)
+    @foreach ($errors->all() as $message)
+        <script>
+            toastr.error("{{ $message }}");
+        </script>
+    @endforeach
+@endif
+
+@if (Session::has('success'))
+    <script>
+        toastr.success("{{ session('success') }}");
+    </script>
+@endif
+
+@if (Session::has('error'))
+    <script>
+        toastr.error("{{ session('error') }}");
+    </script>
+@endif

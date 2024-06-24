@@ -40,7 +40,7 @@
                 </a>
                 
                 <a href="#!" data-url="{{ route('import_tags', ['respondent_id' => $respondent_id]) }}" data-size="xl" data-ajax-popup="true" class="btn btn-primary"
-                    data-bs-original-title="{{ __('Import - Respondents to Project') }}" class="btn btn-primary"
+                    data-bs-original-title="{{ __('Import - Respondents to Panels') }}" class="btn btn-primary"
                     data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
                     Import Panels
                 </a>
