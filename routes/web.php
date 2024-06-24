@@ -168,7 +168,7 @@ Route::group([
     Route::any('tags_attach_store', 'TagsController@tags_attach_store')->name('tags_attach_store');
     Route::any('attach_resp_tags/{tags_id}', 'TagsController@attach_resp_tags')->name('attach_resp_tags');
     Route::any('import_tags/{respondent_id}', 'TagsController@import_tags')->name('import_tags');
-    Route::any('respondent_attach_import/{respondent_id}', 'TagsController@respondent_attach_import')->name('respondent_attach_import');
+    Route::any('respondent_attach_import/{project_id}', 'ProjectsController@respondent_attach_import')->name('respondent_attach_import');
     Route::any('tags_attach_import/{respondent_id}', 'TagsController@tags_attach_import')->name('tags_attach_import');
 
     /* Rewards MENU*/

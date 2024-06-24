@@ -18,7 +18,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Respondents *</label>
         <div class="col-md-10">
             <input type="hidden" id="project_id" value="{{$project_id}}" name="project_id">
-            <input type="file" name="import_excel" id="import_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
+            <input type="file" name="file" id="import_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
         </div>
     </div>
     <span>Note: Upload a CSV of your Respondents Information. The following fields are required in the
