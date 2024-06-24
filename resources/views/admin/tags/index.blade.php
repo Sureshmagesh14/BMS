@@ -48,8 +48,8 @@
     <!-- End Page-content -->
 
     @include('admin.layout.footer')
-        @stack('adminside-js')
-        @stack('adminside-datatable')
+    @stack('adminside-js')
+    @stack('adminside-datatable')
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
@@ -79,12 +79,36 @@
                         alert("undefind error");
                     }
                 },
-                columns: [
-                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                    { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
-                    { data: 'name',name: 'name',orderable: true,searchable: true },
-                    { data: 'colour',name: 'colour',orderable: true,searchable: true },
-                    { data: 'action',name: 'action',orderable: false,searchable: false }
+                columns: [{
+                        data: 'select_all',
+                        name: 'select_all',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'id_show',
+                        name: 'id_show',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'name',
+                        name: 'name',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'colour',
+                        name: 'colour',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
                 ]
             });
         }
@@ -92,17 +116,16 @@
         $(document).on('change', '.tags_select_box', function(e) {
             value = $(this).val();
             form = 'tags';
-            
+
             value_array = [];
 
-            if(value == 'respondents'){
+            if (value == 'respondents') {
                 texthead = 'Export - Respondents';
-                $("#tags_table .tabel_checkbox:checked").each(function(){
+                $("#tags_table .tabel_checkbox:checked").each(function() {
                     value_array.push($(this).attr('id'));
                 });
                 excel_report(value, form, "{{ route('tags_export') }}", texthead, value_array);
-            }
-            else if(value == 'panels'){
+            } else if (value == 'panels') {
                 texthead = 'Export - Panels';
                 excel_report(value, form, "{{ route('tags_export') }}", texthead, value_array);
             }
@@ -131,5 +154,22 @@
             single_delete("DELETE", id, url, "Pannel Deleted", 'tags_table');
         });
 
-        
+        function myFunction(color) {
+            // Log the clicked color to console for debugging
+            // Create a temporary textarea element to copy the color value
+            var textarea = document.createElement('textarea');
+            textarea.value = color;
+            textarea.style.position = 'fixed'; // Ensure it's not visible
+            document.body.appendChild(textarea);
+
+            // Select and copy the color value from the textarea
+            textarea.select();
+            document.execCommand('copy');
+
+            // Remove the textarea from the DOM after copying
+            document.body.removeChild(textarea);
+
+            // Show Toastr success message
+            toastr.success('Copied to clipboard successfully');
+        }
     </script>
