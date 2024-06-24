@@ -65,7 +65,8 @@
                 <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile_wizard') }}">Update
                     Profile</a>
                 <br>
-                <small class="leading-none mt-1 text-danger">Cash Outs and Surveys are available if your profile is up to date.
+                <small class="leading-none mt-1 text-danger">
+                    Cash Outs and Surveys are available if your profile is up to date.
                     Please update your profile.</small>
             </div>
         @endif
@@ -210,37 +211,60 @@ Online Surveys</span>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($get_completed_survey as $res)
+                            @foreach ($get_paid_survey as $res)
                                     <tr>
                                         <td>{{ $res->name }}</td>
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                         <td title="{{ $res->description }}">
-                                        
-                                            @if ($res->type_id == 1) 
-                                            Pre-Screener
-                                            @elseif ($res->type_id == 2) 
-                                            Pre-Task
-                                            @elseif ($res->type_id == 3) 
-                                            Paid survey
-                                            @elseif ($res->type_id == 4) 
-                                            Unpaid survey
-                                            @endif
-                                            
+
+                                        @if ($res->type_id == 1) 
+                                        Pre-Screener
+                                        @elseif ($res->type_id == 2) 
+                                        Pre-Task
+                                        @elseif ($res->type_id == 3) 
+                                        Paid survey
+                                        @elseif ($res->type_id == 4) 
+                                        Unpaid survey
+                                        @endif
+                                         
                                             <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
                                         </td>
                                         <td>{{ $res->reward }}</td>
-                                        @php
-                                            $get_link = \App\Models\Respondents::get_respondend_survey(
-                                                $res->survey_link,
-                                            );
-                                        @endphp
-                                        @if ($get_link != null)
-                                            <td><a class="btn btn-yellow" target="_blank"
-                                                    href="{{ url('survey/view', $get_link->builderID) }}">DETAIL</a>
-                                            </td>
-                                        @else
-                                            <td>No Survey</td>
-                                        @endif
+                                        @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
+
+                                        <!-- @if ($data->profile_completion_id == 0)
+
+                                        <td> Profile Incomple </td>
+                                        @else 
+                                            @if ($get_link != null)
+                                                <td><a target="_blank"
+                                                        href="{{ url('survey/view', $get_link->builderID) }}"
+                                                        class="btn btn-yellow">START</a></td>
+                                            @else
+                                                <td>No Survey</td>
+                                            @endif
+                                        @endif -->
+
+                @if ($data->profile_completion_id == 0)
+                    <td> Profile Incomple </td>
+                @else
+                    @if ($get_link != null)
+                        <td>
+
+                        <div class="social-icons text-md-end text-lg-end text-sm-start">
+
+                        <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #fbbd0a;"></i></a>
+                        @if($res->access_id==1)
+                        <a href="{{ url('share_project', $res->id) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+                        @endif
+                        </div>
+
+                        </td>
+                    @else
+                        <td>No Survey</td>
+                    @endif
+                @endif
+                                            
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -289,7 +313,7 @@ Online Surveys</span>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($get_respondent as $res)
+                                @foreach ($get_other_survey as $res)
                                     <tr>
                                         <td>{{ $res->name }}</td>
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
@@ -310,7 +334,7 @@ Online Surveys</span>
                                         <td>{{ $res->reward }}</td>
                                         @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
 
-                                        @if ($data->profile_completion_id == 0)
+                                        <!-- @if ($data->profile_completion_id == 0)
 
                                         <td> Profile Incomple </td>
                                         @else 
@@ -321,7 +345,27 @@ Online Surveys</span>
                                             @else
                                                 <td>No Survey</td>
                                             @endif
-                                        @endif
+                                        @endif -->
+
+                @if ($data->profile_completion_id == 0)
+                    <td> Profile Incomple </td>
+                @else
+                    @if ($get_link != null)
+                        <td>
+
+                        <div class="social-icons text-md-end text-lg-end text-sm-start">
+
+                        <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #fbbd0a;"></i></a>
+                        @if($res->access_id==1)
+                        <a href="{{ url('share_project', $res->id) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+                        @endif
+                        </div>
+
+                        </td>
+                    @else
+                        <td>No Survey</td>
+                    @endif
+                @endif
                                             
                                     </tr>
                                 @endforeach
