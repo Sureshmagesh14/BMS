@@ -146,6 +146,8 @@
                 "url": "{{ route('get_all_respond') }}",
                 "data": {
                     _token: tempcsrf,
+                    inside_form: 'panels',
+                    id: '{{ $data->id }}',
                 },
                 "dataType": "json",
                 "type": "POST"

@@ -26,7 +26,7 @@
         propertyToSearch: "name",
         tokenValue: "id",
         tokenDelimiter: ",",
-        hintText: "{{ __('Search Project... By(ID, Name)') }}",
+        hintText: "{{ __('Search Panel... By(ID, Name)') }}",
         noResultsText: "{{ __('Panel not found.') }}",
         searchingText: "{{ __('Searching...') }}",
         deleteText: "&#215;",
@@ -68,7 +68,9 @@
                     }
 
                     $("#commonModal").modal('hide');
-                    projects_table();
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
                 },
                 complete: function(response) {
                     $('#attach_tags_button').html('Attach');

@@ -405,7 +405,7 @@ class RespondentsController extends Controller
                 }
                 else{
 
-                    $totalData = Respondents::count();
+                    $totalData = Respondents::Join('respondent_tag as rs','respondents.id','rs.respondent_id')->where('rs.tag_id',$request->id)->count();
                 }
             }
             else{
@@ -426,6 +426,9 @@ class RespondentsController extends Controller
                         if($inside_form == 'projects'){
                             $posts->Join('project_respondent as pr','respondents.id','pr.respondent_id')
                             ->where('pr.project_id',$request->id);
+                        }else{
+                            $posts->Join('respondent_tag as rs','respondents.id','rs.respondent_id')
+                            ->where('rs.tag_id',$request->id);
                         }
                     }
                 $posts = $posts->limit($limit)
