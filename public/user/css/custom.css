@@ -275,7 +275,7 @@ label.email-start,
 
 .vi-full-height {
   /* background-image: url('./../../assets/images/landing_page.png'); */
-  background-image: url('../images/home-xl.png');
+  background-image: url('../images/img_2.png');
 }
 
 .vi-survey-bl-clr {
@@ -322,7 +322,12 @@ tr:nth-child(even) {
 
 
 @media(max-width:767px) {
-
+  .mob-hide{
+    display: none !important;
+}
+.w-50{
+  width:100% !important;
+}
   .vi-gift-box {
     z-index: 99;
     width: 100%;
@@ -393,7 +398,7 @@ tr:nth-child(even) {
   .vi-get-paid-head {
     font-size: 29px;
     font-weight: bold;
-    margin-top: 82%;
+    /* margin-top: 82%; */
   }
 
   .vi-bnr-para-text {
@@ -584,7 +589,7 @@ color:#6396b1 !important; */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 80%;
-  background-color: rgb(103 103 103 / 1);
+  background-color: rgba(157,194,216,0.9);
 }
 
 .vi-main-btn-db,
@@ -595,6 +600,14 @@ color:#6396b1 !important; */
 .fw-700 {
   font-weight: 700;
 }
+.pos-bottom{
+  bottom:0px;
+  left:-150px;
+}
+.ml-auto{
+  margin-left:auto;
+}
+
 
 .box-border-yellow p,
 .box-border-grey p {
@@ -718,13 +731,13 @@ button:focus:not(:focus-visible) {
   }
 
   .heading h1 {
-    font-size: 80px !important;
+    font-size: 50px !important;
   }
 
   .vi-bnr-para-text,
   .vi-get-paid-head {
     font-family: "Quicksand";
-    letter-spacing: -4px;
+    /* letter-spacing: -4px; */
   }
 
   .w-md-20 {
