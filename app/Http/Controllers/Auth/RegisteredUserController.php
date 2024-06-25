@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\WelcomeEmail;
 use App\Models\Respondents;
 use App\Models\Respondent_referrals;
+use App\Models\RespondentProfile;
 use App\Providers\RouteServiceProvider;
 use DB;
 use Illuminate\Auth\Events\Registered;
@@ -64,6 +65,24 @@ class RegisteredUserController extends Controller
         ]);
 
         $id = DB::getPdo()->lastInsertId();
+
+        $resp_save = array(
+            'name'          => $request->name,
+            'surname'       => $request->surname,
+            'date_of_birth' => $request->date_of_birth,
+            'email' => $request->email,
+            'mobile' => str_replace(' ', '', $request->mobile),
+            'whatsapp' => str_replace(' ', '', $request->whatsapp),
+        );
+
+        $basic_data = array(
+            'respondent_id' => $id,
+            'basic_details' => json_encode($resp_save),
+        );
+
+        if(RespondentProfile::where('respondent_id',$id)->doesntExist()){
+            RespondentProfile::insert($basic_data);
+        }
         //email starts
         
         if ($id != null) {

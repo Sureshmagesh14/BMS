@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
+use DateTime ;
 class ExportController extends Controller
 {
 
@@ -135,9 +135,7 @@ class ExportController extends Controller
 
             $respondents = ($request->respondents != null) ? implode(',', array_filter($request->respondents)) : null;
 
-            $all_datas = Respondents::leftJoin('respondent_profile', function ($join) {
-                $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
-            })
+            $all_datas = Respondents::join("respondent_profile", "respondent_profile.respondent_id", "=", "respondents.id")
             ->when($type_method == 'Individual', function ($query) use ($respondents) {
                 $query->whereIn('respondents.id', [$respondents]);
             })
@@ -155,7 +153,9 @@ class ExportController extends Controller
                 'respondent_profile.updated_at',
             ])
             ->get()
-            ->unique('id'); // Ensure uniqueness based on respondents.id
+            ->unique('id'); 
+            
+         
         
         
            
@@ -177,27 +177,51 @@ class ExportController extends Controller
                     $i = 1;
 
                     foreach ($all_datas as $all_data) {
-                  
-                        $basic = json_decode($all_data->basic_details);
-                        $essential = json_decode($all_data->essential_details);
-
-                        $sheet->setCellValue('A' . $rows, $all_data->id);
-                        $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
-                        $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
-                        $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
-                        $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
-                        $sheet->setCellValue('F' . $rows, $basic->email ?? '');
-
-                        $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
-                        $sheet->setCellValue('G' . $rows, $year);
-                        $sheet->setCellValue('H' . $rows, $basic->date_of_birth ?? '');
-                       
+                        $basic = json_decode($all_data->basic_details, true);
+                        $essential = json_decode($all_data->essential_details, true);
+                    
+                        // Check if $basic is null, if so, set default values
+                        $id = $all_data->id ?? '-';
+                        $first_name = $basic['first_name'] ?? '-';
+                        $last_name = $basic['last_name'] ?? '-';
+                        $mobile_number = $basic['mobile_number'] ?? '-';
+                        $whatsapp_number = $basic['whatsapp_number'] ?? '-';
+                        $email = $basic['email'] ?? '-';
+                        $date_of_birth = isset($basic['date_of_birth']) ? $basic['date_of_birth'] : null;
+                    
+                        // Calculate age if date_of_birth is available
+                        $age = '-';
+                        if (!empty($date_of_birth) && $date_of_birth != '0000-00-00') {
+                            // Create DateTime objects
+                            $dob = new DateTime($date_of_birth);
+                            $now = new DateTime();
+                            
+                            // Calculate age
+                            $diff = $now->diff($dob);
+                            $age = $diff->y; // This will give the age in years
+                        }
+                    
+                        // Set cell values
+                        $sheet->setCellValue('A' . $rows, $id);
+                        $sheet->setCellValue('B' . $rows, $first_name);
+                        $sheet->setCellValue('C' . $rows, $last_name);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
+                        $sheet->setCellValue('F' . $rows, $email);
+                        $sheet->setCellValue('G' . $rows, $age);
+                        $sheet->setCellValue('H' . $rows, $date_of_birth ?: '-');
+                    
+                        // Set row height
                         $sheet->getRowDimension($rows)->setRowHeight(20);
+                    
+                        // Apply styles
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
+                    
                         $rows++;
                     }
+                    
                 }
                 else if ($resp_type == 'essential') {
                     $sheet->setCellValue('A1', 'PID');
