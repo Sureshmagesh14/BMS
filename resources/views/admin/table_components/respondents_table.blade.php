@@ -88,11 +88,17 @@
                             <select name="filter_respondent_status" id="filter_respondent_status" class="form-control"
                                 onchange="filter_respondent_status(this)">
                                 <option value="">Select Status</option>
-                                <option value="1">Active</option>
-                                <option value="2">Pending</option>
-                                <option value="3">Deactivated</option>
-                                <option value="4">Unsubscribed</option>
-                                <option value="5">Blacklisted</option>
+                                <option value="1">
+                                    Active
+                                  </option><option value="4">
+                                    Pending
+                                  </option><option value="2">
+                                    Deactivated
+                                  </option><option value="3">
+                                    Unsubscribed
+                                  </option><option value="5">
+                                    Blacklisted
+                                  </option>
                             </select>
                         </li>
                         <li class="mb-3">
@@ -100,8 +106,8 @@
                             <select name="filter_respondent_profile" id="filter_respondent_profile" class="form-control"
                                 onchange="filter_respondent_profile(this)">
                                 <option value="">Select Profile Status</option>
-                                <option value="yes">Completed</option>
-                                <option value="no">Not Completed</option>
+                                <option value="1">Completed</option>
+                                <option value="0">Not Completed</option>
                             </select>
                         </li>
                     </ul>
@@ -157,11 +163,11 @@
             <th>Whatsapp</th>
             <th>Email</th>
             <th>Age</th>
-            <th>race</th>
-            <th>status</th>
-            <th>profile_completion</th>
-            <th>inactive_until</th>
-            <th>opeted_in</th>
+            {{-- <th>race</th> --}}
+            <th>Status</th>
+            <th>Profile Completion</th>
+            <th>Inactive Until</th>
+            <th>Opted In</th>
             <th>Action</th>
 
         </tr>
