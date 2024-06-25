@@ -776,7 +776,7 @@ class WelcomeController extends Controller
 
                 $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
                 
-                $response = batchFileUpload($key, $batch);
+                $response = $this->batchFileUpload($key, $batch);
                 dd($response);
 
                 $curl = curl_init();
