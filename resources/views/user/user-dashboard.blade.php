@@ -166,7 +166,7 @@
                         </div>
                     </h5> --}}
 
-                    <div class="text-center mt-4">
+                    <div class="text-center">
                         <div id="radial_multi_chart" class="chart--container">
                         </div>
                     </div>
