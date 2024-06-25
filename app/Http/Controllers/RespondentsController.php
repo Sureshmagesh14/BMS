@@ -413,6 +413,17 @@ class RespondentsController extends Controller
                         ->where('rt.tag_id', $request->id);
                 }
             }
+
+            $active_status_id = $request->active_status_id;
+            if (!empty($active_status_id)) {
+                $query->where('active_status_id', $active_status_id);
+            }
+    
+            // Filter by profile_completion_id if provided
+            $profile_completion_id = $request->profile_completion_id;
+            if (!empty($profile_completion_id)) {
+                $query->where('profile_completion_id', $profile_completion_id);
+            }
     
             // Total records count before any filtering
             $totalData = $query->count();

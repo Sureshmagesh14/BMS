@@ -543,14 +543,14 @@ class ExportController extends Controller
                     $rows = 2;
                     $i    = 1;
 
-                    $all_datas = Respondents::where('respondents.active_status_id','=',3);
+                    $all_datas = Respondents::where('respondents.active_status_id','=',2);
                     
                     if($respondents != ""){
                         $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                     }
 
                     if($from != null && $to != null){
-                        $all_datas = $all_datas->whereDate('respondents.created_at', '>=', $from)->whereDate('respondents.created_at', '<=', $to);
+                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
                     }
                         
                     $all_datas = $all_datas->get();
@@ -564,6 +564,10 @@ class ExportController extends Controller
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                         $i++;
                     }
@@ -579,8 +583,8 @@ class ExportController extends Controller
                     $sheet->setCellValue('H1', 'Blacklisted By');
                     // $sheet->setCellValue('I1', 'Reason');
 
-                    $sheet->getStyle('A1:I1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:I1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:H1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -590,7 +594,7 @@ class ExportController extends Controller
                             $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                         }
                         if($from != null && $to != null){
-                            $all_datas = $all_datas->whereDate('respondents.created_at', '>=', $from)->whereDate('respondents.created_at', '<=', $to);
+                            $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
                         }
                     $all_datas = $all_datas->get();
 
@@ -605,7 +609,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
                         // $sheet->setCellValue('I' . $rows, $all_data->created_by);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
-                        $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
