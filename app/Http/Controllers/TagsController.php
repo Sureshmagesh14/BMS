@@ -249,7 +249,7 @@ class TagsController extends Controller
                         </a>';
                     })
                     ->addColumn('colour', function ($all_data) {
-                        return '<div class=""><button type="button" class="btn waves-effect waves-light" style="background-color:'.$all_data->colour.'"><i class="uil uil-user"></i></button></div>';
+                        return '<div class=""><button type="button" class="btn waves-effect waves-light"  onClick="myFunction(\''.$all_data->colour.'\')" style="background-color:'.$all_data->colour.'"><i class="uil uil-user"></i></button></div>';
                     })
                     ->addColumn('action', function ($all_data) {
                         $edit_route = route("tags.edit",$all_data->id);
