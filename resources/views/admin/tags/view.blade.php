@@ -106,10 +106,10 @@
                                         <th>Whatsapp</th>
                                         <th>Email</th>
                                         <th>Age</th>
-                                        <th>race</th>
-                                        <th>status</th>
-                                        <th>profile_completion</th>
-                                        <th>inactive_until</th>
+                                        {{-- <th>Race</th> --}}
+                                        <th>Status</th>
+                                        <th>Profile Completion</th>
+                                        <th>Inactive Until</th>
                                         <th>opeted_in</th>
                                         <th>Action</th>
 
@@ -187,9 +187,9 @@
                 {
                     "data": "date_of_birth"
                 },
-                {
-                    "data": "race"
-                },
+                // {
+                //     "data": "race"
+                // },
                 {
                     "data": "status"
                 },
@@ -200,7 +200,7 @@
                     "data": "inactive_until"
                 },
                 {
-                    "data": "opeted_in"
+                    "data": "opted_in"
                 },
                 {
                     "data": "options"
