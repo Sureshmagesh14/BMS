@@ -57,70 +57,121 @@
     <!-- End Page-content -->
 
     @include('admin.layout.footer')
-        @stack('adminside-js')
-        @stack('adminside-datatable')
+    @stack('adminside-js')
+    @stack('adminside-datatable')
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
+        active_status = '';
+        completion_status = '';
         $(document).ready(function() {
-            respondents_datatable();
+            respondents_datatable(active_status, completion_status);
         });
 
+        function filter_respondent_status(get_this) {
+            active_status = $(get_this).val();
+            respondents_datatable(active_status, completion_status);
+        }
+
+        function filter_respondent_profile(get_this) {
+            completion_status = $(get_this).val();
+            respondents_datatable(active_status, completion_status);
+        }
+
+
         function respondents_datatable() {
-            $('#respondents_datatable').dataTable().fnDestroy();
-            var postsTable = $('#respondents_datatable').dataTable({
+            $('#respondents_datatable').DataTable()
+        .destroy(); // Use DataTable() instead of dataTable() for initialization and destroying
+            var postsTable = $('#respondents_datatable').DataTable({
                 "ordering": true,
                 "processing": true,
                 "serverSide": true,
-                "iDisplayLength": 100,
-                "lengthMenu": [[100, "All", 50, 25], [100, "All", 50, 25]],     
-                dom: 'lfrtip',
+                "pageLength": 100, // Change iDisplayLength to pageLength
+                "lengthMenu": [
+                    [25, 50, 100],
+                    [25, 50, 100]
+                ], // Adjust lengthMenu as per requirement
+                "dom": 'lfrtip', // Customize DOM layout
                 "ajax": {
                     "url": "{{ route('get_all_respond') }}",
-                    "data": {
-                        _token: tempcsrf,
-                    },
+                    "type": "POST",
                     "dataType": "json",
-                    "type": "POST"
+                    "data": function(d) {
+                        d._token = tempcsrf;
+                        d.inside_form = 'filter';
+                        d.active_status_id = active_status;
+                        d.profile_completion_id = completion_status;
+                    }
                 },
-                "columns": [
-                    { "data": "select_all" },
-                    { "data": "id_show" },
-                    { "data": "name" },
-                    { "data": "surname" },
-                    { "data": "mobile" },
-                    { "data": "whatsapp" },
-                    { "data": "email" },
-                    { "data": "date_of_birth" },
-                    { "data": "race" },
-                    { "data": "status" },
-                    { "data": "profile_completion" },
-                    { "data": "inactive_until" },
-                    { "data": "opeted_in" },
-                    { "data": "options" }
+                "columns": [{
+                        "data": "select_all",
+                        "orderable": false,
+                        "searchable": false
+                    },
+                    {
+                        "data": "id_show"
+                    },
+                    {
+                        "data": "name"
+                    },
+                    {
+                        "data": "surname"
+                    },
+                    {
+                        "data": "mobile"
+                    },
+                    {
+                        "data": "whatsapp"
+                    },
+                    {
+                        "data": "email"
+                    },
+                    {
+                        "data": "date_of_birth"
+                    },
+                    // { "data": "race" },
+                    {
+                        "data": "status"
+                    },
+                    {
+                        "data": "profile_completion"
+                    },
+                    {
+                        "data": "inactive_until"
+                    },
+                    {
+                        "data": "opted_in"
+                    },
+                    {
+                        "data": "options",
+                        "orderable": false,
+                        "searchable": false
+                    }
                 ],
-                "order": [[1, "asc"]],
-                stateSave: false,
+                "order": [
+                    [1, "asc"]
+                ], // Default sorting by id_show ascending
+                "stateSave": false // Ensure state saving is disabled for server-side processing
             });
         }
+
 
         $(document).on('change', '.respondents_select_box', function(e) {
             value = $(this).val();
             $.post("{{ route('respondents_export') }}", {
-                _token: tempcsrf,
-                id_value: value,
-                form: 'respondents'
-            },
-            function(resp, textStatus, jqXHR) {
+                    _token: tempcsrf,
+                    id_value: value,
+                    form: 'respondents'
+                },
+                function(resp, textStatus, jqXHR) {
 
-                if(resp=='Error'){
-                   console.log("Error");
-                }
-                else{
-                    console.log("resps",resp);
-                    window.location.assign("../"+resp);
-                }
-            });
+                    if (resp == 'Error') {
+                        console.log("Error");
+                    } else {
+                        console.log("resps", resp);
+                        window.location.assign("../" + resp);
+                    }
+                });
         });
 
         $(document).on('click', '#delete_respondents', function(e) {
@@ -143,6 +194,7 @@
                 }
             }).get();
 
-            multi_delete("POST", all_id, "{{ route('respondents_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
+            multi_delete("POST", all_id, "{{ route('respondents_multi_delete') }}", "Respondents Deleted",
+                'respondents_datatable');
         });
     </script>

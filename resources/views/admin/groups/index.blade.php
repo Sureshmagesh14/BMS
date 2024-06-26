@@ -45,11 +45,17 @@
 
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
+        type = '';
         $(document).ready(function() {
-            groups_table();
+            groups_table(type);
         });
 
-        function groups_table() {
+        function select_group(get_this){
+            type = $(get_this).val();
+            groups_table(type);
+        }
+
+        function groups_table(type) {
             $('#groups_table').dataTable().fnDestroy();
             $('#groups_table').DataTable({
                 searching: true,
@@ -65,6 +71,7 @@
                     url: "{{ route('get_groups_banks') }}",
                     data: {
                         _token: tempcsrf,
+                        type: type,
                     },
                     error: function(xhr, error, thrown) {
                         alert("undefind error");

@@ -8,6 +8,30 @@
   src: url('../fonts/Quicksand_Bold.ttf');
 }
 
+@font-face {
+  font-family: 'Barlow Medium';
+  src: url('../fonts/Barlow-Medium.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Barlow';
+  src: url('../fonts/BarlowCondensed-SemiBold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+*:not(i){
+  font-family: 'Barlow Medium' !important;
+}
+
+h1, h2, h3, h4, h5, h6{
+  font-family: 'Barlow' !important;
+}
+
+.fa, .fa-eye-slash:before {
+  font: normal normal normal 14px / 1 FontAwesome !important;
+}
+
 tr{
   width: 100% !important;
 }
@@ -21,9 +45,9 @@ tr{
 
 /* @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap'); */
 
-* {
+/* * {
   font-family: 'Poppins-Light';
-}
+} */
 
 
 /* *{
@@ -250,6 +274,7 @@ label.email-start,
 }
 
 .vi-full-height {
+  /* background-image: url('./../../assets/images/landing_page.png'); */
   background-image: url('../images/home-xl.png');
 }
 

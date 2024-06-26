@@ -127,11 +127,12 @@ Route::group([
     Route::any('deattach_project/{respondent_id}/{project_id}', 'ProjectsController@deattach_project')->name('deattach_project');
     Route::any('project_action', 'ProjectsController@project_action')->name('project_action');
     Route::any('project_unassign', 'ProjectsController@project_unassign')->name('project_unassign');    
-    Route::any('notify_respondent', 'ProjectsController@notify_respondent')->name('notify_respondent');    
+    Route::any('notify_respondent', 'ProjectsController@notify_respondent')->name('notify_respondent');  
+    Route::any('get_project_status', 'ProjectsController@get_project_status')->name('get_project_status'); 
+      
     
     Route::any('get_survey_link', 'ProjectsController@get_survey_link')->name('get_survey_link');
 
-    Route::any('respondent_attach_import/{project_id}', 'ProjectsController@respondent_attach_import')->name('respondent_attach_import');
  
 
     /* Respondents MENU*/
@@ -162,6 +163,17 @@ Route::group([
     Route::any('get_all_tags', 'TagsController@get_all_tags')->name('get_all_tags');
     Route::any('tags_export', 'TagsController@tags_export')->name('tags_export');
     Route::any('tags_multi_delete', 'TagsController@tags_multi_delete')->name('tags_multi_delete');
+    Route::any('attach_tags/{respondent_id}', 'TagsController@attach_tags')->name('attach_tags');
+    Route::any('tags_seach_result', 'TagsController@tags_seach_result')->name('tags_seach_result');
+    Route::any('tags_attach_store', 'TagsController@tags_attach_store')->name('tags_attach_store');
+    Route::any('attach_resp_tags/{tags_id}', 'TagsController@attach_resp_tags')->name('attach_resp_tags');
+    Route::any('attach_resp_tags/{tags_id}', 'TagsController@attach_resp_tags')->name('attach_resp_tags');
+    Route::any('respondent_to_panel_attach_import', 'ProjectsController@respondent_to_panel_attach_import')->name('respondent_to_panel_attach_import');
+    Route::any('import_tags/{respondent_id}', 'TagsController@import_tags')->name('import_tags');
+    Route::any('import_resp_tags/{panel_id}', 'TagsController@import_resp_tags')->name('import_resp_tags');
+    Route::any('respondent_attach_import/{project_id}', 'ProjectsController@respondent_attach_import')->name('respondent_attach_import');
+    Route::any('tags_attach_import/{respondent_id}', 'TagsController@tags_attach_import')->name('tags_attach_import');
+    Route::any('tags_resp_attach_import/{panel_id}', 'TagsController@tags_resp_attach_import')->name('tags_resp_attach_import');
 
     /* Rewards MENU*/
     Route::resource('rewards', 'RewardsController')->name('index', 'rewards.index')->name('destroy', 'rewards.destroy')

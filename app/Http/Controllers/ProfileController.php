@@ -81,14 +81,11 @@ class ProfileController extends Controller
             $resp_id   = Session::get('resp_id');
             $resp_name = Session::get('resp_name');
             $resp_details = Respondents::select('id','name','surname','date_of_birth','email','mobile','whatsapp')->find($resp_id);
+            $children_set = 0;
+            $vehicle_set = 0;
 
             $get_date = Respondents::select('date_of_birth')->where('id',$resp_id)->first();
-            if($get_date->date_of_birth != null){
-                $get_year = date('Y',strtotime($get_date->date_of_birth));
-            }
-            else{
-                $get_year = date('Y',strtotime(1990));
-            }
+            $get_year = ($get_date->date_of_birth != null) ? date('Y',strtotime($get_date->date_of_birth)) : date('Y',strtotime(1990));
            
             $state = DB::table('state')->whereNull('deleted_at')->get();
             $industry_company = DB::table('industry_company')->whereNull('deleted_at')->get();
@@ -131,9 +128,19 @@ class ProfileController extends Controller
             else{
                 Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
             }
+
+            if($profile != null){
+                if($profile->children_data == null){
+                    $children_set = (isset($essential_details['no_children'])) ? (($essential_details['no_children'] != "") ? $essential_details['no_children'] : 0) : 0;
+                }
+
+                if($profile->vehicle_data == null){
+                    $vehicle_set = (isset($essential_details['no_vehicle'])) ? (($essential_details['no_vehicle'] != "") ? $essential_details['no_vehicle'] : 0) : 0;
+                }
+            }
     
             return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area',
-                'child_details','vehicle_details','vehicle_master','get_year'));
+                'child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

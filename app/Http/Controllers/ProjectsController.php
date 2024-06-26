@@ -8,6 +8,7 @@ use App\Models\Project_respondent;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Users;
 use App\Models\Respondents;
+use App\Models\RespondentTags;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -919,6 +920,65 @@ class ProjectsController extends Controller
         
     }
 
+    public function respondent_to_panel_attach_import(Request $request){
+        $project_id = $request->project_id;
+        $file = $request->file('tag_id');
+
+        // File Details 
+        $filename = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+        $tempPath = $file->getRealPath();
+        $fileSize = $file->getSize();
+        $mimeType = $file->getMimeType();
+
+        // Valid File Extensions
+        $valid_extension = array("csv");
+        if(in_array(strtolower($extension),$valid_extension)){
+            // File upload location
+            $location = 'uploads/csv/'.$project_id;
+            // Upload file
+            $file->move($location,$filename);
+            // Import CSV to Database
+            $filepath = public_path($location."/".$filename);
+
+            $file = fopen($filepath,"r");
+
+            $importData_arr = array();
+            $i = 0;
+            $col=1;
+            while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                $num = count($filedata);
+                // Skip first row (Remove below comment if you want to skip the first row)
+                if($i == 0){
+                    $i++;
+                    continue;
+                }
+
+                if($num == $col){
+                    for ($c=0; $c < $num; $c++) {
+                        $set_array = array('tag_id' => $filedata [$c],'project_id' => $project_id);
+                        array_push($importData_arr,$set_array);
+                    }
+                    $i++;
+                }
+                else{
+                    return redirect()->back()->with('error','Column mismatched!');
+                    break;
+                }
+            }
+            fclose($file);
+            
+            RespondentTags::insert($importData_arr);
+
+            return redirect()->back()->with('success','Attached Successfully');
+            
+        }
+        else{
+            return redirect()->back()->with('error','Invalid File Extension, Please Upload CSV File Format');
+        }
+        
+    }
+
     
     public function projects_seach_result(Request $request){
         try {
@@ -949,6 +1009,23 @@ class ProjectsController extends Controller
         catch (Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    public function get_project_status(Request $request){
+
+
+        $get_previous=Projects::where('id',$request->edit_id)->first();
+        if($get_previous->status_id==3){
+            return response()->json(['repsonse' => 400]);
+        }else{
+            $status=array('status_id'=>$request->get_status);
+
+            Projects::where('id',$request->edit_id)->update($status);
+
+            return response()->json(['repsonse' => 200]);
+        }
+    
+        
     }
     
 }
