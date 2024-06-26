@@ -2,11 +2,15 @@
 
 <div class="container-fluid p-md-5 text-white text-center vi-full-height vi-background-index" style="background-size: cover; height:auto;">
   <div class="row">
+    <div class="col-md-6 col-md-12  m-auto">
+    <img src="{{ asset('assets/images/img_2.png') }}" class="img-fluid w-75 m-auto hide-mobile"
+                        alt="">
+    </div>
     <div class="col-md-6 col-sm-12">
       <div class="d-flex align-items-center flex-column justify-content-between">
-        <div class="logo">
+        <!-- <div class="logo">
           <img src="{{ asset('public/inc/images/small-logo.png') }}" class="img-fluid w-50 m-auto hide-mobile" alt="">
-        </div>
+        </div> -->
         <div class="heading">
           <h1 class="fw-boler vi-get-paid-head text-shadow fw-bolder">Get  PAID for your opinion!</h1>
         </div>

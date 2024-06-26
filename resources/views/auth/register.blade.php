@@ -115,17 +115,14 @@
         border-bottom-left-radius: 0;
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
     }
+    .rounded-border{
+        border-radius: 25px;
+    }
 </style>
-<div class="container-fluid vh-80">
-    <div class="row">
-        <div class="col-md-6 d-none-mobile">
-            <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}"
-                class="img-fluid vh-90 w-100 image-cover" alt="" />
-        </div>
-        <div class="col-md-6 col-sm-12">
+<div class="container-fluid">
+    <div class="row vi-background-index">
+        <div class="col-md-7 col-sm-12">
             <div class="rightside text-center">
-
-                <p>Let's get you started</p>
                 <!-- <h3>Join our Database</h3> -->
                 <form method="POST" id="reg_table" action="{{ route('register') }}">
                     @csrf
@@ -171,7 +168,7 @@
                             <label for="email">Email <span class="text-danger">*</span></label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
-                                    <div class="input-group-text"><i class="fa fa-envelope" style="font-size:36px;"
+                                    <div class="input-group-text  px-3 py-3"><i class="fa fa-envelope" style="font-size:36px;"
                                             aria-hidden="true"></i></div>
                                 </div>
                                 <input type="text" name="email" id="email" placeholder="john@example.com"
@@ -184,7 +181,7 @@
                             <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
-                                    <div class="input-group-text"><i class="fa fa-calendar" style="font-size:36px;"
+                                    <div class="input-group-text px-3 py-3"><i class="fa fa-calendar" style="font-size:36px;"
                                             aria-hidden="true"></i></i></div>
                                 </div>
                                 <input type="text" name="date_of_birth" id="date_of_birth" placeholder="yyyy/mm/dd"
@@ -229,7 +226,7 @@
                     </div>
 
                     <div class="submit-btn text-center">
-                        <button type="submit" class="btn vi-light-bg text-white py-3 px-5 w-30"
+                        <button type="submit" class="btn vi-nav-bg text-white w-md-25 m-auto my-2 text-uppercase vi-main-btn-db w-30"
                             id="save_org">Continue</button>
                     </div>
                 </form>
@@ -242,6 +239,21 @@
                             href="{{ route('login') }}">Do you have an account? Login</a></p>
                 </div>
             </div>
+        </div>
+        
+        <div class="col-md-5 d-none-mobile">
+                
+
+                <h3 class="text-center my-5">Let's get you started</h3>
+            <div class="w-100 m-auto">
+            <div>
+            <div class="w-100">
+            <img src="{{ asset('assets/images/register.jpg') }}"
+                class="img-fluid w-75 image-cover rounded-border m-auto d-flex" alt="" />
+            </div>
+            </div>
+            </div>
+            
         </div>
     </div>
 </div>
