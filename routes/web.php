@@ -174,6 +174,7 @@ Route::group([
     Route::any('respondent_attach_import/{project_id}', 'ProjectsController@respondent_attach_import')->name('respondent_attach_import');
     Route::any('tags_attach_import/{respondent_id}', 'TagsController@tags_attach_import')->name('tags_attach_import');
     Route::any('tags_resp_attach_import/{panel_id}', 'TagsController@tags_resp_attach_import')->name('tags_resp_attach_import');
+    Route::any('deattach_tags/{tags_id}', 'TagsController@deattach_tags')->name('deattach_tags');
 
     /* Rewards MENU*/
     Route::resource('rewards', 'RewardsController')->name('index', 'rewards.index')->name('destroy', 'rewards.destroy')
