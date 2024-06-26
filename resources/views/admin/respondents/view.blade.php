@@ -1064,41 +1064,15 @@
                     alert("undefind error");
                 }
             },
-            columns: [{
-                    data: 'select_all',
-                    name: 'select_all',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'id_show',
-                    name: 'id_show',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'name',
-                    name: 'name',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'colour',
-                    name: 'colour',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
+            columns: [
+                {data: 'select_all',name: 'select_all',orderable: false,searchable: false},
+                {data: 'id_show',name: 'id_show',orderable: true,searchable: true},
+                {data: 'name',name: 'name',orderable: true,searchable: true},
+                {data: 'colour',name: 'colour',orderable: true,searchable: true},
+                {data: 'action',name: 'action',orderable: false,searchable: false}
             ]
         });
     }
-
-
 
     $(document).on('click', '#deattach_projects', function(e) {
         e.preventDefault();
@@ -1111,6 +1085,29 @@
         url = url.replace(':project_id', project_id);
 
         single_delete("POST", respondent, url, "Deattach Project", 'projects_table');
+    });
+
+    // $(document).on('click', '.tags_table.delete_all', function(e) {
+    //     e.preventDefault();
+    //     var all_id = [];
+
+    //     var values = $("#tags_table tbody tr").map(function() {
+    //         var $this = $(this);
+    //         if ($this.find("[type=checkbox]").is(':checked')) {
+    //             all_id.push($this.find("[type=checkbox]").attr('id'));
+    //         }
+    //     }).get();
+
+    //     multi_delete("POST", all_id, "{{ route('tags_multi_delete') }}", "Pannels Deleted", 'tags_table');
+    // });
+
+    $(document).on('click', '#deattach_tags', function(e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        var url = "{{ route('deattach_tags', ':id') }}";
+        url = url.replace(':id', id);
+
+        single_delete("POST", id, url, "Deattach Pannel", 'tags_table');
     });
 </script>
 @if (count($errors) > 0)

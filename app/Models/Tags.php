@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 class Tags extends Model
 {
-    use HasFactory,SoftDeletes, Searchable;
-    protected $fillable = ['name','colour'];
+    use HasFactory, Searchable;
+    use SoftDeletes;
+    
+    protected $fillable = ['id','name','colour'];
     protected $table = 'tags';
 
     public function toSearchableArray()

@@ -223,7 +223,7 @@ class TagsController extends Controller
         try {
             if ($request->ajax()) {
                 $token = csrf_token();
-                $all_datas = DB::table('tags');
+                $all_datas = Tags::select('tags.*');
 
                 if ($request->filled('id') && $request->input('inside_form') == 'respondents') {
                     $respondentId = $request->input('id');
@@ -233,10 +233,7 @@ class TagsController extends Controller
                     });
                 }
                 
-                $all_datas = $all_datas->orderBy('tags.id', 'desc')
-                                       ->get();
-                
-                
+                $all_datas = $all_datas->orderBy('tags.id', 'desc')->get();
                 
                 return Datatables::of($all_datas)
                     ->addColumn('select_all', function ($all_data) {
@@ -274,11 +271,20 @@ class TagsController extends Controller
                                         </a>
                                     </li>';
                                     if(Auth::guard('admin')->user()->role_id == 1){
-                                        $design .= '<li class="list-group-item">
-                                            <a href="#!" id="delete_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
-                                                <i class="far fa-trash-alt"></i> Delete
-                                            </a>
-                                        </li>';
+                                        if(str_contains(url()->current(), '/admin/respondents')){
+                                            $design .= '<li class="list-group-item">
+                                                <a href="#!" id="delete_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                                    <i class="far fa-trash-alt"></i> Delete
+                                                </a>
+                                            </li>';
+                                        }
+                                        else{
+                                            $design .= '<li class="list-group-item">
+                                                <a href="#!" id="deattach_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                                    <i class="far fa-trash-alt"></i> De-attach
+                                                </a>
+                                            </li>';
+                                        }
                                     }
                                 $design .='</ul>
                             </div>';
@@ -311,6 +317,22 @@ class TagsController extends Controller
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    public function deattach_tags($id){
+        try {
+            RespondentTags::where('tag_id',$id)->delete();
+
+            return response()->json([
+                'status'  => 200,
+                'success' => true,
+                'message' =>'Tags De-attached'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        
     }
 
     public function tags_export(Request $request){
@@ -597,7 +619,7 @@ class TagsController extends Controller
 
                 if($num == $col){
                     for ($c=0; $c < $num; $c++) {
-                        $set_array = array('respondent_id' => $filedata [$c],'tag_id' => $respondent_id);
+                        $set_array = array('respondent_id' => $respondent_id,'tag_id' => $filedata [$c]);
                         array_push($importData_arr,$set_array);
                     }
                     $i++;
