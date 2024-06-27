@@ -67,6 +67,11 @@ tr{
 .h-90{
   height:90vh !important;
 }
+.reg-img{
+  height: 100vh;
+    margin: auto;
+    display: flex;
+}
 /* @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap'); */
 
 /* * {

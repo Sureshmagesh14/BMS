@@ -124,6 +124,10 @@
         <div class="col-md-7 col-sm-12">
             <div class="rightside text-center">
                 <!-- <h3>Join our Database</h3> -->
+                 
+                
+
+                <h3 class="text-center mt-3 mb-2">Let's get you started</h3>
                 <form method="POST" id="reg_table" action="{{ route('register') }}">
                     @csrf
                     <div class="first-row d-md-flex mt-5">
@@ -242,12 +246,9 @@
         </div>
         
         <div class="col-md-5 d-none-mobile">
-                
-
-                <h3 class="text-center my-5">Let's get you started</h3>
             <div class="w-100 m-auto">
             <div>
-            <div class="w-100">
+            <div class="w-100 reg-img">
             <img src="{{ asset('assets/images/register.jpg') }}"
                 class="img-fluid w-75 image-cover rounded-border m-auto d-flex" alt="" />
             </div>
