@@ -35,7 +35,7 @@
         }
     }
 </style>
-<div class="container-fluid vi-background-index ">
+<div class="container-fluid vi-background-index h-90">
     <div class="row vi-background-index">
         <div class="col-md-6 d-none-mobile  m-auto d-flex mob-hide">
         <div class="w-75 m-auto d-flex ">
@@ -51,13 +51,13 @@
                 <p>Login with your email address</p>
                 <form method="POST" id="login_table" action="{{ route('login') }}">
                     @csrf
-                    <div class="my-3  w-75 m-auto">
+                    <div class="my-1  w-75 m-auto">
                         <!-- <label class="email-start vi-common-clr" for="email">Email Address</label> -->
                         <label class="text-left w-100" for="email">Email Address</label>
                         <input type="text" class="form-control vi-border-clr vi-cs-textbox" name="email"
                             id="email" placeholder="Enter Your Email Address"/>
                     </div>
-                    <div class="my-3 w-75 m-auto">
+                    <div class="my-1 w-75 m-auto">
                         <!-- <label class="pass-start vi-common-clr" for="email text-start">Password</label> -->
                         <label class="text-left w-100" for="email text-start">Password</label>
                         <input id="password-field" type="password" placeholder="Enter Your Password"
@@ -71,7 +71,7 @@
                         </div>
                     @endif
                     <div class="mobile-space">
-                        <input type="submit" value="Login" class="rounded vi-nav-bg text-white w-md-25 m-auto my-2 text-uppercase vi-main-btn-db" />
+                        <input type="submit" value="Login" class="rounded vi-nav-bg text-white w-md-25 m-auto  text-uppercase vi-main-btn-db" />
                     </div>
                 </form>
 
