@@ -157,7 +157,7 @@
                 "url": "{{ route('get_all_respond') }}",
                 "data": {
                     _token: tempcsrf,
-                    inside_form: 'panels',
+                    inside_form: 'tags',
                     id: '{{ $data->id }}',
                 },
                 "dataType": "json",
@@ -253,6 +253,16 @@
 
         multi_delete("POST", all_id, "{{ route('respondents_multi_delete') }}", "Respondents Deleted",
             'respondents_datatable');
+    });
+
+    $(document).on('click', '#deattach_tags', function(e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        console.log("id",id);
+        var url = "{{ route('deattach_tags', ':id') }}";
+        url = url.replace(':id', id);
+
+        single_delete("POST", id, url, "Deattach Pannel", 'respondents_datatable');
     });
 
     function myFunction(color) {

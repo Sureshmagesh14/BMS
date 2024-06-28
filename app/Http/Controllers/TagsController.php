@@ -321,7 +321,7 @@ class TagsController extends Controller
 
     public function deattach_tags($id){
         try {
-            RespondentTags::where('tag_id',$id)->delete();
+            RespondentTags::where('respondent_id',$id)->delete();
 
             return response()->json([
                 'status'  => 200,

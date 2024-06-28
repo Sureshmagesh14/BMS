@@ -52,7 +52,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: "{{ route('respondent_to_panel_attach_import') }}",
+                url: "{{ route('tags_attach_store') }}",
                 data: data,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
