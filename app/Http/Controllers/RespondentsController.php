@@ -529,12 +529,21 @@ class RespondentsController extends Controller
                                 data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="#!" id="delete_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                <i class="far fa-trash-alt"></i> Delete
-                            </a>
                         </li>';
+                      
+                    }
+                    if(str_contains(url()->current(), '/admin/respondents')){
+                        $nestedData['options'] .=  '<li class="list-group-item">
+                        <a href="#!" id="delete_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
+                            <i class="far fa-trash-alt"></i> Delete
+                        </a>
+                        </li>';
+                    }else{
+                        $nestedData['options'] .= '<li class="list-group-item">
+                                                <a href="#!" id="deattach_tags" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
+                                                    <i class="far fa-trash-alt"></i> De-attach
+                                                </a>
+                                            </li>';
                     }
     
                     // Close dropdown menu and div
