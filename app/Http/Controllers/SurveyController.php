@@ -2211,16 +2211,22 @@ class SurveyController extends Controller
     {
         // Custom array data to export
         $survey = Survey::where(['id'=>$survey_id])->first();
-        $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you','rankorder'])->get();
+        $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you','rankorder','multi_choice'])->get();
         $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
+        $multi_choice_qus=Questions::where(['qus_type'=>'multi_choice','survey_id'=>$survey_id])->get();
         $rankorder_qus=Questions::where(['qus_type'=>'rankorder','survey_id'=>$survey_id])->get();
 
         $cols = ["Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name"];
         foreach($question as $qus){
             array_push($cols,$qus->question_name);
         }
-      
-       
+        foreach($multi_choice_qus as $qus){
+            $qus_ans = json_decode($qus->qus_ans); 
+            $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+            foreach($choices as $qus1){
+                array_push($cols,$qus->question_name.'_'.$qus1);
+            }
+        }
         foreach($rankorder_qus as $qus){
             $qus_ans = json_decode($qus->qus_ans); 
             // array_push($cols,$qus->question_name);
@@ -2475,6 +2481,22 @@ class SurveyController extends Controller
                             }
                         }
                        
+                    }
+                   
+                }else if($qus->qus_type == 'multi_choice'){
+                    // $result[$qus->question_name]=''; 
+                    $qus_ans = json_decode($qus->qus_ans); 
+                    $output = explode(",", $output);
+                    $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                    foreach($choices as $qus1){
+                        if($output!=null){
+                            foreach($output as $op){
+                                if($qus1 == $op){
+                                    $arrId= $qus->question_name.'_'.$qus1;
+                                    $result[$arrId]=$op;
+                                }
+                            }
+                        }
                     }
                    
                 }else if($qus->qus_type == 'photo_capture'){
