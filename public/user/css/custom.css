@@ -58,7 +58,7 @@ tr{
   -webkit-box-orient: vertical;
 }
 
-.bg-white{
+.pos-fixed.bg-white{
   bottom: 0px;
     position: fixed;
     left: 0;
@@ -72,6 +72,10 @@ tr{
     margin: auto;
     display: flex;
 }
+.bg-grey-6 {
+  background-color: #EAEAEA !important;
+}
+
 /* @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap'); */
 
 /* * {
@@ -357,6 +361,9 @@ tr:nth-child(even) {
 
 
 @media(max-width:767px) {
+  .d-sm-flex{
+    display: block !important;
+  }
   .h-90{
     height: 100vh !important;
   }
