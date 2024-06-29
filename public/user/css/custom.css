@@ -346,11 +346,20 @@ tr:nth-child(even) {
   background-color: #edbf1b;
   color: white;
 }
+.forgot-pass{
+  height: 84vh !important;
+}
+.login.w-50{
+  width:60vh !important;
+}
 
 /* dashboard css ends  */
 
 
 @media(max-width:767px) {
+  .h-90{
+    height: 100vh !important;
+  }
   .mob-hide{
     display: none !important;
 }

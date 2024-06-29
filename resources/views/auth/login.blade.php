@@ -37,15 +37,15 @@
 </style>
 <div class="container-fluid vi-background-index h-90">
     <div class="row vi-background-index">
-        <div class="col-md-6 d-none-mobile  m-auto d-flex mob-hide">
+        <div class="col-md-5 d-none-mobile  m-auto d-flex mob-hide">
         <div class="w-75 m-auto d-flex ">
         <img src="{{ asset('assets/images/login.jpg') }}"
                 class="img-fluid w-75 image-cover rounded-border m-auto d-flex" alt="" />
 </div>
         </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-7 col-sm-12">
             <div class="rightside text-center">
-                <img src="{{ asset('user/images/small-logo.png') }}" class="img-fluid w-50 m-auto mb-4" alt="" />
+                <img src="{{ asset('user/images/small-logo.png') }}" class="img-fluid w-50 login m-auto mb-4" alt="" />
                 <h2 class="vi-common-clr vi-welcome-size fw-bolder">Welcome Back</h2>
 
                 <p>Login with your email address</p>
