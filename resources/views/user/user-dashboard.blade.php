@@ -83,7 +83,7 @@
 
 
         <div class="alert alert-danger bs-alert-old-docs text-center alert_message" style="display: none;"></div>
-        <div class="row justify-content-center py-5 m-auto">
+        <div class="row justify-content-center py-5 mx-auto mt-auto mb-5">
             <div class="col-md-2 vi-light-grey mx-0 px-0 my-2">
                 <div class="logo bg-white pt-3">
                     <div class="profile text-center m-auto ">
