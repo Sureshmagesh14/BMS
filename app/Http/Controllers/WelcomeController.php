@@ -237,11 +237,19 @@ class WelcomeController extends Controller
 
             $completed=[$percent1,$percent2,$percent3];
 
-            $get_respondent = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+            $get_other_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)->get();
+                ->where('resp.is_frontend_complete', 0)
+                ->where('projects.type_id','!=', 3)->get();
+
+            $get_paid_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+                ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
+                ->where('resp.respondent_id', '=', $id)
+                ->where('projects.closing_date', '>=', Carbon::now())
+                ->where('resp.is_frontend_complete', 0)
+                ->where('projects.type_id', 3)->get();
 
             $get_completed_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
@@ -293,7 +301,7 @@ class WelcomeController extends Controller
                 }
             }
 
-            return view('user.user-dashboard', compact('data', 'get_respondent', 'get_completed_survey', 'percentage','completed'));
+            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -430,11 +438,21 @@ class WelcomeController extends Controller
             $resp_name = Session::get('resp_name');
 
             $data = Groups::where('id', $up_id)->first();
+            $profile_data = Respondents::find($resp_id);
 
-            $get_respondent = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+            $get_other_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $resp_id)
-                ->where('resp.is_frontend_complete', 0)->get();
+                ->where('projects.closing_date', '>=', Carbon::now())
+                ->where('resp.is_frontend_complete', 0)
+                ->where('projects.type_id','!=', 3)->get();
+
+            $get_paid_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+                ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
+                ->where('resp.respondent_id', '=', $resp_id)
+                ->where('projects.closing_date', '>=', Carbon::now())
+                ->where('resp.is_frontend_complete', 0)
+                ->where('projects.type_id', 3)->get();
 
             $get_completed_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
@@ -444,7 +462,7 @@ class WelcomeController extends Controller
             // if($request->user()->profile_completion_id==0){
             //      return view('user.update-profile');
             // }else{
-            return view('user.user-surveys', compact('data', 'get_respondent', 'get_completed_survey'));
+            return view('user.user-surveys', compact('data','profile_data', 'get_other_survey', 'get_paid_survey', 'get_completed_survey'));
             //}
 
         } catch (Exception $e) {
@@ -837,7 +855,10 @@ class WelcomeController extends Controller
                 $batch = $this->generateBatchFile($cashouts);
                 //dd($batch);
 
-                $key = '2dee881e-8c53-4fb8-9e2a-c9ad3c6fc3bd';
+                $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
+                
+                $response = $this->batchFileUpload($key, $batch);
+                dd($response);
 
                 $ch = curl_init();
 
@@ -921,7 +942,57 @@ class WelcomeController extends Controller
 
     }
 
+    public function batchFileUpload($serviceKey, $filePath) {
+        // Read file contents
+        $fileContents = file_get_contents($filePath);
     
+        // Initialize cURL
+        $ch = curl_init();
+    
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_URL, 'https://ws.netcash.co.za/NIWS/niws_nif.svc/BatchFileUpload'); // Replace with actual API endpoint
+        curl_setopt($ch, CURLOPT_POST, 1);
+    
+        // Set POST fields
+        $postData = [
+            'ServiceKey' => $serviceKey,
+            'File' => base64_encode($fileContents) // Encoding file contents if needed
+        ];
+    
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+    
+        // Set options to return the transfer as a string and disable SSL verification
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    
+        // Execute cURL request
+        $response = curl_exec($ch);
+    
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return 'Request Error:' . curl_error($ch);
+        }
+    
+        // Get HTTP response code
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    
+        // Close cURL session
+        curl_close($ch);
+    
+        // Handle the response
+        switch ($response) {
+            case '100':  // Authentication failure
+                return 'Authentication failed.';
+            case '102':  // Parameter error
+                return 'Parameter error.';
+            case '200':  // General code exception
+                return 'General code exception.';
+            default:  // Successful response
+                return $response;
+        }
+    }
+
+  
     public function generateBatchFile($cashouts)
     {
         $total = 0;

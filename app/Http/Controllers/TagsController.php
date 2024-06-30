@@ -223,7 +223,7 @@ class TagsController extends Controller
         try {
             if ($request->ajax()) {
                 $token = csrf_token();
-                $all_datas = DB::table('tags');
+                $all_datas = Tags::select('tags.*');
 
                 if ($request->filled('id') && $request->input('inside_form') == 'respondents') {
                     $respondentId = $request->input('id');
@@ -233,10 +233,7 @@ class TagsController extends Controller
                     });
                 }
                 
-                $all_datas = $all_datas->orderBy('tags.id', 'desc')
-                                       ->get();
-                
-                
+                $all_datas = $all_datas->orderBy('tags.id', 'desc')->get();
                 
                 return Datatables::of($all_datas)
                     ->addColumn('select_all', function ($all_data) {
@@ -249,7 +246,7 @@ class TagsController extends Controller
                         </a>';
                     })
                     ->addColumn('colour', function ($all_data) {
-                        return '<div class=""><button type="button" class="btn waves-effect waves-light" style="background-color:'.$all_data->colour.'"><i class="uil uil-user"></i></button></div>';
+                        return '<div class=""><button type="button" class="btn waves-effect waves-light"  onClick="myFunction(\''.$all_data->colour.'\')" style="background-color:'.$all_data->colour.'"><i class="uil uil-user"></i></button></div>';
                     })
                     ->addColumn('action', function ($all_data) {
                         $edit_route = route("tags.edit",$all_data->id);
@@ -274,11 +271,20 @@ class TagsController extends Controller
                                         </a>
                                     </li>';
                                     if(Auth::guard('admin')->user()->role_id == 1){
-                                        $design .= '<li class="list-group-item">
-                                            <a href="#!" id="delete_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
-                                                <i class="far fa-trash-alt"></i> Delete
-                                            </a>
-                                        </li>';
+                                        if(str_contains(url()->current(), '/admin/respondents')){
+                                            $design .= '<li class="list-group-item">
+                                                <a href="#!" id="delete_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                                    <i class="far fa-trash-alt"></i> Delete
+                                                </a>
+                                            </li>';
+                                        }
+                                        else{
+                                            $design .= '<li class="list-group-item">
+                                                <a href="#!" id="deattach_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                                    <i class="far fa-trash-alt"></i> De-attach
+                                                </a>
+                                            </li>';
+                                        }
                                     }
                                 $design .='</ul>
                             </div>';
@@ -311,6 +317,22 @@ class TagsController extends Controller
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    public function deattach_tags($id){
+        try {
+            RespondentTags::where('respondent_id',$id)->delete();
+
+            return response()->json([
+                'status'  => 200,
+                'success' => true,
+                'message' =>'Tags De-attached'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        
     }
 
     public function tags_export(Request $request){
@@ -446,28 +468,9 @@ class TagsController extends Controller
         }
     }
 
-    public function import_tags(Request $request){
-        try {
-         
-            $project_id = $request->respondent_id;
-            $projects = Tags::select('tags.id','tags.name')->where('tags.id',$project_id)->first();
 
-            $returnHTML = view('admin.tags.import', compact('projects','project_id'))->render();
-
-            return response()->json(
-                [
-                    'success' => true,
-                    'html_page' => $returnHTML,
-                ]
-            );
-        }
-        catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
-
-    public function tags_attach_import(Request $request){
-        $project_id = $request->respondent_id;
+    public function respondendtopanel_attach_import(Request $request){
+        $project_id = $request->project_id;
         $file = $request->file('file');
 
         // File Details 
@@ -502,7 +505,121 @@ class TagsController extends Controller
 
                 if($num == $col){
                     for ($c=0; $c < $num; $c++) {
-                        $set_array = array('respondent_id' => $filedata [$c],'tag_id' => $project_id);
+                        $set_array = array('respondent_id' => $filedata [$c],'project_id' => $project_id);
+                        array_push($importData_arr,$set_array);
+                    }
+                    $i++;
+                }
+                else{
+                    return redirect()->back()->with('error','Column mismatched!');
+                    break;
+                }
+            }
+            fclose($file);
+            
+            Project_respondent::insert($importData_arr);
+
+            return redirect()->back()->with('success','Attached Successfully');
+            
+        }
+        else{
+            return redirect()->back()->with('error','Invalid File Extension, Please Upload CSV File Format');
+        }
+        
+    }
+
+    public function import_tags(Request $request){
+        try {
+         
+            $respondent_id = $request->respondent_id;
+            $respondent = DB::table('respondents')
+            ->select(DB::raw("CONCAT(respondents.name, ' ', respondents.surname) AS full_name"))
+            ->where('id', $respondent_id)
+            ->first();
+        
+            // Accessing the concatenated name
+            if ($respondent) {
+                $fullName = $respondent->full_name; // This will give you the concatenated name
+            } else {
+                // Handle if no record found for the given $respondent_id
+                $fullName = 'No respondent found'; // Example error handling
+            }
+
+            $returnHTML = view('admin.tags.import', compact('fullName','respondent_id'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function import_resp_tags(Request $request){
+        try {
+         
+            $tag_id = $request->panel_id;
+            $tags =Tags::select('id','name')
+            ->where('id', $tag_id)
+            ->first();
+        
+       
+
+            $returnHTML = view('admin.tags.import_respondent', compact('tags','tag_id'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function tags_attach_import(Request $request){
+        $respondent_id = $request->respondent_id;
+        $file = $request->file('file');
+
+        // File Details 
+        $filename = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+        $tempPath = $file->getRealPath();
+        $fileSize = $file->getSize();
+        $mimeType = $file->getMimeType();
+
+        // Valid File Extensions
+        $valid_extension = array("csv");
+        if(in_array(strtolower($extension),$valid_extension)){
+            // File upload location
+            $location = 'uploads/csv/'.$respondent_id;
+            // Upload file
+            $file->move($location,$filename);
+            // Import CSV to Database
+            $filepath = public_path($location."/".$filename);
+
+            $file = fopen($filepath,"r");
+
+            $importData_arr = array();
+            $i = 0;
+            $col=1;
+            while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                $num = count($filedata);
+                // Skip first row (Remove below comment if you want to skip the first row)
+                if($i == 0){
+                    $i++;
+                    continue;
+                }
+
+                if($num == $col){
+                    for ($c=0; $c < $num; $c++) {
+                        $set_array = array('respondent_id' => $respondent_id,'tag_id' => $filedata [$c]);
                         array_push($importData_arr,$set_array);
                     }
                     $i++;
@@ -523,6 +640,64 @@ class TagsController extends Controller
             return redirect()->back()->with('error','Invalid File Extension, Please Upload CSV File Format');
         }
         
+    }
+
+    public function tags_resp_attach_import(Request $request){
+        $tag_id = $request->tag_id;
+        $file = $request->file('file');
+
+        // File Details 
+        $filename = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+        $tempPath = $file->getRealPath();
+        $fileSize = $file->getSize();
+        $mimeType = $file->getMimeType();
+
+        // Valid File Extensions
+        $valid_extension = array("csv");
+        if(in_array(strtolower($extension),$valid_extension)){
+            // File upload location
+            $location = 'uploads/csv/'.$tag_id;
+            // Upload file
+            $file->move($location,$filename);
+            // Import CSV to Database
+            $filepath = public_path($location."/".$filename);
+
+            $file = fopen($filepath,"r");
+
+            $importData_arr = array();
+            $i = 0;
+            $col=1;
+            while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                $num = count($filedata);
+                // Skip first row (Remove below comment if you want to skip the first row)
+                if($i == 0){
+                    $i++;
+                    continue;
+                }
+
+                if($num == $col){
+                    for ($c=0; $c < $num; $c++) {
+                        $set_array = array('respondent_id' => $filedata [$c],'tag_id' => $tag_id);
+                        array_push($importData_arr,$set_array);
+                    }
+                    $i++;
+                }
+                else{
+                    return redirect()->back()->with('error','Column mismatched!');
+                    break;
+                }
+            }
+            fclose($file);
+            
+            RespondentTags::insert($importData_arr);
+
+            return redirect()->back()->with('success','Attached Successfully');
+            
+        }
+        else{
+            return redirect()->back()->with('error','Invalid File Extension, Please Upload CSV File Format');
+        }
     }
 
 }

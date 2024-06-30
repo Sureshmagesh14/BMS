@@ -380,191 +380,195 @@ class RespondentsController extends Controller
     public function indexDataTable(Request $request)
     {
         if ($request->ajax()) {
-            $columns = array(
-            
+            // Define columns array
+            $columns = [
                 0 => 'id',
                 1 => 'name',
                 2 => 'surname',
                 3 => 'mobile',
                 4 => 'whatsapp',
                 5 => 'gender',
-                6=> 'date_of_birth',
-                7=> 'race',
+                6 => 'date_of_birth',
+                7 => 'race',
                 8 => 'status',
                 9 => 'profile_completion',
-                10=> 'inactive_until',
-                11=> 'opeted_in',
+                10 => 'inactive_until',
+                11 => 'opted_in',
                 12 => 'action',
-            );
-
-            $inside_form = $request->inside_form;
-        
-            if(isset($request->id)){
-                if($inside_form == 'projects'){
-                    $totalData = Respondents::Join('project_respondent as pr','respondents.id','pr.respondent_id')->where('pr.project_id',$request->id)->count();
-                }
-                else{
-
-                    $totalData = Respondents::count();
-                }
-            }
-            else{
-                $totalData = Respondents::count();
-            }
-
-            $totalFiltered = $totalData;
-
-            $limit = $request->input('length');
-            $start = $request->input('start');
-            $order = $columns[$request->input('order.0.column')];
-            $dir = $request->input('order.0.dir');
-            
-
-            if (empty($request->input('search.value'))) {
-                $posts = Respondents::select('respondents.*')->offset($start);
-                    if(isset($request->id)){
-                        if($inside_form == 'projects'){
-                            $posts->Join('project_respondent as pr','respondents.id','pr.respondent_id')
-                            ->where('pr.project_id',$request->id);
-                        }
-                    }
-                $posts = $posts->limit($limit)
-                    ->orderBy($order, $dir)
-                    ->get();
-            }
-            else {
-                $search = $request->input('search.value');
-
-                $posts = Respondents::select('respondents.*')->where('id', 'LIKE', "%{$search}%");
-                    if(isset($request->id)){
-                        if($inside_form == 'projects'){
-                            $posts->Join('project_respondent as pr','respondents.id','pr.respondent_id')
-                            ->where('pr.project_id',$request->id);
-                        }
-                    }
-                $posts = $posts->orWhere('name', 'LIKE', "%{$search}%")
-                    ->orWhere('surname', 'LIKE', "%{$search}%")
-                    ->orWhere('mobile', 'LIKE', "%{$search}%")
-                    ->orWhere('whatsapp', 'LIKE', "%{$search}%")
-                    ->orWhere('email', 'LIKE', "%{$search}%")
-                    ->offset($start)
-                    ->limit($limit)
-                    ->orderBy($order, $dir)
-                    ->cursor();
-
-                $totalFiltered = Respondents::where('id', 'LIKE', "%{$search}%");
-                    if(isset($request->id)){
-                        if($inside_form == 'projects'){
-                            $totalFiltered->Join('project_respondent as pr','respondents.id','pr.respondent_id')
-                            ->where('pr.project_id',$request->id);
-                        }
-                    }
-                $totalFiltered = $totalFiltered->orWhere('name', 'LIKE', "%{$search}%")
-                                                ->orWhere('surname', 'LIKE', "%{$search}%")
-                                                ->orWhere('whatsapp', 'LIKE', "%{$search}%")
-                                                ->orWhere('mobile', 'LIKE', "%{$search}%")
-                                                ->orWhere('email', 'LIKE', "%{$search}%")
-                                                ->count();
-            }
-
-            $data = array();
-            if (!empty($posts)) {
-                $i = 1;
-                foreach ($posts as $key => $post) {
-                    $edit_route = route('respondents.edit', $post->id);
-                    $view_route = route('respondents.show', $post->id);
-                    $nestedData['select_all'] = '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this,\'respondents_datatable\')" id="'.$post->id.'">';
-                    $nestedData['id'] = $post->id;
-                    $nestedData['name'] = $post->name ?? '-';
-                    $nestedData['surname'] = $post->surname ?? '-';
-                    $nestedData['mobile'] = $post->mobile ?? '-';
-                    $nestedData['whatsapp'] = $post->whatsapp ?? '-';
-                    $nestedData['email'] = $post->email ?? '-';
-                    if($post->date_of_birth!=null){
-                        $bday = new \DateTime($post->date_of_birth); // Creating a DateTime object representing your date of birth.
-                        $today = new \DateTime(date('m.d.y'));
-                        $diff = $today->diff($bday); 
+            ];
     
-                        $age=$diff->y. 'year '. $diff->m. 'month '. $diff->d .'days';
-                    }else{
-                        $age='-';
-                    }
-                   
-                    $nestedData['date_of_birth'] = $age;
-                    $nestedData['race'] = $post->race ?? '-';
-                    $nestedData['status'] = $post->status ?? '-';
-                    $nestedData['profile_completion'] = $post->profile_completion ?? '-';
-                    $nestedData['inactive_until'] = $post->inactive_until ?? '-';
-                    $nestedData['opeted_in'] = $post->opeted_in ?? '-';
+            // Determine if request is from inside a form (e.g., 'projects' or 'tags')
+            $inside_form = $request->inside_form;
+    
+            // Initial query builder setup
+            $query = Respondents::query();
+    
+            // Apply additional conditions based on 'inside_form' and 'id' parameter
+            if ($request->filled('id')) {
+                if ($inside_form === 'projects') {
+                    $query->join('project_respondent as pr', 'respondents.id', '=', 'pr.respondent_id')
+                        ->where('pr.project_id', $request->id);
+                } elseif ($inside_form === 'tags') {
+                    $query->join('respondent_tag as rt', 'respondents.id', '=', 'rt.respondent_id')
+                        ->where('rt.tag_id', $request->id);
+                }
+            }
 
-                    $nestedData['id_show'] = '<a href="'.$view_route.'" class="rounded waves-light waves-effect">
-                        '.$post->id.'
-                    </a>';
-                    if (Auth::guard('admin')->user()->role_id == 1 || Auth::guard('admin')->user()->id == $post->id) {
-                        $nestedData['options'] = '<div class="col-md-2">
-                            <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
-                                title="Action" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-tasks" aria-hidden="true"></i>
-                                <i class="mdi mdi-chevron-down"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-center">';
-                    
-                        // View option
+            $active_status_id = $request->active_status_id;
+            if (!empty($active_status_id)) {
+                $query->where('active_status_id', $active_status_id);
+            }
+    
+            // Filter by profile_completion_id if provided
+            $profile_completion_id = $request->profile_completion_id;
+            if (!empty($profile_completion_id)) {
+                $query->where('profile_completion_id', $profile_completion_id);
+            }
+    
+            // Total records count before any filtering
+            $totalData = $query->count();
+    
+            // Search value from DataTables
+            $search = $request->input('search.value');
+    
+            // Apply search conditions if search value is present
+            if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('id', 'LIKE', "%{$search}%")
+                        ->orWhere('name', 'LIKE', "%{$search}%")
+                        ->orWhere('surname', 'LIKE', "%{$search}%")
+                        ->orWhere('mobile', 'LIKE', "%{$search}%")
+                        ->orWhere('whatsapp', 'LIKE', "%{$search}%")
+                        ->orWhere('email', 'LIKE', "%{$search}%");
+                });
+            }
+    
+            // Count of filtered records
+            $totalFiltered = $query->count();
+    
+            // Pagination parameters
+            $start = $request->input('start', 0); // Start index for pagination, default 0
+            $limit = $request->input('length', 100); // Records per page, default 100
+            $orderColumn = $columns[$request->input('order.0.column')];
+            $orderDirection = $request->input('order.0.dir');
+    
+            // Retrieve filtered and paginated records
+            $posts = $query->select('respondents.*')
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($orderColumn, $orderDirection)
+                ->get();
+    
+            // Prepare data array for DataTables
+            $data = [];
+            foreach ($posts as $post) {
+                $edit_route = route('respondents.edit', $post->id);
+                $view_route = route('respondents.show', $post->id);
+    
+                // Prepare age based on date_of_birth
+                $age = '-';
+                if ($post->date_of_birth != null) {
+                    $bday = new \DateTime($post->date_of_birth);
+                    $today = new \DateTime();
+                    $diff = $today->diff($bday);
+                    $age = $diff->y . ' years ' . $diff->m . ' months ' . $diff->d . ' days';
+                }
+                $statusMappings = [
+                    1 => 'Active',
+                    2 => 'Deactivated',
+                    3 => 'Unsubscribed',
+                    4 => 'Pending',
+                ];
+                // Build each row of data
+                $nestedData = [
+                    'select_all' => '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this,\'respondents_datatable\')" id="' . $post->id . '">',
+                    'id' => $post->id,
+                    'name' => $post->name ?? '-',
+                    'surname' => $post->surname ?? '-',
+                    'mobile' => $post->mobile ?? '-',
+                    'whatsapp' => $post->whatsapp ?? '-',
+                    'email' => $post->email ?? '-',
+                    'date_of_birth' => $age,
+                    'race' => $post->race ?? '-',
+                    'status' => isset($statusMappings[$post->active_status_id]) ? $statusMappings[$post->active_status_id] : 'Unknown',
+                    'profile_completion' => $post->profile_completion_id == 1 ? 'Completed' : 'Not Completed',
+                    'inactive_until' => $post->inactive_until ?? '-',
+                    'opted_in' => $post->opted_in ?? '-',
+                    'id_show' => '<a href="' . $view_route . '" class="rounded waves-light waves-effect">' . $post->id . '</a>',
+                ];
+    
+                // Add options for each row based on user permissions
+                if (Auth::guard('admin')->user()->role_id == 1 || Auth::guard('admin')->user()->id == $post->id) {
+                    $nestedData['options'] = '<div class="col-md-2">
+                        <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                            title="Action" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-tasks" aria-hidden="true"></i>
+                            <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-center">';
+    
+                    // View option
+                    $nestedData['options'] .= '<li class="list-group-item">
+                        <a href="' . $view_route . '" class="rounded waves-light waves-effect">
+                            <i class="fa fa-eye"></i> View
+                        </a>
+                    </li>';
+    
+                    // Additional options based on conditions
+                    if (str_contains(url()->previous(), '/admin/projects')) {
+                        // If coming from projects page
                         $nestedData['options'] .= '<li class="list-group-item">
-                            <a href="' . $view_route . '" class="rounded waves-light waves-effect">
-                                <i class="fa fa-eye"></i> View
+                            <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
+                                <i class="far fa-trash-alt"></i> De-attach
                             </a>
                         </li>';
-                    
-                        // Additional options based on conditions
-                        if (str_contains(url()->previous(), '/admin/projects')) {
-                            // If coming from projects page
-                            $nestedData['options'] .= '<li class="list-group-item">
-                                <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                    <i class="far fa-trash-alt"></i> De-attach
-                                </a>
-                            </li>';
-                        } else {
-                            // If not coming from projects page
-                            $nestedData['options'] .= '<li class="list-group-item">
-                                <a data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true"
-                                    data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#!" id="delete_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                    <i class="far fa-trash-alt"></i> Delete
-                                </a>
-                            </li>';
-                        }
-                    
-                        // Close dropdown menu and div
-                        $nestedData['options'] .= '</ul>
-                        </div>';
                     } else {
-                        // If user doesn't have permission, set options to empty string or handle accordingly
-                        $nestedData['options'] = '-';
+                        // If not coming from projects page
+                        $nestedData['options'] .= '<li class="list-group-item">
+                            <a data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true"
+                                data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                        </li>';
+                      
                     }
-                    
-
-                 
-                    $data[] = $nestedData;
-                    $i++;
+                    if(str_contains(url()->current(), '/admin/respondents')){
+                        $nestedData['options'] .=  '<li class="list-group-item">
+                        <a href="#!" id="delete_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
+                            <i class="far fa-trash-alt"></i> Delete
+                        </a>
+                        </li>';
+                    }else{
+                        $nestedData['options'] .= '<li class="list-group-item">
+                                                <a href="#!" id="deattach_tags" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
+                                                    <i class="far fa-trash-alt"></i> De-attach
+                                                </a>
+                                            </li>';
+                    }
+    
+                    // Close dropdown menu and div
+                    $nestedData['options'] .= '</ul>
+                    </div>';
+                } else {
+                    // If user doesn't have permission, set options to empty string or handle accordingly
+                    $nestedData['options'] = '-';
                 }
+    
+                $data[] = $nestedData;
             }
-
-            $json_data = array(
+    
+            // Prepare JSON response for DataTables
+            $json_data = [
                 "draw" => intval($request->input('draw')),
                 "recordsTotal" => intval($totalData),
                 "recordsFiltered" => intval($totalFiltered),
                 "data" => $data,
-            );
-
-            echo json_encode($json_data);
+            ];
+    
+            return response()->json($json_data);
         }
-
     }
+    
 
     public function respondent_export(Request $request)
     {

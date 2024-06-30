@@ -16,7 +16,9 @@
         /* margin-top: 85px !important; */
         padding: 20px !important;
     }
-
+    .rounded-border{
+        border-radius: 25px;
+    }
     .container {
         padding-top: 50px;
         margin: auto;
@@ -24,17 +26,22 @@
     .image-cover{
         object-fit: cover;
     }
+    .text-left{
+        text-align:left;
+    }
     @media only screen and (max-width: 600px) {
         .login .w-75{
             width: 100% !important;
         }
     }
 </style>
-<div class="container-fluid vh-90 login">
-    <div class="row">
-        <div class="col-md-6 d-none-mobile">
-            <img src="{{ asset('user/images/group-afro-americans-working-together.jpg') }}" class="img-fluid vh-90 w-100 image-cover"
-                alt="" />
+<div class="container-fluid vi-background-index ">
+    <div class="row vi-background-index">
+        <div class="col-md-6 d-none-mobile  m-auto d-flex mob-hide">
+        <div class="w-75 m-auto d-flex ">
+        <img src="{{ asset('assets/images/login.jpg') }}"
+                class="img-fluid w-75 image-cover rounded-border m-auto d-flex" alt="" />
+</div>
         </div>
         <div class="col-md-6 col-sm-12">
             <div class="rightside text-center">
@@ -45,12 +52,14 @@
                 <form method="POST" id="login_table" action="{{ route('login') }}">
                     @csrf
                     <div class="my-3  w-75 m-auto">
-                        <label class="email-start vi-common-clr" for="email">Email Address</label>
+                        <!-- <label class="email-start vi-common-clr" for="email">Email Address</label> -->
+                        <label class="text-left w-100" for="email">Email Address</label>
                         <input type="text" class="form-control vi-border-clr vi-cs-textbox" name="email"
                             id="email" placeholder="Enter Your Email Address"/>
                     </div>
                     <div class="my-3 w-75 m-auto">
-                        <label class="pass-start vi-common-clr" for="email text-start">Password</label>
+                        <!-- <label class="pass-start vi-common-clr" for="email text-start">Password</label> -->
+                        <label class="text-left w-100" for="email text-start">Password</label>
                         <input id="password-field" type="password" placeholder="Enter Your Password"
                             class="form-control vi-border-clr vi-cs-textbox" name="password" required />
 

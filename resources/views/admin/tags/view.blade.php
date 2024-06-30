@@ -47,10 +47,14 @@
                                         </tr>
                                         <tr>
                                             <th>color</th>
-                                            <td><button type="button" class="btn waves-effect waves-light"
-                                                    style="background-color:{{ $data->colour }}"><i
-                                                        class="uil uil-user"></i></button>
+                                            <td>
+                                                <button type="button" onClick="myFunction('{{ $data->colour }}')"
+                                                    class="btn waves-effect waves-light"
+                                                    style="background-color: {{ $data->colour }}">
+                                                    <i class="uil uil-user"></i>
+                                                </button>
                                             </td>
+
                                         </tr>
 
                                     </tbody>
@@ -67,12 +71,19 @@
                 </div> <!-- end col -->
             </div> <!-- end row -->
             <div class="text-right">
-                
+
                 <a href="#!" data-url="{{ route('attach_resp_tags', ['tags_id' => $data->id]) }}" data-size="xl"
-                    data-ajax-popup="true" class="btn btn-primary"
-                    data-bs-original-title="{{ __('Attach Panel') }}" class="btn btn-primary" data-size="xl"
-                    data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                    data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attach Panel') }}"
+                    class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip"
+                    id="create">
                     Attach Panel
+                </a>
+
+                <a href="#!" data-url="{{ route('import_resp_tags', ['panel_id' => $data->id]) }}" data-size="xl"
+                    data-ajax-popup="true" class="btn btn-primary"
+                    data-bs-original-title="{{ __('Import - Respondents to Panels') }}" class="btn btn-primary"
+                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                    Import Panels
                 </a>
             </div>
             <br>
@@ -95,10 +106,10 @@
                                         <th>Whatsapp</th>
                                         <th>Email</th>
                                         <th>Age</th>
-                                        <th>race</th>
-                                        <th>status</th>
-                                        <th>profile_completion</th>
-                                        <th>inactive_until</th>
+                                        {{-- <th>Race</th> --}}
+                                        <th>Status</th>
+                                        <th>Profile Completion</th>
+                                        <th>Inactive Until</th>
                                         <th>opeted_in</th>
                                         <th>Action</th>
 
@@ -146,6 +157,8 @@
                 "url": "{{ route('get_all_respond') }}",
                 "data": {
                     _token: tempcsrf,
+                    inside_form: 'tags',
+                    id: '{{ $data->id }}',
                 },
                 "dataType": "json",
                 "type": "POST"
@@ -174,9 +187,9 @@
                 {
                     "data": "date_of_birth"
                 },
-                {
-                    "data": "race"
-                },
+                // {
+                //     "data": "race"
+                // },
                 {
                     "data": "status"
                 },
@@ -187,7 +200,7 @@
                     "data": "inactive_until"
                 },
                 {
-                    "data": "opeted_in"
+                    "data": "opted_in"
                 },
                 {
                     "data": "options"
@@ -241,4 +254,52 @@
         multi_delete("POST", all_id, "{{ route('respondents_multi_delete') }}", "Respondents Deleted",
             'respondents_datatable');
     });
+
+    $(document).on('click', '#deattach_tags', function(e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        console.log("id",id);
+        var url = "{{ route('deattach_tags', ':id') }}";
+        url = url.replace(':id', id);
+
+        single_delete("POST", id, url, "Deattach Pannel", 'respondents_datatable');
+    });
+
+    function myFunction(color) {
+        // Log the clicked color to console for debugging
+        // Create a temporary textarea element to copy the color value
+        var textarea = document.createElement('textarea');
+        textarea.value = color;
+        textarea.style.position = 'fixed'; // Ensure it's not visible
+        document.body.appendChild(textarea);
+
+        // Select and copy the color value from the textarea
+        textarea.select();
+        document.execCommand('copy');
+
+        // Remove the textarea from the DOM after copying
+        document.body.removeChild(textarea);
+
+        // Show Toastr success message
+        toastr.success('Copied to clipboard successfully');
+    }
 </script>
+@if (count($errors) > 0)
+    @foreach ($errors->all() as $message)
+        <script>
+            toastr.error("{{ $message }}");
+        </script>
+    @endforeach
+@endif
+
+@if (Session::has('success'))
+    <script>
+        toastr.success("{{ session('success') }}");
+    </script>
+@endif
+
+@if (Session::has('error'))
+    <script>
+        toastr.error("{{ session('error') }}");
+    </script>
+@endif

@@ -4,7 +4,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Panel</label>
         <div class="col-md-10">
             <input disabled class="form-control" type="text" name="project" id="project" value="@if($tags != null) {{ $tags->name }} @endif">
-            <input type="hidden" name="respondents" id="" value="@if($tags != null) {{ $tags->id }} @endif">
+            <input type="hidden" name="tag_id" id="" value="@if($tags != null) {{ $tags->id }} @endif">
         </div>
     </div>
 
@@ -68,7 +68,7 @@
                     }
 
                     $("#commonModal").modal('hide');
-                    projects_table();
+                    respondents_datatable();
                 },
                 complete: function(response) {
                     $('#attach_tags_button').html('Attach');

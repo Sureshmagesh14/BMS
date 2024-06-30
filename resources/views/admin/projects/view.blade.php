@@ -412,9 +412,9 @@
                 {
                     "data": "date_of_birth"
                 },
-                {
-                    "data": "race"
-                },
+                // {
+                //     "data": "race"
+                // },
                 {
                     "data": "status"
                 },
@@ -425,7 +425,7 @@
                     "data": "inactive_until"
                 },
                 {
-                    "data": "opeted_in"
+                    "data": "opted_in"
                 },
                 {
                     "data": "options"
