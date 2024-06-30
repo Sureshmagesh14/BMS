@@ -172,6 +172,7 @@ Route::group([
     Route::any('import_resp_tags/{panel_id}', 'TagsController@import_resp_tags')->name('import_resp_tags');
     Route::any('respondent_attach_import/{project_id}', 'ProjectsController@respondent_attach_import')->name('respondent_attach_import');
     Route::any('tags_attach_import/{respondent_id}', 'TagsController@tags_attach_import')->name('tags_attach_import');
+    Route::any('tags_search_result', 'TagsController@tags_search_result')->name('tags_search_result');
     Route::any('tags_resp_attach_import/{panel_id}', 'TagsController@tags_resp_attach_import')->name('tags_resp_attach_import');
     Route::any('deattach_tags/{tags_id}', 'TagsController@deattach_tags')->name('deattach_tags');
 
