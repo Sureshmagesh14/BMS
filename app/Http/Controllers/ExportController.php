@@ -12,7 +12,8 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use DateTime ;
+use DateTime;
+use App\Models\Tag;
 class ExportController extends Controller
 {
 
@@ -1073,7 +1074,61 @@ class ExportController extends Controller
 
                 $fileName = $module . "_" . date('ymd') . "." . $type;
 
+            } else if ($module == 'Panel') {
+
+
+                $respondents = ($request->respondents != null) ? array_filter($request->respondents) : null;
+                $panel = ($request->panel != null) ? array_filter($request->panel) : null;
+                
+                $query = DB::table('respondent_tag')
+                    ->select('respondent_tag.id', 'respondents.name', 'respondents.surname', 'tags.name as tag_name')
+                    ->join('tags', 'respondent_tag.tag_id', '=', 'tags.id')
+                    ->join('respondents', 'respondents.id', '=', 'respondent_tag.respondent_id') // Join with respondents table
+                    ->when($panel !== null, function ($query) use ($panel) {
+                        $query->whereIn('respondent_tag.tag_id', $panel);
+                    })
+                    ->when($type_method == 'Individual', function ($query) use ($respondents) {
+                        $query->whereIn('respondent_tag.respondent_id', $respondents);
+                    })
+                    ->orderBy('respondent_tag.id', 'desc')
+                    ->take(3)
+                    ->get()
+                    ->map(function ($item) {
+                        $item->full_name = $item->name . ' ' . $item->surname;
+                        unset($item->name, $item->surname); // Optionally remove individual name and surname
+                        return $item;
+                    });
+                
+                // Check if $query is populated correctly
+               
+                
+                // Assuming $query is correctly populated, proceed with Excel export logic
+                if ($query->isNotEmpty()) {
+                    // Prepare Excel sheet
+                    $sheet->setCellValue('A1', 'Profile ID');
+                    $sheet->setCellValue('B1', 'Panel name');
+                    $sheet->setCellValue('C1', 'Full Name');
+                    
+                    $sheet->getStyle('A1:C1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:C1')->applyFromArray($styleArray);
+                    
+                    $rows = 2;
+                    foreach ($query as $all_data) {
+                        $sheet->setCellValue('A' . $rows, $all_data->id); // Assuming 'id' is the profile ID
+                        $sheet->setCellValue('B' . $rows, $all_data->tag_name); // Adjust as per your actual logic for panel name
+                        $sheet->setCellValue('C' . $rows, $all_data->full_name);
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':C' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows)->getAlignment()->setIndent(1);
+                    
+                        $rows++;
+                    }
+                
+                    $fileName = $module . "_" . date('ymd') . "." . $type;
+                }
             }
+            
             else if ($module == 'Internal Reports') {
                 $action=$request->action;
                 $role=$request->role;

@@ -55,4 +55,9 @@ class Respondents extends Authenticatable
     {
         return DB::table('survey')->where('id', '=', $survey_id)->first();
     }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tags::class, 'respondent_tag', 'respondent_id', 'tag_id');
+    }
 }
