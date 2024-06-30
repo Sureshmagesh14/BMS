@@ -326,6 +326,14 @@ class ExportController extends Controller
                     $sheet->getColumnDimension('AN')->setAutoSize(true);
                     $sheet->getColumnDimension('AO')->setAutoSize(true);
                     $sheet->getColumnDimension('AP')->setAutoSize(true);
+                    $sheet->getColumnDimension('AQ')->setAutoSize(true);
+                    $sheet->getColumnDimension('AR')->setAutoSize(true);
+                    $sheet->getColumnDimension('AS')->setAutoSize(true);
+                    $sheet->getColumnDimension('AT')->setAutoSize(true);
+                    $sheet->getColumnDimension('AU')->setAutoSize(true);
+                    $sheet->getColumnDimension('AV')->setAutoSize(true);
+                    $sheet->getColumnDimension('AW')->setAutoSize(true);
+                    $sheet->getColumnDimension('AX')->setAutoSize(true);
                     
                     $sheet->setCellValue('A1', 'PID');
                     $sheet->setCellValue('B1', 'First Name');
@@ -362,18 +370,26 @@ class ExportController extends Controller
                     $sheet->setCellValue('AE1', 'Child 4 - Birth Year');
                     $sheet->setCellValue('AF1', 'Child 4 - Gender');
                     $sheet->setCellValue('AG1', 'Car 1 - Brand');
-                    $sheet->setCellValue('AH1', 'Car 1 - Model');
-                    $sheet->setCellValue('AI1', 'Car 2 - Brand');
-                    $sheet->setCellValue('AJ1', 'Car 2 - Model');
-                    $sheet->setCellValue('AK1', 'Car 3 - Brand');
-                    $sheet->setCellValue('AL1', 'Car 3 - Model');
-                    $sheet->setCellValue('AM1', 'Car 4 - Brand');
-                    $sheet->setCellValue('AN1', 'Car 4 - Model');
-                    $sheet->setCellValue('AO1', 'Opted in');
-                    $sheet->setCellValue('AP1', 'Last Updated');
+                    $sheet->setCellValue('AH1', 'Car 1 - Type of Vechile');
+                    $sheet->setCellValue('AI1', 'Car 1 - Model');
+                    $sheet->setCellValue('AJ1', 'Car 1 - Year');
+                    $sheet->setCellValue('AK1', 'Car 2 - Brand');
+                    $sheet->setCellValue('AL1', 'Car 2 - Type of Vechile');
+                    $sheet->setCellValue('AM1', 'Car 2 - Model');
+                    $sheet->setCellValue('AN1', 'Car 2 - Year');
+                    $sheet->setCellValue('AO1', 'Car 3 - Brand');
+                    $sheet->setCellValue('AP1', 'Car 3 - Type of Vechile');
+                    $sheet->setCellValue('AQ1', 'Car 3 - Model');
+                    $sheet->setCellValue('AR1', 'Car 3 - Year');
+                    $sheet->setCellValue('AS1', 'Car 4 - Brand');
+                    $sheet->setCellValue('AT1', 'Car 4- Type of Vechile');
+                    $sheet->setCellValue('AU1', 'Car 4 - Model');
+                    $sheet->setCellValue('AV1', 'Car 4 - Year');
+                    $sheet->setCellValue('AW1', 'Opted in');
+                    $sheet->setCellValue('AX1', 'Last Updated');
 
-                    $sheet->getStyle('A1:AP1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:AP1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:AX1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:AX1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -493,30 +509,46 @@ class ExportController extends Controller
                             }
                         }
                     
-                        // Handle $vehicle_data
+                        $children_data = json_decode($all_data->children_data, true);
+                        $vehicle_data = json_decode($all_data->vehicle_data, true);
                         $vehicle_alpha = 'AG';
-                        if (!empty($vehicle_data) && is_array($vehicle_data)) {
-                            foreach ($vehicle_data as $vehicle) {
-                                if (is_object($vehicle) && isset($vehicle->brand)) {
-                                    $get_vehicle = DB::table('vehicle_master')->where('id', $vehicle->brand)->first();
-                                    $vehicle_name = ($get_vehicle != null) ? $get_vehicle->vehicle_name : '-';
-                                    $sheet->setCellValue($vehicle_alpha . $rows, $vehicle_name ?? '');
-                                    $vehicle_alpha++;
-                                    $sheet->setCellValue($vehicle_alpha . $rows, $vehicle->model ?? '');
-                                    $vehicle_alpha++;
-                                }
-                            }
+                        
+                        foreach ($vehicle_data as $vehicle) {
+                            $brand_id = $vehicle['brand'];
+                        
+                            // Debugging line to check $brand_id
+               
+                        
+                            $get_vehicle = DB::table('vehicle_master')->where('id', $brand_id)->first();
+                      
+                        
+                            $vehicle_name = $get_vehicle ? $get_vehicle->vehicle_name : '-';
+                            
+                            // Debugging line to check $vehicle_name
+                         
+                        
+                            $sheet->setCellValue($vehicle_alpha . $rows, $vehicle_name);
+                            $vehicle_alpha++;
+                            $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['type'] ?? '');
+                            $vehicle_alpha++;
+                            $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['brand'] ?? '');
+                            $vehicle_alpha++;
+                            $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['year'] ?? '');
+                            $vehicle_alpha++;
                         }
+                        
+                        
+                        
                     
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
                     
-                        $sheet->setCellValue('AO' . $rows, $opted_in);
-                        $sheet->setCellValue('AP' . $rows, $updated_at);
+                        $sheet->setCellValue('AW' . $rows, $opted_in);
+                        $sheet->setCellValue('AX' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':AP' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':AP' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('C' . $rows . ':AX' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':AX' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                         $i++;
                     }
