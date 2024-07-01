@@ -700,4 +700,35 @@ class TagsController extends Controller
         }
     }
 
+    public function tags_search_result(Request $request){
+        try {
+            $searchValue = $request['q'];
+            
+            if($request->filled('q')){
+                $panel_data = Tags::search($searchValue)
+                ->query(function ($query) {
+                    $query->where('deleted_at', '=', NULL);
+                })
+                ->orderBy('id','ASC')
+                ->get();
+            }
+
+            $panel = array();
+            if(count($panel_data) > 0){
+                foreach($panel_data as $resp){
+                    $setUser = [
+                        'id' => $resp->id,
+                        'name' => $resp->name,
+                    ];
+                    $panel[] = $setUser;
+                }
+            }
+
+            echo json_encode($panel);
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
 }

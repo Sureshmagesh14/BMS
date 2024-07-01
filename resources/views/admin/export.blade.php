@@ -65,6 +65,7 @@
                                             <option value="Cashout">Cashout</option>
                                             <option value="Team Activity">Team Activity</option>
                                             <option value="Internal Reports">Internal Reports</option>
+                                            <option value="Panel">Panel</option>
                                             <option value="Survey">Survey</option>
                                         </select>
                                     </div>
@@ -165,6 +166,15 @@
 
                                         <input class="form-control" type="text" id="projects"
                                             name="projects[]" value="{{ request()->get('q') }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row panel">
+                                    <label class="col-md-2 col-form-label">Panel Name</label>
+                                    <div class="col-md-10">
+
+                                        <input class="form-control" type="text" id="panel"
+                                            name="panel[]" value="{{ request()->get('q') }}">
                                     </div>
                                 </div>
 
@@ -319,6 +329,7 @@
                             $(".respondents").show();
                             $(".report_type").show();
                             $(".date_range").show();
+                            $(".panel").hide();
                             $(".methods").hide();
                         } else if (this.value == 'Respondents info') {
                             $(".show_year").hide();
@@ -335,6 +346,7 @@
                             $(".projects").hide();
                             $(".show_pro_type").hide();
                             $(".methods").hide();
+                            $(".panel").hide();
 
                         } else if ((this.value == 'Cashout')) {
                             $(".show_year").hide();
@@ -351,6 +363,7 @@
                             $(".methods").hide();
                             $(".show_pro_type").hide();
                             $(".date_range").show();
+                            $(".panel").hide();
                         } else if (this.value == 'Rewards') {
                             $(".methods").show();
                             $(".show_year").hide();
@@ -366,6 +379,7 @@
                             $(".projects").hide();
                             $(".show_pro_type").hide();
                             $(".date_range").hide();
+                            $(".panel").hide();
                         } else if (this.value == 'Team Activity') {
                             $(".show_year").hide();
                             $(".show_month").hide();
@@ -381,6 +395,7 @@
                             $(".date_range").show();
                             $(".projects").hide();
                             $(".methods").hide();
+                            $(".panel").hide();
                         } else if (this.value == 'Internal Reports') {
                             $(".show_year").show();
                             $(".show_month").show();
@@ -396,7 +411,26 @@
                             $(".date_range").hide();
                             $(".methods").hide();
                             $(".projects").hide();
-                        } else {
+                            $(".panel").hide();
+                        }else if (this.value == 'Panel') {
+                            $(".show_year").hide();
+                            $(".show_month").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
+                            $(".show_resp").hide();
+                            $(".show_resp_status").hide();
+                            $(".show_resp_type").hide();
+                            $(".show_user").hide();
+                            $(".respondents").hide();
+                            $(".panel").show();
+                            $(".report_type").show();
+                            $(".show_pro_type").hide();
+                            $(".date_range").hide();
+                            $(".methods").hide();
+                            $(".projects").hide();
+                           
+                        }
+                        else {
                             $(".show_user").hide();
                             $(".projects").hide();
                             $(".show_year").hide();
@@ -413,6 +447,7 @@
                             $(".show_pro_type").show();
                             $(".date_range").show();
                             $(".methods").hide();
+                            $(".panel").hide();
                         }
                     });
 
@@ -433,6 +468,25 @@
                         preventDuplicates: true,
                         theme: "bootstrap"
                     });
+
+                    $("#panel").tokenInput("{{ route('tags_search_result') }}", {
+                        propertyToSearch: "name",
+                        tokenValue: "id",
+                        tokenDelimiter: ",",
+                        hintText: "{{ __('Search Panel... By(ID, Name)') }}",
+                        noResultsText: "{{ __('Panel not found.') }}",
+                        searchingText: "{{ __('Searching...') }}",
+                        deleteText: "&#215;",
+                        minChars: 2,
+                        tokenLimit: 20,
+                        zindex: 9999,
+                        animateDropdown: false,
+                        resultsLimit: 20,
+                        deleteText: "&times;",
+                        preventDuplicates: true,
+                        theme: "bootstrap"
+                    });
+
 
                     $("#projects").tokenInput("{{ route('project_seach_result') }}", {
                         propertyToSearch: "name",

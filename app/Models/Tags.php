@@ -22,4 +22,9 @@ class Tags extends Model
             'colour' => $this->colour,
         ];
     }
+
+    public function respondents()
+    {
+        return $this->belongsToMany(Respondents::class, 'respondent_tag', 'tag_id', 'respondent_id');
+    }
 }
