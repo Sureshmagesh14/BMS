@@ -175,11 +175,12 @@
                     all_id.push($this.find("[type=checkbox]").attr('id'));
                 }
             }).get();
-
-            select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $(".hided_option").val();
-
+            select_value = $(".cashout_select_box").val();
+       
+            console.log("select_value",select_value);
             if($.isNumeric(select_value)){
                 titles = (select_value == 0) ? "Failed" : (select_value == 3) ? "Completed" : (select_value == 4) ? "Declined" : "EFT Approve & Process";
+                console.log("select_value",select_value);
                 select_action("POST", all_id, select_value, "{{ route('cashout_action') }}", 'cashout_table', titles, "Are You Want To Change Status", "Action");
             }
             else if(select_value == "delete_all"){
