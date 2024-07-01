@@ -1132,4 +1132,17 @@ class WelcomeController extends Controller
         }
     }
 
+    public function about_the_brand(){
+
+        try {
+            
+        
+            return view('user.about_brand');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+    }
+
 }

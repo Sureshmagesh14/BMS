@@ -515,7 +515,7 @@ class RespondentsController extends Controller
                     </li>';
     
                     // Additional options based on conditions
-                    if (str_contains(url()->previous(), '/admin/projects')) {
+                    if (str_contains(url()->previous(), '/admin/projects') || str_contains(url()->current(), '/admin/respondents')) {
                         // If coming from projects page
                         $nestedData['options'] .= '<li class="list-group-item">
                             <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
@@ -530,21 +530,15 @@ class RespondentsController extends Controller
                                 <i class="fa fa-edit"></i> Edit
                             </a>
                         </li>';
-                      
-                    }
-                    if(str_contains(url()->current(), '/admin/respondents')){
+
                         $nestedData['options'] .=  '<li class="list-group-item">
                         <a href="#!" id="delete_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
                             <i class="far fa-trash-alt"></i> Delete
                         </a>
                         </li>';
-                    }else{
-                        $nestedData['options'] .= '<li class="list-group-item">
-                                                <a href="#!" id="deattach_tags" data-id="'.$post->id.'" class="rounded waves-light waves-effect">
-                                                    <i class="far fa-trash-alt"></i> De-attach
-                                                </a>
-                                            </li>';
+                      
                     }
+                    
     
                     // Close dropdown menu and div
                     $nestedData['options'] .= '</ul>

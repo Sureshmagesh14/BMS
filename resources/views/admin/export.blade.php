@@ -105,6 +105,17 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group row show_cashout_type">
+                                    <label class="col-md-2 col-form-label">Choose Type</label>
+                                    <div class="col-md-10">
+                                        <select name="show_cashout_val" id="show_cashout_val" class="form-control">
+                                            <option value="">Select</option>
+                                            <option value="1">EFT</option>
+                                            <option value="3">Airtime</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="form-group row show_year">
                                     <label class="col-md-2 col-form-label">Select Year</label>
                                     <div class="col-md-10">
@@ -289,6 +300,7 @@
                     $(".show_action").hide();
                     $(".show_pro_type").hide();
                     $(".methods").hide();
+                    $(".show_cashout_type").hide();
                     $("#module").val("");
                     $("#year").val("");
                     $("#month").val("");
@@ -331,6 +343,7 @@
                             $(".date_range").show();
                             $(".panel").hide();
                             $(".methods").hide();
+                            $(".show_cashout_type").hide();
                         } else if (this.value == 'Respondents info') {
                             $(".show_year").hide();
                             $(".show_month").hide();
@@ -347,7 +360,7 @@
                             $(".show_pro_type").hide();
                             $(".methods").hide();
                             $(".panel").hide();
-
+                            $(".show_cashout_type").hide();
                         } else if ((this.value == 'Cashout')) {
                             $(".show_year").hide();
                             $(".show_month").hide();
@@ -364,6 +377,7 @@
                             $(".show_pro_type").hide();
                             $(".date_range").show();
                             $(".panel").hide();
+                            $(".show_cashout_type").show();
                         } else if (this.value == 'Rewards') {
                             $(".methods").show();
                             $(".show_year").hide();
@@ -380,6 +394,7 @@
                             $(".show_pro_type").hide();
                             $(".date_range").hide();
                             $(".panel").hide();
+                            $(".show_cashout_type").hide();
                         } else if (this.value == 'Team Activity') {
                             $(".show_year").hide();
                             $(".show_month").hide();
@@ -396,6 +411,7 @@
                             $(".projects").hide();
                             $(".methods").hide();
                             $(".panel").hide();
+                            $(".show_cashout_type").hide();
                         } else if (this.value == 'Internal Reports') {
                             $(".show_year").show();
                             $(".show_month").show();
@@ -412,6 +428,7 @@
                             $(".methods").hide();
                             $(".projects").hide();
                             $(".panel").hide();
+                            $(".show_cashout_type").hide();
                         }else if (this.value == 'Panel') {
                             $(".show_year").hide();
                             $(".show_month").hide();
@@ -428,6 +445,7 @@
                             $(".date_range").hide();
                             $(".methods").hide();
                             $(".projects").hide();
+                            $(".show_cashout_type").hide();
                            
                         }
                         else {
@@ -448,6 +466,7 @@
                             $(".date_range").show();
                             $(".methods").hide();
                             $(".panel").hide();
+                            $(".show_cashout_type").hide();
                         }
                     });
 
