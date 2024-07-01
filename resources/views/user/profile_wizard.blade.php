@@ -954,7 +954,7 @@
             width: '100%'
         });
 
-        $("#no_children").keyup(function() {
+        $("#no_children").on('input focus keypress keydown', function(e) {
             no_children = $(this).val();
             scroll_div = $("#children_table");
             append_html = "";
@@ -990,7 +990,7 @@
             }
         });
 
-        $("#no_vehicle").keyup(function() {
+        $("#no_vehicle").on('input focus keypress keydown', function(e) {
             no_vehicle = $(this).val();
             scroll_div_vehicle = $("#vehicle_table");
             vehicle_html = "";

@@ -259,7 +259,6 @@
                                             <option value="" selected="selected" disabled="disabled">Please
                                                 select
                                             </option>
-                                            <option value="">Select Role</option>
                                             <option value="project">Project</option>
                                             <option value="respondent">Respondent</option>
                                         </select>
