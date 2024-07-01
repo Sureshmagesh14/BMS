@@ -32,7 +32,7 @@
                 </ul>
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link text-white text-uppercase fw-700" href="#">About the Brand Surgeon</a>
+                        <a class="nav-link text-white text-uppercase fw-700" href="{{ route('about_the_brand') }}">About the Brand Surgeon</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white text-uppercase fw-700" href="{{ route('login') }}">Login</a>

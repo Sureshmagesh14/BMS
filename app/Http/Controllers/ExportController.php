@@ -45,6 +45,8 @@ class ExportController extends Controller
             $to = ($request->end != null) ? date('Y-m-d', strtotime($request->end)) : null;
             $type_method = $request->type_method;
             $type_resp = $request->type_resp;
+            $cashout_type = $request->show_cashout_val;
+
 
             $type = 'xlsx';
             $styleArray = array( // font color
@@ -679,13 +681,16 @@ class ExportController extends Controller
             }
             else if ($module == 'Cashout') {
                 
-                $all_datas = Cashout::select('cashouts.*', 'respondents.name', 'respondents.email', 'respondents.mobile')
+                $all_datas = Cashout::select('cashouts.*', 'respondents.name','respondents.surname', 'respondents.email', 'respondents.mobile','respondents.whatsapp')
                     ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
                         if($from != null && $to != null){
                             $all_datas = $all_datas->where('cashouts.created_at', '>=', $from)->where('cashouts.created_at', '<=', $to);
                         }
                         if($respondents != ""){
                             $all_datas = $all_datas->whereIn('cashouts.respondent_id', [$respondents]);
+                        }
+                        if($cashout_type!= ""){
+                            $all_datas = $all_datas->where('cashouts.type_id', $cashout_type);
                         }
                     $all_datas = $all_datas->orderby("id", "desc")->get();
                
@@ -721,6 +726,9 @@ class ExportController extends Controller
                     }
                     else if ($all_data->type_id == 3) {
                         $type_val = 'Airtime';
+                    }
+                    else if ($all_data->type_id == 4) {
+                        $type_val = 'Donation';
                     }
                     else {
                         $type_val = '-';
@@ -1103,7 +1111,7 @@ class ExportController extends Controller
                
                 
                 // Assuming $query is correctly populated, proceed with Excel export logic
-                if ($query->isNotEmpty()) {
+             
                     // Prepare Excel sheet
                     $sheet->setCellValue('A1', 'Profile ID');
                     $sheet->setCellValue('B1', 'Panel name');
@@ -1115,8 +1123,8 @@ class ExportController extends Controller
                     $rows = 2;
                     foreach ($query as $all_data) {
                         $sheet->setCellValue('A' . $rows, $all_data->id); // Assuming 'id' is the profile ID
-                        $sheet->setCellValue('B' . $rows, $all_data->tag_name); // Adjust as per your actual logic for panel name
-                        $sheet->setCellValue('C' . $rows, $all_data->full_name);
+                        $sheet->setCellValue('B' . $rows, $all_data->tag_name ?? ''); // Adjust as per your actual logic for panel name
+                        $sheet->setCellValue('C' . $rows, $all_data->full_name ?? '');
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':C' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows)->applyFromArray($styleArray2);
@@ -1125,8 +1133,9 @@ class ExportController extends Controller
                         $rows++;
                     }
                 
-                    $fileName = $module . "_" . date('ymd') . "." . $type;
-                }
+                    
+                
+                $fileName = $module . "_" . date('ymd') . "." . $type;
             }
             
             else if ($module == 'Internal Reports') {

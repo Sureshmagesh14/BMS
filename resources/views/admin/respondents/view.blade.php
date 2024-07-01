@@ -1087,6 +1087,25 @@
         single_delete("POST", respondent, url, "Deattach Project", 'projects_table');
     });
 
+    function myFunction(color) {
+        // Log the clicked color to console for debugging
+        // Create a temporary textarea element to copy the color value
+        var textarea = document.createElement('textarea');
+        textarea.value = color;
+        textarea.style.position = 'fixed'; // Ensure it's not visible
+        document.body.appendChild(textarea);
+
+        // Select and copy the color value from the textarea
+        textarea.select();
+        document.execCommand('copy');
+
+        // Remove the textarea from the DOM after copying
+        document.body.removeChild(textarea);
+
+        // Show Toastr success message
+        toastr.success('Copied to clipboard successfully');
+    }
+
     // $(document).on('click', '.tags_table.delete_all', function(e) {
     //     e.preventDefault();
     //     var all_id = [];
