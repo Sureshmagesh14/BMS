@@ -1015,17 +1015,19 @@ class ProjectsController extends Controller
 
 
         $get_previous=Projects::where('id',$request->edit_id)->first();
-        if($get_previous->status_id==3){
-            return response()->json(['repsonse' => 400]);
-        }else{
-            $status=array('status_id'=>$request->get_status);
-
+        if($request->get_status == 3){
+            $status = array('status_id'=>$request->get_status);
             Projects::where('id',$request->edit_id)->update($status);
 
             return response()->json(['repsonse' => 200]);
         }
-    
-        
+        else if($request->get_status == 4){
+            Project_respondent::where('project_id',$request->edit_id)->update(['is_frontend_complete' => 1]);
+            return response()->json(['repsonse' => 200]);
+        }
+        else{
+            return response()->json(['repsonse' => 400]);
+        }
     }
     
 }
