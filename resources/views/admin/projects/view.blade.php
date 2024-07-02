@@ -41,18 +41,12 @@
                                         </a>
                                     </div>
                                     <div class="btn-group mr-2" role="group" aria-label="First group">
-
-                                        <input type="hidden" name="project_id" id="project_id"
-                                            value="{{ $data->id }}">
-                                        <select name="action_1" id="action_1"
-                                            class="form-control projects_table show_hided_option select_box">
+ 
+                                        <input type="hidden" name="project_id" id="project_id" value="{{ $data->id }}">
+                                        <select name="action_1" id="action_1" class="form-control projects_table show_hided_option select_box">
                                             <option value="">Select Action</option>
-                                            <option value="3">
-                                                Status &gt; Complete
-                                            </option>
-                                            <option value="4">
-                                                Project Complete &amp; Reward
-                                            </option>
+                                            <option value="3">Status &gt; Complete</option>
+                                            <option value="4">Project Complete &amp; Reward</option>
                                         </select>
                                     </div>
 
@@ -332,7 +326,6 @@
     });
     $("#action_1").change(function() {
         var get_status = this.value;
-        console.log("kj",get_status);
         var edit_id = $('#edit_id').val();
         $.ajax({
 
@@ -346,17 +339,21 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(data) {
-                console.log("fgh", data.repsonse);
-
                 if(data.repsonse==400){
                     toastr.info("Status Already Changed!");
                 }else{
-                    toastr.success("Status Changed Successfully");
+
+                    if(get_status == 3){
+                        toastr.success("Project status changed into Completed");
+                    }
+                    else{
+                        toastr.success("Project status changed into Completed and rewards added to the respondents");
+                    }
                 }
                
                 setTimeout(function() {
                     location.reload();
-                }, 1000);
+                }, 2000);
 
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {

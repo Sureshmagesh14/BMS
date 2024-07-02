@@ -261,46 +261,6 @@ class WelcomeController extends Controller
             //     return view('user.update-profile');
             // }else{
 
-            $get_resp = DB::table('project_respondent as resp')->select('resp.*', 'projects.reward')
-                ->join('projects', 'resp.project_id', 'projects.id')
-                ->where('resp.respondent_id', $id)
-                ->where('resp.is_frontend_complete', 1)->get();
-
-            if (!empty($get_resp)) {
-                foreach ($get_resp as $resp) {
-
-                    if (isset($resp->project_id)) {
-                        $proj_id = $resp->project_id;
-                    } else {
-                        $proj_id = 0;
-                    }
-                    if (isset($resp->respondent_id)) {
-                        $resp_id = $resp->respondent_id;
-                    } else {
-                        $resp_id = 0;
-                    }
-                    if (isset($resp->reward)) {
-                        $rew_id = $resp->reward;
-                    } else {
-                        $rew_id = 0;
-                    }
-
-                    if (DB::table('rewards')->where('project_id', $proj_id)->where('respondent_id', $resp_id)->doesntExist()) {
-
-                        $insert_array = array(
-                            'respondent_id' => $resp_id,
-                            'project_id' => $proj_id,
-                            'points' => $rew_id,
-                            'status_id' => 1,
-                        );
-                        if ($resp_id > 0) {
-                            DB::table('rewards')->insert($insert_array);
-                        }
-
-                    }
-                }
-            }
-
             return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed'));
             //}
         } catch (Exception $e) {
@@ -416,6 +376,32 @@ class WelcomeController extends Controller
                 $get_bank = DB::table('banks')->where('id', $get_cashout->bank_id)->first();
             } else {
                 $get_bank = null;
+            }
+
+            $get_resp = DB::table('project_respondent as resp')->select('resp.*', 'projects.reward')
+                ->join('projects', 'resp.project_id', 'projects.id')
+                ->where('resp.respondent_id', $resp_id)
+                ->where('resp.is_frontend_complete', 1)->get();
+
+            if (!empty($get_resp)) {
+                foreach ($get_resp as $resp) {
+                    $proj_id = (isset($resp->project_id)) ? $resp->project_id : 0;
+                    $resp_id = (isset($resp->respondent_id)) ? $resp->respondent_id : 0;
+                    $rew_id  = (isset($resp->reward)) ? $resp->reward: 0;
+
+                    if (DB::table('rewards')->where('project_id', $proj_id)->where('respondent_id', $resp_id)->doesntExist()) {
+                        $insert_array = array(
+                            'respondent_id' => $resp_id,
+                            'project_id'    => $proj_id,
+                            'points'        => $rew_id,
+                            'status_id'     => 1,
+                        );
+
+                        if ($resp_id > 0) {
+                            DB::table('rewards')->insert($insert_array);
+                        }
+                    }
+                }
             }
 
             // if($request->user()->profile_completion_id==0){
@@ -754,15 +740,27 @@ class WelcomeController extends Controller
     {
         try {
             $points = $request->value;
-            $banks = Banks::get();
-            $returnHTML = view('user.cashout_request', compact('points', 'banks'))->render();
 
-            return response()->json(
-                [
-                    'success' => true,
-                    'html_page' => $returnHTML,
-                ]
-            );
+            if($points > 0){
+                $banks = Banks::get();
+                $returnHTML = view('user.cashout_request', compact('points', 'banks'))->render();
+    
+                return response()->json(
+                    [
+                        'success' => true,
+                        'html_page' => $returnHTML,
+                    ]
+                );
+            }
+            else{
+                return response()->json(
+                    [
+                        'success' => false,
+                        'html_page' => "Your Point is 0",
+                    ]
+                );
+            }
+            
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
