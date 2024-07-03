@@ -434,12 +434,12 @@ class RespondentsController extends Controller
             // Apply search conditions if search value is present
             if (!empty($search)) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('id', 'LIKE', "%{$search}%")
-                        ->orWhere('name', 'LIKE', "%{$search}%")
-                        ->orWhere('surname', 'LIKE', "%{$search}%")
-                        ->orWhere('mobile', 'LIKE', "%{$search}%")
-                        ->orWhere('whatsapp', 'LIKE', "%{$search}%")
-                        ->orWhere('email', 'LIKE', "%{$search}%");
+                    $q->where('respondents.id', 'LIKE', "%{$search}%")
+                        ->orWhere('respondents.name', 'LIKE', "%{$search}%")
+                        ->orWhere('respondents.surname', 'LIKE', "%{$search}%")
+                        ->orWhere('respondents.mobile', 'LIKE', "%{$search}%")
+                        ->orWhere('respondents.whatsapp', 'LIKE', "%{$search}%")
+                        ->orWhere('respondents.email', 'LIKE', "%{$search}%");
                 });
             }
     
@@ -530,7 +530,11 @@ class RespondentsController extends Controller
                                 <i class="fa fa-edit"></i> Edit
                             </a>
                         </li>';
-
+                        $nestedData['options'] .= '<li class="list-group-item">
+                        <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
+                            <i class="far fa-trash-alt"></i> De-attach
+                        </a>
+                        </li>';
                         $nestedData['options'] .=  '<li class="list-group-item">
                         <a href="#!" id="delete_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
                             <i class="far fa-trash-alt"></i> Delete
