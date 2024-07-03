@@ -1,0 +1,2 @@
+[2024-07-03 10:35:13] local.ERROR: SOAP Request failed: SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl' : failed to load external entity "https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl"
+  

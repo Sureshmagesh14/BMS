@@ -930,6 +930,7 @@ class WelcomeController extends Controller
             print_r($response);
             dd($response);
         } catch (\Exception $e) {
+            dd($e->getMessage());
             Log::error('SOAP Request failed: ' . $e->getMessage());
         }
 
