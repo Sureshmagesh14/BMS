@@ -14,6 +14,17 @@
       'SEO' => 'Artesaos\\SEOTools\\Facades\\SEOTools',
     ),
   ),
+  'artisaninweb/laravel-soap' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Artisaninweb\\SoapWrapper\\ServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'SoapWrapper' => 'Artisaninweb\\SoapWrapper\\Facade',
+    ),
+  ),
   'barryvdh/laravel-debugbar' => 
   array (
     'providers' => 
@@ -23,17 +34,6 @@
     'aliases' => 
     array (
       'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
-    ),
-  ),
-  'codedredd/laravel-soap' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'CodeDredd\\Soap\\SoapServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'SOAP' => 'SoapFacade',
     ),
   ),
   'laravel/breeze' => 

@@ -24,8 +24,8 @@
     20 => 'Illuminate\\Validation\\ValidationServiceProvider',
     21 => 'Illuminate\\View\\ViewServiceProvider',
     22 => 'Artesaos\\SEOTools\\Providers\\SEOToolsServiceProvider',
-    23 => 'Barryvdh\\Debugbar\\ServiceProvider',
-    24 => 'CodeDredd\\Soap\\SoapServiceProvider',
+    23 => 'Artisaninweb\\SoapWrapper\\ServiceProvider',
+    24 => 'Barryvdh\\Debugbar\\ServiceProvider',
     25 => 'Laravel\\Breeze\\BreezeServiceProvider',
     26 => 'Laravel\\Sail\\SailServiceProvider',
     27 => 'Laravel\\Sanctum\\SanctumServiceProvider',
@@ -45,6 +45,7 @@
     41 => 'App\\Providers\\RouteServiceProvider',
     42 => 'Barryvdh\\Debugbar\\ServiceProvider',
     43 => 'Collective\\Html\\HtmlServiceProvider',
+    44 => 'Artisaninweb\\SoapWrapper\\ServiceProvider',
   ),
   'eager' => 
   array (
@@ -58,8 +59,8 @@
     7 => 'Illuminate\\Pagination\\PaginationServiceProvider',
     8 => 'Illuminate\\Session\\SessionServiceProvider',
     9 => 'Illuminate\\View\\ViewServiceProvider',
-    10 => 'Barryvdh\\Debugbar\\ServiceProvider',
-    11 => 'CodeDredd\\Soap\\SoapServiceProvider',
+    10 => 'Artisaninweb\\SoapWrapper\\ServiceProvider',
+    11 => 'Barryvdh\\Debugbar\\ServiceProvider',
     12 => 'Laravel\\Sanctum\\SanctumServiceProvider',
     13 => 'Laravel\\Scout\\ScoutServiceProvider',
     14 => 'Carbon\\Laravel\\ServiceProvider',
@@ -74,6 +75,7 @@
     23 => 'App\\Providers\\EventServiceProvider',
     24 => 'App\\Providers\\RouteServiceProvider',
     25 => 'Barryvdh\\Debugbar\\ServiceProvider',
+    26 => 'Artisaninweb\\SoapWrapper\\ServiceProvider',
   ),
   'deferred' => 
   array (
