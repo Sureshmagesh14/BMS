@@ -327,8 +327,7 @@
                                 <li>
                                     <hr class="dropdown-divider" />
                                 </li>
-                                <li><a class="dropdown-item" href="{{ route('user.change_profile') }}">Change
-                                        Profile</a>
+                                <li><a class="dropdown-item" href="{{ route('user.change_profile') }}">Change Profile Picture</a>
                                 </li>
                                 {{-- {{ route('user.viewprofile') }} --}}
 
