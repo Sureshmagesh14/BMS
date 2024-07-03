@@ -18,9 +18,25 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Session;
 use Illuminate\Support\Facades\Auth;
+use Artisaninweb\SoapWrapper\SoapWrapper;
+use App\Soap\Request\GetConversionAmount;
+use App\Soap\Response\GetConversionAmountResponse;
 
 class WelcomeController extends Controller
 {
+    protected $soapWrapper;
+
+     /**
+   * SoapController constructor.
+   *
+   * @param SoapWrapper $soapWrapper
+   */
+    public function __construct(SoapWrapper $soapWrapper)
+    {
+        $this->soapWrapper = $soapWrapper;
+    }
+
+
     public function home(Request $request)
     {
         try {
@@ -836,6 +852,47 @@ class WelcomeController extends Controller
     }
 
     public function createFile(){
+
+        $cashouts = DB::table('cashouts as c')
+        ->leftjoin('respondents as r', 'c.respondent_id', '=', 'r.id')
+        ->leftjoin('banks as b', 'c.bank_id', '=', 'b.id')
+        ->select('c.*', 'r.id','r.name','r.surname','b.bank_name','b.branch_code') 
+        ->where('c.status_id',5)->where('c.type_id',1)->get();
+
+
+        $batch = $this->generateBatchFile($cashouts);
+        $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
+     
+        $this->soapWrapper->add('netcash', function ($service) {
+            $service
+                ->wsdl(config('soap.services.netcash.wsdl'))
+                ->trace(true)
+                ->options([
+                    'soap_version' => SOAP_1_1,
+                ]);
+        });
+
+        // Create the request parameters in an array
+        $params = [
+            'ServiceKey' => $key,
+            'File' => $batch,
+        ];
+
+        try {
+            // Make the SOAP request
+            $response = $this->soapWrapper->call('netcash.BatchFileUpload', [$params]);
+            dd( $response);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            Log::error('SOAP Request failed: ' . $e->getMessage());
+        }
+
+
+        #######################################################
+        
+    }
+
+    public function createFileold(){
 
         try {
             // starts
