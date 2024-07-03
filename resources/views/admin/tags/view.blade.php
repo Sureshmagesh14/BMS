@@ -255,14 +255,14 @@
             'respondents_datatable');
     });
 
-    $(document).on('click', '#deattach_tags', function(e) {
+    $(document).on('click', '#deattach_respondents', function(e) {
         e.preventDefault();
         var id = $(this).data("id");
         console.log("id",id);
         var url = "{{ route('deattach_tags', ':id') }}";
         url = url.replace(':id', id);
 
-        single_delete("POST", id, url, "Deattach Pannel", 'respondents_datatable');
+        single_delete("POST", id, url, "De-attached Panel Successfully", 'respondents_datatable');
     });
 
     function myFunction(color) {
