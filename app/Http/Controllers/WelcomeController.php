@@ -19,8 +19,23 @@ use Illuminate\Support\Facades\Mail;
 use Session;
 use Illuminate\Support\Facades\Auth;
 
+use Meng\AsyncSoap\Guzzle\Factory;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
+
+use Artisaninweb\SoapWrapper\SoapWrapper;
+
+
 class WelcomeController extends Controller
 {
+    protected $soapWrapper;
+
+    public function __construct(SoapWrapper $soapWrapper)
+    {
+        $this->soapWrapper = $soapWrapper;
+    }
+
+    
     public function home(Request $request)
     {
         try {
@@ -835,6 +850,94 @@ class WelcomeController extends Controller
         }
     }
 
+    public function batchFileUpload($serviceKey, $file)
+    {
+        // WSDL URL for the SOAP service
+        $wsdl = 'https://ws.netcash.co.za/NIWS/niws_nif.svc?';
+
+        // Initialize Guzzle client
+        $guzzleFactory = new Client();
+        $guzzleClient = $guzzleFactory->create([
+            'base_uri' => 'https://ws.netcash.co.za',
+            'timeout'  => 2.0,
+        ]);
+
+        // Initialize SOAP client
+        $soapClient = new Client($wsdl, [
+            'soap_version' => SOAP_1_2,
+            'trace'        => true,
+            'exceptions'   => true,
+            'connection_timeout' => 30,
+        ]);
+
+        try {
+            // Call the BatchFileUpload method and store the response
+            $response = $soapClient->BatchFileUpload(['ServiceKey' => $serviceKey, 'File' => $file]);
+
+            // Process the response
+            switch ($response) {
+                case "100":  // Authentication failure
+                    echo "Authentication failure.";
+                    break;
+                case "102":  // Parameter error
+                    echo "Parameter error.";
+                    break;
+                case "200":  // General code exception
+                    echo "General code exception.";
+                    break;
+                default:  // Successful
+                    return $response;
+            }
+
+            // Return the response for further handling if needed
+            return $response;
+        } catch (\Exception $ex) {
+            // Handle any exceptions that occur during the call
+            echo "An error occurred: " . $ex->getMessage();
+            throw $ex;  // Re-throw the exception if you want it to be handled further up the call stack
+        }
+    }
+
+    public function createFile_modifiy(){
+
+        $cashouts = DB::table('cashouts as c')
+        ->leftjoin('respondents as r', 'c.respondent_id', '=', 'r.id')
+        ->leftjoin('banks as b', 'c.bank_id', '=', 'b.id')
+        ->select('c.*', 'r.id','r.name','r.surname','b.bank_name','b.branch_code') 
+        ->where('c.status_id',5)->where('c.type_id',1)->get();
+
+        $batch = $this->generateBatchFile($cashouts);
+        $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
+     
+        $this->soapWrapper->add('netcash', function ($service) {
+            $service
+                ->wsdl(config('soap.services.netcash.wsdl'))
+                ->trace(true)
+                ->options([
+                    'soap_version' => SOAP_1_1,
+                ]);
+        });
+
+        // Create the request parameters in an array
+        $params = [
+            'ServiceKey' => $key,
+            'File' => $batch,
+        ];
+
+        try {
+            // Make the SOAP request
+            $response = $this->soapWrapper->call('netcash.BatchFileUpload', [$params]);
+            print_r($response);
+            dd($response);
+        } catch (\Exception $e) {
+            Log::error('SOAP Request failed: ' . $e->getMessage());
+        }
+
+
+        #######################################################
+        
+    }
+
     public function createFile(){
 
         try {
@@ -850,82 +953,41 @@ class WelcomeController extends Controller
             //dd($cashouts);
             
             if (count($cashouts)) {
-                $batch = $this->generateBatchFile($cashouts);
-                //dd($batch);
+
+
+                $batchId = "C74EXXX5-5499-4663-85FB-2A6XXXXFB9EF";
+                $sequenceNumber = 1;
+                $batchType = "PaySalaries";
+                $description = "My Test Batch";
+                $vendorKey = '24ade73c-98cf-47b3-99be-cc7b867b3080';
+                $serviceKey = '0f70ac77-065a-4246-9126-55977b40ae3d';
+
+                $records = [
+                    ['accountNumber' => '2044060104', 'branchCode' => '470010', 'amount' => 1.00]
+                ];
+                $date = date('Ymd'); // Optional, can be null
+
+                $batchFilePath = $this->createBatchFile($batchId, $sequenceNumber, $batchType, $description, $records, $serviceKey, $vendorKey, $date);
+
+                //$batch = $this->generateBatchFile($cashouts);
+                //dd($batchFilePath);
 
                 $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
-                
-                $response = $this->batchFileUpload($key, $batch);
+
+                $response = $this->batchFileUpload($key, $batchFilePath);
                 dd($response);
-
-                $ch = curl_init();
-
-                curl_setopt($ch, CURLOPT_URL,"https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl");
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_FAILONERROR, true);
                 
-                // In real life you should use something like:
-                 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('ServiceKey' => $key,'File' => $batch)));
-
-                // Receive server response ...
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-                $server_output = curl_exec($ch);
                 
-                if (curl_errno($ch)) {
-                    $error_msg = curl_error($ch);
-                }
-                curl_close($ch);
+
+                // $response = Soap::baseWsdl('https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl')->BatchFileUpload(['ServiceKey' => $key ,'File' => $batch]);
+                // //Log::info([$batch, $response->body()]);
                 
-                if (isset($error_msg)) {
-                    // TODO - Handle cURL error accordingly
-                    dd($error_msg);
-                }
-
-                curl_close($ch);
-             
-                dd($server_output);
-
-                $curl = curl_init();
-
-                curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => array('ServiceKey' => $key,'File' => $batch),
-                CURLOPT_HTTPHEADER => array(
-                    'Cookie: ASP.NET_SessionId=qekk3poz2eerjhrdz2nnmvx1; ApplicationGatewayAffinity=ea2e72380504a82d4dd5a81e13fd6150; ApplicationGatewayAffinityCORS=ea2e72380504a82d4dd5a81e13fd6150'
-                ),
-                ));
-
-                $response = curl_exec($curl);
-
-                curl_close($curl);
-                dd($response);
-
-
-                $ch = curl_init();
-
-                curl_setopt($ch, CURLOPT_URL,"https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl");
-                curl_setopt($ch, CURLOPT_POST, 1);
-                //curl_setopt($ch, CURLOPT_POSTFIELDS,"postvar1=value1&postvar2=value2&postvar3=value3");
-
-                // In real life you should use something like:
-                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('ServiceKey' => $key,'File' => $batch)));
-
-                // Receive server response ...
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-                $server_output = curl_exec($ch);
-
-                curl_close($ch);
-                dd($server_output);
-               
+                // dd($response->body());
+                // $netcashResponse = new NetcashResponse();
+                // $netcashResponse->response = $response;
+                // $netcashResponse->batch = $batch;
+                // $netcashResponse->key = $key;
+                // $netcashResponse->save();
             }
 
             
@@ -940,13 +1002,53 @@ class WelcomeController extends Controller
 
     }
 
-    public function batchFileUpload($serviceKey, $filePath) {
+    public function generateUuid() {
+        return sprintf(
+            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
+    }
+    
+    // Function to create the batch file with multiple records
+    public function createBatchFile($batchId, $sequenceNumber, $batchType, $description, $records, $serviceKey, $vendorKey, $date = null) {
+        if ($date === null) {
+            $date = date('Ymd');
+        }
+        $uniqueId = $this->generateUuid();
+    
+        // Format the header line
+        $headerLine = "H $batchId $sequenceNumber $batchType $description $date $uniqueId $serviceKey $vendorKey";
+        $content = $headerLine . "\n";
+    
+        // Add each record to the content
+        foreach ($records as $record) {
+            // Format: R AccountNumber BranchCode Amount
+            $accountNumber = $record['accountNumber'];
+            $branchCode = $record['branchCode'];
+            $amount = $record['amount'];
+            $content .= "R $accountNumber $branchCode $amount\n";
+        }
+    
+        // File path to save the batch file
+        $filePath = "batch_file.txt";
+    
+        // Write to a file
+        file_put_contents($filePath, $content);
+    
+        return $filePath;
+    }
+
+    public function batchFileUpload12($serviceKey, $filePath) {
         // Read file contents
         $fileContents = file_get_contents($filePath);
     
         // Initialize cURL
         $ch = curl_init();
-    
+        
         // Set cURL options
         curl_setopt($ch, CURLOPT_URL, 'https://ws.netcash.co.za/NIWS/niws_nif.svc/BatchFileUpload'); // Replace with actual API endpoint
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -995,9 +1097,9 @@ class WelcomeController extends Controller
     {
         $total = 0;
         $instruction = 'Realtime';
-        $batchName = 'My Creditor batch';
+        $batchName = 'My Creditor batch2222222sadasda';
         $vendorKey = '24ade73c-98cf-47b3-99be-cc7b867b3080';
-        $serviceKey = '2dee881e-8c53-4fb8-9e2a-c9ad3c6fc3bd';
+        $serviceKey = '0f70ac77-065a-4246-9126-55977b40ae3d';
         // $date = Carbon::now()->addDay()->format('Ymd');
         $date = Carbon::now()->format('Ymd');
 
