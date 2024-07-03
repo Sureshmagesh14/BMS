@@ -32,8 +32,8 @@
     }
 </style>
 <section class="bg-greybg">
-    <div class="container">
-        <div class="row align-items-center justify-content-center pt-5">
+    <div class="container mb-5">
+        <div class="row align-items-center justify-content-center pt-5 mb-3">
 
             <div class="bg-white my-2 w-100">
                 <h4 class="d-flex align-items-center justify-content-around">
@@ -215,6 +215,7 @@ for Other Research</span>
 
         </div>
     </div>
+    <div class="my-4 py-1"></div>
 </section>
 
 
