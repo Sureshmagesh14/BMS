@@ -83,7 +83,7 @@
 
 
         <div class="alert alert-danger bs-alert-old-docs text-center alert_message" style="display: none;"></div>
-        <div class="row justify-content-center py-5 m-auto">
+        <div class="row justify-content-center py-5 mx-auto mt-auto mb-5">
             <div class="col-md-2 vi-light-grey mx-0 px-0 my-2">
                 <div class="logo bg-white pt-3">
                     <div class="profile text-center m-auto ">
@@ -133,7 +133,7 @@
                 <!-- <div class="bg-white my-2 max-w-100" style=""> -->
                     
                     <div class="">
-                    <div class="bg-white mt-2 mb-4 max-w-100 p-2" style="min-height: 270px !important;">
+                    <div class="bg-white mt-2 mb-2 max-w-100 p-2" style="min-height: 270px !important;">
                     {{-- <h5 class="d-flex align-items-center justify-content-around vi-light-grey small-font-sm">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-06.png') }}"
                                 alt="">
@@ -283,12 +283,111 @@ Online Surveys</span>
                 </div>
                 </div>
                     
-                
+                <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
+                    <h5 class=" align-items-center justify-content-around">
+                        <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
+                                alt="">
+                            <span class="small-font-sm">Your Survey History</span>
+                        </div>
+                        <div class="px-3">
+                            <ul class="navbar-nav">
+                                <li class="nav-item dropdown ml-auto">
+                                    <a class="btn btn-yellow width-fit-content ml-auto" href="{{ route('user.cashouts') }}">Cashout
+                                        History</a>
+
+                                    </a>
+                                    {{-- <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ route('user.cashouts') }}">Cashout
+                                            History</a></li>
+                                    <!-- <li>
+                                        <hr class="dropdown-divider" />
+                                    </li>
+                                    <li><a class="dropdown-item" href="#">Unclaimed Rewards</a></li> -->
+                                </ul> --}}
+                                </li>
+                            </ul>
+                        </div>
+                    </h5>
+                    <div class="">
+                        <table class="table table-striped table-bordered table-hover dataTable"
+                            id="DataTables_Table_2" style="width: 100%;" aria-describedby="completed_info">
+                            <thead>
+                                <tr>
+                                    <th>NAME </th>
+                                    <th>DATE </th>
+                                    <th>TYPE OF SURVEY </th>
+                                    <th>REWARD POINTS </th>
+                                    <th>ACTION </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($get_completed_survey as $res)
+                                    <tr>
+                                        <td>{{ $res->name }}</td>
+                                        <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                        <td title="{{ $res->description }}">
+                                        
+                                            @if ($res->type_id == 1) 
+                                            Pre-Screener
+                                            @elseif ($res->type_id == 2) 
+                                            Pre-Task
+                                            @elseif ($res->type_id == 3) 
+                                            Paid survey
+                                            @elseif ($res->type_id == 4) 
+                                            Unpaid survey
+                                            @endif
+                                            
+                                            <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
+                                        </td>
+                                        <td>{{ $res->reward }}</td>
+                                        @php
+                                            $get_link = \App\Models\Respondents::get_respondend_survey(
+                                                $res->survey_link,
+                                            );
+                                        @endphp
+                                        @if ($get_link != null)
+                                            <td><a class="btn btn-yellow" target="_blank"
+                                                    href="{{ url('survey/view', $get_link->builderID) }}">DETAIL</a>
+                                            </td>
+                                        @else
+                                            <td>No Survey</td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
                 
             </div>
 
             <div class="col-md-5">
+            <div class="bg-white my-2 max-w-100" style="min-height: 270px !important;">
+                        <h5 class="p-3 align-items-center justify-content-around small-font-sm">
+                        <div>Your Rewards Breakdown </div>
+                        <div class="row">
+                            <div class="col-4 rounded ">
+                                <div class="bg-grey-6 p-2 m-2 w-100">
+                                    <div class="bg-warning text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                    <div>Total Rewards since 2024</div>
+                                </div>
+                            </div>
+                            <div class="col-4 rounded ">
+                                <div class="bg-grey-6 p-2 m-2 w-100">
+                                    <div class="bg-primary text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                    <div>Total Rewards this year</div>
+                                </div>
+                            </div>
+                            <div class="col-4 rounded ">
+                                <div class="bg-grey-6 p-2 m-2 w-100">
+                                    <div class="bg-success text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                    <div>Available points for Cash Out</div>
+                                </div>
+                            </div>
+                        </div>
+                        </h5>
+                    </div>
             <div class="bg-white my-2 max-w-100">
                         <h5 class=" align-items-center justify-content-around">
                         <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
@@ -382,81 +481,7 @@ Online Surveys</span>
                             </tbody>
                         </table>
                     </div>
-                <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
-                    <h5 class=" align-items-center justify-content-around">
-                        <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
-                                alt="">
-                            <span class="small-font-sm">Your Survey History</span>
-                        </div>
-                        <div class="px-3">
-                            <ul class="navbar-nav">
-                                <li class="nav-item dropdown ml-auto">
-                                    <a class="btn btn-yellow width-fit-content ml-auto" href="{{ route('user.cashouts') }}">Cashout
-                                        History</a>
-
-                                    </a>
-                                    {{-- <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{{ route('user.cashouts') }}">Cashout
-                                            History</a></li>
-                                    <!-- <li>
-                                        <hr class="dropdown-divider" />
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Unclaimed Rewards</a></li> -->
-                                </ul> --}}
-                                </li>
-                            </ul>
-                        </div>
-                    </h5>
-                    <div class="">
-                        <table class="table table-striped table-bordered table-hover dataTable"
-                            id="DataTables_Table_2" style="width: 100%;" aria-describedby="completed_info">
-                            <thead>
-                                <tr>
-                                    <th>NAME </th>
-                                    <th>DATE </th>
-                                    <th>TYPE OF SURVEY </th>
-                                    <th>REWARD POINTS </th>
-                                    <th>ACTION </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($get_completed_survey as $res)
-                                    <tr>
-                                        <td>{{ $res->name }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
-                                        <td title="{{ $res->description }}">
-                                        
-                                            @if ($res->type_id == 1) 
-                                            Pre-Screener
-                                            @elseif ($res->type_id == 2) 
-                                            Pre-Task
-                                            @elseif ($res->type_id == 3) 
-                                            Paid survey
-                                            @elseif ($res->type_id == 4) 
-                                            Unpaid survey
-                                            @endif
-                                            
-                                            <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
-                                        </td>
-                                        <td>{{ $res->reward }}</td>
-                                        @php
-                                            $get_link = \App\Models\Respondents::get_respondend_survey(
-                                                $res->survey_link,
-                                            );
-                                        @endphp
-                                        @if ($get_link != null)
-                                            <td><a class="btn btn-yellow" target="_blank"
-                                                    href="{{ url('survey/view', $get_link->builderID) }}">DETAIL</a>
-                                            </td>
-                                        @else
-                                            <td>No Survey</td>
-                                        @endif
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                
             </div>
 
         </div>

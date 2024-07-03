@@ -7,10 +7,16 @@
   font-family: 'Quicksand';
   src: url('../fonts/Quicksand_Bold.ttf');
 }
-
+/* 
 @font-face {
   font-family: 'Barlow Medium';
   src: url('../fonts/Barlow-Medium.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+} */
+@font-face {
+  font-family: 'HammersmithOne';
+  src: url('../fonts/HammersmithOne.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -20,8 +26,17 @@
   font-weight: bold;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'BarlowSemiCondensed-Regular';
+  src: url('../fonts/BarlowSemiCondensed-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 *:not(i){
-  font-family: 'Barlow Medium' !important;
+  font-family: 'BarlowSemiCondensed-Regular' !important;
 }
 
 h1, h2, h3, h4, h5, h6{
@@ -41,6 +56,24 @@ tr{
   -webkit-line-clamp: 1;
   line-clamp: 1;
   -webkit-box-orient: vertical;
+}
+
+.pos-fixed.bg-white{
+  bottom: 0px;
+    position: fixed;
+    left: 0;
+    right: 0;
+}
+.h-90{
+  height:90vh !important;
+}
+.reg-img{
+  height: 100vh;
+    margin: auto;
+    display: flex;
+}
+.bg-grey-6 {
+  background-color: #EAEAEA !important;
 }
 
 /* @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap'); */
@@ -317,11 +350,23 @@ tr:nth-child(even) {
   background-color: #edbf1b;
   color: white;
 }
+.forgot-pass{
+  height: 84vh !important;
+}
+.login.w-50{
+  width:60vh !important;
+}
 
 /* dashboard css ends  */
 
 
 @media(max-width:767px) {
+  .d-sm-flex{
+    display: block !important;
+  }
+  .h-90{
+    height: 100vh !important;
+  }
   .mob-hide{
     display: none !important;
 }
@@ -589,7 +634,7 @@ color:#6396b1 !important; */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 80%;
-  background-color: rgba(157,194,216,0.9);
+  background-color: rgba(222,227,230,1);
 }
 
 .vi-main-btn-db,
