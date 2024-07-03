@@ -41,6 +41,7 @@
                                 </a>
                             </div>
                             <div class="mb-0">
+                                <input type="hidden" id="tag_id" value="{{$data->id}}">
                                 <table class="table">
                                     <tbody>
                                         <tr>
@@ -368,7 +369,16 @@
                 'rewards_table');
         }
     });
+    $(document).on('click', '#deattach_respondents', function(e) {
+        alert("fghj");
+        e.preventDefault();
+        var id = $(this).data("id");
+        console.log("id",id);
+        var url = "{{ route('deattach_tags', ':id') }}";
+        url = url.replace(':id', id);
 
+        single_delete("POST", id, url, "Deattach Pannel", 'respondents_datatable');
+    });
     function view_details(id) {
         let url = "view_rewards";
         url = url + '/' + id;

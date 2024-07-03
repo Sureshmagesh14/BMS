@@ -536,8 +536,8 @@ class ExportController extends Controller
                             }
                         }
                     
-                        $children_data = json_decode($all_data->children_data, true);
-                        $vehicle_data = json_decode($all_data->vehicle_data, true);
+                        $children_data = json_decode($all_data->children_data, true) ?? [];
+                        $vehicle_data = json_decode($all_data->vehicle_data, true) ?? [];
                         $vehicle_alpha = 'AG';
                         
                         foreach ($vehicle_data as $vehicle) {
@@ -681,19 +681,35 @@ class ExportController extends Controller
             }
             else if ($module == 'Cashout') {
                 
-                $all_datas = Cashout::select('cashouts.*', 'respondents.name','respondents.surname', 'respondents.email', 'respondents.mobile','respondents.whatsapp')
-                    ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
-                        if($from != null && $to != null){
-                            $all_datas = $all_datas->where('cashouts.created_at', '>=', $from)->where('cashouts.created_at', '<=', $to);
-                        }
-                        if($respondents != ""){
-                            $all_datas = $all_datas->whereIn('cashouts.respondent_id', [$respondents]);
-                        }
-                        if($cashout_type!= ""){
-                            $all_datas = $all_datas->where('cashouts.type_id', $cashout_type);
-                        }
-                    $all_datas = $all_datas->orderby("id", "desc")->get();
-               
+                $all_datas = Cashout::select(
+                    'cashouts.*', 
+                    'respondents.name',
+                    'respondents.surname', 
+                    'respondents.email', 
+                    'respondents.mobile',
+                    'respondents.whatsapp',
+                    DB::raw('COUNT(CASE WHEN cashouts.status_id = 3 THEN 1 ELSE NULL END) as total_paid_count')
+                )
+                ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
+            
+            if($from != null && $to != null){
+                $all_datas = $all_datas->whereBetween('cashouts.created_at', [$from, $to]);
+            }
+            
+            if($respondents != ""){
+                $all_datas = $all_datas->whereIn('cashouts.respondent_id', [$respondents]);
+            }
+            
+            if($cashout_type != ""){
+                $all_datas = $all_datas->where('cashouts.type_id', $cashout_type);
+            }
+            
+            $all_datas = $all_datas
+                ->groupBy('cashouts.id', 'respondents.name', 'respondents.surname', 'respondents.email', 'respondents.mobile', 'respondents.whatsapp')
+                ->orderBy("cashouts.id", "desc")
+                ->get();
+            
+            
                 $sheet->setCellValue('A1', 'PID');
                 $sheet->setCellValue('B1', 'First Name');
                 $sheet->setCellValue('C1', 'Last Name');
@@ -744,6 +760,7 @@ class ExportController extends Controller
                     $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
+                    $sheet->setCellValue('G' . $rows, $all_data->total_paid_count);
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                     $sheet->getStyle('C' . $rows . ':P' . $rows)->applyFromArray($styleArray2);

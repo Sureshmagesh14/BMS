@@ -1084,7 +1084,7 @@
         url = url.replace(':respondent_id', respondent);
         url = url.replace(':project_id', project_id);
 
-        single_delete("POST", respondent, url, "Deattach Project", 'projects_table');
+        single_delete("POST", respondent, url, "Deattach Project Successfully", 'projects_table');
     });
 
     function myFunction(color) {
@@ -1126,7 +1126,7 @@
         var url = "{{ route('deattach_tags', ':id') }}";
         url = url.replace(':id', id);
 
-        single_delete("POST", id, url, "Deattach Pannel", 'tags_table');
+        single_delete("POST", id, url, "De-attach Panel Successfully", 'tags_table');
     });
 </script>
 @if (count($errors) > 0)
