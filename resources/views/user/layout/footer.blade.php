@@ -1,6 +1,6 @@
-<footer class="bg-white">
+<footer class="pos-fixed bg-white">
     <!-- <div class="container"> -->
-    <div class="container py-4 my-2">
+    <div class="container py-2">
         <div class="row justify-content-center align-items-center">
             <div class="col-md-6 col-sm-12">
                 <div class="d-md-flex d-lg-flex d-sm-block align-items-end">

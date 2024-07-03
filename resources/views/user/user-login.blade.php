@@ -8,7 +8,7 @@
         </div>
         <div class="col-md-6 col-sm-12">
           <div class="rightside text-center"  >
-            <img src="{{ asset('public/inc/images/small-logo.png') }}" class="img-fluid w-50 m-auto mb-4" alt="" />
+            <img src="{{ asset('public/inc/images/small-logo.png') }}" class="img-fluid w-50 login m-auto mb-4" alt="" />
             <h2 class="vi-common-clr vi-welcome-size fw-bolder">Welcome Back</h2>
             <p>Login with your email address</p>
             <form action="" method="post">

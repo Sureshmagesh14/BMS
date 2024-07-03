@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="col-md-6 mob-hide">
-                <img class="w-75" src="{{ asset('assets/images/img_1.png') }}" alt="Forgot image" />
+                <img class="w-50 m-auto d-flex" src="{{ asset('assets/images/img_1.png') }}" alt="Forgot image" />
 
             </div>
         </div>

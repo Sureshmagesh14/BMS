@@ -2,13 +2,13 @@
 
 
 <section class="bg-greybg vh-100">
+    <div class="mb-5">
     <div class="container">
-        <div class="row justify-content-center py-5 m-auto">
-            <div class="col-md-4 text-center"
-                style="background-size: cover;background-repeat:no-repeat;background-image: url('{{ asset('assets/images/young-afro-woman-watches-live-stream-.jpg') }}');">
-
+        <div class="row justify-content-center py-5 mx-auto">
+            <div class="col-md-6 text-center my-auto d-flex">
+                <img class="w-100" src="{{ asset('assets/images/Share.jpg') }}" />
             </div>
-            <div class="col-md-4 bg-white p-5">
+            <div class="col-md-4 bg-white p-5 mb-5">
                 <div class="qr-code text-center">
                     <!-- <h4 class="text-center">GET PAID FOR YOUR OPINION</h4> -->
                     <h4 class="text-center">Share with your friends and family</h4>
@@ -33,6 +33,7 @@
 
             </div>
         </div>
+    </div>
     </div>
 </section>
 

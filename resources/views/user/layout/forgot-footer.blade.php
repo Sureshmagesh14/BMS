@@ -1,5 +1,6 @@
 
-<footer class="vi-grey-bg set-postion-fixed">
+<!-- <footer class="vi-grey-bg set-postion-fixed"> -->
+<footer class="pos-fixed bg-white">
     <div class="container">
     <div class="container py-3">
         <div class="row justify-content-center align-items-center">
