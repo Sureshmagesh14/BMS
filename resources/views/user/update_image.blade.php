@@ -105,7 +105,7 @@
                     <form class="validation" id="image-upload" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="container">
-                            <h1>Change Profile</h1>
+                            <h1>Change Profile Picture</h1>
                             <div class="avatar-upload">
                                 <div class="avatar-edit">
                                     <input name="image" type='file' id="imageUpload"
