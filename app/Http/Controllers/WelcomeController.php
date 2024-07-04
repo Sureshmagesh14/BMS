@@ -898,7 +898,7 @@ class WelcomeController extends Controller
         }
     }
 
-    public function createFile_modifiy(){
+    public function createFile_modify(){
         //status id 5 - ApprovedForProcessing
         $now = new Carbon();
         $today = $now->toDateTimeString();
