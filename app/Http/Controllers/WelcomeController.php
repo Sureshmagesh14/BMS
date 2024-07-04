@@ -899,12 +899,17 @@ class WelcomeController extends Controller
     }
 
     public function createFile_modifiy(){
-
+        //status id 5 - ApprovedForProcessing
+        $now = new Carbon();
+        $today = $now->toDateTimeString();
+        $twoDaysAgo = $now->subDays(2)->toDateTimeString();
+ 
         $cashouts = DB::table('cashouts as c')
         ->leftjoin('respondents as r', 'c.respondent_id', '=', 'r.id')
         ->leftjoin('banks as b', 'c.bank_id', '=', 'b.id')
-        ->select('c.*', 'r.id','r.name','r.surname','b.bank_name','b.branch_code') 
+        ->select('c.*', 'r.id','r.name','r.surname','r.email','b.bank_name','b.branch_code') 
         ->where('c.status_id',5)->where('c.type_id',1)->get();
+        //dd($cashouts);
 
         $batch = $this->generateBatchFile($cashouts);
         $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
@@ -927,14 +932,33 @@ class WelcomeController extends Controller
         try {
             // Make the SOAP request
             $response = $this->soapWrapper->call('netcash.BatchFileUpload', [$params]);
-            print_r($response);
-            dd($response);
+            // print_r($response); dd($response);
+
+            foreach ($cashouts as $cashout) {
+                
+                //status id =2 Processing                
+                $data=array('status_id'=>2,'updated_at'=>$today);
+                Cashout::where('id',$cashout->id)->update($data);
+            }
+
         } catch (\Exception $e) {
             dd($e->getMessage());
             Log::error('SOAP Request failed: ' . $e->getMessage());
         }
 
+        //complete status id 3
+        $cashouts = Cashout::where('status_id', 2)->whereDate('updated_at', '<=', $twoDaysAgo)->get();
 
+        if ($cashouts) {
+            foreach ($cashouts as $cashout) {
+                $data=array('status_id'=>3);
+                Cashout::where('id',$cashout->id)->update($data);
+                
+                $to_address = $cashout->email;
+                $data = ['subject' => 'Cashout Created','type' => 'cash_create'];
+                Mail::to($to_address)->send(new WelcomeEmail($data));
+            }
+        }
         #######################################################
         
     }
