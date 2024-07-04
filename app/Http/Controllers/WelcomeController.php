@@ -943,7 +943,7 @@ class WelcomeController extends Controller
             }
 
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            
             Log::error('SOAP Request failed: ' . $e->getMessage());
         }
 

@@ -90,3 +90,5 @@
 #10 C:\\wamp64\\www\\bms_new\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #11 {main}
 "} 
+[2024-07-04 10:26:45] local.ERROR: SOAP Request failed: SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl' : failed to load external entity "https://ws.netcash.co.za/NIWS/niws_nif.svc?wsdl"
+  
