@@ -898,8 +898,38 @@ class WelcomeController extends Controller
             throw $ex;  // Re-throw the exception if you want it to be handled further up the call stack
         }
     }
+    public function complete_cashout(){
+        
+        //status id 5 - ApprovedForProcessing
+        $now = new Carbon();
+        $today = $now->toDateTimeString();
+        $twoDaysAgo = $now->subDays(2)->toDateTimeString();
+         
+        //prcessing status id 2
+        $cashouts = Cashout::where('status_id', 2)->whereDate('updated_at', '<=', $twoDaysAgo)->get();
 
-    public function createFile_modify(){
+        if ($cashouts) {
+            foreach ($cashouts as $cashout) {
+
+                //complete status id 3
+                $data=array('status_id'=>3);
+                Cashout::where('id',$cashout->id)->update($data);
+                
+                $cash = DB::table('cashouts as c')
+                ->leftjoin('respondents as r', 'c.respondent_id', '=', 'r.id')
+                ->leftjoin('banks as b', 'c.bank_id', '=', 'b.id')
+                ->select('c.*', 'r.id','r.name','r.surname','r.email','b.bank_name','b.branch_code') 
+                ->where('c.id',$cashout->id)->first();
+                //dd($cashouts);
+                
+                $to_address = $cash->email;
+                $data = ['subject' => 'Cashout Created','type' => 'cash_create'];
+                Mail::to($to_address)->send(new WelcomeEmail($data));
+            }
+        }
+    }
+
+    public function process_cashout(){
         //status id 5 - ApprovedForProcessing
         $now = new Carbon();
         $today = $now->toDateTimeString();
@@ -947,19 +977,7 @@ class WelcomeController extends Controller
             Log::error('SOAP Request failed: ' . $e->getMessage());
         }
 
-        //complete status id 3
-        $cashouts = Cashout::where('status_id', 2)->whereDate('updated_at', '<=', $twoDaysAgo)->get();
-
-        if ($cashouts) {
-            foreach ($cashouts as $cashout) {
-                $data=array('status_id'=>3);
-                Cashout::where('id',$cashout->id)->update($data);
-                
-                $to_address = $cashout->email;
-                $data = ['subject' => 'Cashout Created','type' => 'cash_create'];
-                Mail::to($to_address)->send(new WelcomeEmail($data));
-            }
-        }
+        
         #######################################################
         
     }
