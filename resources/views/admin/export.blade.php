@@ -111,7 +111,9 @@
                                         <select name="show_cashout_val" id="show_cashout_val" class="form-control">
                                             <option value="">Select</option>
                                             <option value="1">EFT</option>
+                                            <option value="2">Data</option>
                                             <option value="3">Airtime</option>
+                                            <option value="4">Donation</option>
                                         </select>
                                     </div>
                                 </div>
