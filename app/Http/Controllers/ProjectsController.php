@@ -1023,6 +1023,32 @@ class ProjectsController extends Controller
         }
         else if($request->get_status == 4){
             Project_respondent::where('project_id',$request->edit_id)->update(['is_frontend_complete' => 1]);
+
+            $get_resp = DB::table('project_respondent as resp')->select('resp.*', 'projects.reward')
+                ->join('projects', 'resp.project_id', 'projects.id')
+                ->where('resp.project_id',$request->edit_id)
+                ->where('resp.is_frontend_complete', 1)->get();
+
+            if (!empty($get_resp)) {
+                foreach ($get_resp as $resp) {
+                    $proj_id = (isset($resp->project_id)) ? $resp->project_id : 0;
+                    $resp_id = (isset($resp->respondent_id)) ? $resp->respondent_id : 0;
+                    $rew_id  = (isset($resp->reward)) ? $resp->reward: 0;
+
+                    if (DB::table('rewards')->where('project_id', $proj_id)->where('respondent_id', $resp_id)->doesntExist()) {
+                        $insert_array = array(
+                            'respondent_id' => $resp_id,
+                            'project_id'    => $proj_id,
+                            'points'        => $rew_id,
+                            'status_id'     => 1,
+                        );
+
+                        if ($resp_id > 0) {
+                            DB::table('rewards')->insert($insert_array);
+                        }
+                    }
+                }
+            }
             return response()->json(['repsonse' => 200]);
         }
         else{
