@@ -2237,7 +2237,7 @@ class SurveyController extends Controller
         }
         
         // Get Survey Data 
-        $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+        $question = Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
                 
         $surveyResponseUsers =  SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
         $finalResult =[$cols];
@@ -2256,44 +2256,44 @@ class SurveyController extends Controller
             $lang_name =''; $long='';$lat =''; $location=''; $ip_address =''; $lang_code =''; $lang_name ='';
 
             if(isset($other_details->device_id)){
-                $deviceID =$other_details->device_id;
+                $deviceID = $other_details->device_id;
             }
             if(isset($other_details->device_name)){
-                $device_name =$other_details->device_name;
+                $device_name = $other_details->device_name;
             }
             if(isset($other_details->browser)){
-                $browser =$other_details->browser;
+                $browser = $other_details->browser;
             }
             if(isset($other_details->os)){
-                $os =$other_details->os;
+                $os = $other_details->os;
             }
             if(isset($other_details->lang_name)){
-                $lang_name =$other_details->lang_name;
+                $lang_name = $other_details->lang_name;
             }
             if(isset($other_details->lang_code)){
-                $lang_code =$other_details->lang_code;
+                $lang_code = $other_details->lang_code;
             }
             if(isset($other_details->ip_address)){
-                $ip_address =$other_details->ip_address;
+                $ip_address = $other_details->ip_address;
             }
             if(isset($other_details->location)){
-                $location =$other_details->location;
+                $location = $other_details->location;
             }
             if(isset($other_details->lat)){
-                $lat =$other_details->lat;
+                $lat = $other_details->lat;
             }
             if(isset($other_details->long)){
-                $long =$other_details->long;
+                $long = $other_details->long;
             }
             if(isset($other_details->lang_name)){
-                $lang_name =$other_details->lang_name;
+                $lang_name = $other_details->lang_name;
             }
             $name = 'Anonymous';
             if(isset($user->name)){
                 $name = $user->name;
             }
 
-            $completedRes =SurveyResponse::where(['response_user_id'=>$userID ,'survey_id'=>$survey_id,'answer'=>'thankyou_submitted'])->first();
+            $completedRes = SurveyResponse::where(['response_user_id'=>$userID ,'survey_id'=>$survey_id,'answer'=>'thankyou_submitted'])->first();
 
             if($completedRes){
                 $completion_status = 'Completed';
@@ -2315,21 +2315,21 @@ class SurveyController extends Controller
                 }
                 if($qus->qus_type == 'likert'){
                     $qusvalue = json_decode($qus->qus_ans);
-                    $left_label='Least Likely';
-                    $middle_label='Netural';
-                    $right_label='Most Likely';
+                    $left_label = 'Least Likely';
+                    $middle_label = 'Netural';
+                    $right_label = 'Most Likely';
                     $likert_range = 10;
                     if(isset($qusvalue->right_label)){
-                        $right_label=$qusvalue->right_label;
+                        $right_label = $qusvalue->right_label;
                     }
                     if(isset($qusvalue->middle_label)){
-                        $middle_label=$qusvalue->middle_label;
+                        $middle_label = $qusvalue->middle_label;
                     }
                     if(isset($qusvalue->likert_range)){
-                        $likert_range=$qusvalue->likert_range;
+                        $likert_range = $qusvalue->likert_range;
                     }
                     if(isset($qusvalue->left_label)){
-                        $left_label=$qusvalue->left_label;
+                        $left_label = $qusvalue->left_label;
                     }
                     $output = intval($output);
                     $likert_label = $output;
