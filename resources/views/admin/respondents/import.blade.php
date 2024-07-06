@@ -40,7 +40,7 @@
             rules: {
                 import_excel: {
                     required: true,
-                    extensionempty: 'xls|xlsx',
+                    extensionempty: 'csv',
                     filesize: 5000000
                 },
             }
@@ -53,8 +53,8 @@
         }, 'File size must be less than 5mb');
 
         $.validator.addMethod("extensionempty", function(value, element, param) {
-            param = typeof param === "string" ? param.replace(/,/g, "|") : "xls|xlsx";
+            param = typeof param === "string" ? param.replace(/,/g, "|") : "csv";
             return this.optional(element) || value.match(new RegExp("\\.(" + param + ")$", "i")) || value.indexOf('.') == -1;
-        }, $.validator.format("Please Upload only xls|xlsx File."));
+        }, $.validator.format("Please Upload only csv File."));
     });
 </script>

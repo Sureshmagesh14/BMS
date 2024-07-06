@@ -3,6 +3,10 @@
     .error {
         color: red;
     }
+    button#pass:hover {
+        background-color: #6396b1;
+        color: #fff;
+    }
 </style>
 <!-- main starts -->
 <main class="forgot-pass my-5 py-5">
@@ -25,7 +29,7 @@
                                 <input type="password" name="password_confirmation" id="password_confirmation" autocomplete="new-password" placeholder="Confirm Password"
                                     class="form-control vi-border-clr border-radius-6px" id="">
                         <button type="submit"
-                            class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2">REQUEST
+                            class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2" id="pass">REQUEST
                             {{ __('Reset Password') }}</button>
                         <a href="{{ route('login') }}"
                             class="btn vi-white-bg border-radius-0 text-white px-5 py-3 m-auto w-100">BACK TO
@@ -39,7 +43,6 @@
     </div>
 </main>
 <!-- main ends -->
-
 @include('user.layout.forgot-footer')
 <script>
     $(function() {
@@ -79,7 +82,11 @@
         </script>
     @endforeach
 @endif
-
+@if (Session::has('status'))
+    <script>
+        toastr.success("{{ session('status') }}");
+    </script>
+@endif
 @if (Session::has('error'))
     <script>
         toastr.error("{{ session('error') }}");

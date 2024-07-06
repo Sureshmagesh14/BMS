@@ -2211,15 +2211,33 @@ class SurveyController extends Controller
     {
         // Custom array data to export
         $survey = Survey::where(['id'=>$survey_id])->first();
-        $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->get();
+        $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you','rankorder','multi_choice'])->get();
         $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
+        $multi_choice_qus=Questions::where(['qus_type'=>'multi_choice','survey_id'=>$survey_id])->get();
+        $rankorder_qus=Questions::where(['qus_type'=>'rankorder','survey_id'=>$survey_id])->get();
+
         $cols = ["Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name"];
         foreach($question as $qus){
             array_push($cols,$qus->question_name);
         }
-      
+        foreach($multi_choice_qus as $qus){
+            $qus_ans = json_decode($qus->qus_ans); 
+            $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+            foreach($choices as $qus1){
+                array_push($cols,$qus->question_name.'_'.$qus1);
+            }
+        }
+        foreach($rankorder_qus as $qus){
+            $qus_ans = json_decode($qus->qus_ans); 
+            // array_push($cols,$qus->question_name);
+            $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+            foreach($choices as $qus1){
+                array_push($cols,$qus->question_name.'_'.$qus1);
+            }
+        }
         foreach($matrix_qus as $qus){
             $qus = json_decode($qus->qus_ans); 
+            array_push($cols,$qus->question_name);
             $exiting_qus_matrix= $qus!=null ? explode(",",$qus->matrix_qus): []; $i=0;
             foreach($exiting_qus_matrix as $qus1){
                 array_push($cols,$qus1);
@@ -2227,6 +2245,41 @@ class SurveyController extends Controller
         }
 
         function getValues($data) {
+            // echo "<pre>";
+            // print_r($data);
+            // Extract the header row
+            $header = $data[0];
+
+            // Create a mapping of header keys to their positions
+            $headerMapping = array_flip($header);
+
+            // Initialize an array to store the rearranged rows
+            $values = [];
+
+            // Add the header row to the values array
+            $values[] = array_values($header);
+
+            // Loop through each row starting from the second element (skip header row)
+            for ($i = 1; $i < count($data); $i++) {
+                $row = $data[$i];
+                $rearrangedRow = [];
+
+                // Loop through the header keys and arrange the row values accordingly
+                foreach ($header as $key) {
+                    if (isset($row[$key])) {
+                        $rearrangedRow[] = $row[$key];
+                    } else {
+                        $rearrangedRow[] = ''; // Handle missing keys by adding an empty string
+                    }
+                }
+
+                $values[] = $rearrangedRow;
+            }
+
+            return $values;
+        }
+
+        function getValues1($data) {
             $values = [];
         
             foreach ($data as $row) {
@@ -2301,7 +2354,7 @@ class SurveyController extends Controller
                 $completion_status = 'Partially Completed';
             }
 
-            $result =['name'=>$name,'responseinfo'=>$responseinfo,'device_id'=>$deviceID,'device_name'=>$device_name,'completion_status'=>$completion_status,'browser'=>$browser,'os'=>$os,'device_type'=>$device_type,'long'=>$long,'lat'=>$lat,'location'=>$location,'ip_address'=>$ip_address,'lang_code'=>$lang_code,'lang_name'=>$lang_name];
+            $result =['Respondent Name'=>$name,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name];
             foreach($question as $qus){
                 $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
                 if($respone){
@@ -2395,6 +2448,7 @@ class SurveyController extends Controller
 
                 }
                 else if($qus->qus_type == 'matrix_qus'){
+                    $result[$qus->question_name]=''; 
                     if($output=='Skip'){
                         $qusvalue = json_decode($qus->qus_ans); 
                         $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
@@ -2411,14 +2465,40 @@ class SurveyController extends Controller
                     }
                     
                 }else if($qus->qus_type == 'rankorder'){
+                    // $result[$qus->question_name]=''; 
+                    $qus_ans = json_decode($qus->qus_ans); 
                     $output = json_decode($output,true);
-                    $ordering = [];
-                    if($output!=null)
-                    foreach($output as $op){
-                        array_push($ordering,$op['id']);
+                    $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                    foreach($choices as $qus1){
+                        // echo "<pre>";
+                        // print_r($qus1);
+                        if($output!=null){
+                            foreach($output as $op){
+                                if($qus1 == $op['id']){
+                                    $arrId= $qus->question_name.'_'.$qus1;
+                                    $result[$arrId]=$op['val'];
+                                }
+                            }
+                        }
+                       
                     }
-                    $tempresult = [$qus->question_name =>implode(',',$ordering)];
-                    $result[$qus->question_name]=implode(',',$ordering);
+                   
+                }else if($qus->qus_type == 'multi_choice'){
+                    // $result[$qus->question_name]=''; 
+                    $qus_ans = json_decode($qus->qus_ans); 
+                    $output = explode(",", $output);
+                    $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                    foreach($choices as $qus1){
+                        if($output!=null){
+                            foreach($output as $op){
+                                if($qus1 == $op){
+                                    $arrId= $qus->question_name.'_'.$qus1;
+                                    $result[$arrId]=$op;
+                                }
+                            }
+                        }
+                    }
+                   
                 }else if($qus->qus_type == 'photo_capture'){
                     $img = $output;
                     $tempresult = [$qus->question_name =>$img];
@@ -2435,7 +2515,13 @@ class SurveyController extends Controller
             }
             array_push($finalResult,$result);
         }
+    //     echo "<pre>";
+    //   print_r($finalResult);
+    //   exit;
         $data = getValues($finalResult);
+        // echo "<pre>";
+        // print_r($data);
+        // exit;
         if($type == 'csv'){
             // Generate a dynamic filename based on the current timestamp
             $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.csv';

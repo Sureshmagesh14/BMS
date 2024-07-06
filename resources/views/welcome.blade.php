@@ -10,17 +10,22 @@
     @endif
     
     <div class="row">
+        <div class="col-md-6 col-sm-12 m-auto mob-hide">
+        <img src="{{ asset('assets/images/img_2.png') }}" class="img-fluid w-75 m-auto hide-mobile"
+                        alt="">
+        </div>
         <div class="col-md-6 col-sm-12">
             <div class="d-flex align-items-center flex-column justify-content-between">
-                <div class="logo">
+                <!-- <div class="logo">
                     <img src="{{ asset('user/images/small-logo.png') }}" class="img-fluid w-50 m-auto hide-mobile"
                         alt="">
-                </div>
+                </div> -->
                 <div class="heading">
                     <h1 class="fw-boler vi-get-paid-head text-shadow fw-bolder">Get PAID for your opinion!</h1>
                 </div>
                 <div class="description">
-                    <p class="vi-bnr-para-text text-shadow">Join 40 000 south africans who make extra money.</p>
+                    <p class="vi-bnr-para-text text-shadow">Join 40 000 South Africans and 
+make extra money.</p>
                 </div>
                 <div class="btn-class-bnr">
                     <div class="d-flex align-items-center flex-column">
