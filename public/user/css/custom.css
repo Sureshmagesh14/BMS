@@ -365,10 +365,16 @@ tr:nth-child(even) {
 .w-85{
   width:85%;
 }
+.m-h-180 {
+  min-height: 180px;
+}
 /* dashboard css ends  */
 
 
 @media(max-width:767px) {
+  .m-h-180 {
+    min-height: 120px !important;
+}
   .w-15{
     width: 15%;
   }
