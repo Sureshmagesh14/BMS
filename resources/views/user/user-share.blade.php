@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center py-5 mx-auto">
             <div class="col-md-6 text-center my-auto d-flex">
-                <img class="w-100" src="{{ asset('assets/images/Share.jpg') }}" />
+                <img class="w-100" src="{{ asset('assets/images/share.png') }}" />
             </div>
             <div class="col-md-4 bg-white p-5 mb-5">
                 <div class="qr-code text-center">
