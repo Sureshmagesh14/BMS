@@ -356,11 +356,34 @@ tr:nth-child(even) {
 .login.w-50{
   width:60vh !important;
 }
-
+.bg-mobile{
+  display: none;
+}
+.w-15{
+  width: 15%;
+}
+.w-85{
+  width:85%;
+}
+.m-h-180 {
+  min-height: 180px;
+}
 /* dashboard css ends  */
 
 
 @media(max-width:767px) {
+  .m-h-180 {
+    min-height: 120px !important;
+}
+  .w-15{
+    width: 15%;
+  }
+  .w-85{
+    width:85%;
+  }
+  .bg-mobile{
+    display: block;
+  }
   .d-sm-flex{
     display: block !important;
   }
