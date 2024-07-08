@@ -25,7 +25,7 @@ Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.endsurvey', 'uses' => 'Su
 Route::post('/survey/submitans', ['as' => 'survey.submitans', 'uses' => 'SurveyController@submitans']);
 
 // Report 
-Route::get('/survey-report-respondent/{id}', ['as' => 'survey.report', 'uses' => 'SurveyController@generateReportbyRespondent']);
+Route::get('/survey-report-respondent/{id}', ['as' => 'survey.reportrespondent', 'uses' => 'SurveyController@generateReportbyRespondent']);
 
 Route::any('terms', 'WelcomeController@terms')->name('terms');
 Route::any('admin', 'Auth\AdminLoginController@showLoginForm')->name('admin.showlogin'); //.....Admin Login
