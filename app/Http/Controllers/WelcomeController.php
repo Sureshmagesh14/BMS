@@ -255,13 +255,28 @@ class WelcomeController extends Controller
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', $id)
                 ->where('projects.closing_date', '<', Carbon::now())->get();
-            
 
+            $currentYear=Carbon::now()->year;
+
+            $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->whereYear('created_at', $currentYear)
+            ->sum('points');
+
+            $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->where(function ($query) use ($currentYear) {
+                $query->whereYear('created_at', '<', $currentYear) // Filters past year data
+                      ->orWhere(function ($query) use ($currentYear) {
+                          $query->whereYear('created_at', $currentYear); // Filters current year data
+                      });
+            })
+            ->sum('points');
+        
+          
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
 
-            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed'));
+            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -404,10 +419,26 @@ class WelcomeController extends Controller
                 }
             }
 
+            $currentYear=Carbon::now()->year;
+            $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->whereYear('created_at', $currentYear)
+            ->sum('points');
+
+            $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->where(function ($query) use ($currentYear) {
+                $query->whereYear('created_at', '<', $currentYear) // Filters past year data
+                      ->orWhere(function ($query) use ($currentYear) {
+                          $query->whereYear('created_at', $currentYear); // Filters current year data
+                      });
+            })
+            ->sum('points');
+        
+
+         
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-            return view('user.user-rewards')->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
+            return view('user.user-rewards',compact('get_current_rewards','get_overrall_rewards'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
             //}
 
         } catch (Exception $e) {

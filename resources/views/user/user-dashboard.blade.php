@@ -369,13 +369,13 @@ Online Surveys</span>
                         <div class="row">
                             <div class="col-4 rounded ">
                                 <div class="bg-grey-6 p-2 m-2 w-100">
-                                    <div class="bg-warning text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                    <div class="bg-warning text-white p-2 w-50 rounded my-2 text-center m-auto">{{$get_overrall_rewards}}</div>
                                     <div>Total Rewards since 2024</div>
                                 </div>
                             </div>
                             <div class="col-4 rounded ">
                                 <div class="bg-grey-6 p-2 m-2 w-100">
-                                    <div class="bg-primary text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                    <div class="bg-primary text-white p-2 w-50 rounded my-2 text-center m-auto">{{$get_current_rewards}}</div>
                                     <div>Total Rewards this year</div>
                                 </div>
                             </div>

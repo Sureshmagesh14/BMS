@@ -515,10 +515,22 @@ class RespondentsController extends Controller
                     </li>';
     
                     // Additional options based on conditions
-                    if (str_contains(url()->previous(), '/admin/projects') || str_contains(url()->current(), '/admin/respondents')) {
+                    if (str_contains(url()->previous(), '/admin/projects') || str_contains(url()->current(), '/admin/respondents'  )) {
                         // If coming from projects page
                         $nestedData['options'] .= '<li class="list-group-item">
                             <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
+                                <i class="far fa-trash-alt"></i> De-attach
+                            </a>
+                        </li>';
+                    }else if(str_contains(url()->previous(), '/admin/tags')){
+                        $nestedData['options'] .= '<li class="list-group-item">
+                            <a data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true"
+                                data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                        </li>';
+                        $nestedData['options'] .= '<li class="list-group-item">
+                            <a id="deattach_tags" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
                                 <i class="far fa-trash-alt"></i> De-attach
                             </a>
                         </li>';
@@ -532,14 +544,10 @@ class RespondentsController extends Controller
                         </li>';
                         $nestedData['options'] .= '<li class="list-group-item">
                         <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                            <i class="far fa-trash-alt"></i> De-attach
-                        </a>
-                        </li>';
-                        $nestedData['options'] .=  '<li class="list-group-item">
-                        <a href="#!" id="delete_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
                             <i class="far fa-trash-alt"></i> Delete
                         </a>
                         </li>';
+                      
                       
                     }
                     

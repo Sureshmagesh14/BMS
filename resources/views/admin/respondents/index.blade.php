@@ -80,8 +80,7 @@
 
 
         function respondents_datatable() {
-            $('#respondents_datatable').DataTable()
-        .destroy(); // Use DataTable() instead of dataTable() for initialization and destroying
+            $('#respondents_datatable').DataTable().destroy(); // Use DataTable() instead of dataTable() for initialization and destroying
             var postsTable = $('#respondents_datatable').DataTable({
                 "ordering": true,
                 "processing": true,

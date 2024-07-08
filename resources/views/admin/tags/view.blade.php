@@ -164,7 +164,9 @@
                 "type": "POST"
             },
             "columns": [{
-                    "data": "select_all"
+                    "data": "select_all",
+                    "orderable": false,
+                    "searchable": false
                 },
                 {
                     "data": "id_show"
@@ -264,6 +266,8 @@
 
         single_delete("POST", id, url, "Deattach Pannel", 'respondents_datatable');
     });
+
+    
 
     function myFunction(color) {
         // Log the clicked color to console for debugging
