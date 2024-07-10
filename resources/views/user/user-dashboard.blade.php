@@ -60,6 +60,9 @@
     .ml-auto{
         margin-left:auto;
     }
+    .m-h-180{
+        min-height:180px;
+    }
 </style>
 @php
     $first_character = mb_substr($data->name, 0, 1);
@@ -380,7 +383,7 @@ Online Surveys</span>
                                 </div>
                             </div>
                             <div class="col-4 rounded ">
-                                <div class="bg-grey-6 p-2 m-2 w-100">
+                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
                                     <div class="bg-success text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
                                     <div>Available points for Cash Out</div>
                                 </div>
