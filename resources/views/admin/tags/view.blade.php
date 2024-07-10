@@ -92,32 +92,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-
-                            <table id="respondents_datatable" class="table dt-responsive nowrap w-100">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" class="select_all" id="inlineForm-customCheck">
-                                        </th>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Surname</th>
-                                        <th>Mobile</th>
-                                        <th>Whatsapp</th>
-                                        <th>Email</th>
-                                        <th>Age</th>
-                                        {{-- <th>Race</th> --}}
-                                        <th>Status</th>
-                                        <th>Profile Completion</th>
-                                        <th>Inactive Until</th>
-                                        <th>opeted_in</th>
-                                        <th>Action</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                            @include('admin.table_components.respondents_table')
                         </div>
                         <!-- end card-body -->
                     </div>
@@ -215,23 +190,23 @@
         });
     }
 
-    $(document).on('change', '.respondents_select_box', function(e) {
-        value = $(this).val();
-        $.post("{{ route('respondents_export') }}", {
-                _token: tempcsrf,
-                id_value: value,
-                form: 'respondents'
-            },
-            function(resp, textStatus, jqXHR) {
+    // $(document).on('change', '.respondents_select_box', function(e) {
+    //     value = $(this).val();
+    //     $.post("{{ route('respondents_export') }}", {
+    //             _token: tempcsrf,
+    //             id_value: value,
+    //             form: 'respondents'
+    //         },
+    //         function(resp, textStatus, jqXHR) {
 
-                if (resp == 'Error') {
-                    console.log("Error");
-                } else {
-                    console.log("resps", resp);
-                    window.location.assign("../" + resp);
-                }
-            });
-    });
+    //             if (resp == 'Error') {
+    //                 console.log("Error");
+    //             } else {
+    //                 console.log("resps", resp);
+    //                 window.location.assign("../" + resp);
+    //             }
+    //         });
+    // });
 
     $(document).on('click', '#delete_respondents', function(e) {
         e.preventDefault();
@@ -260,14 +235,38 @@
     $(document).on('click', '#deattach_respondents', function(e) {
         e.preventDefault();
         var id = $(this).data("id");
-        console.log("id",id);
-        var url = "{{ route('deattach_tags', ':id') }}";
-        url = url.replace(':id', id);
+       
 
-        single_delete("POST", id, url, "De-attached Panel Successfully", 'respondents_datatable');
+        single_delete("POST", id, "{{ route('deattach_multi_panel') }}", "De-attached Panel Successfully", 'respondents_datatable');
     });
 
-    
+    $(document).on('click', '.user_play_button', function(e) {
+        var all_id = [];
+
+        var values = $("#respondents_datatable tbody tr").map(function() {
+            var $this = $(this);
+            if ($this.find("[type=checkbox]").is(':checked')) {
+                all_id.push($this.find("[type=checkbox]").attr('id'));
+            }
+        }).get();
+
+
+
+        select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $("#action_2").val();
+
+        // alert(select_value);
+
+        if (select_value == 11) {
+            titles = "Un-Assign from Project";
+            var url = "{{ route('deattach_tags', ':id') }}";
+            url = url.replace(':id', all_id);
+            
+            multi_delete("POST", all_id, url, "Respondents Deleted",
+                'respondents_datatable');
+        }  else {
+            toastr.info("OOPS! Select the action");
+        }
+    });
 
     function myFunction(color) {
         // Log the clicked color to console for debugging

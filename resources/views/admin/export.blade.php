@@ -98,8 +98,8 @@
                                     <div class="col-md-10">
                                         <select name="show_resp_type" id="show_resp_type" class="form-control">
                                             <option value="">Select</option>
-                                            <option value="simple">Simple Database</option>
-                                            <option value="essential">Normal Database</option>
+                                            <option value="simple">Basic Database</option>
+                                            <option value="essential">Essential Database</option>
                                             <option value="extended">Extended Database</option>
                                         </select>
                                     </div>
