@@ -43,8 +43,8 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'surname' => ['required', 'string', 'max:255'],
-            'mobile' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'whatsapp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'mobile' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11',
+            'whatsapp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11',
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . Respondents::class],
             'date_of_birth' => ['required', 'string', 'max:255'],
             'password_register' => ['required', Rules\Password::defaults()->min(6)],
