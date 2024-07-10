@@ -11,6 +11,8 @@ use App\Models\Rewards;
 use App\Models\Users;
 use App\Models\Projects;
 use App\Models\Cashout;
+use App\Models\Networks;
+use App\Models\Charities;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -786,11 +788,16 @@ class WelcomeController extends Controller
     public function cashout_form(Request $request)
     {
         try {
+            $resp_id = Session::get('resp_id');
             $points = $request->value;
 
             if($points > 0){
                 $banks = Banks::get();
-                $returnHTML = view('user.cashout_request', compact('points', 'banks'))->render();
+                $networks = Networks::get();
+                $charities = Charities::get();
+                $respondent = Respondents::where('id',$resp_id)->first();
+                $content = Contents::where('type_id',2)->first();
+                $returnHTML = view('user.cashout_request', compact('points','banks','networks','charities','respondent','content'))->render();
     
                 return response()->json(
                     [
@@ -813,32 +820,78 @@ class WelcomeController extends Controller
         }
     }
 
+    public function terms_and_conditions(Request $request){
+        try {
+            $resp_id = Session::get('resp_id');
+            $points = $request->value;
+
+            $content = Contents::where('type_id',2)->first();
+            $returnHTML = view('user.terms_and_conditions', compact('content','points'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+            
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function cashout_sent(Request $request)
     {
-        $resp_id = Session::get('resp_id');
-        $banks = $request->bank_value;
+        $resp_id        = Session::get('resp_id');
+        $method         = $request->method;
+        $banks          = $request->bank_value;
         $account_number = $request->account_number;
-        $reward = $request->reward;
-        $branch_name = $request->branch_name;
-        $holder_name = $request->holder_name;
+        $reward         = $request->reward;
+        $branch_name    = $request->branch_name;
+        $holder_name    = $request->holder_name;
+        $mobile_network = $request->network;
+        $mobile_number  = $request->mobile_number;
+        $charitie       = $request->charitie;
+        $result_mobile  = '27' . str_replace(' ', '', $mobile_number); // Remove all spaces
 
         if ($reward != 0) {
-            // $amount = ($reward / 10);
-            $insert_array = array(
-                'respondent_id' => $resp_id,
-                'bank_id' => $banks,
-                'type_id' => 1,
-                'account_number' => $account_number,
-                'amount' => $reward,
-            );
+            if($method == "EFT"){
+                $insert_array = array(
+                    'respondent_id'  => $resp_id,
+                    'bank_id'        => $banks,
+                    'type_id'        => 1,
+                    'account_number' => $account_number,
+                    'amount'         => $reward,
+                );
+                DB::table('respondents')->where('id', $resp_id)->update(['account_number' => $account_number, 'account_holder' => $holder_name]);
+            }
+            else if($method == "Airtime" || $method == "Data"){
+                $insert_array = array(
+                    'respondent_id'  => $resp_id,
+                    'mobile_network' => $mobile_network,
+                    'mobile_number'  => $result_mobile,
+                    'type_id'        => ($method == "Airtime") ? 2 : 3,
+                    'amount'         => $reward,
+                );
+            }
+            else if($method == "Donations"){
+                $insert_array = array(
+                    'respondent_id' => $resp_id,
+                    'charity_id'    => $charitie,
+                    'type_id'       => 4,
+                    'amount'        => $reward,
+                );
+            }
+
+            dd($insert_array);
 
             DB::table('cashouts')->insert($insert_array);
 
-            DB::table('respondents')->where('id', $resp_id)
-                ->update(['account_number' => $account_number, 'account_holder' => $holder_name]);
+            return redirect()->back()->withsuccess('Request Send Successfully');
         }
-
-        return redirect()->back()->withsuccess('Request Send Successfully');
+        else{
+            return redirect()->back()->witherror('Your reward is 0');
+        }
     }
 
     public function update_activitation(Request $request)

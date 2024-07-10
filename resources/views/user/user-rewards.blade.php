@@ -24,10 +24,10 @@
                         <h2 class=" h1 fw-bolder mt-2">Your available rewards</h2>
                             <h2 class="yelow-clr h1 fw-bolder mt-2">{{ $get_reward }} <span>Points</span> </h2>
                             <p>10 points = R1</p>
-                            @if($get_reward > 0)
+                            @if($get_reward >= 400)
                             <button type="button" class="btn vi-border-clr text-white vi-dark-blue-bg vi-full-rounded" id="request_press"
                                 data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
-                                data-bs-original-title="{{ __('Create Banks') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
+                                data-bs-original-title="{{ __('Cashout Process') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
                                 Request Cash Out
                             </button>
                             @endif
