@@ -79,8 +79,10 @@ class RespondentsController extends Controller
                 $respondents->surname = $request->input('surname');
                 $respondents->date_of_birth = $request->input('date_of_birth');
                 $respondents->id_passport = $request->input('id_passport');
-                $respondents->mobile = $request->input('mobile');
-                $respondents->whatsapp = $request->input('whatsapp');
+                $mobile= str_replace(' ', '', $request->mobile);
+                $whatsapp = str_replace(' ', '', $request->whatsapp);
+                $respondents->mobile = $mobile;
+                $respondents->whatsapp = $whatsapp;
                 $respondents->email = $request->input('email');
                 $respondents->bank_name = $request->input('bank_name');
                 $respondents->branch_code = $request->input('branch_code');
@@ -207,8 +209,10 @@ class RespondentsController extends Controller
                     $respondents->surname = $request->input('surname');
                     $respondents->date_of_birth = $request->input('date_of_birth');
                     $respondents->id_passport = $request->input('id_passport');
-                    $respondents->mobile = $request->input('mobile');
-                    $respondents->whatsapp = $request->input('whatsapp');
+                    $mobile= str_replace(' ', '', $request->mobile);
+                    $whatsapp = str_replace(' ', '', $request->whatsapp);
+                    $respondents->mobile = $mobile;
+                    $respondents->whatsapp = $whatsapp;
                     $respondents->email = $request->input('email');
                     $respondents->bank_name = $request->input('bank_name');
                     $respondents->branch_code = $request->input('branch_code');
@@ -479,14 +483,25 @@ class RespondentsController extends Controller
                     3 => 'Unsubscribed',
                     4 => 'Pending',
                 ];
+
+                $mobile = $post->mobile;
+                if (!empty($mobile) && strpos($mobile, '27'  && strlen($mobile) == 9) === 0) {
+                    $mobile = '+' . $mobile;
+                }
+
+                $whatsapp = $post->whatsapp;
+                if (!empty($whatsapp) && strpos($whatsapp, '27') === 0 && strlen($whatsapp) == 9) {
+                    $whatsapp = '+' . $whatsapp;
+                }
+
                 // Build each row of data
                 $nestedData = [
                     'select_all' => '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this,\'respondents_datatable\')" id="' . $post->id . '">',
                     'id' => $post->id,
                     'name' => $post->name ?? '-',
                     'surname' => $post->surname ?? '-',
-                    'mobile' => $post->mobile ?? '-',
-                    'whatsapp' => $post->whatsapp ?? '-',
+                    'mobile' => $mobile ?? '-',
+                    'whatsapp' => $whatsapp ?? '-',
                     'email' => $post->email ?? '-',
                     'date_of_birth' => $age,
                     'race' => $post->race ?? '-',
