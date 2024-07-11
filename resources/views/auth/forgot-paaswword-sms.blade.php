@@ -17,11 +17,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 m-auto">
-                <form id="forgot_table" method="POST" action="{{ route('password.email') }}">
+                <form id="forgot_table" method="POST" action="{{ route('forgot_password_check') }}">
                     @csrf
                     <div class="text-start m-auto my-3">
                         <h2 class="mb-0 pb-2">Forgotten your password</h2>
-                        <p class="mb-4 fw-bold h4">Please use your phone number or email address to receive the code and link</p>
+                        <p class="mb-4 fw-bold h4">Please use your phone number to receive the code and link</p>
                         <h2 class="mb-4 fw-bold h4">Account Information</h2>
                         <label for="phone" class="fw-bolder">Mobile</label>
                         <div class="input-group mb-2">
@@ -29,7 +29,7 @@
                                 <div class="input-group-text">+27</div>
                             </div>
                             <input type="text" name="phone" id="phone" placeholder="819 966 078"
-                                class="form-control vi-border-clr border-radius-0 w-50" minlength="11" required>
+                                class="form-control vi-border-clr border-radius-0 w-50" >
                         </div>
                         <div class="row">
                         <div class="col-md-6 col-sm-12">
@@ -63,7 +63,7 @@
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script>
     $(function() {
-        $('#phone').inputmask("999 999 999");
+        $('#phone').inputmask("999 999 9999");
         $('#forgot_table').validate({
             rules: {
                 phone: {
@@ -76,13 +76,7 @@
         });
     });
 
-    $.validator.addMethod("validate_email", function(value, element) {
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
-            return true;
-        } else {
-            return false;
-        }
-    }, "Please enter a valid email address.");
+  
 </script>
 @if (count($errors) > 0)
     @foreach ($errors->all() as $message)

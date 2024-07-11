@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Meng\AsyncSoap\Guzzle\Factory;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
-
+use Config;
 use Artisaninweb\SoapWrapper\SoapWrapper;
 
 
@@ -1341,46 +1341,68 @@ class WelcomeController extends Controller
     public function forgot_password_check(Request $request) {
         try {
             // API endpoint for sending SMS
-            $api_url = 'http://apihttp.pc2sms.biz/submit/single/';
-    
-            // Data to be sent as POST request
-            $data = array(
-                'username' => 'brandsurgeon',
-                'password' => 's37fwer2',
+            $apiUrl = 'http://apihttp.pc2sms.biz/submit/single/';
+        
+            // Remove spaces from phone number
+            $phone = str_replace(' ', '', $request->phone);
+            $prefix = config('phone'); // Assuming 'phone' is a config key
+        
+            // Construct destination number
+            $destinationNumber = $prefix . $phone;
+        
+            // Parameters for the SMS
+            $postData = array(
+                'username' => 'brandsurgeon_admin',
+                'password' => 'Alison123',
                 'account' => 'brandsurgeon',
-                'da' => '+917395886496', // Destination number
-                'ud' => 'Your forgot password message here' // SMS content
+                'da' => $destinationNumber, // Destination number with country code
+                'ud' => 'hi test sms' // SMS content
             );
-    
+        
             $curl = curl_init();
-    
+        
             curl_setopt_array($curl, array(
-                CURLOPT_URL => $api_url,
+                CURLOPT_URL => $apiUrl,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_TIMEOUT => 30,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => http_build_query($data), // Send data as POST
+                CURLOPT_POSTFIELDS => http_build_query($postData),
             ));
-            
+        
             $response = curl_exec($curl);
-    
-            curl_close($curl);
-    
-            // Check if SMS was sent successfully
+        
             if ($response === false) {
-                throw new Exception('Error occurred: ' . curl_error($curl));
-            } else {
-                echo 'SMS sent successfully. Response: ' . $response;
+                throw new Exception(curl_error($curl), curl_errno($curl));
             }
+        
+            curl_close($curl);
+        
+            // Log the full response for debugging
+            \Log::info('SMS API Response: ' . $response);
+        
+            // Check if response indicates success
+            if (strpos($response, 'OK') !== false) {
+                // Redirect back with a success message
+                return redirect()->route('forgot_password_sms')->with('status', 'SMS sent successfully!');
+            } else {
+                // Handle API error or unexpected response
+                throw new Exception('Failed to send SMS. API response: ' . $response);
+            }
+        
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            // Log the exception with more details
+            \Log::error('SMS API Error: ' . $e->getMessage() . ' - Code: ' . $e->getCode());
+        
+            // Redirect back with an error message
+            return redirect()->back()->with('error', 'Failed to send SMS. Please try again later.');
         }
     }
     
-
+    
+    
+    
 
 }
