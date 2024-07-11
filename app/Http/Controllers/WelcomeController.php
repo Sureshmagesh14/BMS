@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Meng\AsyncSoap\Guzzle\Factory;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
-
+use Config;
 use Artisaninweb\SoapWrapper\SoapWrapper;
 
 
@@ -1343,12 +1343,19 @@ class WelcomeController extends Controller
             // API endpoint for sending SMS
             $apiUrl = 'http://apihttp.pc2sms.biz/submit/single/';
     
+            // Remove spaces from phone number
+            $phone = str_replace(' ', '', $request->phone);
+            $prefix = config('phone'); // Assuming 'phone' is a config key
+    
+            // Construct destination number
+            $destinationNumber = $prefix . $phone;
+    
             // Parameters for the SMS
             $postData = array(
                 'username' => 'brandsurgeon',
                 'password' => 's37fwer2',
                 'account' => 'brandsurgeon',
-                'da' => '+917395886496', // Destination number
+                'da' => $destinationNumber, // Destination number with country code
                 'ud' => 'hi test sms' // SMS content
             );
     
@@ -1374,16 +1381,27 @@ class WelcomeController extends Controller
             curl_close($curl);
     
             // Process the response as needed
-            // For example, log the response
             \Log::info('SMS API Response: ' . $response);
     
-            // Redirect back with a message
-            return redirect()->route('forgot_password_sms')->with('status', 'SMS sent successfully!');
-            
+            // Check if response indicates success (you need to define what success means here)
+            // For example, if API returns 'OK' or similar
+            if (strpos($response, 'OK') !== false) {
+                // Redirect back with a success message
+                return redirect()->route('forgot_password_sms')->with('status', 'SMS sent successfully!');
+            } else {
+                // Handle API error or unexpected response
+                throw new Exception('Failed to send SMS. API response: ' . $response);
+            }
+    
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            // Log the exception
+            \Log::error('SMS API Error: ' . $e->getMessage());
+    
+            // Redirect back with an error message
+            return redirect()->back()->with('error', 'Failed to send SMS. Please try again later.');
         }
     }
+    
     
     
 
