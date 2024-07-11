@@ -22,9 +22,9 @@ button#back_to_profile {
 </head>
 
 <body>
-<a class="back_to_profile" href="{{ route('home') }}">
+<a class="back_to_profile" href="{{ route('user.dashboard') }}">
         <button id="back_to_profile">
-            <span class="ss-primary-action-btn__copy">Back to Login</span>
+            <span class="ss-primary-action-btn__copy">Back to Dashboard</span>
         </button>
     </a>
     <div class="surveysparrow-survey-container--classic-form welcome-page">
