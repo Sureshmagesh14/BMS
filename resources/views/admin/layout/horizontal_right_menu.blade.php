@@ -159,13 +159,22 @@
 
             <div class="dropdown d-inline-block">
 
-                @if (Auth::guard('admin')->user()->role_id == 1)
-                    @php $role='Super User'; @endphp
-                @elseif(Auth::guard('admin')->user()->role_id == 2)
-                    @php $role='User'; @endphp
+                @if (Auth::guard('admin')->check())
+                @php
+                    $role_id = Auth::guard('admin')->user()->role_id;
+            
+                    if ($role_id == 1) {
+                        $role = 'Super User';
+                    } elseif ($role_id == 2) {
+                        $role = 'User';
+                    } else {
+                        $role = 'Temp';
+                    }
+                @endphp
                 @else
-                    @php $role='Temp'; @endphp
+                    @php $role = 'Temp'; @endphp
                 @endif
+            
 
                 <span class="badge badge-pill badge-primary p-2"> {{ $role }}</span>
 
@@ -173,7 +182,16 @@
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{-- <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/avatar-4.jpg') }}"
                     alt="Header Avatar"> --}}
-                    @php $first_character = mb_substr(Auth::guard('admin')->user()->name, 0, 1); @endphp
+                    @php
+                    $user = Auth::guard('admin')->user();
+                    if ($user) {
+                        $first_character = mb_substr($user->name, 0, 1);
+                    } else {
+                        // Handle case where user is not authenticated
+                        $first_character = ''; // or some default value
+                    }
+                    @endphp
+                    
 
                     <span
                         class="rounded-circle header-profile-user vi-usr-profile m-auto p-3"><strong>{{ $first_character }}</strong></span>
@@ -181,10 +199,15 @@
                     <div class="d-none d-xl-block ps-3">
                         <div>
                             @php
-                                $name =
-                                    Auth::guard('admin')->user()->name . ' ' . Auth::guard('admin')->user()->surname;
-                                $out = strlen($name) > 7 ? substr($name, 0, 7) . '...' : $name;
+                            $user = Auth::guard('admin')->user();
+                            $name = '';
+                            if ($user) {
+                                $name = $user->name . ' ' . $user->surname;
+                            }
+                            
+                            $out = strlen($name) > 7 ? substr($name, 0, 7) . '...' : $name;
                             @endphp
+                            
                             <div class="mt-1 small text-muted"><b><a title="{{ $name }}"
                                         href="#">{{ $out }}</a></b></div>
                         </div>

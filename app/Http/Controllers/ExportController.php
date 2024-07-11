@@ -143,7 +143,7 @@ class ExportController extends Controller
                 $query->whereIn('respondents.id', [$respondents]);
             })
             ->when($type_method != 'Individual', function ($query) {
-                $query->where('active_status_id', 1);
+                $query->where('respondents.active_status_id', 1);
             })
             ->select([
                 'respondents.id',
@@ -155,6 +155,7 @@ class ExportController extends Controller
                 \DB::raw('COALESCE(respondent_profile.vehicle_data, "") AS vehicle_data'),
                 'respondent_profile.updated_at',
             ])
+            ->where('respondents.active_status_id',1)
             ->get()
             ->unique('id'); 
             
@@ -681,14 +682,12 @@ class ExportController extends Controller
             }
             else if ($module == 'Cashout') {
                 
-                $all_datas = Cashout::select(
-                    'cashouts.*', 
-                    'respondents.name',
-                    'respondents.surname', 
-                    'respondents.email', 
-                    'respondents.mobile',
-                    'respondents.whatsapp',
-                    DB::raw('COUNT(CASE WHEN cashouts.status_id = 3 THEN 1 ELSE NULL END) as total_paid_count')
+                $all_datas = Cashout::select('cashouts.*','respondents.id as resp_id','respondents.name','respondents.surname','respondents.email','respondents.mobile','respondents.whatsapp',
+                    DB::raw('COUNT(cashouts.id) as total_cashout'),
+                    DB::raw('COUNT(CASE WHEN cashouts.status_id = 1 THEN 1 END) as pending'),
+                    DB::raw('COUNT(CASE WHEN cashouts.status_id = 4 THEN 1 END) as declined'),
+                    DB::raw('COUNT(CASE WHEN cashouts.status_id = 3 THEN 1 END) as complete'),
+                    DB::raw('COUNT(CASE WHEN cashouts.status_id = 0 THEN 1 END) as failed')
                 )
                 ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
             
@@ -705,10 +704,10 @@ class ExportController extends Controller
             }
             
             $all_datas = $all_datas
-                ->groupBy('cashouts.id', 'respondents.name', 'respondents.surname', 'respondents.email', 'respondents.mobile', 'respondents.whatsapp')
+                ->groupBy('respondents.id')
                 ->orderBy("cashouts.id", "desc")
+                ->take(20)
                 ->get();
-            
             
                 $sheet->setCellValue('A1', 'PID');
                 $sheet->setCellValue('B1', 'First Name');
@@ -760,7 +759,23 @@ class ExportController extends Controller
                     $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
-                    $sheet->setCellValue('G' . $rows, $all_data->total_paid_count);
+                    $sheet->setCellValue('H' . $rows, $all_data->total_cashout);
+                    $sheet->setCellValue('J' . $rows, $all_data->failed);
+                    $sheet->setCellValue('K' . $rows, $all_data->pending);
+                    $sheet->setCellValue('L' . $rows, $all_data->declined);
+                    $sheet->setCellValue('M' . $rows, $all_data->complete);
+                    $get_project = Projects::select('projects.id','projects.name')->join('project_respondent as resp','projects.id','resp.project_id')
+                        ->where('resp.respondent_id',$all_data->resp_id)
+                        ->groupBy('projects.id')
+                        ->get();
+                    $project_total = '';
+                    foreach($get_project as $pro){
+                        $project_total .= $pro->id.' - '.$pro->name.PHP_EOL;
+                    }
+
+                    $sheet->setCellValue('O' . $rows, $project_total);
+                    $sheet->getStyle('O' . $rows)->getAlignment()->setWrapText(true);
+                    $sheet->setCellValue('P' . $rows, date('Y-m-d',strtotime($all_data->created_at)));
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                     $sheet->getStyle('C' . $rows . ':P' . $rows)->applyFromArray($styleArray2);
@@ -783,7 +798,7 @@ class ExportController extends Controller
                         if($respondents != ""){
                             $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                         }
-                    $all_datas = $all_datas->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -796,6 +811,7 @@ class ExportController extends Controller
                     $all_datas = Respondents::leftJoin('rewards', function ($join) {
                         $join->on('rewards.respondent_id', '=', 'respondents.id');
                     })
+                    ->where('respondents.active_status_id',1)
                     ->get([
                         'respondents.id',
                         'respondents.name',
@@ -813,7 +829,7 @@ class ExportController extends Controller
                     if($projects != ""){
                         $all_datas = $all_datas->whereIn('rewards.project_id', [$projects]);
                     }
-                    $all_datas = $all_datas->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -1099,7 +1115,8 @@ class ExportController extends Controller
 
                 $fileName = $module . "_" . date('ymd') . "." . $type;
 
-            } else if ($module == 'Panel') {
+            }
+            else if ($module == 'Panel') {
 
 
                 $respondents = ($request->respondents != null) ? array_filter($request->respondents) : null;
@@ -1115,8 +1132,8 @@ class ExportController extends Controller
                     ->when($type_method == 'Individual', function ($query) use ($respondents) {
                         $query->whereIn('respondent_tag.respondent_id', $respondents);
                     })
+                    ->where('respondents.active_status_id',1)
                     ->orderBy('respondent_tag.id', 'desc')
-                    ->take(3)
                     ->get()
                     ->map(function ($item) {
                         $item->full_name = $item->name . ' ' . $item->surname;
@@ -1154,7 +1171,6 @@ class ExportController extends Controller
                 
                 $fileName = $module . "_" . date('ymd') . "." . $type;
             }
-            
             else if ($module == 'Internal Reports') {
                 $action=$request->action;
                 $role=$request->role;

@@ -24,6 +24,9 @@ Route::get('/survey/view/{id}/{qus}', ['as' => 'survey.endsurvey', 'uses' => 'Su
 // Respondent Flow
 Route::post('/survey/submitans', ['as' => 'survey.submitans', 'uses' => 'SurveyController@submitans']);
 
+// Report 
+Route::get('/survey-report-respondent/{id}', ['as' => 'survey.reportrespondent', 'uses' => 'SurveyController@generateReportbyRespondent']);
+
 Route::any('terms', 'WelcomeController@terms')->name('terms');
 Route::any('about_the_brand', 'WelcomeController@about_the_brand')->name('about_the_brand');
 Route::any('admin', 'Auth\AdminLoginController@showLoginForm')->name('admin.showlogin'); //.....Admin Login
@@ -56,7 +59,8 @@ Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'v
 Route::any('get_area', 'ProfileController@get_area')->middleware(['auth', 'verified'])->name('get_area');
 Route::any('profile_save', 'ProfileController@profile_save')->middleware(['auth', 'verified'])->name('profile_save');
 
-Route::any('createFile', 'WelcomeController@createFile')->name('createFile');
+Route::any('process_cashout', 'WelcomeController@process_cashout')->name('process_cashout');
+Route::any('complete_cashout', 'WelcomeController@complete_cashout')->name('complete_cashout');
 
 /* USERS */
 Route::middleware('auth')->group(function () {
@@ -176,6 +180,8 @@ Route::group([
     Route::any('tags_search_result', 'TagsController@tags_search_result')->name('tags_search_result');
     Route::any('tags_resp_attach_import/{panel_id}', 'TagsController@tags_resp_attach_import')->name('tags_resp_attach_import');
     Route::any('deattach_tags/{tags_id}', 'TagsController@deattach_tags')->name('deattach_tags');
+    Route::any('deattach_multi_panel', 'TagsController@deattach_multi_panel')->name('deattach_multi_panel');
+    
 
     /* Rewards MENU*/
     Route::resource('rewards', 'RewardsController')->name('index', 'rewards.index')->name('destroy', 'rewards.destroy')
