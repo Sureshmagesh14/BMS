@@ -37,10 +37,10 @@
 </style>
 <div class="container-fluid vi-background-index h-90">
     <div class="row vi-background-index">
-        <div class="col-md-5 d-none-mobile  m-auto d-flex mob-hide">
-        <div class="w-75 m-auto d-flex ">
-        <img src="{{ asset('assets/images/login.jpg') }}"
-                class="img-fluid w-75 image-cover rounded-border m-auto d-flex" alt="" />
+        <div class="col-md-5 d-none-mobile d-flex mob-hide p-0">
+        <div class="w-100 d-flex ">
+        <img src="{{ asset('assets/images/login-page_a.jpg') }}"
+                class="img-fluid w-100 image-cover d-flex" alt="" />
 </div>
         </div>
         <div class="col-md-7 col-sm-12">
