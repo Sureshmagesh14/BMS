@@ -67,7 +67,7 @@
                     </div>
                     @if (Route::has('password.request'))
                     <div class="forgetpass me-5">
-                        <a href="{{ route('password.request') }}" class="nav-link text-end me-5 my-2">Forgot Password via email?</a><a href="{{ route('password.request') }}" class="nav-link text-end me-5 my-2">Forgot Password via mobile?</a>
+                        <a href="{{ route('password.request') }}" class="nav-link text-end me-5 my-2">Forgot Password via email?</a><a href="{{ route('forgot_password_sms') }}" class="nav-link text-end me-5 my-2">Forgot Password via mobile?</a>
                     </div>
                     
                     @endif

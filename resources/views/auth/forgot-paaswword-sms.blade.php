@@ -8,6 +8,9 @@
         background-color: #6396b1;
         color: #fff;
     }
+    .input-group-text {
+        line-height: 2.3;
+    }
 </style>
 <!-- main starts -->
 <main class="forgot-pass py-5  vi-background-index ">
@@ -20,9 +23,14 @@
                         <h2 class="mb-0 pb-2">Forgotten your password</h2>
                         <p class="mb-4 fw-bold h4">Please use your phone number or email address to receive the code and link</p>
                         <h2 class="mb-4 fw-bold h4">Account Information</h2>
-                        <label for="date" class="fw-bolder">Email</label>
-                        <input type="email" name="email" id="email" placeholder="email@address.com"
-                            class="form-control vi-border-clr border-radius-6px" id="">
+                        <label for="phone" class="fw-bolder">Mobile</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">+27</div>
+                            </div>
+                            <input type="text" name="phone" id="phone" placeholder="819 966 078"
+                                class="form-control vi-border-clr border-radius-0 w-50" minlength="11" required>
+                        </div>
                         <div class="row">
                         <div class="col-md-6 col-sm-12">
                         <button type="submit"
@@ -52,14 +60,16 @@
 <!-- main ends -->
 
 @include('user.layout.forgot-footer')
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script>
     $(function() {
+        $('#phone').inputmask("999 999 999");
         $('#forgot_table').validate({
             rules: {
-                email: {
+                phone: {
                     required: true,
-                    email: true,
-                    validate_email: true
+                    phone: true,
+                   
                 },
 
             }

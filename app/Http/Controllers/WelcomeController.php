@@ -1326,4 +1326,61 @@ class WelcomeController extends Controller
 
     }
 
+
+    public function forgot_password_sms(){
+        try {
+            
+        
+            return view('auth.forgot-paaswword-sms');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function forgot_password_check(Request $request) {
+        try {
+            // API endpoint for sending SMS
+            $api_url = 'http://apihttp.pc2sms.biz/submit/single/';
+    
+            // Data to be sent as POST request
+            $data = array(
+                'username' => 'brandsurgeon',
+                'password' => 's37fwer2',
+                'account' => 'brandsurgeon',
+                'da' => '+917395886496', // Destination number
+                'ud' => 'Your forgot password message here' // SMS content
+            );
+    
+            $curl = curl_init();
+    
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $api_url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => http_build_query($data), // Send data as POST
+            ));
+            
+            $response = curl_exec($curl);
+    
+            curl_close($curl);
+    
+            // Check if SMS was sent successfully
+            if ($response === false) {
+                throw new Exception('Error occurred: ' . curl_error($curl));
+            } else {
+                echo 'SMS sent successfully. Response: ' . $response;
+            }
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    
+
+
 }
