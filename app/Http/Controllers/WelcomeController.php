@@ -1342,25 +1342,25 @@ class WelcomeController extends Controller
         try {
             // API endpoint for sending SMS
             $apiUrl = 'http://apihttp.pc2sms.biz/submit/single/';
-    
+        
             // Remove spaces from phone number
             $phone = str_replace(' ', '', $request->phone);
             $prefix = config('phone'); // Assuming 'phone' is a config key
-    
+        
             // Construct destination number
             $destinationNumber = $prefix . $phone;
-    
+        
             // Parameters for the SMS
             $postData = array(
-                'username' => 'brandsurgeon',
-                'password' => 's37fwer2',
+                'username' => 'brandsurgeon_admin',
+                'password' => 'Alison123',
                 'account' => 'brandsurgeon',
                 'da' => $destinationNumber, // Destination number with country code
                 'ud' => 'hi test sms' // SMS content
             );
-    
+        
             $curl = curl_init();
-    
+        
             curl_setopt_array($curl, array(
                 CURLOPT_URL => $apiUrl,
                 CURLOPT_RETURNTRANSFER => true,
@@ -1371,20 +1371,19 @@ class WelcomeController extends Controller
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => http_build_query($postData),
             ));
-    
+        
             $response = curl_exec($curl);
-    
+        
             if ($response === false) {
                 throw new Exception(curl_error($curl), curl_errno($curl));
             }
-    
+        
             curl_close($curl);
-    
-            // Process the response as needed
+        
+            // Log the full response for debugging
             \Log::info('SMS API Response: ' . $response);
-    
-            // Check if response indicates success (you need to define what success means here)
-            // For example, if API returns 'OK' or similar
+        
+            // Check if response indicates success
             if (strpos($response, 'OK') !== false) {
                 // Redirect back with a success message
                 return redirect()->route('forgot_password_sms')->with('status', 'SMS sent successfully!');
@@ -1392,15 +1391,16 @@ class WelcomeController extends Controller
                 // Handle API error or unexpected response
                 throw new Exception('Failed to send SMS. API response: ' . $response);
             }
-    
+        
         } catch (Exception $e) {
-            // Log the exception
-            \Log::error('SMS API Error: ' . $e->getMessage());
-    
+            // Log the exception with more details
+            \Log::error('SMS API Error: ' . $e->getMessage() . ' - Code: ' . $e->getCode());
+        
             // Redirect back with an error message
             return redirect()->back()->with('error', 'Failed to send SMS. Please try again later.');
         }
     }
+    
     
     
     
