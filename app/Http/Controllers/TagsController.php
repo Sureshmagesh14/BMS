@@ -321,7 +321,13 @@ class TagsController extends Controller
 
     public function deattach_tags($id){
         try {
-            RespondentTags::where('respondent_id',$id)->delete();
+            $idArray = explode(',', $id);
+
+            // Trim whitespace from each ID in the array
+            $idArray = array_map('trim', $idArray);
+    
+            // Delete records where respondent_id is in the $idArray
+            RespondentTags::whereIn('respondent_id', $idArray)->delete();
 
             return response()->json([
                 'status'  => 200,
@@ -334,6 +340,29 @@ class TagsController extends Controller
         }
         
     }
+    
+    public function detach_multi_panel(Request $request){
+        try {
+            $all_id = $request->input('all_id'); // Fetch the 'all_id' array from request inputs
+          
+            foreach($all_id as $id){
+                // Assuming 'RespondentTags' is the model for respondent tags
+                RespondentTags::where('respondent_id', $id)->delete();
+            }
+    
+            return response()->json([
+                'status'  => 200,
+                'success' => true,
+                'message' => 'Tags Detached successfully'
+            ]);
+        }
+        catch (Exception $e) {
+            // Log the exception for debugging purposes
+            // You might also want to handle or report the exception in a production environment
+            throw new Exception($e->getMessage());
+        }
+    }
+    
 
     public function tags_export(Request $request){
         try {

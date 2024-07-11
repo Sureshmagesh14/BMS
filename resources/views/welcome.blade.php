@@ -11,7 +11,7 @@
     
     <div class="row">
         <div class="col-md-6 col-sm-12 m-auto mob-hide">
-        <img src="{{ asset('assets/images/img_2.png') }}" class="img-fluid w-75 m-auto hide-mobile"
+        <img src="{{ asset('assets/images/img_2.png') }}" class="img-fluid w-91 m-auto hide-mobile"
                         alt="">
         </div>
         <div class="col-md-6 col-sm-12">

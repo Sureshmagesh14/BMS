@@ -143,7 +143,7 @@ class ExportController extends Controller
                 $query->whereIn('respondents.id', [$respondents]);
             })
             ->when($type_method != 'Individual', function ($query) {
-                $query->where('active_status_id', 1);
+                $query->where('respondents.active_status_id', 1);
             })
             ->select([
                 'respondents.id',
@@ -155,6 +155,7 @@ class ExportController extends Controller
                 \DB::raw('COALESCE(respondent_profile.vehicle_data, "") AS vehicle_data'),
                 'respondent_profile.updated_at',
             ])
+            ->where('respondents.active_status_id',1)
             ->get()
             ->unique('id'); 
             
@@ -797,7 +798,7 @@ class ExportController extends Controller
                         if($respondents != ""){
                             $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                         }
-                    $all_datas = $all_datas->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -810,6 +811,7 @@ class ExportController extends Controller
                     $all_datas = Respondents::leftJoin('rewards', function ($join) {
                         $join->on('rewards.respondent_id', '=', 'respondents.id');
                     })
+                    ->where('respondents.active_status_id',1)
                     ->get([
                         'respondents.id',
                         'respondents.name',
@@ -827,7 +829,7 @@ class ExportController extends Controller
                     if($projects != ""){
                         $all_datas = $all_datas->whereIn('rewards.project_id', [$projects]);
                     }
-                    $all_datas = $all_datas->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -1130,8 +1132,8 @@ class ExportController extends Controller
                     ->when($type_method == 'Individual', function ($query) use ($respondents) {
                         $query->whereIn('respondent_tag.respondent_id', $respondents);
                     })
+                    ->where('respondents.active_status_id',1)
                     ->orderBy('respondent_tag.id', 'desc')
-                    ->take(3)
                     ->get()
                     ->map(function ($item) {
                         $item->full_name = $item->name . ' ' . $item->surname;

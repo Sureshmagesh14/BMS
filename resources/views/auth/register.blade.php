@@ -152,8 +152,8 @@
                                 <div class="input-group-prepend w-15">
                                     <div class="input-group-text">+27</div>
                                 </div>
-                                <input class="w-85" type="text" name="mobile" id="mobile" placeholder="819 966 078"
-                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
+                                <input  type="text" name="mobile" id="mobile" placeholder="819 966 078"
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" required>
                             </div>
                         </div>
 
@@ -165,8 +165,8 @@
                                 <div class="input-group-prepend w-15">
                                     <div class="input-group-text">+27</div>
                                 </div>
-                                <input class="w-85" type="text" name="whatsapp" id="whatsapp" placeholder="819 966 078"
-                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
+                                <input  type="text" name="whatsapp" id="whatsapp" placeholder="819 966 078"
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" required>
                             </div>
                         </div>
                     </div>
@@ -277,9 +277,9 @@
 </div>
 
 @include('user.layout.footer')
-<script src="{{ asset('assets/js/inputmask.js') }}"></script>
+
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+
 
 @if (count($errors) > 0)
     @foreach ($errors->all() as $message)

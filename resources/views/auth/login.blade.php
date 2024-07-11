@@ -66,9 +66,10 @@
                         <span toggle="#password-field" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
                     </div>
                     @if (Route::has('password.request'))
-                        <div class="forgetpass me-5">
-                            <a href="{{ route('password.request') }}" class="nav-link text-end me-5 my-2">Forgot Password?</a>
-                        </div>
+                    <div class="forgetpass me-5">
+                        <a href="{{ route('password.request') }}" class="nav-link text-end me-5 my-2">Forgot Password via email?</a><a href="{{ route('forgot_password_sms') }}" class="nav-link text-end me-5 my-2">Forgot Password via mobile?</a>
+                    </div>
+                    
                     @endif
                     <div class="mobile-space">
                         <input type="submit" value="Login" class="rounded vi-nav-bg text-white w-md-25 m-auto  text-uppercase vi-main-btn-db" />

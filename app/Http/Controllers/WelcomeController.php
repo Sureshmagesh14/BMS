@@ -271,13 +271,34 @@ class WelcomeController extends Controller
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', $id)
                 ->where('projects.closing_date', '<', Carbon::now())->get();
-            
 
+            $currentYear=Carbon::now()->year;
+
+            $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->whereYear('created_at', $currentYear)
+            ->sum('points');
+
+            $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->where(function ($query) use ($currentYear) {
+                $query->whereYear('created_at', '<', $currentYear) // Filters past year data
+                      ->orWhere(function ($query) use ($currentYear) {
+                          $query->whereYear('created_at', $currentYear); // Filters current year data
+                      });
+            })
+            ->sum('points');
+
+            $available_points = DB::table('rewards')
+            ->select(DB::raw('SUM(points) as total_points'))
+            ->where('respondent_id', Session::get('resp_id'))
+            ->where('status_id', 2)
+            ->groupBy('respondent_id')
+            ->first(); // Use first() instead of get() to get a single row
+       
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
 
-            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed'));
+            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -420,10 +441,26 @@ class WelcomeController extends Controller
                 }
             }
 
+            $currentYear=Carbon::now()->year;
+            $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->whereYear('created_at', $currentYear)
+            ->sum('points');
+
+            $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->where(function ($query) use ($currentYear) {
+                $query->whereYear('created_at', '<', $currentYear) // Filters past year data
+                      ->orWhere(function ($query) use ($currentYear) {
+                          $query->whereYear('created_at', $currentYear); // Filters current year data
+                      });
+            })
+            ->sum('points');
+        
+
+         
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-            return view('user.user-rewards')->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
+            return view('user.user-rewards',compact('get_current_rewards','get_overrall_rewards'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
             //}
 
         } catch (Exception $e) {
@@ -1288,5 +1325,62 @@ class WelcomeController extends Controller
         }
 
     }
+
+
+    public function forgot_password_sms(){
+        try {
+            
+        
+            return view('auth.forgot-paaswword-sms');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function forgot_password_check(Request $request) {
+        try {
+            // API endpoint for sending SMS
+            $api_url = 'http://apihttp.pc2sms.biz/submit/single/';
+    
+            // Data to be sent as POST request
+            $data = array(
+                'username' => 'brandsurgeon',
+                'password' => 's37fwer2',
+                'account' => 'brandsurgeon',
+                'da' => '+917395886496', // Destination number
+                'ud' => 'Your forgot password message here' // SMS content
+            );
+    
+            $curl = curl_init();
+    
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $api_url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => http_build_query($data), // Send data as POST
+            ));
+            
+            $response = curl_exec($curl);
+    
+            curl_close($curl);
+    
+            // Check if SMS was sent successfully
+            if ($response === false) {
+                throw new Exception('Error occurred: ' . curl_error($curl));
+            } else {
+                echo 'SMS sent successfully. Response: ' . $response;
+            }
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    
+
 
 }
