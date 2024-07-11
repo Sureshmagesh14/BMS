@@ -733,10 +733,11 @@ class SurveyController extends Controller
                                 return redirect('dashboard')->with('successMsg', 'Project not assigned');
                             }
                         }else{
-                            return redirect('dashboard')->with('successMsg', 'Project not assigned');
+                            return view('admin.survey.unassigned', compact('survey'));
+
                         }
                     }else{
-                        return redirect('dashboard')->with('successMsg', 'Project not assigned');
+                        return view('admin.survey.unassigned', compact('survey'));
                     }
                    
                 }else{
