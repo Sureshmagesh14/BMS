@@ -44,13 +44,13 @@
                             <div class="d-flex w-100">
                             <div class="col-5 rounded m-1">
                                 <div class="bg-grey-6 p-2 m-2 w-100">
-                                    <div class="bg-warning text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                    <div class="bg-yellow text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
                                     <div>Total Rewards since 2024</div>
                                 </div>
                             </div>
                             <div class="col-5 rounded m-1">
                                 <div class="bg-grey-6 p-2 m-2 w-100">
-                                    <div class="bg-primary text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                    <div class="bg-blue text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
                                     <div>Total Rewards this year</div>
                                 </div>
                             </div>
@@ -61,6 +61,9 @@
                     
                 </div>
                 <div class="w-50 ml-auto">
+                    <div class="w-100">
+                    <a class="btn btn-yellow width-fit-content d-flex">Request Cash Out</a>
+                    </div>
                                 <h2 class="text-left mt-3">T's and C's</h2>
                                 <ul>
                                     <li class=" mt-3" style="text-align: left;">

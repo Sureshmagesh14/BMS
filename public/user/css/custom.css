@@ -68,9 +68,21 @@ tr{
   height:90vh !important;
 }
 .reg-img{
-  height: 100vh;
+  /* height: 100vh; */
     margin: auto;
-    display: flex;
+    /* display: flex; */
+}
+.width-fit-content{
+  width: fit-content;
+}
+.bg-yellow{
+  background: #fabd21;
+}
+.bg-blue{
+  background: #2197bd;
+}
+.bg-green{
+  background: #04c47d;
 }
 .bg-grey-6 {
   background-color: #EAEAEA !important;
@@ -394,7 +406,7 @@ tr:nth-child(even) {
     display: none !important;
 }
 .w-50{
-  width:100% !important;
+  width:90% !important;
 }
   .vi-gift-box {
     z-index: 99;
@@ -449,8 +461,9 @@ tr:nth-child(even) {
 
   /* login page ends  */
   .vi-full-height {
-    height: 100vh !important;
+    height: calc(100vh - 120px) !important;
     padding: 60px 0;
+    overflow: hidden !important;
     /* background-image: url('../images/girl\ cover.png'); */
   }
 

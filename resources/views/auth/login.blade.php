@@ -11,10 +11,18 @@
         position: relative;
         z-index: 2;
     }
-
+    .outside{
+        width:100%;
+        height:100%;
+        margin: auto;
+        display:flex;
+    }
     .rightside.text-center {
         /* margin-top: 85px !important; */
+        width: 100%;
         padding: 20px !important;
+        height: fit-content;
+    margin: auto;
     }
     .rounded-border{
         border-radius: 25px;
@@ -29,6 +37,9 @@
     .text-left{
         text-align:left;
     }
+    .h-100{
+        height: 100vh !important;
+    }
     @media only screen and (max-width: 600px) {
         .login .w-75{
             width: 100% !important;
@@ -37,13 +48,14 @@
 </style>
 <div class="container-fluid vi-background-index h-90">
     <div class="row vi-background-index">
-        <div class="col-md-5 d-none-mobile d-flex mob-hide p-0">
+        <div class="col-md-5 d-none-mobile d-flex mob-hide p-0 h-100">
         <div class="w-100 d-flex ">
         <img src="{{ asset('assets/images/login-page_a.jpg') }}"
                 class="img-fluid w-100 image-cover d-flex" alt="" />
 </div>
         </div>
-        <div class="col-md-7 col-sm-12">
+        <div class="col-md-7 col-sm-12 h-100">
+            <div class="w-100 outside">
             <div class="rightside text-center">
                 <img src="{{ asset('user/images/small-logo.png') }}" class="img-fluid w-50 login m-auto mb-4" alt="" />
                 <h2 class="vi-common-clr vi-welcome-size fw-bolder">Welcome Back</h2>
@@ -95,6 +107,7 @@
                         </div>
                     @endif
                 @endif
+            </div>
             </div>
         </div>
     </div>

@@ -63,6 +63,15 @@
     .m-h-180{
         min-height:180px;
     }
+    .bg-yellow{
+        background: #fabd21;
+    }
+    .bg-blue{
+        background: #2197bd;
+    }
+    .bg-green{
+        background: #04c47d;
+    }
 </style>
 @php
     $first_character = mb_substr($data->name, 0, 1);
@@ -368,24 +377,30 @@ Online Surveys</span>
             <div class="col-md-5">
             <div class="bg-white my-2 max-w-100" style="min-height: 270px !important;">
                         <h5 class="p-3 align-items-center justify-content-around small-font-sm">
-                        <div>Your Rewards Breakdown </div>
+                        <div class="text-center py-2">Your Rewards Breakdown </div> 
                         <div class="row">
                             <div class="col-4 rounded ">
                                 <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                    <div class="bg-warning text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
-                                    <div>Total Rewards since 2024</div>
+                                    <div class="bg-yellow text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                    <div class="text-center">Total Rewards since 2024</div>
                                 </div>
                             </div>
                             <div class="col-4 rounded ">
                                 <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                    <div class="bg-primary text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
-                                    <div>Total Rewards this year</div>
+                                    <div class="bg-blue text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                    <div class="text-center">Total Rewards this year</div>
                                 </div>
                             </div>
                             <div class="col-4 rounded ">
                                 <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                    <div class="bg-success text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
-                                    <div>Available points for Cash Out</div>
+                                    <div class="bg-green text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                    <div class="text-center">Available points for Cash Out</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                <div class="col-6">10 points = R1</div>
+                                <div class="col-6"><a class="btn btn-yellow width-fit-content ml-auto d-flex">Request Cash Out</a></div>
                                 </div>
                             </div>
                         </div>
