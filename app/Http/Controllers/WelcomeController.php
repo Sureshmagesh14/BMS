@@ -9,6 +9,9 @@ use App\Models\Respondents;
 use App\Models\RespondentProfile;
 use App\Models\Rewards;
 use App\Models\Users;
+
+
+
 use App\Models\Projects;
 use App\Models\Cashout;
 use Carbon\Carbon;
@@ -25,7 +28,8 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Config;
 use Artisaninweb\SoapWrapper\SoapWrapper;
-
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Password;
 
 class WelcomeController extends Controller
 {
@@ -1347,20 +1351,59 @@ class WelcomeController extends Controller
             $phone = str_replace(' ', '', $request->phone);
             $prefix = config('phone'); // Assuming 'phone' is a config key
         
-            // Construct destination number
-            $destinationNumber = $prefix . $phone;
+            // Check if the phone number exists in 'phone' or 'whatsapp' fields
+            $user = Respondents::where('mobile', $phone)->orWhere('whatsapp', $phone)->first();
+            
+            if (!$user) {
+                throw new Exception('Mobile number not found');
+            }
         
-            // Parameters for the SMS
-            $postData = array(
-                'username' => 'brandsurgeon_admin',
-                'password' => 'Alison123',
-                'account' => 'brandsurgeon',
-                'da' => $destinationNumber, // Destination number with country code
-                'ud' => 'hi test sms' // SMS content
+            // Create a new password reset token
+            $token = Password::getRepository()->create($user);
+        
+            // Generate password reset URL
+            $resetUrl = URL::temporarySignedRoute(
+                'password.reset', now()->addMinutes(60), ['token' => $token]
             );
         
+            // Email template for the SMS content
+            $smsContent = <<<EOT
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Reset Password</title>
+            </head>
+            <body>
+                <h2>Reset Password Notification</h2>
+            
+                <p>You are receiving this email because we received a password reset request for your account.</p>
+                <p>
+                    Click the button below to reset your password:
+                </p>
+                <p>
+                    <a href="{$resetUrl}" style="background-color: #3490dc; color: #ffffff; display: inline-block; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
+                </p>
+                <p>If you did not request a password reset, no further action is required.</p>
+                <p>This password reset link will expire in :count minutes.</p>
+            </body>
+            </html>
+            EOT;
+    
+            // Parameters for the SMS
+            $postData = array(
+                'username' => 'brandsurgeon',
+                'password' => 's37fwer2',
+                'account' => 'brandsurgeon',
+                'da' => $phone, // Destination number with country code (assuming $phone is cleaned and formatted correctly)
+                'ud' => $smsContent, // SMS content
+            );
+        
+            // Initialize cURL session
             $curl = curl_init();
         
+            // Set cURL options
             curl_setopt_array($curl, array(
                 CURLOPT_URL => $apiUrl,
                 CURLOPT_RETURNTRANSFER => true,
@@ -1372,16 +1415,19 @@ class WelcomeController extends Controller
                 CURLOPT_POSTFIELDS => http_build_query($postData),
             ));
         
+            // Execute cURL session
             $response = curl_exec($curl);
         
+            // Check for cURL execution errors
             if ($response === false) {
                 throw new Exception(curl_error($curl), curl_errno($curl));
             }
         
+            // Close cURL session
             curl_close($curl);
         
             // Log the full response for debugging
-            \Log::info('SMS API Response: ' . $response);
+            Log::info('SMS API Response: ' . $response);
         
             // Check if response indicates success
             if (strpos($response, 'OK') !== false) {
@@ -1394,15 +1440,14 @@ class WelcomeController extends Controller
         
         } catch (Exception $e) {
             // Log the exception with more details
-            \Log::error('SMS API Error: ' . $e->getMessage() . ' - Code: ' . $e->getCode());
+            Log::error('SMS API Error: ' . $e->getMessage() . ' - Code: ' . $e->getCode());
         
             // Redirect back with an error message
-            return redirect()->back()->with('error', 'Failed to send SMS. Please try again later.');
+            return redirect()->back()->with('error', 'Failed to send SMS. ' . $e->getMessage());
         }
     }
     
-    
-    
+
     
 
 }

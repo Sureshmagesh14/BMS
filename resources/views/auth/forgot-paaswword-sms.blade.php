@@ -29,7 +29,7 @@
                                 <div class="input-group-text">+27</div>
                             </div>
                             <input type="text" name="phone" id="phone" placeholder="819 966 078"
-                                class="form-control vi-border-clr border-radius-0 w-50" >
+                                class="form-control vi-border-clr border-radius-0 w-50" maxlength="11">
                         </div>
                         <div class="row">
                         <div class="col-md-6 col-sm-12">
@@ -63,7 +63,7 @@
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script>
     $(function() {
-        $('#phone').inputmask("999 999 9999");
+        $('#phone').inputmask("999 999 999");
         $('#forgot_table').validate({
             rules: {
                 phone: {
