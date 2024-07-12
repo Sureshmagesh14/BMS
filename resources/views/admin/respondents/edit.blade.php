@@ -73,13 +73,13 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Bank Name
         </label>
         <div class="col-md-10">
-            <select id="bank_name" name="bank_name" class="w-full form-control form-select" required>
+            <select id="bank_name" name="bank_name" class="w-full form-control form-select">
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
                 @foreach ($banks as $bank)
-                <option value="{{$bank->id}}" @if($bank->id==$respondents->bank_name) selected @endif>
-                    {{$bank->bank_name}}
+                <option value="{{ $bank->id }}" {{ $bank->id == old('bank_name', $respondents->bank_name) ? 'selected' : '' }}>
+                    {{ $bank->bank_name }}
                 </option>
                 @endforeach
             </select>
