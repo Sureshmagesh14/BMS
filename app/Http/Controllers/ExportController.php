@@ -620,7 +620,17 @@ class ExportController extends Controller
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
                         $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                        $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                        $whatsapp=$all_data->whatsapp;
+                        if (!empty($whatsapp)) {
+                            if (strlen($whatsapp) == 9) {
+                                $whatsapp = '+27' . $whatsapp;
+                            } else if (strpos($whatsapp, '27') === 0 && strlen($whatsapp) == 11) {
+                                $whatsapp = '+' . $whatsapp;
+                            } else if (strpos($whatsapp, '+27') === 0 && strlen($whatsapp) == 12) {
+                                $whatsapp = $whatsapp;
+                            }
+                        }
+                        $sheet->setCellValue('E' . $rows, $whatsapp);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
