@@ -386,7 +386,9 @@
                 "type": "POST"
             },
             "columns": [{
-                    "data": "select_all"
+                    "data": "select_all",
+                    "orderable": false,
+                    "searchable": false
                 },
                 {
                     "data": "id_show"

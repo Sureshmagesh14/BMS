@@ -8,21 +8,32 @@
         background-color: #6396b1;
         color: #fff;
     }
+    .input-group-text {
+        line-height: 2.3;
+    }
+    label#phone-error{
+        width: 100% !important;
+    }
 </style>
 <!-- main starts -->
 <main class="forgot-pass py-5  vi-background-index ">
     <div class="container">
         <div class="row">
             <div class="col-md-6 m-auto">
-                <form id="forgot_table" method="POST" action="{{ route('password.email') }}">
+                <form id="forgot_table" method="POST" action="{{ route('forgot_password_check') }}">
                     @csrf
                     <div class="text-start m-auto my-3">
                         <h2 class="mb-0 pb-2">Forgotten your password</h2>
-                        <p class="mb-4 fw-bold h4">Please use your email address to receive the code and link</p>
+                        <p class="mb-4 fw-bold h4">Please use your phone number to receive the code and link</p>
                         <h2 class="mb-4 fw-bold h4">Account Information</h2>
-                        <label for="date" class="fw-bolder">Email</label>
-                        <input type="email" name="email" id="email" placeholder="email@address.com"
-                            class="form-control vi-border-clr border-radius-6px" id="">
+                        <label for="phone" class="fw-bolder">Mobile</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">+27</div>
+                            </div>
+                            <input type="text" name="phone" id="phone" placeholder="819 966 078"
+                                class="form-control vi-border-clr border-radius-0 w-50" maxlength="11">
+                        </div>
                         <div class="row">
                         <div class="col-md-6 col-sm-12">
                         <button type="submit"
@@ -52,27 +63,23 @@
 <!-- main ends -->
 
 @include('user.layout.forgot-footer')
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script>
     $(function() {
+        $('#phone').inputmask("999 999 999");
         $('#forgot_table').validate({
             rules: {
-                email: {
+                phone: {
                     required: true,
-                    email: true,
-                    validate_email: true
+                    phone: true,
+                   
                 },
 
             }
         });
     });
 
-    $.validator.addMethod("validate_email", function(value, element) {
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
-            return true;
-        } else {
-            return false;
-        }
-    }, "Please enter a valid email address.");
+  
 </script>
 @if (count($errors) > 0)
     @foreach ($errors->all() as $message)
@@ -93,3 +100,4 @@
         toastr.error("{{ session('error') }}");
     </script>
 @endif
+j

@@ -98,8 +98,8 @@
                                     <div class="col-md-10">
                                         <select name="show_resp_type" id="show_resp_type" class="form-control">
                                             <option value="">Select</option>
-                                            <option value="simple">Simple Database</option>
-                                            <option value="essential">Normal Database</option>
+                                            <option value="simple">Basic Database</option>
+                                            <option value="essential">Essential Database</option>
                                             <option value="extended">Extended Database</option>
                                         </select>
                                     </div>
@@ -449,6 +449,24 @@
                             $(".show_cashout_type").hide();
                            
                         }
+                        else if (this.value == 'Survey') {
+                            $(".methods").show();
+                            $(".show_year").hide();
+                            $(".show_month").hide();
+                            $(".report_type").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
+                            $(".show_resp").hide();
+                            $(".show_resp_status").hide();
+                            $(".show_resp_type").hide();
+                            $(".show_user").hide();
+                            $(".respondents").hide();
+                            $(".projects").hide();
+                            $(".show_pro_type").hide();
+                            $(".date_range").hide();
+                            $(".panel").hide();
+                            $(".show_cashout_type").hide();
+                        } 
                         else {
                             $(".show_user").hide();
                             $(".projects").hide();
