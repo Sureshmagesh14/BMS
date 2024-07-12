@@ -297,12 +297,14 @@ class WelcomeController extends Controller
             ->where('status_id', 2)
             ->groupBy('respondent_id')
             ->first(); // Use first() instead of get() to get a single row
+
+            $get_reward = Rewards::where('respondent_id', $id)->where('status_id', 2)->sum('points');
        
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
 
-            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points'));
+            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points','get_reward'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
