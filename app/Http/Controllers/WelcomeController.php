@@ -1347,15 +1347,15 @@ class WelcomeController extends Controller
     public function forgot_password_check(Request $request) {
         try {
             // Validate input
-            // $validator = \Validator::make(
-            //     $request->all(), [
-            //         'phone' => 'required|min:11',
-            //     ]
-            // );
-            // if ($validator->fails()) {
-            //     $messages = $validator->getMessageBag();
-            //     return redirect()->route('forgot_password')->with('error', $messages->first());
-            // }
+            $validator = \Validator::make(
+                $request->all(), [
+                    'phone' => ['required', 'regex:/^\d{11}$/'], // Validate exactly 11 digits
+                ]
+            );
+            if ($validator->fails()) {
+                $messages = $validator->getMessageBag();
+                return redirect()->back()->with('error', $messages->first());
+            }
     
             $apiUrl = 'http://apihttp.pc2sms.biz/submit/single/';
             
@@ -1389,9 +1389,9 @@ class WelcomeController extends Controller
     
             // Parameters for the SMS
             $postData = [
-                'username' => 'brandsurgeon', // Use config values
-                'password' => 's37fwer2', // Use config values
-                'account'  => 'brandsurgeon', // Use config values
+                'username' => config('username'), // Use config values
+                'password' => config('password'), // Use config values
+                'account'  => config('account'), // Use config values
                 'da'       => $phone, // Destination number with country code
                 'ud'       => $smsContent, // SMS content
             ];

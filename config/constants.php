@@ -8,10 +8,9 @@ return [
   'url' =>env('APP_URL'),
   'footer'=>'The Brand Surgeon',
   'phone'=>'+27',
-  'username'=>'brandsurgeon',
-  'password'=>'s37fwer2',
-  'account'=>'brandsurgeon',
-
+  'username' => env('SMS_API_USERNAME', 'default_username'),
+  'password' => env('SMS_API_PASSWORD', 'default_password'),
+  'account'  => env('SMS_API_ACCOUNT', 'default_account'),
 ];
 
 ?>
