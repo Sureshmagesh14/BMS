@@ -27,7 +27,7 @@
                             @if($get_reward > 0)
                             <button type="button" class="btn btn-yellow width-fit-content d-flex" id="request_press"
                                 data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
-                                data-bs-original-title="{{ __('Create Banks') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
+                                data-bs-original-title="{{ __('Cashout Process') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
                                 Request Cash Out
                             </button>
                             @endif
