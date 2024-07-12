@@ -8,6 +8,9 @@ return [
   'url' =>env('APP_URL'),
   'footer'=>'The Brand Surgeon',
   'phone'=>'+27',
+  'username'=>'brandsurgeon',
+  'password'=>'s37fwer2',
+  'account'=>'brandsurgeon',
 
 ];
 
