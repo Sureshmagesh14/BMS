@@ -18,7 +18,7 @@
                     @csrf
                     <div class="text-start m-auto my-3">
                         <h2 class="mb-0 pb-2">Forgotten your password</h2>
-                        <p class="mb-4 fw-bold h4">Please use your phone number or email address to receive the code and link</p>
+                        <p class="mb-4 fw-bold h4">Please use your email address to receive the code and link</p>
                         <h2 class="mb-4 fw-bold h4">Account Information</h2>
                         <label for="date" class="fw-bolder">Email</label>
                         <input type="email" name="email" id="email" placeholder="email@address.com"

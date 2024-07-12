@@ -1345,15 +1345,15 @@ class WelcomeController extends Controller
     public function forgot_password_check(Request $request) {
         try {
             // Validate input
-            $validator = \Validator::make(
-                $request->all(), [
-                    'phone' => 'required|min:11',
-                ]
-            );
-            if ($validator->fails()) {
-                $messages = $validator->getMessageBag();
-                return redirect()->back()->with('error', $messages->first());
-            }
+            // $validator = \Validator::make(
+            //     $request->all(), [
+            //         'phone' => 'required|min:11',
+            //     ]
+            // );
+            // if ($validator->fails()) {
+            //     $messages = $validator->getMessageBag();
+            //     return redirect()->route('forgot_password')->with('error', $messages->first());
+            // }
     
             $apiUrl = 'http://apihttp.pc2sms.biz/submit/single/';
             
@@ -1387,11 +1387,11 @@ class WelcomeController extends Controller
     
             // Parameters for the SMS
             $postData = [
-                'username' => config('username'), // Replace with your config key
-                'password' => config('password'), // Replace with your config key
-                'account' => config('account'), // Replace with your config key
-                'da' => $phone, // Destination number with country code
-                'ud' => $smsContent, // SMS content
+                'username' => 'brandsurgeon', // Use config values
+                'password' => 's37fwer2', // Use config values
+                'account'  => 'brandsurgeon', // Use config values
+                'da'       => $phone, // Destination number with country code
+                'ud'       => $smsContent, // SMS content
             ];
          
             // Initialize cURL session
@@ -1422,11 +1422,11 @@ class WelcomeController extends Controller
             
             // Log the full response for debugging
             Log::info('SMS API Response: ' . $response);
-            
+          
             // Check if response indicates success
-            if (strpos($response, 'OK') !== false) {
-                // Redirect back with a success message
-                return redirect()->route('forgot_password_sms')->with('status', 'SMS sent successfully!');
+            if (strpos($response, 'Accepted for delivery') !== false) {
+                // Redirect with a success message
+                return redirect()->back()->with('status', 'SMS sent successfully!');
             } else {
                 // Handle API error or unexpected response
                 throw new Exception('Failed to send SMS. API response: ' . $response);
@@ -1436,9 +1436,14 @@ class WelcomeController extends Controller
             // Log the exception with more details
             Log::error('SMS API Error: ' . $e->getMessage() . ' - Code: ' . $e->getCode());
             
-            // Redirect back with an error message
+            // Redirect with an error message
             return redirect()->back()->with('error', 'Failed to send SMS. ' . $e->getMessage());
         }
     }
     
+    
+    
+
+    
+
 }
