@@ -484,16 +484,32 @@ class RespondentsController extends Controller
                     4 => 'Pending',
                 ];
 
-                $mobile = $post->mobile;
-                if (!empty($mobile) && strpos($mobile, '27'  && strlen($mobile) == 9) === 0) {
-                    $mobile = '+' . $mobile;
-                }
-
+            
+              
                 $whatsapp = $post->whatsapp;
-                if (!empty($whatsapp) && strpos($whatsapp, '27') === 0 && strlen($whatsapp) == 9) {
-                    $whatsapp = '+' . $whatsapp;
-                }
+                $mobile = $post->mobile;
 
+                if (!empty($mobile)) {
+                    if (strlen($mobile) == 9) {
+                        $mobile = '+27' . $mobile;
+                    } else if (strpos($mobile, '27') === 0 && strlen($mobile) == 11) {
+                        $mobile = '+' . $mobile;
+                    } else if (strpos($mobile, '+27') === 0 && strlen($mobile) == 12) {
+                        $mobile = $mobile;
+                    }
+                }
+                
+                
+                $whatsapp = $post->whatsapp;
+                if (!empty($whatsapp)) {
+                    if (strlen($whatsapp) == 9) {
+                        $whatsapp = '+27' . $whatsapp;
+                    } else if (strpos($whatsapp, '27') === 0 && strlen($whatsapp) == 11) {
+                        $whatsapp = '+' . $whatsapp;
+                    } else if (strpos($whatsapp, '+27') === 0 && strlen($whatsapp) == 12) {
+                        $whatsapp = $whatsapp;
+                    }
+                }
                 // Build each row of data
                 $nestedData = [
                     'select_all' => '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this,\'respondents_datatable\')" id="' . $post->id . '">',

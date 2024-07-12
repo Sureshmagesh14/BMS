@@ -7,7 +7,10 @@ return [
   'delete_confirmation' =>'Are you sure you want to delete the selected resources?',
   'url' =>env('APP_URL'),
   'footer'=>'The Brand Surgeon',
-  'phone'=>'+91',
+  'phone'=>'+27',
+  'username'=>'brandsurgeon',
+  'password'=>'s37fwer2',
+  'account'=>'brandsurgeon',
 
 ];
 
