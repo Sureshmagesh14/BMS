@@ -6,6 +6,9 @@ use App\Models\Cashout;
 use App\Models\Projects;
 use App\Models\Respondents;
 use App\Models\UserEvents;
+use App\Models\SurveyResponse;
+use App\Models\Survey;
+use App\Models\Questions;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -47,6 +50,7 @@ class ExportController extends Controller
             $type_resp    = $request->type_resp;
             $cashout_type = $request->show_cashout_val;
 
+            //dd($module);
 
             $type = 'xlsx';
             $styleArray = array( // font color
@@ -1068,7 +1072,7 @@ class ExportController extends Controller
                 $fileName = $module . "_" . date('ymd') . "." . $type;
 
             }
-            else if ($module == 'Survey') {
+            else if ($module == 'Survey123') {
                 
                 $sheet->getColumnDimension('Y')->setAutoSize(true);
                 $sheet->getColumnDimension('Z')->setAutoSize(true);
@@ -1216,7 +1220,14 @@ class ExportController extends Controller
                     $home_lang    = ($extended->home_lang == 'other') ? $extended->home_lang_other : $extended->home_lang;
 
                     $banks = DB::table('banks')->where('id',$extended->bank_main)->where('active',1)->first();
-                    $bank_main = ($extended->bank_main == 'other') ? $extended->bank_main_other : $banks->bank_name;
+
+                    if(isset($banks->bank_name) && ($banks->bank_name!='')){
+                        $bank_names = $banks->bank_name;
+                    }else{
+                        $bank_names = '';
+                    }
+
+                    $bank_main = ($extended->bank_main == 'other') ? $extended->bank_main_other : $bank_names;
                         
                     $sheet->setCellValue('W' . $rows, $business_org ?? '');
                     $sheet->setCellValue('X' . $rows, $extended->org_company ?? '');
@@ -1517,6 +1528,357 @@ class ExportController extends Controller
                 }
             
                 $fileName = $module . "_" . date('ymd') . "." . $type;
+            }
+            else if ($module == 'Survey') {
+                    
+                    //dd($request);
+                    $type_method=$request->type_method;
+
+                    if($type_method=='Individual'){
+                    
+                    //starts
+
+                    $user_id =[29689];
+                    // Get Surveys by User Id
+                    $survey_IDs = SurveyResponse::where(['response_user_id' => $user_id])->groupBy('survey_id')->pluck('survey_id')->toArray();
+                
+                
+                    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+                    function getValuesUser($data)
+                    {
+                        $header = $data[0];
+                        $headerMapping = array_flip($header);
+                        $values = [];
+                        $values[] = array_values($header);
+
+                        for ($i = 1; $i < count($data); $i++) {
+                            $row = $data[$i];
+                            $rearrangedRow = [];
+                            foreach ($header as $key) {
+                                $rearrangedRow[] = $row[$key] ?? '';
+                            }
+                            $values[] = $rearrangedRow;
+                        }
+
+                        return $values;
+                    }
+                    foreach ($survey_IDs as $survey_id) {
+                        // Custom array data to export
+                        $survey = Survey::where(['id' => $survey_id])->first();
+                    
+                        $question = Questions::where(['survey_id' => $survey_id])->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you', 'rankorder', 'multi_choice'])->get();
+                        $matrix_qus = Questions::where(['qus_type' => 'matrix_qus', 'survey_id' => $survey_id])->get();
+                        $multi_choice_qus = Questions::where(['qus_type' => 'multi_choice', 'survey_id' => $survey_id])->get();
+                        $rankorder_qus = Questions::where(['qus_type' => 'rankorder', 'survey_id' => $survey_id])->get();
+                
+                        $cols = ["Respondent Name", "Date", "Device ID", "Device Name", "Completion Status", "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"];
+                        foreach ($question as $qus) {
+                            array_push($cols, $qus->question_name);
+                        }
+                        foreach ($multi_choice_qus as $qus) {
+                            $qus_ans = json_decode($qus->qus_ans);
+                            $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
+                            foreach ($choices as $qus1) {
+                                array_push($cols, $qus->question_name . '_' . $qus1);
+                            }
+                        }
+                        foreach ($rankorder_qus as $qus) {
+                            $qus_ans = json_decode($qus->qus_ans);
+                            $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
+                            foreach ($choices as $qus1) {
+                                array_push($cols, $qus->question_name . '_' . $qus1);
+                            }
+                        }
+                        foreach ($matrix_qus as $qus) {
+                            $qus = json_decode($qus->qus_ans);
+                            array_push($cols, $qus->question_name);
+                            $exiting_qus_matrix = $qus != null ? explode(",", $qus->matrix_qus) : [];
+                            foreach ($exiting_qus_matrix as $qus1) {
+                                array_push($cols, $qus1);
+                            }
+                        }
+                
+                    
+                
+                        // Get Survey Data
+                        $question = Questions::where(['survey_id' => $survey_id])->whereNotIn('qus_type', ['welcome_page', 'thank_you'])->get();
+                
+                        $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id,'response_user_id'=>$user_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+                        $finalResult = [$cols];
+                        foreach ($surveyResponseUsers as $userID) {
+                            $user = Respondents::where('id', $userID)->first();
+                            $starttime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "asc")->first();
+                            $endtime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
+                            $startedAt = $starttime->created_at;
+                            $endedAt = $endtime->created_at;
+                            $time = $endedAt->diffInSeconds($startedAt);
+                            $responseinfo = $startedAt->toDayDateTimeString() . ' | ' . $time . ' seconds';
+                            $other_details = json_decode($endtime->other_details);
+                            $deviceID = $other_details->device_id ?? '';
+                            $device_name = $other_details->device_name ?? '';
+                            $browser = $other_details->browser ?? '';
+                            $os = $other_details->os ?? '';
+                            $device_type = '';
+                            $lang_name = $other_details->lang_name ?? '';
+                            $long = $other_details->long ?? '';
+                            $lat = $other_details->lat ?? '';
+                            $location = $other_details->location ?? '';
+                            $ip_address = $other_details->ip_address ?? '';
+                            $lang_code = $other_details->lang_code ?? '';
+                            $name = $user->name ?? 'Anonymous';
+                
+                            $completedRes = SurveyResponse::where(['response_user_id' => $userID, 'survey_id' => $survey_id, 'answer' => 'thankyou_submitted'])->first();
+                            $completion_status = $completedRes ? 'Completed' : 'Partially Completed';
+                
+                            $result = ['Respondent Name' => $name, 'Date' => $responseinfo, 'Device ID' => $deviceID, 'Device Name' => $device_name, 'Completion Status' => $completion_status, 'Browser' => $browser, 'OS' => $os, 'Device Type' => $device_type, 'Long' => $long, 'Lat' => $lat, 'Location' => $location, 'IP Address' => $ip_address, 'Language Code' => $lang_code, 'Language Name' => $lang_name];
+                
+                            foreach ($question as $qus) {
+                                $respone = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
+                                $output = $respone ? ($respone->skip == 'yes' ? 'Skip' : $respone->answer) : '-';
+                
+                                if ($qus->qus_type == 'likert') {
+                                    $qusvalue = json_decode($qus->qus_ans);
+                                    $left_label = $qusvalue->left_label ?? 'Least Likely';
+                                    $middle_label = $qusvalue->middle_label ?? 'Neutral';
+                                    $right_label = $qusvalue->right_label ?? 'Most Likely';
+                                    $likert_range = $qusvalue->likert_range ?? 10;
+                                    $output = intval($output);
+                                    $likert_label = $output;
+                
+                                    if ($likert_range <= 4 && $output <= 4) {
+                                        $likert_label = $output <= 2 ? $left_label : $right_label;
+                                    } else if ($likert_range >= 5 && $output >= 5) {
+                                        if ($likert_range == 5) {
+                                            if ($output <= 2) {
+                                                $likert_label = $left_label;
+                                            } else if ($output == 3) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        } else if ($likert_range == 6) {
+                                            if ($output <= 2) {
+                                                $likert_label = $left_label;
+                                            } else if ($output <= 4) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        } else if ($likert_range == 7) {
+                                            if ($output <= 2) {
+                                                $likert_label = $left_label;
+                                            } else if ($output <= 5) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        } else if ($likert_range == 8) {
+                                            if ($output <= 3) {
+                                                $likert_label = $left_label;
+                                            } else if ($output <= 5) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        } else if ($likert_range == 9) {
+                                            if ($output <= 3) {
+                                                $likert_label = $left_label;
+                                            } else if ($output <= 6) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        } else if ($likert_range == 10) {
+                                            if ($output <= 3) {
+                                                $likert_label = $left_label;
+                                            } else if ($output <= 7) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        }
+                                    }
+                
+                                    $result[$qus->question_name] = $likert_label;
+                                } else if ($qus->qus_type == 'matrix_qus') {
+                                    $result[$qus->question_name] = '';
+                                    if ($output == 'Skip') {
+                                        foreach (json_decode($qus->qus_ans) as $matrix_qus) {
+                                            $result[$matrix_qus] = 'Skip';
+                                        }
+                                    } else {
+                                        foreach (json_decode($qus->qus_ans) as $matrix_qus) {
+                                            $matrixQus = SurveyResponse::where(['survey_id' => $survey_id, 'matrix_qus' => $matrix_qus, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
+                                            $output_matrix_qus = $matrixQus ? $matrixQus->answer : '-';
+                                            $result[$matrix_qus] = $output_matrix_qus;
+                                        }
+                                    }
+                                } else {
+                                    $result[$qus->question_name] = $output;
+                                }
+                            }
+                
+                            foreach ($multi_choice_qus as $qus) {
+                                $qus_ans = json_decode($qus->qus_ans);
+                                $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
+                                $multichoicesResult = [];
+                                foreach ($choices as $choice) {
+                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'multi_ans' => $choice])->orderBy("id", "desc")->first();
+                                    $multichoicesResult[$qus->question_name . '_' . $choice] = $answer ? 'Yes' : 'No';
+                                }
+                                $result = array_merge($result, $multichoicesResult);
+                            }
+                
+                            foreach ($rankorder_qus as $qus) {
+                                $qus_ans = json_decode($qus->qus_ans);
+                                $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
+                                $rankorderResult = [];
+                                foreach ($choices as $choice) {
+                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'rank_ans' => $choice])->orderBy("id", "desc")->first();
+                                    $rankorderResult[$qus->question_name . '_' . $choice] = $answer ? $answer->rank_ans : 'No';
+                                }
+                                $result = array_merge($result, $rankorderResult);
+                            }
+                
+                            $finalResult[] = $result;
+                        }
+                
+                        $finalResult = getValuesUser($finalResult);
+                        if($survey){
+                            $survey_name = $survey->title;
+                        }else{
+                            $survey_name = "Survey-".$survey_id;
+                        }
+                
+                        $sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $survey_name);
+                        $spreadsheet->addSheet($sheet, 0);
+                        $spreadsheet->setActiveSheetIndex(0);
+                        $sheet = $spreadsheet->getActiveSheet();
+                
+                        // Export Data to Excel
+                        $sheet->fromArray($finalResult, null, 'A1', false, false);
+                
+                        foreach (range('A', $sheet->getHighestDataColumn()) as $col) {
+                            $sheet->getColumnDimension($col)->setAutoSize(true);
+                        }
+                    }
+                
+                    $spreadsheet->removeSheetByIndex(count($spreadsheet->getSheetNames()) - 1);
+                
+                    $fileName = 'Survey_Report_' . $user_id . '_' . date('Y-m-d') . '.xlsx';
+                    $filePath = storage_path('app/public/' . $fileName);
+                
+                    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+                    $writer->save($filePath);
+                
+                    return response()->download($filePath)->deleteFileAfterSend(true);
+                        //ends
+                    }
+                    
+
+                    dd('test');
+                    $pro_type=$request->pro_type;
+                    $respondents = $request->respondents;
+                    $projects = $request->projects;
+                    
+                    if($type_method == 'Individual'){
+
+                        $all_datas = Respondents::leftJoin('rewards', function ($join) {
+                            $join->on('rewards.respondent_id', '=', 'respondents.id');
+                        });
+                            if($respondents != ""){
+                                $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                            }
+                        $all_datas = $all_datas->get([
+                            'respondents.id',
+                            'respondents.name',
+                            'respondents.surname',
+                            'respondents.mobile',
+                            'respondents.whatsapp',
+                            'respondents.email',
+                            'rewards.status_id',
+                        ]);
+                    }else if($type_method == 'All'){
+                        $all_datas = Respondents::leftJoin('rewards', function ($join) {
+                            $join->on('rewards.respondent_id', '=', 'respondents.id');
+                        })
+                        ->get([
+                            'respondents.id',
+                            'respondents.name',
+                            'respondents.surname',
+                            'respondents.mobile',
+                            'respondents.whatsapp',
+                            'respondents.email',
+                            'rewards.status_id',
+                        ]);
+                    }
+                    else{
+                        $all_datas = Respondents::leftJoin('rewards', function ($join) {
+                            $join->on('rewards.respondent_id', '=', 'respondents.id');
+                        });
+                        if($projects != ""){
+                            $all_datas = $all_datas->whereIn('rewards.project_id', [$projects]);
+                        }
+                        $all_datas = $all_datas->get([
+                            'respondents.id',
+                            'respondents.name',
+                            'respondents.surname',
+                            'respondents.mobile',
+                            'respondents.whatsapp',
+                            'respondents.email',
+                            'rewards.status_id',
+                        ]);
+                    }
+                    
+                    if($pro_type == 'project'){
+
+                        $sheet->setCellValue('A1', 'PID');
+                        $sheet->setCellValue('B1', 'First Name');
+                        $sheet->setCellValue('C1', 'Last Name');
+                        $sheet->setCellValue('D1', 'Mobile Number');
+                        $sheet->setCellValue('E1', 'WA Number');
+                        $sheet->setCellValue('F1', 'Email');
+
+                        $sheet->getStyle('A1:F1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                        $sheet->getStyle('A1:F1')->applyFromArray($styleArray);
+
+                        $rows = 2;
+                        $i    = 1;
+
+                        $all_datas = Respondents::where('respondents.active_status_id','=',1);
+                        
+                        if($respondents != ""){
+                            $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                        }
+
+                        if($from != null && $to != null){
+                            $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
+                        }
+                            
+                        $all_datas = $all_datas->get();
+
+                        foreach ($all_datas as $all_data) {
+                            $sheet->setCellValue('A' . $rows, $i);
+                            $sheet->setCellValue('B' . $rows, $all_data->name);
+                            $sheet->setCellValue('C' . $rows, $all_data->surname);
+                            $sheet->setCellValue('D' . $rows, $all_data->mobile);
+                            $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                            $sheet->setCellValue('F' . $rows, $all_data->email);
+                           
+                            $sheet->getRowDimension($rows)->setRowHeight(20);
+                            $sheet->getStyle('A' . $rows . ':F' . $rows)->applyFromArray($styleArray3);
+                            $sheet->getStyle('C' . $rows . ':F' . $rows)->applyFromArray($styleArray2);
+                            $sheet->getStyle('C' . $rows . ':F' . $rows)->getAlignment()->setIndent(1);
+                            $rows++;
+                            $i++;
+                        }
+                        
+                    }else{
+
+                    }
+
+                    
+                    $fileName = $module . "_" . $resp_status . "_" . date('ymd') . "." . $type;
             }
             
             
