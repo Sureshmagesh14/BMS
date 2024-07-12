@@ -2,10 +2,12 @@
 <style>
     .container {
         max-width: 960px;
-        margin: 30px auto;
+        /* margin: 30px auto; */
         padding: 20px;
     }
-
+    .vh-80{
+        height: 80vh !important;
+    }
     h1 {
         font-size: 20px;
         text-align: center;
@@ -22,7 +24,7 @@
     .avatar-upload {
         position: relative;
         max-width: 205px;
-        margin: 50px auto;
+        margin: 10px auto;
 
         .avatar-edit {
             position: absolute;
@@ -90,13 +92,13 @@
         color: #fff;
     }
 </style>
-<section class="bg-greybg vh-100">
-    <div class="container">
-        <div class="row justify-content-center py-5">
-            <div class="col-md-6 yelow-bg text-center d-none-mobile">
-                <img class="img-fluid m-auto w-75" src="{{ asset('assets/images/img44.png') }}" alt="">
+<section class="bg-greybg vh-80 d-flex">
+    <div class="container m-auto">
+        <div class="row justify-content-center py-2">
+            <div class="col-md-6 yelow-bg2 text-center d-none-mobile d-flex">
+                <img class="img-fluid m-auto w-75" src="{{ asset('assets/images/Update your profile picture.png') }}" alt="">
             </div>
-            <div class="col-md-6 bg-white p-5">
+            <div class="col-md-6 bg-white p-2">
                 <div class="text-center">
                     @php
                         $profile_image = $data->profile_image ?? '';

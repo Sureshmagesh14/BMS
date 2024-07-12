@@ -41,7 +41,8 @@
         <div class="col-md-10">
             <div class="input-group">
                 <div class="input-group-text">+27</div>
-                <input type="text" class="form-control" id="mobile" name="mobile" value="{{ $respondents->mobile }}"  maxlength="16">
+                <input type="text" class="form-control" id="mobile" name="mobile"
+                    value="{{ $respondents->mobile }}" maxlength="16">
             </div>
         </div>
     </div>
@@ -53,7 +54,8 @@
         <div class="col-md-10">
             <div class="input-group">
                 <div class="input-group-text">+27</div>
-                <input type="text" class="form-control" id="whatsapp" name="whatsapp" value="{{ $respondents->whatsapp }}"  maxlength="16">
+                <input type="text" class="form-control" id="whatsapp" name="whatsapp"
+                    value="{{ $respondents->whatsapp }}" maxlength="16">
             </div>
         </div>
     </div>
@@ -73,14 +75,15 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Bank Name
         </label>
         <div class="col-md-10">
-            <select id="bank_name" name="bank_name" class="w-full form-control form-select" required>
+            <select id="bank_name" name="bank_name" class="w-full form-control form-select">
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
                 @foreach ($banks as $bank)
-                <option value="{{$bank->id}}" @if($bank->id==$respondents->bank_name) selected @endif>
-                    {{$bank->bank_name}}
-                </option>
+                    <option value="{{ $bank->id }}"
+                        {{ $bank->id == old('bank_name', $respondents->bank_name) ? 'selected' : '' }}>
+                        {{ $bank->bank_name }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -90,8 +93,10 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Branch Code
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="branch_code"  value="{{ $respondents->branch_code }}" readonly>
-            <input type="hidden" class="form-control" id="branch" name="branch_code"  value="{{ $respondents->branch_code }}">
+            <input type="text" class="form-control" id="branch_code" value="{{ $respondents->branch_code }}"
+                readonly>
+            <input type="hidden" class="form-control" id="branch" name="branch_code"
+                value="{{ $respondents->branch_code }}">
         </div>
     </div>
 
@@ -158,7 +163,7 @@
     @php
         $refcode = \App\Models\Respondents::randomPassword(); #function call
     @endphp
-     @if ($respondents->referral_code != null)
+    @if ($respondents->referral_code != null)
         @php $share_link=$respondents->referral_code; @endphp
     @else
         @php $share_link=$refcode; @endphp
@@ -167,13 +172,13 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Referral Code
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="" name="" value="{{ URL::to('/').'?r='.$share_link }}"
-                disabled>
+            <input type="text" class="form-control" id="" name=""
+                value="{{ URL::to('/') . '?r=' . $share_link }}" disabled>
             <input type="hidden" class="form-control" id="referral_code" name="referral_code"
-                value="{{ URL::to('/').'?r='.$share_link }}">
+                value="{{ URL::to('/') . '?r=' . $share_link }}">
         </div>
     </div>
-    
+
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Accepted Terms *
         </label>
@@ -196,39 +201,51 @@
 
 
 <script>
- $(function() {
-    $('#mobile').inputmask("999 999 999");
-    $('#whatsapp').inputmask("999 999 999");
+    $(function() {
+        $('#mobile').inputmask("999 999 999");
+        $('#whatsapp').inputmask("999 999 999");
         $('#edit_respondents_form').validate({
             rules: {
                 email: {
                     required: true,
                     email: true,
-                    validate_email: true,
                     remote: {
-                        url: '{{ route("user_respondent_id_check") }}',
-                        data: { 'form_name' : "useredit" ,'id':'{{ $respondents->id }}'},
-                        type: "GET"
+                        url: '{{ route('user_respondent_id_check') }}',
+                        type: "GET",
+                        data: {
+                            form_name: "useredit",
+                            id: function() {
+                                return '{{ $respondents->id }}'; // Ensure this variable is properly rendered in the template
+                            },
+                            email: function() {
+                                return $('#email').val(); // Ensure email field value is sent
+                            }
+                        },
+                        dataFilter: function(response) {
+                            // Parse the JSON response
+                            var json = JSON.parse(response);
+                            // Return validation result based on 'exists' key
+                            return json.exists === false ? 'true' : 'false';
+                        }
                     }
                 },
                 password: {
-                  
                     minlength: 8
                 },
                 cpassword: {
-                   
                     minlength: 8,
                     equalTo: "#password"
                 }
             },
             messages: {
                 email: {
-                    remote: "{{__('Email Name already exists!')}}"
+                    remote: "{{ __('Email Name already exists!') }}"
                 }
             }
         });
+
     });
-   
+
     $.validator.addMethod("validate_email", function(value, element) {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
             return true;
@@ -256,9 +273,16 @@
                     $('#respondents_edit').html('....Please wait');
                 },
                 success: function(response) {
-                    toastr.success(response.message);
-                    $("#commonModal").modal('hide');
-                    respondents_datatable();
+                    if (response.message == 'Email already exists.') {
+                        toastr.error(response.message);
+                        $("#commonModal").modal('hide');
+                        respondents_datatable();
+                    } else {
+                        toastr.success(response.message);
+                        $("#commonModal").modal('hide');
+                        respondents_datatable();
+                    }
+
                 },
                 complete: function(response) {
                     $('#respondents_edit').html('Create New');
