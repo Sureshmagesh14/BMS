@@ -18,6 +18,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\RespondentProfile;
+use Illuminate\Support\Facades\Hash;
 class RespondentsController extends Controller
 {
     /**
@@ -81,6 +82,8 @@ class RespondentsController extends Controller
                 $respondents->id_passport = $request->input('id_passport');
                 $mobile= str_replace(' ', '', $request->mobile);
                 $whatsapp = str_replace(' ', '', $request->whatsapp);
+                $password = Hash::make($request->input('password'));
+                $respondents->password = $password;
                 $respondents->mobile = $mobile;
                 $respondents->whatsapp = $whatsapp;
                 $respondents->email = $request->input('email');
@@ -237,6 +240,8 @@ class RespondentsController extends Controller
         $respondent->id_passport = $request->input('id_passport', $respondent->id_passport);
         $respondent->mobile = str_replace(' ', '', $request->input('mobile', $respondent->mobile));
         $respondent->whatsapp = str_replace(' ', '', $request->input('whatsapp', $respondent->whatsapp));
+        $password = Hash::make($request->input('password'));
+        $respondent->password = $password;
         $respondent->email = $email;
         $respondent->bank_name = $request->input('bank_name', $respondent->bank_name);
         $respondent->branch_code = $request->input('branch_code', $respondent->branch_code);
@@ -910,10 +915,12 @@ class RespondentsController extends Controller
             if($request->filled('q')){
                 $respondents_data = Respondents::search($searchValue)
                 ->query(function ($query) {
-                    $query->where('deleted_at', '=', NULL);
+                    $query->where('active_status_id', 1)
+                        ->whereNull('deleted_at');
                 })
-                ->orderBy('id','ASC')
+                ->orderBy('id', 'ASC')
                 ->get();
+
             }
 
             $respondents = array();
