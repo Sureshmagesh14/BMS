@@ -120,17 +120,22 @@
     }
     .bg-yellows{
         background:#ffce45;
+        border: 1px solid #ffce45;
+    }
+    .h-100p{
+        height:100%;
     }
 </style>
 <div class="container-fluid">
     <div class="row vi-background-index">
         <div class="col-md-7 col-sm-12">
-            <div class="rightside text-center">
+            <div class="w-100 h-100p d-flex m-auto">
+            <div class="rightside text-center m-auto w-100">
                 <!-- <h3>Join our Database</h3> -->
                  
                 
 
-                <h3 class="text-center mt-3 mb-2">Let's get you started</h3>
+                
                 <form method="POST" id="reg_table" action="{{ route('register') }}">
                     @csrf
                     <div class="first-row d-md-flex mt-5">
@@ -246,16 +251,18 @@
                             href="{{ route('login') }}">Do you have an account? Login</a></p>
                 </div>
             </div>
+            </div>
         </div>
         
-        <div class="col-md-5 d-none-mobile p-0 bg-yellows">
-            <div class="w-100 m-auto">
-            <div>
-            <div class="w-100 reg-img">
+        <div class="col-md-5 d-none-mobile p-0">
+            <div class="w-75 m-auto h-100p d-flex">
+            <!-- <div> -->
+            <div class="w-100 reg-img m-auto">
+            <h3 class="text-center mt-3 mb-2">Let's get you started</h3>
             <img src="{{ asset('assets/images/reg-page_b.png') }}"
-                class="img-fluid w-100 image-cover " alt="" />
+                class="img-fluid w-100 image-cover bg-yellows m-auto rounded-border" alt="" />
             </div>
-            </div>
+            <!-- </div> -->
             </div>
             
         </div>

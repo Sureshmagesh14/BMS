@@ -61,6 +61,9 @@
                     
                 </div>
                 <div class="w-50 ml-auto">
+                    <div class="w-100">
+                    <a class="btn btn-yellow width-fit-content d-flex">Request Cash Out</a>
+                    </div>
                                 <h2 class="text-left mt-3">T's and C's</h2>
                                 <ul>
                                     <li class=" mt-3" style="text-align: left;">
