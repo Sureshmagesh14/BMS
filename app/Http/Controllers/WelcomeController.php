@@ -1386,9 +1386,9 @@ class WelcomeController extends Controller
         
             // Parameters for the SMS
             $postData = [
-                'username' => config('username'),
-                'password' => config('password'),
-                'account'  => config('account'),
+                'username' => config('constants.username'),
+                'password' => config('constants.password'),
+                'account'  => config('constants.account'),
                 'da'       => $phone, // Destination number with country code
                 'ud'       => $smsContent, // SMS content
             ];
