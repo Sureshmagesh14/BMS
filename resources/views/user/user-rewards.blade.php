@@ -24,8 +24,8 @@
                         <h2 class=" h1 fw-bolder mt-2">Your available rewards</h2>
                             <h2 class="yelow-clr h1 fw-bolder mt-2">{{ $get_reward }} <span>Points</span> </h2>
                             <p>10 points = R1</p>
-                            @if($get_reward >= 400)
-                            <button type="button" class="btn vi-border-clr text-white vi-dark-blue-bg vi-full-rounded" id="request_press"
+                            @if($get_reward > 0)
+                            <button type="button" class="btn btn-yellow width-fit-content d-flex" id="request_press"
                                 data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
                                 data-bs-original-title="{{ __('Cashout Process') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
                                 Request Cash Out
@@ -45,7 +45,7 @@
                             <div class="col-5 rounded m-1">
                                 <div class="bg-grey-6 p-2 m-2 w-100">
                                     <div class="bg-warning text-white p-2 w-50 rounded my-2 text-center m-auto">{{$get_overrall_rewards}}</div>
-                                    <div>Total Rewards since 2024</div>
+                                    <div>Total Rewards since {{ \Carbon\Carbon::now()->year }}</div>
                                 </div>
                             </div>
                             <div class="col-5 rounded m-1">
@@ -61,6 +61,9 @@
                     
                 </div>
                 <div class="w-50 ml-auto">
+                    <div class="w-100">
+                 
+                    </div>
                                 <h2 class="text-left mt-3">T's and C's</h2>
                                 <ul>
                                     <li class=" mt-3" style="text-align: left;">

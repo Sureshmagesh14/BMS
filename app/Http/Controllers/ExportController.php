@@ -143,7 +143,7 @@ class ExportController extends Controller
                 $query->whereIn('respondents.id', [$respondents]);
             })
             ->when($type_method != 'Individual', function ($query) {
-                $query->where('active_status_id', 1);
+                $query->where('respondents.active_status_id', 1);
             })
             ->select([
                 'respondents.id',
@@ -155,6 +155,7 @@ class ExportController extends Controller
                 \DB::raw('COALESCE(respondent_profile.vehicle_data, "") AS vehicle_data'),
                 'respondent_profile.updated_at',
             ])
+            ->where('respondents.active_status_id',1)
             ->get()
             ->unique('id'); 
             
@@ -619,7 +620,17 @@ class ExportController extends Controller
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
                         $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                        $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                        $whatsapp=$all_data->whatsapp;
+                        if (!empty($whatsapp)) {
+                            if (strlen($whatsapp) == 9) {
+                                $whatsapp = '+27' . $whatsapp;
+                            } else if (strpos($whatsapp, '27') === 0 && strlen($whatsapp) == 11) {
+                                $whatsapp = '+' . $whatsapp;
+                            } else if (strpos($whatsapp, '+27') === 0 && strlen($whatsapp) == 12) {
+                                $whatsapp = $whatsapp;
+                            }
+                        }
+                        $sheet->setCellValue('E' . $rows, $whatsapp);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
@@ -797,7 +808,7 @@ class ExportController extends Controller
                         if($respondents != ""){
                             $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                         }
-                    $all_datas = $all_datas->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -810,6 +821,7 @@ class ExportController extends Controller
                     $all_datas = Respondents::leftJoin('rewards', function ($join) {
                         $join->on('rewards.respondent_id', '=', 'respondents.id');
                     })
+                    ->where('respondents.active_status_id',1)
                     ->get([
                         'respondents.id',
                         'respondents.name',
@@ -827,7 +839,7 @@ class ExportController extends Controller
                     if($projects != ""){
                         $all_datas = $all_datas->whereIn('rewards.project_id', [$projects]);
                     }
-                    $all_datas = $all_datas->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -1130,8 +1142,8 @@ class ExportController extends Controller
                     ->when($type_method == 'Individual', function ($query) use ($respondents) {
                         $query->whereIn('respondent_tag.respondent_id', $respondents);
                     })
+                    ->where('respondents.active_status_id',1)
                     ->orderBy('respondent_tag.id', 'desc')
-                    ->take(3)
                     ->get()
                     ->map(function ($item) {
                         $item->full_name = $item->name . ' ' . $item->surname;

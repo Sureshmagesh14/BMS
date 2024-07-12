@@ -59,7 +59,7 @@
     @include('admin.layout.footer')
     @stack('adminside-js')
     @stack('adminside-datatable')
-
+    <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
         active_status = '';

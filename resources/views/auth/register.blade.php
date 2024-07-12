@@ -120,17 +120,22 @@
     }
     .bg-yellows{
         background:#ffce45;
+        border: 1px solid #ffce45;
+    }
+    .h-100p{
+        height:100%;
     }
 </style>
 <div class="container-fluid">
     <div class="row vi-background-index">
         <div class="col-md-7 col-sm-12">
-            <div class="rightside text-center">
+            <div class="w-100 h-100p d-flex m-auto">
+            <div class="rightside text-center m-auto w-100">
                 <!-- <h3>Join our Database</h3> -->
                  
                 
 
-                <h3 class="text-center mt-3 mb-2">Let's get you started</h3>
+                
                 <form method="POST" id="reg_table" action="{{ route('register') }}">
                     @csrf
                     <div class="first-row d-md-flex mt-5">
@@ -152,8 +157,8 @@
                                 <div class="input-group-prepend w-15">
                                     <div class="input-group-text">+27</div>
                                 </div>
-                                <input class="w-85" type="text" name="mobile" id="mobile" placeholder="819 966 078"
-                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
+                                <input  type="text" name="mobile" id="mobile" placeholder="819 966 078"
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" required>
                             </div>
                         </div>
 
@@ -165,8 +170,8 @@
                                 <div class="input-group-prepend w-15">
                                     <div class="input-group-text">+27</div>
                                 </div>
-                                <input class="w-85" type="text" name="whatsapp" id="whatsapp" placeholder="819 966 078"
-                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
+                                <input  type="text" name="whatsapp" id="whatsapp" placeholder="819 966 078"
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" required>
                             </div>
                         </div>
                     </div>
@@ -246,16 +251,18 @@
                             href="{{ route('login') }}">Do you have an account? Login</a></p>
                 </div>
             </div>
+            </div>
         </div>
         
-        <div class="col-md-5 d-none-mobile p-0 bg-yellows">
-            <div class="w-100 m-auto">
-            <div>
-            <div class="w-100 reg-img">
+        <div class="col-md-5 d-none-mobile p-0">
+            <div class="w-75 m-auto h-100p d-flex">
+            <!-- <div> -->
+            <div class="w-100 reg-img m-auto">
+            <h3 class="text-center mt-3 mb-2">Let's get you started</h3>
             <img src="{{ asset('assets/images/reg-page_b.png') }}"
-                class="img-fluid w-100 image-cover " alt="" />
+                class="img-fluid w-100 image-cover bg-yellows m-auto rounded-border" alt="" />
             </div>
-            </div>
+            <!-- </div> -->
             </div>
             
         </div>
@@ -277,9 +284,9 @@
 </div>
 
 @include('user.layout.footer')
-<script src="{{ asset('assets/js/inputmask.js') }}"></script>
+
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+
 
 @if (count($errors) > 0)
     @foreach ($errors->all() as $message)

@@ -281,7 +281,7 @@ label.email-start,.pass-start {
     }
     /* login page ends  */
     .vi-full-height{
-        height: 100vh !important;padding: 60px 0;
+        height: 84vh !important;padding: 60px 0;
         /* background-image: url('../images/girl\ cover.png'); */
     }
     .hide-mobile{

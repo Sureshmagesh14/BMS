@@ -1,6 +1,6 @@
 @include('user.layout.header')
 
-<div class="container-fluid p-md-5 text-center vi-full-height vi-background-index"
+<div class="container-fluid p-md-3 text-center vi-full-height vi-background-index"
     style="background-size: cover; height:auto;">
 
     @if(isset($data->name) && ($data->name!=''))
@@ -10,11 +10,11 @@
     @endif
     
     <div class="row">
-        <div class="col-md-6 col-sm-12 m-auto mob-hide">
+        <div class="col-md-4 col-sm-12 m-auto mob-hide">
         <img src="{{ asset('assets/images/img_2.png') }}" class="img-fluid w-75 m-auto hide-mobile"
                         alt="">
         </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-8 col-sm-12">
         <img src="{{ asset('assets/images/img_2.png') }}" class="img-fluid w-75 m-auto bg-mobile"
         alt="">
             <div class="d-flex align-items-center flex-column justify-content-between">
