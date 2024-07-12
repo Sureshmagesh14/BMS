@@ -1,3 +1,12 @@
+<style>
+    .field-icon {
+        float: right;
+        margin-right: 12px;
+        margin-top: -26px;
+        position: relative;
+        z-index: 2;
+    }
+</style>
 <form id="edit_respondents_form" class="validation">
     <input type="hidden" id="id" name="id" value="{{ $respondents->id }}">
     @csrf
@@ -148,7 +157,8 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Password
         </label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="password" name="password">
+            <input type="password" class="form-control" id="password-field" name="password">
+            <span toggle="#password-field" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
         </div>
     </div>
 
@@ -310,5 +320,15 @@
 
             }
         });
+    });
+    $(".toggle-password").click(function() {
+
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
     });
 </script>

@@ -1,3 +1,12 @@
+<style>
+    .field-icon {
+        float: right;
+        margin-right: 12px;
+        margin-top: -26px;
+        position: relative;
+        z-index: 2;
+    }
+</style>
 <form id="users_form" class="validation">
     @csrf
     <div class="form-group row">
@@ -31,12 +40,14 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Password *</label>
         <div class="col-md-10">
             <input type="password" class="form-control" id="password" name="password" required>
+            <span toggle="#password" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
         </div>
     </div>
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Password Confirmation </label>
         <div class="col-md-10">
             <input type="password" class="form-control" id="cpassword" name="cpassword">
+            <span toggle="#cpassword" class="fa fa-fw fa-eye-slash field-icon toggle-password1"></span>
         </div>
     </div>
 
@@ -71,10 +82,10 @@
         </label>
         <div class="col-md-10">
             <div class="input-group mb-3">
-                <input type="text" class="form-control" id="share_link_url" name="" value="{{ Config::get('constants.url').'/?r='.$share_link }}"
-            readonly>
-            <input type="hidden" class="form-control" id="share_link" name="share_link"
-            value="{{ Config::get('constants.url').'/'.$share_link }}">
+                <input type="text" class="form-control" id="share_link_url" name=""
+                    value="{{ Config::get('constants.url') . '/?r=' . $share_link }}" readonly>
+                <input type="hidden" class="form-control" id="share_link" name="share_link"
+                    value="{{ Config::get('constants.url') . '/' . $share_link }}">
                 <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2" onclick="copy_link();">Copy</span>
                 </div>
@@ -127,8 +138,10 @@
                     email: true,
                     validate_email: true,
                     remote: {
-                        url: '{{ route("user_email_id_check") }}',
-                        data: { 'form_name' : "usercreate" },
+                        url: '{{ route('user_email_id_check') }}',
+                        data: {
+                            'form_name': "usercreate"
+                        },
                         type: "GET"
                     }
                 },
@@ -144,7 +157,7 @@
             },
             messages: {
                 email: {
-                    remote: "{{__('email Name already exists!')}}"
+                    remote: "{{ __('email Name already exists!') }}"
                 }
             }
         });
@@ -169,4 +182,25 @@
             toastr.error('No Survey Link Found');
         }
     }
+    $(".toggle-password").click(function() {
+
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
+
+    $(".toggle-password1").click(function() {
+
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
 </script>

@@ -1,3 +1,12 @@
+<style>
+    .field-icon {
+        float: right;
+        margin-right: 12px;
+        margin-top: -26px;
+        position: relative;
+        z-index: 2;
+    }
+</style>
 <form id="respondents_form" class="validation">
     @csrf
     <div class="form-group row">
@@ -68,14 +77,14 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Bank Name
         </label>
         <div class="col-md-10">
-            <select id="bank_name" name="bank_name" class="w-full form-control form-select" >
+            <select id="bank_name" name="bank_name" class="w-full form-control form-select">
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
                 @foreach ($banks as $bank)
-                <option value="{{$bank->id}}">
-                    {{$bank->bank_name}}
-                </option>
+                    <option value="{{ $bank->id }}">
+                        {{ $bank->bank_name }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -145,7 +154,8 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Password *
         </label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="password-field" name="password" required>
+            <span toggle="#password-field" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
         </div>
     </div>
 
@@ -163,10 +173,10 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Referral Code
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="" name="" value="{{ URL::to('/').'?r='.$refcode }}"
-                disabled>
+            <input type="text" class="form-control" id="" name=""
+                value="{{ URL::to('/') . '?r=' . $refcode }}" disabled>
             <input type="hidden" class="form-control" id="referral_code" name="referral_code"
-                value="{{ URL::to('/').'?r='.$refcode }}">
+                value="{{ URL::to('/') . '?r=' . $refcode }}">
         </div>
     </div>
 
@@ -207,8 +217,10 @@
                     email: true,
                     validate_email: true,
                     remote: {
-                        url: '{{ route("user_respondent_id_check") }}',
-                        data: { 'form_name' : "usercreate" },
+                        url: '{{ route('user_respondent_id_check') }}',
+                        data: {
+                            'form_name': "usercreate"
+                        },
                         type: "GET"
                     }
                 },
@@ -216,11 +228,11 @@
                     required: true,
                     minlength: 8
                 },
-                
+
             },
             messages: {
                 email: {
-                    remote: "{{__('email Name already exists!')}}"
+                    remote: "{{ __('email Name already exists!') }}"
                 }
             }
         });
@@ -233,7 +245,7 @@
             return false;
         }
     }, "Please enter a valid email address.");
-    
+
     $("#respondents_create").click(function() {
         if (!$("#respondents_form").valid()) { // Not Valid
             return false;
@@ -282,5 +294,16 @@
 
             }
         });
+    });
+
+    $(".toggle-password").click(function() {
+
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
     });
 </script>
