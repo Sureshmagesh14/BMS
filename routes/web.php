@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 Route::any('/', 'WelcomeController@home')->name('home');
 Route::any('update_activitation/{id}', 'WelcomeController@update_activitation')->name('update_activitation');
 Route::any('activation_status/{id}/{active_id}', 'WelcomeController@activation_status')->name('activation_status');
+Route::any('forgot_password_sms', 'WelcomeController@forgot_password_sms')->name('forgot_password_sms');
+
+Route::any('forgot_password_check', 'WelcomeController@forgot_password_check')->name('forgot_password_check');
+
 // View Survey
 Route::get('/survey/view/{id}', ['as' => 'survey.view', 'uses' => 'SurveyController@viewsurvey']);
 // Start Survey
@@ -180,6 +184,8 @@ Route::group([
     Route::any('tags_search_result', 'TagsController@tags_search_result')->name('tags_search_result');
     Route::any('tags_resp_attach_import/{panel_id}', 'TagsController@tags_resp_attach_import')->name('tags_resp_attach_import');
     Route::any('deattach_tags/{tags_id}', 'TagsController@deattach_tags')->name('deattach_tags');
+    Route::any('deattach_multi_panel', 'TagsController@deattach_multi_panel')->name('deattach_multi_panel');
+    
 
     /* Rewards MENU*/
     Route::resource('rewards', 'RewardsController')->name('index', 'rewards.index')->name('destroy', 'rewards.destroy')

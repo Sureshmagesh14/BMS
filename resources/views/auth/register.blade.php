@@ -118,6 +118,9 @@
     .rounded-border{
         border-radius: 25px;
     }
+    .bg-yellows{
+        background:#ffce45;
+    }
 </style>
 <div class="container-fluid">
     <div class="row vi-background-index">
@@ -146,11 +149,11 @@
                         <div class="mobile text-start w-48 m-auto my-3">
                             <label for="mobile">Mobile <span class="text-danger">*</span></label>
                             <div class="input-group mb-2">
-                                <div class="input-group-prepend">
+                                <div class="input-group-prepend w-15">
                                     <div class="input-group-text">+27</div>
                                 </div>
-                                <input type="text" name="mobile" id="mobile" placeholder="819 966 078"
-                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
+                                <input  type="text" name="mobile" id="mobile" placeholder="819 966 078"
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" required>
                             </div>
                         </div>
 
@@ -159,11 +162,11 @@
                                     class="text-xs text-brand underline pointer-events-auto cursor-pointer">(Use
                                     Mobile)</span></label>
                             <div class="input-group mb-2">
-                                <div class="input-group-prepend">
+                                <div class="input-group-prepend w-15">
                                     <div class="input-group-text">+27</div>
                                 </div>
-                                <input type="text" name="whatsapp" id="whatsapp" placeholder="819 966 078"
-                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" required>
+                                <input  type="text" name="whatsapp" id="whatsapp" placeholder="819 966 078"
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" required>
                             </div>
                         </div>
                     </div>
@@ -245,12 +248,12 @@
             </div>
         </div>
         
-        <div class="col-md-5 d-none-mobile">
+        <div class="col-md-5 d-none-mobile p-0 bg-yellows">
             <div class="w-100 m-auto">
             <div>
             <div class="w-100 reg-img">
-            <img src="{{ asset('assets/images/register.jpg') }}"
-                class="img-fluid w-75 image-cover rounded-border m-auto d-flex" alt="" />
+            <img src="{{ asset('assets/images/reg-page_b.png') }}"
+                class="img-fluid w-100 image-cover " alt="" />
             </div>
             </div>
             </div>
@@ -274,9 +277,9 @@
 </div>
 
 @include('user.layout.footer')
-<script src="{{ asset('assets/js/inputmask.js') }}"></script>
+
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+
 
 @if (count($errors) > 0)
     @foreach ($errors->all() as $message)

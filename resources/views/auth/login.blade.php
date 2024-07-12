@@ -37,10 +37,10 @@
 </style>
 <div class="container-fluid vi-background-index h-90">
     <div class="row vi-background-index">
-        <div class="col-md-5 d-none-mobile  m-auto d-flex mob-hide">
-        <div class="w-75 m-auto d-flex ">
-        <img src="{{ asset('assets/images/login.jpg') }}"
-                class="img-fluid w-75 image-cover rounded-border m-auto d-flex" alt="" />
+        <div class="col-md-5 d-none-mobile d-flex mob-hide p-0">
+        <div class="w-100 d-flex ">
+        <img src="{{ asset('assets/images/login-page_a.jpg') }}"
+                class="img-fluid w-100 image-cover d-flex" alt="" />
 </div>
         </div>
         <div class="col-md-7 col-sm-12">
@@ -66,9 +66,10 @@
                         <span toggle="#password-field" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
                     </div>
                     @if (Route::has('password.request'))
-                        <div class="forgetpass me-5">
-                            <a href="{{ route('password.request') }}" class="nav-link text-end me-5 my-2">Forgot Password?</a>
-                        </div>
+                    <div class="forgetpass me-5">
+                        <a href="{{ route('password.request') }}" class="nav-link text-end me-5 my-2">Forgot Password via email?</a><a href="{{ route('forgot_password_sms') }}" class="nav-link text-end me-5 my-2">Forgot Password via mobile?</a>
+                    </div>
+                    
                     @endif
                     <div class="mobile-space">
                         <input type="submit" value="Login" class="rounded vi-nav-bg text-white w-md-25 m-auto  text-uppercase vi-main-btn-db" />

@@ -60,6 +60,9 @@
     .ml-auto{
         margin-left:auto;
     }
+    .m-h-180{
+        min-height:180px;
+    }
 </style>
 @php
     $first_character = mb_substr($data->name, 0, 1);
@@ -368,20 +371,26 @@ Online Surveys</span>
                         <div>Your Rewards Breakdown </div>
                         <div class="row">
                             <div class="col-4 rounded ">
-                                <div class="bg-grey-6 p-2 m-2 w-100">
-                                    <div class="bg-warning text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
+                                    <div class="bg-warning text-white p-2 w-50 rounded my-2 text-center m-auto">{{$get_overrall_rewards ?? 0}}</div>
                                     <div>Total Rewards since 2024</div>
                                 </div>
                             </div>
                             <div class="col-4 rounded ">
-                                <div class="bg-grey-6 p-2 m-2 w-100">
-                                    <div class="bg-primary text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
+                                    <div class="bg-primary text-white p-2 w-50 rounded my-2 text-center m-auto">{{$get_current_rewards ?? 0}}</div>
                                     <div>Total Rewards this year</div>
                                 </div>
                             </div>
                             <div class="col-4 rounded ">
-                                <div class="bg-grey-6 p-2 m-2 w-100">
-                                    <div class="bg-success text-white p-2 w-50 rounded my-2 text-center m-auto">2300</div>
+                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
+                                    <div class="bg-success text-white p-2 w-50 rounded my-2 text-center m-auto">  
+                                        @if ($available_points)
+                                            {{ $available_points->total_points }}
+                                        @else
+                                            0
+                                        @endif
+                                    </div>
                                     <div>Available points for Cash Out</div>
                                 </div>
                             </div>
@@ -515,7 +524,7 @@ Online Surveys</span>
             }
         },
         chart: {
-            height: 300,
+            height: 400,
             type: 'radialBar',
         },
         plotOptions: {
@@ -529,7 +538,7 @@ Online Surveys</span>
                     },
                     total: {
                         show: true,
-                        label: 'Total',
+                        label: 'Profile Status',
                         formatter: function (w) {
                             return round+"%"
                         }

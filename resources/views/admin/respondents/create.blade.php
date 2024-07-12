@@ -197,6 +197,9 @@
 
 <script>
     $(function() {
+
+        $('#mobile').inputmask("999 999 999");
+        $('#whatsapp').inputmask("999 999 999");
         $('#respondents_form').validate({
             rules: {
                 email: {

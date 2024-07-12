@@ -9,6 +9,9 @@ use App\Models\Respondents;
 use App\Models\RespondentProfile;
 use App\Models\Rewards;
 use App\Models\Users;
+
+
+
 use App\Models\Projects;
 use App\Models\Cashout;
 use Carbon\Carbon;
@@ -23,9 +26,10 @@ use Illuminate\Support\Facades\Auth;
 use Meng\AsyncSoap\Guzzle\Factory;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
-
+use Config;
 use Artisaninweb\SoapWrapper\SoapWrapper;
-
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Password;
 
 class WelcomeController extends Controller
 {
@@ -271,13 +275,34 @@ class WelcomeController extends Controller
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', $id)
                 ->where('projects.closing_date', '<', Carbon::now())->get();
-            
 
+            $currentYear=Carbon::now()->year;
+
+            $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->whereYear('created_at', $currentYear)
+            ->sum('points');
+
+            $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->where(function ($query) use ($currentYear) {
+                $query->whereYear('created_at', '<', $currentYear) // Filters past year data
+                      ->orWhere(function ($query) use ($currentYear) {
+                          $query->whereYear('created_at', $currentYear); // Filters current year data
+                      });
+            })
+            ->sum('points');
+
+            $available_points = DB::table('rewards')
+            ->select(DB::raw('SUM(points) as total_points'))
+            ->where('respondent_id', Session::get('resp_id'))
+            ->where('status_id', 2)
+            ->groupBy('respondent_id')
+            ->first(); // Use first() instead of get() to get a single row
+       
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
 
-            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed'));
+            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -420,10 +445,26 @@ class WelcomeController extends Controller
                 }
             }
 
+            $currentYear=Carbon::now()->year;
+            $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->whereYear('created_at', $currentYear)
+            ->sum('points');
+
+            $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->where(function ($query) use ($currentYear) {
+                $query->whereYear('created_at', '<', $currentYear) // Filters past year data
+                      ->orWhere(function ($query) use ($currentYear) {
+                          $query->whereYear('created_at', $currentYear); // Filters current year data
+                      });
+            })
+            ->sum('points');
+        
+
+         
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-            return view('user.user-rewards')->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
+            return view('user.user-rewards',compact('get_current_rewards','get_overrall_rewards'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
             //}
 
         } catch (Exception $e) {
@@ -1288,5 +1329,121 @@ class WelcomeController extends Controller
         }
 
     }
+
+
+    public function forgot_password_sms(){
+        try {
+            
+        
+            return view('auth.forgot-paaswword-sms');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function forgot_password_check(Request $request) {
+        try {
+            // Validate input
+            // $validator = \Validator::make(
+            //     $request->all(), [
+            //         'phone' => 'required|min:11',
+            //     ]
+            // );
+            // if ($validator->fails()) {
+            //     $messages = $validator->getMessageBag();
+            //     return redirect()->route('forgot_password')->with('error', $messages->first());
+            // }
+    
+            $apiUrl = 'http://apihttp.pc2sms.biz/submit/single/';
+            
+            // Clean phone number
+            $phone = str_replace(' ', '', $request->phone);
+            
+            // Check if the phone number exists
+            $user = Respondents::where('mobile', $phone)
+                               ->orWhere('whatsapp', $phone)
+                               ->first();
+            
+            if (!$user) {
+                throw new Exception('Mobile number not found');
+            }
+    
+            // Create a new password reset token
+            $token = Password::broker()->createToken($user);
+            
+            // Generate password reset URL
+            $resetUrl = URL::temporarySignedRoute(
+                'password.reset', now()->addMinutes(60), ['token' => $token]
+            );
+    
+            // Plain text SMS content
+            $smsContent = "Reset Password Notification\n\n";
+            $smsContent .= "You are receiving this message because we received a password reset request for your account.\n";
+            $smsContent .= "Click the following link to reset your password:\n";
+            $smsContent .= "{$resetUrl}\n\n";
+            $smsContent .= "If you did not request a password reset, no further action is required.\n";
+            $smsContent .= "This password reset link will expire in 60 minutes.";
+    
+            // Parameters for the SMS
+            $postData = [
+                'username' => 'brandsurgeon', // Use config values
+                'password' => 's37fwer2', // Use config values
+                'account'  => 'brandsurgeon', // Use config values
+                'da'       => $phone, // Destination number with country code
+                'ud'       => $smsContent, // SMS content
+            ];
+         
+            // Initialize cURL session
+            $curl = curl_init();
+            
+            // Set cURL options
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $apiUrl,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => http_build_query($postData),
+            ]);
+            
+            // Execute cURL session
+            $response = curl_exec($curl);
+            
+            // Check for cURL execution errors
+            if ($response === false) {
+                throw new Exception(curl_error($curl), curl_errno($curl));
+            }
+            
+            // Close cURL session
+            curl_close($curl);
+            
+            // Log the full response for debugging
+            Log::info('SMS API Response: ' . $response);
+          
+            // Check if response indicates success
+            if (strpos($response, 'Accepted for delivery') !== false) {
+                // Redirect with a success message
+                return redirect()->back()->with('status', 'SMS sent successfully!');
+            } else {
+                // Handle API error or unexpected response
+                throw new Exception('Failed to send SMS. API response: ' . $response);
+            }
+            
+        } catch (Exception $e) {
+            // Log the exception with more details
+            Log::error('SMS API Error: ' . $e->getMessage() . ' - Code: ' . $e->getCode());
+            
+            // Redirect with an error message
+            return redirect()->back()->with('error', 'Failed to send SMS. ' . $e->getMessage());
+        }
+    }
+    
+    
+    
+
+    
 
 }
