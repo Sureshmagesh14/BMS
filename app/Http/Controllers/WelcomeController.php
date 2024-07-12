@@ -1346,62 +1346,59 @@ class WelcomeController extends Controller
 
     public function forgot_password_check(Request $request) {
         try {
-            // Validate input
-            $validator = \Validator::make(
-                $request->all(), [
-                    'phone' => ['required', 'regex:/^\d{11}$/'], // Validate exactly 11 digits
-                ]
-            );
-            if ($validator->fails()) {
-                $messages = $validator->getMessageBag();
-                return redirect()->back()->with('error', $messages->first());
-            }
-    
-            $apiUrl = 'http://apihttp.pc2sms.biz/submit/single/';
-            
-            // Clean phone number
+            // Clean and validate phone number
             $phone = str_replace(' ', '', $request->phone);
             
+            // Ensure phone number contains only digits
+            if (!ctype_digit($phone)) {
+                return redirect()->back()->with('error', 'Invalid phone number format');
+            }
+    
+            // Validate phone number length (less than or equal to 9 digits)
+            if (strlen($phone) > 9) {
+                return redirect()->back()->with('error', 'Invalid phone number format: Must be 9 digits or less');
+            }
+        
             // Check if the phone number exists
             $user = Respondents::where('mobile', $phone)
-                               ->orWhere('whatsapp', $phone)
-                               ->first();
-            
+                ->orWhere('whatsapp', $phone)
+                ->first();
+        
             if (!$user) {
                 throw new Exception('Mobile number not found');
             }
-    
+        
             // Create a new password reset token
             $token = Password::broker()->createToken($user);
-            
+        
             // Generate password reset URL
             $resetUrl = URL::temporarySignedRoute(
                 'password.reset', now()->addMinutes(60), ['token' => $token]
             );
-    
-            // Plain text SMS content
+        
+            // Prepare SMS content
             $smsContent = "Reset Password Notification\n\n";
             $smsContent .= "You are receiving this message because we received a password reset request for your account.\n";
             $smsContent .= "Click the following link to reset your password:\n";
             $smsContent .= "{$resetUrl}\n\n";
             $smsContent .= "If you did not request a password reset, no further action is required.\n";
             $smsContent .= "This password reset link will expire in 60 minutes.";
-    
+        
             // Parameters for the SMS
             $postData = [
-                'username' => config('username'), // Use config values
-                'password' => config('password'), // Use config values
-                'account'  => config('account'), // Use config values
+                'username' => config('username'),
+                'password' => config('password'),
+                'account'  => config('account'),
                 'da'       => $phone, // Destination number with country code
                 'ud'       => $smsContent, // SMS content
             ];
-         
+        
             // Initialize cURL session
             $curl = curl_init();
-            
+        
             // Set cURL options
             curl_setopt_array($curl, [
-                CURLOPT_URL => $apiUrl,
+                CURLOPT_URL => 'http://apihttp.pc2sms.biz/submit/single/',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -1410,30 +1407,28 @@ class WelcomeController extends Controller
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => http_build_query($postData),
             ]);
-            
+        
             // Execute cURL session
             $response = curl_exec($curl);
-            
+        
             // Check for cURL execution errors
             if ($response === false) {
                 throw new Exception(curl_error($curl), curl_errno($curl));
             }
-            
+        
             // Close cURL session
             curl_close($curl);
-            
+        
             // Log the full response for debugging
             Log::info('SMS API Response: ' . $response);
-          
+        
             // Check if response indicates success
             if (strpos($response, 'Accepted for delivery') !== false) {
-                // Redirect with a success message
                 return redirect()->back()->with('status', 'SMS sent successfully!');
             } else {
-                // Handle API error or unexpected response
                 throw new Exception('Failed to send SMS. API response: ' . $response);
             }
-            
+        
         } catch (Exception $e) {
             // Log the exception with more details
             Log::error('SMS API Error: ' . $e->getMessage() . ' - Code: ' . $e->getCode());
@@ -1442,10 +1437,6 @@ class WelcomeController extends Controller
             return redirect()->back()->with('error', 'Failed to send SMS. ' . $e->getMessage());
         }
     }
-    
-    
-    
-
     
 
 }
