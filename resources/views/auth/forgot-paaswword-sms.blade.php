@@ -11,6 +11,9 @@
     .input-group-text {
         line-height: 2.3;
     }
+    label#phone-error{
+        width: 100% !important;
+    }
 </style>
 <!-- main starts -->
 <main class="forgot-pass py-5  vi-background-index ">
