@@ -10,11 +10,11 @@
     @endif
     
     <div class="row">
-        <div class="col-md-4 col-sm-12 m-auto mob-hide">
-        <img src="{{ asset('assets/images/img_2.png') }}" class="img-fluid w-75 m-auto hide-mobile"
+        <div class="col-md-5 col-sm-12 m-auto mob-hide mt-auto">
+        <img src="{{ asset('assets/images/img_2.png') }}" class="img-fluid w-100 m-auto hide-mobile"
                         alt="">
         </div>
-        <div class="col-md-8 col-sm-12">
+        <div class="col-md-7 col-sm-12 m-auto h-100p d-flex">
         <img src="{{ asset('assets/images/img_2.png') }}" class="img-fluid w-75 m-auto bg-mobile"
         alt="">
             <div class="d-flex align-items-center flex-column justify-content-between">
