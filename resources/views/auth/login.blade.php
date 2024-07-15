@@ -18,6 +18,15 @@
         margin: auto;
         display: flex;
     }
+    .w-90{
+        width: 90%;
+    }
+    .login_img{
+
+        border-radius: 30px;
+    border: 1px solid #fff;
+    overflow: hidden;
+    }
 
     .rightside.text-center {
         /* margin-top: 85px !important; */
@@ -59,7 +68,7 @@
     <div class="row vi-background-index">
         <div class="col-md-5 d-none-mobile d-flex mob-hide p-0 h-100">
             <div class="w-100 d-flex ">
-                <img src="{{ asset('assets/images/login-page_a.jpg') }}" class="img-fluid w-100 image-cover d-flex"
+                <img src="{{ asset('assets/images/login-page_b.jpg') }}" class="login_img img-fluid w-90 d-flex m-auto d-flex "
                     alt="" />
             </div>
         </div>

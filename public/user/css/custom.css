@@ -612,7 +612,6 @@ a.nav-link.dropdown-toggle:after {
   left: unset !important;
 }
 
-
 .vi-usr-profile {
   background-color: #edbf1b;
   border-radius: 50%;
@@ -621,6 +620,16 @@ a.nav-link.dropdown-toggle:after {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.vi-usr-profile1 {
+  background-color: #edbf1b;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 100px;
 }
 
 .darkblue-clr {

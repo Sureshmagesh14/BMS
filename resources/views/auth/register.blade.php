@@ -233,8 +233,8 @@
 
                     <div class="lname text-start w-48 me-auto my-3">
                         <input type="checkbox" id="terms" name="terms" class="form-check-input" required>
-                        <span class="form-check-label">Agree the <a style="cursor: pointer;" id="policy"
-                                data-bs-toggle="modal" data-bs-target="#exampleModal">terms and policy</a>.</span>
+                        <span class="form-check-label">Agree to the <a style="cursor: pointer;" id="policy"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal">Terms and Conditions</a>.</span>
                     </div>
 
                     <div class="submit-btn text-center">

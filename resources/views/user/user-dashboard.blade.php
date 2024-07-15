@@ -7,6 +7,9 @@
 .h-100p{
     height:100%;
 }
+.fa{
+    font-size:18px !important;
+}
 
     table#DataTables_Table_0 {
         /* width: 709.406px; */
@@ -127,16 +130,24 @@
              <div class="row">
                 <div class="col-md-4 vi-light-grey bg-white cir-border">
                    <div class="logo bg-white pt-3">
-                      <div class="profile text-center m-auto ">
-                         <span class="vi-usr-profile m-auto p-4"
+                     
+                      @if ($data->profile_image != null)
+    <div class="avatar-preview">
+        <div id="imagePreview" style="background-image: url('{{ asset($profile_path . $data->profile_image) }}');" height="10">
+        </div>
+    </div>
+@else
+<div class="profile text-center m-auto ">
+                         <span class="vi-usr-profile1 m-auto p-4"
                             style="text-transform: capitalize;">{{ $first_character }}</span>
                       </div>
-                      <div class="py-3 mb-5">
+@endif
+                      <div class="py-3 mb-5 text-center">
                          <p class="text-center fw-bolder" style="text-transform: capitalize;">{{ $data->name }}</p>
                          <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $data->email }}" target="_blank"
-                            class="nav-link d-flex align-items-center px-2 small-font"><i
+                            class="nav-link d-flex align-items-center px-2"><i
                             class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{ $data->email }}</a>
-                         <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center px-2 small-font"><i
+                         <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center px-2"><i
                             class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> {{ $data->mobile }}</a>
                       </div>
                    </div>
