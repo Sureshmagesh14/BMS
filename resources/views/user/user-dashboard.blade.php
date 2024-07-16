@@ -7,6 +7,9 @@
 .h-100p{
     height:100%;
 }
+.fa{
+    font-size:18px !important;
+}
 
     table#DataTables_Table_0 {
         /* width: 709.406px; */
@@ -127,16 +130,24 @@
              <div class="row">
                 <div class="col-md-4 vi-light-grey bg-white cir-border">
                    <div class="logo bg-white pt-3">
-                      <div class="profile text-center m-auto ">
-                         <span class="vi-usr-profile m-auto p-4"
+                     
+                      @if ($data->profile_image != null)
+    <div class="avatar-preview">
+        <div id="imagePreview" style="background-image: url('{{ asset($profile_path . $data->profile_image) }}');" height="10">
+        </div>
+    </div>
+@else
+<div class="profile text-center m-auto ">
+                         <span class="vi-usr-profile1 m-auto p-4"
                             style="text-transform: capitalize;">{{ $first_character }}</span>
                       </div>
-                      <div class="py-3 mb-5">
+@endif
+                      <div class="py-3 mb-5 text-center">
                          <p class="text-center fw-bolder" style="text-transform: capitalize;">{{ $data->name }}</p>
                          <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $data->email }}" target="_blank"
-                            class="nav-link d-flex align-items-center px-2 small-font"><i
+                            class="nav-link d-flex align-items-center px-2"><i
                             class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{ $data->email }}</a>
-                         <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center px-2 small-font"><i
+                         <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center px-2"><i
                             class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> {{ $data->mobile }}</a>
                       </div>
                    </div>
@@ -147,46 +158,28 @@
                          <div class="text-center py-2">Your Rewards Breakdown </div>
                          <div class="row">
                             <div class="col-4 rounded ">
-                               <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                  <div class="bg-yellow text-white p-2 fit-content rounded my-2 text-center m-auto">  {{ $get_overrall_rewards ?? 0 }}</div>
-                                  <div class="text-center">Total Rewards since  {{ \Carbon\Carbon::now()->year }}</div>
-                               </div>
+                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
+                                    <div class="bg-yellow text-white p-2 rounded my-2 text-center m-auto">2300</div>
+                                    <div class="text-center">Total Rewards since 2024</div>
+                                </div>
                             </div>
                             <div class="col-4 rounded ">
-                               <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                  <div class="bg-blue text-white p-2 fit-content rounded my-2 text-center m-auto">{{ $get_current_rewards ?? 0 }}</div>
-                                  <div class="text-center">Total Rewards this year</div>
-                               </div>
+                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
+                                    <div class="bg-blue text-white p-2 rounded my-2 text-center m-auto">2300</div>
+                                    <div class="text-center">Total Rewards this year</div>
+                                </div>
                             </div>
                             <div class="col-4 rounded ">
-                               <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                  <div class="bg-green text-white p-2 fit-content rounded my-2 text-center m-auto">
-                                     @if ($available_points)
-                                     {{ $available_points->total_points }}
-                                     @else
-                                     0
-                                     @endif
-                                  </div>
-                                  <div class="text-center">Available points for Cash Out</div>
-                               </div>
+                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
+                                    <div class="bg-green text-white p-2 rounded my-2 text-center m-auto">2300</div>
+                                    <div class="text-center">Available points for Cash Out</div>
+                                </div>
                             </div>
                             <div class="col-md-12">
-                               <div class="row">
-                                  <div class="col-6">10 points = R1</div>
-                                  <div class="col-6"><a class="btn btn-yellow width-fit-content ml-auto d-flex">
-                                     @if ($get_reward > 0)
-                                     <button type="button"
-                                        class="btn btn-yellow width-fit-content ml-auto d-flex"
-                                        id="request_press" data-url="{{ route('cashout_form') }}"
-                                        data-size="xl" data-ajax-popup="true"
-                                        data-bs-original-title="{{ __('Create Banks') }}"
-                                        data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
-                                     Request Cash Out
-                                     </button>
-                                     @endif
-                                     </a>
-                                  </div>
-                               </div>
+                                <div class="row my-3">
+                                <div class="col-6 my-auto">10 points = R1</div>
+                                <div class="col-6 my-auto"><a class="btn btn-yellow width-fit-content ml-auto d-flex">Request Cash Out</a></div>
+                                </div>
                             </div>
                          </div>
                       </h5>
