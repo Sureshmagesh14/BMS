@@ -54,14 +54,17 @@
                         <h2 class="mb-4 fw-bold h4">Account Info</h2>
                         
                         <label for="email" class="fw-bolder">Email</label>
-                        <input type="email"  disabled
-                               class="form-control vi-border-clr border-radius-6px" value="{{ old('email', $request->email) }}">
+                        <div class="input-group mb-3"> <!-- Add margin-bottom for spacing -->
+                            <input type="email" disabled
+                            class="form-control vi-border-clr border-radius-6px" value="{{ old('email', $request->email) }}">
+                        </div>
+                     
                         <input type="hidden" name="email" id="email" placeholder="email@address.com"
                                class="form-control vi-border-clr border-radius-6px" value="{{ old('email', $request->email) }}">
                         <label id="email-error" class="error" for="email"></label>
 
                         <label for="password" class="fw-bolder">Password</label>
-                        <div class="input-group">
+                        <div class="input-group mb-3"> <!-- Add margin-bottom for spacing -->
                             <input type="password" name="password" id="password" placeholder="Password" autocomplete="new-password"
                                    class="form-control vi-border-clr border-radius-6px">
                             <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
@@ -71,7 +74,7 @@
                         <label id="password-error" class="error" for="password"></label>
 
                         <label for="password_confirmation" class="fw-bolder">Confirm Password</label>
-                        <div class="input-group">
+                        <div class="input-group mb-3"> <!-- Add margin-bottom for spacing -->
                             <input type="password" name="password_confirmation" id="password_confirmation" autocomplete="new-password" placeholder="Confirm Password"
                                    class="form-control vi-border-clr border-radius-6px">
                             <span class="input-group-text" id="togglePasswordConfirmation" style="cursor: pointer;">
@@ -84,13 +87,14 @@
                                 class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2" id="pass">REQUEST
                             {{ __('Reset Password') }}</button>
                         <a href="{{ route('login') }}"
-                           class="btn vi-white-bg border-radius-0 text-white px-5 py-3 m-auto w-100">BACK TO Back</a>
+                           class="btn vi-white-bg border-radius-0 text-white px-5 py-3 m-auto w-100">BACK To Login</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </main>
+
 
 <!-- main ends -->
 @include('user.layout.forgot-footer')
