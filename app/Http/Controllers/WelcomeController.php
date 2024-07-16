@@ -9,7 +9,7 @@ use App\Models\Respondents;
 use App\Models\RespondentProfile;
 use App\Models\Rewards;
 use App\Models\Users;
-
+use App\Models\PasswordResets;
 
 
 use App\Models\Projects;
@@ -1423,17 +1423,23 @@ class WelcomeController extends Controller
         
             // Create a new password reset token
             $token = Password::broker()->createToken($user);
-        
-            // Generate password reset URL
-            $resetUrl = URL::temporarySignedRoute(
-                'password.reset', now()->addMinutes(60), ['token' => $token]
+            
+            // Store the token with an expiration time (60 minutes)
+            $expiresAt = now()->addMinutes(60);
+            // Assuming you have a PasswordResets model to store the token and expiration
+            PasswordResets::updateOrCreate(
+                ['email' => $user->email],
+                ['token' => $token, 'expires_at' => $expiresAt]
             );
-        
+
+            // Generate password reset URL
+            $resetUrl = url('password/reset', [$token]);
+
             // Prepare SMS content
             $smsContent = "Reset Password Notification\n\n";
             $smsContent .= "You are receiving this message because we received a password reset request for your account.\n";
             $smsContent .= "Click the following link to reset your password:\n";
-            $smsContent .= "{$resetUrl}\n\n";
+            $smsContent .= $resetUrl . "\n\n";  // Include the reset URL
             $smsContent .= "If you did not request a password reset, no further action is required.\n";
             $smsContent .= "This password reset link will expire in 60 minutes.";
         
