@@ -1442,7 +1442,7 @@ class WelcomeController extends Controller
                 'username' => config('constants.username'),
                 'password' => config('constants.password'),
                 'account'  => config('constants.account'),
-                'da'       => $phone, // Destination number with country code
+                'da'       => config('constants.username').$phone, // Destination number with country code
                 'ud'       => $smsContent, // SMS content
             ];
         
