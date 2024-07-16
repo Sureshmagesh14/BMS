@@ -139,6 +139,12 @@
                                     <div class="col-md-10">
 
                                         <div class="custom-control custom-radio mb-3">
+                                            <input type="radio" id="Active" name="resp_status"
+                                                class="custom-control-input" value="Active" checked="checked">
+                                            <label class="custom-control-label" for="Active">Active</label>
+                                        </div>
+
+                                        <div class="custom-control custom-radio mb-3">
                                             <input type="radio" id="Deactivated" name="resp_status"
                                                 class="custom-control-input" value="Deactivated">
                                             <label class="custom-control-label" for="Deactivated">Deactivated</label>
@@ -148,6 +154,12 @@
                                             <input type="radio" id="Blacklisted" name="resp_status"
                                                 class="custom-control-input" value="Blacklisted">
                                             <label class="custom-control-label" for="Blacklisted">Blacklisted</label>
+                                        </div>
+
+                                        <div class="custom-control custom-radio mb-3">
+                                            <input type="radio" id="Unsubscribed" name="resp_status"
+                                                class="custom-control-input" value="Unsubscribed">
+                                            <label class="custom-control-label" for="Unsubscribed">Unsubscribed</label>
                                         </div>
 
                                     </div>

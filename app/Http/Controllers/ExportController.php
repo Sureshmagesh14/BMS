@@ -738,6 +738,146 @@ class ExportController extends Controller
                         $rows++;
                         $i++;
                     }
+                }else if ($resp_status == 'Unsubscribed') {
+                    $sheet->setCellValue('A1', 'PID');
+                    $sheet->setCellValue('B1', 'First Name');
+                    $sheet->setCellValue('C1', 'Last Name');
+                    $sheet->setCellValue('D1', 'Mobile Number');
+                    $sheet->setCellValue('E1', 'WA Number');
+                    $sheet->setCellValue('F1', 'Email');
+                    $sheet->setCellValue('G1', 'Date Unsubscribed');
+                    $sheet->setCellValue('H1', 'Unsubscribed By');
+
+                    $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:H1')->applyFromArray($styleArray);
+
+                    $rows = 2;
+                    $i    = 1;
+
+                    $all_datas = Respondents::where('respondents.active_status_id','=',3);
+                    
+                    if($respondents != ""){
+                        $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                    }
+
+                    if($from != null && $to != null){
+                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
+                    }
+                        
+                    $all_datas = $all_datas->get();
+
+                    foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
+                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('B' . $rows, $all_data->name);
+                        $sheet->setCellValue('C' . $rows, $all_data->surname);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
+                        $sheet->setCellValue('F' . $rows, $all_data->email);
+                        $sheet->setCellValue('G' . $rows, $all_data->updated_at);
+                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
+                        $i++;
+                    }
+                }else if ($resp_status == 'Active') {
+                    $sheet->setCellValue('A1', 'PID');
+                    $sheet->setCellValue('B1', 'First Name');
+                    $sheet->setCellValue('C1', 'Last Name');
+                    $sheet->setCellValue('D1', 'Mobile Number');
+                    $sheet->setCellValue('E1', 'WA Number');
+                    $sheet->setCellValue('F1', 'Email');
+                    $sheet->setCellValue('G1', 'Created At');
+                   
+
+                    $sheet->getStyle('A1:G1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:G1')->applyFromArray($styleArray);
+
+                    $rows = 2;
+                    $i    = 1;
+
+                    $all_datas = Respondents::where('respondents.active_status_id','=',1);
+                    
+                    if($respondents != ""){
+                        $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                    }
+
+                    if($from != null && $to != null){
+                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
+                    }
+                        
+                    $all_datas = $all_datas->get();
+
+                    foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
+                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('B' . $rows, $all_data->name);
+                        $sheet->setCellValue('C' . $rows, $all_data->surname);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
+                        $sheet->setCellValue('F' . $rows, $all_data->email);
+                        $sheet->setCellValue('G' . $rows, $all_data->created_at);
+                    
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':G' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':G' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':G' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
+                        $i++;
+                    }
                 }
                 else if ($resp_status == 'Blacklisted') {
                     $sheet->setCellValue('A1', 'PID');
