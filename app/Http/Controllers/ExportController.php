@@ -1677,8 +1677,8 @@ class ExportController extends Controller
                     if($methods=='respondents_type'){
                     
                     //starts
-                    //dd($request->respondents);
-                    $user_id =$request->respondents[0];
+                    //dd($request->respondents_survey);
+                    $user_id =$request->respondents_survey[0];
                     
                     // Get Surveys by User Id
                     $survey_IDs = SurveyResponse::where(['response_user_id' => $user_id])->groupBy('survey_id')->pluck('survey_id')->toArray();
