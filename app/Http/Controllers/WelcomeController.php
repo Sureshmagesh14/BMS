@@ -9,7 +9,7 @@ use App\Models\Respondents;
 use App\Models\RespondentProfile;
 use App\Models\Rewards;
 use App\Models\Users;
-use App\Models\PasswordResets;
+use App\Models\PasswordResetsViaPhone;
 
 
 use App\Models\Projects;
@@ -1427,13 +1427,13 @@ class WelcomeController extends Controller
             // Store the token with an expiration time (60 minutes)
             $expiresAt = now()->addMinutes(60);
             // Assuming you have a PasswordResets model to store the token and expiration
-            PasswordResets::updateOrCreate(
-                ['email' => $user->email],
+            PasswordResetsViaPhone::updateOrCreate(
+                ['phone' => $user->phone],
                 ['token' => $token, 'expires_at' => $expiresAt]
             );
 
             // Generate password reset URL
-            $resetUrl = url('password/reset', [$token]);
+            $resetUrl = url('password_reset_sms', [$token]);
 
             // Prepare SMS content
             $smsContent = "Reset Password Notification\n\n";
@@ -1495,6 +1495,19 @@ class WelcomeController extends Controller
             // Redirect with an error message
             return redirect()->back()->with('error', 'Failed to send SMS. ' . $e->getMessage());
         }
+    }
+
+    public function password_reset_sms(){
+        try {
+
+            return view('auth.reset-sms-password');
+
+        } catch (Exception $e) {
+
+            throw new Exception($e->getMessage());
+          
+        }
+
     }
     
 
