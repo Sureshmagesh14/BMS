@@ -466,7 +466,7 @@
             }
         },
         chart: {
-            height: 300,
+            height: 400,
             type: 'radialBar',
         },
         plotOptions: {
@@ -499,7 +499,23 @@
         },
         title: {
             text: 'Profile Completion Status Keep your profile up to date',
+        },
+        responsive: [{
+        breakpoint: 480, // Adjust as per your mobile breakpoint
+        options: {
+            chart: {
+                height: 350 // Adjust height for mobile
+            },
+            plotOptions: {
+                radialBar: {
+                    size: 100 // Adjust size for mobile
+                }
+            },
+            legend: {
+                position: 'bottom'
+            }
         }
+    }]
     };
 
     var chart = new ApexCharts(document.querySelector("#radial_multi_chart"), options);
