@@ -65,5 +65,45 @@ class PasswordResetLinkController extends Controller
     
         return back()->with('status', __('Password reset email sent! Please check your email.'));
     }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'mobile' => 'required|digits:9',
+            'password' => 'required|min:6|confirmed',
+            'token' => 'required|string',
+        ]);
+
+        try {
+            // Validate the token
+            $resetRecord = PasswordResetsViaPhone::where('token', $request->token)
+                ->where('expires_at', '>', now())
+                ->first();
+
+            if (!$resetRecord) {
+                return redirect()->back()->with('error', 'Invalid or expired token.');
+            }
+
+            // Find the user
+            $user = Respondents::where('mobile', $request->mobile)->first();
+
+            if (!$user) {
+                return redirect()->back()->with('error', 'Mobile number not found.');
+            }
+
+            // Update the user's password
+            $user->password = bcrypt($request->password);
+            $user->save();
+
+            // Delete the reset record
+            $resetRecord->delete();
+
+            return redirect()->route('login')->with('status', 'Password reset successfully. You can now log in.');
+
+        } catch (Exception $e) {
+            Log::error('Password reset failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to reset password. ' . $e->getMessage());
+        }
+    }
     
 }

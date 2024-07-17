@@ -738,6 +738,146 @@ class ExportController extends Controller
                         $rows++;
                         $i++;
                     }
+                }else if ($resp_status == 'Unsubscribed') {
+                    $sheet->setCellValue('A1', 'PID');
+                    $sheet->setCellValue('B1', 'First Name');
+                    $sheet->setCellValue('C1', 'Last Name');
+                    $sheet->setCellValue('D1', 'Mobile Number');
+                    $sheet->setCellValue('E1', 'WA Number');
+                    $sheet->setCellValue('F1', 'Email');
+                    $sheet->setCellValue('G1', 'Date Unsubscribed');
+                    $sheet->setCellValue('H1', 'Unsubscribed By');
+
+                    $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:H1')->applyFromArray($styleArray);
+
+                    $rows = 2;
+                    $i    = 1;
+
+                    $all_datas = Respondents::where('respondents.active_status_id','=',3);
+                    
+                    if($respondents != ""){
+                        $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                    }
+
+                    if($from != null && $to != null){
+                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
+                    }
+                        
+                    $all_datas = $all_datas->get();
+
+                    foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
+                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('B' . $rows, $all_data->name);
+                        $sheet->setCellValue('C' . $rows, $all_data->surname);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
+                        $sheet->setCellValue('F' . $rows, $all_data->email);
+                        $sheet->setCellValue('G' . $rows, $all_data->updated_at);
+                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
+                        $i++;
+                    }
+                }else if ($resp_status == 'Active') {
+                    $sheet->setCellValue('A1', 'PID');
+                    $sheet->setCellValue('B1', 'First Name');
+                    $sheet->setCellValue('C1', 'Last Name');
+                    $sheet->setCellValue('D1', 'Mobile Number');
+                    $sheet->setCellValue('E1', 'WA Number');
+                    $sheet->setCellValue('F1', 'Email');
+                    $sheet->setCellValue('G1', 'Created At');
+                   
+
+                    $sheet->getStyle('A1:G1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:G1')->applyFromArray($styleArray);
+
+                    $rows = 2;
+                    $i    = 1;
+
+                    $all_datas = Respondents::where('respondents.active_status_id','=',1);
+                    
+                    if($respondents != ""){
+                        $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                    }
+
+                    if($from != null && $to != null){
+                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
+                    }
+                        
+                    $all_datas = $all_datas->get();
+
+                    foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
+                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('B' . $rows, $all_data->name);
+                        $sheet->setCellValue('C' . $rows, $all_data->surname);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
+                        $sheet->setCellValue('F' . $rows, $all_data->email);
+                        $sheet->setCellValue('G' . $rows, $all_data->created_at);
+                    
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':G' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':G' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':G' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
+                        $i++;
+                    }
                 }
                 else if ($resp_status == 'Blacklisted') {
                     $sheet->setCellValue('A1', 'PID');
@@ -866,21 +1006,37 @@ class ExportController extends Controller
                 $i = 1;
                 foreach ($all_datas as $all_data) {
 
+                    $respondent_id = $all_data->respondent_id;
+
+                    $get_incentive = Cashout::where('respondent_id',$respondent_id)->where('status_id',3);
+                    $get_incentive_owed = Cashout::where('respondent_id',$respondent_id)->where('status_id',1);
+
                     if ($all_data->type_id == 1) {
                         $type_val = 'EFT';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else if ($all_data->type_id == 2) {
                         $type_val = 'Data';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else if ($all_data->type_id == 3) {
                         $type_val = 'Airtime';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else if ($all_data->type_id == 4) {
                         $type_val = 'Donation';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else {
                         $type_val = '-';
                     }
+
+                    $get_incentive = $get_incentive->groupBy('respondent_id')->sum('amount');
+                    $get_incentive_owed = $get_incentive_owed->groupBy('respondent_id')->sum('amount');
 
                     $amount = $all_data->amount / 10;
                     $respondent = $all_data->name . ' - ' . $all_data->email . ' - ' . $all_data->mobile;
@@ -919,10 +1075,12 @@ class ExportController extends Controller
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
                     $sheet->setCellValue('H' . $rows, $all_data->total_cashout);
+                    $sheet->setCellValue('I' . $rows, ($get_incentive > 0) ? $get_incentive/10 : 0);
                     $sheet->setCellValue('J' . $rows, $all_data->failed);
                     $sheet->setCellValue('K' . $rows, $all_data->pending);
                     $sheet->setCellValue('L' . $rows, $all_data->declined);
                     $sheet->setCellValue('M' . $rows, $all_data->complete);
+                    $sheet->setCellValue('N' . $rows, ($get_incentive_owed > 0) ? $get_incentive_owed/10 : 0);
                     $get_project = Projects::select('projects.id','projects.name')->join('project_respondent as resp','projects.id','resp.project_id')
                         ->where('resp.respondent_id',$all_data->resp_id)
                         ->groupBy('projects.id')
@@ -1532,16 +1690,28 @@ class ExportController extends Controller
             else if ($module == 'Survey') {
                     
                     //dd($request);
-                    $type_method=$request->type_method;
+                    $methods=$request->methods;
 
-                    if($type_method=='Individual'){
+                    if($methods=='respondents_type'){
                     
                     //starts
-
-                    $user_id =[29689];
+                    //dd($request->respondents_survey);
+                    $user_id =$request->respondents_survey[0];
+                    
                     // Get Surveys by User Id
                     $survey_IDs = SurveyResponse::where(['response_user_id' => $user_id])->groupBy('survey_id')->pluck('survey_id')->toArray();
-                
+
+                    }else if($methods=='projects_type'){
+                    
+                        //starts
+                        //dd($request->projects);
+                        $project_id =$request->projects[0];
+                        
+                        // Get Surveys by User Id
+                        $survey_IDs = Projects::where(['id' => $project_id])->pluck('survey_link')->toArray();
+                    }
+
+                    //dd($survey_IDs);
                 
                     $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
                     function getValuesUser($data)
@@ -1602,8 +1772,12 @@ class ExportController extends Controller
                 
                         // Get Survey Data
                         $question = Questions::where(['survey_id' => $survey_id])->whereNotIn('qus_type', ['welcome_page', 'thank_you'])->get();
-                
-                        $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id,'response_user_id'=>$user_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+                        
+                        if($methods=='respondents_type'){
+                            $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id,'response_user_id'=>$user_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+                        }else{
+                            $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+                        }
                         $finalResult = [$cols];
                         foreach ($surveyResponseUsers as $userID) {
                             $user = Respondents::where('id', $userID)->first();
@@ -1744,6 +1918,8 @@ class ExportController extends Controller
                         }
                 
                         $finalResult = getValuesUser($finalResult);
+                        //dd($finalResult);
+                        
                         if($survey){
                             $survey_name = $survey->title;
                         }else{
@@ -1764,121 +1940,23 @@ class ExportController extends Controller
                     }
                 
                     $spreadsheet->removeSheetByIndex(count($spreadsheet->getSheetNames()) - 1);
-                
-                    $fileName = 'Survey_Report_' . $user_id . '_' . date('Y-m-d') . '.xlsx';
+                    
+                    if($methods=='respondents_type'){
+                        $fileName = 'Survey_Report_' . $user_id . '_' . date('Y-m-d') . '.xlsx';
+                    }else{
+                        $fileName = 'Survey_Report_' . $project_id . '_' . date('Y-m-d') . '.xlsx';
+                    }
+
                     $filePath = storage_path('app/public/' . $fileName);
                 
                     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
                     $writer->save($filePath);
                 
                     return response()->download($filePath)->deleteFileAfterSend(true);
-                        //ends
-                    }
+                    //ends
+                  
                     
 
-                    dd('test');
-                    $pro_type=$request->pro_type;
-                    $respondents = $request->respondents;
-                    $projects = $request->projects;
-                    
-                    if($type_method == 'Individual'){
-
-                        $all_datas = Respondents::leftJoin('rewards', function ($join) {
-                            $join->on('rewards.respondent_id', '=', 'respondents.id');
-                        });
-                            if($respondents != ""){
-                                $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
-                            }
-                        $all_datas = $all_datas->get([
-                            'respondents.id',
-                            'respondents.name',
-                            'respondents.surname',
-                            'respondents.mobile',
-                            'respondents.whatsapp',
-                            'respondents.email',
-                            'rewards.status_id',
-                        ]);
-                    }else if($type_method == 'All'){
-                        $all_datas = Respondents::leftJoin('rewards', function ($join) {
-                            $join->on('rewards.respondent_id', '=', 'respondents.id');
-                        })
-                        ->get([
-                            'respondents.id',
-                            'respondents.name',
-                            'respondents.surname',
-                            'respondents.mobile',
-                            'respondents.whatsapp',
-                            'respondents.email',
-                            'rewards.status_id',
-                        ]);
-                    }
-                    else{
-                        $all_datas = Respondents::leftJoin('rewards', function ($join) {
-                            $join->on('rewards.respondent_id', '=', 'respondents.id');
-                        });
-                        if($projects != ""){
-                            $all_datas = $all_datas->whereIn('rewards.project_id', [$projects]);
-                        }
-                        $all_datas = $all_datas->get([
-                            'respondents.id',
-                            'respondents.name',
-                            'respondents.surname',
-                            'respondents.mobile',
-                            'respondents.whatsapp',
-                            'respondents.email',
-                            'rewards.status_id',
-                        ]);
-                    }
-                    
-                    if($pro_type == 'project'){
-
-                        $sheet->setCellValue('A1', 'PID');
-                        $sheet->setCellValue('B1', 'First Name');
-                        $sheet->setCellValue('C1', 'Last Name');
-                        $sheet->setCellValue('D1', 'Mobile Number');
-                        $sheet->setCellValue('E1', 'WA Number');
-                        $sheet->setCellValue('F1', 'Email');
-
-                        $sheet->getStyle('A1:F1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                        $sheet->getStyle('A1:F1')->applyFromArray($styleArray);
-
-                        $rows = 2;
-                        $i    = 1;
-
-                        $all_datas = Respondents::where('respondents.active_status_id','=',1);
-                        
-                        if($respondents != ""){
-                            $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
-                        }
-
-                        if($from != null && $to != null){
-                            $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
-                        }
-                            
-                        $all_datas = $all_datas->get();
-
-                        foreach ($all_datas as $all_data) {
-                            $sheet->setCellValue('A' . $rows, $i);
-                            $sheet->setCellValue('B' . $rows, $all_data->name);
-                            $sheet->setCellValue('C' . $rows, $all_data->surname);
-                            $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                            $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
-                            $sheet->setCellValue('F' . $rows, $all_data->email);
-                           
-                            $sheet->getRowDimension($rows)->setRowHeight(20);
-                            $sheet->getStyle('A' . $rows . ':F' . $rows)->applyFromArray($styleArray3);
-                            $sheet->getStyle('C' . $rows . ':F' . $rows)->applyFromArray($styleArray2);
-                            $sheet->getStyle('C' . $rows . ':F' . $rows)->getAlignment()->setIndent(1);
-                            $rows++;
-                            $i++;
-                        }
-                        
-                    }else{
-
-                    }
-
-                    
-                    $fileName = $module . "_" . $resp_status . "_" . date('ymd') . "." . $type;
             }
             
             
