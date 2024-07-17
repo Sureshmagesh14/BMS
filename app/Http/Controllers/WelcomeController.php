@@ -9,8 +9,13 @@ use App\Models\Respondents;
 use App\Models\RespondentProfile;
 use App\Models\Rewards;
 use App\Models\Users;
+use App\Models\PasswordResetsViaPhone;
+
+
 use App\Models\Projects;
 use App\Models\Cashout;
+use App\Models\Networks;
+use App\Models\Charities;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -23,9 +28,10 @@ use Illuminate\Support\Facades\Auth;
 use Meng\AsyncSoap\Guzzle\Factory;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
-
+use Config;
 use Artisaninweb\SoapWrapper\SoapWrapper;
-
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Password;
 
 class WelcomeController extends Controller
 {
@@ -271,13 +277,36 @@ class WelcomeController extends Controller
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', $id)
                 ->where('projects.closing_date', '<', Carbon::now())->get();
-            
 
+            $currentYear=Carbon::now()->year;
+
+            $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->whereYear('created_at', $currentYear)
+            ->sum('points');
+
+            $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->where(function ($query) use ($currentYear) {
+                $query->whereYear('created_at', '<', $currentYear) // Filters past year data
+                      ->orWhere(function ($query) use ($currentYear) {
+                          $query->whereYear('created_at', $currentYear); // Filters current year data
+                      });
+            })
+            ->sum('points');
+
+            $available_points = DB::table('rewards')
+            ->select(DB::raw('SUM(points) as total_points'))
+            ->where('respondent_id', Session::get('resp_id'))
+            ->where('status_id', 2)
+            ->groupBy('respondent_id')
+            ->first(); // Use first() instead of get() to get a single row
+
+            $get_reward = Rewards::where('respondent_id', $id)->where('status_id', 2)->sum('points');
+       
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
 
-            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed'));
+            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points','get_reward'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -420,10 +449,26 @@ class WelcomeController extends Controller
                 }
             }
 
+            $currentYear=Carbon::now()->year;
+            $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->whereYear('created_at', $currentYear)
+            ->sum('points');
+
+            $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->where(function ($query) use ($currentYear) {
+                $query->whereYear('created_at', '<', $currentYear) // Filters past year data
+                      ->orWhere(function ($query) use ($currentYear) {
+                          $query->whereYear('created_at', $currentYear); // Filters current year data
+                      });
+            })
+            ->sum('points');
+        
+
+         
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-            return view('user.user-rewards')->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
+            return view('user.user-rewards',compact('get_current_rewards','get_overrall_rewards'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
             //}
 
         } catch (Exception $e) {
@@ -755,11 +800,16 @@ class WelcomeController extends Controller
     public function cashout_form(Request $request)
     {
         try {
+            $resp_id = Session::get('resp_id');
             $points = $request->value;
 
             if($points > 0){
                 $banks = Banks::get();
-                $returnHTML = view('user.cashout_request', compact('points', 'banks'))->render();
+                $networks = Networks::get();
+                $charities = Charities::get();
+                $respondent = Respondents::where('id',$resp_id)->first();
+                $content = Contents::where('type_id',2)->first();
+                $returnHTML = view('user.cashout_request', compact('points','banks','networks','charities','respondent','content'))->render();
     
                 return response()->json(
                     [
@@ -782,32 +832,78 @@ class WelcomeController extends Controller
         }
     }
 
+    public function terms_and_conditions(Request $request){
+        try {
+            $resp_id = Session::get('resp_id');
+            $points = $request->value;
+
+            $content = Contents::where('type_id',2)->first();
+            $returnHTML = view('user.terms_and_conditions', compact('content','points'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+            
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function cashout_sent(Request $request)
     {
-        $resp_id = Session::get('resp_id');
-        $banks = $request->bank_value;
+        $resp_id        = Session::get('resp_id');
+        $method         = $request->method;
+        $banks          = $request->bank_value;
         $account_number = $request->account_number;
-        $reward = $request->reward;
-        $branch_name = $request->branch_name;
-        $holder_name = $request->holder_name;
+        $reward         = $request->reward;
+        $branch_name    = $request->branch_name;
+        $holder_name    = $request->holder_name;
+        $mobile_network = $request->network;
+        $mobile_number  = $request->mobile_number;
+        $charitie       = $request->charitie;
+        $result_mobile  = '27' . str_replace(' ', '', $mobile_number); // Remove all spaces
 
         if ($reward != 0) {
-            // $amount = ($reward / 10);
-            $insert_array = array(
-                'respondent_id' => $resp_id,
-                'bank_id' => $banks,
-                'type_id' => 1,
-                'account_number' => $account_number,
-                'amount' => $reward,
-            );
+            if($method == "EFT"){
+                $insert_array = array(
+                    'respondent_id'  => $resp_id,
+                    'bank_id'        => $banks,
+                    'type_id'        => 1,
+                    'account_number' => $account_number,
+                    'amount'         => $reward,
+                );
+                DB::table('respondents')->where('id', $resp_id)->update(['account_number' => $account_number, 'account_holder' => $holder_name]);
+            }
+            else if($method == "Airtime" || $method == "Data"){
+                $insert_array = array(
+                    'respondent_id'  => $resp_id,
+                    'mobile_network' => $mobile_network,
+                    'mobile_number'  => $result_mobile,
+                    'type_id'        => ($method == "Airtime") ? 2 : 3,
+                    'amount'         => $reward,
+                );
+            }
+            else if($method == "Donations"){
+                $insert_array = array(
+                    'respondent_id' => $resp_id,
+                    'charity_id'    => $charitie,
+                    'type_id'       => 4,
+                    'amount'        => $reward,
+                );
+            }
+
+            dd($insert_array);
 
             DB::table('cashouts')->insert($insert_array);
 
-            DB::table('respondents')->where('id', $resp_id)
-                ->update(['account_number' => $account_number, 'account_holder' => $holder_name]);
+            return redirect()->back()->withsuccess('Request Send Successfully');
         }
-
-        return redirect()->back()->withsuccess('Request Send Successfully');
+        else{
+            return redirect()->back()->witherror('Your reward is 0');
+        }
     }
 
     public function update_activitation(Request $request)
@@ -1288,5 +1384,131 @@ class WelcomeController extends Controller
         }
 
     }
+
+
+    public function forgot_password_sms(){
+        try {
+            
+        
+            return view('auth.forgot-paaswword-sms');
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function forgot_password_check(Request $request) {
+        try {
+            // Clean and validate phone number
+            $phone = str_replace(' ', '', $request->phone);
+            
+            // Ensure phone number contains only digits
+            if (!ctype_digit($phone)) {
+                return redirect()->back()->with('error', 'Invalid phone number format');
+            }
+    
+            // Validate phone number length (less than or equal to 9 digits)
+            if (strlen($phone) > 9) {
+                return redirect()->back()->with('error', 'Invalid phone number format: Must be 9 digits or less');
+            }
+        
+            // Check if the phone number exists
+            $user = Respondents::where('mobile', $phone)
+                ->orWhere('whatsapp', $phone)
+                ->first();
+        
+            if (!$user) {
+                throw new Exception('Mobile number not found');
+            }
+        
+            // Create a new password reset token
+            $token = Password::broker()->createToken($user);
+            
+            // Store the token with an expiration time (60 minutes)
+            $expiresAt = now()->addMinutes(60);
+            // Assuming you have a PasswordResets model to store the token and expiration
+            PasswordResetsViaPhone::updateOrCreate(
+                ['phone' => $user->phone],
+                ['token' => $token, 'expires_at' => $expiresAt]
+            );
+
+            // Generate password reset URL
+            $resetUrl = url('password_reset_sms', [$token]);
+
+            // Prepare SMS content
+            $smsContent = "Reset Password Notification\n\n";
+            $smsContent .= "You are receiving this message because we received a password reset request for your account.\n";
+            $smsContent .= "Click the following link to reset your password:\n";
+            $smsContent .= $resetUrl . "\n\n";  // Include the reset URL
+            $smsContent .= "If you did not request a password reset, no further action is required.\n";
+            $smsContent .= "This password reset link will expire in 60 minutes.";
+        
+            // Parameters for the SMS
+            $postData = [
+                'username' => config('constants.username'),
+                'password' => config('constants.password'),
+                'account'  => config('constants.account'),
+                'da'       => config('constants.phone').$phone, // Destination number with country code
+                'ud'       => $smsContent, // SMS content
+            ];
+        
+            // Initialize cURL session
+            $curl = curl_init();
+        
+            // Set cURL options
+            curl_setopt_array($curl, [
+                CURLOPT_URL => 'http://apihttp.pc2sms.biz/submit/single/',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => http_build_query($postData),
+            ]);
+        
+            // Execute cURL session
+            $response = curl_exec($curl);
+        
+            // Check for cURL execution errors
+            if ($response === false) {
+                throw new Exception(curl_error($curl), curl_errno($curl));
+            }
+        
+            // Close cURL session
+            curl_close($curl);
+        
+            // Log the full response for debugging
+            Log::info('SMS API Response: ' . $response);
+        
+            // Check if response indicates success
+            if (strpos($response, 'Accepted for delivery') !== false) {
+                return redirect()->back()->with('status', 'SMS sent successfully!');
+            } else {
+                throw new Exception('Failed to send SMS. API response: ' . $response);
+            }
+        
+        } catch (Exception $e) {
+            // Log the exception with more details
+            Log::error('SMS API Error: ' . $e->getMessage() . ' - Code: ' . $e->getCode());
+            
+            // Redirect with an error message
+            return redirect()->back()->with('error', 'Failed to send SMS. ' . $e->getMessage());
+        }
+    }
+
+    public function password_reset_sms(){
+        try {
+
+            return view('auth.reset-sms-password');
+
+        } catch (Exception $e) {
+
+            throw new Exception($e->getMessage());
+          
+        }
+
+    }
+    
 
 }

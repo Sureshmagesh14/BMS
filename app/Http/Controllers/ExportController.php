@@ -41,13 +41,13 @@ class ExportController extends Controller
 
         try {
 
-            $module = $request->module;
-            $resp_status = $request->resp_status;
-            $resp_type = $request->show_resp_type;
-            $from = ($request->start != null) ? date('Y-m-d', strtotime($request->start)) : null;
-            $to = ($request->end != null) ? date('Y-m-d', strtotime($request->end)) : null;
-            $type_method = $request->type_method;
-            $type_resp = $request->type_resp;
+            $module       = $request->module;
+            $resp_status  = $request->resp_status;
+            $resp_type    = $request->show_resp_type;
+            $from         = ($request->start != null) ? date('Y-m-d', strtotime($request->start)) : null;
+            $to           = ($request->end != null) ? date('Y-m-d', strtotime($request->end)) : null;
+            $type_method  = $request->type_method;
+            $type_resp    = $request->type_resp;
             $cashout_type = $request->show_cashout_val;
 
             //dd($module);
@@ -147,7 +147,7 @@ class ExportController extends Controller
                 $query->whereIn('respondents.id', [$respondents]);
             })
             ->when($type_method != 'Individual', function ($query) {
-                $query->where('active_status_id', 1);
+                $query->where('respondents.active_status_id', 1);
             })
             ->select([
                 'respondents.id',
@@ -159,6 +159,7 @@ class ExportController extends Controller
                 \DB::raw('COALESCE(respondent_profile.vehicle_data, "") AS vehicle_data'),
                 'respondent_profile.updated_at',
             ])
+            ->where('respondents.active_status_id',1)
             ->get()
             ->unique('id'); 
             
@@ -188,11 +189,36 @@ class ExportController extends Controller
                         $essential = json_decode($all_data->essential_details, true);
                     
                         // Check if $basic is null, if so, set default values
+
+                        $mobile_number = '-';
+                        if (!empty($basic['mobile_number'])) {
+                            $m_number = $basic['mobile_number'];
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($basic['whatsapp_number'])) {
+                            $w_number = $basic['whatsapp_number'];
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
                         $id = $all_data->id ?? '-';
                         $first_name = $basic['first_name'] ?? '-';
                         $last_name = $basic['last_name'] ?? '-';
-                        $mobile_number = $basic['mobile_number'] ?? '-';
-                        $whatsapp_number = $basic['whatsapp_number'] ?? '-';
                         $email = $basic['email'] ?? '-';
                         $date_of_birth = isset($basic['date_of_birth']) ? $basic['date_of_birth'] : null;
                     
@@ -266,11 +292,37 @@ class ExportController extends Controller
                         $basic = json_decode($all_data->basic_details);
                         $essential = json_decode($all_data->essential_details);
 
+                        $mobile_number = '-';
+                        if (!empty($basic->mobile_number)) {
+                            $m_number = $basic->mobile_number;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($basic->whatsapp_number)) {
+                            $w_number = $basic->whatsapp_number;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
                         $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
                         $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
-                        $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
-                        $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
+                        $sheet->setCellValue('D' . $rows, $mobile_number ?? '');
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
 
                         $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
@@ -429,12 +481,38 @@ class ExportController extends Controller
                         $basic = json_decode($all_data->basic_details);
                         $essential = json_decode($all_data->essential_details);
                         $extended = json_decode($all_data->extended_details);
-                    
+
+                        $mobile_number = '-';
+                        if (!empty($basic->mobile_number)) {
+                            $m_number = $basic->mobile_number;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($basic->whatsapp_number)) {
+                            $w_number = $basic->whatsapp_number;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
                         $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
                         $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
-                        $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
-                        $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
+                        $sheet->setCellValue('D' . $rows, $mobile_number ?? '');
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
                     
                         $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
@@ -619,11 +697,37 @@ class ExportController extends Controller
                     $all_datas = $all_datas->get();
 
                     foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
                         $sheet->setCellValue('A' . $rows, $i);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
-                        $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                        $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
@@ -631,6 +735,146 @@ class ExportController extends Controller
                         $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
+                        $i++;
+                    }
+                }else if ($resp_status == 'Unsubscribed') {
+                    $sheet->setCellValue('A1', 'PID');
+                    $sheet->setCellValue('B1', 'First Name');
+                    $sheet->setCellValue('C1', 'Last Name');
+                    $sheet->setCellValue('D1', 'Mobile Number');
+                    $sheet->setCellValue('E1', 'WA Number');
+                    $sheet->setCellValue('F1', 'Email');
+                    $sheet->setCellValue('G1', 'Date Unsubscribed');
+                    $sheet->setCellValue('H1', 'Unsubscribed By');
+
+                    $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:H1')->applyFromArray($styleArray);
+
+                    $rows = 2;
+                    $i    = 1;
+
+                    $all_datas = Respondents::where('respondents.active_status_id','=',3);
+                    
+                    if($respondents != ""){
+                        $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                    }
+
+                    if($from != null && $to != null){
+                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
+                    }
+                        
+                    $all_datas = $all_datas->get();
+
+                    foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
+                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('B' . $rows, $all_data->name);
+                        $sheet->setCellValue('C' . $rows, $all_data->surname);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
+                        $sheet->setCellValue('F' . $rows, $all_data->email);
+                        $sheet->setCellValue('G' . $rows, $all_data->updated_at);
+                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
+                        $i++;
+                    }
+                }else if ($resp_status == 'Active') {
+                    $sheet->setCellValue('A1', 'PID');
+                    $sheet->setCellValue('B1', 'First Name');
+                    $sheet->setCellValue('C1', 'Last Name');
+                    $sheet->setCellValue('D1', 'Mobile Number');
+                    $sheet->setCellValue('E1', 'WA Number');
+                    $sheet->setCellValue('F1', 'Email');
+                    $sheet->setCellValue('G1', 'Created At');
+                   
+
+                    $sheet->getStyle('A1:G1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:G1')->applyFromArray($styleArray);
+
+                    $rows = 2;
+                    $i    = 1;
+
+                    $all_datas = Respondents::where('respondents.active_status_id','=',1);
+                    
+                    if($respondents != ""){
+                        $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                    }
+
+                    if($from != null && $to != null){
+                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
+                    }
+                        
+                    $all_datas = $all_datas->get();
+
+                    foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
+                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('B' . $rows, $all_data->name);
+                        $sheet->setCellValue('C' . $rows, $all_data->surname);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
+                        $sheet->setCellValue('F' . $rows, $all_data->email);
+                        $sheet->setCellValue('G' . $rows, $all_data->created_at);
+                    
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':G' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':G' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':G' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                         $i++;
                     }
@@ -662,11 +906,37 @@ class ExportController extends Controller
                     $all_datas = $all_datas->get();
 
                     foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
                         $sheet->setCellValue('A' . $rows, $i);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
-                        $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                        $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
@@ -755,11 +1025,37 @@ class ExportController extends Controller
                     $amount = $all_data->amount / 10;
                     $respondent = $all_data->name . ' - ' . $all_data->email . ' - ' . $all_data->mobile;
 
+                    $mobile_number = '-';
+                    if (!empty($all_data->mobile)) {
+                        $m_number = $all_data->mobile;
+                        
+                        if (strlen($m_number) == 9) {
+                            $mobile_number = '+27' . $m_number;
+                        } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            $mobile_number = '+' . $m_number;
+                        } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                            $mobile_number = $m_number;
+                        }
+                    }
+
+                    $whatsapp_number = '-';
+                    if (!empty($all_data->whatsapp)) {
+                        $w_number = $all_data->whatsapp;
+                        
+                        if (strlen($w_number) == 9) {
+                            $whatsapp_number = '+27' . $w_number;
+                        } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            $whatsapp_number = '+' . $w_number;
+                        } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                            $whatsapp_number = $w_number;
+                        }
+                    }
+
                     $sheet->setCellValue('A' . $rows, $i);
                     $sheet->setCellValue('B' . $rows, $all_data->name);
                     $sheet->setCellValue('C' . $rows, $all_data->surname);
-                    $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                    $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                    $sheet->setCellValue('D' . $rows, $mobile_number);
+                    $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
                     $sheet->setCellValue('H' . $rows, $all_data->total_cashout);
@@ -801,7 +1097,7 @@ class ExportController extends Controller
                         if($respondents != ""){
                             $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                         }
-                    $all_datas = $all_datas->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -814,6 +1110,7 @@ class ExportController extends Controller
                     $all_datas = Respondents::leftJoin('rewards', function ($join) {
                         $join->on('rewards.respondent_id', '=', 'respondents.id');
                     })
+                    ->where('respondents.active_status_id',1)
                     ->get([
                         'respondents.id',
                         'respondents.name',
@@ -831,7 +1128,7 @@ class ExportController extends Controller
                     if($projects != ""){
                         $all_datas = $all_datas->whereIn('rewards.project_id', [$projects]);
                     }
-                    $all_datas = $all_datas->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -857,11 +1154,37 @@ class ExportController extends Controller
                 $i = 1;
                 foreach ($all_datas as $all_data) {
 
+                    $mobile_number = '-';
+                    if (!empty($all_data->mobile)) {
+                        $m_number = $all_data->mobile;
+                        
+                        if (strlen($m_number) == 9) {
+                            $mobile_number = '+27' . $m_number;
+                        } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            $mobile_number = '+' . $m_number;
+                        } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                            $mobile_number = $m_number;
+                        }
+                    }
+
+                    $whatsapp_number = '-';
+                    if (!empty($all_data->whatsapp)) {
+                        $w_number = $all_data->whatsapp;
+                        
+                        if (strlen($w_number) == 9) {
+                            $whatsapp_number = '+27' . $w_number;
+                        } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            $whatsapp_number = '+' . $w_number;
+                        } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                            $whatsapp_number = $w_number;
+                        }
+                    }
+
                     $sheet->setCellValue('A' . $rows, $i);
                     $sheet->setCellValue('B' . $rows, $all_data->name);
                     $sheet->setCellValue('C' . $rows, $all_data->surname);
-                    $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                    $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                    $sheet->setCellValue('D' . $rows, $mobile_number);
+                    $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
 
                     if($all_data->status_id==1){
@@ -966,11 +1289,37 @@ class ExportController extends Controller
                     $essential = json_decode($all_data->essential_details);
                     $extended  = json_decode($all_data->extended_details);
 
+                    $mobile_number = '-';
+                    if (!empty($basic->mobile_number)) {
+                        $m_number = $basic->mobile_number;
+                        
+                        if (strlen($m_number) == 9) {
+                            $mobile_number = '+27' . $m_number;
+                        } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            $mobile_number = '+' . $m_number;
+                        } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                            $mobile_number = $m_number;
+                        }
+                    }
+
+                    $whatsapp_number = '-';
+                    if (!empty($basic->whatsapp_number)) {
+                        $w_number = $basic->whatsapp_number;
+                        
+                        if (strlen($w_number) == 9) {
+                            $whatsapp_number = '+27' . $w_number;
+                        } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            $whatsapp_number = '+' . $w_number;
+                        } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                            $whatsapp_number = $w_number;
+                        }
+                    }
+
                     $sheet->setCellValue('A' . $rows, $all_data->id);
                     $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
                     $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
-                    $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
-                    $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
+                    $sheet->setCellValue('D' . $rows, $mobile_number);
+                    $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $basic->email ?? '');
 
                     $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
@@ -1141,8 +1490,8 @@ class ExportController extends Controller
                     ->when($type_method == 'Individual', function ($query) use ($respondents) {
                         $query->whereIn('respondent_tag.respondent_id', $respondents);
                     })
+                    ->where('respondents.active_status_id',1)
                     ->orderBy('respondent_tag.id', 'desc')
-                    ->take(3)
                     ->get()
                     ->map(function ($item) {
                         $item->full_name = $item->name . ' ' . $item->surname;
@@ -1328,8 +1677,8 @@ class ExportController extends Controller
                     if($methods=='respondents_type'){
                     
                     //starts
-                    //dd($request->respondents);
-                    $user_id =$request->respondents[0];
+                    //dd($request->respondents_survey);
+                    $user_id =$request->respondents_survey[0];
                     
                     // Get Surveys by User Id
                     $survey_IDs = SurveyResponse::where(['response_user_id' => $user_id])->groupBy('survey_id')->pluck('survey_id')->toArray();

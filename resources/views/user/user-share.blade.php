@@ -1,20 +1,20 @@
 @include('user.layout.header-2')
 
 
-<section class="bg-greybg vh-100">
-    <div class="mb-5">
+<section class="bg-greybg vh-75 m-auto d-flex">
+    <div class="m-auto d-flex">
     <div class="container">
-        <div class="row justify-content-center py-5 mx-auto">
-            <div class="col-md-6 text-center my-auto d-flex">
-                <img class="w-100" src="{{ asset('assets/images/Share.jpg') }}" />
+        <div class="row justify-content-center py-2 mx-auto">
+            <div class="col-md-6 text-center d-flex">
+                <img class="w-80 object-fit" src="{{ asset('assets/images/share.png') }}" />
             </div>
-            <div class="col-md-4 bg-white p-5 mb-5">
+            <div class="col-md-6 bg-white p-2">
                 <div class="qr-code text-center">
                     <!-- <h4 class="text-center">GET PAID FOR YOUR OPINION</h4> -->
                     <h4 class="text-center">Share with your friends and family</h4>
                     <h4 class="text-center">It's free to join</h4>
                     <div class="visible-print text-center">
-                        {!! QrCode::size(250)->generate(URL::to('/') . $ref_code) !!}
+                        {!! QrCode::size(150)->generate(URL::to('/') . $ref_code) !!}
                     </div>
                     
                     <div class="social-icons-color d-flex justify-content-center my-3">
