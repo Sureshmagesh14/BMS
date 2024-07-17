@@ -450,52 +450,96 @@ class TagsController extends Controller
         }
     }
 
-    public function tags_attach_store(Request $request){
+    // public function tags_attach_store(Request $request){
+    //     try {
+    //         $tag_id  = $request->tag_id;
+    //         $respondents = $request->respondents;
+
+    //         if(RespondentTags::where('tag_id', $tag_id)->where('respondent_id', $respondents)->exists()){
+
+    //             RespondentTags::update(['updated_at' => date("Y-m-d h:i:s")]);
+
+    //             return response()->json([
+    //                 'text_status' => false,
+    //                 'status' => 200,
+    //                 'message' => 'Panel Already Attached.',
+    //             ]);
+    //         }
+    //         else{
+    //             RespondentTags::insert(['tag_id' => $tag_id, 'respondent_id' => $respondents, 'created_at' => date("Y-m-d h:i:s")]);
+
+    //             // $proj = Projects::where('id',$project_id)->first();
+    //             // $resp = Respondents::where('id',$respondents)->first();
+
+    //             //email starts
+    //             // if($proj->name!='')
+    //             // {
+    //             //     $to_address = $resp->email;
+    //             //     //$to_address = 'hemanathans1@gmail.com';
+    //             //     $resp_name = $resp->name.' '.$resp->surname;
+    //             //     $proj_name = $proj->name;
+
+    //             //     $data = ['subject' => 'New Survey Assigned','name' => $resp_name,'project' => $proj_name,'type' => 'new_project'];
+                
+    //             //     Mail::to($to_address)->send(new WelcomeEmail($data));
+    //             // }
+    //             //email ends
+
+    //             return response()->json([
+    //                 'text_status' => true,
+    //                 'status' => 200,
+    //                 'message' => 'Project Attached Successfully.',
+    //             ]);
+    //         }
+    //     }
+    //     catch (Exception $e) {
+    //         return $e->getMessage();
+    //     }
+    // }
+
+    public function tags_attach_store(Request $request) {
         try {
-            $tag_id  = $request->tag_id;
-            $respondents = $request->respondents;
-
-            if(RespondentTags::where('tag_id', $tag_id)->where('respondent_id', $respondents)->exists()){
-
-                RespondentTags::update(['updated_at' => date("Y-m-d h:i:s")]);
-
+            $tag_id = $request->tag_id;
+            $respondent_id = $request->respondents; // Renamed for clarity
+    
+            // Check if the respondent is already tagged
+            if (RespondentTags::where('tag_id', $tag_id)->where('respondent_id', $respondent_id)->exists()) {
+                // If exists, update the timestamp
+                RespondentTags::where('tag_id', $tag_id)->where('respondent_id', $respondent_id)
+                    ->update(['updated_at' => now()]);
+    
                 return response()->json([
                     'text_status' => false,
                     'status' => 200,
                     'message' => 'Panel Already Attached.',
                 ]);
-            }
-            else{
-                RespondentTags::insert(['tag_id' => $tag_id, 'respondent_id' => $respondents, 'created_at' => date("Y-m-d h:i:s")]);
-
-                // $proj = Projects::where('id',$project_id)->first();
-                // $resp = Respondents::where('id',$respondents)->first();
-
-                //email starts
-                // if($proj->name!='')
-                // {
-                //     $to_address = $resp->email;
-                //     //$to_address = 'hemanathans1@gmail.com';
-                //     $resp_name = $resp->name.' '.$resp->surname;
-                //     $proj_name = $proj->name;
-
-                //     $data = ['subject' => 'New Survey Assigned','name' => $resp_name,'project' => $proj_name,'type' => 'new_project'];
-                
-                //     Mail::to($to_address)->send(new WelcomeEmail($data));
-                // }
-                //email ends
-
+            } else {
+                // If not, create a new entry
+                RespondentTags::create([
+                    'tag_id' => $tag_id,
+                    'respondent_id' => $respondent_id,
+                    'created_at' => now(),
+                    'updated_at' => now(), // Adding updated_at for consistency
+                ]);
+    
+                // Optional email logic could go here
+    
                 return response()->json([
                     'text_status' => true,
                     'status' => 200,
-                    'message' => 'Project Attached Successfully.',
+                    'message' => 'Panel Attached Successfully.',
                 ]);
             }
-        }
-        catch (Exception $e) {
-            return $e->getMessage();
+        } catch (Exception $e) {
+            // Improved error handling
+            return response()->json([
+                'text_status' => false,
+                'status' => 500,
+                'message' => 'An error occurred: ' . $e->getMessage(),
+            ]);
         }
     }
+    
 
 
     public function respondendtopanel_attach_import(Request $request){
