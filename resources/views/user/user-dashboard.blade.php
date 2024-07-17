@@ -158,21 +158,24 @@
                          <div class="text-center py-2">Your Rewards Breakdown </div>
                          <div class="row">
                             <div class="col-4 rounded ">
-                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                    <div class="bg-yellow text-white p-2 rounded my-2 text-center m-auto">2300</div>
-                                    <div class="text-center">Total Rewards since 2024</div>
+                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
+                                    <div class="bg-yellow text-white p-2 rounded mt-2 text-center m-auto">2300</div>
+                                    <div class="down-triangle-yellow triangle"></div>
+                                    <div class="text-center my-2">Total Rewards since 2024</div>
                                 </div>
                             </div>
                             <div class="col-4 rounded ">
-                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                    <div class="bg-blue text-white p-2 rounded my-2 text-center m-auto">2300</div>
-                                    <div class="text-center">Total Rewards this year</div>
+                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
+                                    <div class="bg-blue text-white p-2 rounded mt-2 text-center m-auto">2300</div>
+                                    <div class="down-triangle-blue triangle"></div>
+                                    <div class="text-center my-2">Total Rewards this year</div>
                                 </div>
                             </div>
                             <div class="col-4 rounded ">
-                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                    <div class="bg-green text-white p-2 rounded my-2 text-center m-auto">2300</div>
-                                    <div class="text-center">Available points for Cash Out</div>
+                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
+                                    <div class="bg-green text-white p-2 rounded mt-2 text-center m-auto">2300</div>
+                                    <div class="down-triangle-green triangle"></div>
+                                    <div class="text-center my-2">Available points for Cash Out</div>
                                 </div>
                             </div>
                             <div class="col-md-12">

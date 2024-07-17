@@ -24,7 +24,6 @@
     .login_img{
 
         border-radius: 30px;
-    border: 1px solid #fff;
     overflow: hidden;
     }
 
@@ -116,7 +115,7 @@
                         <span class="vi-bdr-set-or position-relative px-3">OR</span>
                     </div>
                     <div class="forgetpass">
-                        Forgot Password via
+                        <a href="">Forgot Password</a> via
                         <a href="{{ route('password.request') }}" class="link">Email</a>
                         or
                         <a href="{{ route('forgot_password_sms') }}" class="link">SMS</a>

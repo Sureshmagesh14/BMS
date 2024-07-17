@@ -27,7 +27,7 @@
                         <div class="col-md-6 col-sm-12">
                         <button type="submit"
                             class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2 me-1"
-                            id="reset">REQUEST
+                            id="reset">REQUEST PASSWORD
                             RESET</button>
                     </div>
                     <div class="col-md-6 col-sm-12 m-auto">

@@ -3,7 +3,7 @@
 
 <section class="vi-background-index ">
     <div class="container">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mb-10vh">
 
             <div class="col-md-10 m-auto h-100vh" style=""> <!-- margin-top: 5% !important; -->
                 <div class="w-100 position-relative">
@@ -19,7 +19,7 @@
                 
                         
                 <div class="w-50 ml-auto d-flex d-sm-flex">
-                    <div>
+                    <div class="w-50">
                         @if($get_cashout == null)
                         <h2 class=" h1 fw-bolder mt-2">Your available rewards</h2>
                             <h2 class="yelow-clr h1 fw-bolder mt-2">{{ $get_reward }} <span>Points</span> </h2>
@@ -38,20 +38,22 @@
                                 <h5>@if($get_cashout->amount != 0){{$get_cashout->amount / 10}} ZAR @endif</h5>
                             @endif
                     </div>
-                    <div>
+                    <div class="w-50">
                         @if($get_cashout == null)
                         <h2 class=" h1 fw-bolder mt-2">Your reward history</h2>
                             <div class="d-flex w-100">
-                            <div class="col-5 rounded m-1">
-                                <div class="bg-grey-6 p-2 m-2 w-100">
-                                    <div class="bg-warning text-white p-2 w-50 rounded my-2 text-center m-auto">{{$get_overrall_rewards}}</div>
-                                    <div>Total Rewards since {{ \Carbon\Carbon::now()->year }}</div>
+                            <div class="col-5 col-xs-6 rounded m-1">
+                                <div class="bg-grey-6 p-2 m-2 w-100 h-100p rounded">
+                                    <div class="bg-yellow text-white p-2 w-100 rounded mt-2 text-center m-auto">{{$get_overrall_rewards}}</div>
+                                    <div class="down-triangle-yellow triangle"></div>
+                                    <div class="my-2">Total Rewards since {{ \Carbon\Carbon::now()->year }}</div>
                                 </div>
                             </div>
-                            <div class="col-5 rounded m-1">
-                                <div class="bg-grey-6 p-2 m-2 w-100">
-                                    <div class="bg-primary text-white p-2 w-50 rounded my-2 text-center m-auto">{{$get_current_rewards}}</div>
-                                    <div>Total Rewards this year</div>
+                            <div class="col-5 col-xs-6 rounded m-1">
+                                <div class="bg-grey-6 p-2 m-2 w-100 h-100p rounded">
+                                    <div class="bg-blue text-white p-2 w-100 rounded mt-2 text-center m-auto">{{$get_current_rewards}}</div>
+                                    <div class="down-triangle-blue triangle"></div>
+                                    <div class="my-2">Total Rewards this year</div>
                                 </div>
                             </div>
                             </div>
