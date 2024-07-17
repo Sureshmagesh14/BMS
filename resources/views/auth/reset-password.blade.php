@@ -22,8 +22,8 @@
                         <label for="date" class="fw-bolder">Email</label>
                         <input type="email" name="email" id="email" placeholder="email@address.com"
                             class="form-control vi-border-clr border-radius-6px" value="{{old('email', $request->email)}}">
-                            <label for="date" class="fw-bolder">Password</label>
-                            <input type="password" name="password" id="password"  placeholder="Password" autocomplete="new-password"
+                            <label for="date" class="fw-bolder">New Password</label>
+                            <input type="password" name="password" id="password"  placeholder="New Password" autocomplete="new-password"
                                 class="form-control vi-border-clr border-radius-6px" id="">
                                 <label for="date" class="fw-bolder">Confirm Password</label>
                                 <input type="password" name="password_confirmation" id="password_confirmation" autocomplete="new-password" placeholder="Confirm Password"
