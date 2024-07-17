@@ -50,10 +50,10 @@ make extra money.</p>
                         </a>
                     </div>
                 </div>
-                <div class="logo show-mobile">
+                <!-- <div class="logo show-mobile">
                     <img src="{{ asset('user/images/small-logo.png') }}" class="img-fluid w-50 m-auto show-mobile"
                         alt="">
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

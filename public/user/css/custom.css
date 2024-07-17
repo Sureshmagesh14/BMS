@@ -426,10 +426,10 @@ tr:nth-child(even) {
     display: none !important;
 }
 .register.w-50{
-  width:85% !important;
+  width:85%;
 }
 .w-50{
-  width:100% !important;
+  width:100%;
 }
   .vi-gift-box {
     z-index: 99;
