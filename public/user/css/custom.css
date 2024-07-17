@@ -425,7 +425,7 @@ tr:nth-child(even) {
   .mob-hide{
     display: none !important;
 }
-.register.w-50{
+.register .w-50{
   width:85% !important;
 }
 .w-50{
