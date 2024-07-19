@@ -181,11 +181,11 @@
                                <div class="row my-3">
                                   <div class="col-6 my-auto">10 points = R1</div>
                                   <div class="col-6 my-auto">
-                                    {{-- @if($get_reward > 0) --}}
+                                    @if($get_reward >= 40)
                                     <a class="btn btn-yellow width-fit-content ml-auto d-flex" id="request_press"
                                     data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
                                     data-bs-original-title="{{ __('Cashout Process') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">Request Cash Out</a>
-                                    {{-- @endif --}}
+                                    @endif
                                 </div>
                                </div>
                             </div>
