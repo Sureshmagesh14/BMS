@@ -1,6 +1,10 @@
 @include('user.layout.header')
-
-<div class="container-fluid p-md-3 text-center vi-full-height vi-background-index"
+<style>
+.m-auto.h-100p.d-flex{
+    display:block !important;
+}
+</style>
+<div class="container-fluid p-md-3 text-center vi-full-height vi-background-index dashboard"
     style="background-size: cover; height:auto;">
 
     @if(isset($data->name) && ($data->name!=''))
@@ -46,10 +50,10 @@ make extra money.</p>
                         </a>
                     </div>
                 </div>
-                <div class="logo show-mobile">
+                <!-- <div class="logo show-mobile">
                     <img src="{{ asset('user/images/small-logo.png') }}" class="img-fluid w-50 m-auto show-mobile"
                         alt="">
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

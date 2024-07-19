@@ -126,7 +126,7 @@
         height:100%;
     }
 </style>
-<div class="container-fluid">
+<div class="container-fluid register">
     <div class="row vi-background-index">
         <div class="col-md-7 col-sm-12">
             <div class="w-100 h-100p d-flex m-auto">

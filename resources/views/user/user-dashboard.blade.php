@@ -130,18 +130,17 @@
              <div class="row">
                 <div class="col-md-4 vi-light-grey bg-white cir-border">
                    <div class="logo bg-white pt-3">
-                     
                       @if ($data->profile_image != null)
-    <div class="avatar-preview">
-        <div id="imagePreview" style="background-image: url('{{ asset($profile_path . $data->profile_image) }}');" height="10">
-        </div>
-    </div>
-@else
-<div class="profile text-center m-auto ">
+                      <div class="avatar-preview">
+                         <div id="imagePreview" style="background-image: url('{{ asset($data->$profile_path.$data->profile_image) }}');" height="10">
+                         </div>
+                      </div>
+                      @else
+                      <div class="profile text-center m-auto ">
                          <span class="vi-usr-profile1 m-auto p-4"
                             style="text-transform: capitalize;">{{ $first_character }}</span>
                       </div>
-@endif
+                      @endif
                       <div class="py-3 mb-5 text-center">
                          <p class="text-center fw-bolder" style="text-transform: capitalize;">{{ $data->name }}</p>
                          <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $data->email }}" target="_blank"
@@ -158,33 +157,46 @@
                          <div class="text-center py-2">Your Rewards Breakdown </div>
                          <div class="row">
                             <div class="col-4 rounded ">
-                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                    <div class="bg-yellow text-white p-2 rounded my-2 text-center m-auto">2300</div>
-                                    <div class="text-center">Total Rewards since 2024</div>
-                                </div>
+                               <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
+                                  <div class="bg-yellow text-white p-2 rounded mt-2 text-center m-auto">{{$get_overrall_rewards}}</div>
+                                  <div class="down-triangle-yellow triangle"></div>
+                                  <div class="text-center my-2">Total Rewards since {{ \Carbon\Carbon::now()->year }}</div>
+                               </div>
                             </div>
                             <div class="col-4 rounded ">
-                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                    <div class="bg-blue text-white p-2 rounded my-2 text-center m-auto">2300</div>
-                                    <div class="text-center">Total Rewards this year</div>
-                                </div>
+                               <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
+                                  <div class="bg-blue text-white p-2 rounded mt-2 text-center m-auto">{{$get_current_rewards}}</div>
+                                  <div class="down-triangle-blue triangle"></div>
+                                  <div class="text-center my-2">Total Rewards this year</div>
+                               </div>
                             </div>
                             <div class="col-4 rounded ">
-                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180">
-                                    <div class="bg-green text-white p-2 rounded my-2 text-center m-auto">2300</div>
-                                    <div class="text-center">Available points for Cash Out</div>
-                                </div>
+                               <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
+                                  <div class="bg-green text-white p-2 rounded mt-2 text-center m-auto">{{$available_points ?? '0'}}</div>
+                                  <div class="down-triangle-green triangle"></div>
+                                  <div class="text-center my-2">Available points for Cash Out</div>
+                               </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="row my-3">
-                                <div class="col-6 my-auto">10 points = R1</div>
-                                <div class="col-6 my-auto"><a class="btn btn-yellow width-fit-content ml-auto d-flex">Request Cash Out</a></div>
+                               <div class="row my-3">
+                                  <div class="col-6 my-auto">10 points = R1</div>
+                                  <div class="col-6 my-auto">
+                                    {{-- @if($get_reward > 0) --}}
+                                    <a class="btn btn-yellow width-fit-content ml-auto d-flex" id="request_press"
+                                    data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
+                                    data-bs-original-title="{{ __('Cashout Process') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">Request Cash Out</a>
+                                    {{-- @endif --}}
                                 </div>
+                               </div>
                             </div>
                          </div>
                       </h5>
                    </div>
                 </div>
+
+              
+
+
                 <div class="col-md-4 bg-white cir-border">
                    <div class="max-w-100 h-100p " style="">
                       <div class="text-center p-2">
@@ -463,7 +475,7 @@
             }
         },
         chart: {
-            height: 300,
+            height: 400,
             type: 'radialBar',
         },
         plotOptions: {
@@ -496,7 +508,23 @@
         },
         title: {
             text: 'Profile Completion Status Keep your profile up to date',
+        },
+        responsive: [{
+        breakpoint: 480, // Adjust as per your mobile breakpoint
+        options: {
+            chart: {
+                height: 350 // Adjust height for mobile
+            },
+            plotOptions: {
+                radialBar: {
+                    size: 100 // Adjust size for mobile
+                }
+            },
+            legend: {
+                position: 'bottom'
+            }
         }
+    }]
     };
 
     var chart = new ApexCharts(document.querySelector("#radial_multi_chart"), options);
@@ -569,7 +597,7 @@
         });
     });
 
-    $("#request_press").click(function() {
-        $(this).hide();
+    $("#request_press, .btn.close").click(function() {
+        $('#commonModal').modal('hide'); // Replace #myModal with your modal ID
     });
 </script>
