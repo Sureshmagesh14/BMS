@@ -132,7 +132,7 @@
                    <div class="logo bg-white pt-3">
                       @if ($data->profile_image != null)
                       <div class="avatar-preview">
-                         <div id="imagePreview" style="background-image: url('{{ asset($data->$profile_path.$data->profile_image) }}');" height="10">
+                         <div id="imagePreview" style="background-image: url('{{ asset($data->profile_path.$data->profile_image) }}');" height="10">
                          </div>
                       </div>
                       @else
