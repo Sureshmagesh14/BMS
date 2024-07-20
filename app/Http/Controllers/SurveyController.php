@@ -1982,7 +1982,7 @@ class SurveyController extends Controller
     public function checkquota($survey_id, $current_question_id, $current_user_ans)
     {
         $survey = Survey::find($survey_id);
-        if (!$survey) {
+        if (!$survey) {  
             return "Survey not found.";
         }
     
@@ -2200,7 +2200,7 @@ class SurveyController extends Controller
                         }
                     }
                     // If the quota limit is reached, return the redirection question
-                    if ($limit > (int)$quota->quota_limit) {
+                    if ($limit >= (int)$quota->quota_limit) {
        
                         return $quota->redirection_qus;
                     }
