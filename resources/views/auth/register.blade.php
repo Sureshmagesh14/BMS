@@ -259,7 +259,7 @@
             <!-- <div> -->
             <div class="w-100 reg-img m-auto">
             <h3 class="text-center mt-3 mb-2">Let's get you started</h3>
-            <img src="{{ asset('assets/images/reg-page_b.png') }}"
+            <img src="{{ asset('assets/images/reg-page_b.webp') }}"
                 class="img-fluid w-100 image-cover bg-yellows m-auto rounded-border" alt="" />
             </div>
             <!-- </div> -->
