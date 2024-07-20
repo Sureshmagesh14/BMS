@@ -104,7 +104,7 @@
     <div data-simplebar class="sidebar-menu-scroll">
 
         <!--- Sidemenu -->
-        <div id="sidebar-menu">
+        <div id="sidebar-menu" class="container_drag">
            
 
             <div class=" fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
@@ -155,8 +155,8 @@
               
                @endif
                <?php $i=1;?>
-                @foreach($questions as $qus)
-                    <div class="fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
+                @foreach($questions as $key => $qus)
+                    <div data-id="{{$key + 1}}" data-qus_id="{{$qus->id}}" data-qus_order_no="{{$qus->qus_order_no}}" draggable="true" class="draggable fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
                             <?php  $qus_url=route('survey.builder',[$survey->builderID,$qus->id]); ?>
                             <div class="d-flex qus_set qus" onclick="sectactivequs({{$qus->id}},'{{$qus->qus_type}}','{{$qus_url}}')">
                                 <span class="qus_no"><?php echo $i; ?></span>
@@ -194,6 +194,9 @@
                            
                            
                         <div class="ss-builder-features__button">
+                        <?php $url =route("survey.copyqus",$qus->id);?>
+                            <i data-feather="copy" onclick="copyqus('{{$url}}')"></i>
+                       
                         <?php $url =route("survey.deletequs",$qus->id);?>
                             <i data-feather="trash-2" onclick="qusdelete('{{$url}}')"></i>
                         </div>
@@ -1590,6 +1593,29 @@ function qusdelete(url){
         
     })
 }
+function copyqus(url){
+    Swal.fire({ 
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning", showCancelButton: !0, 
+        confirmButtonColor: "#34c38f", 
+        cancelButtonColor: "#f46a6a", 
+        confirmButtonText: "Yes, copy it!" 
+    }).then(function (t) { 
+        if(t.isConfirmed){
+            $.ajax({url: url, success: function(result){
+                result = JSON.parse(result);
+                if(result.error!=''){
+                    t.value && Swal.fire("Warning!", result.error, "warning") ;
+                }else{
+                    t.value && Swal.fire("Copied!", result.success, "success") ;
+                }
+                window.location.reload();
+            }});
+        }
+        
+    })
+}
 
 function sectactivequs(id,type,url){
     let pagetype=$('#pagetype').val();
@@ -2152,5 +2178,76 @@ $('#survey_thankyou_page').change(function () {
        $('#update_qus').click();
     });
   
-</script>
+    const draggables = document.querySelectorAll('.draggable');
+        const container = document.querySelector('.container_drag');
 
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+            });
+
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+                handleDragEnd();
+            });
+        });
+
+        container.addEventListener('dragover', e => {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(container, e.clientY);
+            const dragging = document.querySelector('.dragging');
+            if (afterElement == null) {
+                container.appendChild(dragging);
+            } else {
+                container.insertBefore(dragging, afterElement);
+            }
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function handleDragEnd() {
+            const reorderedData =  [...container.querySelectorAll('.draggable')].map((child, key) => ({
+                current_index: child.getAttribute('data-id'),
+                qusId: child.getAttribute('data-qus_id'),
+                qusOrderNo: child.getAttribute('data-qus_order_no'),
+                update_index: key+1
+            }));
+
+           makeAjaxCall(reorderedData);
+        }
+
+        function makeAjaxCall(reorderedData) {
+            console.log(reorderedData,"idd")
+            fetch("{{route('survey.qus.move')}}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': '{!! csrf_token() !!}'
+                },
+                body: JSON.stringify({ order: reorderedData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.data == 'Reordered'){
+                    // window.location.reload();
+                }
+                console.log('Server response:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+            
+        }
+</script>
