@@ -44,6 +44,10 @@
         margin: auto;
     }
 
+    .anchor{
+        text-decoration: none;
+    }   
+
     .image-cover {
         object-fit: cover;
     }
@@ -115,10 +119,10 @@
                         <span class="vi-bdr-set-or position-relative px-3">OR</span>
                     </div>
                     <div class="forgetpass">
-                        <a href="">Forgot Password</a> via
-                        <a href="{{ route('password.request') }}" class="link">Email</a>
+                        <a class="anchor" href="">Forgot Password</a> via
+                        <a class="anchor" href="{{ route('password.request') }}" class="link">Email</a>
                         or
-                        <a href="{{ route('forgot_password_sms') }}" class="link">SMS</a>
+                        <a class="anchor" href="{{ route('forgot_password_sms') }}" class="link">SMS</a>
                     </div>
                     @if (count($errors) > 0)
                         @if (
