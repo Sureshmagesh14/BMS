@@ -6,7 +6,7 @@
              <!-- margin-top: 5% !important; -->
              <div class="w-100 position-relative">
                 <div class="w-50 my-auto position-absolute pos-bottom mob-hide">
-                   <img src="{{ asset('assets/images/ima_3.png') }}" class="img-fluid" alt="">
+                   <img src="{{ asset('assets/images/ima_3.webp') }}" class="img-fluid" alt="">
                 </div>
                 <div class="m-auto text-center bg-white py-2 my-2 px-3 vi-full-rounded">
                    <div class=" text-center w-25 vi-gift-box m-auto">
