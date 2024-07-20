@@ -96,7 +96,7 @@
     <div class="container m-auto">
         <div class="row justify-content-center py-2">
             <div class="col-md-6 yelow-bg2 text-center d-none-mobile d-flex">
-                <img class="img-fluid w-100" src="{{ asset('assets/images/Update your profile picture.png') }}" alt="">
+                <img class="img-fluid w-100" src="{{ asset('assets/images/Update your profile picture.webp') }}" alt="">
             </div>
             <div class="col-md-6 bg-white p-2">
                 <div class="text-center">
