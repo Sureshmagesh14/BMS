@@ -18,6 +18,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\RespondentProfile;
+use Illuminate\Support\Facades\Hash;
 class RespondentsController extends Controller
 {
     /**
@@ -79,8 +80,12 @@ class RespondentsController extends Controller
                 $respondents->surname = $request->input('surname');
                 $respondents->date_of_birth = $request->input('date_of_birth');
                 $respondents->id_passport = $request->input('id_passport');
-                $respondents->mobile = $request->input('mobile');
-                $respondents->whatsapp = $request->input('whatsapp');
+                $mobile= str_replace(' ', '', $request->mobile);
+                $whatsapp = str_replace(' ', '', $request->whatsapp);
+                $password = Hash::make($request->input('password'));
+                $respondents->password = $password;
+                $respondents->mobile = $mobile;
+                $respondents->whatsapp = $whatsapp;
                 $respondents->email = $request->input('email');
                 $respondents->bank_name = $request->input('bank_name');
                 $respondents->branch_code = $request->input('branch_code');
@@ -185,61 +190,89 @@ class RespondentsController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'email' => 'required',
-                'active_status_id' => 'required',
-                'accept_terms'=> 'required',
+{
+    try {
+        // Define validation rules and messages
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'active_status_id' => 'required|integer',
+            'accept_terms' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'errors' => $validator->messages(),
             ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => 400,
-                    'errors' => $validator->messages(),
-                ]);
-            } else {
-// dd($request->id);
-                $respondents = Respondents::find($request->id);
-                if ($respondents) {
-                 
-                    $respondents->name = $request->input('name');
-                    $respondents->surname = $request->input('surname');
-                    $respondents->date_of_birth = $request->input('date_of_birth');
-                    $respondents->id_passport = $request->input('id_passport');
-                    $respondents->mobile = $request->input('mobile');
-                    $respondents->whatsapp = $request->input('whatsapp');
-                    $respondents->email = $request->input('email');
-                    $respondents->bank_name = $request->input('bank_name');
-                    $respondents->branch_code = $request->input('branch_code');
-                    $respondents->account_type = $request->input('account_type');
-                    $respondents->account_holder = $request->input('account_holder');
-                    $respondents->account_number = $request->input('account_number');
-                    $respondents->active_status_id = $request->input('active_status_id');
-                    $respondents->updated_at = $request->input('updated_at');
-                    $respondents->referral_code = $request->input('referral_code');
-                    $respondents->accept_terms = $request->input('accept_terms');
-                    $respondents->update();
-                    $respondents->id;
-                    app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'updated','respondent');
-                    return response()->json([
-                        'status' => 200,
-                        'last_insert_id' => $respondents->id,
-                        'message' => 'Respondents Updated.',
-                    ]);
-                } else {
-                    return response()->json([
-                        'status' => 404,
-                        'error' => 'No Respondents Found.',
-                    ]);
-                }
-
-            }
-
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
         }
+
+        // Normalize email for comparison
+        $email = trim(strtolower($request->input('email')));
+
+        // Check if email already exists for another respondent
+        $existingRespondent = Respondents::where('email', $email)
+            ->where('id', '!=', $id) // Exclude current respondent ID
+            ->first();
+
+        if ($existingRespondent) {
+            return response()->json([
+                'status' => 400,
+                'error' => 'Email already exists.',
+                'message' => 'Email already exists.',
+            ]);
+        }
+
+        // Find the respondent by ID
+        $respondent = Respondents::find($id);
+
+        if (!$respondent) {
+            return response()->json([
+                'status' => 404,
+                'error' => 'No Respondent Found.',
+                'message' => 'No Respondent Found.',
+            ]);
+        }
+
+        // Update respondent details
+        $respondent->name = $request->input('name', $respondent->name);
+        $respondent->surname = $request->input('surname', $respondent->surname);
+        $respondent->date_of_birth = $request->input('date_of_birth', $respondent->date_of_birth);
+        $respondent->id_passport = $request->input('id_passport', $respondent->id_passport);
+        $respondent->mobile = str_replace(' ', '', $request->input('mobile', $respondent->mobile));
+        $respondent->whatsapp = str_replace(' ', '', $request->input('whatsapp', $respondent->whatsapp));
+        $password = Hash::make($request->input('password'));
+        $respondent->password = $password;
+        $respondent->email = $email;
+        $respondent->bank_name = $request->input('bank_name', $respondent->bank_name);
+        $respondent->branch_code = $request->input('branch_code', $respondent->branch_code);
+        $respondent->account_type = $request->input('account_type', $respondent->account_type);
+        $respondent->account_holder = $request->input('account_holder', $respondent->account_holder);
+        $respondent->account_number = $request->input('account_number', $respondent->account_number);
+        $respondent->active_status_id = $request->input('active_status_id', $respondent->active_status_id);
+        $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
+        $respondent->accept_terms = $request->input('accept_terms', $respondent->accept_terms);
+
+        // Save changes
+        $respondent->save();
+
+        // Log the update activity
+        app('App\Http\Controllers\InternalReportController')
+            ->call_activity(Auth::guard('admin')->user()->role_id, Auth::guard('admin')->user()->id, 'updated', 'respondent');
+
+        return response()->json([
+            'status' => 200,
+            'last_insert_id' => $respondent->id,
+            'message' => 'Respondent Updated.',
+        ]);
+
+    } catch (Exception $e) {
+        // Handle and log the exception
+        return response()->json([
+            'status' => 500,
+            'error' => 'An error occurred while updating the respondent.',
+        ]);
     }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -479,14 +512,41 @@ class RespondentsController extends Controller
                     3 => 'Unsubscribed',
                     4 => 'Pending',
                 ];
+
+            
+              
+                $whatsapp = $post->whatsapp;
+                $mobile = $post->mobile;
+
+                if (!empty($mobile)) {
+                    if (strlen($mobile) == 9) {
+                        $mobile = '+27' . $mobile;
+                    } else if (strpos($mobile, '27') === 0 && strlen($mobile) == 11) {
+                        $mobile = '+' . $mobile;
+                    } else if (strpos($mobile, '+27') === 0 && strlen($mobile) == 12) {
+                        $mobile = $mobile;
+                    }
+                }
+                
+                
+                $whatsapp = $post->whatsapp;
+                if (!empty($whatsapp)) {
+                    if (strlen($whatsapp) == 9) {
+                        $whatsapp = '+27' . $whatsapp;
+                    } else if (strpos($whatsapp, '27') === 0 && strlen($whatsapp) == 11) {
+                        $whatsapp = '+' . $whatsapp;
+                    } else if (strpos($whatsapp, '+27') === 0 && strlen($whatsapp) == 12) {
+                        $whatsapp = $whatsapp;
+                    }
+                }
                 // Build each row of data
                 $nestedData = [
                     'select_all' => '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this,\'respondents_datatable\')" id="' . $post->id . '">',
                     'id' => $post->id,
                     'name' => $post->name ?? '-',
                     'surname' => $post->surname ?? '-',
-                    'mobile' => $post->mobile ?? '-',
-                    'whatsapp' => $post->whatsapp ?? '-',
+                    'mobile' => $mobile ?? '-',
+                    'whatsapp' => $whatsapp ?? '-',
                     'email' => $post->email ?? '-',
                     'date_of_birth' => $age,
                     'race' => $post->race ?? '-',
@@ -515,10 +575,22 @@ class RespondentsController extends Controller
                     </li>';
     
                     // Additional options based on conditions
-                    if (str_contains(url()->previous(), '/admin/projects') || str_contains(url()->current(), '/admin/respondents')) {
+                    if (str_contains(url()->previous(), '/admin/projects') || str_contains(url()->current(), '/admin/respondents'  )) {
                         // If coming from projects page
                         $nestedData['options'] .= '<li class="list-group-item">
                             <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
+                                <i class="far fa-trash-alt"></i> De-attach
+                            </a>
+                        </li>';
+                    }else if(str_contains(url()->previous(), '/admin/tags')){
+                        $nestedData['options'] .= '<li class="list-group-item">
+                            <a data-url="' . $edit_route . '" data-size="xl" data-ajax-popup="true"
+                                data-bs-original-title="Edit Respondent" class="rounded waves-light waves-effect">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                        </li>';
+                        $nestedData['options'] .= '<li class="list-group-item">
+                            <a id="deattach_tags" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
                                 <i class="far fa-trash-alt"></i> De-attach
                             </a>
                         </li>';
@@ -532,14 +604,10 @@ class RespondentsController extends Controller
                         </li>';
                         $nestedData['options'] .= '<li class="list-group-item">
                         <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                            <i class="far fa-trash-alt"></i> De-attach
-                        </a>
-                        </li>';
-                        $nestedData['options'] .=  '<li class="list-group-item">
-                        <a href="#!" id="delete_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
                             <i class="far fa-trash-alt"></i> Delete
                         </a>
                         </li>';
+                      
                       
                     }
                     
@@ -847,10 +915,12 @@ class RespondentsController extends Controller
             if($request->filled('q')){
                 $respondents_data = Respondents::search($searchValue)
                 ->query(function ($query) {
-                    $query->where('deleted_at', '=', NULL);
+                    $query->where('active_status_id', 1)
+                        ->whereNull('deleted_at');
                 })
-                ->orderBy('id','ASC')
+                ->orderBy('id', 'ASC')
                 ->get();
+
             }
 
             $respondents = array();
@@ -940,36 +1010,32 @@ class RespondentsController extends Controller
         }
     }
 
-    public function user_respondent_id_check(Request $request){
-        $form_name = $request->form_name;
-        $email = $request->email;
-        if($request->id==null){
-            if($form_name == "usercreate"){
-                $getCheckVal = DB::table('respondents')
-                    ->whereRaw('TRIM(LOWER(`email`)) LIKE ? ', [trim(strtolower($email)) . '%'])
-                    ->first();
-            }
-            else {
-                $getCheckVal = "Not Empty";
-            }
-          
-        }else{
-            $getCheckVal = DB::table('respondents')
-            ->whereRaw('TRIM(LOWER(`email`)) LIKE ? ', [trim(strtolower($email)) . '%'])
-            ->whereNot('id', $request->id)
-            ->first();
-           
+    public function user_respondent_id_check(Request $request)
+    {
+        $formName = $request->input('form_name');
+        $email = trim(strtolower($request->input('email')));
+        $id = $request->input('id');
+    
+        // Check for valid email
+        if (empty($email)) {
+            return response()->json(['exists' => false]);
         }
-        
-
-        if ($getCheckVal == null) {
-            echo "true";
-            // return 1; //Success
-        } else {
-            echo "false";
-            // return 0; //Error
+    
+        // Query to check if the email exists
+        $query = DB::table('respondents')
+            ->whereRaw('TRIM(LOWER(email)) = ?', [$email]);
+    
+        if ($id) {
+            // Exclude current respondent if ID is provided
+            $query->where('id', '!=', $id);
         }
+    
+        $exists = $query->exists();
+    
+        // Return JSON response
+        return response()->json(['exists' => $exists]);
     }
+    
 
     public function get_user_survey(Request $request)
     {

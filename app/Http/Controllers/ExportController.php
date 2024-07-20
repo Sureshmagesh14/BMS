@@ -6,6 +6,9 @@ use App\Models\Cashout;
 use App\Models\Projects;
 use App\Models\Respondents;
 use App\Models\UserEvents;
+use App\Models\SurveyResponse;
+use App\Models\Survey;
+use App\Models\Questions;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -38,15 +41,16 @@ class ExportController extends Controller
 
         try {
 
-            $module = $request->module;
-            $resp_status = $request->resp_status;
-            $resp_type = $request->show_resp_type;
-            $from = ($request->start != null) ? date('Y-m-d', strtotime($request->start)) : null;
-            $to = ($request->end != null) ? date('Y-m-d', strtotime($request->end)) : null;
-            $type_method = $request->type_method;
-            $type_resp = $request->type_resp;
+            $module       = $request->module;
+            $resp_status  = $request->resp_status;
+            $resp_type    = $request->show_resp_type;
+            $from         = ($request->start != null) ? date('Y-m-d', strtotime($request->start)) : null;
+            $to           = ($request->end != null) ? date('Y-m-d', strtotime($request->end)) : null;
+            $type_method  = $request->type_method;
+            $type_resp    = $request->type_resp;
             $cashout_type = $request->show_cashout_val;
 
+            //dd($module);
 
             $type = 'xlsx';
             $styleArray = array( // font color
@@ -143,7 +147,7 @@ class ExportController extends Controller
                 $query->whereIn('respondents.id', [$respondents]);
             })
             ->when($type_method != 'Individual', function ($query) {
-                $query->where('active_status_id', 1);
+                $query->where('respondents.active_status_id', 1);
             })
             ->select([
                 'respondents.id',
@@ -155,6 +159,7 @@ class ExportController extends Controller
                 \DB::raw('COALESCE(respondent_profile.vehicle_data, "") AS vehicle_data'),
                 'respondent_profile.updated_at',
             ])
+            ->where('respondents.active_status_id',1)
             ->get()
             ->unique('id'); 
             
@@ -184,11 +189,36 @@ class ExportController extends Controller
                         $essential = json_decode($all_data->essential_details, true);
                     
                         // Check if $basic is null, if so, set default values
+
+                        $mobile_number = '-';
+                        if (!empty($basic['mobile_number'])) {
+                            $m_number = $basic['mobile_number'];
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($basic['whatsapp_number'])) {
+                            $w_number = $basic['whatsapp_number'];
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
                         $id = $all_data->id ?? '-';
                         $first_name = $basic['first_name'] ?? '-';
                         $last_name = $basic['last_name'] ?? '-';
-                        $mobile_number = $basic['mobile_number'] ?? '-';
-                        $whatsapp_number = $basic['whatsapp_number'] ?? '-';
                         $email = $basic['email'] ?? '-';
                         $date_of_birth = isset($basic['date_of_birth']) ? $basic['date_of_birth'] : null;
                     
@@ -262,11 +292,37 @@ class ExportController extends Controller
                         $basic = json_decode($all_data->basic_details);
                         $essential = json_decode($all_data->essential_details);
 
+                        $mobile_number = '-';
+                        if (!empty($basic->mobile_number)) {
+                            $m_number = $basic->mobile_number;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($basic->whatsapp_number)) {
+                            $w_number = $basic->whatsapp_number;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
                         $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
                         $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
-                        $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
-                        $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
+                        $sheet->setCellValue('D' . $rows, $mobile_number ?? '');
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
 
                         $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
@@ -425,12 +481,38 @@ class ExportController extends Controller
                         $basic = json_decode($all_data->basic_details);
                         $essential = json_decode($all_data->essential_details);
                         $extended = json_decode($all_data->extended_details);
-                    
+
+                        $mobile_number = '-';
+                        if (!empty($basic->mobile_number)) {
+                            $m_number = $basic->mobile_number;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($basic->whatsapp_number)) {
+                            $w_number = $basic->whatsapp_number;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
                         $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
                         $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
-                        $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
-                        $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
+                        $sheet->setCellValue('D' . $rows, $mobile_number ?? '');
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
                     
                         $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
@@ -615,11 +697,37 @@ class ExportController extends Controller
                     $all_datas = $all_datas->get();
 
                     foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
                         $sheet->setCellValue('A' . $rows, $i);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
-                        $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                        $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
@@ -627,6 +735,146 @@ class ExportController extends Controller
                         $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
+                        $i++;
+                    }
+                }else if ($resp_status == 'Unsubscribed') {
+                    $sheet->setCellValue('A1', 'PID');
+                    $sheet->setCellValue('B1', 'First Name');
+                    $sheet->setCellValue('C1', 'Last Name');
+                    $sheet->setCellValue('D1', 'Mobile Number');
+                    $sheet->setCellValue('E1', 'WA Number');
+                    $sheet->setCellValue('F1', 'Email');
+                    $sheet->setCellValue('G1', 'Date Unsubscribed');
+                    $sheet->setCellValue('H1', 'Unsubscribed By');
+
+                    $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:H1')->applyFromArray($styleArray);
+
+                    $rows = 2;
+                    $i    = 1;
+
+                    $all_datas = Respondents::where('respondents.active_status_id','=',3);
+                    
+                    if($respondents != ""){
+                        $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                    }
+
+                    if($from != null && $to != null){
+                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
+                    }
+                        
+                    $all_datas = $all_datas->get();
+
+                    foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
+                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('B' . $rows, $all_data->name);
+                        $sheet->setCellValue('C' . $rows, $all_data->surname);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
+                        $sheet->setCellValue('F' . $rows, $all_data->email);
+                        $sheet->setCellValue('G' . $rows, $all_data->updated_at);
+                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
+                        $rows++;
+                        $i++;
+                    }
+                }else if ($resp_status == 'Active') {
+                    $sheet->setCellValue('A1', 'PID');
+                    $sheet->setCellValue('B1', 'First Name');
+                    $sheet->setCellValue('C1', 'Last Name');
+                    $sheet->setCellValue('D1', 'Mobile Number');
+                    $sheet->setCellValue('E1', 'WA Number');
+                    $sheet->setCellValue('F1', 'Email');
+                    $sheet->setCellValue('G1', 'Created At');
+                   
+
+                    $sheet->getStyle('A1:G1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:G1')->applyFromArray($styleArray);
+
+                    $rows = 2;
+                    $i    = 1;
+
+                    $all_datas = Respondents::where('respondents.active_status_id','=',1);
+                    
+                    if($respondents != ""){
+                        $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                    }
+
+                    if($from != null && $to != null){
+                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
+                    }
+                        
+                    $all_datas = $all_datas->get();
+
+                    foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
+                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('B' . $rows, $all_data->name);
+                        $sheet->setCellValue('C' . $rows, $all_data->surname);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
+                        $sheet->setCellValue('F' . $rows, $all_data->email);
+                        $sheet->setCellValue('G' . $rows, $all_data->created_at);
+                    
+                        $sheet->getRowDimension($rows)->setRowHeight(20);
+                        $sheet->getStyle('A' . $rows . ':G' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':G' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':G' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                         $i++;
                     }
@@ -658,11 +906,37 @@ class ExportController extends Controller
                     $all_datas = $all_datas->get();
 
                     foreach ($all_datas as $all_data) {
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+
                         $sheet->setCellValue('A' . $rows, $i);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
-                        $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                        $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                        $sheet->setCellValue('D' . $rows, $mobile_number);
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
                         $sheet->setCellValue('H' . $rows, $all_data->created_by);
@@ -732,37 +1006,81 @@ class ExportController extends Controller
                 $i = 1;
                 foreach ($all_datas as $all_data) {
 
+                    $respondent_id = $all_data->respondent_id;
+
+                    $get_incentive = Cashout::where('respondent_id',$respondent_id)->where('status_id',3);
+                    $get_incentive_owed = Cashout::where('respondent_id',$respondent_id)->where('status_id',1);
+
                     if ($all_data->type_id == 1) {
                         $type_val = 'EFT';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else if ($all_data->type_id == 2) {
                         $type_val = 'Data';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else if ($all_data->type_id == 3) {
                         $type_val = 'Airtime';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else if ($all_data->type_id == 4) {
                         $type_val = 'Donation';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else {
                         $type_val = '-';
                     }
 
+                    $get_incentive = $get_incentive->groupBy('respondent_id')->sum('amount');
+                    $get_incentive_owed = $get_incentive_owed->groupBy('respondent_id')->sum('amount');
+
                     $amount = $all_data->amount / 10;
                     $respondent = $all_data->name . ' - ' . $all_data->email . ' - ' . $all_data->mobile;
+
+                    $mobile_number = '-';
+                    if (!empty($all_data->mobile)) {
+                        $m_number = $all_data->mobile;
+                        
+                        if (strlen($m_number) == 9) {
+                            $mobile_number = '+27' . $m_number;
+                        } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            $mobile_number = '+' . $m_number;
+                        } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                            $mobile_number = $m_number;
+                        }
+                    }
+
+                    $whatsapp_number = '-';
+                    if (!empty($all_data->whatsapp)) {
+                        $w_number = $all_data->whatsapp;
+                        
+                        if (strlen($w_number) == 9) {
+                            $whatsapp_number = '+27' . $w_number;
+                        } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            $whatsapp_number = '+' . $w_number;
+                        } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                            $whatsapp_number = $w_number;
+                        }
+                    }
 
                     $sheet->setCellValue('A' . $rows, $i);
                     $sheet->setCellValue('B' . $rows, $all_data->name);
                     $sheet->setCellValue('C' . $rows, $all_data->surname);
-                    $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                    $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                    $sheet->setCellValue('D' . $rows, $mobile_number);
+                    $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
                     $sheet->setCellValue('H' . $rows, $all_data->total_cashout);
+                    $sheet->setCellValue('I' . $rows, ($get_incentive > 0) ? $get_incentive/10 : 0);
                     $sheet->setCellValue('J' . $rows, $all_data->failed);
                     $sheet->setCellValue('K' . $rows, $all_data->pending);
                     $sheet->setCellValue('L' . $rows, $all_data->declined);
                     $sheet->setCellValue('M' . $rows, $all_data->complete);
+                    $sheet->setCellValue('N' . $rows, ($get_incentive_owed > 0) ? $get_incentive_owed/10 : 0);
                     $get_project = Projects::select('projects.id','projects.name')->join('project_respondent as resp','projects.id','resp.project_id')
                         ->where('resp.respondent_id',$all_data->resp_id)
                         ->groupBy('projects.id')
@@ -797,7 +1115,7 @@ class ExportController extends Controller
                         if($respondents != ""){
                             $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                         }
-                    $all_datas = $all_datas->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -810,6 +1128,7 @@ class ExportController extends Controller
                     $all_datas = Respondents::leftJoin('rewards', function ($join) {
                         $join->on('rewards.respondent_id', '=', 'respondents.id');
                     })
+                    ->where('respondents.active_status_id',1)
                     ->get([
                         'respondents.id',
                         'respondents.name',
@@ -827,7 +1146,7 @@ class ExportController extends Controller
                     if($projects != ""){
                         $all_datas = $all_datas->whereIn('rewards.project_id', [$projects]);
                     }
-                    $all_datas = $all_datas->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -853,11 +1172,37 @@ class ExportController extends Controller
                 $i = 1;
                 foreach ($all_datas as $all_data) {
 
+                    $mobile_number = '-';
+                    if (!empty($all_data->mobile)) {
+                        $m_number = $all_data->mobile;
+                        
+                        if (strlen($m_number) == 9) {
+                            $mobile_number = '+27' . $m_number;
+                        } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            $mobile_number = '+' . $m_number;
+                        } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                            $mobile_number = $m_number;
+                        }
+                    }
+
+                    $whatsapp_number = '-';
+                    if (!empty($all_data->whatsapp)) {
+                        $w_number = $all_data->whatsapp;
+                        
+                        if (strlen($w_number) == 9) {
+                            $whatsapp_number = '+27' . $w_number;
+                        } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            $whatsapp_number = '+' . $w_number;
+                        } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                            $whatsapp_number = $w_number;
+                        }
+                    }
+
                     $sheet->setCellValue('A' . $rows, $i);
                     $sheet->setCellValue('B' . $rows, $all_data->name);
                     $sheet->setCellValue('C' . $rows, $all_data->surname);
-                    $sheet->setCellValue('D' . $rows, $all_data->mobile);
-                    $sheet->setCellValue('E' . $rows, $all_data->whatsapp);
+                    $sheet->setCellValue('D' . $rows, $mobile_number);
+                    $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
 
                     if($all_data->status_id==1){
@@ -885,7 +1230,7 @@ class ExportController extends Controller
                 $fileName = $module . "_" . date('ymd') . "." . $type;
 
             }
-            else if ($module == 'Survey') {
+            else if ($module == 'Survey123') {
                 
                 $sheet->getColumnDimension('Y')->setAutoSize(true);
                 $sheet->getColumnDimension('Z')->setAutoSize(true);
@@ -962,11 +1307,37 @@ class ExportController extends Controller
                     $essential = json_decode($all_data->essential_details);
                     $extended  = json_decode($all_data->extended_details);
 
+                    $mobile_number = '-';
+                    if (!empty($basic->mobile_number)) {
+                        $m_number = $basic->mobile_number;
+                        
+                        if (strlen($m_number) == 9) {
+                            $mobile_number = '+27' . $m_number;
+                        } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            $mobile_number = '+' . $m_number;
+                        } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                            $mobile_number = $m_number;
+                        }
+                    }
+
+                    $whatsapp_number = '-';
+                    if (!empty($basic->whatsapp_number)) {
+                        $w_number = $basic->whatsapp_number;
+                        
+                        if (strlen($w_number) == 9) {
+                            $whatsapp_number = '+27' . $w_number;
+                        } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            $whatsapp_number = '+' . $w_number;
+                        } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                            $whatsapp_number = $w_number;
+                        }
+                    }
+
                     $sheet->setCellValue('A' . $rows, $all_data->id);
                     $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
                     $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
-                    $sheet->setCellValue('D' . $rows, $basic->mobile_number ?? '');
-                    $sheet->setCellValue('E' . $rows, $basic->whatsapp_number ?? '');
+                    $sheet->setCellValue('D' . $rows, $mobile_number);
+                    $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $basic->email ?? '');
 
                     $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
@@ -1007,7 +1378,14 @@ class ExportController extends Controller
                     $home_lang    = ($extended->home_lang == 'other') ? $extended->home_lang_other : $extended->home_lang;
 
                     $banks = DB::table('banks')->where('id',$extended->bank_main)->where('active',1)->first();
-                    $bank_main = ($extended->bank_main == 'other') ? $extended->bank_main_other : $banks->bank_name;
+
+                    if(isset($banks->bank_name) && ($banks->bank_name!='')){
+                        $bank_names = $banks->bank_name;
+                    }else{
+                        $bank_names = '';
+                    }
+
+                    $bank_main = ($extended->bank_main == 'other') ? $extended->bank_main_other : $bank_names;
                         
                     $sheet->setCellValue('W' . $rows, $business_org ?? '');
                     $sheet->setCellValue('X' . $rows, $extended->org_company ?? '');
@@ -1130,8 +1508,8 @@ class ExportController extends Controller
                     ->when($type_method == 'Individual', function ($query) use ($respondents) {
                         $query->whereIn('respondent_tag.respondent_id', $respondents);
                     })
+                    ->where('respondents.active_status_id',1)
                     ->orderBy('respondent_tag.id', 'desc')
-                    ->take(3)
                     ->get()
                     ->map(function ($item) {
                         $item->full_name = $item->name . ' ' . $item->surname;
@@ -1308,6 +1686,277 @@ class ExportController extends Controller
                 }
             
                 $fileName = $module . "_" . date('ymd') . "." . $type;
+            }
+            else if ($module == 'Survey') {
+                    
+                    //dd($request);
+                    $methods=$request->methods;
+
+                    if($methods=='respondents_type'){
+                    
+                    //starts
+                    //dd($request->respondents_survey);
+                    $user_id =$request->respondents_survey[0];
+                    
+                    // Get Surveys by User Id
+                    $survey_IDs = SurveyResponse::where(['response_user_id' => $user_id])->groupBy('survey_id')->pluck('survey_id')->toArray();
+
+                    }else if($methods=='projects_type'){
+                    
+                        //starts
+                        //dd($request->projects);
+                        $project_id =$request->projects[0];
+                        
+                        // Get Surveys by User Id
+                        $survey_IDs = Projects::where(['id' => $project_id])->pluck('survey_link')->toArray();
+                    }
+
+                    //dd($survey_IDs);
+                
+                    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+                    function getValuesUser($data)
+                    {
+                        $header = $data[0];
+                        $headerMapping = array_flip($header);
+                        $values = [];
+                        $values[] = array_values($header);
+
+                        for ($i = 1; $i < count($data); $i++) {
+                            $row = $data[$i];
+                            $rearrangedRow = [];
+                            foreach ($header as $key) {
+                                $rearrangedRow[] = $row[$key] ?? '';
+                            }
+                            $values[] = $rearrangedRow;
+                        }
+
+                        return $values;
+                    }
+                    foreach ($survey_IDs as $survey_id) {
+                        // Custom array data to export
+                        $survey = Survey::where(['id' => $survey_id])->first();
+                    
+                        $question = Questions::where(['survey_id' => $survey_id])->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you', 'rankorder', 'multi_choice'])->get();
+                        $matrix_qus = Questions::where(['qus_type' => 'matrix_qus', 'survey_id' => $survey_id])->get();
+                        $multi_choice_qus = Questions::where(['qus_type' => 'multi_choice', 'survey_id' => $survey_id])->get();
+                        $rankorder_qus = Questions::where(['qus_type' => 'rankorder', 'survey_id' => $survey_id])->get();
+                
+                        $cols = ["Respondent Name", "Date", "Device ID", "Device Name", "Completion Status", "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"];
+                        foreach ($question as $qus) {
+                            array_push($cols, $qus->question_name);
+                        }
+                        foreach ($multi_choice_qus as $qus) {
+                            $qus_ans = json_decode($qus->qus_ans);
+                            $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
+                            foreach ($choices as $qus1) {
+                                array_push($cols, $qus->question_name . '_' . $qus1);
+                            }
+                        }
+                        foreach ($rankorder_qus as $qus) {
+                            $qus_ans = json_decode($qus->qus_ans);
+                            $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
+                            foreach ($choices as $qus1) {
+                                array_push($cols, $qus->question_name . '_' . $qus1);
+                            }
+                        }
+                        foreach ($matrix_qus as $qus) {
+                            $qus = json_decode($qus->qus_ans);
+                            array_push($cols, $qus->question_name);
+                            $exiting_qus_matrix = $qus != null ? explode(",", $qus->matrix_qus) : [];
+                            foreach ($exiting_qus_matrix as $qus1) {
+                                array_push($cols, $qus1);
+                            }
+                        }
+                
+                    
+                
+                        // Get Survey Data
+                        $question = Questions::where(['survey_id' => $survey_id])->whereNotIn('qus_type', ['welcome_page', 'thank_you'])->get();
+                        
+                        if($methods=='respondents_type'){
+                            $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id,'response_user_id'=>$user_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+                        }else{
+                            $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+                        }
+                        $finalResult = [$cols];
+                        foreach ($surveyResponseUsers as $userID) {
+                            $user = Respondents::where('id', $userID)->first();
+                            $starttime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "asc")->first();
+                            $endtime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
+                            $startedAt = $starttime->created_at;
+                            $endedAt = $endtime->created_at;
+                            $time = $endedAt->diffInSeconds($startedAt);
+                            $responseinfo = $startedAt->toDayDateTimeString() . ' | ' . $time . ' seconds';
+                            $other_details = json_decode($endtime->other_details);
+                            $deviceID = $other_details->device_id ?? '';
+                            $device_name = $other_details->device_name ?? '';
+                            $browser = $other_details->browser ?? '';
+                            $os = $other_details->os ?? '';
+                            $device_type = '';
+                            $lang_name = $other_details->lang_name ?? '';
+                            $long = $other_details->long ?? '';
+                            $lat = $other_details->lat ?? '';
+                            $location = $other_details->location ?? '';
+                            $ip_address = $other_details->ip_address ?? '';
+                            $lang_code = $other_details->lang_code ?? '';
+                            $name = $user->name ?? 'Anonymous';
+                
+                            $completedRes = SurveyResponse::where(['response_user_id' => $userID, 'survey_id' => $survey_id, 'answer' => 'thankyou_submitted'])->first();
+                            $completion_status = $completedRes ? 'Completed' : 'Partially Completed';
+                
+                            $result = ['Respondent Name' => $name, 'Date' => $responseinfo, 'Device ID' => $deviceID, 'Device Name' => $device_name, 'Completion Status' => $completion_status, 'Browser' => $browser, 'OS' => $os, 'Device Type' => $device_type, 'Long' => $long, 'Lat' => $lat, 'Location' => $location, 'IP Address' => $ip_address, 'Language Code' => $lang_code, 'Language Name' => $lang_name];
+                
+                            foreach ($question as $qus) {
+                                $respone = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
+                                $output = $respone ? ($respone->skip == 'yes' ? 'Skip' : $respone->answer) : '-';
+                
+                                if ($qus->qus_type == 'likert') {
+                                    $qusvalue = json_decode($qus->qus_ans);
+                                    $left_label = $qusvalue->left_label ?? 'Least Likely';
+                                    $middle_label = $qusvalue->middle_label ?? 'Neutral';
+                                    $right_label = $qusvalue->right_label ?? 'Most Likely';
+                                    $likert_range = $qusvalue->likert_range ?? 10;
+                                    $output = intval($output);
+                                    $likert_label = $output;
+                
+                                    if ($likert_range <= 4 && $output <= 4) {
+                                        $likert_label = $output <= 2 ? $left_label : $right_label;
+                                    } else if ($likert_range >= 5 && $output >= 5) {
+                                        if ($likert_range == 5) {
+                                            if ($output <= 2) {
+                                                $likert_label = $left_label;
+                                            } else if ($output == 3) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        } else if ($likert_range == 6) {
+                                            if ($output <= 2) {
+                                                $likert_label = $left_label;
+                                            } else if ($output <= 4) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        } else if ($likert_range == 7) {
+                                            if ($output <= 2) {
+                                                $likert_label = $left_label;
+                                            } else if ($output <= 5) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        } else if ($likert_range == 8) {
+                                            if ($output <= 3) {
+                                                $likert_label = $left_label;
+                                            } else if ($output <= 5) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        } else if ($likert_range == 9) {
+                                            if ($output <= 3) {
+                                                $likert_label = $left_label;
+                                            } else if ($output <= 6) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        } else if ($likert_range == 10) {
+                                            if ($output <= 3) {
+                                                $likert_label = $left_label;
+                                            } else if ($output <= 7) {
+                                                $likert_label = $middle_label;
+                                            } else {
+                                                $likert_label = $right_label;
+                                            }
+                                        }
+                                    }
+                
+                                    $result[$qus->question_name] = $likert_label;
+                                } else if ($qus->qus_type == 'matrix_qus') {
+                                    $result[$qus->question_name] = '';
+                                    if ($output == 'Skip') {
+                                        foreach (json_decode($qus->qus_ans) as $matrix_qus) {
+                                            $result[$matrix_qus] = 'Skip';
+                                        }
+                                    } else {
+                                        foreach (json_decode($qus->qus_ans) as $matrix_qus) {
+                                            $matrixQus = SurveyResponse::where(['survey_id' => $survey_id, 'matrix_qus' => $matrix_qus, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
+                                            $output_matrix_qus = $matrixQus ? $matrixQus->answer : '-';
+                                            $result[$matrix_qus] = $output_matrix_qus;
+                                        }
+                                    }
+                                } else {
+                                    $result[$qus->question_name] = $output;
+                                }
+                            }
+                
+                            foreach ($multi_choice_qus as $qus) {
+                                $qus_ans = json_decode($qus->qus_ans);
+                                $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
+                                $multichoicesResult = [];
+                                foreach ($choices as $choice) {
+                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'multi_ans' => $choice])->orderBy("id", "desc")->first();
+                                    $multichoicesResult[$qus->question_name . '_' . $choice] = $answer ? 'Yes' : 'No';
+                                }
+                                $result = array_merge($result, $multichoicesResult);
+                            }
+                
+                            foreach ($rankorder_qus as $qus) {
+                                $qus_ans = json_decode($qus->qus_ans);
+                                $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
+                                $rankorderResult = [];
+                                foreach ($choices as $choice) {
+                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'rank_ans' => $choice])->orderBy("id", "desc")->first();
+                                    $rankorderResult[$qus->question_name . '_' . $choice] = $answer ? $answer->rank_ans : 'No';
+                                }
+                                $result = array_merge($result, $rankorderResult);
+                            }
+                
+                            $finalResult[] = $result;
+                        }
+                
+                        $finalResult = getValuesUser($finalResult);
+                        //dd($finalResult);
+                        
+                        if($survey){
+                            $survey_name = $survey->title;
+                        }else{
+                            $survey_name = "Survey-".$survey_id;
+                        }
+                
+                        $sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $survey_name);
+                        $spreadsheet->addSheet($sheet, 0);
+                        $spreadsheet->setActiveSheetIndex(0);
+                        $sheet = $spreadsheet->getActiveSheet();
+                
+                        // Export Data to Excel
+                        $sheet->fromArray($finalResult, null, 'A1', false, false);
+                
+                        foreach (range('A', $sheet->getHighestDataColumn()) as $col) {
+                            $sheet->getColumnDimension($col)->setAutoSize(true);
+                        }
+                    }
+                
+                    $spreadsheet->removeSheetByIndex(count($spreadsheet->getSheetNames()) - 1);
+                    
+                    if($methods=='respondents_type'){
+                        $fileName = 'Survey_Report_' . $user_id . '_' . date('Y-m-d') . '.xlsx';
+                    }else{
+                        $fileName = 'Survey_Report_' . $project_id . '_' . date('Y-m-d') . '.xlsx';
+                    }
+
+                    $filePath = storage_path('app/public/' . $fileName);
+                
+                    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+                    $writer->save($filePath);
+                
+                    return response()->download($filePath)->deleteFileAfterSend(true);
+                    //ends
+                  
+                    
+
             }
             
             

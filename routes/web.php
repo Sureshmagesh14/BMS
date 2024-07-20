@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 Route::any('/', 'WelcomeController@home')->name('home');
 Route::any('update_activitation/{id}', 'WelcomeController@update_activitation')->name('update_activitation');
 Route::any('activation_status/{id}/{active_id}', 'WelcomeController@activation_status')->name('activation_status');
+Route::any('forgot_password_sms', 'WelcomeController@forgot_password_sms')->name('forgot_password_sms');
+
+Route::any('forgot_password_check', 'WelcomeController@forgot_password_check')->name('forgot_password_check');
+
 // View Survey
 Route::get('/survey/view/{id}', ['as' => 'survey.view', 'uses' => 'SurveyController@viewsurvey']);
 // Start Survey
@@ -34,6 +38,9 @@ Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.l
 Route::any('admin/forgot_password', 'Auth\AdminLoginController@forgot_password')->name('admin.forgot_password');
 Route::any('email', 'WelcomeController@email')->name('email');
 
+Route::get('password_reset_sms/{token}', 'WelcomeController@password_reset_sms')->name('password.sms');
+Route::post('password/reset', 'PasswordResetController@resetPassword')->name('password.store.sms');
+Route::any('email', 'WelcomeController@email')->name('email');
 Route::any('dashboard', 'WelcomeController@user_dashboard')->middleware(['auth', 'verified'])->name('user.dashboard');
 Route::any('view_client_survey_list', 'WelcomeController@view_client_survey_list')->middleware(['auth', 'verified'])->name('client.survey');
 Route::any('profile-edit', 'WelcomeController@user_profile')->middleware(['auth', 'verified'])->name('user.profile');
@@ -53,6 +60,7 @@ Route::any('cashout_form', 'WelcomeController@cashout_form')->middleware(['auth'
 Route::any('cashouts', 'WelcomeController@user_cashout')->middleware(['auth', 'verified'])->name('user.cashouts');
 Route::any('change_profile', 'WelcomeController@change_profile')->middleware(['auth', 'verified'])->name('user.change_profile');
 Route::post('image_update', 'WelcomeController@image_update')->middleware(['auth', 'verified'])->name('user.image_update');
+Route::any('terms_and_conditions', 'WelcomeController@terms_and_conditions')->middleware(['auth', 'verified'])->name('terms_and_conditions');
 
 Route::any('updateprofile_wizard', 'ProfileController@updateprofile_wizard')->middleware(['auth', 'verified'])->name('updateprofile_wizard');
 Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'verified'])->name('get_suburb');
@@ -180,6 +188,8 @@ Route::group([
     Route::any('tags_search_result', 'TagsController@tags_search_result')->name('tags_search_result');
     Route::any('tags_resp_attach_import/{panel_id}', 'TagsController@tags_resp_attach_import')->name('tags_resp_attach_import');
     Route::any('deattach_tags/{tags_id}', 'TagsController@deattach_tags')->name('deattach_tags');
+    Route::any('deattach_multi_panel', 'TagsController@deattach_multi_panel')->name('deattach_multi_panel');
+    
 
     /* Rewards MENU*/
     Route::resource('rewards', 'RewardsController')->name('index', 'rewards.index')->name('destroy', 'rewards.destroy')

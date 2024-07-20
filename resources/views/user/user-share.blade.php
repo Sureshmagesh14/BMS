@@ -1,20 +1,21 @@
 @include('user.layout.header-2')
 
 
-<section class="bg-greybg vh-100">
-    <div class="mb-5">
-    <div class="container">
-        <div class="row justify-content-center py-5 mx-auto">
-            <div class="col-md-6 text-center my-auto d-flex">
-                <img class="w-100" src="{{ asset('assets/images/Share.jpg') }}" />
+<section class="bg-greybg vh-75 m-auto d-flex">
+    <div class="m-auto d-flex">
+    <div class="container my-2">
+        <div class="row justify-content-center mx-auto bg-white">
+            <div class="col-md-6 text-center d-flex bg-white">
+                <img class="w-100 object-fit" src="{{ asset('assets/images/share.png') }}" />
             </div>
-            <div class="col-md-4 bg-white p-5 mb-5">
+            <div class="col-md-6  p-2 d-flex m-auto">
+                <div class="w-100">
                 <div class="qr-code text-center">
                     <!-- <h4 class="text-center">GET PAID FOR YOUR OPINION</h4> -->
                     <h4 class="text-center">Share with your friends and family</h4>
                     <h4 class="text-center">It's free to join</h4>
                     <div class="visible-print text-center">
-                        {!! QrCode::size(250)->generate(URL::to('/') . $ref_code) !!}
+                        {!! QrCode::size(150)->generate(URL::to('/') . $ref_code) !!}
                     </div>
                     
                     <div class="social-icons-color d-flex justify-content-center my-3">
@@ -25,12 +26,11 @@
                         <img id="mail" src="{{ asset('assets/images/SM icons-04.png') }}" class="img-fluid w-10" onclick="fbs_click(this);" alt=""/>
                     </div>
                 </div>
-                <div class="bg-light text-center">
+                <div class="text-center">
                     <span id="demo"> {{ URL::to('/') }}?r={{ $ref_code }}</span><br>
                     <p class="text-secondary btn" onclick="copy('#demo')">Tap to copy link</p>
                 </div>
-
-
+                </div>
             </div>
         </div>
     </div>

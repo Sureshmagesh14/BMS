@@ -5,11 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RespondentTags extends Model
+class PasswordResets extends Model
 {
     use HasFactory;
-
-    
-    protected $table = 'respondent_tag';
-    protected $fillable = ['respondent_id','tag_id'];
 }

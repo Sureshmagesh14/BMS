@@ -82,6 +82,9 @@
                                     </div>
                                 </div>
 
+
+                                
+
                                 <div class="form-group row date_range" style="display: none;">
                                     <label class="col-md-2 col-form-label">Date Range</label>
                                     <div class="col-md-10">
@@ -98,8 +101,8 @@
                                     <div class="col-md-10">
                                         <select name="show_resp_type" id="show_resp_type" class="form-control">
                                             <option value="">Select</option>
-                                            <option value="simple">Simple Database</option>
-                                            <option value="essential">Normal Database</option>
+                                            <option value="simple">Basic Database</option>
+                                            <option value="essential">Essential Database</option>
                                             <option value="extended">Extended Database</option>
                                         </select>
                                     </div>
@@ -139,6 +142,12 @@
                                     <div class="col-md-10">
 
                                         <div class="custom-control custom-radio mb-3">
+                                            <input type="radio" id="Active" name="resp_status"
+                                                class="custom-control-input" value="Active" checked="checked">
+                                            <label class="custom-control-label" for="Active">Active</label>
+                                        </div>
+
+                                        <div class="custom-control custom-radio mb-3">
                                             <input type="radio" id="Deactivated" name="resp_status"
                                                 class="custom-control-input" value="Deactivated">
                                             <label class="custom-control-label" for="Deactivated">Deactivated</label>
@@ -148,6 +157,12 @@
                                             <input type="radio" id="Blacklisted" name="resp_status"
                                                 class="custom-control-input" value="Blacklisted">
                                             <label class="custom-control-label" for="Blacklisted">Blacklisted</label>
+                                        </div>
+
+                                        <div class="custom-control custom-radio mb-3">
+                                            <input type="radio" id="Unsubscribed" name="resp_status"
+                                                class="custom-control-input" value="Unsubscribed">
+                                            <label class="custom-control-label" for="Unsubscribed">Unsubscribed</label>
                                         </div>
 
                                     </div>
@@ -197,6 +212,15 @@
 
                                         <input class="form-control" type="text" id="respondents"
                                             name="respondents[]" value="{{ request()->get('q') }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row respondents_survey">
+                                    <label class="col-md-2 col-form-label">Respondents</label>
+                                    <div class="col-md-10">
+
+                                        <input class="form-control" type="text" id="respondents_survey"
+                                            name="respondents_survey[]" value="{{ request()->get('q') }}">
                                     </div>
                                 </div>
 
@@ -302,6 +326,8 @@
                     $(".show_pro_type").hide();
                     $(".methods").hide();
                     $(".show_cashout_type").hide();
+                    $(".respondents_survey").hide();
+                    
                     $("#module").val("");
                     $("#year").val("");
                     $("#month").val("");
@@ -318,12 +344,10 @@
                     $('#methods').on('change', function() {
                         if (this.value == 'projects_type') {
                             $(".projects").show();
-                            $(".report_type").hide();
-                            $(".respondents").hide();
+                            $(".respondents_survey").hide();
                         } else{
                             $(".projects").hide();
-                            $(".report_type").show();
-                            $(".respondents").show();
+                            $(".respondents_survey").show();
                         }
                     });
 
@@ -344,6 +368,7 @@
                             $(".date_range").show();
                             $(".panel").hide();
                             $(".methods").hide();
+                            $(".respondents_survey").hide();
                             $(".show_cashout_type").hide();
                         } else if (this.value == 'Respondents info') {
                             $(".show_year").hide();
@@ -357,6 +382,7 @@
                             $(".report_type").show();
                             $(".respondents").hide();
                             $(".date_range").hide(); 
+                            $(".respondents_survey").hide();
                             $(".projects").hide();
                             $(".show_pro_type").hide();
                             $(".methods").hide();
@@ -369,6 +395,7 @@
                             $(".show_action").hide();
                             $(".projects").hide();
                             $(".show_resp").hide();
+                            $(".respondents_survey").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
@@ -385,6 +412,7 @@
                             $(".show_month").hide();
                             $(".report_type").hide();
                             $(".show_role").hide();
+                            $(".respondents_survey").hide();
                             $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".show_resp_status").hide();
@@ -400,6 +428,7 @@
                             $(".show_year").hide();
                             $(".show_month").hide();
                             $(".show_role").hide();
+                            $(".respondents_survey").hide();
                             $(".show_action").hide();
                             $(".show_resp").hide();
                             $(".show_resp_status").hide();
@@ -418,7 +447,8 @@
                             $(".show_month").show();
                             $(".show_role").show();
                             $(".show_action").show();
-                            $(".show_resp").hide();
+                            $(".show_resp").hide(); 
+                            $(".respondents_survey").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").show();
@@ -439,6 +469,7 @@
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
+                            $(".respondents_survey").hide();
                             $(".respondents").hide();
                             $(".panel").show();
                             $(".report_type").show();
@@ -449,6 +480,24 @@
                             $(".show_cashout_type").hide();
                            
                         }
+                        else if (this.value == 'Survey') {
+                            $(".methods").show();
+                            $(".show_year").hide();
+                            $(".show_month").hide();
+                            $(".report_type").hide();
+                            $(".show_role").hide();
+                            $(".show_action").hide();
+                            $(".show_resp").hide();
+                            $(".show_resp_status").hide();
+                            $(".show_resp_type").hide();
+                            $(".show_user").hide();
+                            $(".respondents").hide();
+                            $(".projects").hide();
+                            $(".show_pro_type").hide();
+                            $(".date_range").hide();
+                            $(".panel").hide();
+                            $(".show_cashout_type").hide();
+                        } 
                         else {
                             $(".show_user").hide();
                             $(".projects").hide();
@@ -468,6 +517,7 @@
                             $(".methods").hide();
                             $(".panel").hide();
                             $(".show_cashout_type").hide();
+                            $(".respondents_survey").hide();
                         }
                     });
 
@@ -489,6 +539,25 @@
                         theme: "bootstrap"
                     });
 
+                    $("#respondents_survey").tokenInput("{{ route('respondent_seach_result') }}", {
+                        propertyToSearch: "name",
+                        tokenValue: "id",
+                        tokenDelimiter: ",",
+                        hintText: "{{ __('Search Respondent... By(ID, Name, Surname, Mobile)') }}",
+                        noResultsText: "{{ __('Respondent not found.') }}",
+                        searchingText: "{{ __('Searching...') }}",
+                        deleteText: "&#215;",
+                        minChars: 2,
+                        tokenLimit: 1,
+                        zindex: 9999,
+                        animateDropdown: false,
+                        resultsLimit: 20,
+                        deleteText: "&times;",
+                        preventDuplicates: true,
+                        theme: "bootstrap"
+                    });
+
+                 
                     $("#panel").tokenInput("{{ route('tags_search_result') }}", {
                         propertyToSearch: "name",
                         tokenValue: "id",
