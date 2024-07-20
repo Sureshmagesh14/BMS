@@ -2241,7 +2241,7 @@ $('#survey_thankyou_page').change(function () {
             .then(response => response.json())
             .then(data => {
                 if(data.data == 'Reordered'){
-                    // window.location.reload();
+                    window.location.reload();
                 }
                 console.log('Server response:', data);
             })
