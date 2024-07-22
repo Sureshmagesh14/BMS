@@ -71,7 +71,7 @@
     <div class="row vi-background-index">
         <div class="col-md-5 d-none-mobile d-flex mob-hide p-0 h-100">
             <div class="w-100 d-flex ">
-                <img src="{{ asset('assets/images/login-page_b.jpg') }}" class="login_img img-fluid w-90 d-flex m-auto d-flex "
+                <img src="{{ asset('assets/images/login-page_b.webp') }}" class="login_img img-fluid w-90 d-flex m-auto d-flex "
                     alt="" />
             </div>
         </div>

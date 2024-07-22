@@ -263,10 +263,12 @@ Route::group([
     Route::get('/survey/questiontype/{id}', ['as' => 'survey.questiontype', 'uses' => 'SurveyController@questiontype']);
     Route::get('/survey/qustype/{survey}/{qustype}', ['as' => 'survey.qustype', 'uses' => 'SurveyController@questiontypesurvey']);
     Route::get('/survey/deletequs/{id}', ['as' => 'survey.deletequs', 'uses' => 'SurveyController@deletequs']);
+    Route::get('/survey/copyqus/{id}', ['as' => 'survey.copyqus', 'uses' => 'SurveyController@copyqus']);
 
     /* Survey Questions Routings*/
     Route::get('/survey/questions/{id}', ['as' => 'survey.quesbuilder', 'uses' => 'SurveyController@questionList']);
     Route::post('/survey/questions/{id}', ['as' => 'survey.qus.update', 'uses' => 'SurveyController@updateQus']);
+    Route::post('/survey/questions-move', ['as' => 'survey.qus.move', 'uses' => 'SurveyController@moveQus']);
 
     /* Survey Clone Routings*/
     Route::get('/survey/surveyduplication/{id}', ['as' => 'survey.surveyduplication', 'uses' => 'SurveyController@surveyduplication']);

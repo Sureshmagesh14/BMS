@@ -6,7 +6,7 @@
     <div class="container my-2">
         <div class="row justify-content-center mx-auto bg-white">
             <div class="col-md-6 text-center d-flex bg-white">
-                <img class="w-100 object-fit" src="{{ asset('assets/images/share.png') }}" />
+                <img class="w-100 object-fit" src="{{ asset('assets/images/share.webp') }}" />
             </div>
             <div class="col-md-6  p-2 d-flex m-auto">
                 <div class="w-100">
