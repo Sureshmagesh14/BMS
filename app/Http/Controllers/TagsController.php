@@ -357,27 +357,57 @@ class TagsController extends Controller
     }
 
     
-    public function detach_multi_panel(Request $request){
+    public function deattach_multi_panel(Request $request)
+    {
         try {
-            $all_id = $request->input('all_id'); // Fetch the 'all_id' array from request inputs
-          
-            foreach($all_id as $id){
-                // Assuming 'RespondentTags' is the model for respondent tags
-                RespondentTags::where('respondent_id', $id)->delete();
+            $ids = $request->input('id');
+
+            // Check if $ids is not null and is iterable (array or object)
+            if (!is_array($ids)) {
+                // If 'id' is not an array, treat it as a single ID
+                $ids = [$ids]; // Convert single ID to an array for uniform processing
             }
-    
-            return response()->json([
-                'status'  => 200,
-                'success' => true,
-                'message' => 'Tags Detached successfully'
-            ]);
-        }
-        catch (Exception $e) {
+
+            // Validate input
+            if (empty($ids)) {
+                return response()->json([
+                    'status' => 400,
+                    'success' => false,
+                    'message' => 'No IDs provided or invalid data format.'
+                ]);
+            }
+
+            // Delete records based on each 'id' in the array
+            $deletedCount = 0;
+            foreach ($ids as $id) {
+                $deletedCount += RespondentTags::where('respondent_id', $id)->delete();
+            }
+
+            if ($deletedCount > 0) {
+                return response()->json([
+                    'status' => 200,
+                    'success' => true,
+                    'message' => 'Tags Detached successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'success' => false,
+                    'message' => 'No matching records found to delete.'
+                ]);
+            }
+        } catch (\Exception $e) {
             // Log the exception for debugging purposes
             // You might also want to handle or report the exception in a production environment
-            throw new Exception($e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'success' => false,
+                'message' => 'Error occurred: ' . $e->getMessage()
+            ]);
         }
     }
+
+    
     
 
     public function tags_export(Request $request){
@@ -527,7 +557,7 @@ class TagsController extends Controller
                 return response()->json([
                     'text_status' => false,
                     'status' => 200,
-                    'message' => 'Panel Already Attached.',
+                    'message' => 'Respondent Already Attached.',
                 ]);
             } else {
                 // If not, create a new entry
@@ -750,7 +780,8 @@ class TagsController extends Controller
     }
     
 
-    public function tags_resp_attach_import(Request $request){
+    public function tags_resp_attach_import(Request $request)
+    {
         $tag_id = $request->tag_id;
         $file = $request->file('file');
 
@@ -763,50 +794,74 @@ class TagsController extends Controller
 
         // Valid File Extensions
         $valid_extension = array("csv");
-        if(in_array(strtolower($extension),$valid_extension)){
-            // File upload location
-            $location = 'uploads/csv/'.$tag_id;
-            // Upload file
-            $file->move($location,$filename);
-            // Import CSV to Database
-            $filepath = public_path($location."/".$filename);
+        if (!in_array(strtolower($extension), $valid_extension)) {
+            return redirect()->back()->with('error', 'Invalid File Extension, Please Upload CSV File Format');
+        }
 
-            $file = fopen($filepath,"r");
+        // File upload location
+        $location = 'uploads/csv/' . $tag_id;
 
-            $importData_arr = array();
-            $i = 0;
-            $col=1;
-            while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
-                $num = count($filedata);
-                // Skip first row (Remove below comment if you want to skip the first row)
-                if($i == 0){
-                    $i++;
-                    continue;
-                }
+        // Upload file
+        $file->move($location, $filename);
 
-                if($num == $col){
-                    for ($c=0; $c < $num; $c++) {
-                        $set_array = array('respondent_id' => $filedata [$c],'tag_id' => $tag_id);
-                        array_push($importData_arr,$set_array);
-                    }
-                    $i++;
-                }
-                else{
-                    return redirect()->back()->with('error','Column mismatched!');
-                    break;
-                }
+        // Import CSV to Database
+        $filepath = public_path($location . "/" . $filename);
+        $file = fopen($filepath, "r");
+
+        $importData_arr = array();
+        $i = 0;
+        $col = 1;
+        while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+            $num = count($filedata);
+            // Skip first row (Remove below comment if you want to skip the first row)
+            if ($i == 0) {
+                $i++;
+                continue;
             }
-            fclose($file);
-            
+
+            if ($num == $col) {
+                for ($c = 0; $c < $num; $c++) {
+                    $respondent_id = $filedata[$c];
+
+                    // Check if respondent_id already exists for the given tag_id
+                    $existingRecord = RespondentTags::where('respondent_id', $respondent_id)
+                                                    ->where('tag_id', $tag_id)
+                                                    ->exists(); // Use exists() to check existence without fetching the whole record
+
+                    if ($existingRecord) {
+                        fclose($file);
+                        return redirect()->back()->with('error', 'Respondent ID ' . $respondent_id . ' already exists for this Panel.');
+                    }
+
+                    $set_array = array('respondent_id' => $respondent_id, 'tag_id' => $tag_id);
+                    array_push($importData_arr, $set_array);
+                }
+                $i++;
+            } else {
+                fclose($file);
+                return redirect()->back()->with('error', 'Column mismatched!');
+                break;
+            }
+        }
+        fclose($file);
+
+        // Using DB transaction to ensure atomicity
+        DB::beginTransaction();
+
+        try {
+            // Insert all records
             RespondentTags::insert($importData_arr);
 
-            return redirect()->back()->with('success','Attached Successfully');
-            
-        }
-        else{
-            return redirect()->back()->with('error','Invalid File Extension, Please Upload CSV File Format');
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Attached Successfully');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
         }
     }
+
 
     public function tags_search_result(Request $request){
         try {
