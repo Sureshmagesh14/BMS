@@ -232,12 +232,33 @@
             'respondents_datatable');
     });
 
-    $(document).on('click', '#deattach_respondents', function(e) {
+    $(document).on('click', '#deattach_tags', function(e) {
         e.preventDefault();
         var id = $(this).data("id");
-       
 
-        single_delete("POST", id, "{{ route('deattach_multi_panel') }}", "De-attached Panel Successfully", 'respondents_datatable');
+        // AJAX request to send 'id' to Laravel controller
+        $.ajax({
+            url: "{{ route('deattach_multi_panel') }}",
+            method: "POST",
+            data: {
+                _token: tempcsrf,
+                id: id // Sending 'id' as data to the controller
+            },
+            success: function(response) {
+                // Assuming response is handled appropriately in 'single_delete' function or elsewhere
+                console.log(response); // Log response for debugging purposes
+              
+                toastr.success("De-attached Panel Successfully");
+                respondents_datatable();
+                // Optionally, you might refresh datatable or perform other actions
+                // Example: $('#respondents_datatable').DataTable().ajax.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText); // Log error response for debugging purposes
+             
+                toastr.error("Error occurred: " + error);
+            }
+        });
     });
 
     $(document).on('click', '.user_play_button', function(e) {
