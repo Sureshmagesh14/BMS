@@ -780,92 +780,88 @@ class TagsController extends Controller
     }
     
 
-    public function tags_resp_attach_import(Request $request){
+    public function tags_resp_attach_import(Request $request)
+    {
         $tag_id = $request->tag_id;
         $file = $request->file('file');
-    
+
         // File Details 
         $filename = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
         $tempPath = $file->getRealPath();
         $fileSize = $file->getSize();
         $mimeType = $file->getMimeType();
-    
+
         // Valid File Extensions
         $valid_extension = array("csv");
-        if(in_array(strtolower($extension),$valid_extension)){
-            // File upload location
-            $location = 'uploads/csv/'.$tag_id;
-            // Upload file
-            $file->move($location,$filename);
-            // Import CSV to Database
-            $filepath = public_path($location."/".$filename);
-    
-            $file = fopen($filepath,"r");
-    
-            $importData_arr = array();
-            $i = 0;
-            $col=1;
-            while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
-                $num = count($filedata);
-                // Skip first row (Remove below comment if you want to skip the first row)
-                if($i == 0){
-                    $i++;
-                    continue;
-                }
-    
-                if($num == $col){
-                    for ($c=0; $c < $num; $c++) {
-                        $respondent_id = $filedata[$c];
-    
-                        // Check if respondent_id already exists
-                        $existingRecord = RespondentTags::where('respondent_id', $respondent_id)
-                                                        ->where('tag_id', $tag_id)
-                                                        ->first();
-    
-                        if(!$existingRecord){
-                            $set_array = array('respondent_id' => $respondent_id,'tag_id' => $tag_id);
-                            array_push($importData_arr,$set_array);
-                        }
-                        // If you want to handle duplicates differently, you can add else condition here
-    
-                    }
-                    $i++;
-                }
-                else{
-                    return redirect()->back()->with('error','Column mismatched!');
-                    break;
-                }
-            }
-            fclose($file);
-            
-            // Using DB transaction
-            DB::beginTransaction();
-    
-            try {
-                // Insert non-duplicate records
-                if(!empty($importData_arr)){
-                    RespondentTags::insert($importData_arr);
-                }
-    
-                DB::commit();
-    
-                return redirect()->back()->with('success','Attached Successfully');
-                
-            } catch (\Exception $e) {
-                DB::rollback();
-                return redirect()->back()->with('error','Error occurred: '.$e->getMessage());
-            }
-            
+        if (!in_array(strtolower($extension), $valid_extension)) {
+            return redirect()->back()->with('error', 'Invalid File Extension, Please Upload CSV File Format');
         }
-        else{
-            return redirect()->back()->with('error','Invalid File Extension, Please Upload CSV File Format');
+
+        // File upload location
+        $location = 'uploads/csv/' . $tag_id;
+
+        // Upload file
+        $file->move($location, $filename);
+
+        // Import CSV to Database
+        $filepath = public_path($location . "/" . $filename);
+        $file = fopen($filepath, "r");
+
+        $importData_arr = array();
+        $i = 0;
+        $col = 1;
+        while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+            $num = count($filedata);
+            // Skip first row (Remove below comment if you want to skip the first row)
+            if ($i == 0) {
+                $i++;
+                continue;
+            }
+
+            if ($num == $col) {
+                for ($c = 0; $c < $num; $c++) {
+                    $respondent_id = $filedata[$c];
+
+                    // Check if respondent_id already exists for the given tag_id
+                    $existingRecord = RespondentTags::where('respondent_id', $respondent_id)
+                                                    ->where('tag_id', $tag_id)
+                                                    ->exists(); // Use exists() to check existence without fetching the whole record
+
+                    if ($existingRecord) {
+                        fclose($file);
+                        return redirect()->back()->with('error', 'Respondent ID ' . $respondent_id . ' already exists for this Panel.');
+                    }
+
+                    $set_array = array('respondent_id' => $respondent_id, 'tag_id' => $tag_id);
+                    array_push($importData_arr, $set_array);
+                }
+                $i++;
+            } else {
+                fclose($file);
+                return redirect()->back()->with('error', 'Column mismatched!');
+                break;
+            }
+        }
+        fclose($file);
+
+        // Using DB transaction to ensure atomicity
+        DB::beginTransaction();
+
+        try {
+            // Insert all records
+            RespondentTags::insert($importData_arr);
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Attached Successfully');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
         }
     }
 
-   
-    
-    
 
     public function tags_search_result(Request $request){
         try {
