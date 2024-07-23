@@ -294,11 +294,10 @@ class WelcomeController extends Controller
             ->sum('points');
 
             $available_points = DB::table('rewards')
-            ->select(DB::raw('SUM(points) as total_points'))
             ->where('respondent_id', Session::get('resp_id'))
             ->where('status_id', 2)
             ->groupBy('respondent_id')
-            ->first(); // Use first() instead of get() to get a single row
+            ->sum('points');
 
             $get_reward = Rewards::where('respondent_id', $id)->where('status_id', 2)->sum('points');
        
