@@ -359,7 +359,11 @@ class SurveyController extends Controller
     $newqus->survey_id = $survey;
     $newqus->qus_type = $qustype;
     $newqus->created_by = $user->id;
-    $newqus->qus_order_no = $last_order_no->qus_order_no + 1;
+    if($last_order_no){
+        $newqus->qus_order_no = $last_order_no->qus_order_no + 1;
+    }else{
+        $newqus->qus_order_no = 1;
+    }
     $newqus->save();
     // Update Qus Count 
     $survey=Survey::where(['id'=>$survey])->first();
@@ -399,7 +403,11 @@ class SurveyController extends Controller
         $newqus->display_logic=$question->display_logic;
         $newqus->survey_thankyou_page=$question->survey_thankyou_page;
         $newqus->created_by=$question->created_by;
-        $newqus->qus_order_no = $last_order_no->qus_order_no + 1;
+        if($last_order_no){
+            $newqus->qus_order_no = $last_order_no->qus_order_no + 1;
+        }else{
+            $newqus->qus_order_no = 1;
+        }
 
         $newqus->save();
         return json_encode(['success'=>'Question copied Successfully',"error"=>""]);
@@ -423,7 +431,6 @@ class SurveyController extends Controller
         // Clone Question 
         foreach($questions as $qus){
             $last_order_no=Questions::where(['survey_id'=>$clonesurvey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->orderBy('qus_order_no', "desc")->first();
-
             $newqus=new Questions();
             $newqus->survey_id=$clonesurvey->id;
             $newqus->question_name=$qus->question_name;
@@ -433,7 +440,14 @@ class SurveyController extends Controller
             $newqus->skip_logic=$qus->skip_logic;
             $newqus->display_logic=$qus->display_logic;
             $newqus->created_by=$user->id;
-            $newqus->qus_order_no = $last_order_no->qus_order_no + 1;
+            
+            if($last_order_no){
+                $newqus->qus_order_no = $last_order_no->qus_order_no + 1;
+            }else{
+                $newqus->qus_order_no = 1;
+            }
+
+           
 
             $newqus->save();
         }
