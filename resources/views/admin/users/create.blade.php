@@ -7,46 +7,46 @@
         z-index: 2;
     }
 </style>
-<form id="users_form" class="validation">
+<form id="users_form" class="validation" autocomplete="off">
     @csrf
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Name *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name" required>
+            <input type="text" class="form-control" id="name" name="name" autocomplete="off" required>
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Surname *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="surname" name="surname" required>
+            <input type="text" class="form-control" id="surname" name="surname" autocomplete="off" required>
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">RSA ID / Passport *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="id_passport" name="id_passport" required>
+            <input type="text" class="form-control" id="id_passport" name="id_passport" autocomplete="off" required>
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Email *</label>
         <div class="col-md-10">
-            <input type="email" class="form-control" id="email" name="email" required>
+            <input type="email" class="form-control" id="email" name="email" autocomplete="off" required>
         </div>
     </div>
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Password *</label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="password" name="password" autocomplete="off" required>
             <span toggle="#password" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
         </div>
     </div>
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Password Confirmation </label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="cpassword" name="cpassword">
+            <input type="password" class="form-control" id="cpassword" autocomplete="off" name="cpassword">
             <span toggle="#cpassword" class="fa fa-fw fa-eye-slash field-icon toggle-password1"></span>
         </div>
     </div>
@@ -203,4 +203,20 @@
             input.attr("type", "password");
         }
     });
+
+    $(document).ready(function() {
+    // Ensure autocomplete="new-password" is applied to password fields
+    $('#password').attr('autocomplete', 'new-password');
+    $('#cpassword').attr('autocomplete', 'new-password');
+
+    // Clear autofill values if browser still autofills despite autocomplete="off"
+    $('#password').on('focus', function() {
+        $(this).attr('type', 'password');
+    });
+
+    $('#cpassword').on('focus', function() {
+        $(this).attr('type', 'password');
+    });
+  });
+
 </script>

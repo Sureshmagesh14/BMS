@@ -7,19 +7,19 @@
         z-index: 2;
     }
 </style>
-<form id="respondents_form" class="validation">
+<form id="respondents_form" class="validation" autocomplete="off">
     @csrf
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Name</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name">
+            <input type="text" class="form-control" id="name" name="name" autocomplete="off">
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Surname </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="surname" name="surname">
+            <input type="text" class="form-control" id="surname" name="surname" autocomplete="off">
         </div>
     </div>
 
@@ -27,14 +27,14 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Date Of Birth </label>
         <div class="col-md-10">
-            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth">
+            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" autocomplete="off">
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">RSA ID / Passport </label>
         <div class="col-md-10">
-            <input type="name" class="form-control" id="id_passport" name="id_passport">
+            <input type="text" class="form-control" id="id_passport" name="id_passport" autocomplete="off">
         </div>
     </div>
 
@@ -46,7 +46,7 @@
         <div class="col-md-10">
             <div class="input-group">
                 <div class="input-group-text">+27</div>
-                <input type="text" class="form-control" id="mobile" name="mobile" maxlength="16">
+                <input type="text" class="form-control" id="mobile" name="mobile" maxlength="16" autocomplete="off">
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
         <div class="col-md-10">
             <div class="input-group">
                 <div class="input-group-text">+27</div>
-                <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="16">
+                <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="16" autocomplete="off">
             </div>
         </div>
     </div>
@@ -69,7 +69,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Email *
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="email" name="email" required>
+            <input type="email" class="form-control" id="email" name="email" required autocomplete="off">
         </div>
     </div>
 
@@ -95,7 +95,7 @@
         </label>
         <div class="col-md-10">
             <input type="text" class="form-control" id="branch_code" readonly>
-            <input type="hidden" class="form-control" id="branch" name="branch_code">
+            <input type="hidden" class="form-control" id="branch" name="branch_code" autocomplete="off">
         </div>
     </div>
 
@@ -103,7 +103,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Account Type
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="account_type" name="account_type">
+            <input type="text" class="form-control" id="account_type" name="account_type" autocomplete="off">
         </div>
     </div>
 
@@ -111,7 +111,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Account Holder
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="account_holder" name="account_holder">
+            <input type="text" class="form-control" id="account_holder" name="account_holder" autocomplete="off">
         </div>
     </div>
 
@@ -119,7 +119,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Account Number
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="account_number" name="account_number">
+            <input type="text" class="form-control" id="account_number" name="account_number" autocomplete="off">
         </div>
     </div>
 
@@ -154,7 +154,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Password *
         </label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="password-field" name="password" required>
+            <input type="password" class="form-control" id="password-field" name="password" autocomplete="off" required>
             <span toggle="#password-field" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
         </div>
     </div>
