@@ -130,22 +130,23 @@
              <div class="row">
                 <div class="col-md-4 vi-light-grey bg-white cir-border">
                    <div class="logo bg-white pt-3">
-                        @if ($data->profile_image != null)
-                        <div class="avatar-preview d-flex justify-content-center align-items-center">
-                            <div id="imagePreview" class="rounded-circle overflow-hidden"
-                                style="background-image: url('{{ asset($data->profile_path.$data->profile_image) }}');
-                                        width: 150px; height: 150px; background-size: cover; background-position: center;
-                                        border: 2px solid #000;">
-                            </div>
+                    @if ($data->profile_image != null)
+                    <div class="avatar-preview d-flex justify-content-center align-items-center">
+                        <div id="imagePreview" class="rounded-circle overflow-hidden"
+                            style="background-image: url('{{ asset($data->profile_path.$data->profile_image) }}');
+                                    width: 150px; height: 150px; background-size: cover; background-position: center;
+                                    border: 2px solid #000;">
                         </div>
-                        @else
-                        <div class="profile text-center m-auto">
-                            <span class="vi-usr-profile1 d-inline-block p-4 rounded-circle bg-secondary text-white"
-                                style="font-size: 72px; line-height: 72px; width: 150px; height: 150px;">
-                                {{ $first_character }}
-                            </span>
-                        </div>
-                        @endif
+                    </div>
+                @else
+                    <div class="profile text-center m-auto">
+                        <span class="vi-usr-profile1 d-inline-block p-4 rounded-circle"
+                            style="font-size: 72px; line-height: 72px; width: 150px; height: 150px; background-color: #edbf1b; color: #ffffff;">
+                            {{ $first_character }}
+                        </span>
+                    </div>
+                @endif
+                
                       <div class="py-3 mb-5 text-center">
                         <p class="text-center fw-bolder" style="text-transform: capitalize;">{{ $data->name }}</p>
                         <div class="row justify-content-center">
