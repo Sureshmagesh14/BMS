@@ -403,8 +403,8 @@ class SurveyController extends Controller
         $newqus->display_logic=$question->display_logic;
         $newqus->survey_thankyou_page=$question->survey_thankyou_page;
         $newqus->created_by=$question->created_by;
+        
         // Reorder Other Qus
-
         $currentqus_no = (int)$question->qus_order_no;
 
         // Get next qus 
