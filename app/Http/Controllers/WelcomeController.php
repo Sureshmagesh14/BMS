@@ -305,7 +305,7 @@ class WelcomeController extends Controller
             //     return view('user.update-profile');
             // }else{
 
-            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points','get_reward'));
+            return view('user.user-dashboard', compact('request','data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points','get_reward'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -1499,16 +1499,13 @@ class WelcomeController extends Controller
 
     public function password_reset_sms(Request $request){
         try {
-
-            return view('auth.reset-sms-password');
-
+            $token = $request->route('token');
+            return view('auth.reset-sms-password', compact('token'));
         } catch (Exception $e) {
-
             throw new Exception($e->getMessage());
-          
         }
-
     }
+    
     
 
 }
