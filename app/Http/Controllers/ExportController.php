@@ -1897,7 +1897,7 @@ class ExportController extends Controller
                                 $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
                                 $multichoicesResult = [];
                                 foreach ($choices as $choice) {
-                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'multi_ans' => $choice])->orderBy("id", "desc")->first();
+                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
                                     $multichoicesResult[$qus->question_name . '_' . $choice] = $answer ? 'Yes' : 'No';
                                 }
                                 $result = array_merge($result, $multichoicesResult);
@@ -1908,7 +1908,7 @@ class ExportController extends Controller
                                 $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
                                 $rankorderResult = [];
                                 foreach ($choices as $choice) {
-                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'rank_ans' => $choice])->orderBy("id", "desc")->first();
+                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
                                     $rankorderResult[$qus->question_name . '_' . $choice] = $answer ? $answer->rank_ans : 'No';
                                 }
                                 $result = array_merge($result, $rankorderResult);
