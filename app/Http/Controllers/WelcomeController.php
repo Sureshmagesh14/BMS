@@ -1498,7 +1498,7 @@ class WelcomeController extends Controller
     }
     
 
-    public function password_reset_sms(){
+    public function password_reset_sms(Request $request){
         try {
 
             return view('auth.reset-sms-password');
