@@ -130,25 +130,47 @@
              <div class="row">
                 <div class="col-md-4 vi-light-grey bg-white cir-border">
                    <div class="logo bg-white pt-3">
-                      @if ($data->profile_image != null)
-                      <div class="avatar-preview">
-                         <div id="imagePreview" style="background-image: url('{{ asset($data->profile_path.$data->profile_image) }}');" height="10">
-                         </div>
-                      </div>
-                      @else
-                      <div class="profile text-center m-auto ">
-                         <span class="vi-usr-profile1 m-auto p-4"
-                            style="text-transform: capitalize;">{{ $first_character }}</span>
-                      </div>
-                      @endif
+                        @if ($data->profile_image != null)
+                        <div class="avatar-preview d-flex justify-content-center align-items-center">
+                            <div id="imagePreview" class="rounded-circle overflow-hidden"
+                                style="background-image: url('{{ asset($data->profile_path.$data->profile_image) }}');
+                                        width: 150px; height: 150px; background-size: cover; background-position: center;
+                                        border: 2px solid #000;">
+                            </div>
+                        </div>
+                        @else
+                        <div class="profile text-center m-auto">
+                            <span class="vi-usr-profile1 d-inline-block p-4 rounded-circle bg-secondary text-white"
+                                style="font-size: 72px; line-height: 72px; width: 150px; height: 150px;">
+                                {{ $first_character }}
+                            </span>
+                        </div>
+                        @endif
                       <div class="py-3 mb-5 text-center">
-                         <p class="text-center fw-bolder" style="text-transform: capitalize;">{{ $data->name }}</p>
-                         <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $data->email }}" target="_blank"
-                            class="nav-link d-flex align-items-center px-2"><i
-                            class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{ $data->email }}</a>
-                         <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center px-2"><i
-                            class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> {{ $data->mobile }}</a>
-                      </div>
+                        <p class="text-center fw-bolder" style="text-transform: capitalize;">{{ $data->name }}</p>
+                        <div class="row justify-content-center">
+                            <div class="col-auto">
+                                <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $data->email }}" target="_blank"
+                                   class="nav-link d-flex align-items-center">
+                                   <i class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{ $data->email }}
+                                </a>
+                            </div>
+                            <div class="col-auto">
+                                <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center">
+                                   <i class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> {{ $data->mobile }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mt-3 d-flex justify-content-center">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="btn btn-yellow rounded-pill d-flex align-items-center">
+                                    <i class="fa fa-sign-out me-2" aria-hidden="true"></i> Logout
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                
                    </div>
                 </div>
                 <div class="col-md-4 bg-white cir-border center-col">
