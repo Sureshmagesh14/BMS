@@ -119,7 +119,7 @@
                         <span class="vi-bdr-set-or position-relative px-3">OR</span>
                     </div>
                     <div class="forgetpass">
-                        <a class="anchor" href="">Forgot Password</a> via
+                        <span>Forgot Password</span> via
                         <a class="anchor" href="{{ route('password.request') }}" class="link">Email</a>
                         or
                         <a class="anchor" href="{{ route('forgot_password_sms') }}" class="link">SMS</a>
