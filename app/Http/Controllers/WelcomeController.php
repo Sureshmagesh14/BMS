@@ -1428,7 +1428,7 @@ class WelcomeController extends Controller
             // Assuming you have a PasswordResetsViaPhone model to store the token and expiration
             PasswordResetsViaPhone::updateOrCreate(
                 ['phone' => $phone],  // Use $phone variable instead of $user->phone
-                ['token' => $token, 'expires_at' => $expiresAt]
+                ['token' => $token, 'updated_at' => now()]
             );
     
             // Generate password reset URL
