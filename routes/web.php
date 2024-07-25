@@ -146,6 +146,10 @@ Route::group([
     
     Route::any('get_survey_link', 'ProjectsController@get_survey_link')->name('get_survey_link');
 
+    //Qualified Respondent
+    Route::resource('qualified_respondent', 'QualifiedController');
+    Route::any('get_all_qualified', 'QualifiedController@get_all_qualified')->name('get_all_qualified');
+
  
 
     /* Respondents MENU*/

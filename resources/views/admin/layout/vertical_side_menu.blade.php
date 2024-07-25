@@ -188,6 +188,14 @@
                     </a>
                 </li>
 
+                <li>
+                    <a href="{{ route('qualified_respondent.index') }}" class=" waves-effect">
+                        <i class="fas fa-network-wired"></i>
+                        <span class="menu-item" key="t-chat">Qualified Respondent
+                        </span>
+                    </a>
+                </li>
+
                 @if (Auth::guard('admin')->user()->role_id == 1)
                     <li>
                         <a href="{{ route('contents.index') }}" class=" waves-effect">

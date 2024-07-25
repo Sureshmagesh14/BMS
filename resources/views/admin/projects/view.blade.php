@@ -46,7 +46,7 @@
                                         <select name="action_1" id="action_1" class="form-control projects_table show_hided_option select_box">
                                             <option value="">Select Action</option>
                                             <option value="3">Status &gt; Complete</option>
-                                            <option value="4">Project Complete &amp; Reward</option>
+                                            <option value="5">Project Complete &amp; Qualified</option>
                                         </select>
                                     </div>
 
@@ -211,6 +211,22 @@
                         <!-- end card-body -->
                     </div>
 
+                    <!-- Respondent start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">Qualified Respondents</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Respondent end page title -->
+                    <div class="card">
+                        <div class="card-body">
+                            @include('admin.table_components.qualified_table', ['project_id' => $data->id,])
+                        </div>
+                        <!-- end card-body -->
+                    </div>
+
                 </div> <!-- end col -->
             </div> <!-- end row -->
 
@@ -230,6 +246,7 @@
     $(document).ready(function() {
         rewards_table();
         respondents_datatable();
+        qualified_table();
     });
 
     /* Rewards Inner Page */
@@ -324,6 +341,7 @@
                 'rewards_table');
         }
     });
+
     $("#action_1").change(function() {
         var get_status = this.value;
         var edit_id = $('#edit_id').val();
@@ -345,6 +363,9 @@
 
                     if(get_status == 3){
                         toastr.success("Project status changed into Completed");
+                    }
+                    else if(get_status == 3){
+                        toastr.success("Project status changed into Completed and Respondent moved to the Qualified");
                     }
                     else{
                         toastr.success("Project status changed into Completed and rewards added to the respondents");
@@ -511,6 +532,41 @@
             toastr.info("OOPS! Select the action");
         }
     });
+
+    function qualified_table() {
+        $('#qualified_table').dataTable().fnDestroy();
+        $('#qualified_table').DataTable({
+            searching: true,
+            ordering: true,
+            dom: 'lfrtip',
+            info: true,
+            iDisplayLength: 100,
+            lengthMenu: [
+                [100, 50, 25, -1],
+                [100, 50, 25, "All"]
+            ],
+            ajax: {
+                url: "{{ route('get_all_qualified') }}",
+                data: {
+                    _token: tempcsrf,
+                    id: '{{ $data->id }}',
+                    inside_form: 'projects',
+                },
+                error: function(xhr, error, thrown) {
+                    alert("undefind error");
+                }
+            },
+            columns: [
+                { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
+                { data: 'respondent_id',name: 'respondent_id',orderable: true,searchable: true },
+                { data: 'name',name: 'name',orderable: true,searchable: true },
+                { data: 'points',name: 'points',orderable: true,searchable: true },
+                { data: 'status',name: 'status',orderable: true,searchable: true },
+                { data: 'created_at',name: 'created_at',orderable: true,searchable: true },
+                { data: 'action',name: 'action',orderable: true,searchable: true }
+            ]
+        });
+    }
 </script>
 
 @if (Session::has('success'))
