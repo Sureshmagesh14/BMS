@@ -154,23 +154,68 @@
             });
         }
 
+        $(document).on('click', '.respondents_play_button', function(e) {
+            var all_id = [];
+            var values = $("#respondents_datatable tbody tr").map(function() {
+                var $this = $(this);
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    console.log("ll",$this.find("[type=checkbox]").attr('id'));
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
+                }
+            }).get();
 
-        $(document).on('change', '.respondents_select_box', function(e) {
-            value = $(this).val();
-            $.post("{{ route('respondents_export') }}", {
-                    _token: tempcsrf,
-                    id_value: value,
-                    form: 'respondents'
-                },
-                function(resp, textStatus, jqXHR) {
+            select_value = (all_id.length != 0) ? $(".respondents_select_box").val() : 0;
 
-                    if (resp == 'Error') {
-                        console.log("Error");
-                    } else {
-                        console.log("resps", resp);
-                        window.location.assign("../" + resp);
+            if(select_value == 3){
+                titles = "Status > Complete";
+                select_action("POST", all_id, select_value, "{{ route('project_action') }}", 'respondents_datatable', titles, "Are You Want To Change Status", "Action");
+            }
+            else if(select_value == "delete_all"){
+                multi_delete("POST", all_id, "{{ route('respondents_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
+            }
+            else if(select_value == "qualified"){
+                var get_status = this.value;
+                var edit_id = $('#edit_id').val();
+                $.ajax({
+
+                    type: "GET",
+                    url: "{{ route('get_project_status') }}",
+                    data: {
+                        "get_status": get_status,
+                        "edit_id": edit_id,
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        if(data.repsonse==400){
+                            toastr.info("Status Already Changed!");
+                        }else{
+
+                            if(get_status == 3){
+                                toastr.success("Project status changed into Completed");
+                            }
+                            else if(get_status == 3){
+                                toastr.success("Project status changed into Completed and Respondent moved to the Qualified");
+                            }
+                            else{
+                                toastr.success("Project status changed into Completed and rewards added to the respondents");
+                            }
+                        }
+                    
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
+
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+
                     }
                 });
+            }
+            else{
+                toastr.info("OOPS! Select the action");
+            }
         });
 
         $(document).on('click', '#delete_respondents', function(e) {
@@ -180,20 +225,5 @@
             url = url.replace(':id', id);
 
             single_delete("DELETE", id, url, "Respondents Deleted", 'respondents_datatable');
-        });
-
-        $(document).on('click', '.respondents_datatable.delete_all', function(e) {
-            e.preventDefault();
-            var all_id = [];
-
-            var values = $("#respondents_datatable tbody tr").map(function() {
-                var $this = $(this);
-                if ($this.find("[type=checkbox]").is(':checked')) {
-                    all_id.push($this.find("[type=checkbox]").attr('id'));
-                }
-            }).get();
-
-            multi_delete("POST", all_id, "{{ route('respondents_multi_delete') }}", "Respondents Deleted",
-                'respondents_datatable');
         });
     </script>

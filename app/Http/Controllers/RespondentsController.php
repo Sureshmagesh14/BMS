@@ -306,14 +306,47 @@ class RespondentsController extends Controller
         try {
             $all_id = $request->all_id;
             foreach($all_id as $id){
-                $contents = Respondents::find($id);
-                $contents->delete();
+                $respondents = Respondents::find($id);
+                $respondents->delete();
             }
             
             return response()->json([
                 'status'=>200,
                 'success' => true,
                 'message'=>'Respondents Deleted Successfully'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function qualified_respondent_status(Request $request){
+        try {
+            $all_id   = $request->all_id;
+            $proj_id  = $request->edit_id;
+            $projects = Projects::where('id',$proj_id)->first();
+            $reward   = ($projects != null) ? $projects->reward : 0;
+           
+            foreach($all_id as $id){
+                if (DB::table('qualified_respondent')->where('project_id', $proj_id)->where('respondent_id', $id)->doesntExist()) {
+                    $insert_array = array(
+                        'respondent_id' => $id,
+                        'project_id'    => $proj_id,
+                        'points'        => $reward,
+                        'status'        => 1,
+                    );
+
+                    if ($id > 0) {
+                        DB::table('qualified_respondent')->insert($insert_array);
+                    }
+                }
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Respondents Moved to Qualified Successfully'
             ]);
         }
         catch (Exception $e) {
