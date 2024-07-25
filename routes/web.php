@@ -149,6 +149,9 @@ Route::group([
     //Qualified Respondent
     Route::resource('qualified_respondent', 'QualifiedController');
     Route::any('get_all_qualified', 'QualifiedController@get_all_qualified')->name('get_all_qualified');
+    Route::any('attach_qualified_respondents/{project_id}', 'QualifiedController@attach_qualified_respondents')->name('attach_qualified_respondents');
+    Route::any('get_resp_details', 'QualifiedController@get_resp_details')->name('get_resp_details');
+    Route::any('qualified_respondent_attach_store', 'QualifiedController@qualified_respondent_attach_store')->name('qualified_respondent_attach_store');
 
  
 
@@ -172,7 +175,8 @@ Route::group([
     Route::any('get_branch_code', 'RespondentsController@get_branch_code')->name('get_branch_code');
     Route::any('import_respondents/{project_id}', 'RespondentsController@import_respondents')->name('import_respondents');
     Route::any('upload_respondent', 'RespondentsController@upload_respondent')->name('upload_respondent');
-    Route::any('qualified_respondent', 'RespondentsController@qualified_respondent')->name('qualified_respondent');
+    Route::any('qualified_respondent_status', 'RespondentsController@qualified_respondent_status')->name('qualified_respondent_status');
+    
     
 
     /* Tags (or) Pannels MENU*/

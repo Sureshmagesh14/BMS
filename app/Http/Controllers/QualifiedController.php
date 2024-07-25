@@ -112,7 +112,10 @@ class QualifiedController extends Controller
                         return $all_data->respondent_id;
                     })
                     ->addColumn('name', function ($all_data) {
-                        return $all_data->name.' '.$all_data->surname;
+                        return $all_data->name;
+                    })
+                    ->addColumn('surname', function ($all_data) {
+                        return $all_data->surname;
                     })
                     ->addColumn('points', function ($all_data) {
                         return ($all_data->points != 0) ? $all_data->points/ 10 : 0;
@@ -175,6 +178,84 @@ class QualifiedController extends Controller
             }
         }
         catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    
+    public function attach_qualified_respondents(Request $request){
+        try {
+            $project_id = $request->project_id;
+            
+            if($project_id == 0){
+                $project_all = Projects::select('projects.id','projects.name')->orderBy('name','ASC')->get();
+                $returnHTML = view('admin.qualified.attach', compact('project_all'))->render();
+            }
+            else{
+                $projects = Projects::select('projects.id','projects.name')->where('projects.id',$project_id)->first();
+                $get_resp = DB::table('project_respondent as pro_resp')->select('resp.*')
+                    ->join('respondents as resp', 'pro_resp.respondent_id', 'resp.id')
+                    ->where('pro_resp.project_id',$project_id)->get();
+                $returnHTML = view('admin.qualified.attach_inside', compact('projects','project_id', 'get_resp'))->render();
+            }
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function get_resp_details(Request $request){
+        $select = '<option value="" disabled>Select Respondent</option>';
+        $project_id = $request->project_id;
+
+        $get_resp = DB::table('project_respondent as pro_resp')->select('resp.*')
+            ->join('respondents as resp', 'pro_resp.respondent_id', 'resp.id')
+            ->where('pro_resp.project_id',$project_id)->get();
+
+        if(count($get_resp) > 0){
+            foreach($get_resp as $resp){
+                $select .= '<option value="'.$resp->id.'">'.$resp->name.' '.$resp->surname.'</option>';
+            }
+        }
+        else{
+            $select .= '<option value="">OPPS! No Respondent</option>';
+        }
+
+        return $select;
+    }
+
+    public function qualified_respondent_attach_store(Request $request){
+        try {
+            $project_id = $request->project_id;
+            $respondents = $request->respondents;
+
+            $projects = Projects::where('id',$project_id)->first();
+
+            if($projects != null){
+                foreach($respondents as $resp){
+                    if (DB::table('qualified_respondent')->where('project_id', $projects->id)->where('respondent_id', $resp)->doesntExist()) {
+                        $insert = array(
+                            'respondent_id' => $resp,
+                            'project_id' => $projects->id,
+                            'points' => $projects->reward,
+                            'status' => 1
+                        );
+
+                        QualifiedRespondent::insert($insert);
+                    }
+                }
+            }
+
+            return array('text_status' => true, 'message' => 'Selected Respondent is Qualified');
+        }
+        catch (Exception $e) {
+            return array('text_status' => false, 'message' => 'Something Went Wrong');
             throw new Exception($e->getMessage());
         }
     }

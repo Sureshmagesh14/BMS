@@ -321,7 +321,7 @@ class RespondentsController extends Controller
         }
     }
 
-    public function qualified_respondent(Request $request){
+    public function qualified_respondent_status(Request $request){
         try {
             $all_id   = $request->all_id;
             $proj_id  = $request->edit_id;

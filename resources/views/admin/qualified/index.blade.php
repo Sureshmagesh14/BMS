@@ -62,20 +62,6 @@
     <script>
         var tempcsrf = '{!! csrf_token() !!}';
 
-        $(document).on('click', '.qualified_table.delete_all', function(e) {
-            e.preventDefault();
-            var all_id = [];
-
-            var values = $("#qualified_table tbody tr").map(function() {
-                var $this = $(this);
-                if ($this.find("[type=checkbox]").is(':checked')) {
-                    all_id.push($this.find("[type=checkbox]").attr('id'));
-                }
-            }).get();
-
-            multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects Deleted", 'qualified_table');
-        });
-
         $(document).ready(function() {
             qualified_table();
         });
@@ -102,9 +88,10 @@
                     }
                 },
                 columns: [
-                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
+                    // { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
                     { data: 'respondent_id',name: 'respondent_id',orderable: true,searchable: true },
                     { data: 'name',name: 'name',orderable: true,searchable: true },
+                    { data: 'surname',name: 'surname',orderable: true,searchable: true },
                     { data: 'points',name: 'points',orderable: true,searchable: true },
                     { data: 'status',name: 'status',orderable: true,searchable: true },
                     { data: 'created_at',name: 'created_at',orderable: true,searchable: true },
@@ -113,16 +100,7 @@
             });
         }
 
-        $(document).on('click', '#delete_projects', function(e) {
-            e.preventDefault();
-            var id = $(this).data("id");
-            var url = "{{ route('projects.destroy', ':id') }}";
-            url = url.replace(':id', id);
-
-            single_delete("DELETE", id, url, "Project Deleted", 'qualified_table');
-        });
-
-        $(document).on('click', '.project_play_button', function(e) {
+        $(document).on('click', '.qualified_play_button', function(e) {
             var all_id = [];
             var values = $("#qualified_table tbody tr").map(function() {
                 var $this = $(this);

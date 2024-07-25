@@ -551,7 +551,7 @@
             $.ajax({
 
                 type: "GET",
-                url: "{{ route('qualified_respondent') }}",
+                url: "{{ route('qualified_respondent_status') }}",
                 data: {
                     "get_status": get_status,
                     "edit_id": edit_id,
@@ -605,9 +605,10 @@
                 }
             },
             columns: [
-                { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
+                // { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
                 { data: 'respondent_id',name: 'respondent_id',orderable: true,searchable: true },
                 { data: 'name',name: 'name',orderable: true,searchable: true },
+                { data: 'surname',name: 'surname',orderable: true,searchable: true },
                 { data: 'points',name: 'points',orderable: true,searchable: true },
                 { data: 'status',name: 'status',orderable: true,searchable: true },
                 { data: 'created_at',name: 'created_at',orderable: true,searchable: true },
