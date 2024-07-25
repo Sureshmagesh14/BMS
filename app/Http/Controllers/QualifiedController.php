@@ -370,6 +370,7 @@ class QualifiedController extends Controller
 
     public function project_store_qualified_respondents(Request $request){
         $project_id = $request->project_id;
+       
         $file = $request->file('file');
         
         if (!$request->hasFile('file')) {
@@ -423,7 +424,7 @@ class QualifiedController extends Controller
                         if (QualifiedRespondent::where('project_id', $project_id)->where('respondent_id', $respondent_id)->exists()) {
                             continue; // Skip if respondent already exists
                         }
-    
+ 
                         // Insert into QualifiedRespondent table
                         $get_rewards = Projects::where('id', $project_id)->first();
                         QualifiedRespondent::create([
