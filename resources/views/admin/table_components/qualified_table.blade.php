@@ -11,7 +11,7 @@
         Attach Qualified Respondent
     </a>
 
-    <a href="#!" data-url="#" data-size="xl"
+    <a href="#!" data-url="{{ route('import_qualified_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
         data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Import Qualified Respondent') }}"
         class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
         Import Qualified Respondent

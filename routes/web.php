@@ -150,10 +150,12 @@ Route::group([
     Route::resource('qualified_respondent', 'QualifiedController');
     Route::any('get_all_qualified', 'QualifiedController@get_all_qualified')->name('get_all_qualified');
     Route::any('attach_qualified_respondents/{project_id}', 'QualifiedController@attach_qualified_respondents')->name('attach_qualified_respondents');
+    Route::any('import_qualified_respondents/{project_id}', 'QualifiedController@import_qualified_respondents')->name('import_qualified_respondents');
     Route::any('get_resp_details', 'QualifiedController@get_resp_details')->name('get_resp_details');
     Route::any('qualified_respondent_attach_store', 'QualifiedController@qualified_respondent_attach_store')->name('qualified_respondent_attach_store');
+    Route::any('store_qualified_respondents', 'QualifiedController@store_qualified_respondents')->name('store_qualified_respondents');
+    Route::any('project_store_qualified_respondents', 'QualifiedController@project_store_qualified_respondents')->name('project_store_qualified_respondents');
 
- 
 
     /* Respondents MENU*/
     Route::resource('respondents', 'RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
@@ -176,6 +178,8 @@ Route::group([
     Route::any('import_respondents/{project_id}', 'RespondentsController@import_respondents')->name('import_respondents');
     Route::any('upload_respondent', 'RespondentsController@upload_respondent')->name('upload_respondent');
     Route::any('qualified_respondent_status', 'RespondentsController@qualified_respondent_status')->name('qualified_respondent_status');
+ 
+    
     
     
 

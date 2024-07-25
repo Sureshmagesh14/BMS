@@ -259,4 +259,197 @@ class QualifiedController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+
+
+    public function import_qualified_respondents(Request $request){
+        try {
+            $project_id = $request->project_id;
+            $projects = Projects::select('projects.id','projects.name')->where('projects.id',$project_id)->first();
+            $project_all = Projects::select('projects.id','projects.name')->orderBy('name','ASC')->get();
+
+            $returnHTML = view('admin.projects.import_qualified_respondent', compact('projects','project_id','project_all'))->render();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'html_page' => $returnHTML,
+                ]
+            );
+
+            
+        }
+        catch (Exception $e) {
+          
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function store_qualified_respondents(Request $request)
+    {
+        $project_id = $request->project_id;
+        $file = $request->file('file');
+        
+        if (!$request->hasFile('file')) {
+            return redirect()->back()->with('error', 'Please upload a file');
+        }
+    
+        // File Details 
+        $filename = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+    
+        // Validate File Extension
+        if (strtolower($extension) !== 'csv') {
+            return redirect()->back()->with('error', 'Invalid File Extension, Please Upload CSV File Format');
+        }
+    
+        // File upload location
+        $location = 'uploads/csv/'.$project_id;
+        // Ensure directory exists
+        if (!file_exists($location)) {
+            mkdir($location, 0777, true);
+        }
+    
+        // Upload file
+        $file->move($location, $filename);
+        // Import CSV to Database
+        $filepath = public_path($location . "/" . $filename);
+    
+        $file = fopen($filepath, "r");
+    
+        $importData_arr = [];
+        $i = 0;
+        $col = 1;
+    
+        try {
+            DB::beginTransaction();
+    
+            while (($filedata = fgetcsv($file, 1000, ",")) !== false) {
+                $num = count($filedata);
+    
+                // Skip first row
+                if ($i == 0) {
+                    $i++;
+                    continue;
+                }
+    
+                if ($num == $col) {
+                    for ($c = 0; $c < $num; $c++) {
+                        $respondent_id = $filedata[$c];
+    
+                        // Check if respondent already exists
+                        if (QualifiedRespondent::where('project_id', $project_id)->where('respondent_id', $respondent_id)->exists()) {
+                            continue; // Skip if respondent already exists
+                        }
+    
+                        // Insert into QualifiedRespondent table
+                        $get_rewards = Projects::where('id', $project_id)->first();
+                        QualifiedRespondent::create([
+                            'project_id' => $project_id,
+                            'respondent_id' => $respondent_id,
+                            'status' => 1,
+                            'points' => $get_rewards->reward,
+                            'created_at' => now(),
+                        ]);
+                    }
+                } else {
+                    return redirect()->back()->with('error', 'Column mismatched!');
+                }
+    
+                $i++;
+            }
+    
+            DB::commit();
+            fclose($file);
+    
+            return redirect()->back()->with('success', 'Attached Successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
+        }
+    }
+
+    public function project_store_qualified_respondents(Request $request){
+        $project_id = $request->project_id;
+        $file = $request->file('file');
+        
+        if (!$request->hasFile('file')) {
+            return redirect()->back()->with('error', 'Please upload a file');
+        }
+    
+        // File Details 
+        $filename = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+    
+        // Validate File Extension
+        if (strtolower($extension) !== 'csv') {
+            return redirect()->back()->with('error', 'Invalid File Extension, Please Upload CSV File Format');
+        }
+    
+        // File upload location
+        $location = 'uploads/csv/'.$project_id;
+        // Ensure directory exists
+        if (!file_exists($location)) {
+            mkdir($location, 0777, true);
+        }
+    
+        // Upload file
+        $file->move($location, $filename);
+        // Import CSV to Database
+        $filepath = public_path($location . "/" . $filename);
+    
+        $file = fopen($filepath, "r");
+    
+        $importData_arr = [];
+        $i = 0;
+        $col = 1;
+    
+        try {
+            DB::beginTransaction();
+    
+            while (($filedata = fgetcsv($file, 1000, ",")) !== false) {
+                $num = count($filedata);
+    
+                // Skip first row
+                if ($i == 0) {
+                    $i++;
+                    continue;
+                }
+    
+                if ($num == $col) {
+                    for ($c = 0; $c < $num; $c++) {
+                        $respondent_id = $filedata[$c];
+    
+                        // Check if respondent already exists
+                        if (QualifiedRespondent::where('project_id', $project_id)->where('respondent_id', $respondent_id)->exists()) {
+                            continue; // Skip if respondent already exists
+                        }
+    
+                        // Insert into QualifiedRespondent table
+                        $get_rewards = Projects::where('id', $project_id)->first();
+                        QualifiedRespondent::create([
+                            'project_id' => $project_id,
+                            'respondent_id' => $respondent_id,
+                            'status' => 1,
+                            'points' => $get_rewards->reward,
+                            'created_at' => now(),
+                        ]);
+                    }
+                } else {
+                    return redirect()->back()->with('error', 'Column mismatched!');
+                }
+    
+                $i++;
+            }
+    
+            DB::commit();
+            fclose($file);
+    
+            return redirect()->back()->with('success', 'Attached Successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
+        }
+    }
+    
+
 }
