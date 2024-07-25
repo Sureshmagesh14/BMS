@@ -171,7 +171,7 @@
                     this.reset();
                     toastr.success(response.message);
                     setTimeout(function() {
-                        location.reload();
+                       window.location.href="{{ route('user.dashboard') }}";
                     }, 1000);
 
                 }
