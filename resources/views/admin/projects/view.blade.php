@@ -524,11 +524,59 @@
         } else if (select_value == "delete_all") {
             multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects Deleted",
                 'respondents_datatable');
-        } else if (select_value == "export_all_project") {
-
-        } else if (select_value == "export_survey_response") {
-
         } else {
+            toastr.info("OOPS! Select the action");
+        }
+    });
+
+    $(document).on('click', '.respondents_play_button', function(e) {
+        var all_id = [];
+        var values = $("#respondents_datatable tbody tr").map(function() {
+            var $this = $(this);
+            if ($this.find("[type=checkbox]").is(':checked')) {
+                console.log("ll",$this.find("[type=checkbox]").attr('id'));
+                all_id.push($this.find("[type=checkbox]").attr('id'));
+            }
+        }).get();
+
+        select_value = (all_id.length != 0) ? $(".respondents_select_box").val() : 0;
+
+        if(select_value == 3){
+            titles = "Status > Complete";
+            select_action("POST", all_id, select_value, "{{ route('project_action') }}", 'respondents_datatable', titles, "Are You Want To Change Status", "Action");
+        }
+        else if(select_value == "qualified"){
+            var get_status = this.value;
+            var edit_id = $('#edit_id').val();
+            $.ajax({
+
+                type: "GET",
+                url: "{{ route('qualified_respondent') }}",
+                data: {
+                    "get_status": get_status,
+                    "edit_id": edit_id,
+                    'all_id': all_id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    if(data.repsonse==400){
+                        toastr.info("Status Already Changed!");
+                    }else{
+                        toastr.success("Project status changed into Completed and Respondent moved to the Qualified");
+                    }
+                
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        }
+        else{
             toastr.info("OOPS! Select the action");
         }
     });
