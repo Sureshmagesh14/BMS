@@ -141,13 +141,15 @@ Route::group([
     Route::any('project_action', 'ProjectsController@project_action')->name('project_action');
     Route::any('project_unassign', 'ProjectsController@project_unassign')->name('project_unassign');    
     Route::any('notify_respondent', 'ProjectsController@notify_respondent')->name('notify_respondent');  
-    Route::any('get_project_status', 'ProjectsController@get_project_status')->name('get_project_status'); 
+    Route::any('get_project_status', 'ProjectsController@get_project_status')->name('get_project_status');
+    
       
     
     Route::any('get_survey_link', 'ProjectsController@get_survey_link')->name('get_survey_link');
 
     //Qualified Respondent
     Route::resource('qualified_respondent', 'QualifiedController');
+    Route::any('change_all_rewards_status', 'QualifiedController@change_all_rewards_status')->name('change_all_rewards_status'); 
     Route::any('get_all_qualified', 'QualifiedController@get_all_qualified')->name('get_all_qualified');
     Route::any('attach_qualified_respondents/{project_id}', 'QualifiedController@attach_qualified_respondents')->name('attach_qualified_respondents');
     Route::any('import_qualified_respondents/{project_id}', 'QualifiedController@import_qualified_respondents')->name('import_qualified_respondents');

@@ -102,7 +102,7 @@ class QualifiedController extends Controller
                             $all_datas->where('qualified_respondent.project_id',$request->id);
                         }
                     }
-                $all_datas = $all_datas->orderby("qualified_respondent.id","desc")->get();
+                $all_datas = $all_datas->where('status',1)->orderby("qualified_respondent.id","desc")->get();
 
                 return Datatables::of($all_datas)
                     ->addColumn('select_all', function ($all_data) {
@@ -451,6 +451,46 @@ class QualifiedController extends Controller
             return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
         }
     }
+    
+    public function change_all_rewards_status(Request $request) {
+        try {
+            // Fetch QualifiedRespondent records where status is 1
+            $get_status_records = QualifiedRespondent::where('status', 1)->get();
+    
+            foreach ($get_status_records as $rewards) {
+                // Retrieve points from Projects table based on project_id
+                $get_points = Projects::where('id', $rewards->project_id)->first();
+    
+                // Check if $get_points is null
+                if ($get_points) {
+                    // Prepare data to insert into Rewards table
+                    $all_record = [
+                        'respondent_id' => $rewards->respondent_id,
+                        'user_id' => $rewards->respondent_id, // Assuming user_id is same as respondent_id
+                        'project_id' => $rewards->project_id,
+                        'points' => $get_points->reward,
+                        'status_id' => 2,
+                        'created_at' => now(), // Assuming now() returns current timestamp
+                    ];
+    
+                    // Insert into Rewards table
+                    Rewards::insert($all_record);
+                } else {
+                    // Log or handle the case where $get_points is null
+                    // For example:
+                    Log::warning("No project found with id {$rewards->project_id}");
+                }
+            }
+    
+            // Update QualifiedRespondent table status from 1 to 2
+            QualifiedRespondent::where('status', 1)->update(['status' => 2]);
+    
+        } catch (Exception $e) {
+            // Handle exceptions
+            throw new Exception($e->getMessage());
+        }
+    }
+    
     
 
 }

@@ -102,18 +102,14 @@
 
         $(document).on('click', '.qualified_play_button', function(e) {
             var all_id = [];
-            var values = $("#qualified_table tbody tr").map(function() {
-                var $this = $(this);
-                if ($this.find("[type=checkbox]").is(':checked')) {
-                    all_id.push($this.find("[type=checkbox]").attr('id'));
-                }
-            }).get();
+            var select_value =  $("#action_2").val();
 
-            select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $(".hided_option").val();
+           
 
             if(select_value == 3){
                 titles = "Status > Complete";
-                select_action("POST", all_id, select_value, "{{ route('project_action') }}", 'qualified_table', titles, "Are You Want To Change Status", "Action");
+                select_action("POST", all_id, select_value, "{{ route('change_all_rewards_status') }}", 'qualified_table', titles, "Are You Want To Change Status", "Action");
+               
             }
             else if(select_value == "delete_all"){
                 multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects Deleted", 'qualified_table');
