@@ -141,12 +141,23 @@ Route::group([
     Route::any('project_action', 'ProjectsController@project_action')->name('project_action');
     Route::any('project_unassign', 'ProjectsController@project_unassign')->name('project_unassign');    
     Route::any('notify_respondent', 'ProjectsController@notify_respondent')->name('notify_respondent');  
-    Route::any('get_project_status', 'ProjectsController@get_project_status')->name('get_project_status'); 
+    Route::any('get_project_status', 'ProjectsController@get_project_status')->name('get_project_status');
+    
       
     
     Route::any('get_survey_link', 'ProjectsController@get_survey_link')->name('get_survey_link');
 
- 
+    //Qualified Respondent
+    Route::resource('qualified_respondent', 'QualifiedController');
+    Route::any('change_all_rewards_status', 'QualifiedController@change_all_rewards_status')->name('change_all_rewards_status'); 
+    Route::any('get_all_qualified', 'QualifiedController@get_all_qualified')->name('get_all_qualified');
+    Route::any('attach_qualified_respondents/{project_id}', 'QualifiedController@attach_qualified_respondents')->name('attach_qualified_respondents');
+    Route::any('import_qualified_respondents/{project_id}', 'QualifiedController@import_qualified_respondents')->name('import_qualified_respondents');
+    Route::any('get_resp_details', 'QualifiedController@get_resp_details')->name('get_resp_details');
+    Route::any('qualified_respondent_attach_store', 'QualifiedController@qualified_respondent_attach_store')->name('qualified_respondent_attach_store');
+    Route::any('store_qualified_respondents', 'QualifiedController@store_qualified_respondents')->name('store_qualified_respondents');
+    Route::any('project_store_qualified_respondents', 'QualifiedController@project_store_qualified_respondents')->name('project_store_qualified_respondents');
+
 
     /* Respondents MENU*/
     Route::resource('respondents', 'RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
@@ -168,6 +179,10 @@ Route::group([
     Route::any('get_branch_code', 'RespondentsController@get_branch_code')->name('get_branch_code');
     Route::any('import_respondents/{project_id}', 'RespondentsController@import_respondents')->name('import_respondents');
     Route::any('upload_respondent', 'RespondentsController@upload_respondent')->name('upload_respondent');
+    Route::any('qualified_respondent_status', 'RespondentsController@qualified_respondent_status')->name('qualified_respondent_status');
+ 
+    
+    
     
 
     /* Tags (or) Pannels MENU*/

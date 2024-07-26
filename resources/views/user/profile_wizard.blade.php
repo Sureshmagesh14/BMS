@@ -91,6 +91,9 @@
             overflow: auto;
         }
     }
+    .hide_class{
+        display:none;
+    }
 
 </style>
 
@@ -106,7 +109,7 @@
                                 <h2>Basic Details</h2>
                                 <section>
                                     <div class="row">
-                                        <div class="col-6 col-sm-12">
+                                        <div class="col-6 col-sm-12 hide_class">
                                             <label for="unique_id">PID</label>
                                             <input type="number" class="form-control unique_id" id="unique_id" disabled
                                                 value="{{ $pid }}">
