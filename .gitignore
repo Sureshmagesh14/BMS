@@ -20,3 +20,10 @@ yarn-error.log
 /.vscode
 /public/uploads/survey/
 /storage/logs/laravel.log
+.htaccess
+/public
+.user.ini
+php.ini
+storage/logs/laravel.log
+.gitignore
+public
