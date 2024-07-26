@@ -24,7 +24,6 @@
     .login_img{
 
         border-radius: 30px;
-    border: 1px solid #fff;
     overflow: hidden;
     }
 
@@ -44,6 +43,10 @@
         padding-top: 50px;
         margin: auto;
     }
+
+    .anchor{
+        text-decoration: none;
+    }   
 
     .image-cover {
         object-fit: cover;
@@ -68,7 +71,7 @@
     <div class="row vi-background-index">
         <div class="col-md-5 d-none-mobile d-flex mob-hide p-0 h-100">
             <div class="w-100 d-flex ">
-                <img src="{{ asset('assets/images/login-page_b.jpg') }}" class="login_img img-fluid w-90 d-flex m-auto d-flex "
+                <img src="{{ asset('assets/images/login-page_b.webp') }}" class="login_img img-fluid w-90 d-flex m-auto d-flex "
                     alt="" />
             </div>
         </div>
@@ -116,10 +119,10 @@
                         <span class="vi-bdr-set-or position-relative px-3">OR</span>
                     </div>
                     <div class="forgetpass">
-                        Forgot Password via
-                        <a href="{{ route('password.request') }}" class="link">Email</a>
+                        <span>Forgot Password</span> via
+                        <a class="anchor" href="{{ route('password.request') }}" class="link">Email</a>
                         or
-                        <a href="{{ route('forgot_password_sms') }}" class="link">SMS</a>
+                        <a class="anchor" href="{{ route('forgot_password_sms') }}" class="link">SMS</a>
                     </div>
                     @if (count($errors) > 0)
                         @if (

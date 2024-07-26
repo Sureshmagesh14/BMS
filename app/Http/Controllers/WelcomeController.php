@@ -294,11 +294,10 @@ class WelcomeController extends Controller
             ->sum('points');
 
             $available_points = DB::table('rewards')
-            ->select(DB::raw('SUM(points) as total_points'))
             ->where('respondent_id', Session::get('resp_id'))
             ->where('status_id', 2)
             ->groupBy('respondent_id')
-            ->first(); // Use first() instead of get() to get a single row
+            ->sum('points');
 
             $get_reward = Rewards::where('respondent_id', $id)->where('status_id', 2)->sum('points');
        
@@ -306,7 +305,7 @@ class WelcomeController extends Controller
             //     return view('user.update-profile');
             // }else{
 
-            return view('user.user-dashboard', compact('data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points','get_reward'));
+            return view('user.user-dashboard', compact('request','data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points','get_reward'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -1411,30 +1410,30 @@ class WelcomeController extends Controller
             if (strlen($phone) > 9) {
                 return redirect()->back()->with('error', 'Invalid phone number format: Must be 9 digits or less');
             }
-        
+    
             // Check if the phone number exists
             $user = Respondents::where('mobile', $phone)
                 ->orWhere('whatsapp', $phone)
                 ->first();
-        
+    
             if (!$user) {
                 throw new Exception('Mobile number not found');
             }
-        
+    
             // Create a new password reset token
             $token = Password::broker()->createToken($user);
-            
+    
             // Store the token with an expiration time (60 minutes)
             $expiresAt = now()->addMinutes(60);
-            // Assuming you have a PasswordResets model to store the token and expiration
+            // Assuming you have a PasswordResetsViaPhone model to store the token and expiration
             PasswordResetsViaPhone::updateOrCreate(
-                ['phone' => $user->phone],
-                ['token' => $token, 'expires_at' => $expiresAt]
+                ['phone' => $phone],  // Use $phone variable instead of $user->phone
+                ['token' => $token, 'updated_at' => now()]
             );
-
+    
             // Generate password reset URL
             $resetUrl = url('password_reset_sms', [$token]);
-
+    
             // Prepare SMS content
             $smsContent = "Reset Password Notification\n\n";
             $smsContent .= "You are receiving this message because we received a password reset request for your account.\n";
@@ -1442,19 +1441,19 @@ class WelcomeController extends Controller
             $smsContent .= $resetUrl . "\n\n";  // Include the reset URL
             $smsContent .= "If you did not request a password reset, no further action is required.\n";
             $smsContent .= "This password reset link will expire in 60 minutes.";
-        
+    
             // Parameters for the SMS
             $postData = [
                 'username' => config('constants.username'),
                 'password' => config('constants.password'),
                 'account'  => config('constants.account'),
-                'da'       => config('constants.phone').$phone, // Destination number with country code
+                'da'       => config('constants.phone') . $phone, // Destination number with country code
                 'ud'       => $smsContent, // SMS content
             ];
-        
+    
             // Initialize cURL session
             $curl = curl_init();
-        
+    
             // Set cURL options
             curl_setopt_array($curl, [
                 CURLOPT_URL => 'http://apihttp.pc2sms.biz/submit/single/',
@@ -1466,49 +1465,47 @@ class WelcomeController extends Controller
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => http_build_query($postData),
             ]);
-        
+    
             // Execute cURL session
             $response = curl_exec($curl);
-        
+    
             // Check for cURL execution errors
             if ($response === false) {
                 throw new Exception(curl_error($curl), curl_errno($curl));
             }
-        
+    
             // Close cURL session
             curl_close($curl);
-        
+    
             // Log the full response for debugging
             Log::info('SMS API Response: ' . $response);
-        
+    
             // Check if response indicates success
             if (strpos($response, 'Accepted for delivery') !== false) {
                 return redirect()->back()->with('status', 'SMS sent successfully!');
             } else {
                 throw new Exception('Failed to send SMS. API response: ' . $response);
             }
-        
+    
         } catch (Exception $e) {
             // Log the exception with more details
             Log::error('SMS API Error: ' . $e->getMessage() . ' - Code: ' . $e->getCode());
-            
+    
             // Redirect with an error message
             return redirect()->back()->with('error', 'Failed to send SMS. ' . $e->getMessage());
         }
     }
+    
 
-    public function password_reset_sms(){
+    public function password_reset_sms(Request $request){
         try {
-
-            return view('auth.reset-sms-password');
-
+            $token = $request->route('token');
+            return view('auth.reset-sms-password', compact('token'));
         } catch (Exception $e) {
-
             throw new Exception($e->getMessage());
-          
         }
-
     }
+    
     
 
 }

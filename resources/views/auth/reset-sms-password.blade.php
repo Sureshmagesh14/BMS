@@ -11,7 +11,7 @@
             <div class="col-md-6 m-auto">
                 <form id="forgot_table" method="POST" action="{{ route('password.store.sms') }}">
                     @csrf
-                    <input type="hidden" name="token" value="{{ $request->route('token') }}">
+                    <input type="hidden" name="token" value="{{ $token }}">
                     <div class="text-start w-md-50 w-100 m-auto my-3">
                         <p class="mb-0">Forgot Password</p>
                         <h2 class="mb-4 fw-bold h4">Account Info</h2>

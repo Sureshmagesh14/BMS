@@ -282,7 +282,7 @@ class SurveyController extends Controller
     public function builder(Request $request,$survey,$qusID=0){
         // Generatre builder ID
         $survey=Survey::where(['builderID'=>$survey])->first();
-        $questions=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+        $questions=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->orderBy('qus_order_no')->get();
         $welcomQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'welcome_page'])->first();
         $thankQus=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->get();
         if($qusID==0){
@@ -353,10 +353,17 @@ class SurveyController extends Controller
     // Create New Question
     // Create New Qus 
     $user = Auth::guard('admin')->user();
-    $newqus=new Questions();
-    $newqus->survey_id=$survey;
-    $newqus->qus_type=$qustype;
-    $newqus->created_by=$user->id;
+    // Get Last Order No 
+    $last_order_no=Questions::where(['survey_id'=>$survey])->whereNotIn('qus_type',['welcome_page','thank_you'])->orderBy('qus_order_no', "desc")->first();
+    $newqus = new Questions();
+    $newqus->survey_id = $survey;
+    $newqus->qus_type = $qustype;
+    $newqus->created_by = $user->id;
+    if($last_order_no){
+        $newqus->qus_order_no = $last_order_no->qus_order_no + 1;
+    }else{
+        $newqus->qus_order_no = 1;
+    }
     $newqus->save();
     // Update Qus Count 
     $survey=Survey::where(['id'=>$survey])->first();
@@ -377,8 +384,56 @@ class SurveyController extends Controller
         $survey->save();
         $question->delete();
         return json_encode(['success'=>'Question deleted Successfully',"error"=>""]);
-        
     }
+     public function copyqus(Request $request,$id){
+        $question=Questions::where(['id'=>$id])->first();
+        $survey = Survey::where(['id'=>$question->survey_id])->first();
+        $survey->qus_count = $survey->qus_count + 1;
+        $survey->save();
+        $last_order_no=Questions::where(['survey_id'=>$question->survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->orderBy('qus_order_no', "desc")->first();
+        $newqus = new Questions();
+        $newqus->survey_id=$question->survey_id;
+        $newqus->question_name=$question->question_name;
+        $newqus->question_description=$question->question_description;
+        $newqus->qus_required=$question->qus_required;
+        $newqus->qus_template=$question->qus_template;
+        $newqus->qus_type=$question->qus_type;
+        $newqus->qus_ans=$question->qus_ans;
+        $newqus->skip_logic=$question->skip_logic;
+        $newqus->display_logic=$question->display_logic;
+        $newqus->survey_thankyou_page=$question->survey_thankyou_page;
+        $newqus->created_by=$question->created_by;
+        
+        // Reorder Other Qus
+        $currentqus_no = (int)$question->qus_order_no;
+
+        // Get next qus 
+        $upcoming_qus = Questions::where(['survey_id' => $question->survey_id])->where('qus_order_no', '>', $currentqus_no)->get();
+        if($upcoming_qus){
+            if($currentqus_no){
+                $newqus->qus_order_no = $currentqus_no + 1;
+            }else{
+                $newqus->qus_order_no = 1;
+            }
+            $newqus->save();
+            foreach($upcoming_qus as $upqus){
+                $upqus->qus_order_no = $upqus->qus_order_no+1;
+                $upqus->save();
+            }
+        }else{
+            if($currentqus_no){
+                $newqus->qus_order_no = $qus_order_no + 1;
+            }else{
+                $newqus->qus_order_no = 1;
+            }
+            $newqus->save();
+        }
+       
+
+        
+        return json_encode(['success'=>'Question copied Successfully',"error"=>""]);
+    }
+    
     public function surveyduplication(Request $request,$id){
 
         $survey=Survey::where(['id'=>$id])->first();
@@ -396,6 +451,7 @@ class SurveyController extends Controller
 
         // Clone Question 
         foreach($questions as $qus){
+            $last_order_no=Questions::where(['survey_id'=>$clonesurvey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->orderBy('qus_order_no', "desc")->first();
             $newqus=new Questions();
             $newqus->survey_id=$clonesurvey->id;
             $newqus->question_name=$qus->question_name;
@@ -405,6 +461,15 @@ class SurveyController extends Controller
             $newqus->skip_logic=$qus->skip_logic;
             $newqus->display_logic=$qus->display_logic;
             $newqus->created_by=$user->id;
+            
+            if($last_order_no){
+                $newqus->qus_order_no = $last_order_no->qus_order_no + 1;
+            }else{
+                $newqus->qus_order_no = 1;
+            }
+
+           
+
             $newqus->save();
         }
         return redirect()->back()->with('success', __('Survey Duplicated Successfully.'));
@@ -662,7 +727,7 @@ class SurveyController extends Controller
                         }
                         $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
             
-                        $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+                        $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->orderBy('qus_order_no')->first();
                         if($question1){
                             $question1=$question1;
                         }else{
@@ -715,7 +780,7 @@ class SurveyController extends Controller
                                     }
                                     $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
                         
-                                    $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->first();
+                                    $question1=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->orderBy('qus_order_no')->first();
                                     if($question1){
                                         $question1=$question1;
                                     }else{
@@ -778,12 +843,13 @@ class SurveyController extends Controller
             
             $question=Questions::where(['id'=>$qus])->first();
     
-            $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+            $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->orderBy('qus_order_no')->get();
            
-            $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
+            $question1=Questions::where('qus_order_no', '>', $question->qus_order_no)->where('survey_id', $survey->id)->orderBy('qus_order_no')->first();
     
+         
             // Check Survey has question or not 
-            $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
+            $surveyQus = Questions::where(['survey_id'=>$survey->id])->orderBy('qus_order_no')->get();
             if(count($surveyQus)<=0){
                 return view('admin.survey.noquserror', compact('survey'));
 
@@ -944,7 +1010,7 @@ class SurveyController extends Controller
         // Other details 
         $other_details = ["device_id"=>$request->device_id,"device_name"=>$request->device_name,"browser"=>$request->browser,"os"=>$request->os,"device_type"=>$request->device_type,"long"=>$request->long,"lat"=>$request->lat,"location"=>$request->location,"ip_address"=>$ipAddress,"lang_code"=>$request->lang_code,"lang_name"=>$request->lang_name];
         
-        $qus_check=Questions::where('id', '=', $question_id)->where('survey_id', $survey_id)->orderBy('id')->first();
+        $qus_check=Questions::where('id', '=', $question_id)->where('survey_id', $survey_id)->orderBy('qus_order_no')->first();
         $user_ans =$request->user_ans;
         if($request->hasfile('uploadfile'))
         {
@@ -1059,9 +1125,11 @@ class SurveyController extends Controller
     public static function displayNextQus($question_id, $survey_id, $other_details)
     {
         $response_user_id = Auth::user()->id;
-        $next_qus = Questions::where('id', '>', $question_id)
+        $currentQusSet = Questions::where('id', '=', $question_id)->first();
+        $next_qus = Questions::where('qus_order_no', '>', $currentQusSet->qus_order_no)
             ->where(['survey_id' => $survey_id])
             ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
+            ->orderBy('qus_order_no')
             ->first();
         if (!$next_qus) {
             return self::handleSurveyCompletion($survey_id, $other_details);
@@ -1952,7 +2020,7 @@ class SurveyController extends Controller
     public function checkquota($survey_id, $current_question_id, $current_user_ans)
     {
         $survey = Survey::find($survey_id);
-        if (!$survey) {
+        if (!$survey) {  
             return "Survey not found.";
         }
     
@@ -2170,7 +2238,7 @@ class SurveyController extends Controller
                         }
                     }
                     // If the quota limit is reached, return the redirection question
-                    if ($limit > (int)$quota->quota_limit) {
+                    if ($limit >= (int)$quota->quota_limit) {
        
                         return $quota->redirection_qus;
                     }
@@ -2746,7 +2814,7 @@ class SurveyController extends Controller
                     $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
                     $multichoicesResult = [];
                     foreach ($choices as $choice) {
-                        $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'multi_ans' => $choice])->orderBy("id", "desc")->first();
+                        $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
                         $multichoicesResult[$qus->question_name . '_' . $choice] = $answer ? 'Yes' : 'No';
                     }
                     $result = array_merge($result, $multichoicesResult);
@@ -2757,7 +2825,7 @@ class SurveyController extends Controller
                     $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
                     $rankorderResult = [];
                     foreach ($choices as $choice) {
-                        $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'rank_ans' => $choice])->orderBy("id", "desc")->first();
+                        $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
                         $rankorderResult[$qus->question_name . '_' . $choice] = $answer ? $answer->rank_ans : 'No';
                     }
                     $result = array_merge($result, $rankorderResult);
@@ -2868,6 +2936,17 @@ class SurveyController extends Controller
                 return redirect()->route('survey.view',$request->survey_id);
             }
         }
+    }
+    public function moveQus(Request $request){
+        foreach($request->order as $updateOrder){
+             
+            $getQus = Questions::where(['id'=>$updateOrder['qusId']])->first();
+            // Update Qus 
+            $upqus =  Questions::where(['id'=>$updateOrder['qusId']])->update(['qus_order_no'=>$updateOrder['update_index']]);
+
+        }
+        return response()->json(['data' => "Reordered"], 200);
+
     }
 }
 

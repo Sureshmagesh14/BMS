@@ -27,7 +27,7 @@
                         <div class="col-md-6 col-sm-12">
                         <button type="submit"
                             class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2 me-1"
-                            id="reset">REQUEST
+                            id="reset">REQUEST PASSWORD
                             RESET</button>
                     </div>
                     <div class="col-md-6 col-sm-12 m-auto">
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="col-md-6 mob-hide">
-                <img class="w-50 m-auto d-flex" src="{{ asset('assets/images/img_1.png') }}" alt="Forgot image" />
+                <img class="w-50 m-auto d-flex" src="{{ asset('assets/images/img_1.webp') }}" alt="Forgot image" />
 
             </div>
         </div>

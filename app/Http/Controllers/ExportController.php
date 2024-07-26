@@ -1006,21 +1006,37 @@ class ExportController extends Controller
                 $i = 1;
                 foreach ($all_datas as $all_data) {
 
+                    $respondent_id = $all_data->respondent_id;
+
+                    $get_incentive = Cashout::where('respondent_id',$respondent_id)->where('status_id',3);
+                    $get_incentive_owed = Cashout::where('respondent_id',$respondent_id)->where('status_id',1);
+
                     if ($all_data->type_id == 1) {
                         $type_val = 'EFT';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else if ($all_data->type_id == 2) {
                         $type_val = 'Data';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else if ($all_data->type_id == 3) {
                         $type_val = 'Airtime';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else if ($all_data->type_id == 4) {
                         $type_val = 'Donation';
+                        $get_incentive->where('type_id',$all_data->type_id);
+                        $get_incentive_owed->where('type_id',$all_data->type_id);
                     }
                     else {
                         $type_val = '-';
                     }
+
+                    $get_incentive = $get_incentive->groupBy('respondent_id')->sum('amount');
+                    $get_incentive_owed = $get_incentive_owed->groupBy('respondent_id')->sum('amount');
 
                     $amount = $all_data->amount / 10;
                     $respondent = $all_data->name . ' - ' . $all_data->email . ' - ' . $all_data->mobile;
@@ -1059,10 +1075,12 @@ class ExportController extends Controller
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
                     $sheet->setCellValue('H' . $rows, $all_data->total_cashout);
+                    $sheet->setCellValue('I' . $rows, ($get_incentive > 0) ? $get_incentive/10 : 0);
                     $sheet->setCellValue('J' . $rows, $all_data->failed);
                     $sheet->setCellValue('K' . $rows, $all_data->pending);
                     $sheet->setCellValue('L' . $rows, $all_data->declined);
                     $sheet->setCellValue('M' . $rows, $all_data->complete);
+                    $sheet->setCellValue('N' . $rows, ($get_incentive_owed > 0) ? $get_incentive_owed/10 : 0);
                     $get_project = Projects::select('projects.id','projects.name')->join('project_respondent as resp','projects.id','resp.project_id')
                         ->where('resp.respondent_id',$all_data->resp_id)
                         ->groupBy('projects.id')
@@ -1879,7 +1897,7 @@ class ExportController extends Controller
                                 $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
                                 $multichoicesResult = [];
                                 foreach ($choices as $choice) {
-                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'multi_ans' => $choice])->orderBy("id", "desc")->first();
+                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
                                     $multichoicesResult[$qus->question_name . '_' . $choice] = $answer ? 'Yes' : 'No';
                                 }
                                 $result = array_merge($result, $multichoicesResult);
@@ -1890,7 +1908,7 @@ class ExportController extends Controller
                                 $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
                                 $rankorderResult = [];
                                 foreach ($choices as $choice) {
-                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'rank_ans' => $choice])->orderBy("id", "desc")->first();
+                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
                                     $rankorderResult[$qus->question_name . '_' . $choice] = $answer ? $answer->rank_ans : 'No';
                                 }
                                 $result = array_merge($result, $rankorderResult);

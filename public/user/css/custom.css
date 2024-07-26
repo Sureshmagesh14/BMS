@@ -391,10 +391,19 @@ tr:nth-child(even) {
 .m-h-180 {
   min-height: 180px;
 }
+.h-100p{
+  height:100%;
+}
+.mb-10vh{
+  margin-bottom: 10vh;
+}
 /* dashboard css ends  */
 
 
 @media(max-width:767px) {
+  .col-xs-6{
+    width: calc(50% - 10px);
+  }
   .m-h-180 {
     min-height: 120px !important;
 }
@@ -416,8 +425,11 @@ tr:nth-child(even) {
   .mob-hide{
     display: none !important;
 }
+.register .w-50{
+  width:85% !important;
+}
 .w-50{
-  width:90% !important;
+  width:100% !important;
 }
   .vi-gift-box {
     z-index: 99;
@@ -611,7 +623,28 @@ a.nav-link.dropdown-toggle:after {
   right: 0 !important;
   left: unset !important;
 }
-
+.triangle{
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent; 
+  border-right: 5px solid transparent; 
+  margin:auto;
+    }
+    .down-triangle-yellow {
+  border-top: 10px solid #fabd21; 
+}
+.down-triangle-blue {
+  border-top: 10px solid #2197bd; 
+}
+.down-triangle-green {
+  border-top: 10px solid #04c47d; 
+}
+.bg-blue {
+  background: #2197bd;
+}
+.bg-yellow {
+  background: #fabd21;
+}
 .vi-usr-profile {
   background-color: #edbf1b;
   border-radius: 50%;
@@ -774,7 +807,9 @@ color:#6396b1 !important; */
   bottom: 0;
   z-index: 99999;
 }
-
+.dashboard.vi-background-index {
+  height: 85vh !important;
+}
 button:focus:not(:focus-visible) {
   box-shadow: unset !important;
 }

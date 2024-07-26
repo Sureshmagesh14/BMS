@@ -126,28 +126,24 @@
         height:100%;
     }
 </style>
-<div class="container-fluid">
+<div class="container-fluid register">
     <div class="row vi-background-index">
         <div class="col-md-7 col-sm-12">
             <div class="w-100 h-100p d-flex m-auto">
             <div class="rightside text-center m-auto w-100">
                 <!-- <h3>Join our Database</h3> -->
-                 
-                
-
-                
-                <form method="POST" id="reg_table" action="{{ route('register') }}">
+                <form method="POST" id="reg_table" action="{{ route('register') }}" autocomplete="off">
                     @csrf
                     <div class="first-row d-md-flex mt-5">
                         <div class="fname text-start w-48 m-auto">
                             <label for="name">First Name <span class="text-danger">*</span></label>
                             <input type="text" name="name" id="name" placeholder="John"
-                                oninput ="alphanum(this);" class="form-control vi-border-clr border-radius-0" required>
+                                oninput ="alphanum(this);" class="form-control vi-border-clr border-radius-0" autocomplete="off" required>
                         </div>
                         <div class="lname text-start w-48 m-auto">
                             <label for="surname">Last Name <span class="text-danger">*</span></label>
                             <input type="text" name="surname" id="surname" placeholder="Doe"
-                                oninput ="alphanum(this);" class="form-control vi-border-clr border-radius-0" required>
+                                oninput ="alphanum(this);" class="form-control vi-border-clr border-radius-0" autocomplete="off" required>
                         </div>
                     </div>
                     <div class="first-row d-md-flex">
@@ -158,7 +154,7 @@
                                     <div class="input-group-text">+27</div>
                                 </div>
                                 <input  type="text" name="mobile" id="mobile" placeholder="819 966 078"
-                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" required>
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" autocomplete="off" required>
                             </div>
                         </div>
 
@@ -171,7 +167,7 @@
                                     <div class="input-group-text">+27</div>
                                 </div>
                                 <input  type="text" name="whatsapp" id="whatsapp" placeholder="819 966 078"
-                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" required>
+                                    class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" autocomplete="off" required>
                             </div>
                         </div>
                     </div>
@@ -183,7 +179,7 @@
                                     <div class="input-group-text  px-3 py-3"><i class="fa fa-envelope" style="font-size:36px;"
                                             aria-hidden="true"></i></div>
                                 </div>
-                                <input type="text" name="email" id="email" placeholder="john@example.com"
+                                <input type="email" name="email" id="email" autocomplete="off" placeholder="john@example.com"
                                     class="form-control vi-border-clr border-radius-0 reg_email" required>
                                 <span class="email_error">Invalid Email Address</span>
                             </div>
@@ -210,7 +206,7 @@
                                     class="text-xs text-brand underline pointer-events-auto cursor-pointer">(At least 6
                                     characters)</span></label>
                             <div class="main-password">
-                                <input type="password" name="password_register" id="password_register"
+                                <input type="password" name="password_register" id="password_register" autocomplete="off"
                                     class="form-control vi-border-clr border-radius-0 input-password"
                                     aria-label="password" placeholder="Create Password" required>
                                 <a href="JavaScript:void(0);" class="icon-view">
@@ -222,7 +218,7 @@
                             <label for="date">Confirm Password<span class="text-danger">*</span> <span
                                     class="text-xs text-brand underline pointer-events-auto cursor-pointer"></span></label>
                             <div class="main-password">
-                                <input type="password" name="password_confirmation" id="password_confirmation"
+                                <input type="password" name="password_confirmation" id="password_confirmation" autocomplete="off"
                                     class="form-control vi-border-clr border-radius-0 input-password"
                                     aria-label="password" placeholder="Confirm/Retype Password" required>
                                 <a href="JavaScript:void(0);" class="icon-view"><i class="fa fa-eye-slash"></i></a>
@@ -259,7 +255,7 @@
             <!-- <div> -->
             <div class="w-100 reg-img m-auto">
             <h3 class="text-center mt-3 mb-2">Let's get you started</h3>
-            <img src="{{ asset('assets/images/reg-page_b.png') }}"
+            <img src="{{ asset('assets/images/reg-page_b.webp') }}"
                 class="img-fluid w-100 image-cover bg-yellows m-auto rounded-border" alt="" />
             </div>
             <!-- </div> -->
@@ -504,6 +500,26 @@
             "placeholder": "YYYY/MM/DD",
             onincomplete: function() {
                 $(this).val('');
+            }
+        });
+    });
+
+   $(document).ready(function() {
+    // Ensure autocomplete="new-password" is applied to password fields
+        $('#password_register').attr('autocomplete', 'new-password');
+        $('#password_confirmation').attr('autocomplete', 'new-password');
+
+        // Clear autofill values if browser still autofills despite autocomplete="new-password"
+        $('#password_register, #password_confirmation').on('focus', function() {
+            $(this).attr('type', 'password');
+        });
+
+        // Handle cases where browser ignores autocomplete attributes
+        $('#password_register, #password_confirmation').on('input', function() {
+            if ($(this).val().trim() === '') {
+                $(this).attr('type', 'text');
+            } else {
+                $(this).attr('type', 'password');
             }
         });
     });

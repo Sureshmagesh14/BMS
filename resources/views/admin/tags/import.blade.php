@@ -10,7 +10,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Respondent</label>
         <div class="col-md-10">
             <input disabled class="form-control" type="text" name="project" id="project" value="@if($fullName != null) {{ $fullName}} @endif">
-            <input type="hidden" name="respondent_id" id="respondent_id" value="@if($fullName != null) {{$respondent_id}} @endif">
+            <input type="hidden" name="respondent_id" id="respondent_id" value="{{$respondent_id}}">
         </div>
     </div>
    
@@ -22,7 +22,7 @@
     </div>
     <span>Note: Upload a CSV of your Respondents Information. The following fields are required in the
         CSV: <strong>Panel ID</strong></span><br>
-        <a href="{{ asset('public/import/respondents/resp import csv.csv') }}">Click to
+        <a href="{{ asset('public/import/panel/panel import csv.csv') }}">Click to
             download sample CSV file.</a>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>

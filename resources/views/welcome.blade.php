@@ -1,6 +1,10 @@
 @include('user.layout.header')
-
-<div class="container-fluid p-md-3 text-center vi-full-height vi-background-index"
+<style>
+.m-auto.h-100p.d-flex{
+    display:block !important;
+}
+</style>
+<div class="container-fluid p-md-3 text-center vi-full-height vi-background-index dashboard"
     style="background-size: cover; height:auto;">
 
     @if(isset($data->name) && ($data->name!=''))
@@ -11,11 +15,11 @@
     
     <div class="row">
         <div class="col-md-5 col-sm-12 m-auto mob-hide mt-auto">
-        <img src="{{ asset('assets/images/img_2.png') }}" class="img-fluid w-100 m-auto hide-mobile"
+        <img src="{{ asset('assets/images/img_2.webp') }}" class="img-fluid w-100 m-auto hide-mobile"
                         alt="">
         </div>
         <div class="col-md-7 col-sm-12 m-auto h-100p d-flex">
-        <img src="{{ asset('assets/images/img_2.png') }}" class="img-fluid w-75 m-auto bg-mobile"
+        <img src="{{ asset('assets/images/img_2.webp') }}" class="img-fluid w-75 m-auto bg-mobile"
         alt="">
             <div class="d-flex align-items-center flex-column justify-content-between">
                 <!-- <div class="logo">
@@ -46,10 +50,10 @@ make extra money.</p>
                         </a>
                     </div>
                 </div>
-                <div class="logo show-mobile">
+                <!-- <div class="logo show-mobile">
                     <img src="{{ asset('user/images/small-logo.png') }}" class="img-fluid w-50 m-auto show-mobile"
                         alt="">
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

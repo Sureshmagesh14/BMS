@@ -861,64 +861,105 @@ class ProjectsController extends Controller
         return response()->json(['repsonse' => $repsonse], 200);
     }
 
-    public function respondent_attach_import(Request $request){
+    public function respondent_attach_import(Request $request)
+    {
         $project_id = $request->project_id;
         $file = $request->file('file');
-
+    
+        if (!$request->hasFile('file')) {
+            return redirect()->back()->with('error', 'Please upload a file');
+        }
+    
         // File Details 
         $filename = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
-        $tempPath = $file->getRealPath();
-        $fileSize = $file->getSize();
-        $mimeType = $file->getMimeType();
-
-        // Valid File Extensions
-        $valid_extension = array("csv");
-        if(in_array(strtolower($extension),$valid_extension)){
-            // File upload location
-            $location = 'uploads/csv/'.$project_id;
-            // Upload file
-            $file->move($location,$filename);
-            // Import CSV to Database
-            $filepath = public_path($location."/".$filename);
-
-            $file = fopen($filepath,"r");
-
-            $importData_arr = array();
-            $i = 0;
-            $col=1;
-            while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+    
+        // Validate File Extension
+        if (strtolower($extension) !== 'csv') {
+            return redirect()->back()->with('error', 'Invalid File Extension, Please Upload CSV File Format');
+        }
+    
+        // File upload location
+        $location = 'uploads/csv/'.$project_id;
+        // Ensure directory exists
+        if (!file_exists($location)) {
+            mkdir($location, 0777, true);
+        }
+    
+        // Upload file
+        $file->move($location, $filename);
+        // Import CSV to Database
+        $filepath = public_path($location . "/" . $filename);
+    
+        $file = fopen($filepath, "r");
+    
+        $importData_arr = [];
+        $i = 0;
+        $col = 1;
+    
+        try {
+            DB::beginTransaction();
+    
+            while (($filedata = fgetcsv($file, 1000, ",")) !== false) {
                 $num = count($filedata);
-                // Skip first row (Remove below comment if you want to skip the first row)
-                if($i == 0){
+    
+                // Skip first row
+                if ($i == 0) {
                     $i++;
                     continue;
                 }
-
-                if($num == $col){
-                    for ($c=0; $c < $num; $c++) {
-                        $set_array = array('respondent_id' => $filedata [$c],'project_id' => $project_id);
-                        array_push($importData_arr,$set_array);
+    
+                if ($num == $col) {
+                    for ($c = 0; $c < $num; $c++) {
+                        $respondent_id = $filedata[$c];
+    
+                        // Check if respondent already exists
+                        if (Project_respondent::where('project_id', $project_id)->where('respondent_id', $respondent_id)->exists()) {
+                            return redirect()->back()->with('error', 'Respondent Already Exists!');
+                        }
+    
+                        // Insert into Project_respondent table
+                        Project_respondent::create([
+                            'project_id' => $project_id,
+                            'respondent_id' => $respondent_id
+                        ]);
+    
+                        // Send email notification
+                        $project = Projects::find($project_id);
+                        $respondent = Respondents::find($respondent_id);
+    
+                        if ($project && $respondent) {
+                            $to_address = $respondent->email;
+                            $resp_name = $respondent->name . ' ' . $respondent->surname;
+                            $proj_name = $project->name;
+    
+                            $data = [
+                                'subject' => 'New Survey Assigned',
+                                'name' => $resp_name,
+                                'project' => $proj_name,
+                                'type' => 'new_project'
+                            ];
+    
+                            Mail::to($to_address)->send(new WelcomeEmail($data));
+                        }
                     }
-                    $i++;
+                } else {
+                    return redirect()->back()->with('error', 'Column mismatched!');
                 }
-                else{
-                    return redirect()->back()->with('error','Column mismatched!');
-                    break;
-                }
+    
+                $i++;
             }
+    
+            DB::commit();
             fclose($file);
-            
-            Project_respondent::insert($importData_arr);
-
-            return redirect()->back()->with('success','Attached Successfully');
-            
+    
+            return redirect()->back()->with('success', 'Attached Successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
         }
-        else{
-            return redirect()->back()->with('error','Invalid File Extension, Please Upload CSV File Format');
-        }
-        
     }
+    
 
     public function respondent_to_panel_attach_import(Request $request){
         $project_id = $request->project_id;

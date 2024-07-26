@@ -63,9 +63,9 @@
                                class="form-control vi-border-clr border-radius-6px" value="{{ old('email', $request->email) }}">
                         <label id="email-error" class="error" for="email"></label>
 
-                        <label for="password" class="fw-bolder">Password</label>
+                        <label for="password" class="fw-bolder">New Password</label>
                         <div class="input-group mb-3"> <!-- Add margin-bottom for spacing -->
-                            <input type="password" name="password" id="password" placeholder="Password" autocomplete="new-password"
+                            <input type="password" name="password" id="password" placeholder="New Password" autocomplete="new-password"
                                    class="form-control vi-border-clr border-radius-6px">
                             <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
                                 <i class="fas fa-eye"></i>

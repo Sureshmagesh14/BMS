@@ -3,12 +3,13 @@
 
 <section class="bg-greybg vh-75 m-auto d-flex">
     <div class="m-auto d-flex">
-    <div class="container">
-        <div class="row justify-content-center py-2 mx-auto">
-            <div class="col-md-6 text-center d-flex">
-                <img class="w-80 object-fit" src="{{ asset('assets/images/share.png') }}" />
+    <div class="container my-2">
+        <div class="row justify-content-center mx-auto bg-white">
+            <div class="col-md-6 text-center d-flex bg-white">
+                <img class="w-100 object-fit" src="{{ asset('assets/images/share.webp') }}" />
             </div>
-            <div class="col-md-6 bg-white p-2">
+            <div class="col-md-6  p-2 d-flex m-auto">
+                <div class="w-100">
                 <div class="qr-code text-center">
                     <!-- <h4 class="text-center">GET PAID FOR YOUR OPINION</h4> -->
                     <h4 class="text-center">Share with your friends and family</h4>
@@ -25,12 +26,11 @@
                         <img id="mail" src="{{ asset('assets/images/SM icons-04.png') }}" class="img-fluid w-10" onclick="fbs_click(this);" alt=""/>
                     </div>
                 </div>
-                <div class="bg-light text-center">
+                <div class="text-center">
                     <span id="demo"> {{ URL::to('/') }}?r={{ $ref_code }}</span><br>
                     <p class="text-secondary btn" onclick="copy('#demo')">Tap to copy link</p>
                 </div>
-
-
+                </div>
             </div>
         </div>
     </div>
