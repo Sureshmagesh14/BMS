@@ -21,7 +21,7 @@
 <br>
 <div class="text-right">
     <div class="btn-group mr-2 qualified_table hided_option" role="group" aria-label="First group"> 
-        <select name="action_2" id="action_2" class="form-control select_box">
+        <select name="action_2" id="action_3" class="form-control select_box">
             <option value="">Select Action</option>
             <option value="3">Rewarded all qualified Respondent</option>
         </select>

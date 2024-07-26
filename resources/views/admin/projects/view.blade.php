@@ -616,6 +616,33 @@
             ]
         });
     }
+
+    $(document).on('click', '.qualified_play_button', function(e) {
+            var all_id = [];
+            var select_value =  $("#action_3").val();
+
+           
+
+            if(select_value == 3){
+                titles = "Status > Complete";
+                select_action("POST", all_id, select_value, "{{ route('change_all_rewards_status') }}", 'qualified_table', titles, "Are You Want To Change Status", "Action");
+              
+            }
+            else if(select_value == "delete_all"){
+                multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects Deleted", 'qualified_table');
+               
+            }
+            else if(select_value == "export_all_project"){
+               
+            }
+            else if(select_value == "export_survey_response"){
+               
+            }
+            else{
+                toastr.info("OOPS! Select the action");
+            }
+    });
+
 </script>
 
 @if (Session::has('success'))

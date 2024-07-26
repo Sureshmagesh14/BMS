@@ -102,13 +102,14 @@
 
         $(document).on('click', '.qualified_play_button', function(e) {
             var all_id = [];
-            var select_value =  $("#action_2").val();
+            var select_value =  $("#action_3").val();
 
            
 
             if(select_value == 3){
                 titles = "Status > Complete";
                 select_action("POST", all_id, select_value, "{{ route('change_all_rewards_status') }}", 'qualified_table', titles, "Are You Want To Change Status", "Action");
+                toastr.success("Successfully moved to rewards!");
                
             }
             else if(select_value == "delete_all"){
