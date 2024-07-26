@@ -2918,7 +2918,18 @@ class SurveyController extends Controller
         // Check Email already exist or not 
         $emailCheck = Respondents::where(['email' => $request->input('email')])->first();
         if($emailCheck){
-            return redirect()->route('login');
+            // return redirect()->route('login');
+            $user = Respondents::find($emailCheck->id);
+            if ($user) {
+                Auth::login($user);
+                if (Auth::check()) {
+                    return redirect()->route('survey.view',$request->survey_id);
+                } else {
+                    return redirect()->route('survey.view',$request->survey_id);
+                }
+            } else {
+                return redirect()->route('survey.view',$request->survey_id);
+            }
         }else{
             $respondents->email = $request->input('email');
             $respondents->password = "SurveyBMS@2024";
