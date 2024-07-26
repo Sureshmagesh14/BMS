@@ -29,55 +29,47 @@
     @endif
     <br><br>
 
-    <div class="btn-group mr-2 respondents_datatable hided_option" role="group" aria-label="First group"
-        style="display: none;">
-        @if (str_contains(Request::url(), '/admin/tags'))
-        <select name="action_2" id="action_2"
-            class="form-control respondents_datatable hided_option respondents_select_box">
-            <option value="">Select Action</option>
-            <optgroup label="Extras">
-                
-               
-                <option value="11">Un-Assign from Project</option>
-                
-            </optgroup>
-           
-        </select>
-        @else
-        <select name="action_2" id="action_2"
-        class="form-control respondents_datatable hided_option respondents_select_box">
-        <option value="">Select Action</option>
-        <optgroup label="Extras">
-            <option value="10">Notify All Respondents</option>
-           
-            <option value="11">Un-Assign from Project</option>
-            
-        </optgroup>
-        <optgroup label="Respondent">
-            <option value="1">Status > Activate</option>
-            <option value="2">Status > Deactivate</option>
-            <option value="3">Status > Opt-Out</option>
-            {{-- <option value="4">Export - Simple Database</option>
-        <option value="5">Export - Normal Database</option>
-        <option value="6">Export - Extended Database</option> --}}
-        </optgroup>
-        {{-- <optgroup label="Standalone Actions">
-        <option value="7">Export - Deactivated Respondents</option> --}}
-        {{-- <option value="8">Import - Old Respondents</option> --}}
-        {{-- <option value="9">Updates imports with file</option> --}}
-        {{-- </optgroup> --}}
-    </select>
-        @endif
+    <div class="btn-group mr-2 respondents_datatable hided_option" role="group" aria-label="First group" style="display: none;">
 
+        {{-- ACTION --}}
+        <select name="action_2" id="action_2" class="form-control respondents_datatable hided_option respondents_select_box">
+            <option value="">Select Action</option>
+            @if (str_contains(Request::url(), '/admin/tags'))
+                <optgroup label="Extras">
+                    <option value="11">Un-Assign from Project</option>
+                </optgroup>
+            @else
+                <optgroup label="Extras">
+                    <option value="10">Notify All Respondents</option>
+                    <option value="11">Un-Assign from Project</option>
+                </optgroup>
+
+                <optgroup label="Respondent">
+                    @if (str_contains(Request::url(), '/admin/projects'))
+                        <option value="qualified">Move to Qualified</option>
+                    @endif
+                    <option value="1">Status > Activate</option>
+                    <option value="2">Status > Deactivate</option>
+                    <option value="3">Status > Opt-Out</option>
+                    @if (Auth::guard('admin')->user()->role_id == 1)
+                        @if (str_contains(Request::url(), '/admin/respondents'))
+                            <option value="delete_all">Delete Selected All</option>
+                        @endif
+                    @endif
+                </optgroup>
+            @endif
+        </select>
+
+        {{-- PLAY BUTTON --}}
         <div class="play-button-container ml-3">
-            <a class="play-button user_play_button">
+            <a class="play-button respondents_play_button">
                 <div class="play-button__triangle"></div>
             </a>
         </div>
     </div>
 
 
-
+    {{-- FILTER --}}
     <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="First group">
             <div class="btn-group dropdown-filter">
@@ -104,17 +96,11 @@
                             <select name="filter_respondent_status" id="filter_respondent_status" class="form-control"
                                 onchange="filter_respondent_status(this)">
                                 <option value="">Select Status</option>
-                                <option value="1">
-                                    Active
-                                  </option><option value="4">
-                                    Pending
-                                  </option><option value="2">
-                                    Deactivated
-                                  </option><option value="3">
-                                    Unsubscribed
-                                  </option><option value="5">
-                                    Blacklisted
-                                  </option>
+                                <option value="1">Active</option>
+                                <option value="4">Pending</option>
+                                <option value="2">Deactivated</option>
+                                <option value="3">Unsubscribed</option>
+                                <option value="5">Blacklisted</option>
                             </select>
                         </li>
                         <li class="mb-3">
@@ -132,37 +118,6 @@
         </div>
     </div>
 
-    @if (Auth::guard('admin')->user()->role_id == 1)
-        @if (str_contains(Request::url(), '/admin/respondents'))
-            <div class="btn-group respondents_datatable hided_option" role="group" aria-label="Third group"
-                style="display: none;">
-                <div class="btn-group dropdown-filter">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
-                            aria-labelledby="delete" role="presentation" class="fill-current text-80">
-                            <path fill-rule="nonzero"
-                                d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z">
-                            </path>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"
-                            class="ml-2">
-                            <path fill="var(--90)"
-                                d="M8.292893.292893c.390525-.390524 1.023689-.390524 1.414214 0 .390524.390525.390524 1.023689 0 1.414214l-4 4c-.390525.390524-1.023689.390524-1.414214 0l-4-4c-.390524-.390525-.390524-1.023689 0-1.414214.390525-.390524 1.023689-.390524 1.414214 0L5 3.585786 8.292893.292893z">
-                            </path>
-                        </svg>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li class="dropdown-header">
-                            <a class="btn btn-danger respondents_datatable delete_all" class="btn btn-primary">
-                                Delete Selected All
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        @endif
-    @endif
 </div>
 
 <h4 class="card-title"> </h4>
