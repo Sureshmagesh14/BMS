@@ -1,6 +1,9 @@
 @include('user.layout.header')
 <style>
-    /* Your existing styles */
+   button#pass:hover {
+        background-color: #6396b1;
+        color: #fff;
+    }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -9,7 +12,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 m-auto">
-                <form id="forgot_table" method="POST" action="{{ route('password.store.sms') }}">
+                <form id="forgot_table" method="POST" action="{{ route('password.reset.sms') }}">
                     @csrf
                     <input type="hidden" name="token" value="{{ $token }}">
                     <div class="text-start w-md-50 w-100 m-auto my-3">
@@ -19,9 +22,9 @@
                         <label for="mobile" class="fw-bolder">Mobile Number</label>
                         <div class="input-group mb-3">
                             <input type="text"  placeholder="Enter your mobile number" 
-                                   class="form-control vi-border-clr border-radius-6px" value="{{ old('mobile') }}" disabled>
+                                   class="form-control vi-border-clr border-radius-6px" value="{{ $phone }}" disabled>
                             <input type="hidden" name="mobile" id="mobile" placeholder="Enter your mobile number" 
-                                   class="form-control vi-border-clr border-radius-6px" value="{{ old('mobile') }}">
+                                   class="form-control vi-border-clr border-radius-6px" value="{{ $phone }}">
                         </div>
                         <label id="mobile-error" class="error" for="mobile"></label>
 
