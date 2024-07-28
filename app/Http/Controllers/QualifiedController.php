@@ -544,11 +544,16 @@ class QualifiedController extends Controller
             // Update QualifiedRespondent table status from 1 to 2
             QualifiedRespondent::where('status', 1)->update(['status' => 2]);
     
-        } catch (Exception $e) {
-            // Handle exceptions
-            throw new Exception($e->getMessage());
+            // Return a success JSON response
+            return response()->json(['success' => true, 'message' => 'Status changed successfully!']);
+            
+        } catch (\Exception $e) {
+            // Handle exceptions and return an error response
+            Log::error("Error in change_all_rewards_status: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'An error occurred. Please try again.']);
         }
     }
+    
     
     
 
