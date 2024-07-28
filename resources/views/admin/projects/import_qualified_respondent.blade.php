@@ -36,7 +36,7 @@
     <div class="form-group row">
         <div class="col-md-10 offset-md-2">
             <span>Note: Upload a CSV of your Respondents Information. The following fields are required in the CSV: <strong>Profile ID</strong></span><br>
-            <a href="{{ asset('public/import/respondents/resp_import_csv.csv') }}">Click to download sample CSV file.</a>
+            <a href="{{ asset('public/import/respondents/resp_import_csv.csv') }}" download>Click to download sample CSV file.</a>
         </div>
     </div>
 
