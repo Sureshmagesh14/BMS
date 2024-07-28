@@ -38,8 +38,8 @@ Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.l
 Route::any('admin/forgot_password', 'Auth\AdminLoginController@forgot_password')->name('admin.forgot_password');
 Route::any('email', 'WelcomeController@email')->name('email');
 
-Route::get('password_reset_sms/{token}', 'WelcomeController@password_reset_sms')->name('password.sms');
-Route::post('password/reset', 'PasswordResetController@resetPassword')->name('password.store.sms');
+Route::get('password_reset_sms/{token}/{phone}', 'WelcomeController@password_reset_sms')->name('password.sms');
+Route::post('password/reset', 'Auth\PasswordResetLinkController@resetPassword')->name('password.reset.sms');
 Route::any('email', 'WelcomeController@email')->name('email');
 Route::any('dashboard', 'WelcomeController@user_dashboard')->middleware(['auth', 'verified'])->name('user.dashboard');
 Route::any('view_client_survey_list', 'WelcomeController@view_client_survey_list')->middleware(['auth', 'verified'])->name('client.survey');

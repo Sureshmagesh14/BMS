@@ -76,7 +76,11 @@ Online Surveys</span>
 
 
                                 @if ($profile_data->profile_completion_id == 0)
-                                    <td> Profile Incomple </td>
+                                    <td> 
+                                    <a href="{{ route('updateprofile_wizard') }}">
+                                        Profile Incomplete
+                                    </a>
+                                    </td>
                                 @else
                                     @if ($get_link != null)
                                         <td>
@@ -144,7 +148,11 @@ for Other Research</span>
                                       
 
                 @if ($profile_data->profile_completion_id == 0)
-                    <td> Profile Incomple </td>
+                    <td> 
+                    <a href="{{ route('updateprofile_wizard') }}">
+                            Profile Incomplete
+                         </a>
+                    </td>
                 @else
                     @if ($get_link != null)
                         <td>

@@ -1428,11 +1428,11 @@ class WelcomeController extends Controller
             // Assuming you have a PasswordResetsViaPhone model to store the token and expiration
             PasswordResetsViaPhone::updateOrCreate(
                 ['phone' => $phone],  // Use $phone variable instead of $user->phone
-                ['token' => $token, 'updated_at' => now()]
+                ['token' => $token, 'updated_at' => Carbon::now()]
             );
     
             // Generate password reset URL
-            $resetUrl = url('password_reset_sms', [$token]);
+            $resetUrl = url('password_reset_sms', ['token' => $token, 'phone' => $phone]);
     
             // Prepare SMS content
             $smsContent = "Reset Password Notification\n\n";
@@ -1500,7 +1500,8 @@ class WelcomeController extends Controller
     public function password_reset_sms(Request $request){
         try {
             $token = $request->route('token');
-            return view('auth.reset-sms-password', compact('token'));
+            $phone = $request->route('phone');
+            return view('auth.reset-sms-password', compact('token','phone'));
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

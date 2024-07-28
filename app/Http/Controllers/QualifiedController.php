@@ -184,6 +184,7 @@ class QualifiedController extends Controller
     
     public function attach_qualified_respondents(Request $request){
         try {
+            
             $project_id = $request->project_id;
             
             if($project_id == 0){
@@ -333,10 +334,40 @@ class QualifiedController extends Controller
                 }
     
                 if ($num == $col) {
-                    for ($c = 0; $c < $num; $c++) {
-                        $respondent_id = $filedata[$c];
+                    foreach ($filedata as $respondent_id) {
+                        // Check if the project_id exists in the projects table
+                        $project_exists = DB::table('projects')
+                            ->where('id', $project_id)
+                            ->exists();
     
-                        // Check if respondent already exists
+                        if (!$project_exists) {
+                            DB::rollback();
+                            fclose($file);
+                            return redirect()->back()->with('error', "Project ID {$project_id} does not exist.");
+                        }
+    
+                        // Check if the project_id and respondent_id exist in the project_respondent table
+                        $exists = DB::table('project_respondent')
+                            ->where('project_id', $project_id)
+                            ->where('respondent_id', $respondent_id)
+                            ->exists();
+    
+                        if (!$exists) {
+                            // Get the project name for the error message
+                            $project_name = DB::table('projects')
+                                ->where('id', $project_id)
+                                ->value('name');
+    
+                            $error_message = $project_name
+                                ? "Project '{$project_name}' or Respondent ID {$respondent_id} does not exist in project_respondent table."
+                                : "Project ID {$project_id} or Respondent ID {$respondent_id} does not exist in project_respondent table.";
+    
+                            DB::rollback();
+                            fclose($file);
+                            return redirect()->back()->with('error', $error_message);
+                        }
+    
+                        // Check if respondent already exists in QualifiedRespondent table
                         if (QualifiedRespondent::where('project_id', $project_id)->where('respondent_id', $respondent_id)->exists()) {
                             continue; // Skip if respondent already exists
                         }
@@ -352,6 +383,8 @@ class QualifiedController extends Controller
                         ]);
                     }
                 } else {
+                    DB::rollback();
+                    fclose($file);
                     return redirect()->back()->with('error', 'Column mismatched!');
                 }
     
@@ -367,10 +400,12 @@ class QualifiedController extends Controller
             return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
         }
     }
+    
 
-    public function project_store_qualified_respondents(Request $request){
+
+    public function project_store_qualified_respondents(Request $request)
+    {
         $project_id = $request->project_id;
-       
         $file = $request->file('file');
         
         if (!$request->hasFile('file')) {
@@ -417,14 +452,34 @@ class QualifiedController extends Controller
                 }
     
                 if ($num == $col) {
-                    for ($c = 0; $c < $num; $c++) {
-                        $respondent_id = $filedata[$c];
+                    foreach ($filedata as $respondent_id) {
+                        // Check if project_id and respondent_id exist in project_respondent table
+                        $exists = DB::table('project_respondent')
+                            ->join('projects', 'project_respondent.project_id', '=', 'projects.id')
+                            ->where('project_respondent.project_id', $project_id)
+                            ->where('project_respondent.respondent_id', $respondent_id)
+                            ->exists();
     
-                        // Check if respondent already exists
+                        if (!$exists) {
+                            // Get the project name
+                            $project_name = DB::table('projects')
+                                ->where('id', $project_id)
+                                ->value('name');
+    
+                            $error_message = $project_name
+                                ? "Project '{$project_name}' or Respondent ID {$respondent_id} does not exist in project_respondent table."
+                                : "Project ID {$project_id} or Respondent ID {$respondent_id} does not exist in project_respondent table.";
+    
+                            DB::rollback();
+                            fclose($file);
+                            return redirect()->back()->with('error', $error_message);
+                        }
+    
+                        // Check if respondent already exists in QualifiedRespondent table
                         if (QualifiedRespondent::where('project_id', $project_id)->where('respondent_id', $respondent_id)->exists()) {
                             continue; // Skip if respondent already exists
                         }
- 
+    
                         // Insert into QualifiedRespondent table
                         $get_rewards = Projects::where('id', $project_id)->first();
                         QualifiedRespondent::create([
@@ -436,6 +491,8 @@ class QualifiedController extends Controller
                         ]);
                     }
                 } else {
+                    DB::rollback();
+                    fclose($file);
                     return redirect()->back()->with('error', 'Column mismatched!');
                 }
     
@@ -451,6 +508,8 @@ class QualifiedController extends Controller
             return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
         }
     }
+    
+    
     
     public function change_all_rewards_status(Request $request) {
         try {
@@ -485,11 +544,16 @@ class QualifiedController extends Controller
             // Update QualifiedRespondent table status from 1 to 2
             QualifiedRespondent::where('status', 1)->update(['status' => 2]);
     
-        } catch (Exception $e) {
-            // Handle exceptions
-            throw new Exception($e->getMessage());
+            // Return a success JSON response
+            return response()->json(['success' => true, 'message' => 'Status changed successfully!']);
+            
+        } catch (\Exception $e) {
+            // Handle exceptions and return an error response
+            Log::error("Error in change_all_rewards_status: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'An error occurred. Please try again.']);
         }
     }
+    
     
     
 

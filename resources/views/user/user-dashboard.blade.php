@@ -291,7 +291,9 @@
                                      <td>{{ $res->reward }}</td>
                                      @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
                                      @if ($data->profile_completion_id == 0)
-                                     <td> Profile Incomple </td>
+                                     <td> 
+                                     <a href="{{ route('updateprofile_wizard') }}">
+                                        Profile Incomplete </a> </td>
                                      @else
                                      @if ($get_link != null)
                                      <td>
@@ -446,7 +448,11 @@
                                 @endif
                             @endif -->
                          @if ($data->profile_completion_id == 0)
-                         <td> Profile Incomple </td>
+                         <td> 
+                         <a href="{{ route('updateprofile_wizard') }}">
+                            Profile Incomplete
+                         </a>
+                                 </td>
                          @else
                          @if ($get_link != null)
                          <td>

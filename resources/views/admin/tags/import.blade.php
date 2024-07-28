@@ -22,7 +22,7 @@
     </div>
     <span>Note: Upload a CSV of your Respondents Information. The following fields are required in the
         CSV: <strong>Panel ID</strong></span><br>
-        <a href="{{ asset('public/import/panel/panel import csv.csv') }}">Click to
+        <a href="{{ asset('public/import/panel/panel import csv.csv') }}" download>Click to
             download sample CSV file.</a>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
