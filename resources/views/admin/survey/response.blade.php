@@ -2,6 +2,12 @@
 <head>
     <link href="{{ asset('assets/css/preview.css') }}" rel="stylesheet" type="text/css" />
     <style>
+
+        body{
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
         img.imagesurvey {
             width: 100%;
             height: 100px !important;
@@ -167,7 +173,7 @@ if(isset($bg)){
         }
     }
 }
- ?>
+?>
 <body style="{{$stylebackground}}">
     <div class="surveybackground">
         <?php  $qus_url=route('survey.builder',[$survey->builderID,$question->id]); ?>
