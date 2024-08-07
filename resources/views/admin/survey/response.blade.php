@@ -2,6 +2,11 @@
 <head>
     <link href="{{ asset('assets/css/preview.css') }}" rel="stylesheet" type="text/css" />
     <style>
+        img.imagesurvey {
+            width: 100%;
+            height: 100px !important;
+            object-fit: contain;
+        }
         img#tbs_logo {
             width: 200px;
         }
@@ -210,7 +215,7 @@ if(isset($bg)){
                                     <figure>
                                         <span>
                                             <div class="ss_image_wrapper">
-                                                <img id="tbs_logo" src="{{ asset('uploads/survey/'.$qusvalue->tbs_logo_url) }}" alt="TBS Logo">
+                                                <img class="imagesurvey"  id="tbs_logo" src="{{ asset('uploads/survey/'.$qusvalue->tbs_logo_url) }}" alt="TBS Logo">
                                             </div>
                                         </span>
                                     </figure>
@@ -224,7 +229,7 @@ if(isset($bg)){
                                 <figure>
                                     <span>
                                         <div class="ss_image_wrapper">
-                                            <img src="{{ asset('uploads/survey/'.$qusvalue->welcome_image) }}" alt="welcome image">
+                                            <img class="imagesurvey" src="{{ asset('uploads/survey/'.$qusvalue->welcome_image) }}" alt="welcome image">
                                         </div>
                                     </span>
                                 </figure>
@@ -1287,6 +1292,7 @@ $('.text-ans-input').keyup(function(){
 $('#dropdownlist').change(function(){
     if($(this).val()!=''){
         $('#next_button').removeClass('disabled');
+        $('#next_button').click();
     }else{
         $('#next_button').addClass('disabled');
     }
@@ -1309,6 +1315,7 @@ function enableNextButton(classname,btnname){
         $(btnname).toggleClass('disabled');
         $('#next_button').removeClass('disabled');
         $('#answered').val('yes');
+        $('#next_button').click();
     }else{
         $(btnname).toggleClass('disabled');
         $('#next_button').addClass('disabled');
@@ -1327,6 +1334,7 @@ $('.likert_choice').click(function(){
     if(enable == 1){
         $('#answered').val('yes');
         $('#next_button').removeClass('disabled');
+        $('#next_button').click();
 
     }else{
         $('#answered').val('no');
@@ -1366,6 +1374,7 @@ $('.ss-answer-option--picture-choice').click(function(){
     $('.ss-answer-option--picture-choice').not(this).removeClass("active");
     if($('.ss-answer-option--picture-choice.active .ss-choice-content p').text() !=''){
         $('#next_button').removeClass('disabled');
+        $('#next_button').click();
     }else{
         $('#next_button').addClass('disabled');
 
