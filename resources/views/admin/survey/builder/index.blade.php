@@ -265,6 +265,8 @@
             <!-- end page title -->
             <div class="card card-body">
                 @if(isset($currentQus))
+                    <input type="hidden" name="qus_type_survey" id="qus_type_survey" value="{{$currentQus->qus_type}}"/>
+
                     <?php  $qusvalue = json_decode($currentQus->qus_ans); 
                     
                     $qus_name='';
@@ -2098,7 +2100,7 @@ $('#welcome_template').on("change",function(){
             $('#existing_image').css('display',"block");
             $('#trigger_welcome_image').css('display','none');
             $('#ss_draft_remove_image_welcome').css('display','block');
-            let qus_type = "{{$currentQus->qus_type}}";
+            let qus_type = $('#qus_type_survey').val();
             if(qus_type == 'welcome_page' || qus_type == 'thank_you'){
                 let title =  $('#welcome_title').val();
                 let title1 =  $('#thankyou_title').val();
@@ -2128,7 +2130,7 @@ $('#thankyou_template').on("change",function(){
             var baseUrl = window.location.origin;
 
             $('#existing_image_thankyou').attr("src",baseUrl+"/uploads/survey/"+result?.image);
-            let qus_type = "{{$currentQus->qus_type}}";
+            let qus_type = $('#qus_type_survey').val();
             if(qus_type == 'welcome_page' || qus_type == 'thank_you'){
                 let title =  $('#welcome_title').val();
                 let title1 =  $('#thankyou_title').val();
@@ -2195,7 +2197,7 @@ $('#survey_thankyou_page').change(function () {
   });
   $('input, select, textarea').on('change', function() {
         // Perform any validation or pre-submit actions here
-        let qus_type = "{{$currentQus->qus_type}}";
+        let qus_type = $('#qus_type_survey').val();
         if(qus_type == 'welcome_page' || qus_type == 'thank_you'){
             let title =  $('#welcome_title').val();
             let title1 =  $('#thankyou_title').val();
