@@ -2,7 +2,11 @@
 <head>
     <link href="{{ asset('assets/css/preview.css') }}" rel="stylesheet" type="text/css" />
     <style>
-
+div#uploaded_file img {
+    width: 100px !important;
+    height: 100px !important;
+    object-fit: contain;
+}
         body{
             background-repeat: no-repeat;
             background-position: center;
@@ -1111,7 +1115,9 @@ if(isset($bg)){
                                     </div>
                                 <span id="helper" class="answer-option--file-input-text ss-survey-font-family ss-survey-text-size--xs sm_ss-survey-text-size--xs ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--primary-06">Maximum number of files is 1. Maximum upload size per file is 10 MB.</span>
                                 </div>
-                                    
+                                    <div id="uploaded_file">
+
+                                    </div>
                                     <div class="ss_cl_qstn_action disabled {{$question->qus_type}}_action">
                                         <div class="">
                                             <button data-url="@if($question1) {{route('survey.startsurvey',[$survey->id,$question1->id])}} @endif"  id="next_button"  class="disabled ss-primary-action-btn ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--base ss-survey-line-height--tight ss-survey-text-weight--bold"><span class="ss-primary-action-btn__copy">Next</span>
@@ -1638,13 +1644,111 @@ $('#uploadfile').change((e)=>{
         $('#uploadurl').val('');
         $('#next_button').addClass('disabled');
     }
+    let file = e.target.files[0]; 
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const preview = document.getElementById('uploaded_file');
+        preview.innerHTML = ''; // Clear previous content
+
+        // Create a container for the file name and preview element
+        const fileContainer = document.createElement('div');
+        fileContainer.style.display = 'flex';
+        fileContainer.style.alignItems = 'center';
+        fileContainer.style.marginBottom = '10px';
+
+        // Create and append the file name element
+        const fileName = document.createElement('span');
+        fileName.textContent = `File Name: ${file.name}`;
+        fileName.style.marginRight = '10px';
+        fileContainer.appendChild(fileName);
+
+        if (file.type.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.maxWidth = '100px';
+            fileContainer.appendChild(img);
+        } else if (file.type.startsWith('video/')) {
+            const video = document.createElement('video');
+            video.src = e.target.result;
+            video.controls = true;
+            video.style.maxWidth = '300px';
+            video.style.maxHeight = '200px';
+            video.load(); // Ensure the video is loaded correctly
+            fileContainer.appendChild(video);
+        } else if (file.type.startsWith('audio/')) {
+            const audio = document.createElement('audio');
+            audio.src = e.target.result;
+            audio.controls = true;
+            fileContainer.appendChild(audio);
+        } else {
+            const link = document.createElement('a');
+            link.href = e.target.result;
+            link.download = file.name;
+            link.textContent = `Download ${file.name}`;
+            fileContainer.appendChild(link);
+        }
+
+        // Append the fileContainer to the preview element
+        preview.appendChild(fileContainer);
+    };
+    reader.readAsDataURL(file);
+
   
 });
 function handleDrop(event) {
     event.preventDefault();
     const files = event.dataTransfer.files;
     if (files) {
-    $('#uploadurl').val(files[0].name);
+        $('#uploadurl').val(files[0].name);
+        let file = files[0]; 
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('uploaded_file');
+            preview.innerHTML = ''; // Clear previous content
+
+            // Create a container for the file name and preview element
+            const fileContainer = document.createElement('div');
+            fileContainer.style.display = 'flex';
+            fileContainer.style.alignItems = 'center';
+            fileContainer.style.marginBottom = '10px';
+
+            // Create and append the file name element
+            const fileName = document.createElement('span');
+            fileName.textContent = `File Name: ${file.name}`;
+            fileName.style.marginRight = '10px';
+            fileContainer.appendChild(fileName);
+
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '100px';
+                fileContainer.appendChild(img);
+            } else if (file.type.startsWith('video/')) {
+                const video = document.createElement('video');
+                video.src = e.target.result;
+                video.controls = true;
+                video.style.maxWidth = '300px';
+                video.style.maxHeight = '200px';
+                video.load(); // Ensure the video is loaded correctly
+                fileContainer.appendChild(video);
+            } else if (file.type.startsWith('audio/')) {
+                const audio = document.createElement('audio');
+                audio.src = e.target.result;
+                audio.controls = true;
+                fileContainer.appendChild(audio);
+            } else {
+                const link = document.createElement('a');
+                link.href = e.target.result;
+                link.download = file.name;
+                link.textContent = `Download ${file.name}`;
+                fileContainer.appendChild(link);
+            }
+
+            // Append the fileContainer to the preview element
+            preview.appendChild(fileContainer);
+        };
+        reader.readAsDataURL(file);
+
       const validFiles = Array.from(files).filter(file => {
         const allowedFormats = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","text/csv",'application/vnd.openxmlformats-officedocument.presentationml.presentation','application/pdf',"audio/mpeg","audio/mp3","audio/wav","audio/aac", 'image/png', 'image/jpeg','image/jpg','audio/mp3','audio/*'];
         return allowedFormats.includes(file.type);
