@@ -18,10 +18,40 @@ button#back_to_profile {
     padding: 10px;
     border-radius: 6px;
 }
+body{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.surveysparrow-survey-container--classic-form{
+    background-color:unset;
+}
 </style>
 </head>
-
-<body>
+<?php // Survey Background 
+$bg=json_decode($survey->background); 
+$stylebackground="";
+if(isset($bg)){
+    $type=$bg->type;
+    if($bg->type=='image'){
+        $styleimage= asset('uploads/survey/background/'.$bg->color);
+        $stylebackground="background-image:url('".$styleimage."')";
+    }else if($bg->type =='single'){
+        if($bg->color!=''){
+            $stylebackground="background-color:".$bg->color.";";
+        }
+    }else if($bg->type =='gradient'){
+        if($bg->color!=''){
+            $color=json_decode($bg->color);
+            $ori=$color->ori;
+            $c1=$color->hex1;
+            $c2=$color->hex2;
+            $colorset = $color->ori.",".$color->hex1.",".$color->hex2;
+            $stylebackground="background-image:linear-gradient($colorset);";
+        }
+    }
+} ?>
+<body style="{{$stylebackground}}">
 @if($survey->survey_type == 'profile')
 <a class="back_to_profile" href="{{ route('user.dashboard') }}">
         <button id="back_to_profile">
@@ -42,7 +72,7 @@ button#back_to_profile {
                     <p>Survey Completed!</p>
                     
                     @endif
-                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">Thanks for you time</p>
+                        <p class="ss-survey-heading--text ss-survey-question-description ss-survey-font-family ss-survey-text-size--lg sm_ss-survey-text-size--base ss-survey-line-height--normal ss-survey-text-weight--regular ss-survey-text-question-text ss-survey-text-color--primary-07">Thanks for your time</p>
                         <figure>
                             <span>
                                 <div class="ss_image_wrapper">
