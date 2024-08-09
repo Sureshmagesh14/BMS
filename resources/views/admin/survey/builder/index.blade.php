@@ -265,6 +265,8 @@
             <!-- end page title -->
             <div class="card card-body">
                 @if(isset($currentQus))
+                    <input type="hidden" name="qus_type_survey" id="qus_type_survey" value="{{$currentQus->qus_type}}"/>
+
                     <?php  $qusvalue = json_decode($currentQus->qus_ans); 
                     
                     $qus_name='';
@@ -2098,6 +2100,16 @@ $('#welcome_template').on("change",function(){
             $('#existing_image').css('display',"block");
             $('#trigger_welcome_image').css('display','none');
             $('#ss_draft_remove_image_welcome').css('display','block');
+            let qus_type = $('#qus_type_survey').val();
+            if(qus_type == 'welcome_page' || qus_type == 'thank_you'){
+                let title =  $('#welcome_title').val();
+                let title1 =  $('#thankyou_title').val();
+                if((title != undefined && title!="" )|| (title1 != undefined && title1 != "" )){
+                    $('#update_qus').click();
+                }
+            }else{
+                $('#update_qus').click();
+            }
         }
     });
 
@@ -2118,6 +2130,16 @@ $('#thankyou_template').on("change",function(){
             var baseUrl = window.location.origin;
 
             $('#existing_image_thankyou').attr("src",baseUrl+"/uploads/survey/"+result?.image);
+            let qus_type = $('#qus_type_survey').val();
+            if(qus_type == 'welcome_page' || qus_type == 'thank_you'){
+                let title =  $('#welcome_title').val();
+                let title1 =  $('#thankyou_title').val();
+                if((title != undefined && title!="" )|| (title1 != undefined && title1 != "" )){
+                    $('#update_qus').click();
+                }
+            }else{
+                $('#update_qus').click();
+            }
         }
     });
 
@@ -2175,7 +2197,36 @@ $('#survey_thankyou_page').change(function () {
   });
   $('input, select, textarea').on('change', function() {
         // Perform any validation or pre-submit actions here
-       $('#update_qus').click();
+        let qus_type = $('#qus_type_survey').val();
+        if(qus_type == 'welcome_page' || qus_type == 'thank_you'){
+            let title =  $('#welcome_title').val();
+            let title1 =  $('#thankyou_title').val();
+            if((title != undefined && title!="" )|| (title1 != undefined && title1 != "" )){
+                $('#update_qus').click();
+            }
+        }else{
+            if(qus_type=='single_choice' || qus_type=='multi_choice' || qus_type=='dropdown' || qus_type=='rankorder'){
+                let choices=[];
+                $("input[name=choice]").each(function(idx, elem) {
+                    choices.push($(elem).val());
+                });
+                $('#choices_list').val(choices);
+                if(choices.length>0){
+                    $('#update_qus').click();
+                }
+            }else if(qus_type=='picturechoice'){
+                let choice_pic=[];
+                $('.img_placeholder').each(function(){
+                    choice_pic.push({'img':$(this).children('.current_image').attr('src'),'text':$(this).children('.option-action').children('textarea.choice_desc').val()});
+                });
+                $('#choices_list_pic').val(JSON.stringify(choice_pic));
+                if(choice_pic.length>0){
+                    $('#update_qus_final').click();
+                }
+            }else{
+                $('#update_qus').click();
+            }
+        }
     });
   
     const draggables = document.querySelectorAll('.draggable');
