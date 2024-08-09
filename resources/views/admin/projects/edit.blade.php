@@ -18,12 +18,12 @@
         </div>
     </div>
 
-
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Project Name *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name" value="{{ $projects->name }}"
-                required>
+            <input type="text" class="form-control" id="name" name="name" oninput="validateProjectName()"
+                value="{{ $projects->name }}" required>
+            <div id="name-error" class="text-danger"></div>
         </div>
     </div>
 
@@ -144,7 +144,7 @@
         </div>
     </div>
 
- 
+
 
     {{-- <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Email Description 2 (Pre-task only)
@@ -246,14 +246,32 @@
 
 
 <script>
+    function validateProjectName() {
+        var input = document.getElementById("name");
+        var errorDiv = document.getElementById("name-error");
+        var regex = /^[A-Za-z0-9\-]+$/;
+        var value = input.value;
+
+        if (!regex.test(value)) {
+            errorDiv.textContent = "Only letters, numbers, and dashes are allowed.";
+            input.setCustomValidity("Invalid input");
+        } else {
+            errorDiv.textContent = "";
+            input.setCustomValidity("");
+        }
+    }
+
     $("#edit_create").click(function() {
-        if (!$("#edit_projects_form").valid()) { // Not Valid
+        validateProjectName(); // Validate the project name before form submission
+
+        if (!$("#edit_projects_form")[0].checkValidity()) { // Check form validity
             return false;
         } else {
             var data = $('#edit_projects_form').serialize();
             var id = $("#id").val();
             var url_set = "{{ route('projects.update', ':id') }}";
             url_set = url_set.replace(':id', id);
+
             $.ajax({
                 type: 'PUT',
                 url: url_set,
@@ -267,10 +285,13 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    projects_table();
+                    projects_table(); // Update your projects table
                 },
-                complete: function(response) {
-                    $('#edit_create').html('Create New');
+                error: function(xhr, status, error) {
+                    toastr.error('An error occurred: ' + error);
+                },
+                complete: function() {
+                    $('#edit_create').html('Update');
                 }
             });
         }

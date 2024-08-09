@@ -19,7 +19,9 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Project Name *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name">
+            <input type="text" class="form-control" id="name" name="name" oninput="validateProjectName()"
+                required>
+            <div id="name-error" class="text-danger"></div>
         </div>
     </div>
 
@@ -136,7 +138,7 @@
         </div>
     </div>
 
-    
+
 
     {{-- <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Email Description 2 (Pre-task only)
@@ -230,8 +232,24 @@
 
 
 <script>
+    function validateProjectName() {
+        var input = document.getElementById("name");
+        var errorDiv = document.getElementById("name-error");
+        var regex = /^[A-Za-z0-9\-]+$/;
+        var value = input.value;
+
+        if (!regex.test(value)) {
+            errorDiv.textContent = "Only letters, numbers, and dashes are allowed.";
+            input.setCustomValidity("Invalid input");
+        } else {
+            errorDiv.textContent = "";
+            input.setCustomValidity("");
+        }
+    }
     $("#projects_create").click(function() {
-        if (!$("#projects_form").valid()) { // Not Valid
+        validateProjectName(); // Validate the project name before form submission
+
+        if (!$("#projects_form")[0].checkValidity()) { // Not Valid
             return false;
         } else {
             var data = $('#projects_form').serialize();

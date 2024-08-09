@@ -14,6 +14,14 @@
     #ui-datepicker-div {
         width: 30% !important;
     }
+    .dataTables_wrapper {
+    overflow-x: auto;
+}
+
+#respondents_datatable {
+    width: 100%;
+    display: block; /* Ensure it takes full width */
+}
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
@@ -142,15 +150,26 @@
                         "data": "opted_in"
                     },
                     {
+                        "data": "updated_at"
+                    },
+                    {
+                        "data": "referral_code"
+                    },
+                    {
+                        "data": "accept_terms"
+                    },
+                    {
                         "data": "options",
                         "orderable": false,
-                        "searchable": false
+                        "searchable": false,
+                       
                     }
                 ],
                 "order": [
                     [1, "asc"]
                 ], // Default sorting by id_show ascending
-                "stateSave": false // Ensure state saving is disabled for server-side processing
+                "stateSave": false, // Ensure state saving is disabled for server-side processing
+                "responsive": false // Disable responsive feature
             });
         }
 
