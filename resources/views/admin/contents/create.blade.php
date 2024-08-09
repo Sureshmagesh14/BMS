@@ -1,7 +1,7 @@
 <form id="content_form" class="validation">
     @csrf
     <div class="form-group row">
-        <label for="example-text-input" class="col-md-2 col-form-label">Type*</label>
+        <label for="type_id" class="col-md-2 col-form-label">Type*</label>
         <div class="col-md-10">
             <select name="type_id" id="type_id" class="form-control" required>
                 <option value="" selected disabled>Choose an option</option>
@@ -12,7 +12,7 @@
     </div>
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Search</label>
+        <label for="data" class="col-md-2 col-form-label">Content</label>
         <div class="col-md-10">
             <textarea id="data" name="data" class="form-control" required></textarea>
         </div>
@@ -26,6 +26,22 @@
 
 
 <script>
+    // Initialize TinyMCE editor
+    tinymce.init({
+        selector: '#data', // Apply TinyMCE to the textarea with id 'data'
+        plugins: 'advlist autolink lists link image charmap preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount',
+        toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+        menubar: false,
+        height: 300, // Adjust height as needed
+        branding: false, // Remove TinyMCE branding
+        // Remove content if it exists (optional)
+        setup: function (editor) {
+            editor.on('init', function () {
+                editor.setContent('');
+            });
+        }
+    });
+
     $(function() {
         $('#content_form').validate({
             rules: {
@@ -33,13 +49,14 @@
                     required: true,
                     remote: {
                         url: '{{ route('check_content_duplicate') }}',
-                        data: { 'form_name' : "contentcreate" },
-                        asysc:false,
-                        type: "GET"
+                        type: "GET",
+                        data: {
+                            type_id: function() {
+                                return $("#type_id").val();
+                            }
+                        }
                     }
-                },
-              
-
+                }
             },
             messages: {
                 type_id: {
@@ -54,6 +71,9 @@
             return false;
         } else {
             var data = $('#content_form').serialize();
+
+            // Add TinyMCE content to form data
+            data += '&data=' + encodeURIComponent(tinyMCE.get('data').getContent());
 
             $.ajax({
                 type: 'POST',

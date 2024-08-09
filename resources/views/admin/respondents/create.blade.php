@@ -45,23 +45,25 @@
         </label>
         <div class="col-md-10">
             <div class="input-group">
-                <div class="input-group-text">+27</div>
+                <div class="input-group-text">+27(0)</div>
                 <input type="text" class="form-control" id="mobile" name="mobile" maxlength="16" autocomplete="off">
             </div>
+            <small class="form-text text-muted">Please do not begin with a zero.</small>
         </div>
     </div>
 
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Whatsapp Number
-        </label>
+        <label for="whatsapp" class="col-md-2 col-form-label">WhatsApp Number</label>
         <div class="col-md-10">
             <div class="input-group">
                 <div class="input-group-text">+27</div>
-                <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="16" autocomplete="off">
+                <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="15" autocomplete="off" placeholder="Enter number without zero">
             </div>
+            <small class="form-text text-muted">Please do not begin with a zero.</small>
         </div>
     </div>
+    
 
 
 

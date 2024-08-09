@@ -460,7 +460,10 @@ class RespondentsController extends Controller
                 9 => 'profile_completion',
                 10 => 'inactive_until',
                 11 => 'opted_in',
-                12 => 'action',
+                12 => 'updated_at',
+                13 => 'referral_code',
+                14 => 'accept_terms',
+                15 => 'action',
             ];
     
             // Determine if request is from inside a form (e.g., 'projects' or 'tags')
@@ -494,18 +497,18 @@ class RespondentsController extends Controller
             // Total records count before any filtering
             $totalData = $query->count();
     
-            // Search value from DataTables
             $search = $request->input('search.value');
-    
+
             // Apply search conditions if search value is present
             if (!empty($search)) {
+                $search = strtolower($search); // Convert search term to lowercase
                 $query->where(function ($q) use ($search) {
-                    $q->where('respondents.id', 'LIKE', "%{$search}%")
-                        ->orWhere('respondents.name', 'LIKE', "%{$search}%")
-                        ->orWhere('respondents.surname', 'LIKE', "%{$search}%")
-                        ->orWhere('respondents.mobile', 'LIKE', "%{$search}%")
-                        ->orWhere('respondents.whatsapp', 'LIKE', "%{$search}%")
-                        ->orWhere('respondents.email', 'LIKE', "%{$search}%");
+                    $q->whereRaw('LOWER(respondents.id) LIKE ?', ["%{$search}%"])
+                      ->orWhereRaw('LOWER(respondents.name) LIKE ?', ["%{$search}%"])
+                      ->orWhereRaw('LOWER(respondents.surname) LIKE ?', ["%{$search}%"])
+                      ->orWhereRaw('LOWER(respondents.mobile) LIKE ?', ["%{$search}%"])
+                      ->orWhereRaw('LOWER(respondents.whatsapp) LIKE ?', ["%{$search}%"])
+                      ->orWhereRaw('LOWER(respondents.email) LIKE ?', ["%{$search}%"]);
                 });
             }
     
@@ -572,6 +575,11 @@ class RespondentsController extends Controller
                         $whatsapp = $whatsapp;
                     }
                 }
+                $opted_in = ($post->opted_in != null) ? date("d-m-Y", strtotime($post->opted_in)) : '';
+                $updated_at = ($post->updated_at != null) ? date("d-m-Y", strtotime($post->updated_at)) : '';
+                $accept_terms = $post->accept_terms == 1 ? 'Yes' : 'No';
+                $referral_code = strlen($post->referral_code) > 10 ? substr($post->referral_code, 0, 10) . '...' : $post->referral_code;
+
                 // Build each row of data
                 $nestedData = [
                     'select_all' => '<input class="tabel_checkbox" name="networks[]" type="checkbox" onchange="table_checkbox(this,\'respondents_datatable\')" id="' . $post->id . '">',
@@ -586,7 +594,10 @@ class RespondentsController extends Controller
                     'status' => isset($statusMappings[$post->active_status_id]) ? $statusMappings[$post->active_status_id] : 'Unknown',
                     'profile_completion' => $post->profile_completion_id == 1 ? 'Completed' : 'Not Completed',
                     'inactive_until' => $post->inactive_until ?? '-',
-                    'opted_in' => $post->opted_in ?? '-',
+                    'opted_in' => $opted_in,
+                    'updated_at' => $updated_at,
+                 'referral_code' => '<div class="text-container" title="' . htmlspecialchars($post->referral_code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($referral_code, ENT_QUOTES, 'UTF-8') . '</div>',
+                    'accept_terms' => $accept_terms,
                     'id_show' => '<a href="' . $view_route . '" class="rounded waves-light waves-effect">' . $post->id . '</a>',
                 ];
     

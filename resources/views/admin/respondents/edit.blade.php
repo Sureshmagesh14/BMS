@@ -49,10 +49,11 @@
         </label>
         <div class="col-md-10">
             <div class="input-group">
-                <div class="input-group-text">+27</div>
+                <div class="input-group-text">+27(0)</div>
                 <input type="text" class="form-control" id="mobile" name="mobile" autocomplete="off"
                     value="{{ $respondents->mobile }}" maxlength="16">
             </div>
+            <small class="form-text text-muted">Please do not begin with a zero.</small>
         </div>
     </div>
 
@@ -62,10 +63,11 @@
         </label>
         <div class="col-md-10">
             <div class="input-group">
-                <div class="input-group-text">+27</div>
+                <div class="input-group-text">+27(0)</div>
                 <input type="text" class="form-control" id="whatsapp" name="whatsapp" autocomplete="off"
                     value="{{ $respondents->whatsapp }}" maxlength="16">
             </div>
+            <small class="form-text text-muted">Please do not begin with a zero.</small>
         </div>
     </div>
 

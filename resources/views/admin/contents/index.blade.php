@@ -5,6 +5,7 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.0.5/tinymce.min.js" referrerpolicy="origin"></script> 
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">

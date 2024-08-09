@@ -303,28 +303,28 @@ class ContentsController extends Controller
         }
     }
 
-    public function check_content_duplicate(Request $request){
+    public function check_content_duplicate(Request $request)
+    {
         try {
-            if($request->form_name=="contentcreate"){
-                $get_count=Contents::where('id',$request->type_id)->get()->count();
-                if($get_count<1){
-                    echo "true";
-                }else{
-                    echo "false";
-                }
-            }else{
-                $get_count=Contents::whereNot('id',$request->type_id)->get()->count();
-                if($get_count<1){
-                    echo "true";
-                }else{
-                    echo "false";
-                }
+            $type_id = $request->input('type_id');
+            $form_name = $request->input('form_name');
+    
+            if ($form_name === "contentcreate") {
+                // For content creation, check if type_id already exists
+                $exists = Contents::where('type_id', $type_id)->exists();
+            } else {
+                // For content update, check if type_id exists but not for the current record
+                $exists = Contents::where('type_id', $type_id)
+                                  ->where('id', '!=', $request->input('id'))
+                                  ->exists();
             }
-            
-             
-        }
-        catch (Exception $e) {
-            throw new Exception($e->getMessage());
+    
+            // Return appropriate response
+            return response()->json(!$exists);
+        } catch (Exception $e) {
+            // Return an error response in case of exceptions
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
 }

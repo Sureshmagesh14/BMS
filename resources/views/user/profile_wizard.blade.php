@@ -6,15 +6,22 @@
         text-decoration: none;
     }
 
-    /* .wizard>.steps{
-            width: 20% !important;
-        } */
+    .wizard>.steps{
+        width: 15% !important;
+    }
     .wizard.vertical>.actions {
         margin: 11px 2.5%;
     }
 
     .wizard.vertical>.content {
-        width: 75%;
+        width: 80%;
+    }
+
+    .wizard > .content > .body {
+        position: absolute;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 1.5% !important;
     }
 
     span.select2-selection.select2-selection--single.error {
@@ -580,7 +587,7 @@
                                                                             Convertible</option>
                                                                         <option value="suv"
                                                                             @isset($vehicle['type']) @if ('suv' == $vehicle['type']) selected @endif @endisset>
-                                                                            SPORT-UTILITY VEHICLE (SUV)</option>
+                                                                            SUV (SPORT-UTILITY VEHICLE)</option>
                                                                         <option value="minivan"
                                                                             @isset($vehicle['type']) @if ('minivan' == $vehicle['type']) selected @endif @endisset>
                                                                             Minivan</option>
@@ -626,7 +633,7 @@
                                                                         <option value="wagon">Station Wagon</option>
                                                                         <option value="hatchback">Hatchback</option>
                                                                         <option value="convertible">Convertible</option>
-                                                                        <option value="suv">SPORT-UTILITY VEHICLE (SUV)</option>
+                                                                        <option value="suv">SUV (SPORT-UTILITY VEHICLE)</option>
                                                                         <option value="minivan">Minivan</option>
                                                                         <option value="pickup_tuck">Pickup Truck</option>
                                                                     </select>
@@ -827,10 +834,10 @@
             transitionEffect: "slideLeft",
             autoFocus: true,
             // saveState: true,
-            // stepsOrientation: "vertical",
+            stepsOrientation: "vertical",
             onStepChanging: function(event, currentIndex, newIndex) {
                 if (currentIndex == 0 && newIndex == 1 || currentIndex == 2 && newIndex == 1) {
-                    if (form.valid() == true) {
+                    // if (form.valid() == true) {
                         get_unique_id = $("#get_unique_id").val();
                         first_name = $("#first_name").val();
                         last_name = $("#last_name").val();
@@ -848,25 +855,27 @@
                         if (currentIndex == 0 && newIndex == 1) {
                             wizard_save(datas1);
                         }
-                    }
+                    // }
 
-                    return form.valid();
+                    // return form.valid();
+                    return true;
                 } else if (currentIndex == 1 && newIndex == 2) {
-                    if (form.valid() == true) {
+                    // if (form.valid() == true) {
                         datas2 = {
                             _token: tempcsrf,
                             serialize_data: form.serialize(),
                             step: 2
                         };
                         wizard_save(datas2);
-                    }
-                    return form.valid();
+                    // }
+                    // return form.valid();
+                    return true;
                 }
                 return true;
             },
             labels: {
-                finish: 'Finish <i class="fa fa-chevron-right"></i>',
-                next: 'Next <i class="fa fa-chevron-right"></i>',
+                finish: 'Save <i class="fa fa-chevron-right"></i>',
+                next: 'Save <i class="fa fa-chevron-right"></i>',
                 previous: '<i class="fa fa-chevron-left"></i> Previous'
             },
             onFinishing: function(event, currentIndex) {
@@ -874,11 +883,11 @@
             },
             onFinished: function(event, currentIndex) {
                 $.confirm({
-                    title: "Confirmation!",
-                    content: "Are You Sure To Complete Your Profile?",
+                    title: "",
+                    content: "Are You happy with the information and want to complete your profile?",
                     autoClose: 'cancel|8000',
                     type: 'blue',
-                    icon: 'fa fa-check',
+                    // icon: 'fa fa-check',
                     typeAnimated: true,
                     draggable: false,
                     animationBounce: 2,
@@ -1022,7 +1031,7 @@
                         '<option value="wagon">Station Wagon</option>' +
                         '<option value="hatchback">Hatchback</option>' +
                         '<option value="convertible">Convertible</option>' +
-                        '<option value="suv">SPORT-UTILITY VEHICLE (SUV)</option>' +
+                        '<option value="suv">SUV (SPORT-UTILITY VEHICLE)</option>' +
                         '<option value="minivan">Minivan</option>' +
                         '<option value="pickup_tuck">Pickup Truck</option>' +
                         '</select>' +
