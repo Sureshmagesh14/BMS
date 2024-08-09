@@ -33,7 +33,9 @@
                             </div>
                             <input type="text" name="phone" id="phone" placeholder="000 000 000"
                                 class="form-control vi-border-clr border-radius-0 w-50" maxlength="11">
+                               
                         </div>
+                        <span>Please do not begin with a zero.</span>
                         <div class="row">
                         <div class="col-md-6 col-sm-12">
                         <button type="submit"

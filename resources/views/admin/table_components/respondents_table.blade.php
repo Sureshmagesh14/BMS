@@ -141,6 +141,9 @@
             <th>Profile Completion</th>
             <th>Inactive Until</th>
             <th>Opted In</th>
+            <th>Last Updated</th>
+            <th>Referral Code</th>
+            <th>Accepted Terms</th>
             <th>Action</th>
 
         </tr>

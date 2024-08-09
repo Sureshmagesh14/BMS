@@ -587,7 +587,7 @@
                                                                             Convertible</option>
                                                                         <option value="suv"
                                                                             @isset($vehicle['type']) @if ('suv' == $vehicle['type']) selected @endif @endisset>
-                                                                            SPORT-UTILITY VEHICLE (SUV)</option>
+                                                                            SUV (SPORT-UTILITY VEHICLE)</option>
                                                                         <option value="minivan"
                                                                             @isset($vehicle['type']) @if ('minivan' == $vehicle['type']) selected @endif @endisset>
                                                                             Minivan</option>
@@ -633,7 +633,7 @@
                                                                         <option value="wagon">Station Wagon</option>
                                                                         <option value="hatchback">Hatchback</option>
                                                                         <option value="convertible">Convertible</option>
-                                                                        <option value="suv">SPORT-UTILITY VEHICLE (SUV)</option>
+                                                                        <option value="suv">SUV (SPORT-UTILITY VEHICLE)</option>
                                                                         <option value="minivan">Minivan</option>
                                                                         <option value="pickup_tuck">Pickup Truck</option>
                                                                     </select>
@@ -884,7 +884,7 @@
             onFinished: function(event, currentIndex) {
                 $.confirm({
                     title: "",
-                    content: "I confirm all my details are all correct",
+                    content: "Are You happy with the information and want to complete your profile?",
                     autoClose: 'cancel|8000',
                     type: 'blue',
                     // icon: 'fa fa-check',
@@ -1031,7 +1031,7 @@
                         '<option value="wagon">Station Wagon</option>' +
                         '<option value="hatchback">Hatchback</option>' +
                         '<option value="convertible">Convertible</option>' +
-                        '<option value="suv">SPORT-UTILITY VEHICLE (SUV)</option>' +
+                        '<option value="suv">SUV (SPORT-UTILITY VEHICLE)</option>' +
                         '<option value="minivan">Minivan</option>' +
                         '<option value="pickup_tuck">Pickup Truck</option>' +
                         '</select>' +

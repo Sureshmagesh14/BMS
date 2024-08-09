@@ -217,7 +217,8 @@ class QualifiedController extends Controller
 
         $get_resp = DB::table('project_respondent as pro_resp')->select('resp.*')
             ->join('respondents as resp', 'pro_resp.respondent_id', 'resp.id')
-            ->where('pro_resp.project_id',$project_id)->get();
+            ->where('pro_resp.project_id',$project_id)
+            ->where('resp.active_status_id',1)->get();
 
         if(count($get_resp) > 0){
             foreach($get_resp as $resp){

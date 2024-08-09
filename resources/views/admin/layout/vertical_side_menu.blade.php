@@ -190,7 +190,7 @@
 
                 <li>
                     <a href="{{ route('qualified_respondent.index') }}" class=" waves-effect">
-                        <i class="fas fa-network-wired"></i>
+                        <i class="fa fa-certificate" aria-hidden="true"></i>
                         <span class="menu-item" key="t-chat">Qualified Respondent
                         </span>
                     </a>
