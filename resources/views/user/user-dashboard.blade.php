@@ -158,7 +158,7 @@
                             </div>
                             <div class="col-auto">
                                 <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center">
-                                   <i class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i> {{ $data->mobile }}
+                                   <i class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i>+27(0) {{ $data->mobile }}
                                 </a>
                             </div>
                         </div>

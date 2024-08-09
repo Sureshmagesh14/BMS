@@ -883,11 +883,11 @@
             },
             onFinished: function(event, currentIndex) {
                 $.confirm({
-                    title: "Confirmation!",
-                    content: "Are You Sure To Complete Your Profile?",
+                    title: "",
+                    content: "I confirm all my details are all correct",
                     autoClose: 'cancel|8000',
                     type: 'blue',
-                    icon: 'fa fa-check',
+                    // icon: 'fa fa-check',
                     typeAnimated: true,
                     draggable: false,
                     animationBounce: 2,

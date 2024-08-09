@@ -29,9 +29,9 @@
                         <label for="phone" class="fw-bolder">Mobile</label>
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
-                                <div class="input-group-text">+27</div>
+                                <div class="input-group-text">+27 (0)</div>
                             </div>
-                            <input type="text" name="phone" id="phone" placeholder="819 966 078"
+                            <input type="text" name="phone" id="phone" placeholder="000 000 000"
                                 class="form-control vi-border-clr border-radius-0 w-50" maxlength="11">
                         </div>
                         <div class="row">
