@@ -870,7 +870,7 @@ class ProjectsController extends Controller
             return redirect()->back()->with('error', 'Please upload a file');
         }
     
-        // File Details 
+        // File Details
         $filename = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
     
@@ -900,47 +900,52 @@ class ProjectsController extends Controller
         try {
             DB::beginTransaction();
     
+            $errors = [];
+    
             while (($filedata = fgetcsv($file, 1000, ",")) !== false) {
                 $num = count($filedata);
     
-                // Skip first row
+                // Skip first row (headers)
                 if ($i == 0) {
                     $i++;
                     continue;
                 }
     
                 if ($num == $col) {
-                    for ($c = 0; $c < $num; $c++) {
-                        $respondent_id = $filedata[$c];
-    
+                    foreach ($filedata as $respondent_id) {
                         // Check if respondent already exists
-                        if (Project_respondent::where('project_id', $project_id)->where('respondent_id', $respondent_id)->exists()) {
-                            return redirect()->back()->with('error', 'Respondent Already Exists!');
-                        }
+                        $existing = Project_respondent::where('project_id', $project_id)
+                                                      ->where('respondent_id', $respondent_id)
+                                                      ->first();
     
-                        // Insert into Project_respondent table
-                        Project_respondent::create([
-                            'project_id' => $project_id,
-                            'respondent_id' => $respondent_id
-                        ]);
+                        if ($existing) {
+                            // Collect existing respondent IDs
+                            $errors[] = "Respondent ID $respondent_id already exists!";
+                        } else {
+                            // Insert into Project_respondent table
+                            Project_respondent::create([
+                                'project_id' => $project_id,
+                                'respondent_id' => $respondent_id
+                            ]);
     
-                        // Send email notification
-                        $project = Projects::find($project_id);
-                        $respondent = Respondents::find($respondent_id);
+                            // Send email notification
+                            $project = Projects::find($project_id);
+                            $respondent = Respondents::find($respondent_id);
     
-                        if ($project && $respondent) {
-                            $to_address = $respondent->email;
-                            $resp_name = $respondent->name . ' ' . $respondent->surname;
-                            $proj_name = $project->name;
+                            if ($project && $respondent) {
+                                $to_address = $respondent->email;
+                                $resp_name = $respondent->name . ' ' . $respondent->surname;
+                                $proj_name = $project->name;
     
-                            $data = [
-                                'subject' => 'New Survey Assigned',
-                                'name' => $resp_name,
-                                'project' => $proj_name,
-                                'type' => 'new_project'
-                            ];
+                                $data = [
+                                    'subject' => 'New Survey Assigned',
+                                    'name' => $resp_name,
+                                    'project' => $proj_name,
+                                    'type' => 'new_project'
+                                ];
     
-                            Mail::to($to_address)->send(new WelcomeEmail($data));
+                                Mail::to($to_address)->send(new WelcomeEmail($data));
+                            }
                         }
                     }
                 } else {
@@ -950,15 +955,25 @@ class ProjectsController extends Controller
                 $i++;
             }
     
-            DB::commit();
             fclose($file);
     
-            return redirect()->back()->with('success', 'Attached Successfully');
+            // Commit if there are no errors
+            if (empty($errors)) {
+                DB::commit();
+                return redirect()->back()->with('success', 'Attached Successfully');
+            } else {
+                DB::rollback();
+                // Display error messages
+                $errorMessages = implode('<br>', $errors);
+                return redirect()->back()->with('error', 'Errors occurred:<br>' . $errorMessages);
+            }
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
         }
     }
+    
+    
     
 
     public function respondent_to_panel_attach_import(Request $request){
