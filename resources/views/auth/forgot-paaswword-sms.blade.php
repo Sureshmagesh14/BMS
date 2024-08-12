@@ -35,7 +35,7 @@
                                 class="form-control vi-border-clr border-radius-0 w-50" maxlength="11">
                                
                         </div>
-                        <span>Please do not begin with a zero.</span>
+                        <span>Don’t include 0 in starting.</span>
                         <div class="row">
                         <div class="col-md-6 col-sm-12">
                         <button type="submit"
