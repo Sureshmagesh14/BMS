@@ -1176,6 +1176,32 @@ class RespondentsController extends Controller
 
         return response()->json(['repsonse' => $repsonse], 200);
     }
+
+
+    public function downloadSampleCSV()
+    {
+        try {
+            $filePath = public_path('public/import/respondents/resp import csv.csv');
+    
+            // Check if the file exists
+            if (!file_exists($filePath)) {
+                return response()->json([
+                    'error' => 'File not found.'
+                ], 404);
+            }
+    
+            // Proceed with file download
+            return response()->download($filePath);
+        } catch (\Exception $e) {
+            // Log the exception message
+            \Log::error('File download error: ' . $e->getMessage());
+    
+            // Return a custom error response
+            return response()->json([
+                'error' => 'An error occurred while trying to download the file.'
+            ], 500);
+        }
+    }
    
     
 }

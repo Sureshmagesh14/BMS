@@ -180,6 +180,8 @@ Route::group([
     Route::any('import_respondents/{project_id}', 'RespondentsController@import_respondents')->name('import_respondents');
     Route::any('upload_respondent', 'RespondentsController@upload_respondent')->name('upload_respondent');
     Route::any('qualified_respondent_status', 'RespondentsController@qualified_respondent_status')->name('qualified_respondent_status');
+    Route::any('download-sample-csv', 'RespondentsController@downloadSampleCSV')->name('download-sample-csv');
+
  
     
     
@@ -204,6 +206,7 @@ Route::group([
     Route::any('tags_resp_attach_import/{panel_id}', 'TagsController@tags_resp_attach_import')->name('tags_resp_attach_import');
     Route::any('deattach_tags/{tags_id}', 'TagsController@deattach_tags')->name('deattach_tags');
     Route::any('deattach_multi_panel', 'TagsController@deattach_multi_panel')->name('deattach_multi_panel');
+    Route::any('tags-download-sample-csv', 'TagsController@downloadSampleCSV')->name('tags-download-sample-csv');
     
 
     /* Rewards MENU*/

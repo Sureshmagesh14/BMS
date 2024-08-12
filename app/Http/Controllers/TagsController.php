@@ -701,13 +701,16 @@ class TagsController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-
     public function tags_attach_import(Request $request)
     {
         $respondent_id = $request->respondent_id;
         $file = $request->file('file');
     
-        // File Details 
+        if (!$request->hasFile('file')) {
+            return redirect()->back()->with('error', 'Please upload a file');
+        }
+    
+        // File Details
         $filename = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
     
@@ -718,63 +721,81 @@ class TagsController extends Controller
     
         // File upload location
         $location = 'uploads/csv/' . $respondent_id;
-        // Ensure directory exists
         if (!file_exists($location)) {
             mkdir($location, 0777, true);
         }
     
         // Upload file
         $file->move($location, $filename);
+    
         // Import CSV to Database
         $filepath = public_path($location . "/" . $filename);
-    
         $file = fopen($filepath, "r");
     
         $importData_arr = [];
+        $duplicateTags = [];
         $i = 0;
         $col = 1;
     
-        try {
-            while (($filedata = fgetcsv($file, 1000, ",")) !== false) {
-                $num = count($filedata);
+        // Collect existing tags for this respondent
+        $existingTags = RespondentTags::where('respondent_id', $respondent_id)
+                                      ->pluck('tag_id')
+                                      ->toArray();
     
-                // Skip first row
-                if ($i == 0) {
-                    $i++;
-                    continue;
-                }
+        while (($filedata = fgetcsv($file, 1000, ",")) !== false) {
+            $num = count($filedata);
     
-                if ($num == $col) {
-                    $tag_id = $filedata[0]; // Assuming the CSV has only one column for tag IDs
+            // Skip first row (headers)
+            if ($i == 0) {
+                $i++;
+                continue;
+            }
     
-                    // Check if the tag ID already exists for the respondent
-                    $existingTag = RespondentTags::where('respondent_id', $respondent_id)
-                        ->where('tag_id', $tag_id)
-                        ->exists();
+            if ($num == $col) {
+                $tag_id = $filedata[0]; // Assuming the CSV has only one column for tag IDs
     
-                    if ($existingTag) {
-                        return redirect()->back()->with('error', 'Tag ID ' . $tag_id . ' already exists for this respondent.');
-                    }
-    
+                if (in_array($tag_id, $existingTags)) {
+                    // Collect duplicate tags for reporting
+                    $duplicateTags[] = $tag_id;
+                } else {
                     // Add to import data array
                     $importData_arr[] = [
                         'respondent_id' => $respondent_id,
                         'tag_id' => $tag_id
                     ];
-    
-                    $i++;
-                } else {
-                    return redirect()->back()->with('error', 'Column mismatched!');
+                    $existingTags[] = $tag_id; // Add to existing tags to avoid re-checking
                 }
+    
+                $i++;
+            } else {
+                fclose($file);
+                return redirect()->back()->with('error', 'Column mismatched!');
+            }
+        }
+    
+        fclose($file);
+    
+        if (!empty($duplicateTags)) {
+            // Redirect back with error message if duplicates are found
+            $duplicateTagsMessage = 'Duplicate Tag IDs found:<br>' . implode('<br>', $duplicateTags);
+            return redirect()->back()->with('error', $duplicateTagsMessage);
+        }
+    
+        // Using DB transaction to ensure atomicity
+        DB::beginTransaction();
+    
+        try {
+            // Insert all non-duplicate records
+            if (!empty($importData_arr)) {
+                RespondentTags::insert($importData_arr);
             }
     
-            fclose($file);
-    
-            // Insert data into RespondentTags table
-            RespondentTags::insert($importData_arr);
+            DB::commit();
     
             return redirect()->back()->with('success', 'Tags Attached Successfully');
+    
         } catch (\Exception $e) {
+            DB::rollback();
             return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
         }
     }
@@ -784,84 +805,98 @@ class TagsController extends Controller
     {
         $tag_id = $request->tag_id;
         $file = $request->file('file');
-
-        // File Details 
+    
+        if (!$request->hasFile('file')) {
+            return redirect()->back()->with('error', 'Please upload a file');
+        }
+    
+        // File Details
         $filename = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
-        $tempPath = $file->getRealPath();
-        $fileSize = $file->getSize();
-        $mimeType = $file->getMimeType();
-
+    
         // Valid File Extensions
-        $valid_extension = array("csv");
+        $valid_extension = ['csv'];
         if (!in_array(strtolower($extension), $valid_extension)) {
             return redirect()->back()->with('error', 'Invalid File Extension, Please Upload CSV File Format');
         }
-
+    
         // File upload location
         $location = 'uploads/csv/' . $tag_id;
-
+        if (!file_exists($location)) {
+            mkdir($location, 0777, true);
+        }
+    
         // Upload file
         $file->move($location, $filename);
-
+    
         // Import CSV to Database
         $filepath = public_path($location . "/" . $filename);
         $file = fopen($filepath, "r");
-
-        $importData_arr = array();
+    
+        $importData_arr = [];
+        $duplicateErrors = [];
         $i = 0;
         $col = 1;
+    
         while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
             $num = count($filedata);
-            // Skip first row (Remove below comment if you want to skip the first row)
+    
+            // Skip first row (headers)
             if ($i == 0) {
                 $i++;
                 continue;
             }
-
+    
             if ($num == $col) {
-                for ($c = 0; $c < $num; $c++) {
-                    $respondent_id = $filedata[$c];
-
-                    // Check if respondent_id already exists for the given tag_id
+                foreach ($filedata as $respondent_id) {
+                    // Check if respondent_id and tag_id combination already exists
                     $existingRecord = RespondentTags::where('respondent_id', $respondent_id)
                                                     ->where('tag_id', $tag_id)
-                                                    ->exists(); // Use exists() to check existence without fetching the whole record
-
+                                                    ->exists();
+    
                     if ($existingRecord) {
-                        fclose($file);
-                        return redirect()->back()->with('error', 'Respondent ID ' . $respondent_id . ' already exists for this Panel.');
+                        // Collect duplicate errors
+                        $duplicateErrors[] = "Respondent ID $respondent_id already exists for this tag.";
+                    } else {
+                        // Add to import data array
+                        $importData_arr[] = [
+                            'respondent_id' => $respondent_id,
+                            'tag_id' => $tag_id
+                        ];
                     }
-
-                    $set_array = array('respondent_id' => $respondent_id, 'tag_id' => $tag_id);
-                    array_push($importData_arr, $set_array);
                 }
                 $i++;
             } else {
                 fclose($file);
                 return redirect()->back()->with('error', 'Column mismatched!');
-                break;
             }
         }
         fclose($file);
-
+    
+        // Check for duplicate errors and handle appropriately
+        if (!empty($duplicateErrors)) {
+            $errorMessage = 'Duplicates found:<br>' . implode('<br>', $duplicateErrors);
+            return redirect()->back()->with('error', $errorMessage);
+        }
+    
         // Using DB transaction to ensure atomicity
         DB::beginTransaction();
-
+    
         try {
-            // Insert all records
-            RespondentTags::insert($importData_arr);
-
+            // Insert all non-duplicate records
+            if (!empty($importData_arr)) {
+                RespondentTags::insert($importData_arr);
+            }
+    
             DB::commit();
-
-            return redirect()->back()->with('success', 'Attached Successfully');
-
+            return redirect()->back()->with('success', 'Tags Attached Successfully');
+    
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
         }
     }
-
+    
 
     public function tags_search_result(Request $request){
         try {
@@ -891,6 +926,31 @@ class TagsController extends Controller
         }
         catch (Exception $e) {
             return $e->getMessage();
+        }
+    }
+
+    public function downloadSampleCSV()
+    {
+        try {
+            $filePath = public_path('public/import/panel/panel import csv.csv');
+    
+            // Check if the file exists
+            if (!file_exists($filePath)) {
+                return response()->json([
+                    'error' => 'File not found.'
+                ], 404);
+            }
+    
+            // Proceed with file download
+            return response()->download($filePath);
+        } catch (\Exception $e) {
+            // Log the exception message
+            \Log::error('File download error: ' . $e->getMessage());
+    
+            // Return a custom error response
+            return response()->json([
+                'error' => 'An error occurred while trying to download the file.'
+            ], 500);
         }
     }
 
