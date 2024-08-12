@@ -45,7 +45,7 @@
 
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Mobile Number
+        <label for="example-search-input" class="col-md-2 col-form-label">Mobile Number *
         </label>
         <div class="col-md-10">
             <div class="input-group">
@@ -53,21 +53,21 @@
                 <input type="text" class="form-control" id="mobile" name="mobile" autocomplete="off"
                     value="{{ $respondents->mobile }}" maxlength="16">
             </div>
-            <small class="form-text text-muted">Please do not begin with a zero.</small>
+            <small class="form-text text-muted">Don’t include 0 in starting.</small>
         </div>
     </div>
 
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Whatsapp Number
+        <label for="example-search-input" class="col-md-2 col-form-label">Whatsapp Number *
         </label>
         <div class="col-md-10">
             <div class="input-group">
                 <div class="input-group-text">+27(0)</div>
-                <input type="text" class="form-control" id="whatsapp" name="whatsapp" autocomplete="off"
+                <input type="text" class="form-control" id="whatsapp" name="whatsapp" placeholder="Don’t include 0 in starting."  autocomplete="off"
                     value="{{ $respondents->whatsapp }}" maxlength="16">
             </div>
-            <small class="form-text text-muted">Please do not begin with a zero.</small>
+            <small class="form-text text-muted">Don’t include 0 in starting.</small>
         </div>
     </div>
 
@@ -77,7 +77,7 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Email *
         </label>
         <div class="col-md-10">
-            <input type="email" class="form-control" id="email" name="email" autocomplete="off" value="{{ $respondents->email }}"
+            <input type="email" class="form-control" id="email" name="email" placeholder="Don’t include 0 in starting."  autocomplete="off" value="{{ $respondents->email }}"
                 required>
         </div>
     </div>
