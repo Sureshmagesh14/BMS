@@ -20,9 +20,9 @@
             <input type="file" name="file" id="import_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
         </div>
     </div>
-    <span>Note: Upload a CSV of your Respondents Information. The following fields are required in the
+    <span>Note: Upload a CSV of your Panel Information. The following fields are required in the
         CSV: <strong>Panel ID</strong></span><br>
-        <a href="{{ asset('public/import/panel/panel import csv.csv') }}" download>Click to
+        <a href="{{ route('tags-download-sample-csv') }}">Click to
             download sample CSV file.</a>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>

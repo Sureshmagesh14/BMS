@@ -22,7 +22,7 @@
     </div>
     <span>Note: Upload a CSV of your Respondents Information. The following fields are required in the
         CSV: <strong>Profile ID</strong></span><br>
-        <a href="{{ asset('public/import/respondents/resp import csv.csv') }}" download>Click to
+        <a href="{{ route('download-sample-csv') }}">Click to
             download sample CSV file.</a>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
