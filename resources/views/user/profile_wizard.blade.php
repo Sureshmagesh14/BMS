@@ -142,26 +142,29 @@
                                                     class="star_require">*</span></label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">+27</div>
+                                                    <div class="input-group-text">+27(0)</div>
                                                 </div>
                                                 <input type="text" name="basic[mobile_number]" id="mobile_number"
                                                     placeholder="081 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ $resp_details->mobile }}" maxlength="16" required>
+                                                    
                                             </div>
+                                            <small class="form-text text-muted">Don’t include 0 in starting.</small>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="whatsapp_number">Whats App Number <span
                                                     class="star_require">*</span></label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">+27</div>
+                                                    <div class="input-group-text">+27(0)</div>
                                                 </div>
                                                 <input type="text" name="basic[whatsapp_number]" id="whatsapp_number"
                                                     placeholder="081 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ $resp_details->whatsapp }}" maxlength="16" required>
                                             </div>
+                                            <small class="form-text text-muted">Don’t include 0 in starting.</small>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="email">Email <span class="star_require">*</span></label>

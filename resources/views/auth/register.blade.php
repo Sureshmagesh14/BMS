@@ -156,7 +156,7 @@
                                 <input type="text" name="mobile" id="mobile" placeholder="819 966 078"
                                        class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" autocomplete="off" required>
                             </div>
-                            <small class="text-muted">Please do not begin with a zero.</small>
+                            <small class="text-muted">Don’t include 0 in starting.</small>
                         </div>
 
                         <div class="mobile text-start w-48 m-auto my-3">
@@ -170,7 +170,7 @@
                                 <input  type="text" name="whatsapp" id="whatsapp" placeholder="819 966 078"
                                     class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" autocomplete="off" required>
                             </div>
-                            <small class="text-muted">Please do not begin with a zero.</small>
+                            <small class="text-muted">Don’t include 0 in starting.</small>
                         </div>
                     </div>
                     <div class="first-row d-md-flex">

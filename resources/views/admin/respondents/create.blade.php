@@ -41,26 +41,26 @@
 
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Mobile Number
+        <label for="example-search-input" class="col-md-2 col-form-label">Mobile Number *
         </label>
         <div class="col-md-10">
             <div class="input-group">
                 <div class="input-group-text">+27(0)</div>
-                <input type="text" class="form-control" id="mobile" name="mobile" maxlength="16" autocomplete="off">
+                <input type="text" class="form-control" id="mobile" name="mobile" maxlength="16" placeholder="Don’t include 0 in starting." autocomplete="off" required>
             </div>
-            <small class="form-text text-muted">Please do not begin with a zero.</small>
+            <small class="form-text text-muted">Don’t include 0 in starting.</small>
         </div>
     </div>
 
 
     <div class="form-group row">
-        <label for="whatsapp" class="col-md-2 col-form-label">WhatsApp Number</label>
+        <label for="whatsapp" class="col-md-2 col-form-label">WhatsApp Number *</label>
         <div class="col-md-10">
             <div class="input-group">
                 <div class="input-group-text">+27</div>
-                <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="15" autocomplete="off" placeholder="Enter number without zero">
+                <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="15" autocomplete="off" placeholder="Don’t include 0 in starting." required>
             </div>
-            <small class="form-text text-muted">Please do not begin with a zero.</small>
+            <small class="form-text text-muted">Don’t include 0 in starting.</small>
         </div>
     </div>
     
