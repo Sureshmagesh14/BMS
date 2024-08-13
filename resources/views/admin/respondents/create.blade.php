@@ -6,20 +6,67 @@
         position: relative;
         z-index: 2;
     }
+
+    label#mobile-error {
+        width: 100% !important;
+    }
+
+    label#whatsapp-error {
+        width: 100% !important;
+    }
+
+    .invalid-feedback {
+        display: block;
+        /* Ensure it displays as a block element */
+        color: #dc3545;
+        /* Bootstrap's default error color */
+        font-size: 0.875em;
+        /* Slightly smaller font size for error messages */
+        margin-top: 0.25rem;
+        /* Space between input and error message */
+    }
+
+    #email-error {
+        padding-left: 0;
+        /* Default padding for small screens */
+    }
+
+    @media (min-width: 768px) {
+
+        /* Adjust padding for medium and larger screens */
+        #email-error {
+            padding-left: 200px;
+        }
+    }
+
+    #mobile-error {
+        padding-left: 0;
+        /* Default padding for small screens */
+    }
+
+    @media (min-width: 768px) {
+
+        /* Adjust padding for medium and larger screens */
+        #mobile-error {
+            padding-left: 200px;
+        }
+    }
 </style>
 <form id="respondents_form" class="validation" autocomplete="off">
     @csrf
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Name</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name" autocomplete="off">
+            <input type="text" class="form-control" id="name" name="name" autocomplete="off"
+                placeholder="Enter Your Name">
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Surname </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="surname" name="surname" autocomplete="off">
+            <input type="text" class="form-control" id="surname" name="surname" autocomplete="off"
+                placeholder="Enter Your Surname">
         </div>
     </div>
 
@@ -34,7 +81,8 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">RSA ID / Passport </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="id_passport" name="id_passport" autocomplete="off">
+            <input type="text" class="form-control" id="id_passport" name="id_passport" autocomplete="off"
+                placeholder="Enter Your RSA ID / Passport">
         </div>
     </div>
 
@@ -46,7 +94,9 @@
         <div class="col-md-10">
             <div class="input-group">
                 <div class="input-group-text">+27(0)</div>
-                <input type="text" class="form-control" id="mobile" name="mobile" maxlength="16" placeholder="Don’t include 0 in starting." autocomplete="off" required>
+                <input type="text" class="form-control" id="mobile" name="mobile" maxlength="16"
+                    placeholder="Don’t include 0 in starting." autocomplete="off" required>
+                <span id="mobile-error" class="invalid-feedback"></span>
             </div>
             <small class="form-text text-muted">Don’t include 0 in starting.</small>
         </div>
@@ -58,12 +108,13 @@
         <div class="col-md-10">
             <div class="input-group">
                 <div class="input-group-text">+27</div>
-                <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="15" autocomplete="off" placeholder="Don’t include 0 in starting." required>
+                <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="15"
+                    autocomplete="off" placeholder="Don’t include 0 in starting." required>
             </div>
             <small class="form-text text-muted">Don’t include 0 in starting.</small>
         </div>
     </div>
-    
+
 
 
 
@@ -71,7 +122,9 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Email *
         </label>
         <div class="col-md-10">
-            <input type="email" class="form-control" id="email" name="email" required autocomplete="off">
+            <input type="email" class="form-control" id="email" name="email" autocomplete="off" required
+                placeholder="Enter Your Email">
+            <span id="email-error" class="invalid-feedback d-block mt-1"></span>
         </div>
     </div>
 
@@ -105,7 +158,8 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Account Type
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="account_type" name="account_type" autocomplete="off">
+            <input type="text" class="form-control" id="account_type" name="account_type" autocomplete="off"
+                placeholder="Enter Your Account Type">
         </div>
     </div>
 
@@ -113,7 +167,8 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Account Holder
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="account_holder" name="account_holder" autocomplete="off">
+            <input type="text" class="form-control" id="account_holder" name="account_holder"
+                placeholder="Enter Your Account Holder" autocomplete="off">
         </div>
     </div>
 
@@ -121,7 +176,8 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Account Number
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="account_number" name="account_number" autocomplete="off">
+            <input type="text" class="form-control" id="account_number" name="account_number"
+                placeholder="Enter Your Account Number" autocomplete="off">
         </div>
     </div>
 
@@ -156,7 +212,8 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Password *
         </label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="password-field" name="password" autocomplete="off" required>
+            <input type="password" class="form-control" id="password-field" name="password" autocomplete="off"
+                placeholder="Enter Your Password" required>
             <span toggle="#password-field" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
         </div>
     </div>
@@ -212,32 +269,84 @@
 
         $('#mobile').inputmask("999 999 999");
         $('#whatsapp').inputmask("999 999 999");
-        $('#respondents_form').validate({
-            rules: {
-                email: {
-                    required: true,
-                    email: true,
-                    validate_email: true,
-                    remote: {
-                        url: '{{ route('user_respondent_id_check') }}',
-                        data: {
-                            'form_name': "usercreate"
+        $(document).ready(function() {
+            $(document).ready(function() {
+                $('#respondents_form').validate({
+                    rules: {
+                        email: {
+                            required: true,
+                            email: true,
+                            remote: {
+                                url: '{{ route('user_respondent_id_check') }}',
+                                type: "GET",
+                                data: {
+                                    email: function() {
+                                        return $('#email')
+                                            .val(); // Ensure this matches the input's ID or name
+                                    },
+                                    form_name: "usercreate"
+                                },
+                                dataFilter: function(response) {
+                                    // Parse the JSON response from the server
+                                    var json = JSON.parse(response);
+                                    return json.valid ? "true" :
+                                        "false"; // Return 'true' or 'false' to indicate validity
+                                }
+                            }
                         },
-                        type: "GET"
-                    }
-                },
-                password: {
-                    required: true,
-                    minlength: 8
-                },
+                        mobile: {
+                            required: true,
 
-            },
-            messages: {
-                email: {
-                    remote: "{{ __('email Name already exists!') }}"
-                }
-            }
+
+                            remote: {
+                                url: '{{ route('user_respondent_mobile_check') }}',
+                                type: "GET",
+                                data: {
+                                    mobile: function() {
+                                        return $('#mobile')
+                                    .val(); // Ensure this matches the input's ID or name
+                                    },
+                                    form_name: "usercreate"
+                                },
+                                dataFilter: function(response) {
+                                    var json = JSON.parse(response);
+                                    return json.valid ? "true" : "false";
+                                }
+                            }
+                        },
+                        password: {
+                            required: true,
+                            minlength: 8
+                        }
+                    },
+                    messages: {
+                        email: {
+                            remote: "Email already exists!" // Display this message if the email is not valid
+                        },
+                        mobile: {
+                            remote: "Mobile number already exists!" // Error message for mobile number
+                        }
+                    },
+                    errorElement: "span", // HTML element for error messages
+                    errorPlacement: function(error, element) {
+                        error.addClass(
+                            'invalid-feedback'); // Add a class for styling
+                        element.closest('.form-group').append(
+                            error); // Append the error message to the form group
+                    },
+                    highlight: function(element, errorClass, validClass) {
+                        $(element).addClass('is-invalid').removeClass(
+                            'is-valid'); // Add class for invalid state
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).removeClass('is-invalid').addClass(
+                            'is-valid'); // Add class for valid state
+                    }
+                });
+            });
+
         });
+
     });
 
     $.validator.addMethod("validate_email", function(value, element) {

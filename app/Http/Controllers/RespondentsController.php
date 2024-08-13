@@ -1081,6 +1081,34 @@ class RespondentsController extends Controller
     }
     
 
+    public function user_respondent_mobile_check(Request $request)
+    {
+        // Retrieve the mobile number from the request
+      
+        $id = $request->input('id');
+        $mobile = preg_replace('/\s+/', '', $request->input('mobile')); // Remove all spaces if necessary
+        // Check if the mobile number is provided
+        if (empty($mobile)) {
+            return response()->json(['valid' => true]); // Consider it valid if mobile is empty
+        }
+    
+        // Build the query to check if the mobile number exists
+        $query = DB::table('respondents')
+            ->where('mobile', $mobile);
+    
+        if ($id) {
+            // Exclude current respondent if ID is provided
+            $query->where('id', '!=', $id);
+        }
+    
+        // Check if the mobile number exists
+        $exists = $query->exists();
+    
+        // Return JSON response
+        return response()->json(['valid' => !$exists]); // Return 'valid' true if it does not exist
+    }
+    
+
     public function get_user_survey(Request $request)
     {
 

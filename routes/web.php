@@ -174,6 +174,7 @@ Route::group([
     Route::any('respondent_attach_store', 'RespondentsController@respondent_attach_store')->name('respondent_attach_store');
     Route::any('deattach_respondent/{respondent_id}/{project_id}', 'RespondentsController@deattach_respondent')->name('deattach_respondent');
     Route::any('user_respondent_id_check', 'RespondentsController@user_respondent_id_check')->name('user_respondent_id_check');
+    Route::any('user_respondent_mobile_check', 'RespondentsController@user_respondent_mobile_check')->name('user_respondent_mobile_check');
     Route::any('get_user_survey', 'RespondentsController@get_user_survey')->name('get_user_survey');
     Route::any('respondents_multi_delete', 'RespondentsController@respondents_multi_delete')->name('respondents_multi_delete');
     Route::any('get_branch_code', 'RespondentsController@get_branch_code')->name('get_branch_code');
