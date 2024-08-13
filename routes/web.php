@@ -343,6 +343,7 @@ Route::controller(SettingsController::class)->group(function () {
     Route::get('getrecentcontentid', 'getrecentcontentid')->name('getrecentcontentid');
 });
 Route::any('check_email_name', 'CommonAdminController@check_email_name')->name('check_email_name');
+Route::any('check_phone_name', 'CommonAdminController@check_phone_name')->name('check_phone_name');
 
 require __DIR__ . '/auth.php';
 

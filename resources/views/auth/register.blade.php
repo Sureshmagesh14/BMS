@@ -341,6 +341,17 @@
                         type: "GET"
                     }
                 },
+                mobile: {
+                    required: true,
+                 
+                    remote: {
+                        url: "{{ route('check_phone_name') }}",
+                        data: {
+                            'form_name': "regsiter"
+                        },
+                        type: "GET"
+                    }
+                },
 
                 password_register: {
                     required: true,
@@ -360,6 +371,9 @@
             messages: {
                 email: {
                     remote: mess
+                },
+                mobile: {
+                    remote: 'Mobile Number Already Exists',
                 },
                 "terms": {
                     required: function() {
