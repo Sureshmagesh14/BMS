@@ -156,14 +156,14 @@
         </div>
     </div> --}}
 
-    <div class="form-group row">
+    {{-- <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Survey Duration (Minutes) *</label>
         <div class="col-md-10">
             <input type="number" class="form-control" id="survey_duration" name="survey_duration"
                 value="{{ $projects->survey_duration }}">
 
         </div>
-    </div>
+    </div> --}}
 
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Live Date *

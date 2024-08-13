@@ -12,41 +12,41 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Name *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name" autocomplete="off" required>
+            <input type="text" class="form-control" id="name" name="name" autocomplete="off" placeholder="Enter Your Name" required>
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Surname *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="surname" name="surname" autocomplete="off" required>
+            <input type="text" class="form-control" id="surname" name="surname" autocomplete="off" placeholder="Enter Your Surname" required>
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">RSA ID / Passport *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="id_passport" name="id_passport" autocomplete="off" required>
+            <input type="text" class="form-control" id="id_passport" name="id_passport" autocomplete="off" placeholder="Enter Your RSA ID / Passport" required>
         </div>
     </div>
 
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Email *</label>
         <div class="col-md-10">
-            <input type="email" class="form-control" id="email" name="email" autocomplete="off" required>
+            <input type="email" class="form-control" id="email" name="email" autocomplete="off" placeholder="Enter Your Email" required>
         </div>
     </div>
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Password *</label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="password" name="password" autocomplete="off" required>
+            <input type="password" class="form-control" id="password" name="password" autocomplete="off" placeholder="Enter Your Password"  required>
             <span toggle="#password" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
         </div>
     </div>
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Password Confirmation </label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="cpassword" autocomplete="off" name="cpassword">
+            <input type="password" class="form-control" id="cpassword" autocomplete="off" placeholder="Re-enter Your Password" name="cpassword">
             <span toggle="#cpassword" class="fa fa-fw fa-eye-slash field-icon toggle-password1"></span>
         </div>
     </div>
