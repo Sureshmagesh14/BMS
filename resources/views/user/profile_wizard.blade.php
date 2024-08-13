@@ -712,6 +712,33 @@
                                             @endisset
                                                 @isset($extended_details['bank_main_other']) value="{{ $extended_details['bank_main_other'] }}" @endisset>
                                         </div>
+
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
+                                            <label for="bank_secondary">Which is your secondary bank?</label>
+                                            <select name="extended[bank_secondary]" id="bank_secondary"
+                                                onchange="show_other(this, 'bank_secondary')">
+                                                <option value="">Select</option>
+                                                @foreach ($banks as $bank)
+                                                    <option value="{{ $bank->id }}"
+                                                        @isset($extended_details['bank_secondary']) @if ($extended_details['bank_secondary'] == $bank->id) selected @endif @endisset>
+                                                        {{ $bank->bank_name }}</option>
+                                                @endforeach
+                                                <option value="other"
+                                                    @isset($extended_details['bank_secondary']) @if ($extended_details['bank_secondary'] == 'other') selected @endif @endisset>
+                                                    Other</option>
+                                            </select>
+                                            <br>
+                                            <input type="text" name="extended[bank_secondary_other]"
+                                                id="bank_secondary_other" class="form-control"
+                                                placeholder="Please specify"
+                                                @isset($extended_details['bank_secondary'])
+                                                @if ($extended_details['bank_secondary'] == 'other') style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                            @else
+                                                style="display:none;margin-top: 10px;"
+                                            @endisset
+                                                @isset($extended_details['bank_secondary_other']) value="{{ $extended_details['bank_secondary_other'] }}" @endisset>
+                                        </div>
+
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="home_lang">Home Language</label>
                                             <select name="extended[home_lang]" id="home_lang"
@@ -783,6 +810,16 @@
 <script src="{{ asset('assets/moment/moment.js') }}"></script>
 <script src="{{ asset('assets/wizard/js/jquery.steps.js') }}"></script>
 <script>
+      function show_other(get_this, id_val){
+        value = $(get_this).val();
+        console.log("value",value);
+        if(value == "other"){
+            console.log("HI");
+            $("#"+id_val+"_other").show();
+        }else{
+            $("#"+id_val+"_other").hide();
+        }
+    }
     $(document).ready(function() {
         var tempcsrf = '{!! csrf_token() !!}';
         var form = $("#profile_wizard_form");
@@ -1082,7 +1119,7 @@
                 $('#agecal').text(str);
             }
         });
-
+      
         function wizard_save(datas) {
             $.ajax({
                 url: "{{ route('profile_save') }}",
@@ -1144,7 +1181,7 @@
     });
     $(function() { 
         $('#relationship_status, #gender, #ethnic_group, #education_level, #employment_status, #industry_my_company, #personal_income_per_month, #business_org,' +
-            '#household_income_per_monty, #province, #suburb, #org, #org_company, #bank_main, #home_lang, #household_income_per_month'
+            '#household_income_per_monty, #province, #suburb, #org, #org_company, #bank_main, #home_lang, #household_income_per_month,#bank_secondary'
         ).select2({
             height: '10%',
             width: '100%'

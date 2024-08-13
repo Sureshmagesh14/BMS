@@ -32,4 +32,20 @@ class CommonAdminController extends Controller
             echo "true";
         }
     }
+
+    public function check_phone_name(Request $request)
+    {
+        $form_name = $request->form_name;
+        $mobile = preg_replace('/\s+/', '', $request->mobile); // Remove all spaces if necessary
+ 
+        $getcheckval = DB::table('respondents')->where('mobile', $mobile)->get()->count();
+
+        if ($getcheckval > 0) {
+            echo "false";
+        } else {
+            echo "true";
+        }
+    }
+
+    
 }

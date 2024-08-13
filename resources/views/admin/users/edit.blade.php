@@ -13,7 +13,7 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Name *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name" autocomplete="off" value="{{ $users->name }}"
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Your Name" autocomplete="off" value="{{ $users->name }}"
                 required>
         </div>
     </div>
@@ -21,7 +21,7 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Surname *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="surname" name="surname" autocomplete="off" value="{{ $users->surname }}"
+            <input type="text" class="form-control" id="surname" name="surname" placeholder="Enter Your Surname" autocomplete="off" value="{{ $users->surname }}"
                 required>
         </div>
     </div>
@@ -29,7 +29,7 @@
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">RSA ID / Passport *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="id_passport" name="id_passport" autocomplete="off"
+            <input type="text" class="form-control" id="id_passport" name="id_passport" placeholder="Enter Your RSA ID / Passport" autocomplete="off"
                 value="{{ $users->id_passport }}" required>
         </div>
     </div>
@@ -37,21 +37,21 @@
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Email *</label>
         <div class="col-md-10">
-            <input type="email" class="form-control" id="email" name="email" autocomplete="off" value="{{ $users->email }}"
+            <input type="email" class="form-control" id="email" name="email" autocomplete="off" placeholder="Enter Your Email" value="{{ $users->email }}"
                 required>
         </div>
     </div>
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Password </label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="password" name="password" autocomplete="off">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter Your Password" autocomplete="off">
             <span toggle="#password" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
         </div>
     </div>
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Password Confirmation </label>
         <div class="col-md-10">
-            <input type="password" class="form-control" id="cpassword" name="cpassword" autocomplete="off">
+            <input type="password" class="form-control" id="cpassword" name="cpassword" placeholder="Re-enter Your Password" autocomplete="off">
             <span toggle="#cpassword" class="fa fa-fw fa-eye-slash field-icon toggle-password1"></span>
         </div>
     </div>
