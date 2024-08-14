@@ -26,22 +26,6 @@
 
 
 <script>
-    // Initialize TinyMCE editor
-    tinymce.init({
-        selector: '#data', // Apply TinyMCE to the textarea with id 'data'
-        plugins: 'advlist autolink lists link image charmap preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount',
-        toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-        menubar: false,
-        height: 300, // Adjust height as needed
-        branding: false, // Remove TinyMCE branding
-        // Remove content if it exists (optional)
-        setup: function (editor) {
-            editor.on('init', function () {
-                editor.setContent('');
-            });
-        }
-    });
-
     $(function() {
         $('#content_form').validate({
             rules: {
@@ -62,6 +46,22 @@
                 type_id: {
                     remote: "{{ __('Type Name already exists!') }}"
                 }
+            }
+        });
+
+        // Initialize TinyMCE editor
+        tinymce.init({
+            selector: '#data', // Apply TinyMCE to the textarea with id 'data'
+            plugins: 'advlist autolink lists link image charmap preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount',
+            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            menubar: false,
+            height: 300, // Adjust height as needed
+            branding: false, // Remove TinyMCE branding
+            // Remove content if it exists (optional)
+            setup: function(editor) {
+                editor.on('init', function() {
+                    editor.setContent('');
+                });
             }
         });
     });
