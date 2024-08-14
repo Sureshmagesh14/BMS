@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use DateTime;
 use App\Models\Tag;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 class ExportController extends Controller
 {
 
@@ -64,8 +65,8 @@ class ExportController extends Controller
                     ),
                 ),
                 'alignment' => [
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER, // Center vertically
+                    'horizontal' => Alignment::HORIZONTAL_LEFT, // Align left horizontally
                     // 'wrapText' => true,
                 ],
                 'borders' => [
@@ -88,7 +89,7 @@ class ExportController extends Controller
                     'name' => 'Arial',
                 ],
                 'alignment' => [
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER,
                     // 'wrapText' => true,
                 ],
             ];
@@ -106,8 +107,8 @@ class ExportController extends Controller
                     'name' => 'Arial',
                 ],
                 'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    'horizontal' => Alignment::HORIZONTAL_LEFT,
+                    'vertical' => Alignment::VERTICAL_CENTER,
                 ],
             ];
 
