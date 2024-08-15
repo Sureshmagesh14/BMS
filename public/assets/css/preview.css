@@ -13202,7 +13202,8 @@ body *::before {
 }
 
 .surveysparrow-survey-container--classic-form .ss-fp-section {
-    height: 100vh;
+    /* height: 100vh; */
+    height: auto;
     width: 100%;
     overflow: hidden;
 }
@@ -13231,7 +13232,7 @@ body *::before {
 
 .surveysparrow-survey-container--classic-form .ss-fp-section__inner-frame {
     padding-top: 50px;
-    padding-bottom: 50px;
+    padding-bottom: 100px;
 }
 
 .surveysparrow-survey-container--classic-form .surveysparrow-survey-form-wrapper--centered .ss_completed_container {
@@ -13450,4 +13451,39 @@ select#dropdownlist:focus-visible {
 }
 button#camera_btn {
     pointer-events: none;
+}
+@media (max-width: 600px) {
+    .ss-fp-section__inner-frame {
+        transform: scale(1.2); /* Adjust scale as needed to prevent hiding */
+        transform-origin: center top;
+        width: 100%; /* Ensure it fits within the parent container */
+        position: relative;
+        left: 0;
+        top: 0;
+    }
+
+    .ss-fp-section__frame {
+        overflow: hidden; /* Prevent overflow issues */
+        position: relative;
+        width: 100%; /* Ensure it takes the full width */
+    }
+
+    h3, p {
+        font-size: 1em; /* Adjust text size to be more responsive */
+        line-height: 1.2em; /* Ensure proper line spacing */
+        word-wrap: break-word; /* Force words to break if they are too long */
+        overflow-wrap: break-word; /* Ensures wrapping works in all browsers */
+        white-space: normal; /* Allow text to wrap to the next line */
+        margin: 0 auto; /* Center text block if needed */
+    }
+
+    /* Ensure images are responsive */
+    img.imagesurvey {
+        width: 100%; /* Ensure image scales correctly */
+        height: auto;
+    }
+
+    .ss-primary-action-btn {
+        font-size: 1.2em; /* Adjust button text size */
+    }
 }

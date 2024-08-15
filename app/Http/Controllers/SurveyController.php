@@ -21,6 +21,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Excel;
 use Illuminate\Support\Facades\Storage;
+use App\Models\SurveyHistory;
 use Exception;
 
 // Word Cloud 
@@ -699,6 +700,20 @@ class SurveyController extends Controller
     }
     public function viewsurvey(Request $request, $id){
         $survey = Survey::with('questions')->where(['builderID'=>$id])->first();
+         // Create Survey History 
+         if (Auth::check()) {
+         $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=> Auth::user()->id])->first();
+         if($survey_history){
+             // Survey already attended
+             return view('admin.survey.alreadyattempted', compact('survey'));
+         }else{
+             $history = new SurveyHistory();
+             $history->respondent_id= Auth::user()->id;
+             $history->survey_id=$survey->id;
+             $history->status=0;
+             $history->save();
+         }
+        }
         if($survey->is_deleted == 0){
             // Check Shareable Type 
             if($survey->shareable_type == 'share'){
@@ -837,6 +852,7 @@ class SurveyController extends Controller
 
         }else{
             if($request->type == 'welcome'){
+              
                 // Update started Count 
                 $started_count=Survey::where(['id'=>$id])->update(['started_count'=>$survey->started_count+1]);
             }
@@ -877,21 +893,42 @@ class SurveyController extends Controller
         $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
         // Check Survey has question or not 
         $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
+        
         if(count($surveyQus)<=0){
+            
             return view('admin.survey.noquserror', compact('survey'));
         }else{
             if($qus == 0){
+                //  update Survey History
+                $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=>$response_user_id])->first();
+                if($survey_history){
+                    $survey_history->status=1;
+                    $survey_history->save();
+                }
                 return view('admin.survey.thankyoudefault', compact('survey'));
             }else{
                 if($question){
+                    if($question->qus_type =='thank_you'){
+                        //  update Survey History
+                        $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=>$response_user_id])->first();
+                        if($survey_history){
+                            $survey_history->status=1;
+                            $survey_history->save();
+                        }
+                    }
                     if($question->qus_type =='thank_you' && $question->question_name ==''){
                         return view('admin.survey.thankyoudefault', compact('survey'));
-
                     }else{
                         return view('admin.survey.response', compact('survey','question','question1','questionsset'));
                     }
 
                 }else{
+                    //  update Survey History
+                    $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=>$response_user_id])->first();
+                    if($survey_history){
+                        $survey_history->status=1;
+                        $survey_history->save();
+                    }
                     return view('admin.survey.thankyoudefault', compact('survey'));
                 }
             }
@@ -1006,6 +1043,17 @@ class SurveyController extends Controller
         $survey_id = $request->survey_id;
         $question_id = $request->question_id;
         $response_user_id =  Auth::user()->id;
+         // Create Survey History 
+         $survey_history = SurveyHistory::where(['survey_id'=>$survey_id,'respondent_id'=>$response_user_id])->first();
+         if($survey_history){
+             // Survey already attended
+         }else{
+             $history = new SurveyHistory();
+             $history->respondent_id=$response_user_id;
+             $history->survey_id=$survey_id;
+             $history->status=0;
+             $history->save();
+         }
         $ipAddress = $this->getRealIp($request);
         // Other details 
         $other_details = ["device_id"=>$request->device_id,"device_name"=>$request->device_name,"browser"=>$request->browser,"os"=>$request->os,"device_type"=>$request->device_type,"long"=>$request->long,"lat"=>$request->lat,"location"=>$request->location,"ip_address"=>$ipAddress,"lang_code"=>$request->lang_code,"lang_name"=>$request->lang_name];
