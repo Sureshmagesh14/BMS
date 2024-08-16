@@ -351,7 +351,7 @@
                             </ul>
                         </li>
                     </ul>
-                    <i class="fa fa-ellipsis-v m-hide" aria-hidden="true"></i>
+                    <!-- <i class="fa fa-ellipsis-v m-hide" aria-hidden="true"></i> -->
                 </div>
             </div>
         </div>
