@@ -94,6 +94,26 @@ class ProfileController extends Controller
             $profile = RespondentProfile::where('respondent_id',$resp_id)->first();
             $vehicle_master = DB::table('vehicle_master')->whereNull('deleted_at')->get();
 
+                    // Get the selected personal income from the request
+            $selectedPersonalIncomeId = $request->input('essential.personal_income_per_month');
+
+            // Find the selected personal income range
+            $selectedPersonalIncome = $income_per_month->where('id', $selectedPersonalIncomeId)->first();
+
+            if ($selectedPersonalIncome) {
+                // Filter household income options based on the selected personal income range
+                $filtered_income_per_month = $income_per_month->filter(function ($income) use ($selectedPersonalIncome) {
+                    return $income->min_amount >= $selectedPersonalIncome->min_amount;
+                });
+            } else {
+                // If no personal income is selected, show all household income options
+                $filtered_income_per_month = $income_per_month;
+            }
+
+            // Get the previously selected household income if available
+            $selectedHouseholdIncome = $request->input('essential.household_income_per_month');
+
+
             if($profile != null){
                 $pid = $profile->pid;
             }
@@ -140,7 +160,7 @@ class ProfileController extends Controller
             }
     
             return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area',
-                'child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set'));
+                'child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set','filtered_income_per_month','selectedPersonalIncome','selectedHouseholdIncome'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

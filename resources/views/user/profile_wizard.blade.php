@@ -431,7 +431,6 @@
 
 
 
-
                                         <!-- Personal Income Per Month -->
                                         <div class="col-12 col-md-6 mb-3">
                                             <label for="personal_income_per_month">Personal Income Per Month <span
@@ -441,8 +440,9 @@
                                                 <option value="">Select</option>
                                                 @foreach ($income_per_month as $income)
                                                     <option value="{{ $income->id }}"
-                                                        @isset($essential_details['personal_income_per_month']) @if ($essential_details['personal_income_per_month'] == $income->id) selected @endif @endisset>
-                                                        {{ $income->income }}</option>
+                                                        {{ old('essential.personal_income_per_month', $selectedPersonalIncome) == $income->id ? 'selected' : '' }}>
+                                                        {{ $income->income }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -457,6 +457,7 @@
                                         </div>
 
 
+
                                         <!-- Household Income Per Month -->
                                         <div class="col-12 col-md-6 mb-3">
                                             <label for="household_income_per_month">Household Income per Month <span
@@ -464,10 +465,11 @@
                                             <select name="essential[household_income_per_month]"
                                                 id="household_income_per_month" class="form-control" required>
                                                 <option value="">Select</option>
-                                                @foreach ($income_per_month as $income)
+                                                @foreach ($filtered_income_per_month as $income)
                                                     <option value="{{ $income->id }}"
-                                                        @isset($essential_details['household_income_per_month']) @if ($essential_details['household_income_per_month'] == $income->id) selected @endif @endisset>
-                                                        {{ $income->income }}</option>
+                                                        {{ old('essential.household_income_per_month', $selectedHouseholdIncome) == $income->id ? 'selected' : '' }}>
+                                                        {{ $income->income }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -1308,6 +1310,41 @@
                     phoneUS: "Please enter a valid WhatsApp number."
                 }
             }
+        });
+        $('#personal_income_per_month').on('change', function() {
+            var personalIncomeText = $(this).find('option:selected').text();
+
+            // Extract the numerical values from the personal income range
+            var personalIncomeRange = personalIncomeText.match(/\d+/g);
+            if (!personalIncomeRange || personalIncomeRange.length < 2) {
+                console.error("Selected personal income range is invalid.");
+                return;
+            }
+            var personalIncomeMin = parseInt(personalIncomeRange[0], 10);
+            var personalIncomeMax = parseInt(personalIncomeRange[1], 10);
+
+            // Get the household income options
+            var householdIncomeOptions = $('#household_income_per_month').find('option');
+
+            // Filter the household income options based on the selected personal income
+            householdIncomeOptions.each(function() {
+                var householdIncomeText = $(this).text();
+                var householdIncomeRange = householdIncomeText.match(/\d+/g);
+                if (!householdIncomeRange || householdIncomeRange.length < 2) {
+                    console.error("Household income range is invalid for option: " +
+                        householdIncomeText);
+                    return;
+                }
+                var householdIncomeMin = parseInt(householdIncomeRange[0], 10);
+                var householdIncomeMax = parseInt(householdIncomeRange[1], 10);
+
+                // Disable options where household income range is less than the personal income range minimum
+                if (householdIncomeMax < personalIncomeMin) {
+                    $(this).prop('disabled', true);
+                } else {
+                    $(this).prop('disabled', false);
+                }
+            });
         });
 
 
