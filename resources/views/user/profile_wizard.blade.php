@@ -651,7 +651,7 @@
                                                                             Convertible</option>
                                                                         <option value="suv"
                                                                             @isset($vehicle['type']) @if ('suv' == $vehicle['type']) selected @endif @endisset>
-                                                                            SUV (SPORT-UTILITY VEHICLE)</option>
+                                                                            SUV </option>
                                                                         <option value="minivan"
                                                                             @isset($vehicle['type']) @if ('minivan' == $vehicle['type']) selected @endif @endisset>
                                                                             Minivan</option>
@@ -821,8 +821,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
-                                            <label for="bank_main">Which bank do you bank with (which is your bank
-                                                main)</label>
+                                            <label for="bank_main">Which bank do you bank with (which is your bank main)</label>
                                             <select name="extended[bank_main]" id="bank_main"
                                                 onchange="show_other(this, 'bank_main')">
                                                 <option value="">Select</option>
@@ -846,6 +845,8 @@
                                             @endisset
                                                 @isset($extended_details['bank_main_other']) value="{{ $extended_details['bank_main_other'] }}" @endisset>
                                         </div>
+
+                                        
 
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="bank_secondary">Which is your secondary bank?</label>
