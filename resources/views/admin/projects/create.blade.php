@@ -31,8 +31,11 @@
             <select id="user" name="user" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">Choose an option</option>
                 @foreach ($users as $user)
-                    <option @if (Session::has('user_to_project_id')) @if (Session::get('user_to_project_id') == $user->id) selected @endif
-                        @endif
+                    <option @if (Session::has('user_to_project_id')) 
+                            @if (Session::get('user_to_project_id') == $user->id) selected @endif
+                            @else 
+                            @if (Auth::guard('admin')->user()->id == $user->id) selected @endif                            
+                            @endif
                         value="{{ $user->id }}">{{ $user->name }} {{ $user->surname }}</option>
                 @endforeach
             </select>
@@ -232,6 +235,18 @@
 
 
 <script>
+     $(function() {
+        var today = new Date().toISOString().split('T')[0];
+        $("#published_date").val(today);
+
+        var endday = new Date();
+        endday.setFullYear(endday.getFullYear() + 1);  // Add 1 year
+        var formattedDate = endday.toISOString().split('T')[0];
+        $("#closing_date").val(formattedDate);
+
+
+    });
+
     function validateProjectName() {
         var input = document.getElementById("name");
         var errorDiv = document.getElementById("name-error");
