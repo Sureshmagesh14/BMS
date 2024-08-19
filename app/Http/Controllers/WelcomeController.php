@@ -1507,6 +1507,16 @@ class WelcomeController extends Controller
         }
     }
     
+
+    public function admin_password_reset(Request $request){
+        try {
+            $token = $request->route('token');
+            $email = $request->route('email');
+            return view('admin.admin-reset', compact('token','email'));
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
     
 
 }
