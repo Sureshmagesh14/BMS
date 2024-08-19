@@ -440,9 +440,8 @@
                                                 <option value="">Select</option>
                                                 @foreach ($income_per_month as $income)
                                                     <option value="{{ $income->id }}"
-                                                        {{ old('essential.personal_income_per_month', $selectedPersonalIncome) == $income->id ? 'selected' : '' }}>
-                                                        {{ $income->income }}
-                                                    </option>
+                                                        @isset($essential_details['personal_income_per_month']) @if ($essential_details['personal_income_per_month'] == $income->id) selected @endif @endisset>
+                                                        {{ $income->income }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -457,22 +456,26 @@
                                         </div>
 
 
-
-                                        <!-- Household Income Per Month -->
                                         <div class="col-12 col-md-6 mb-3">
-                                            <label for="household_income_per_month">Household Income per Month <span
-                                                    class="text-danger">*</span></label>
-                                            <select name="essential[household_income_per_month]"
-                                                id="household_income_per_month" class="form-control" required>
+                                            <label for="household_income_per_month">Household Income per Month <span class="text-danger">*</span></label>
+                                            <select name="essential[household_income_per_month]" id="household_income_per_month" class="form-control" required>
                                                 <option value="">Select</option>
-                                                @foreach ($filtered_income_per_month as $income)
-                                                    <option value="{{ $income->id }}"
-                                                        {{ old('essential.household_income_per_month', $selectedHouseholdIncome) == $income->id ? 'selected' : '' }}>
-                                                        {{ $income->income }}
-                                                    </option>
-                                                @endforeach
+                                                @foreach ($income_per_month as $income)
+                                                @php
+                                                    // Disable options where the income is less than the selected personal income
+                                                    $isDisabled = $income->id <= $personalIncomeValue->id;
+                                                @endphp
+                                                <option value="{{ $income->id }}"
+                                                    @isset($essential_details['household_income_per_month'])
+                                                        @if ($essential_details['household_income_per_month'] == $income->id) selected @endif
+                                                    @endisset
+                                                    @if ($isDisabled) disabled @endif>
+                                                    {{ $income->income }}
+                                                </option>
+                                            @endforeach
                                             </select>
                                         </div>
+                                        
 
 
 
@@ -1312,7 +1315,8 @@
             }
         });
         $('#personal_income_per_month').on('change', function() {
-            var personalIncomeText = $(this).find('option:selected').text();
+            var personalIncomeText = $(this).find('option:selected').val();
+            console.log("personalIncomeText",personalIncomeText);
 
             // Extract the numerical values from the personal income range
             var personalIncomeRange = personalIncomeText.match(/\d+/g);
@@ -1325,7 +1329,7 @@
 
             // Get the household income options
             var householdIncomeOptions = $('#household_income_per_month').find('option');
-
+            console.log("householdIncomeOptions",householdIncomeOptions);
             // Filter the household income options based on the selected personal income
             householdIncomeOptions.each(function() {
                 var householdIncomeText = $(this).text();

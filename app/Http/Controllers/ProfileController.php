@@ -95,24 +95,7 @@ class ProfileController extends Controller
             $vehicle_master = DB::table('vehicle_master')->whereNull('deleted_at')->get();
 
                     // Get the selected personal income from the request
-            $selectedPersonalIncomeId = $request->input('essential.personal_income_per_month');
-
-            // Find the selected personal income range
-            $selectedPersonalIncome = $income_per_month->where('id', $selectedPersonalIncomeId)->first();
-
-            if ($selectedPersonalIncome) {
-                // Filter household income options based on the selected personal income range
-                $filtered_income_per_month = $income_per_month->filter(function ($income) use ($selectedPersonalIncome) {
-                    return $income->min_amount >= $selectedPersonalIncome->min_amount;
-                });
-            } else {
-                // If no personal income is selected, show all household income options
-                $filtered_income_per_month = $income_per_month;
-            }
-
-            // Get the previously selected household income if available
-            $selectedHouseholdIncome = $request->input('essential.household_income_per_month');
-
+        
 
             if($profile != null){
                 $pid = $profile->pid;
@@ -148,6 +131,16 @@ class ProfileController extends Controller
             else{
                 Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
             }
+            // Create an associative array for income ranges
+            $incomeRanges = $income_per_month->pluck('income', 'id')->toArray();
+           
+            $essential_details = json_decode($profile->essential_details, true);
+        
+            // Get the selected personal income id
+            $selectedPersonalIncomeId = $essential_details['personal_income_per_month'] ?? null;
+        
+            // Extract the personal income value
+            $personalIncomeValue = $income_per_month->where('id', $selectedPersonalIncomeId)->first() ?? 0;
 
             if($profile != null){
                 if($profile->children_data == null){
@@ -160,7 +153,7 @@ class ProfileController extends Controller
             }
     
             return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area',
-                'child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set','filtered_income_per_month','selectedPersonalIncome','selectedHouseholdIncome'));
+                'child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set','personalIncomeValue','incomeRanges'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
