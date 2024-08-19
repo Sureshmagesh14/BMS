@@ -1329,5 +1329,8 @@
     $(document).ready(function() {
         // Remove all <li> elements with role="tab", class="disabled", and aria-disabled="true"
         $('#profile_wizard .steps ul li[role="tab"][aria-disabled="true"]').removeClass('disabled');
+
+        $('#nav_profile').addClass('active');
+        
     });
 </script>
