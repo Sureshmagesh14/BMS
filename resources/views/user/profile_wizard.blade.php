@@ -369,7 +369,7 @@
 
 
                                         <!-- Job Title -->
-                                        <div class="col-12 col-md-6 mb-3">
+                                        <div class="col-12 col-md-6 mb-3" id="job_title_container">
                                             <label for="job_title">Job Title <span
                                                     class="text-danger">*</span></label>
                                             <input type="text" name="essential[job_title]" id="job_title"
@@ -391,7 +391,7 @@
                                             </select>
                                         </div>
                                         <!-- Industry my company is in -->
-                                        <div class="col-12 col-md-6 mb-3">
+                                        <div class="col-12 col-md-6 mb-3" id="industry_container">
                                             <label for="industry_my_company">Industry my company is in <span
                                                     class="text-danger">*</span></label>
                                             <select name="essential[industry_my_company]" id="industry_my_company"
@@ -745,7 +745,7 @@
                                             </table>
                                         </div>
 
-                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3" id="role_container">
                                             <label for="business_org">Which best describes the role in you business /
                                                 organization?</label>
                                             <select name="extended[business_org]" id="business_org"
@@ -785,7 +785,7 @@
                                                 @endisset
                                                 @isset($extended_details['business_org_other']) value="{{ $extended_details['business_org_other'] }}" @endisset>
                                         </div>
-                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3" id="organization_size_container">
                                             <label for="org_company">What is the number of people in your organisation
                                                 / company?</label>
                                             <select name="extended[org_company]" id="org_company">
@@ -1372,6 +1372,42 @@
         $('#profile_wizard .steps ul li[role="tab"][aria-disabled="true"]').removeClass('disabled');
 
         $('#nav_profile').addClass('active');
+
+        function toggleFields() {
+        var selectedStatus = $('#employment_status').val();
+
+        // Array of values for which the job-related fields should be hidden
+        var jobExemptStatuses = ['unemployed', 'study', 'home_person', 'retired'];
+
+        if (jobExemptStatuses.includes(selectedStatus)) {
+            // Hide job-related fields
+            $('#job_title_container').hide();
+            $('#industry_container').hide();
+            $('#role_container').hide();
+            $('#organization_size_container').hide();
+        } else {
+            // Show job-related fields
+            $('#job_title_container').show();
+            $('#industry_container').show();
+            $('#role_container').show();
+            $('#organization_size_container').show();
+        }
+
+        // Show/hide the "other" input field based on the "other" option
+        if (selectedStatus === 'other') {
+            $('#employment_status_other').show();
+        } else {
+            $('#employment_status_other').hide();
+        }
+    }
+
+    // Trigger the function on page load
+    toggleFields();
+
+    // Trigger the function on change of employment status
+    $('#employment_status').on('change', function() {
+        toggleFields();
+    });
         
     });
 </script>
