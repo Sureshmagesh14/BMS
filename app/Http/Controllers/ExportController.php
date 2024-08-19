@@ -1500,7 +1500,7 @@ class ExportController extends Controller
                 $panel = ($request->panel != null) ? array_filter($request->panel) : null;
                 
                 $query = DB::table('respondent_tag')
-                    ->select('respondent_tag.id', 'respondents.name', 'respondents.surname', 'tags.name as tag_name')
+                    ->select('respondent_tag.id', 'respondents.name', 'respondents.surname', 'tags.name as tag_name','respondents.mobile','respondents.whatsapp','respondents.email','respondents.date_of_birth')
                     ->join('tags', 'respondent_tag.tag_id', '=', 'tags.id')
                     ->join('respondents', 'respondents.id', '=', 'respondent_tag.respondent_id') // Join with respondents table
                     ->when($panel !== null, function ($query) use ($panel) {
@@ -1527,19 +1527,68 @@ class ExportController extends Controller
                     $sheet->setCellValue('A1', 'Profile ID');
                     $sheet->setCellValue('B1', 'Panel name');
                     $sheet->setCellValue('C1', 'Full Name');
+                    $sheet->setCellValue('D1', 'Mobile Number');
+                    $sheet->setCellValue('E1', 'WA Number');
+                    $sheet->setCellValue('F1', 'Email');
+                    $sheet->setCellValue('G1', 'Age');
+                    $sheet->setCellValue('H1', 'Date of Birth');
                     
-                    $sheet->getStyle('A1:C1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:C1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:H1')->applyFromArray($styleArray);
                     
                     $rows = 2;
                     foreach ($query as $all_data) {
                         $sheet->setCellValue('A' . $rows, $all_data->id); // Assuming 'id' is the profile ID
                         $sheet->setCellValue('B' . $rows, $all_data->tag_name ?? ''); // Adjust as per your actual logic for panel name
                         $sheet->setCellValue('C' . $rows, $all_data->full_name ?? '');
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+                       
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+                        
+                        $sheet->setCellValue('D' . $rows, $mobile_number ?? '');
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
+                        $sheet->setCellValue('F' . $rows, $all_data->email ?? '');
+                        $date_of_birth = isset($all_data->date_of_birth) ? $all_data->date_of_birth : null;
+                    
+                        // Calculate age if date_of_birth is available
+                        $age = '-';
+                        if (!empty($date_of_birth) && $date_of_birth != '0000-00-00') {
+                            // Create DateTime objects
+                            $dob = new DateTime($date_of_birth);
+                            $now = new DateTime();
+                            
+                            // Calculate age
+                            $diff = $now->diff($dob);
+                            $age = $diff->y; // This will give the age in years
+                        }
+                        $sheet->setCellValue('G' . $rows, $age ?? '');
+                        $sheet->setCellValue('H' . $rows, $all_data->date_of_birth ?? '');
                         $sheet->getRowDimension($rows)->setRowHeight(20);
-                        $sheet->getStyle('A' . $rows . ':C' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
                     
                         $rows++;
                     }

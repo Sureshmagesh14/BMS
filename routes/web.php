@@ -18,7 +18,7 @@ Route::any('activation_status/{id}/{active_id}', 'WelcomeController@activation_s
 Route::any('forgot_password_sms', 'WelcomeController@forgot_password_sms')->name('forgot_password_sms');
 
 Route::any('forgot_password_check', 'WelcomeController@forgot_password_check')->name('forgot_password_check');
-
+Route::any('password_forgot', 'Auth\AdminLoginController@password_forgot')->name('password_forgot');
 // View Survey
 Route::get('/survey/view/{id}', ['as' => 'survey.view', 'uses' => 'SurveyController@viewsurvey']);
 // Start Survey
@@ -83,6 +83,7 @@ Route::group([
     'middleware' => 'admin',
 ], function () {
     Route::any('dashboard', 'Auth\AdminLoginController@admin_dashboard')->name('admin.dashboard');
+
     Route::any('get_activity_data', 'Auth\AdminLoginController@get_activity_data')->name('get_activity_data');
     Route::get('signout', 'Auth\AdminLoginController@signOut')->name('signout');
     Route::any('export_index', 'ExportController@export_index')->name('admin.export');

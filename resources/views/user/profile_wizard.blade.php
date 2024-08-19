@@ -369,7 +369,7 @@
 
 
                                         <!-- Job Title -->
-                                        <div class="col-12 col-md-6 mb-3">
+                                        <div class="col-12 col-md-6 mb-3" id="job_title_container">
                                             <label for="job_title">Job Title <span
                                                     class="text-danger">*</span></label>
                                             <input type="text" name="essential[job_title]" id="job_title"
@@ -391,7 +391,7 @@
                                             </select>
                                         </div>
                                         <!-- Industry my company is in -->
-                                        <div class="col-12 col-md-6 mb-3">
+                                        <div class="col-12 col-md-6 mb-3" id="industry_container">
                                             <label for="industry_my_company">Industry my company is in <span
                                                     class="text-danger">*</span></label>
                                             <select name="essential[industry_my_company]" id="industry_my_company"
@@ -431,7 +431,6 @@
 
 
 
-
                                         <!-- Personal Income Per Month -->
                                         <div class="col-12 col-md-6 mb-3">
                                             <label for="personal_income_per_month">Personal Income Per Month <span
@@ -457,20 +456,26 @@
                                         </div>
 
 
-                                        <!-- Household Income Per Month -->
                                         <div class="col-12 col-md-6 mb-3">
-                                            <label for="household_income_per_month">Household Income per Month <span
-                                                    class="text-danger">*</span></label>
-                                            <select name="essential[household_income_per_month]"
-                                                id="household_income_per_month" class="form-control" required>
+                                            <label for="household_income_per_month">Household Income per Month <span class="text-danger">*</span></label>
+                                            <select name="essential[household_income_per_month]" id="household_income_per_month" class="form-control" required>
                                                 <option value="">Select</option>
                                                 @foreach ($income_per_month as $income)
-                                                    <option value="{{ $income->id }}"
-                                                        @isset($essential_details['household_income_per_month']) @if ($essential_details['household_income_per_month'] == $income->id) selected @endif @endisset>
-                                                        {{ $income->income }}</option>
-                                                @endforeach
+                                                @php
+                                                    // Disable options where the income is less than the selected personal income
+                                                    $isDisabled = $income->id <= $personalIncomeValue->id;
+                                                @endphp
+                                                <option value="{{ $income->id }}"
+                                                    @isset($essential_details['household_income_per_month'])
+                                                        @if ($essential_details['household_income_per_month'] == $income->id) selected @endif
+                                                    @endisset
+                                                    @if ($isDisabled) disabled @endif>
+                                                    {{ $income->income }}
+                                                </option>
+                                            @endforeach
                                             </select>
                                         </div>
+                                        
 
 
 
@@ -651,7 +656,7 @@
                                                                             Convertible</option>
                                                                         <option value="suv"
                                                                             @isset($vehicle['type']) @if ('suv' == $vehicle['type']) selected @endif @endisset>
-                                                                            SUV (SPORT-UTILITY VEHICLE)</option>
+                                                                            SUV </option>
                                                                         <option value="minivan"
                                                                             @isset($vehicle['type']) @if ('minivan' == $vehicle['type']) selected @endif @endisset>
                                                                             Minivan</option>
@@ -740,7 +745,7 @@
                                             </table>
                                         </div>
 
-                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3" id="role_container">
                                             <label for="business_org">Which best describes the role in you business /
                                                 organization?</label>
                                             <select name="extended[business_org]" id="business_org"
@@ -780,7 +785,7 @@
                                                 @endisset
                                                 @isset($extended_details['business_org_other']) value="{{ $extended_details['business_org_other'] }}" @endisset>
                                         </div>
-                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3" id="organization_size_container">
                                             <label for="org_company">What is the number of people in your organisation
                                                 / company?</label>
                                             <select name="extended[org_company]" id="org_company">
@@ -821,8 +826,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
-                                            <label for="bank_main">Which bank do you bank with (which is your bank
-                                                main)</label>
+                                            <label for="bank_main">Which bank do you bank with (which is your bank main)</label>
                                             <select name="extended[bank_main]" id="bank_main"
                                                 onchange="show_other(this, 'bank_main')">
                                                 <option value="">Select</option>
@@ -846,6 +850,8 @@
                                             @endisset
                                                 @isset($extended_details['bank_main_other']) value="{{ $extended_details['bank_main_other'] }}" @endisset>
                                         </div>
+
+                                        
 
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="bank_secondary">Which is your secondary bank?</label>
@@ -1309,6 +1315,42 @@
                 }
             }
         });
+        $('#personal_income_per_month').on('change', function() {
+            var personalIncomeText = $(this).find('option:selected').val();
+            console.log("personalIncomeText",personalIncomeText);
+
+            // Extract the numerical values from the personal income range
+            var personalIncomeRange = personalIncomeText.match(/\d+/g);
+            if (!personalIncomeRange || personalIncomeRange.length < 2) {
+                console.error("Selected personal income range is invalid.");
+                return;
+            }
+            var personalIncomeMin = parseInt(personalIncomeRange[0], 10);
+            var personalIncomeMax = parseInt(personalIncomeRange[1], 10);
+
+            // Get the household income options
+            var householdIncomeOptions = $('#household_income_per_month').find('option');
+            console.log("householdIncomeOptions",householdIncomeOptions);
+            // Filter the household income options based on the selected personal income
+            householdIncomeOptions.each(function() {
+                var householdIncomeText = $(this).text();
+                var householdIncomeRange = householdIncomeText.match(/\d+/g);
+                if (!householdIncomeRange || householdIncomeRange.length < 2) {
+                    console.error("Household income range is invalid for option: " +
+                        householdIncomeText);
+                    return;
+                }
+                var householdIncomeMin = parseInt(householdIncomeRange[0], 10);
+                var householdIncomeMax = parseInt(householdIncomeRange[1], 10);
+
+                // Disable options where household income range is less than the personal income range minimum
+                if (householdIncomeMax < personalIncomeMin) {
+                    $(this).prop('disabled', true);
+                } else {
+                    $(this).prop('disabled', false);
+                }
+            });
+        });
 
 
 
@@ -1328,5 +1370,44 @@
     $(document).ready(function() {
         // Remove all <li> elements with role="tab", class="disabled", and aria-disabled="true"
         $('#profile_wizard .steps ul li[role="tab"][aria-disabled="true"]').removeClass('disabled');
+
+        $('#nav_profile').addClass('active');
+
+        function toggleFields() {
+        var selectedStatus = $('#employment_status').val();
+
+        // Array of values for which the job-related fields should be hidden
+        var jobExemptStatuses = ['unemployed', 'study', 'home_person', 'retired'];
+
+        if (jobExemptStatuses.includes(selectedStatus)) {
+            // Hide job-related fields
+            $('#job_title_container').hide();
+            $('#industry_container').hide();
+            $('#role_container').hide();
+            $('#organization_size_container').hide();
+        } else {
+            // Show job-related fields
+            $('#job_title_container').show();
+            $('#industry_container').show();
+            $('#role_container').show();
+            $('#organization_size_container').show();
+        }
+
+        // Show/hide the "other" input field based on the "other" option
+        if (selectedStatus === 'other') {
+            $('#employment_status_other').show();
+        } else {
+            $('#employment_status_other').hide();
+        }
+    }
+
+    // Trigger the function on page load
+    toggleFields();
+
+    // Trigger the function on change of employment status
+    $('#employment_status').on('change', function() {
+        toggleFields();
+    });
+        
     });
 </script>
