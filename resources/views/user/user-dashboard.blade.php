@@ -293,7 +293,7 @@
                                      @if ($data->profile_completion_id == 0)
                                      <td> 
                                      <a href="{{ route('updateprofile_wizard') }}">
-                                        Profile Incomplete </a> </td>
+                                     To continue please complete your profile </a> </td>
                                      @else
                                      @if ($get_link != null)
                                      <td>
@@ -450,7 +450,7 @@
                          @if ($data->profile_completion_id == 0)
                          <td> 
                          <a href="{{ route('updateprofile_wizard') }}">
-                            Profile Incomplete
+                         To continue please complete your profile
                          </a>
                                  </td>
                          @else
