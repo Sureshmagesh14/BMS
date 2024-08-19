@@ -275,7 +275,13 @@
                                <tbody>
                                   @foreach ($get_paid_survey as $res)
                                   <tr>
-                                     <td>{{ $res->name }}</td>
+                                     <td>
+                                     @if($res->project_name_resp!='')
+                                     {{ $res->project_name_resp }}
+                                     @else 
+                                     {{ $res->name }}
+                                     @endif 
+                                     </td>
                                      <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                      <td title="{{ $res->description }}">
                                         @if ($res->type_id == 1) 
@@ -347,7 +353,14 @@
                                <tbody>
                                   @foreach ($get_completed_survey as $res)
                                   <tr>
-                                     <td>{{ $res->name }}</td>
+                                     <td>
+                                     @if($res->project_name_resp!='')
+                                    {{ $res->project_name_resp }}
+                                    @else 
+                                    {{ $res->name }}
+                                    @endif 
+                                    
+                                     </td>
                                      <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                      <td title="{{ $res->description }}">
                                         @if ($res->type_id == 1) 
@@ -420,7 +433,14 @@
                    <tbody>
                       @foreach ($get_other_survey as $res)
                       <tr>
-                         <td>{{ $res->name }}</td>
+                         <td>
+                          @if($res->project_name_resp!='')
+                          {{ $res->project_name_resp }}
+                          @else 
+                          {{ $res->name }}
+                          @endif 
+                          
+                         </td>
                          <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                          <td title="{{ $res->description }}">
                             @if ($res->type_id == 1) 

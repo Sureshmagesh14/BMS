@@ -55,7 +55,14 @@ Online Surveys</span>
                             <tbody>
                             @foreach ($get_paid_survey as $res)
                                     <tr>
-                                        <td>{{ $res->name }}</td>
+                                        <td>
+                                        @if($res->project_name_resp!='')
+                                        {{ $res->project_name_resp }}
+                                        @else 
+                                        {{ $res->name }}
+                                        @endif 
+                                        
+                                        </td>
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                         <td title="{{ $res->description }}">
 
@@ -126,7 +133,14 @@ for Other Research</span>
                             <tbody>
                                 @foreach ($get_other_survey as $res)
                                     <tr>
-                                        <td>{{ $res->name }}</td>
+                                        <td>
+                                        @if($res->project_name_resp!='')
+                                        {{ $res->project_name_resp }}
+                                        @else 
+                                        {{ $res->name }}
+                                        @endif 
+                                        
+                                        </td>
                                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                         <td title="{{ $res->description }}">
 
@@ -198,7 +212,13 @@ for Other Research</span>
                         <tbody>
                             @foreach ($get_completed_survey as $res)
                                 <tr>
-                                    <td>{{ $res->name }}</td>
+                                    <td>
+                                    @if($res->project_name_resp!='')
+                                    {{ $res->project_name_resp }}
+                                    @else 
+                                    {{ $res->name }}
+                                    @endif 
+                                    </td>
                                     <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                     <td title="{{ $res->description }}">
                                         {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
