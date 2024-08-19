@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Users extends Model
 {
     use HasFactory,SoftDeletes;
-
+    protected $guarded = ['id'];
     protected $fillable = ['name','surname','id_passport','email','password','role_id','status_id','share_link'];
+    protected $hidden = ['password', 'remember_token',];
     protected $table = 'users';
 
-    
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
+
 
 }

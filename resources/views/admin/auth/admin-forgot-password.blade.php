@@ -18,7 +18,7 @@
                 <input class="form-control form-input form-input-bordered w-full" id="email" type="email"
                     name="email" required>
             </div>
-        
+
             <button class="w-full btn btn-default btn-primary hover:bg-primary-dark" type="submit">
                 Send Password Reset Link
             </button>
@@ -59,6 +59,12 @@
                 toastr.error("{{ $message }}");
             </script>
         @endforeach
+    @endif
+
+    @if (Session::has('status'))
+        <script>
+            toastr.success("{{ session('status') }}");
+        </script>
     @endif
 
     @if (Session::has('error'))
