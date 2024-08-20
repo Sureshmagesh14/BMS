@@ -463,7 +463,7 @@
                                                 @foreach ($income_per_month as $income)
                                                 @php
                                                     // Disable options where the income is less than the selected personal income
-                                                    $isDisabled = $income->id <= $personalIncomeValue->id;
+                                                    $isDisabled = $income->id < $personalIncomeValue->id;
                                                 @endphp
                                                 <option value="{{ $income->id }}"
                                                     @isset($essential_details['household_income_per_month'])
@@ -1316,41 +1316,45 @@
             }
         });
         $('#personal_income_per_month').on('change', function() {
-            var personalIncomeText = $(this).find('option:selected').val();
-            console.log("personalIncomeText",personalIncomeText);
+    // Get the selected personal income value
+    var personalIncomeText = $(this).find('option:selected').text();
+    
+    // Extract numerical values from the personal income range
+    var personalIncomeRange = personalIncomeText.match(/\d+/g);
+    if (!personalIncomeRange || personalIncomeRange.length < 2) {
+        console.error("Selected personal income range is invalid.");
+        return;
+    }
+    
+    // Convert to integers
+    var personalIncomeMin = parseInt(personalIncomeRange[0].replace(/\D/g, ''), 10);
+    var personalIncomeMax = parseInt(personalIncomeRange[1].replace(/\D/g, ''), 10);
 
-            // Extract the numerical values from the personal income range
-            var personalIncomeRange = personalIncomeText.match(/\d+/g);
-            if (!personalIncomeRange || personalIncomeRange.length < 2) {
-                console.error("Selected personal income range is invalid.");
-                return;
-            }
-            var personalIncomeMin = parseInt(personalIncomeRange[0], 10);
-            var personalIncomeMax = parseInt(personalIncomeRange[1], 10);
+    // Get the household income options
+    var householdIncomeOptions = $('#household_income_per_month').find('option');
+    
+    // Filter the household income options based on the selected personal income
+    householdIncomeOptions.each(function() {
+        var householdIncomeText = $(this).text();
+        var householdIncomeRange = householdIncomeText.match(/\d+/g);
+        
+        if (!householdIncomeRange || householdIncomeRange.length < 2) {
+            console.error("Household income range is invalid for option: " + householdIncomeText);
+            return;
+        }
+        
+        // Convert to integers
+        var householdIncomeMin = parseInt(householdIncomeRange[0].replace(/\D/g, ''), 10);
+        var householdIncomeMax = parseInt(householdIncomeRange[1].replace(/\D/g, ''), 10);
 
-            // Get the household income options
-            var householdIncomeOptions = $('#household_income_per_month').find('option');
-            console.log("householdIncomeOptions",householdIncomeOptions);
-            // Filter the household income options based on the selected personal income
-            householdIncomeOptions.each(function() {
-                var householdIncomeText = $(this).text();
-                var householdIncomeRange = householdIncomeText.match(/\d+/g);
-                if (!householdIncomeRange || householdIncomeRange.length < 2) {
-                    console.error("Household income range is invalid for option: " +
-                        householdIncomeText);
-                    return;
-                }
-                var householdIncomeMin = parseInt(householdIncomeRange[0], 10);
-                var householdIncomeMax = parseInt(householdIncomeRange[1], 10);
-
-                // Disable options where household income range is less than the personal income range minimum
-                if (householdIncomeMax < personalIncomeMin) {
-                    $(this).prop('disabled', true);
-                } else {
-                    $(this).prop('disabled', false);
-                }
-            });
-        });
+        // Disable options where household income is less than the personal income minimum
+        if (householdIncomeMin < personalIncomeMin) {
+            $(this).prop('disabled', true);
+        } else {
+            $(this).prop('disabled', false);
+        }
+    });
+});
 
 
 
