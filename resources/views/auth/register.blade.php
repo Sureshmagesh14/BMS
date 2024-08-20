@@ -128,10 +128,10 @@
     /* Container for the curved text */
     .curved-text-container {
             width: 100%;
-            max-width: 300px;
+            /* max-width: 300px; */
             margin: 0px auto;
             position: relative;
-            height: 200px; /* Set a height to ensure the container can hold the SVG */
+            height: 100px; /* Set a height to ensure the container can hold the SVG */
         }
 
         /* Styling for SVG Text */
@@ -278,7 +278,7 @@
             <!-- <div> -->
             <div class="w-100 reg-img m-auto">
             <div class="curved-text-container">
-        <svg viewBox="0 0 400 100">
+        <svg viewBox="0 0 400 10">
             <defs>
                 <path id="curve" d="M 50,90 A 170,170 0 0,1 350,90" />
             </defs>
