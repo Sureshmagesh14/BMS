@@ -16,9 +16,13 @@ Route::any('/', 'WelcomeController@home')->name('home');
 Route::any('update_activitation/{id}', 'WelcomeController@update_activitation')->name('update_activitation');
 Route::any('activation_status/{id}/{active_id}', 'WelcomeController@activation_status')->name('activation_status');
 Route::any('forgot_password_sms', 'WelcomeController@forgot_password_sms')->name('forgot_password_sms');
+Route::any('admin_password_reset/{token}', 'WelcomeController@admin_password_reset')->name('admin_password_reset');
+Route::any('admin_password_reset_save', 'Auth\AdminLoginController@admin_password_reset_save')->name('admin_password_reset_save');
+Route::any('admin_password_reset_update', 'Auth\AdminLoginController@admin_password_reset_update')->name('admin_password_reset_update');
+   
 
 Route::any('forgot_password_check', 'WelcomeController@forgot_password_check')->name('forgot_password_check');
-
+Route::any('password_forgot', 'Auth\AdminLoginController@password_forgot')->name('password_forgot');
 // View Survey
 Route::get('/survey/view/{id}', ['as' => 'survey.view', 'uses' => 'SurveyController@viewsurvey']);
 // Start Survey
@@ -83,6 +87,7 @@ Route::group([
     'middleware' => 'admin',
 ], function () {
     Route::any('dashboard', 'Auth\AdminLoginController@admin_dashboard')->name('admin.dashboard');
+
     Route::any('get_activity_data', 'Auth\AdminLoginController@get_activity_data')->name('get_activity_data');
     Route::get('signout', 'Auth\AdminLoginController@signOut')->name('signout');
     Route::any('export_index', 'ExportController@export_index')->name('admin.export');

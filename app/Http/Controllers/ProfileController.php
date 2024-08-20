@@ -94,6 +94,9 @@ class ProfileController extends Controller
             $profile = RespondentProfile::where('respondent_id',$resp_id)->first();
             $vehicle_master = DB::table('vehicle_master')->whereNull('deleted_at')->get();
 
+                    // Get the selected personal income from the request
+        
+
             if($profile != null){
                 $pid = $profile->pid;
             }
@@ -128,6 +131,16 @@ class ProfileController extends Controller
             else{
                 Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
             }
+            // Create an associative array for income ranges
+            $incomeRanges = $income_per_month->pluck('income', 'id')->toArray();
+           
+            $essential_details = json_decode($profile->essential_details, true);
+        
+            // Get the selected personal income id
+            $selectedPersonalIncomeId = $essential_details['personal_income_per_month'] ?? null;
+        
+            // Extract the personal income value
+            $personalIncomeValue = $income_per_month->where('id', $selectedPersonalIncomeId)->first() ?? 0;
 
             if($profile != null){
                 if($profile->children_data == null){
@@ -138,8 +151,8 @@ class ProfileController extends Controller
                     $vehicle_set = (isset($essential_details['no_vehicle'])) ? (($essential_details['no_vehicle'] != "") ? $essential_details['no_vehicle'] : 0) : 0;
                 }
             }
-    
-            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set'));
+  
+            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

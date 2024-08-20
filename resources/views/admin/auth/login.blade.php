@@ -150,6 +150,12 @@
         @endforeach
     @endif
 
+    @if (Session::has('status'))
+    <script>
+        toastr.success("{{ session('status') }}");
+    </script>
+    @endif
+
     @if (Session::has('error'))
         <script>
             toastr.error("{{ session('error') }}");
