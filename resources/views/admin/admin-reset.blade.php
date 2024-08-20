@@ -1,180 +1,157 @@
-@include('admin.layout.header')
-<style>
-    
-    button#pass:hover {
-        background-color: #6396b1;
-        color: #fff;
-    }
-    label#password-error{
-        width: 100% !important;
-    }
-    label#password_confirmation-error {
-        width: 100% !important;
-    }
-    .error {
-    color: red;
-    font-size: 0.875rem; /* Smaller size for error message */
-    margin-top: 0.25rem; /* Space above the error message */
-}
 
-
-.input-group .input-group-text {
-    display: flex; /* Flex to center the icon */
-    align-items: center; /* Center the icon vertically */
-}
-
-@media (max-width: 768px) {
-        .text-start {
-            text-align: center; /* Center text on smaller screens */
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .field-icon {
+            float: right;
+            margin-right: 12px;
+            margin-top: -26px;
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
         }
 
-        .form-control {
-            width: 100%; /* Full width on smaller screens */
+        i.fa.fa-eye {
+            color: black;
         }
-
-        .btn {
-            width: 100%; /* Full width buttons */
-            margin-bottom: 1rem; /* Space between buttons */
+        #submitButton{
+            background-color: red;
+            color:white;
         }
-    }
-
-</style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-<!-- main starts -->
-<main class="forgot-pass my-5 py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 m-auto">
-                <form id="forgot_table" method="POST" action="{{ route('password.store') }}">
-                    @csrf
-                    <input type="hidden" name="token" value="{{ $request->route('token') }}">
-                    <div class="text-start w-md-50 w-100 m-auto my-3">
-                        <p class="mb-0">Forgot Password</p>
-                        <h2 class="mb-4 fw-bold h4">Account Info</h2>
-                        
-                        <label for="email" class="fw-bolder">Email</label>
-                        <div class="input-group mb-3"> <!-- Add margin-bottom for spacing -->
-                            <input type="email" disabled
-                            class="form-control vi-border-clr border-radius-6px" value="{{ old('email', $request->email) }}">
-                        </div>
-                     
-                        <input type="hidden" name="email" id="email" placeholder="email@address.com"
-                               class="form-control vi-border-clr border-radius-6px" value="{{ old('email', $request->email) }}">
-                        <label id="email-error" class="error" for="email"></label>
-
-                        <label for="password" class="fw-bolder">New Password</label>
-                        <div class="input-group mb-3"> <!-- Add margin-bottom for spacing -->
-                            <input type="password" name="password" id="password" placeholder="New Password" autocomplete="new-password"
-                                   class="form-control vi-border-clr border-radius-6px">
-                            <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
-                                <i class="fas fa-eye"></i>
-                            </span>
-                        </div>
-                        <label id="password-error" class="error" for="password"></label>
-
-                        <label for="password_confirmation" class="fw-bolder">Confirm Password</label>
-                        <div class="input-group mb-3"> <!-- Add margin-bottom for spacing -->
-                            <input type="password" name="password_confirmation" id="password_confirmation" autocomplete="new-password" placeholder="Confirm Password"
-                                   class="form-control vi-border-clr border-radius-6px">
-                            <span class="input-group-text" id="togglePasswordConfirmation" style="cursor: pointer;">
-                                <i class="fas fa-eye"></i>
-                            </span>
-                        </div>
-                        <label id="password_confirmation-error" class="error" for="password_confirmation"></label>
-
-                        <button type="submit"
-                                class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2" id="pass">REQUEST
-                            {{ __('Reset Password') }}</button>
-                        <a href="{{ route('login') }}"
-                           class="btn vi-white-bg border-radius-0 text-white px-5 py-3 m-auto w-100">BACK To Login</a>
-                    </div>
-                </form>
+    </style>
+    @include('admin.auth.admin-header')
+    <div class="h-full">
+        <div class="px-view py-view mx-auto">
+            <div class="mx-auto py-8 max-w-sm text-center text-90">
+                <img class="fill-current" width="200" height="39"
+                    src="{{ asset('assets/images/brand_surgen.png') }}" />
             </div>
+            <form id="forgot_form" class="bg-white shadow rounded-lg p-8 max-w-login mx-auto" method="POST"
+                action="{{ route('admin_password_reset_update') }}">
+                @csrf
+                <h2 class="text-2xl text-center font-normal mb-6 text-90">Forgot your password?</h2>
+                <svg class="block mx-auto mb-6" xmlns="http://www.w3.org/2000/svg" width="100" height="2"
+                    viewBox="0 0 100 2">
+                    <path fill="#D8E3EC" d="M0 0h100v2H0z" />
+                </svg>
+
+                <div class="mb-6">
+                    <label class="block font-bold mb-2" for="email">Email Address</label>
+                    <input class="form-control form-input form-input-bordered w-full"
+                        value="{{ old('email', $request->email) }}" readonly>
+                    <input class="form-control form-input form-input-bordered w-full" id="email" type="hidden"
+                        value="{{ old('email', $request->email) }}" name="email" readonly>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block font-bold mb-2" for="password">Password</label>
+                    <div class="my-3 w-75 m-auto position-relative">
+                        <input class="form-control form-input form-input-bordered w-full input-password"
+                            id="password-field" type="password" name="password" placeholder="Enter Your Password"
+                            required />
+                        <span toggle="#password-field" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block font-bold mb-2" for="password_confirmation">Confirm Password</label>
+                    <div class="my-3 w-75 m-auto position-relative">
+                        <input class="form-control form-input form-input-bordered w-full input-password"
+                            id="password_confirmation-field" type="password" name="password_confirmation"
+                            placeholder="Confirm Password" required />
+                        <span toggle="#password_confirmation-field"
+                            class="fa fa-fw fa-eye-slash field-icon toggle-password-confirm"></span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <button class="btn btn-default btn-primary hover:bg-primary-dark w-full sm:w-1/2 mr-2"
+                        type="submit">
+                        Submit
+                    </button>
+                    <button class="btn btn-default btn-primary hover:bg-primary-dark w-full sm:w-1/2 mr-2"
+                        id="submitButton">
+                        Back
+                    </button>
+                </div>
+
+
+            </form>
         </div>
-    </div>
-</main>
+        @include('admin.auth.admin-footer')
 
 
-<!-- main ends -->
-@include('admin.layout.footer')
-<script>
-    $(function() {
-        $('#forgot_table').validate({
-            rules: {
-                email: {
-                    required: true,
-                    email: true,
-                    validate_email: true
-                },
-                password: {
-                    required: true,
-                    minlength: 6
-                },
-                password_confirmation: {
-                    required: true,
-                    minlength: 6,
-                    equalTo: "#password"
-                }
-
-            }
-        });
-    });
-
-    $.validator.addMethod("validate_email", function(value, element) {
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
-            return true;
-        } else {
-            return false;
-        }
-    }, "Please enter a valid email address.");
-</script>
-
-<script>
-    document.getElementById('togglePassword').addEventListener('click', function () {
-        const passwordInput = document.getElementById('password');
-        const passwordIcon = this.querySelector('i');
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            passwordIcon.classList.remove('fa-eye');
-            passwordIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            passwordIcon.classList.remove('fa-eye-slash');
-            passwordIcon.classList.add('fa-eye');
-        }
-    });
-
-    document.getElementById('togglePasswordConfirmation').addEventListener('click', function () {
-        const passwordConfirmationInput = document.getElementById('password_confirmation');
-        const confirmationIcon = this.querySelector('i');
-        if (passwordConfirmationInput.type === 'password') {
-            passwordConfirmationInput.type = 'text';
-            confirmationIcon.classList.remove('fa-eye');
-            confirmationIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordConfirmationInput.type = 'password';
-            confirmationIcon.classList.remove('fa-eye-slash');
-            confirmationIcon.classList.add('fa-eye');
-        }
-    });
-</script>
-
-
-@if (count($errors) > 0)
-    @foreach ($errors->all() as $message)
         <script>
-            toastr.error("{{ $message }}");
+            const routeUrl = "{{ route('admin.forgot_password') }}";
+
+            // Add click event listener to the button
+            document.getElementById('submitButton').addEventListener('click', function() {
+                window.location.href = routeUrl;
+            });
+
+            $(function() {
+                $('#forgot_form').validate({
+                    rules: {
+
+                        password: {
+                            required: true,
+                            minlength: 6
+                        },
+                        password_confirmation: {
+                            required: true,
+                            minlength: 6,
+                            equalTo: "#password-field"
+                        }
+                    },
+                    messages: {
+                        password: {
+                            minlength: "Password must be at least 6 characters long"
+                        },
+                        password_confirmation: {
+                            equalTo: "Passwords do not match"
+                        }
+                    }
+                });
+
+                $(".toggle-password").click(function() {
+                    $(this).toggleClass("fa-eye fa-eye-slash");
+                    var input = $($(this).attr("toggle"));
+                    if (input.attr("type") == "password") {
+                        input.attr("type", "text");
+                    } else {
+                        input.attr("type", "password");
+                    }
+                });
+
+                $(".toggle-password-confirm").click(function() {
+                    $(this).toggleClass("fa-eye fa-eye-slash");
+                    var input = $($(this).attr("toggle"));
+                    if (input.attr("type") == "password") {
+                        input.attr("type", "text");
+                    } else {
+                        input.attr("type", "password");
+                    }
+                });
+            });
         </script>
-    @endforeach
-@endif
-@if (Session::has('status'))
-    <script>
-        toastr.success("{{ session('status') }}");
-    </script>
-@endif
-@if (Session::has('error'))
-    <script>
-        toastr.error("{{ session('error') }}");
-    </script>
-@endif
+
+        @if (count($errors) > 0)
+            @foreach ($errors->all() as $message)
+                <script>
+                    toastr.error("{{ $message }}");
+                </script>
+            @endforeach
+        @endif
+
+        @if (Session::has('status'))
+            <script>
+                toastr.success("{{ session('status') }}");
+            </script>
+        @endif
+
+        @if (Session::has('error'))
+            <script>
+                toastr.error("{{ session('error') }}");
+            </script>
+        @endif
+    </div>
+
