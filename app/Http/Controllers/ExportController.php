@@ -17,6 +17,9 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use DateTime;
 use App\Models\Tag;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use App\Models\RespondentProfile;
+
 class ExportController extends Controller
 {
 
@@ -64,8 +67,8 @@ class ExportController extends Controller
                     ),
                 ),
                 'alignment' => [
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER, // Center vertically
+                    'horizontal' => Alignment::HORIZONTAL_LEFT, // Align left horizontally
                     // 'wrapText' => true,
                 ],
                 'borders' => [
@@ -88,7 +91,7 @@ class ExportController extends Controller
                     'name' => 'Arial',
                 ],
                 'alignment' => [
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER,
                     // 'wrapText' => true,
                 ],
             ];
@@ -106,8 +109,8 @@ class ExportController extends Controller
                     'name' => 'Arial',
                 ],
                 'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    'horizontal' => Alignment::HORIZONTAL_LEFT,
+                    'vertical' => Alignment::VERTICAL_CENTER,
                 ],
             ];
 
@@ -1499,7 +1502,7 @@ class ExportController extends Controller
                 $panel = ($request->panel != null) ? array_filter($request->panel) : null;
                 
                 $query = DB::table('respondent_tag')
-                    ->select('respondent_tag.id', 'respondents.name', 'respondents.surname', 'tags.name as tag_name')
+                    ->select('respondent_tag.id', 'respondents.name', 'respondents.surname', 'tags.name as tag_name','respondents.mobile','respondents.whatsapp','respondents.email','respondents.date_of_birth')
                     ->join('tags', 'respondent_tag.tag_id', '=', 'tags.id')
                     ->join('respondents', 'respondents.id', '=', 'respondent_tag.respondent_id') // Join with respondents table
                     ->when($panel !== null, function ($query) use ($panel) {
@@ -1526,19 +1529,68 @@ class ExportController extends Controller
                     $sheet->setCellValue('A1', 'Profile ID');
                     $sheet->setCellValue('B1', 'Panel name');
                     $sheet->setCellValue('C1', 'Full Name');
+                    $sheet->setCellValue('D1', 'Mobile Number');
+                    $sheet->setCellValue('E1', 'WA Number');
+                    $sheet->setCellValue('F1', 'Email');
+                    $sheet->setCellValue('G1', 'Age');
+                    $sheet->setCellValue('H1', 'Date of Birth');
                     
-                    $sheet->getStyle('A1:C1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:C1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:H1')->applyFromArray($styleArray);
                     
                     $rows = 2;
                     foreach ($query as $all_data) {
                         $sheet->setCellValue('A' . $rows, $all_data->id); // Assuming 'id' is the profile ID
                         $sheet->setCellValue('B' . $rows, $all_data->tag_name ?? ''); // Adjust as per your actual logic for panel name
                         $sheet->setCellValue('C' . $rows, $all_data->full_name ?? '');
+                        $mobile_number = '-';
+                        if (!empty($all_data->mobile)) {
+                            $m_number = $all_data->mobile;
+                            
+                            if (strlen($m_number) == 9) {
+                                $mobile_number = '+27' . $m_number;
+                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                $mobile_number = '+' . $m_number;
+                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                $mobile_number = $m_number;
+                            }
+                        }
+                       
+                        $whatsapp_number = '-';
+                        if (!empty($all_data->whatsapp)) {
+                            $w_number = $all_data->whatsapp;
+                            
+                            if (strlen($w_number) == 9) {
+                                $whatsapp_number = '+27' . $w_number;
+                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                $whatsapp_number = '+' . $w_number;
+                            } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                $whatsapp_number = $w_number;
+                            }
+                        }
+                        
+                        $sheet->setCellValue('D' . $rows, $mobile_number ?? '');
+                        $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
+                        $sheet->setCellValue('F' . $rows, $all_data->email ?? '');
+                        $date_of_birth = isset($all_data->date_of_birth) ? $all_data->date_of_birth : null;
+                    
+                        // Calculate age if date_of_birth is available
+                        $age = '-';
+                        if (!empty($date_of_birth) && $date_of_birth != '0000-00-00') {
+                            // Create DateTime objects
+                            $dob = new DateTime($date_of_birth);
+                            $now = new DateTime();
+                            
+                            // Calculate age
+                            $diff = $now->diff($dob);
+                            $age = $diff->y; // This will give the age in years
+                        }
+                        $sheet->setCellValue('G' . $rows, $age ?? '');
+                        $sheet->setCellValue('H' . $rows, $all_data->date_of_birth ?? '');
                         $sheet->getRowDimension($rows)->setRowHeight(20);
-                        $sheet->getStyle('A' . $rows . ':C' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
                     
                         $rows++;
                     }
@@ -1741,7 +1793,8 @@ class ExportController extends Controller
                         $multi_choice_qus = Questions::where(['qus_type' => 'multi_choice', 'survey_id' => $survey_id])->get();
                         $rankorder_qus = Questions::where(['qus_type' => 'rankorder', 'survey_id' => $survey_id])->get();
                 
-                        $cols = ["Respondent Name", "Date", "Device ID", "Device Name", "Completion Status", "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"];
+                        $cols = ["Respondent Name", "Mobile","Whatsapp","Email","DOB","Gender","Highest Education Level","Employment Status","Industry my company","Personal Income","Household Income","Relationship Status","Ethnic Group","Province","Suburb","Date","Device ID", "Device Name", "Completion Status", "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"];
+
                         foreach ($question as $qus) {
                             array_push($cols, $qus->question_name);
                         }
@@ -1779,6 +1832,7 @@ class ExportController extends Controller
                             $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
                         }
                         $finalResult = [$cols];
+
                         foreach ($surveyResponseUsers as $userID) {
                             $user = Respondents::where('id', $userID)->first();
                             $starttime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "asc")->first();
@@ -1802,10 +1856,113 @@ class ExportController extends Controller
                             $name = $user->name ?? 'Anonymous';
                 
                             $completedRes = SurveyResponse::where(['response_user_id' => $userID, 'survey_id' => $survey_id, 'answer' => 'thankyou_submitted'])->first();
+
+                            $profile = RespondentProfile::where('respondent_id',$userID)->first();
+                            if(isset($profile->basic_details)){
+                                $basic = json_decode($profile->basic_details);
+                            }else{
+                                $basic = array();
+                            }
+                            
+                            if(isset($profile->essential_details)){
+                                $essential = json_decode($profile->essential_details);
+                            }else{
+                                $essential = array();
+                            }
+                            
+                            //dd($essential);
+
                             $completion_status = $completedRes ? 'Completed' : 'Partially Completed';
-                
-                            $result = ['Respondent Name' => $name, 'Date' => $responseinfo, 'Device ID' => $deviceID, 'Device Name' => $device_name, 'Completion Status' => $completion_status, 'Browser' => $browser, 'OS' => $os, 'Device Type' => $device_type, 'Long' => $long, 'Lat' => $lat, 'Location' => $location, 'IP Address' => $ip_address, 'Language Code' => $lang_code, 'Language Name' => $lang_name];
-                
+                            
+                            $mobile_number = '-';
+                            if (!empty($basic->mobile_number)) {
+                                $m_number = $basic->mobile_number;
+                                
+                                if (strlen($m_number) == 9) {
+                                    $mobile_number = '+27' . $m_number;
+                                } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                    $mobile_number = '+' . $m_number;
+                                } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                    $mobile_number = $m_number;
+                                }
+                            }
+
+                            $whatsapp_number = '-';
+                            if (!empty($basic->whatsapp_number)) {
+                                $w_number = $basic->whatsapp_number;
+                                
+                                if (strlen($w_number) == 9) {
+                                    $whatsapp_number = '+27' . $w_number;
+                                } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                                    $whatsapp_number = '+' . $w_number;
+                                } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                    $whatsapp_number = $w_number;
+                                }
+                            }
+                            
+                            $email = $basic->email ?? '';
+                            $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+
+                            $employment_status = null;
+
+                            if (isset($essential) && is_array($essential) && !empty($essential)) {
+
+                                $employment_status = isset($essential) && $essential->employment_status == 'other' ? $essential->employment_status_other : ($essential ? $essential->employment_status : null);
+
+                            }
+
+                            $industry_my_company = null;
+
+                            if (isset($industry_my_company) && is_array($industry_my_company) && !empty($industry_my_company)) {
+                                    
+                                $industry_my_company = isset($essential) && $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : ($essential ? $essential->industry_my_company : null);
+                            }
+
+                            $p_income = null; // Initialize $p_income to null
+
+                            if ($essential && isset($essential->personal_income_per_month)) {
+                                $p_income = DB::table('income_per_month')
+                                                ->where('id', $essential->personal_income_per_month)
+                                                ->first();
+                            }
+
+                            $h_income = null; // Initialize $h_income to null
+
+                            if ($essential && isset($essential->household_income_per_month)) {
+                                $h_income = DB::table('income_per_month')
+                                                ->where('id', $essential->household_income_per_month)
+                                                ->first();
+                            }
+                            
+                            $household_income = ($h_income != null) ? $h_income->income : '-';
+                            $personal_income = ($p_income != null) ? $p_income->income : '-';
+                            $relationship_status = $essential->relationship_status ?? '';
+                            $ethnic_group = $essential->ethnic_group ?? '';
+                            $gender = $essential->gender ?? '';
+                            $education_level = $essential->education_level ?? '';
+
+                            $state = null; // Initialize $state to null
+
+                            if ($essential && isset($essential->province)) {
+                                $state = DB::table('state')
+                                            ->where('id', $essential->province)
+                                            ->first();
+                            }
+                            $district = null; // Initialize $district to null
+
+                            if ($essential && isset($essential->suburb)) {
+                                $district = DB::table('district')
+                                            ->where('id', $essential->suburb)
+                                            ->first();
+                            }
+
+                            $get_state = ($state != null) ? $state->state : '-';
+                            $get_district = ($district != null) ? $district->district : '-';
+                            
+                            $result = ['Respondent Name' => $name,'Mobile'=>$mobile_number, 'Whatsapp'=>$whatsapp_number, 'Email'=>$email, 'DOB'=>$year,'Gender'=>$gender,'Highest Education Level'=>$education_level,'Employment Status'=>$employment_status,'Industry my company'=>$industry_my_company,'Personal Income'=>$personal_income,'Household Income'=>$household_income,'Relationship Status'=>$relationship_status,'Ethnic Group'=>$ethnic_group,'Province'=>$get_state,'Suburb'=>$get_district, 'Date' => $responseinfo, 'Device ID' => $deviceID, 'Device Name' => $device_name, 'Completion Status' => $completion_status, 'Browser' => $browser, 'OS' => $os, 'Device Type' => $device_type, 'Long' => $long, 'Lat' => $lat, 'Location' => $location, 'IP Address' => $ip_address, 'Language Code' => $lang_code, 'Language Name' => $lang_name];
+                            
+                            //dd($result);
+                            
                             foreach ($question as $qus) {
                                 $respone = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
                                 $output = $respone ? ($respone->skip == 'yes' ? 'Skip' : $respone->answer) : '-';

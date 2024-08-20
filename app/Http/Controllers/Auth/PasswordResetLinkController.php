@@ -46,6 +46,8 @@ class PasswordResetLinkController extends Controller
         $resetUrl = URL::temporarySignedRoute(
             'password.reset', now()->addMinutes(60), ['token' => $token, 'email' => $user->email]
         );
+
+        
     
         try {
             // Send password reset email
@@ -105,6 +107,10 @@ class PasswordResetLinkController extends Controller
             Log::error('Password reset failed: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to reset password. ' . $e->getMessage());
         }
+    }
+
+    public function showResetForm(Request $request){
+        return view('admin.admin-reset');
     }
     
 }

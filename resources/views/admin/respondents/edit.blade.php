@@ -149,43 +149,43 @@
         </div>
     </div>
 
-    <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Branch Code
-        </label>
+    {{-- <div class="form-group row"> --}}
+        {{-- <label for="example-search-input" class="col-md-2 col-form-label">Branch Code
+        </label> --}}
         <div class="col-md-10">
-            <input type="text" class="form-control" id="branch_code" autocomplete="off"
+            <input type="hidden" class="form-control" id="branch_code" autocomplete="off"
                 value="{{ $respondents->branch_code }}" readonly>
             <input type="hidden" class="form-control" id="branch" name="branch_code"
                 value="{{ $respondents->branch_code }}">
         </div>
-    </div>
+    {{-- </div> --}}
 
-    <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Account Type
+    {{-- <div class="form-group row"> --}}
+        {{-- <label for="example-search-input" class="col-md-2 col-form-label">Account Type --}}
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="account_type" placeholder="Enter Your Account Type"
+            <input type="hidden" class="form-control" id="account_type" placeholder="Enter Your Account Type"
                 autocomplete="off" name="account_type" value="{{ $respondents->account_type }}">
         </div>
-    </div>
+    {{-- </div> --}}
 
-    <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Account Holder
+    {{-- <div class="form-group row"> --}}
+        {{-- <label for="example-search-input" class="col-md-2 col-form-label">Account Holder --}}
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="account_holder" placeholder="Enter Your Account Holder"
+            <input type="hidden" class="form-control" id="account_holder" placeholder="Enter Your Account Holder"
                 autocomplete="off" name="account_holder" value="{{ $respondents->account_holder }}">
         </div>
-    </div>
+    {{-- </div> --}}
 
-    <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Account Number
+    {{-- <div class="form-group row"> --}}
+        {{-- <label for="example-search-input" class="col-md-2 col-form-label">Account Number --}}
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="account_number" placeholder="Enter Your Account Number"
+            <input type="hidden" class="form-control" id="account_number" placeholder="Enter Your Account Number"
                 autocomplete="off" name="account_number" value="{{ $respondents->account_number }}">
         </div>
-    </div>
+    {{-- </div> --}}
 
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Status *</label>

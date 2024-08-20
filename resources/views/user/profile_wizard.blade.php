@@ -31,12 +31,16 @@
     }
 
     .error {
-    color: red; /* Or your preferred error color */
-    font-weight: bold;
-    display: block; /* Makes it occupy a full line */
-    margin-top: 5px; /* Adds spacing */
-    margin-bottom: 10px; /* Adds spacing */
-}
+        color: red;
+        /* Or your preferred error color */
+        font-weight: bold;
+        display: block;
+        /* Makes it occupy a full line */
+        margin-top: 5px;
+        /* Adds spacing */
+        margin-bottom: 10px;
+        /* Adds spacing */
+    }
 
     span.error {
         outline: none;
@@ -158,7 +162,7 @@
                                                 <input type="text" name="basic[mobile_number]" id="mobile_number"
                                                     placeholder="081 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
-                                                    value="{{ $resp_details->mobile }}" maxlength="16"  readonly>
+                                                    value="{{ $resp_details->mobile }}" maxlength="16" readonly>
 
                                             </div>
                                             <small class="form-text text-muted">Don’t include 0 in starting.</small>
@@ -209,171 +213,306 @@
                                     </div>
                                 </section>
 
-                              
+
                                 <h2>Essential Details</h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
                                         <!-- Relationship Status -->
                                         <div class="col-12 col-md-6 mb-3">
-                                            <label for="relationship_status">Relationship Status <span class="text-danger">*</span></label>
-                                            <select name="essential[relationship_status]" id="relationship_status" class="form-control" required>
+                                            <label for="relationship_status">Relationship Status <span
+                                                    class="text-danger">*</span></label>
+                                            <select name="essential[relationship_status]" id="relationship_status"
+                                                class="form-control" required>
                                                 <option value="">Select</option>
-                                                <option value="single" @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'single') selected @endif @endisset>Single</option>
-                                                <option value="cohabitation" @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'cohabitation') selected @endif @endisset>Cohabitation</option>
-                                                <option value="engaged" @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'engaged') selected @endif @endisset>Engaged</option>
-                                                <option value="divorced" @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'divorced') selected @endif @endisset>Divorced</option>
-                                                <option value="married" @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'married') selected @endif @endisset>Married</option>
-                                                <option value="widowed" @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'widowed') selected @endif @endisset>Widowed</option>
+                                                <option value="single"
+                                                    @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'single') selected @endif @endisset>
+                                                    Single</option>
+                                                <option value="cohabitation"
+                                                    @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'cohabitation') selected @endif @endisset>
+                                                    Cohabitation</option>
+                                                <option value="engaged"
+                                                    @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'engaged') selected @endif @endisset>
+                                                    Engaged</option>
+                                                <option value="divorced"
+                                                    @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'divorced') selected @endif @endisset>
+                                                    Divorced</option>
+                                                <option value="married"
+                                                    @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'married') selected @endif @endisset>
+                                                    Married</option>
+                                                <option value="widowed"
+                                                    @isset($essential_details['relationship_status']) @if ($essential_details['relationship_status'] == 'widowed') selected @endif @endisset>
+                                                    Widowed</option>
                                             </select>
                                         </div>
-                                
+
+                                        <!-- Highest Education Level -->
+                                        <div class="col-12 col-md-6 mb-3">
+                                            <label for="education_level">Highest Education Level <span
+                                                    class="text-danger">*</span></label>
+                                            <select name="essential[education_level]" id="education_level"
+                                                class="form-control" required>
+                                                <option value="">Select</option>
+                                                <option value="matric"
+                                                    @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'matric') selected @endif @endisset>
+                                                    Matric</option>
+                                                <option value="post_matric_courses"
+                                                    @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'post_matric_courses') selected @endif @endisset>
+                                                    Post Matric Courses / Higher Certificate</option>
+                                                <option value="post_matric_diploma"
+                                                    @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'post_matric_diploma') selected @endif @endisset>
+                                                    Post Matric Diploma</option>
+                                                <option value="ug"
+                                                    @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'ug') selected @endif @endisset>
+                                                    Undergrad University Degree</option>
+                                                <option value="pg"
+                                                    @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'pg') selected @endif @endisset>
+                                                    Post Grad Degree - Honours, Masters, PhD, MBA</option>
+                                                <option value="school_no_metric"
+                                                    @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'school_no_metric') selected @endif @endisset>
+                                                    School But No Matric</option>
+                                            </select>
+                                        </div>
+
                                         <!-- Gender -->
                                         <div class="col-12 col-md-6 mb-3">
                                             <label for="gender">Gender <span class="text-danger">*</span></label>
-                                            <select name="essential[gender]" id="gender" class="form-control" required>
+                                            <select name="essential[gender]" id="gender" class="form-control"
+                                                required>
                                                 <option value="">Select</option>
-                                                <option value="male" @isset($essential_details['gender']) @if ($essential_details['gender'] == 'male') selected @endif @endisset>Male</option>
-                                                <option value="female" @isset($essential_details['gender']) @if ($essential_details['gender'] == 'female') selected @endif @endisset>Female</option>
-                                                <option value="non_binary" @isset($essential_details['gender']) @if ($essential_details['gender'] == 'non_binary') selected @endif @endisset>Non-Binary</option>
-                                                <option value="prefer_not_to_say" @isset($essential_details['gender']) @if ($essential_details['gender'] == 'prefer_not_to_say') selected @endif @endisset>Prefer not to say</option>
-                                                <option value="other" @isset($essential_details['gender']) @if ($essential_details['gender'] == 'other') selected @endif @endisset>Other</option>
+                                                <option value="male"
+                                                    @isset($essential_details['gender']) @if ($essential_details['gender'] == 'male') selected @endif @endisset>
+                                                    Male</option>
+                                                <option value="female"
+                                                    @isset($essential_details['gender']) @if ($essential_details['gender'] == 'female') selected @endif @endisset>
+                                                    Female</option>
+                                                <option value="non_binary"
+                                                    @isset($essential_details['gender']) @if ($essential_details['gender'] == 'non_binary') selected @endif @endisset>
+                                                    Non-Binary</option>
+                                                <option value="prefer_not_to_say"
+                                                    @isset($essential_details['gender']) @if ($essential_details['gender'] == 'prefer_not_to_say') selected @endif @endisset>
+                                                    Prefer not to say</option>
+                                                <option value="other"
+                                                    @isset($essential_details['gender']) @if ($essential_details['gender'] == 'other') selected @endif @endisset>
+                                                    Other</option>
                                             </select>
                                         </div>
-                                
-                                        <!-- Ethnic Group -->
-                                        <div class="col-12 col-md-6 mb-3">
-                                            <label for="ethnic_group">Ethnic Group / Race <span class="text-danger">*</span></label>
-                                            <select name="essential[ethnic_group]" id="ethnic_group" class="form-control" required>
-                                                <option value="">Select</option>
-                                                <option value="asian" @isset($essential_details['ethnic_group']) @if ($essential_details['ethnic_group'] == 'asian') selected @endif @endisset>Asian</option>
-                                                <option value="black" @isset($essential_details['ethnic_group']) @if ($essential_details['ethnic_group'] == 'black') selected @endif @endisset>Black</option>
-                                                <option value="coloured" @isset($essential_details['ethnic_group']) @if ($essential_details['ethnic_group'] == 'coloured') selected @endif @endisset>Coloured</option>
-                                                <option value="indian" @isset($essential_details['ethnic_group']) @if ($essential_details['ethnic_group'] == 'indian') selected @endif @endisset>Indian</option>
-                                                <option value="white" @isset($essential_details['ethnic_group']) @if ($essential_details['ethnic_group'] == 'white') selected @endif @endisset>White</option>
-                                            </select>
-                                        </div>
-                                
-                                        <!-- Highest Education Level -->
-                                        <div class="col-12 col-md-6 mb-3">
-                                            <label for="education_level">Highest Education Level <span class="text-danger">*</span></label>
-                                            <select name="essential[education_level]" id="education_level" class="form-control" required>
-                                                <option value="">Select</option>
-                                                <option value="matric" @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'matric') selected @endif @endisset>Matric</option>
-                                                <option value="post_matric_courses" @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'post_matric_courses') selected @endif @endisset>Post Matric Courses / Higher Certificate</option>
-                                                <option value="post_matric_diploma" @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'post_matric_diploma') selected @endif @endisset>Post Matric Diploma</option>
-                                                <option value="ug" @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'ug') selected @endif @endisset>Undergrad University Degree</option>
-                                                <option value="pg" @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'pg') selected @endif @endisset>Post Grad Degree - Honours, Masters, PhD, MBA</option>
-                                                <option value="school_no_metric" @isset($essential_details['education_level']) @if ($essential_details['education_level'] == 'school_no_metric') selected @endif @endisset>School But No Matric</option>
-                                            </select>
-                                        </div>
-                                
+
                                         <!-- Employment Status -->
                                         <div class="col-12 col-md-6 mb-3">
-                                            <label for="employment_status">Employment Status <span class="text-danger">*</span></label>
-                                            <select name="essential[employment_status]" id="employment_status" class="form-control" required onchange="show_other(this, 'employment_status')">
+                                            <label for="employment_status">Employment Status <span
+                                                    class="text-danger">*</span></label>
+                                            <select name="essential[employment_status]" id="employment_status"
+                                                class="form-control" required
+                                                onchange="show_other(this, 'employment_status')">
                                                 <option value="">Select</option>
-                                                <option value="emp_full_time" @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'emp_full_time') selected @endif @endisset>Employed Full-Time</option>
-                                                <option value="emp_part_time" @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'emp_part_time') selected @endif @endisset>Employed Part-Time</option>
-                                                <option value="self" @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'self') selected @endif @endisset>Self-Employed</option>
-                                                <option value="study" @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'study') selected @endif @endisset>Studying Full-Time (Not Working)</option>
-                                                <option value="working_and_studying" @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'working_and_studying') selected @endif @endisset>Working & Studying</option>
-                                                <option value="home_person" @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'home_person') selected @endif @endisset>Stay at Home Person</option>
-                                                <option value="retired" @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'retired') selected @endif @endisset>Retired</option>
-                                                <option value="unemployed" @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'unemployed') selected @endif @endisset>Unemployed</option>
-                                                <option value="other" @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'other') selected @endif @endisset>Other</option>
+                                                <option value="emp_full_time"
+                                                    @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'emp_full_time') selected @endif @endisset>
+                                                    Employed Full-Time</option>
+                                                <option value="emp_part_time"
+                                                    @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'emp_part_time') selected @endif @endisset>
+                                                    Employed Part-Time</option>
+                                                <option value="self"
+                                                    @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'self') selected @endif @endisset>
+                                                    Self-Employed</option>
+                                                <option value="study"
+                                                    @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'study') selected @endif @endisset>
+                                                    Studying Full-Time (Not Working)</option>
+                                                <option value="working_and_studying"
+                                                    @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'working_and_studying') selected @endif @endisset>
+                                                    Working & Studying</option>
+                                                <option value="home_person"
+                                                    @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'home_person') selected @endif @endisset>
+                                                    Stay at Home Person</option>
+                                                <option value="retired"
+                                                    @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'retired') selected @endif @endisset>
+                                                    Retired</option>
+                                                <option value="unemployed"
+                                                    @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'unemployed') selected @endif @endisset>
+                                                    Unemployed</option>
+                                                <option value="other"
+                                                    @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'other') selected @endif @endisset>
+                                                    Other</option>
                                             </select>
-                                            <input type="text" name="essential[employment_status_other]" id="employment_status_other" class="form-control mt-2" placeholder="Please specify" @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'other') value="{{ $essential_details['employment_status_other'] }}" @else style="display:none;" @endif @else style="display:none;" @endisset>
+                                            <input type="text" name="essential[employment_status_other]"
+                                                id="employment_status_other" class="form-control mt-2"
+                                                placeholder="Please specify"
+                                                @isset($essential_details['employment_status']) @if ($essential_details['employment_status'] == 'other') value="{{ $essential_details['employment_status_other'] }}" @else style="display:none;" @endif @else style="display:none;" @endisset>
                                         </div>
-                                
-                                        <!-- Industry my company is in -->
+
+                                        <!-- Ethnic Group -->
                                         <div class="col-12 col-md-6 mb-3">
-                                            <label for="industry_my_company">Industry my company is in <span class="text-danger">*</span></label>
-                                            <select name="essential[industry_my_company]" id="industry_my_company" class="form-control" required onchange="show_other(this, 'industry_my_company')">
+                                            <label for="ethnic_group">Ethnic Group / Race <span
+                                                    class="text-danger">*</span></label>
+                                            <select name="essential[ethnic_group]" id="ethnic_group"
+                                                class="form-control" required>
+                                                <option value="">Select</option>
+                                                <option value="asian"
+                                                    @isset($essential_details['ethnic_group']) @if ($essential_details['ethnic_group'] == 'asian') selected @endif @endisset>
+                                                    Asian</option>
+                                                <option value="black"
+                                                    @isset($essential_details['ethnic_group']) @if ($essential_details['ethnic_group'] == 'black') selected @endif @endisset>
+                                                    Black</option>
+                                                <option value="coloured"
+                                                    @isset($essential_details['ethnic_group']) @if ($essential_details['ethnic_group'] == 'coloured') selected @endif @endisset>
+                                                    Coloured</option>
+                                                <option value="indian"
+                                                    @isset($essential_details['ethnic_group']) @if ($essential_details['ethnic_group'] == 'indian') selected @endif @endisset>
+                                                    Indian</option>
+                                                <option value="white"
+                                                    @isset($essential_details['ethnic_group']) @if ($essential_details['ethnic_group'] == 'white') selected @endif @endisset>
+                                                    White</option>
+                                            </select>
+                                        </div>
+
+
+
+
+
+                                        <!-- Job Title -->
+                                        <div class="col-12 col-md-6 mb-3" id="job_title_container">
+                                            <label for="job_title">Job Title <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="text" name="essential[job_title]" id="job_title"
+                                                class="form-control" required
+                                                @isset($essential_details['job_title']) value="{{ $essential_details['job_title'] }}" @endisset>
+                                        </div>
+
+                                        <!-- Province -->
+                                        <div class="col-12 col-md-6 mb-3">
+                                            <label for="province">Province <span class="text-danger">*</span></label>
+                                            <select name="essential[province]" id="province" class="form-control"
+                                                required>
+                                                <option value="">Select</option>
+                                                @foreach ($state as $states)
+                                                    <option value="{{ $states->id }}"
+                                                        @isset($essential_details['province']) @if ($essential_details['province'] == $states->id) selected @endif @endisset>
+                                                        {{ $states->state }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <!-- Industry my company is in -->
+                                        <div class="col-12 col-md-6 mb-3" id="industry_container">
+                                            <label for="industry_my_company">Industry my company is in <span
+                                                    class="text-danger">*</span></label>
+                                            <select name="essential[industry_my_company]" id="industry_my_company"
+                                                class="form-control" required
+                                                onchange="show_other(this, 'industry_my_company')">
                                                 <option value="">Select</option>
                                                 @foreach ($industry_company as $industry)
-                                                    <option value="{{ $industry->id }}" @isset($essential_details['industry_my_company']) @if ($essential_details['industry_my_company'] == $industry->id) selected @endif @endisset>{{ $industry->company }}</option>
+                                                    <option value="{{ $industry->id }}"
+                                                        @isset($essential_details['industry_my_company']) @if ($essential_details['industry_my_company'] == $industry->id) selected @endif @endisset>
+                                                        {{ $industry->company }}</option>
                                                 @endforeach
-                                                <option value="other" @isset($essential_details['industry_my_company']) @if ($essential_details['industry_my_company'] == 'other') selected @endif @endisset>Other</option>
+                                                <option value="other"
+                                                    @isset($essential_details['industry_my_company']) @if ($essential_details['industry_my_company'] == 'other') selected @endif @endisset>
+                                                    Other</option>
                                             </select>
-                                            <input type="text" name="essential[industry_my_company_other]" id="industry_my_company_other" class="form-control mt-2" placeholder="Please specify" @isset($essential_details['industry_my_company']) @if ($essential_details['industry_my_company'] == 'other') value="{{ $essential_details['industry_my_company_other'] }}" @else style="display:none;" @endif @else style="display:none;" @endisset>
+                                            <input type="text" name="essential[industry_my_company_other]"
+                                                id="industry_my_company_other" class="form-control mt-2"
+                                                placeholder="Please specify"
+                                                @isset($essential_details['industry_my_company']) @if ($essential_details['industry_my_company'] == 'other') value="{{ $essential_details['industry_my_company_other'] }}" @else style="display:none;" @endif @else style="display:none;" @endisset>
                                         </div>
-                                
-                                        <!-- Job Title -->
+                                        <!-- Metropolitan Area -->
                                         <div class="col-12 col-md-6 mb-3">
-                                            <label for="job_title">Job Title <span class="text-danger">*</span></label>
-                                            <input type="text" name="essential[job_title]" id="job_title" class="form-control" required @isset($essential_details['job_title']) value="{{ $essential_details['job_title'] }}" @endisset>
+                                            <label for="suburb">Metropolitan Area <span
+                                                    class="text-danger">*</span></label>
+                                            <select name="essential[suburb]" id="suburb" class="form-control"
+                                                required>
+                                                <option value="">Select</option>
+                                                @foreach ($get_suburb as $suburb)
+                                                    <option value="{{ $suburb->id }}"
+                                                        @isset($essential_details['suburb']) @if ($essential_details['suburb'] == $suburb->id) selected @endif @endisset>
+                                                        {{ $suburb->district }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
-                                
+
+
+
+
+
                                         <!-- Personal Income Per Month -->
                                         <div class="col-12 col-md-6 mb-3">
-                                            <label for="personal_income_per_month">Personal Income Per Month <span class="text-danger">*</span></label>
-                                            <select name="essential[personal_income_per_month]" id="personal_income_per_month" class="form-control" required>
+                                            <label for="personal_income_per_month">Personal Income Per Month <span
+                                                    class="text-danger">*</span></label>
+                                            <select name="essential[personal_income_per_month]"
+                                                id="personal_income_per_month" class="form-control" required>
                                                 <option value="">Select</option>
                                                 @foreach ($income_per_month as $income)
-                                                    <option value="{{ $income->id }}" @isset($essential_details['personal_income_per_month']) @if ($essential_details['personal_income_per_month'] == $income->id) selected @endif @endisset>{{ $income->income }}</option>
+                                                    <option value="{{ $income->id }}"
+                                                        @isset($essential_details['personal_income_per_month']) @if ($essential_details['personal_income_per_month'] == $income->id) selected @endif @endisset>
+                                                        {{ $income->income }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                
-                                        <!-- Household Income Per Month -->
+
+                                        <!-- Suburb -->
+                                        <div class="col-12 col-md-6 mb-3">
+                                            <label for="metropolitan_area">Suburb <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="text" name="essential[metropolitan_area]"
+                                                id="metropolitan_area" class="form-control" required
+                                                @isset($essential_details['metropolitan_area']) value="{{ $essential_details['metropolitan_area'] }}" @endisset>
+                                        </div>
+
+
                                         <div class="col-12 col-md-6 mb-3">
                                             <label for="household_income_per_month">Household Income per Month <span class="text-danger">*</span></label>
                                             <select name="essential[household_income_per_month]" id="household_income_per_month" class="form-control" required>
                                                 <option value="">Select</option>
                                                 @foreach ($income_per_month as $income)
-                                                    <option value="{{ $income->id }}" @isset($essential_details['household_income_per_month']) @if ($essential_details['household_income_per_month'] == $income->id) selected @endif @endisset>{{ $income->income }}</option>
-                                                @endforeach
+                                                @php
+                                                    // Disable options where the income is less than the selected personal income
+                                                    $isDisabled = $income->id < $personalIncomeValue->id;
+                                                @endphp
+                                                <option value="{{ $income->id }}"
+                                                    @isset($essential_details['household_income_per_month'])
+                                                        @if ($essential_details['household_income_per_month'] == $income->id) selected @endif
+                                                    @endisset
+                                                    @if ($isDisabled) disabled @endif>
+                                                    {{ $income->income }}
+                                                </option>
+                                            @endforeach
                                             </select>
                                         </div>
-                                
-                                        <!-- Province -->
-                                        <div class="col-12 col-md-6 mb-3">
-                                            <label for="province">Province <span class="text-danger">*</span></label>
-                                            <select name="essential[province]" id="province" class="form-control" required>
-                                                <option value="">Select</option>
-                                                @foreach ($state as $states)
-                                                    <option value="{{ $states->id }}" @isset($essential_details['province']) @if ($essential_details['province'] == $states->id) selected @endif @endisset>{{ $states->state }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                
-                                        <!-- Metropolitan Area -->
-                                        <div class="col-12 col-md-6 mb-3">
-                                            <label for="suburb">Metropolitan Area <span class="text-danger">*</span></label>
-                                            <select name="essential[suburb]" id="suburb" class="form-control" required>
-                                                <option value="">Select</option>
-                                                @foreach ($get_suburb as $suburb)
-                                                    <option value="{{ $suburb->id }}" @isset($essential_details['suburb']) @if ($essential_details['suburb'] == $suburb->id) selected @endif @endisset>{{ $suburb->district }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                
-                                        <!-- Suburb -->
-                                        <div class="col-12 col-md-6 mb-3">
-                                            <label for="metropolitan_area">Suburb <span class="text-danger">*</span></label>
-                                            <input type="text" name="essential[metropolitan_area]" id="metropolitan_area" class="form-control" required @isset($essential_details['metropolitan_area']) value="{{ $essential_details['metropolitan_area'] }}" @endisset>
-                                        </div>
-                                
-                                        <!-- Number of People Living in Household -->
-                                        <div class="col-12 col-md-6 mb-3">
-                                            <label for="no_houehold">Number of People Living in Your Household <span class="text-danger">*</span></label>
-                                            <input type="number" name="essential[no_houehold]" id="no_houehold" class="form-control" required @isset($essential_details['no_houehold']) value="{{ $essential_details['no_houehold'] }}" @endisset min="0">
-                                        </div>
-                                
+                                        
+
+
+
                                         <!-- Number of Children -->
                                         <div class="col-12 col-md-6 mb-3">
-                                            <label for="no_children">Number of Children <span class="text-danger">*</span></label>
-                                            <input type="number" name="essential[no_children]" id="no_children" class="form-control" required @isset($essential_details['no_children']) value="{{ $essential_details['no_children'] }}" @endisset min="0" max="10">
+                                            <label for="no_children">Number of Children <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="number" name="essential[no_children]" id="no_children"
+                                                class="form-control" required
+                                                @isset($essential_details['no_children']) value="{{ $essential_details['no_children'] }}" @endisset
+                                                min="0" max="10">
                                         </div>
-                                
+
+                                        <!-- Number of People Living in Household -->
+                                        <div class="col-12 col-md-6 mb-3">
+                                            <label for="no_houehold">Number of People Living in Your Household <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="number" name="essential[no_houehold]" id="no_houehold"
+                                                class="form-control" required
+                                                @isset($essential_details['no_houehold']) value="{{ $essential_details['no_houehold'] }}" @endisset
+                                                min="0">
+                                        </div>
+
+
+
                                         <!-- Number of Vehicles -->
                                         <div class="col-12 col-md-6 mb-3">
-                                            <label for="no_vehicle">Number of Vehicles <span class="text-danger">*</span></label>
-                                            <input type="number" name="essential[no_vehicle]" id="no_vehicle" class="form-control" required @isset($essential_details['no_vehicle']) value="{{ $essential_details['no_vehicle'] }}" @endisset min="0" max="10">
+                                            <label for="no_vehicle">Number of Vehicles <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="number" name="essential[no_vehicle]" id="no_vehicle"
+                                                class="form-control" required
+                                                @isset($essential_details['no_vehicle']) value="{{ $essential_details['no_vehicle'] }}" @endisset
+                                                min="0" max="10">
                                         </div>
                                     </div>
                                 </section>
-                                
+
 
                                 <h2>Extended Details</h2>
                                 <section style="overflow-x: auto;">
@@ -517,7 +656,7 @@
                                                                             Convertible</option>
                                                                         <option value="suv"
                                                                             @isset($vehicle['type']) @if ('suv' == $vehicle['type']) selected @endif @endisset>
-                                                                            SUV (SPORT-UTILITY VEHICLE)</option>
+                                                                            SUV </option>
                                                                         <option value="minivan"
                                                                             @isset($vehicle['type']) @if ('minivan' == $vehicle['type']) selected @endif @endisset>
                                                                             Minivan</option>
@@ -606,7 +745,7 @@
                                             </table>
                                         </div>
 
-                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3" id="role_container">
                                             <label for="business_org">Which best describes the role in you business /
                                                 organization?</label>
                                             <select name="extended[business_org]" id="business_org"
@@ -646,7 +785,7 @@
                                                 @endisset
                                                 @isset($extended_details['business_org_other']) value="{{ $extended_details['business_org_other'] }}" @endisset>
                                         </div>
-                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3" id="organization_size_container">
                                             <label for="org_company">What is the number of people in your organisation
                                                 / company?</label>
                                             <select name="extended[org_company]" id="org_company">
@@ -687,8 +826,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
-                                            <label for="bank_main">Which bank do you bank with (which is your bank
-                                                main)</label>
+                                            <label for="bank_main">Which bank do you bank with (which is your bank main)</label>
                                             <select name="extended[bank_main]" id="bank_main"
                                                 onchange="show_other(this, 'bank_main')">
                                                 <option value="">Select</option>
@@ -712,6 +850,8 @@
                                             @endisset
                                                 @isset($extended_details['bank_main_other']) value="{{ $extended_details['bank_main_other'] }}" @endisset>
                                         </div>
+
+                                        
 
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="bank_secondary">Which is your secondary bank?</label>
@@ -810,14 +950,14 @@
 <script src="{{ asset('assets/moment/moment.js') }}"></script>
 <script src="{{ asset('assets/wizard/js/jquery.steps.js') }}"></script>
 <script>
-      function show_other(get_this, id_val){
+    function show_other(get_this, id_val) {
         value = $(get_this).val();
-        console.log("value",value);
-        if(value == "other"){
+        console.log("value", value);
+        if (value == "other") {
             console.log("HI");
-            $("#"+id_val+"_other").show();
-        }else{
-            $("#"+id_val+"_other").hide();
+            $("#" + id_val + "_other").show();
+        } else {
+            $("#" + id_val + "_other").hide();
         }
     }
     $(document).ready(function() {
@@ -835,7 +975,7 @@
         });
 
         // Initialize Select2
-     
+
 
         // Custom validation method for phone numbers
         $.validator.addMethod("phoneFormat", function(value, element) {
@@ -1119,7 +1259,7 @@
                 $('#agecal').text(str);
             }
         });
-      
+
         function wizard_save(datas) {
             $.ajax({
                 url: "{{ route('profile_save') }}",
@@ -1175,11 +1315,51 @@
                 }
             }
         });
+        $('#personal_income_per_month').on('change', function() {
+    // Get the selected personal income value
+    var personalIncomeText = $(this).find('option:selected').text();
+    
+    // Extract numerical values from the personal income range
+    var personalIncomeRange = personalIncomeText.match(/\d+/g);
+    if (!personalIncomeRange || personalIncomeRange.length < 2) {
+        console.error("Selected personal income range is invalid.");
+        return;
+    }
+    
+    // Convert to integers
+    var personalIncomeMin = parseInt(personalIncomeRange[0].replace(/\D/g, ''), 10);
+    var personalIncomeMax = parseInt(personalIncomeRange[1].replace(/\D/g, ''), 10);
 
+    // Get the household income options
+    var householdIncomeOptions = $('#household_income_per_month').find('option');
+    
+    // Filter the household income options based on the selected personal income
+    householdIncomeOptions.each(function() {
+        var householdIncomeText = $(this).text();
+        var householdIncomeRange = householdIncomeText.match(/\d+/g);
         
+        if (!householdIncomeRange || householdIncomeRange.length < 2) {
+            console.error("Household income range is invalid for option: " + householdIncomeText);
+            return;
+        }
         
+        // Convert to integers
+        var householdIncomeMin = parseInt(householdIncomeRange[0].replace(/\D/g, ''), 10);
+        var householdIncomeMax = parseInt(householdIncomeRange[1].replace(/\D/g, ''), 10);
+
+        // Disable options where household income is less than the personal income minimum
+        if (householdIncomeMin < personalIncomeMin) {
+            $(this).prop('disabled', true);
+        } else {
+            $(this).prop('disabled', false);
+        }
     });
-    $(function() { 
+});
+
+
+
+    });
+    $(function() {
         $('#relationship_status, #gender, #ethnic_group, #education_level, #employment_status, #industry_my_company, #personal_income_per_month, #business_org,' +
             '#household_income_per_monty, #province, #suburb, #org, #org_company, #bank_main, #home_lang, #household_income_per_month,#bank_secondary'
         ).select2({
@@ -1190,5 +1370,48 @@
             $(this).valid();
 
         });
-     });
+    });
+    $(document).ready(function() {
+        // Remove all <li> elements with role="tab", class="disabled", and aria-disabled="true"
+        $('#profile_wizard .steps ul li[role="tab"][aria-disabled="true"]').removeClass('disabled');
+
+        $('#nav_profile').addClass('active');
+
+        function toggleFields() {
+        var selectedStatus = $('#employment_status').val();
+
+        // Array of values for which the job-related fields should be hidden
+        var jobExemptStatuses = ['unemployed', 'study', 'home_person', 'retired'];
+
+        if (jobExemptStatuses.includes(selectedStatus)) {
+            // Hide job-related fields
+            $('#job_title_container').hide();
+            $('#industry_container').hide();
+            $('#role_container').hide();
+            $('#organization_size_container').hide();
+        } else {
+            // Show job-related fields
+            $('#job_title_container').show();
+            $('#industry_container').show();
+            $('#role_container').show();
+            $('#organization_size_container').show();
+        }
+
+        // Show/hide the "other" input field based on the "other" option
+        if (selectedStatus === 'other') {
+            $('#employment_status_other').show();
+        } else {
+            $('#employment_status_other').hide();
+        }
+    }
+
+    // Trigger the function on page load
+    toggleFields();
+
+    // Trigger the function on change of employment status
+    $('#employment_status').on('change', function() {
+        toggleFields();
+    });
+        
+    });
 </script>
