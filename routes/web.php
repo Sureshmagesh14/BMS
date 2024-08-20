@@ -16,6 +16,10 @@ Route::any('/', 'WelcomeController@home')->name('home');
 Route::any('update_activitation/{id}', 'WelcomeController@update_activitation')->name('update_activitation');
 Route::any('activation_status/{id}/{active_id}', 'WelcomeController@activation_status')->name('activation_status');
 Route::any('forgot_password_sms', 'WelcomeController@forgot_password_sms')->name('forgot_password_sms');
+Route::any('admin_password_reset/{token}', 'WelcomeController@admin_password_reset')->name('admin_password_reset');
+Route::any('admin_password_reset_save', 'Auth\AdminLoginController@admin_password_reset_save')->name('admin_password_reset_save');
+Route::any('admin_password_reset_update', 'Auth\AdminLoginController@admin_password_reset_update')->name('admin_password_reset_update');
+   
 
 Route::any('forgot_password_check', 'WelcomeController@forgot_password_check')->name('forgot_password_check');
 Route::any('password_forgot', 'Auth\AdminLoginController@password_forgot')->name('password_forgot');

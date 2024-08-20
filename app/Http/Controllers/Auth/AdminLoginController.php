@@ -11,6 +11,10 @@ use DB;
 use Session;
 use Exception;
 use Hash;
+use App\Mail\ResetPasswordEmail;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Mail;
 class AdminLoginController extends Controller
 {
 
@@ -273,6 +277,67 @@ class AdminLoginController extends Controller
     
             return response()->json($json_data);
         }
+    }
+
+    public function admin_password_reset_save(Request $request){
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+    
+        $user = Users::where('email', $request->email)->first();
+    
+        if (!$user) {
+            return back()->withErrors(['email' => __('We could not find a user with that email address.')]);
+        }
+    
+        // Generate password reset token
+        $token = Password::getRepository()->create($user);
+    
+        // Generate password reset URL
+        $resetUrl = URL::temporarySignedRoute(
+            'admin_password_reset', now()->addMinutes(60), ['token' => $token, 'email' => $user->email]
+        );
+     
+        try {
+            // Send password reset email
+            $data = [
+                'subject' => 'Reset Password Notification',
+                'type' => 'forgot_password_email',
+                'token' => $token,
+                'resetUrl' => $resetUrl,
+            ];
+    
+            Mail::to($user->email)->send(new ResetPasswordEmail($data));
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            // Log the exception for debugging
+            \Log::error('Failed to send password reset email: ' . $e->getMessage());
+            return back()->withErrors(['email' => __('Failed to send password reset email. Please try again later.')]);
+        }
+    
+        return back()->with('status', __('Password reset email sent! Please check your email.'));
+    }
+
+
+    public function admin_password_reset_update(Request $request)
+    {
+        // Validate the request data
+        $request->validate([
+            'email' => ['required', 'email', 'exists:users,email'],
+    'password' => ['required', 'string', 'min:6', 'confirmed'],
+        ]);
+
+        // Get the user by email
+        $user = Users::where('email', $request->email)->first();
+
+        // Check if the current password is correct
+      
+
+        // Update the user's password
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect('/admin')->with('status', 'Password updated successfully.');
     }
     
 

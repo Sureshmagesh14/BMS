@@ -151,9 +151,8 @@ class ProfileController extends Controller
                     $vehicle_set = (isset($essential_details['no_vehicle'])) ? (($essential_details['no_vehicle'] != "") ? $essential_details['no_vehicle'] : 0) : 0;
                 }
             }
-    
-            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area',
-                'child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set','personalIncomeValue','incomeRanges'));
+  
+            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
