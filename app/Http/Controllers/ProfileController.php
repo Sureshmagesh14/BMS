@@ -139,8 +139,7 @@ class ProfileController extends Controller
                 }
             }
     
-            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area',
-                'child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set'));
+            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
