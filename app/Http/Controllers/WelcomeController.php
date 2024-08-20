@@ -10,7 +10,7 @@ use App\Models\RespondentProfile;
 use App\Models\Rewards;
 use App\Models\Users;
 use App\Models\PasswordResetsViaPhone;
-
+use App\Mail\ResetPasswordEmail;
 
 use App\Models\Projects;
 use App\Models\Cashout;
@@ -1506,6 +1506,19 @@ class WelcomeController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+    
+
+    public function admin_password_reset(Request $request){
+        try {
+            $token = $request->route('token');
+            $email = $request->route('email');
+            return view('admin.admin-reset', compact('token','email','request'));
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    
     
     
 
