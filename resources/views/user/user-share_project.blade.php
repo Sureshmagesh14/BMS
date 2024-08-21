@@ -1,38 +1,80 @@
+<style>
+   .h-90vh{
+      height:90vh !important;
+   }
+   .w-40{
+      width: 40%;
+   }
+   .text-left{
+      text-align:left;
+   }
+   .width-fitcontet{
+      width: fit-content;
+   }
+   .vi-background-index{
+      height:90vh !important;
+   }
+   .bg-greybg{
+      overflow:hidden;
+   }
+   </style>
 @include('user.layout.header-2')
 
-
-<section class="bg-greybg vh-100">
-    <div class="container">
-        <div class="row justify-content-center py-5 m-auto">
-            <div class="col-md-4 text-center"
-                style="background-size: cover;background-repeat:no-repeat;background-image: url('{{ asset('assets/images/young-afro-woman-watches-live-stream-.jpg') }}');">
-
-            </div>
-            <div class="col-md-4 bg-white p-5">
-                <div class="qr-code text-center">
-                    <h4 class="text-center">GET PAID FOR YOUR OPINION</h4>
-                    <div class="visible-print text-center">
-                        {!! QrCode::size(250)->generate(URL::to('/') . $ref_code) !!}
-                    </div>
-                    
-                    <div class="social-icons-color d-flex justify-content-center my-3">
-                        <img id="whatsap" src="{{ asset('assets/images/SM icons-01.png') }}" class="img-fluid w-10"
-                            alt=""/>
-                        <img  src="{{ asset('assets/images/SM icons-02.png') }}" id="facebook" class="img-fluid w-10" alt=""/>
-                        <img id="twitter" src="{{ asset('assets/images/SM icons-03.png') }}" class="img-fluid w-10" alt="" />
-                        <img id="mail" src="{{ asset('assets/images/SM icons-04.png') }}" class="img-fluid w-10" onclick="fbs_click(this);" alt=""/>
-                    </div>
+<section class=" ">
+    <div class="container m-auto d-flex h-90vh">
+       <div class="row justify-content-center mb-10vh w-100">
+          <div class="col-md-10 m-auto h-100vh" style="">
+             <!-- margin-top: 5% !important; -->
+             <div class="w-100 position-relative">
+                <div class="w-40 my-auto position-absolute pos-bottom mob-hide">
+                   <img src="{{ asset('assets/images/img_4.webp') }}" class="img-fluid" alt="">
                 </div>
-                <div class="bg-light text-center">
-                    <span id="demo"> {{ url('survey/view', $res->builderID) }}</span><br>
-                    <p class="text-secondary btn" onclick="copy('#demo')">Tap to copy link</p>
+                <div class="m-auto text-center bg-white py-2 my-2 px-3 vi-full-rounded">
+                   <div class=" text-center w-75 vi-gift-box ml-auto">
+                   <h2 class=" h1 fw-bolder mt-2">
+                   @if($res->project_name_resp!='')
+                    {{ $res->project_name_resp }}
+                    @else 
+                    {{ $res->name }}
+                    @endif 
+                   </h2>
+                   <h3  class=" h1 fw-bolder mt-2">
+                    @php 
+                    $arr = ['1'=> 'Pre-Screener', "2" => 'Pre-Task', "3" => 'Paid survey', "4" => 'Unpaid survey']
+                    @endphp 
+                    {{$arr[$res->type_id]}} - {{ $res->number }}
+                   </h3>
+                   <h4 class="text-center">Share Survey</h4>
+                   <div class="row w-75 m-auto">
+                   <div class="col-md-6 col-sm-12">
+                   <div class="visible-print text-right my-2 ml-auto width-fitcontet">
+                       
+                        {!! QrCode::size(150)->generate(URL::to('/') . $ref_code) !!}
+
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 mr-auto my-auto">
+                <div class="social-icons text-left">
+                        <img id="whatsap" src="{{ asset('assets/images/SM icons-01.png') }}" class="img-fluid w-20" alt=""/>
+                        <img  src="{{ asset('assets/images/SM icons-02.png') }}" id="facebook" class="img-fluid w-20" alt=""/>
+                        <img id="twitter" src="{{ asset('assets/images/SM icons-03.png') }}" class="img-fluid w-20" alt="" />
+                        <img id="mail" src="{{ asset('assets/images/SM icons-04.png') }}" class="img-fluid w-20" onclick="fbs_click(this);" alt=""/>
                 </div>
 
-
+                
             </div>
-        </div>
+                  </div>
+                   <div class="text-center">
+                   <span id="demo"> {{ url('survey/view', $res->builderID) }}</span><br>
+                   <p class="text-secondary btn" onclick="copy('#demo')">Tap to copy link</p>
+                </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
     </div>
-</section>
+ </section>
 
 
 
