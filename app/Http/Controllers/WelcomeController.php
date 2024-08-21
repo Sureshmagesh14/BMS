@@ -322,7 +322,7 @@ class WelcomeController extends Controller
 
             $data = Respondents::find($resp_id);
           
-            $res = DB::table('projects')->select('projects.id', 'survey.builderID','projects.access_id')
+            $res = DB::table('projects')->select('projects.id', 'survey.builderID','projects.access_id','projects.project_name_resp','projects.name','projects.number','projects.type_id')
                     ->join('survey', 'survey.id', 'projects.survey_link')
                     ->where('projects.id',$id)->first();
         

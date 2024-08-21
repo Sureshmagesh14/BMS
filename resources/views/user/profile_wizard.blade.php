@@ -489,6 +489,16 @@
                                                 min="0" max="10">
                                         </div>
 
+                                         <!-- Number of Vehicles -->
+                                         <div class="col-12 col-md-6 mb-3">
+                                            <label for="no_vehicle">Number of Vehicles <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="number" name="essential[no_vehicle]" id="no_vehicle"
+                                                class="form-control" required
+                                                @isset($essential_details['no_vehicle']) value="{{ $essential_details['no_vehicle'] }}" @endisset
+                                                min="0" max="10">
+                                        </div>
+
                                         <!-- Number of People Living in Household -->
                                         <div class="col-12 col-md-6 mb-3">
                                             <label for="no_houehold">Number of People Living in Your Household <span
@@ -497,18 +507,6 @@
                                                 class="form-control" required
                                                 @isset($essential_details['no_houehold']) value="{{ $essential_details['no_houehold'] }}" @endisset
                                                 min="0">
-                                        </div>
-
-
-
-                                        <!-- Number of Vehicles -->
-                                        <div class="col-12 col-md-6 mb-3">
-                                            <label for="no_vehicle">Number of Vehicles <span
-                                                    class="text-danger">*</span></label>
-                                            <input type="number" name="essential[no_vehicle]" id="no_vehicle"
-                                                class="form-control" required
-                                                @isset($essential_details['no_vehicle']) value="{{ $essential_details['no_vehicle'] }}" @endisset
-                                                min="0" max="10">
                                         </div>
                                     </div>
                                 </section>
@@ -1050,6 +1048,7 @@
             bodyTag: "section",
             transitionEffect: "slideLeft",
             autoFocus: true,
+            startIndex: {{ $page }}, // Correctly embed PHP variable into JavaScript
             stepsOrientation: "vertical",
             onStepChanging: function(event, currentIndex, newIndex) {
                 if (form.valid()) {
