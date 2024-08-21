@@ -125,6 +125,27 @@
     .h-100p{
         height:100%;
     }
+    /* Container for the curved text */
+    .curved-text-container {
+            width: 100%;
+            /* max-width: 300px; */
+            margin: 0px auto;
+            position: relative;
+            height: 100px; /* Set a height to ensure the container can hold the SVG */
+        }
+
+        /* Styling for SVG Text */
+        .curved-text {
+            font-size: 20px;
+            fill: #000000; /* Black color text */
+            font-weight: bold;
+        }
+
+        /* SVG Styling */
+        svg {
+            width: 100%;
+            height: 100%;
+        }
 </style>
 <div class="container-fluid register">
     <div class="row vi-background-index">
@@ -256,7 +277,19 @@
             <div class="w-75 m-auto h-100p d-flex">
             <!-- <div> -->
             <div class="w-100 reg-img m-auto">
-            <h3 class="text-center mt-3 mb-2">Let's get you started</h3>
+            <div class="curved-text-container">
+        <svg viewBox="0 0 400 10">
+            <defs>
+                <path id="curve" d="M 50,90 A 170,170 0 0,1 350,90" />
+            </defs>
+            <text width="100%">
+                <textPath href="#curve" startOffset="50%" text-anchor="middle" class="curved-text">
+                    LET'S GET YOU STARTED
+                </textPath>
+            </text>
+        </svg>
+    </div>
+            <!-- <h3 class="text-center mt-3 mb-2">Let's get you started</h3> -->
             <img src="{{ asset('assets/images/reg-page_b.webp') }}"
                 class="img-fluid w-100 image-cover bg-yellows m-auto rounded-border" alt="" />
             </div>

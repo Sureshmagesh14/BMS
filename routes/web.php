@@ -65,6 +65,7 @@ Route::any('cashouts', 'WelcomeController@user_cashout')->middleware(['auth', 'v
 Route::any('change_profile', 'WelcomeController@change_profile')->middleware(['auth', 'verified'])->name('user.change_profile');
 Route::post('image_update', 'WelcomeController@image_update')->middleware(['auth', 'verified'])->name('user.image_update');
 Route::any('terms_and_conditions', 'WelcomeController@terms_and_conditions')->middleware(['auth', 'verified'])->name('terms_and_conditions');
+Route::any('survey_share', 'WelcomeController@survey_share')->middleware(['auth', 'verified'])->name('user.survey_share');
 
 Route::any('updateprofile_wizard', 'ProfileController@updateprofile_wizard')->middleware(['auth', 'verified'])->name('updateprofile_wizard');
 Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'verified'])->name('get_suburb');

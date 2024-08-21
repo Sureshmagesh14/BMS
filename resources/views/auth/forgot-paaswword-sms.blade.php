@@ -55,8 +55,8 @@
                 <div class="text-center m-auto d-flex flex-column">
                 </div>
             </div>
-            <div class="col-md-6 mob-hide">
-                <img class="w-50 m-auto d-flex" src="{{ asset('assets/images/img_1.png') }}" alt="Forgot image" />
+            <div class="col-md-5 mob-hide">
+                <img class="w-100 m-auto d-flex" src="{{ asset('assets/images/img_1.png') }}" alt="Forgot image" />
 
             </div>
         </div>
