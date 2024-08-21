@@ -322,7 +322,7 @@ class WelcomeController extends Controller
 
             $data = Respondents::find($resp_id);
           
-            $res = DB::table('projects')->select('projects.id', 'survey.builderID','projects.access_id')
+            $res = DB::table('projects')->select('projects.id', 'survey.builderID','projects.access_id','projects.project_name_resp','projects.name','projects.number','projects.type_id')
                     ->join('survey', 'survey.id', 'projects.survey_link')
                     ->where('projects.id',$id)->first();
         
@@ -468,6 +468,79 @@ class WelcomeController extends Controller
             //     return view('user.update-profile');
             // }else{
             return view('user.user-rewards',compact('get_current_rewards','get_overrall_rewards'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
+            //}
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function survey_share(Request $request)
+    {
+        try {
+
+            $resp_id = Session::get('resp_id');
+            $resp_name = Session::get('resp_name');
+
+            $get_reward = Rewards::where('respondent_id', $resp_id)->where('status_id', 2)->sum('points');
+
+            $get_cashout = DB::table('respondents as resp')->select('resp.account_number', 'resp.account_holder', 'cashouts.*')
+                ->join('cashouts', 'resp.id', 'cashouts.respondent_id')
+                ->where('cashouts.type_id', '!=', 3)
+                ->where('resp.id', $resp_id)->orderBy('cashouts.id', 'DESC')->first();
+
+            if ($get_cashout != null) {
+                $get_bank = DB::table('banks')->where('id', $get_cashout->bank_id)->first();
+            } else {
+                $get_bank = null;
+            }
+
+            $get_resp = DB::table('project_respondent as resp')->select('resp.*', 'projects.reward')
+                ->join('projects', 'resp.project_id', 'projects.id')
+                ->where('resp.respondent_id', $resp_id)
+                ->where('resp.is_frontend_complete', 1)->get();
+
+            if (!empty($get_resp)) {
+                foreach ($get_resp as $resp) {
+                    $proj_id = (isset($resp->project_id)) ? $resp->project_id : 0;
+                    $resp_id = (isset($resp->respondent_id)) ? $resp->respondent_id : 0;
+                    $rew_id  = (isset($resp->reward)) ? $resp->reward: 0;
+
+                    if (DB::table('rewards')->where('project_id', $proj_id)->where('respondent_id', $resp_id)->doesntExist()) {
+                        $insert_array = array(
+                            'respondent_id' => $resp_id,
+                            'project_id'    => $proj_id,
+                            'points'        => $rew_id,
+                            'status_id'     => 1,
+                        );
+
+                        if ($resp_id > 0) {
+                            DB::table('rewards')->insert($insert_array);
+                        }
+                    }
+                }
+            }
+
+            $currentYear=Carbon::now()->year;
+            $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->whereYear('created_at', $currentYear)
+            ->sum('points');
+
+            $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
+            ->where(function ($query) use ($currentYear) {
+                $query->whereYear('created_at', '<', $currentYear) // Filters past year data
+                      ->orWhere(function ($query) use ($currentYear) {
+                          $query->whereYear('created_at', $currentYear); // Filters current year data
+                      });
+            })
+            ->sum('points');
+        
+
+         
+            // if($request->user()->profile_completion_id==0){
+            //     return view('user.update-profile');
+            // }else{
+            return view('user.user_survey',compact('get_current_rewards','get_overrall_rewards'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
             //}
 
         } catch (Exception $e) {
