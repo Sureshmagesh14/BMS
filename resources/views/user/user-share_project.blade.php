@@ -49,7 +49,7 @@
                    <div class="col-md-6 col-sm-12">
                    <div class="visible-print text-right my-2 ml-auto width-fitcontet">
                        
-                        {!! QrCode::size(150)->generate(URL::to('/') . $ref_code) !!}
+                        {!! QrCode::size(150)->generate(url('survey/view', $res->builderID)) !!}
 
                     </div>
                     </div>
@@ -87,22 +87,22 @@
         $('#nav_share').addClass('active');
    
         $("#whatsap").click(function() {
-            var whatsapurl ='https://wa.me/?text=I think you should join The Brand Surgeon and get paid for your opinion - {{ URL::to('/') }}?r={{ $ref_code }}';
+            var whatsapurl ='https://wa.me/?text=I think you should join The Brand Surgeon and get paid for your opinion - {{ url('survey/view', $res->builderID) }}';
             window.location.href = whatsapurl;
         });
 
         $("#facebook").click(function() {
-            var facebook ='https://www.facebook.com/sharer/sharer.php?u=https://app.thebrandsurgeon.co.za/?r={{ URL::to('/') }}?r={{ $ref_code }}';
+            var facebook ='https://www.facebook.com/sharer/sharer.php?u={{ url('survey/view', $res->builderID) }}';
             window.location.href = facebook;
         });
      
         $("#twitter").click(function() {
-            var twitter ='https://twitter.com/intent/tweet?url=https://app.thebrandsurgeon.co.za/?r={{ URL::to('/') }}?r={{ $ref_code }}&amp;text=I think you should join The Brand Surgeon and get paid for your opinion';
+            var twitter ='https://twitter.com/intent/tweet?url={{ url('survey/view', $res->builderID) }}&amp;text=I think you should join The Brand Surgeon and get paid for your opinion';
             window.location.href = twitter;
         });
         
         $("#mail").click(function() {
-            var whatsapurl ='mailto:info@example.com?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ URL::to('/') }}?r={{ $ref_code }}';
+            var whatsapurl ='mailto:info@example.com?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ url('survey/view', $res->builderID) }}';
             window.location.href = whatsapurl;
         });
 
