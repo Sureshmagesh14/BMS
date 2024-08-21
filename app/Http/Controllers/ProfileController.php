@@ -151,8 +151,105 @@ class ProfileController extends Controller
                     $vehicle_set = (isset($essential_details['no_vehicle'])) ? (($essential_details['no_vehicle'] != "") ? $essential_details['no_vehicle'] : 0) : 0;
                 }
             }
+
+            $resp_datas =  RespondentProfile::where('respondent_id', $resp_id)->first();
+            
+
+            if(isset($resp_datas->basic_details) && ($resp_datas->basic_details!='')){
+
+                $percent1 = $resp_datas->basic_details;
+                $json_array  = json_decode($percent1, true);
+                $tot_count  = count($json_array);
+             
+                $fill_count =0;
+                foreach ($json_array as $key => $value) {
+                    if (!strlen($value)) {
+                       
+                    }else{
+                        $fill_count ++;
+                    }
+                }
+
+                $percent1 = ($fill_count/$tot_count)*100;
+                $percent1 = round($percent1);
+
+            }else{
+                $percent1 =0;
+            }
+            
+            if(isset($resp_datas->essential_details) && ($resp_datas->essential_details!='')){
+
+                $percent2 = $resp_datas->essential_details;
+                
+                $json_array  = json_decode($percent2, true);
+                unset($json_array['employment_status_other'],$json_array['industry_my_company_other']);
+                $tot_count  = count($json_array);
+              
+                $fill_count =0;
+                foreach ($json_array as $key => $value) {
+                    if (!strlen($value)) {
+                       
+                    }else{
+                        $fill_count ++;
+                    }
+                }
+
+                $percent2 = ($fill_count/$tot_count)*100;
+                $percent2 = round($percent2);
+
+
+            }else{
+                $percent2 =0;
+            }
+
+            if(isset($resp_datas->extended_details) && ($resp_datas->extended_details!='')){
+
+                $percent3 = $resp_datas->extended_details;
+                $json_array  = json_decode($percent3, true);
+                unset($json_array['bank_main_other'],$json_array['home_lang_other'], $json_array['business_org_other']);
+
+                $tot_count  = count($json_array);
+           
+                $fill_count =0;
+                foreach ($json_array as $key => $value) {
+                    if (!strlen($value)) {
+                       
+                    }else{
+                        $fill_count ++;
+                    }
+                }
+
+                $percent3 = ($fill_count/$tot_count)*100;
+                $percent3 = round($percent3);
+
+            }else{
+                $percent3 =0;
+            }
+
+            $page = 1; // Default value
+
+            if ($percent1 == '100.0' && $percent2 == '100.0' && $percent3 == '100.0') {
+                $page = 0;
+            } elseif ($percent1 == '100.0' && $percent2 < '100.0' && $percent3 == '100.0') {
+                $page = 1;
+            } elseif ($percent1 == '100.0' && $percent3 < '100.0' && $percent2 == '100.0') {
+                $page = 2;
+            } elseif ($percent2 == '100.0' && $percent1 < '100.0' && $percent3 == '100.0') {
+                $page = 0;
+            } else {
+                $page = 0; // This is redundant; it's the default value
+            }
+            
+            
+
+        
+           
+
+
+
+
   
-            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges'));
+            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges','page'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

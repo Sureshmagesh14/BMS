@@ -131,7 +131,7 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row" style="display: none;">
         <label for="example-search-input" class="col-md-2 col-form-label">Bank Name
         </label>
         <div class="col-md-10">
