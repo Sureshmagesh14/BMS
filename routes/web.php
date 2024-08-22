@@ -19,7 +19,7 @@ Route::any('forgot_password_sms', 'WelcomeController@forgot_password_sms')->name
 Route::any('admin_password_reset/{token}', 'WelcomeController@admin_password_reset')->name('admin_password_reset');
 Route::any('admin_password_reset_save', 'Auth\AdminLoginController@admin_password_reset_save')->name('admin_password_reset_save');
 Route::any('admin_password_reset_update', 'Auth\AdminLoginController@admin_password_reset_update')->name('admin_password_reset_update');
-   
+Route::get('active_deactive', 'RespondentsController@active_deactive')->name('active_deactive');
 
 Route::any('forgot_password_check', 'WelcomeController@forgot_password_check')->name('forgot_password_check');
 Route::any('password_forgot', 'Auth\AdminLoginController@password_forgot')->name('password_forgot');
