@@ -19,6 +19,8 @@ use DateTime;
 use App\Models\Tag;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use App\Models\RespondentProfile;
+use App\Models\RespondentTags;
+use App\Models\IndustryCompany;
 
 class ExportController extends Controller
 {
@@ -345,14 +347,124 @@ class ExportController extends Controller
                        
                         $sheet->setCellValue('G' . $rows, $year);
                         $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
-                        $sheet->setCellValue('I' . $rows, $essential->ethnic_group ?? '');
-                        $sheet->setCellValue('J' . $rows, $essential->gender ?? '');
-                        $sheet->setCellValue('K' . $rows, $essential->education_level ?? '');
-                        $sheet->setCellValue('L' . $rows, $employment_status ?? '');
-                        $sheet->setCellValue('M' . $rows, $industry_my_company ?? '');
+                        // Define the mapping of ethnic group codes to names
+                       // Define the mapping of ethnic group codes to names
+                        $ethnicGroups = [
+                            'asian'   => 'Asian',
+                            'black'   => 'Black',
+                            'coloured'=> 'Coloured',
+                            'indian'  => 'Indian',
+                            'white'   => 'White'
+                        ];
+
+                        // Default to an empty string if $essential is null or ethnic group is not found
+                        $ethnic_group = '';
+                        if ($essential && isset($essential->ethnic_group) && isset($ethnicGroups[$essential->ethnic_group])) {
+                            $ethnic_group = $ethnicGroups[$essential->ethnic_group];
+                        }
+
+                        // Set the value in the spreadsheet
+                        $sheet->setCellValue('I' . $rows, $ethnic_group);
+
+                        $education_level = '';
+
+                        // Check if $essential is not null and has the education_level property
+                        if ($essential && isset($essential->education_level)) {
+                            switch ($essential->education_level) {
+                                case 'matric':
+                                    $education_level = 'Matric';
+                                    break;
+                                case 'post_matric_courses':
+                                    $education_level = 'Post Matric Courses / Higher Certificate';
+                                    break;
+                                case 'post_matric_diploma':
+                                    $education_level = 'Post Matric Diploma';
+                                    break;
+                                case 'ug':
+                                    $education_level = 'Undergrad University Degree';
+                                    break;
+                                case 'pg':
+                                    $education_level = 'Post Grad Degree - Honours, Masters, PhD, MBA';
+                                    break;
+                                case 'school_no_metric':
+                                    $education_level = 'School But No Matric';
+                                    break;
+                                default:
+                                    $education_level = ''; // Handle unexpected values
+                                    break;
+                            }
+                        }
+                        // Initialize the gender variable with a default value
+                        $gender = '';
+
+                        // Check if $essential is not null and has the gender property
+                        if ($essential && isset($essential->gender)) {
+                            // Set the gender value, ensuring it's properly capitalized
+                            $gender = ucfirst($essential->gender);
+                        }
+                        $sheet->setCellValue('J' . $rows, $gender);
+                        $sheet->setCellValue('K' . $rows, $education_level);
+                        $employment_status = '';
+
+                        // Check if $essential is not null and has the employment_status property
+                        if ($essential && isset($essential->employment_status)) {
+                            switch ($essential->employment_status) {
+                                case 'emp_full_time':
+                                    $employment_status = 'Employed Full-Time';
+                                    break;
+                                case 'emp_part_time':
+                                    $employment_status = 'Employed Part-Time';
+                                    break;
+                                case 'self':
+                                    $employment_status = 'Self-Employed';
+                                    break;
+                                case 'study':
+                                    $employment_status = 'Studying Full-Time (Not Working)';
+                                    break;
+                                case 'working_and_studying':
+                                    $employment_status = 'Working & Studying';
+                                    break;
+                                case 'home_person':
+                                    $employment_status = 'Stay at Home Person';
+                                    break;
+                                case 'retired':
+                                    $employment_status = 'Retired';
+                                    break;
+                                case 'unemployed':
+                                    $employment_status = 'Unemployed';
+                                    break;
+                                case 'other':
+                                    $employment_status = 'Other';
+                                    break;
+                                default:
+                                    $employment_status = ''; // Handle unexpected values
+                                    break;
+                            }
+                        }
+                        $sheet->setCellValue('L' . $rows, $employment_status);
+                        $industry = IndustryCompany::find($industry_my_company);
+                        $companyName = $industry ? $industry->company : '';
+                        $sheet->setCellValue('M' . $rows, $companyName);
                         $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
-                        $sheet->setCellValue('O' . $rows, $essential->personal_income_per_month ?? '');
-                        $sheet->setCellValue('P' . $rows, $essential->job_title ?? '');
+                        $p_income = null; // Initialize $p_income to null
+                    
+                        if ($essential && isset($essential->personal_income_per_month)) {
+                            $p_income = DB::table('income_per_month')
+                                            ->where('id', $essential->personal_income_per_month)
+                                            ->first();
+                        }
+                        $h_income = null; // Initialize $h_income to null
+                    
+                        if ($essential && isset($essential->household_income_per_month)) {
+                            $h_income = DB::table('income_per_month')
+                                            ->where('id', $essential->household_income_per_month)
+                                            ->first();
+                        }
+                    
+                        $personal_income = ($p_income != null) ? $p_income->income : '-';
+                        $household_income = ($h_income != null) ? $h_income->income : '-';
+                        $sheet->setCellValue('O' . $rows, $personal_income);
+                        $sheet->setCellValue('P' . $rows, $household_income);
 
                         $state = null; // Initialize $state to null
 
@@ -543,11 +655,109 @@ class ExportController extends Controller
                     
                         $sheet->setCellValue('G' . $rows, $year);
                         $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
-                        $sheet->setCellValue('I' . $rows, $essential->ethnic_group ?? '');
-                        $sheet->setCellValue('J' . $rows, $essential->gender ?? '');
-                        $sheet->setCellValue('K' . $rows, $essential->education_level ?? '');
-                        $sheet->setCellValue('L' . $rows, $employment_status ?? '');
-                        $sheet->setCellValue('M' . $rows, $industry_my_company ?? '');
+                       // Define the mapping of ethnic group codes to names
+                        $ethnicGroups = [
+                            'asian'   => 'Asian',
+                            'black'   => 'Black',
+                            'coloured'=> 'Coloured',
+                            'indian'  => 'Indian',
+                            'white'   => 'White'
+                        ];
+
+                        // Initialize the ethnic_group variable with a default value
+                        $ethnic_group = '';
+
+                        // Check if $essential is not null and has the ethnic_group property
+                        if ($essential && isset($essential->ethnic_group)) {
+                            $ethnic_group = isset($ethnicGroups[$essential->ethnic_group])
+                                            ? $ethnicGroups[$essential->ethnic_group]
+                                            : ''; // Default to empty string if ethnic_group is not found
+                        }
+
+                        // Set the cell value
+                        $sheet->setCellValue('I' . $rows, $ethnic_group); // Adjust the cell reference as needed
+
+                         // Initialize the gender variable with a default value
+                         $gender = '';
+
+                         // Check if $essential is not null and has the gender property
+                         if ($essential && isset($essential->gender)) {
+                             // Set the gender value, ensuring it's properly capitalized
+                             $gender = ucfirst($essential->gender);
+                         }
+
+                        $sheet->setCellValue('J' . $rows, $gender);
+
+                        $education_level = '';
+
+                        // Check if $essential is not null and has the education_level property
+                        if ($essential && isset($essential->education_level)) {
+                            switch ($essential->education_level) {
+                                case 'matric':
+                                    $education_level = 'Matric';
+                                    break;
+                                case 'post_matric_courses':
+                                    $education_level = 'Post Matric Courses / Higher Certificate';
+                                    break;
+                                case 'post_matric_diploma':
+                                    $education_level = 'Post Matric Diploma';
+                                    break;
+                                case 'ug':
+                                    $education_level = 'Undergrad University Degree';
+                                    break;
+                                case 'pg':
+                                    $education_level = 'Post Grad Degree - Honours, Masters, PhD, MBA';
+                                    break;
+                                case 'school_no_metric':
+                                    $education_level = 'School But No Matric';
+                                    break;
+                                default:
+                                    $education_level = ''; // Handle unexpected values
+                                    break;
+                            }
+                        }
+                        $sheet->setCellValue('K' . $rows, $education_level);
+                        $employment_status = '';
+
+                        // Check if $essential is not null and has the employment_status property
+                        if ($essential && isset($essential->employment_status)) {
+                            switch ($essential->employment_status) {
+                                case 'emp_full_time':
+                                    $employment_status = 'Employed Full-Time';
+                                    break;
+                                case 'emp_part_time':
+                                    $employment_status = 'Employed Part-Time';
+                                    break;
+                                case 'self':
+                                    $employment_status = 'Self-Employed';
+                                    break;
+                                case 'study':
+                                    $employment_status = 'Studying Full-Time (Not Working)';
+                                    break;
+                                case 'working_and_studying':
+                                    $employment_status = 'Working & Studying';
+                                    break;
+                                case 'home_person':
+                                    $employment_status = 'Stay at Home Person';
+                                    break;
+                                case 'retired':
+                                    $employment_status = 'Retired';
+                                    break;
+                                case 'unemployed':
+                                    $employment_status = 'Unemployed';
+                                    break;
+                                case 'other':
+                                    $employment_status = 'Other';
+                                    break;
+                                default:
+                                    $employment_status = ''; // Handle unexpected values
+                                    break;
+                            }
+                        }
+                        $sheet->setCellValue('L' . $rows, $employment_status);
+                        $industry = IndustryCompany::find($industry_my_company);
+                        $companyName = $industry ? $industry->company : '';
+                        $sheet->setCellValue('M' . $rows, $companyName);
                         $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
                         $sheet->setCellValue('O' . $rows, $personal_income ?? '');
                         $sheet->setCellValue('P' . $rows, $household_income ?? '');
@@ -608,7 +818,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('W' . $rows, $business_org ?? '');
                         $sheet->setCellValue('X' . $rows, $extended->org_company ?? '');
                         $sheet->setCellValue('Y' . $rows, $bank_main ?? '');
-                        $sheet->setCellValue('Z' . $rows, $home_lang ?? '');
+                        $sheet->setCellValue('Z' . $rows, ucfirst($home_lang?? ''));
                     
                         // Handle $children_data
                         $new_alpha = 'AA';
@@ -616,7 +826,7 @@ class ExportController extends Controller
                             foreach ($children_data as $children) {
                                 $sheet->setCellValue($new_alpha . $rows, $children['date'] ?? '');
                                 $new_alpha++;
-                                $sheet->setCellValue($new_alpha . $rows, $children['gender'] ?? '');
+                                $sheet->setCellValue($new_alpha . $rows, ucfirst($children['gender']) ?? '');
                                 $new_alpha++;
                             }
                         }
@@ -1355,11 +1565,53 @@ class ExportController extends Controller
 
                     $sheet->setCellValue('G' . $rows, $year);
                     $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
-                    $sheet->setCellValue('I' . $rows, $essential->ethnic_group ?? '');
+                    // Define the mapping of ethnic group codes to names
+                    $ethnicGroups = [
+                        'asian'   => 'Asian',
+                        'black'   => 'Black',
+                        'coloured'=> 'Coloured',
+                        'indian'  => 'Indian',
+                        'white'   => 'White'
+                    ];
+
+                    // Default to an empty string if the ethnic group is not in the array
+                    $ethnic_group = isset($ethnicGroups[$essential->ethnic_group]) ? $ethnicGroups[$essential->ethnic_group] : '';
+
+                    $sheet->setCellValue('I' . $rows, $ethnic_group);
                     $sheet->setCellValue('J' . $rows, $essential->gender ?? '');
-                    $sheet->setCellValue('K' . $rows, $essential->education_level ?? '');
+                    $education_level = '';
+
+                    // Check if $essential is not null and has the education_level property
+                    if ($essential && isset($essential->education_level)) {
+                        switch ($essential->education_level) {
+                            case 'matric':
+                                $education_level = 'Matric';
+                                break;
+                            case 'post_matric_courses':
+                                $education_level = 'Post Matric Courses / Higher Certificate';
+                                break;
+                            case 'post_matric_diploma':
+                                $education_level = 'Post Matric Diploma';
+                                break;
+                            case 'ug':
+                                $education_level = 'Undergrad University Degree';
+                                break;
+                            case 'pg':
+                                $education_level = 'Post Grad Degree - Honours, Masters, PhD, MBA';
+                                break;
+                            case 'school_no_metric':
+                                $education_level = 'School But No Matric';
+                                break;
+                            default:
+                                $education_level = ''; // Handle unexpected values
+                                break;
+                        }
+                    }
+                    $sheet->setCellValue('K' . $rows, $education_level);
                     $sheet->setCellValue('L' . $rows, $employment_status ?? '');
-                    $sheet->setCellValue('M' . $rows, $industry_my_company ?? '');
+                    $industry = IndustryCompany::find($industry_my_company);
+                    $companyName = $industry ? $industry->company : '';
+                    $sheet->setCellValue('M' . $rows, $companyName);
                     $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
                     $sheet->setCellValue('O' . $rows, $personal_income ?? '');
                     $sheet->setCellValue('P' . $rows, $household_income ?? '');
@@ -1500,53 +1752,106 @@ class ExportController extends Controller
 
                 $respondents = ($request->respondents != null) ? array_filter($request->respondents) : null;
                 $panel = ($request->panel != null) ? array_filter($request->panel) : null;
-                
+
                 $query = DB::table('respondent_tag')
-                    ->select('respondent_tag.id', 'respondents.name', 'respondents.surname', 'tags.name as tag_name','respondents.mobile','respondents.whatsapp','respondents.email','respondents.date_of_birth')
-                    ->join('tags', 'respondent_tag.tag_id', '=', 'tags.id')
-                    ->join('respondents', 'respondents.id', '=', 'respondent_tag.respondent_id') // Join with respondents table
-                    ->when($panel !== null, function ($query) use ($panel) {
-                        $query->whereIn('respondent_tag.tag_id', $panel);
-                    })
-                    ->when($type_method == 'Individual', function ($query) use ($respondents) {
-                        $query->whereIn('respondent_tag.respondent_id', $respondents);
-                    })
-                    ->where('respondents.active_status_id',1)
-                    ->orderBy('respondent_tag.id', 'desc')
-                    ->get()
-                    ->map(function ($item) {
-                        $item->full_name = $item->name . ' ' . $item->surname;
-                        unset($item->name, $item->surname); // Optionally remove individual name and surname
-                        return $item;
-                    });
-                
-                // Check if $query is populated correctly
-               
-                
-                // Assuming $query is correctly populated, proceed with Excel export logic
-             
-                    // Prepare Excel sheet
-                    $sheet->setCellValue('A1', 'Profile ID');
-                    $sheet->setCellValue('B1', 'Panel name');
-                    $sheet->setCellValue('C1', 'Full Name');
-                    $sheet->setCellValue('D1', 'Mobile Number');
-                    $sheet->setCellValue('E1', 'WA Number');
-                    $sheet->setCellValue('F1', 'Email');
-                    $sheet->setCellValue('G1', 'Age');
-                    $sheet->setCellValue('H1', 'Date of Birth');
-                    
-                    $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:H1')->applyFromArray($styleArray);
-                    
+                ->select([
+                     'respondents.id',
+                     'respondents.opted_in',
+                  'respondent_tag.id as tag_id',
+                   'respondents.name', 
+                    'respondents.surname',
+                      'tags.name as tag_name',
+                      'respondents.mobile',
+                     'respondents.whatsapp',
+                     'respondents.email',
+                      'respondents.date_of_birth',
+                   \DB::raw('COALESCE(respondent_profile.basic_details, "") AS basic_details'),
+                  \DB::raw('COALESCE(respondent_profile.essential_details, "") AS essential_details'),
+                      'respondent_profile.updated_at',
+               ])
+                  ->join('tags', 'respondent_tag.tag_id', '=', 'tags.id')
+              ->join('respondents', 'respondents.id', '=', 'respondent_tag.respondent_id') // Join with respondents table
+                 ->join("respondent_profile", "respondent_profile.respondent_id", "=", "respondents.id")
+               ->when($panel !== null, function ($query) use ($panel) {
+                  $query->whereIn('respondent_tag.tag_id', $panel);
+                  })
+                  ->when($type_method == 'Individual', function ($query) use ($respondents) {
+                      $query->whereIn('respondent_tag.respondent_id', $respondents);
+                  })
+                  ->where('respondents.active_status_id', 1)
+                  ->orderBy('respondent_tag.id', 'desc')
+                  ->get();
+          
+                // $query = DB::table('respondent_tag')
+                //         ->select([
+                //             'respondents.id as respondent_id',
+                //             'respondents.opted_in',
+                //             'respondent_tag.id as tag_id',
+                //             'respondents.name', 
+                //             'respondents.surname',
+                //             'tags.name as tag_name',
+                //             'respondents.mobile',
+                //             'respondents.whatsapp',
+                //             'respondents.email',
+                //             'respondents.date_of_birth',
+                //             \DB::raw('COALESCE(respondent_profile.basic_details, "") AS basic_details'),
+                //             \DB::raw('COALESCE(respondent_profile.essential_details, "") AS essential_details'),
+                //             'respondent_profile.updated_at',
+                //         ])
+                //         ->join('tags', 'respondent_tag.tag_id', '=', 'tags.id')
+                //         ->join('respondents', 'respondents.id', '=', 'respondent_tag.respondent_id') // Join with respondents table
+                //         ->join("respondent_profile", "respondent_profile.respondent_id", "=", "respondents.id")
+                //         ->when($panel !== null, function ($query) use ($panel) {
+                //             $query->whereIn('respondent_tag.tag_id', $panel);
+                //         })
+                //         ->when($type_method == 'Individual', function ($query) use ($respondents) {
+                //             $query->whereIn('respondent_tag.respondent_id', $respondents);
+                //         })
+                //         ->where('respondents.active_status_id', 1)
+                //         ->orderBy('respondent_tag.id', 'desc')
+                //         ->get();
+ 
+                      
+                    $sheet->setCellValue('A1', 'PID');
+                    $sheet->setCellValue('B1', 'First Name');
+                    $sheet->setCellValue('C1', 'Last Name');
+                    $sheet->setCellValue('D1', 'Panel Name');
+                    $sheet->setCellValue('E1', 'Mobile Number');
+                    $sheet->setCellValue('F1', 'WA Number');
+                    $sheet->setCellValue('G1', 'Email');
+                    $sheet->setCellValue('H1', 'Age');
+                    $sheet->setCellValue('I1', 'Relationship status');
+                    $sheet->setCellValue('J1', 'Ethnic Group / Race');
+                    $sheet->setCellValue('K1', 'Gender');
+                    $sheet->setCellValue('L1', 'Highest Education Level');
+                    $sheet->setCellValue('M1', 'Employment Status');
+                    $sheet->setCellValue('N1', 'Industry my company is in');
+                    $sheet->setCellValue('O1', 'Job Title');
+                    $sheet->setCellValue('P1', 'Personal Income per month');
+                    $sheet->setCellValue('Q1', 'HHI per month');
+                    $sheet->setCellValue('R1', 'Province');
+                    $sheet->setCellValue('S1', 'Area');
+                    $sheet->setCellValue('T1', 'No. of people living in your household');
+                    $sheet->setCellValue('U1', 'Number of children');
+                    $sheet->setCellValue('V1', 'Number of vehicles');
+                    $sheet->setCellValue('W1', 'Opted in');
+                    $sheet->setCellValue('X1', 'Last Updated');
+
+                    $sheet->getStyle('A1:X1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:X1')->applyFromArray($styleArray);
+
                     $rows = 2;
+                    $i = 1;
+                  
                     foreach ($query as $all_data) {
-                        $sheet->setCellValue('A' . $rows, $all_data->id); // Assuming 'id' is the profile ID
-                        $sheet->setCellValue('B' . $rows, $all_data->tag_name ?? ''); // Adjust as per your actual logic for panel name
-                        $sheet->setCellValue('C' . $rows, $all_data->full_name ?? '');
+                 
+                        $basic = json_decode($all_data->basic_details);
+                     
+                        $essential = json_decode($all_data->essential_details);
                         $mobile_number = '-';
-                        if (!empty($all_data->mobile)) {
-                            $m_number = $all_data->mobile;
-                            
+                        if (!empty($basic->mobile_number)) {
+                            $m_number = preg_replace('/\s+/', '',$all_data->mobile);
+                          
                             if (strlen($m_number) == 9) {
                                 $mobile_number = '+27' . $m_number;
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
@@ -1555,11 +1860,11 @@ class ExportController extends Controller
                                 $mobile_number = $m_number;
                             }
                         }
-                       
+
                         $whatsapp_number = '-';
-                        if (!empty($all_data->whatsapp)) {
-                            $w_number = $all_data->whatsapp;
-                            
+                        if (!empty($basic->whatsapp_number)) {
+                       
+                            $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
                             if (strlen($w_number) == 9) {
                                 $whatsapp_number = '+27' . $w_number;
                             } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
@@ -1568,30 +1873,176 @@ class ExportController extends Controller
                                 $whatsapp_number = $w_number;
                             }
                         }
-                        
-                        $sheet->setCellValue('D' . $rows, $mobile_number ?? '');
-                        $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
-                        $sheet->setCellValue('F' . $rows, $all_data->email ?? '');
-                        $date_of_birth = isset($all_data->date_of_birth) ? $all_data->date_of_birth : null;
-                    
-                        // Calculate age if date_of_birth is available
-                        $age = '-';
-                        if (!empty($date_of_birth) && $date_of_birth != '0000-00-00') {
-                            // Create DateTime objects
-                            $dob = new DateTime($date_of_birth);
-                            $now = new DateTime();
-                            
-                            // Calculate age
-                            $diff = $now->diff($dob);
-                            $age = $diff->y; // This will give the age in years
+
+                        $sheet->setCellValue('A' . $rows, $all_data->id);
+                        $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
+                        $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
+                        $sheet->setCellValue('D' . $rows, $all_data->tag_name);
+                        $sheet->setCellValue('E' . $rows, $mobile_number ?? '');
+                        $sheet->setCellValue('F' . $rows, $whatsapp_number ?? '');
+                        $sheet->setCellValue('G' . $rows, $basic->email ?? '');
+
+                        $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+
+                        $employment_status = null; // Initialize $employment_status to null
+
+                        if ($essential && isset($essential->employment_status)) {
+                            $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
                         }
-                        $sheet->setCellValue('G' . $rows, $age ?? '');
-                        $sheet->setCellValue('H' . $rows, $all_data->date_of_birth ?? '');
+                        
+                        $industry_my_company = null; // Initialize $industry_my_company to null
+
+                        if ($essential && isset($essential->industry_my_company)) {
+                            $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
+                        }
+
+                       
+                        $sheet->setCellValue('H' . $rows, $year);
+                        $sheet->setCellValue('I' . $rows, $essential->relationship_statu ?? '');
+                        // Define the mapping of ethnic group codes to names
+                        $ethnicGroups = [
+                            'asian'   => 'Asian',
+                            'black'   => 'Black',
+                            'coloured'=> 'Coloured',
+                            'indian'  => 'Indian',
+                            'white'   => 'White'
+                        ];
+
+                        // Default to an empty string if the ethnic group is not in the array
+                        $ethnic_group = isset($ethnicGroups[$essential->ethnic_group]) ? $ethnicGroups[$essential->ethnic_group] : '';
+
+                        $sheet->setCellValue('J' . $rows, $ethnic_group);
+                        $sheet->setCellValue('K' . $rows, ucfirst($essential->gender) ?? '');
+                        $education_level = '';
+
+                        // Check if $essential is not null and has the education_level property
+                        if ($essential && isset($essential->education_level)) {
+                            switch ($essential->education_level) {
+                                case 'matric':
+                                    $education_level = 'Matric';
+                                    break;
+                                case 'post_matric_courses':
+                                    $education_level = 'Post Matric Courses / Higher Certificate';
+                                    break;
+                                case 'post_matric_diploma':
+                                    $education_level = 'Post Matric Diploma';
+                                    break;
+                                case 'ug':
+                                    $education_level = 'Undergrad University Degree';
+                                    break;
+                                case 'pg':
+                                    $education_level = 'Post Grad Degree - Honours, Masters, PhD, MBA';
+                                    break;
+                                case 'school_no_metric':
+                                    $education_level = 'School But No Matric';
+                                    break;
+                                default:
+                                    $education_level = ''; // Handle unexpected values
+                                    break;
+                            }
+                        }
+                        
+                        $sheet->setCellValue('L' . $rows, $education_level);
+                        $employment_status = '';
+
+                        // Check if $essential is not null and has the employment_status property
+                        if ($essential && isset($essential->employment_status)) {
+                            switch ($essential->employment_status) {
+                                case 'emp_full_time':
+                                    $employment_status = 'Employed Full-Time';
+                                    break;
+                                case 'emp_part_time':
+                                    $employment_status = 'Employed Part-Time';
+                                    break;
+                                case 'self':
+                                    $employment_status = 'Self-Employed';
+                                    break;
+                                case 'study':
+                                    $employment_status = 'Studying Full-Time (Not Working)';
+                                    break;
+                                case 'working_and_studying':
+                                    $employment_status = 'Working & Studying';
+                                    break;
+                                case 'home_person':
+                                    $employment_status = 'Stay at Home Person';
+                                    break;
+                                case 'retired':
+                                    $employment_status = 'Retired';
+                                    break;
+                                case 'unemployed':
+                                    $employment_status = 'Unemployed';
+                                    break;
+                                case 'other':
+                                    $employment_status = 'Other';
+                                    break;
+                                default:
+                                    $employment_status = ''; // Handle unexpected values
+                                    break;
+                            }
+                        }
+                       
+                        $sheet->setCellValue('M' . $rows, $employment_status);
+                        $industry = IndustryCompany::find($industry_my_company);
+                        $companyName = $industry ? $industry->company : '';
+                        $sheet->setCellValue('N' . $rows, $companyName ?? '');
+                        $sheet->setCellValue('O' . $rows, $essential->job_title ?? '');
+                        $p_income = null; // Initialize $p_income to null
+
+                        if ($essential && isset($essential->personal_income_per_month)) {
+                            $p_income_record = DB::table('income_per_month')
+                                                 ->where('id', $essential->personal_income_per_month)
+                                                 ->first();
+                            $p_income = $p_income_record ? $p_income_record->income : ''; // Extract the specific value or set a default
+                        }
+                        
+                        $h_income = null; // Initialize $h_income to null
+                        
+                        if ($essential && isset($essential->household_income_per_month)) {
+                            $h_income_record = DB::table('income_per_month')
+                                                 ->where('id', $essential->household_income_per_month)
+                                                 ->first();
+                            $h_income = $h_income_record ? $h_income_record->income : ''; // Extract the specific value or set a default
+                        }
+                        
+                        $sheet->setCellValue('P' . $rows, $p_income);
+                        $sheet->setCellValue('Q' . $rows, $h_income);
+                        
+
+                        $state = null; // Initialize $state to null
+
+                        if ($essential && isset($essential->province)) {
+                            $state = DB::table('state')
+                                        ->where('id', $essential->province)
+                                        ->first();
+                        }
+                        
+                        $district = null; // Initialize $district to null
+
+                        if ($essential && isset($essential->suburb)) {
+                            $district = DB::table('district')
+                                          ->where('id', $essential->suburb)
+                                          ->first();
+                        }
+                        
+
+                        $get_state = ($state != null) ? $state->state : '-';
+                        $get_district = ($district != null) ? $district->district : '-';
+                      
+                        $sheet->setCellValue('R' . $rows, $get_state ?? '');
+                        $sheet->setCellValue('S' . $rows, $get_district ?? '');
+                        $sheet->setCellValue('T' . $rows, $essential->no_houehold ?? '');
+                        $sheet->setCellValue('U' . $rows, $essential->no_children ?? '');
+                        $sheet->setCellValue('V' . $rows, $essential->no_vehicle ?? '');
+
+                        $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
+                        $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
+
+                        $sheet->setCellValue('W' . $rows, $opted_in);
+                        $sheet->setCellValue('X' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':H' . $rows)->getAlignment()->setIndent(1);
-                    
+                        $sheet->getStyle('C' . $rows . ':X' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':X' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                     }
                 
@@ -1937,10 +2388,56 @@ class ExportController extends Controller
                             $household_income = ($h_income != null) ? $h_income->income : '-';
                             $personal_income = ($p_income != null) ? $p_income->income : '-';
                             $relationship_status = $essential->relationship_status ?? '';
-                            $ethnic_group = $essential->ethnic_group ?? '';
-                            $gender = $essential->gender ?? '';
-                            $education_level = $essential->education_level ?? '';
+                            // Define the mapping of ethnic group codes to names
+                            $ethnicGroups = [
+                                'asian'   => 'Asian',
+                                'black'   => 'Black',
+                                'coloured'=> 'Coloured',
+                                'indian'  => 'Indian',
+                                'white'   => 'White'
+                            ];
 
+                            // Default to an empty string if the ethnic group is not in the array
+                            $ethnic_group = isset($ethnicGroups[$essential->ethnic_group]) ? $ethnicGroups[$essential->ethnic_group] : '';
+
+                         
+                            // Initialize the gender variable with a default value
+                            $gender = '';
+
+                            // Check if $essential is not null and has the gender property
+                            if ($essential && isset($essential->gender)) {
+                                // Set the gender value, ensuring it's properly capitalized
+                                $gender = ucfirst($essential->gender);
+                            }
+                           
+                            $education_level = '';
+
+                            // Check if $essential is not null and has the education_level property
+                            if ($essential && isset($essential->education_level)) {
+                                switch ($essential->education_level) {
+                                    case 'matric':
+                                        $education_level = 'Matric';
+                                        break;
+                                    case 'post_matric_courses':
+                                        $education_level = 'Post Matric Courses / Higher Certificate';
+                                        break;
+                                    case 'post_matric_diploma':
+                                        $education_level = 'Post Matric Diploma';
+                                        break;
+                                    case 'ug':
+                                        $education_level = 'Undergrad University Degree';
+                                        break;
+                                    case 'pg':
+                                        $education_level = 'Post Grad Degree - Honours, Masters, PhD, MBA';
+                                        break;
+                                    case 'school_no_metric':
+                                        $education_level = 'School But No Matric';
+                                        break;
+                                    default:
+                                        $education_level = ''; // Handle unexpected values
+                                        break;
+                                }
+                            }
                             $state = null; // Initialize $state to null
 
                             if ($essential && isset($essential->province)) {
@@ -2130,7 +2627,15 @@ class ExportController extends Controller
             header("Content-Type: application/vnd.ms-excel");
             return redirect(url('/') . "/" . $fileName);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            $errorMessage = sprintf(
+                "Error: %s in %s on line %d",
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine()
+            );
+        
+            // Throw a new exception with the formatted message
+            throw new \Exception($errorMessage);
         }
     }
 }

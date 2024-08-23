@@ -1230,6 +1230,26 @@ class RespondentsController extends Controller
             ], 500);
         }
     }
+
+    public function active_deactive()
+    {
+        try {
+            $sixMonthsLater = date("Y-m-d", strtotime("+6 months"));
+            $sixMonthsBefore = date("Y-m-d", strtotime("-6 months"));
+
+            DB::transaction(function () use ($sixMonthsLater, $sixMonthsBefore) {
+                Respondents::whereNull('deactivated_date')
+                    ->update(['deactivated_date' => $sixMonthsLater]);
+
+                Respondents::where('deactivated_date', '<=', $sixMonthsBefore)
+                    ->update(['deactivated_date' => $sixMonthsLater]);
+            });
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            // You can also send an email or notification to the admin/team
+            // or perform any other error handling mechanism
+        }
+    }
    
     
 }

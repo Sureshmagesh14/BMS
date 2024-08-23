@@ -306,7 +306,10 @@
                                         <div class="social-icons text-md-end text-lg-end text-sm-start">
                                            <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #fbbd0a;"></i></a>
                                            @if($res->access_id==1)
-                                           <a href="{{ url('share_project', $res->id) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+                                           
+                                            @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
+                                            <a href="{{ url('share_project', $res->project_link) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+                                            @endif 
                                            @endif
                                         </div>
                                      </td>
@@ -479,7 +482,12 @@
                             <div class="social-icons text-md-end text-lg-end text-sm-start">
                                <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #fbbd0a;"></i></a>
                                @if($res->access_id==1)
-                               <a href="{{ url('share_project', $res->id) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+
+                               
+                                @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
+                                <a href="{{ url('share_project', $res->project_link) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+                                @endif 
+                                
                                @endif
                             </div>
                          </td>

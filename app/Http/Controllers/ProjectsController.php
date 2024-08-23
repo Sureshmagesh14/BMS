@@ -102,7 +102,7 @@ class ProjectsController extends Controller
                 $projects->user_id = $request->input('user');
                 $projects->type_id = $request->input('type_id');
                 $projects->reward = $request->input('reward');
-                $projects->project_link = $request->input('project_link');
+                //$projects->project_link = $request->input('project_link');
                 $projects->status_id = $request->input('status_id');
                 $projects->description = $request->input('description');
                 $projects->description1 = $request->input('description1');
@@ -653,8 +653,20 @@ class ProjectsController extends Controller
                     $proj_name = $proj->name;
                     $survey_duration = $proj->survey_duration;
                     $reward = $proj->reward;
+                    
+                    if($proj->description!=''){
+                        $proj_subject = $proj->description;
+                    }else{
+                        $proj_subject = 'Get paid for your opinion - Join The Brand Surgeon for free';
+                    }
+                    
+                    if($proj->description1!=''){
+                        $proj_content = $proj->description1;
+                    }else{
+                        $proj_content = '';
+                    }
 
-                    $data = ['subject' => 'UPCOMING MARKET RESEARCH - DO YOU QUALIFY?','name' => $resp_name,'project' => $proj_name,'reward' => $reward,'survey_duration' => $survey_duration,'type' => 'project_notification'];
+                    $data = ['subject' => $proj_subject, 'proj_content'=>$proj_content, 'name' => $resp_name,'project' => $proj_name,'reward' => $reward,'survey_duration' => $survey_duration,'type' => 'project_notification'];
                 
                     Mail::to($to_address)->send(new WelcomeEmail($data));
                 }

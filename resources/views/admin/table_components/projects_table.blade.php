@@ -69,7 +69,6 @@
             <th>Creator</th>
             <th>Survey Type</th>
             <th>Reward Amount</th>
-            <th>Project Link</th>
             <th>Created</th>
             <th>Status</th>
             <th>Action</th>
