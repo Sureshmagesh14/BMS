@@ -86,9 +86,9 @@
             @if ($projects->project_link != null)
                 @php $project_link=$projects->project_link; @endphp
             @else
-                @php $project_link=Config::get('constants.url') . $refcode; @endphp
+                @php $project_link=$refcode; @endphp
             @endif
-            <input type="url" class="form-control" id="project_link" value="{{ $project_link }}" disabled>
+            <input type="url" class="form-control" id="project_link" value="{{ url('share_project', $project_link) }}" disabled>
 
             <input type="hidden" class="form-control" name="project_link" value="{{ $project_link }}">
         </div>

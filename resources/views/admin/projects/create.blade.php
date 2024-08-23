@@ -85,10 +85,8 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Project Link
         </label>
         <div class="col-md-10">
-            <input type="url" class="form-control" id="project_link"
-                value="{{ Config::get('constants.url') . $refcode }}" disabled>
-            <input type="hidden" class="form-control" name="project_link"
-                value="{{ Config::get('constants.url') . $refcode }}">
+            <input type="url" class="form-control" id="project_link" value="{{ url('share_project', $refcode) }}" disabled>
+            <input type="hidden" class="form-control" name="project_link" value="{{ $refcode }}">
         </div>
     </div>
 

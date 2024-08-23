@@ -102,7 +102,7 @@ class ProjectsController extends Controller
                 $projects->user_id = $request->input('user');
                 $projects->type_id = $request->input('type_id');
                 $projects->reward = $request->input('reward');
-                $projects->project_link = $request->input('project_link');
+                //$projects->project_link = $request->input('project_link');
                 $projects->status_id = $request->input('status_id');
                 $projects->description = $request->input('description');
                 $projects->description1 = $request->input('description1');

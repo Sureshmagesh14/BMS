@@ -110,7 +110,7 @@
                     { data: 'creator',name: 'creator',orderable: true,searchable: true },
                     { data: 'type',name: 'type',orderable: true,searchable: true },
                     { data: 'reward_amount',name: 'reward_amount',orderable: true,searchable: true },
-                    { data: 'project_link',name: 'project_link',orderable: true,searchable: true },
+                   
                     { data: 'created',name: 'created',orderable: true,searchable: true },
                     { data: 'status',name: 'status',orderable: true,searchable: true },
                     { data: 'action',name: 'action',orderable: true,searchable: true }
