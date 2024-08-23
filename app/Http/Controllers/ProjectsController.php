@@ -657,7 +657,7 @@ class ProjectsController extends Controller
                     if($proj->description!=''){
                         $proj_subject = $proj->description;
                     }else{
-                        $proj_subject = 'UPCOMING MARKET RESEARCH - DO YOU QUALIFY?';
+                        $proj_subject = 'Get paid for your opinion - Join The Brand Surgeon for free';
                     }
                     
                     if($proj->description1!=''){
