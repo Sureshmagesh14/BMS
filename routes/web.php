@@ -19,7 +19,7 @@ Route::any('forgot_password_sms', 'WelcomeController@forgot_password_sms')->name
 Route::any('admin_password_reset/{token}', 'WelcomeController@admin_password_reset')->name('admin_password_reset');
 Route::any('admin_password_reset_save', 'Auth\AdminLoginController@admin_password_reset_save')->name('admin_password_reset_save');
 Route::any('admin_password_reset_update', 'Auth\AdminLoginController@admin_password_reset_update')->name('admin_password_reset_update');
-   
+Route::get('active_deactive', 'RespondentsController@active_deactive')->name('active_deactive');
 
 Route::any('forgot_password_check', 'WelcomeController@forgot_password_check')->name('forgot_password_check');
 Route::any('password_forgot', 'Auth\AdminLoginController@password_forgot')->name('password_forgot');
@@ -49,7 +49,7 @@ Route::any('dashboard', 'WelcomeController@user_dashboard')->middleware(['auth',
 Route::any('view_client_survey_list', 'WelcomeController@view_client_survey_list')->middleware(['auth', 'verified'])->name('client.survey');
 Route::any('profile-edit', 'WelcomeController@user_profile')->middleware(['auth', 'verified'])->name('user.profile');
 Route::any('share', 'WelcomeController@user_share')->middleware(['auth', 'verified'])->name('user.share');
-Route::any('share_project/{id}', 'WelcomeController@share_project')->middleware(['auth', 'verified'])->name('share_project');
+Route::any('share_project/{id}', 'WelcomeController@share_project')->where('id', '[A-Za-z0-9]+')->name('share_project');
 Route::any('rewards', 'WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
 Route::any('surveys', 'WelcomeController@user_surveys')->middleware(['auth', 'verified'])->name('user.surveys');
 Route::any('viewprofile', 'WelcomeController@user_viewprofile')->middleware(['auth', 'verified'])->name('user.viewprofile');

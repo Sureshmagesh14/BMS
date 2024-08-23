@@ -83,9 +83,9 @@ class PasswordResetLinkController extends Controller
                 ->where('updated_at', '>', now())
                 ->first();
 
-            if (!$resetRecord) {
-                return redirect()->back()->with('error', 'Invalid or expired token.');
-            }
+            // if (!$resetRecord) {
+            //     return redirect()->back()->with('error', 'Invalid or expired token.');
+            // }
 
             // Find the user
             $user = Respondents::where('mobile', $request->mobile)->first();

@@ -18,7 +18,11 @@
       overflow:hidden;
    }
    </style>
-@include('user.layout.header-2')
+@if(Session::get('resp_id')!='')
+   @include('user.layout.header-2')
+@else
+   @include('user.layout.header')
+@endif
 
 <section class=" ">
     <div class="container m-auto d-flex h-90vh">
@@ -49,7 +53,7 @@
                    <div class="col-md-6 col-sm-12">
                    <div class="visible-print text-right my-2 ml-auto width-fitcontet">
                        
-                        {!! QrCode::size(150)->generate(url('survey/view', $res->builderID)) !!}
+                        {!! QrCode::size(150)->generate(url('share_project', $res->project_link)) !!}
 
                     </div>
                     </div>
@@ -64,8 +68,14 @@
                 
             </div>
                   </div>
+                  @if(Session::get('resp_id')!='')
+                  <div class="text-center">
+                  <a class="btn btn-yellow width-fit-content ml-auto" href="{{ url('survey/view', $res->builderID) }}"> Start Survey</a>
+                  </div>
+                  @endif
+
                    <div class="text-center">
-                   <span id="demo"> {{ url('survey/view', $res->builderID) }}</span><br>
+                   <span id="demo"> {{ url('share_project', $res->project_link) }}</span><br>
                    <p class="text-secondary btn" onclick="copy('#demo')">Tap to copy link</p>
                 </div>
                    </div>
@@ -87,22 +97,22 @@
         $('#nav_share').addClass('active');
    
         $("#whatsap").click(function() {
-            var whatsapurl ='https://wa.me/?text=I think you should join The Brand Surgeon and get paid for your opinion - {{ url('survey/view', $res->builderID) }}';
+            var whatsapurl ='https://wa.me/?text=I think you should join The Brand Surgeon and get paid for your opinion - {{ url('share_project', $res->project_link) }}';
             window.location.href = whatsapurl;
         });
 
         $("#facebook").click(function() {
-            var facebook ='https://www.facebook.com/sharer/sharer.php?u={{ url('survey/view', $res->builderID) }}';
+            var facebook ='https://www.facebook.com/sharer/sharer.php?u={{ url('share_project', $res->project_link) }}';
             window.location.href = facebook;
         });
      
         $("#twitter").click(function() {
-            var twitter ='https://twitter.com/intent/tweet?url={{ url('survey/view', $res->builderID) }}&amp;text=I think you should join The Brand Surgeon and get paid for your opinion';
+            var twitter ='https://twitter.com/intent/tweet?url={{ url('share_project', $res->project_link) }}&amp;text=I think you should join The Brand Surgeon and get paid for your opinion';
             window.location.href = twitter;
         });
         
         $("#mail").click(function() {
-            var whatsapurl ='mailto:info@example.com?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ url('survey/view', $res->builderID) }}';
+            var whatsapurl ='mailto:info@example.com?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ url('share_project', $res->project_link) }}';
             window.location.href = whatsapurl;
         });
 

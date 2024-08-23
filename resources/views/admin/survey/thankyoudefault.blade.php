@@ -88,5 +88,9 @@ if(isset($bg)){
     </div>
 </body>
 <script src="{{asset('assets/js/jquery.min.js')}}"></script>
-
+<script>
+    setTimeout(function() {
+        window.location.href = "{{ route('user.surveys') }}";
+    }, 2000); // Redirect after 2 seconds
+</script>
 </html>

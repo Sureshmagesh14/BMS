@@ -1818,6 +1818,16 @@ function click_button_camera(){
 
     }
 }
+// Get the value of #question_type
+let qusVal = $('#question_type').val();
+
+// Check if the value is 'thank_you'
+if (qusVal === 'thank_you') {
+    // Redirect to user.surveys
+    setTimeout(function() {
+     window.location.href = "{{ route('user.surveys') }}";
+    }, 2000); // Redirect after 2 seconds
+}
 
 </script>
     
