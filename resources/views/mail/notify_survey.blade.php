@@ -8,7 +8,12 @@ See if you qualify!
 @endsection
 
 @section('content')
-<p>Hi {{ $name }}, <br><br>We have interesting paid market reaserch <br> {{ $project }}. <br><br>Please answer a few questions to see if you qualify. <br> </p>
+<p>Hi {{ $name }}, </p>
+<br><br>
+@if($proj_content!='')
+<p>{{$proj_content}} </p>
+@else
+<p>We have interesting paid market reaserch <br> {{ $project }}. <br><br>Please answer a few questions to see if you qualify. <br> </p>
 <hr>
 <b> Duration</b><br>
 <p>
@@ -21,6 +26,7 @@ See if you qualify!
     Points {{ $reward }}
 </p>
 <hr>
+@endif
 <!-- <br><br>
 <p style="font-size:8px;">
     You are receiving this email because you are signed up to the Branch 

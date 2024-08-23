@@ -653,8 +653,20 @@ class ProjectsController extends Controller
                     $proj_name = $proj->name;
                     $survey_duration = $proj->survey_duration;
                     $reward = $proj->reward;
+                    
+                    if($proj->description!=''){
+                        $proj_subject = $proj->description;
+                    }else{
+                        $proj_subject = 'UPCOMING MARKET RESEARCH - DO YOU QUALIFY?';
+                    }
+                    
+                    if($proj->description1!=''){
+                        $proj_content = $proj->description1;
+                    }else{
+                        $proj_content = '';
+                    }
 
-                    $data = ['subject' => 'UPCOMING MARKET RESEARCH - DO YOU QUALIFY?','name' => $resp_name,'project' => $proj_name,'reward' => $reward,'survey_duration' => $survey_duration,'type' => 'project_notification'];
+                    $data = ['subject' => $proj_subject, 'proj_content'=>$proj_content, 'name' => $resp_name,'project' => $proj_name,'reward' => $reward,'survey_duration' => $survey_duration,'type' => 'project_notification'];
                 
                     Mail::to($to_address)->send(new WelcomeEmail($data));
                 }
