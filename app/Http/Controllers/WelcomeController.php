@@ -322,11 +322,10 @@ class WelcomeController extends Controller
 
             $data = Respondents::find($resp_id);
           
-            $res = DB::table('projects')->select('projects.id', 'survey.builderID','projects.access_id','projects.project_name_resp','projects.name','projects.number','projects.type_id')
+            $res = DB::table('projects')->select('projects.id', 'survey.builderID','projects.access_id','projects.project_name_resp','projects.name','projects.number','projects.type_id','projects.project_link')
                     ->join('survey', 'survey.id', 'projects.survey_link')
-                    ->where('projects.id',$id)->first();
+                    ->where('projects.project_link',$id)->first();
         
-            $ref_code = $data->referral_code;
 
             if($res->access_id==2){
                 //access_id 2 assigned
@@ -340,7 +339,7 @@ class WelcomeController extends Controller
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-            return view('user.user-share_project', compact('data', 'ref_code', 'get_res_phone','res'));
+            return view('user.user-share_project', compact('data', 'get_res_phone','res'));
             //}
 
         } catch (Exception $e) {
