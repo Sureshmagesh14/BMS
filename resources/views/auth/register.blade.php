@@ -136,7 +136,7 @@
 
         /* Styling for SVG Text */
         .curved-text {
-            font-size: 20px;
+            font-size: 26px;
             fill: #000000; /* Black color text */
             font-weight: bold;
         }
@@ -145,6 +145,9 @@
         svg {
             width: 100%;
             height: 100%;
+        }
+        .reg-img{
+            margin: 40px !important;
         }
 </style>
 <div class="container-fluid register">
@@ -276,7 +279,7 @@
         <div class="col-md-5 d-none-mobile p-0">
             <div class="w-75 m-auto h-100p d-flex">
             <!-- <div> -->
-            <div class="w-100 reg-img m-auto">
+            <div class="w-100 reg-img mx-auto">
             <div class="curved-text-container">
         <svg viewBox="0 0 400 10">
             <defs>

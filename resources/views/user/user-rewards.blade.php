@@ -1,18 +1,32 @@
 @include('user.layout.header-2')
-<section class="vi-background-index ">
+<style>
+.pos-bottom{
+   bottom: 0px;
+    left: 25px;
+}
+.w-75{
+   width: 75%;
+}
+.vi-background-index.position-relative{
+   border:1px solid #90b8d0; 
+}
+</style>
+
+<section class="vi-background-index  position-relative">
+       <div class="w-50 my-auto position-absolute pos-bottom mob-hide">
+                   <img class="w-75" src="{{ asset('assets/images/ima_3.webp') }}" class="img-fluid" alt="">
+                </div>
     <div class="container">
        <div class="row justify-content-center mb-10vh">
           <div class="col-md-10 m-auto h-100vh" style="">
              <!-- margin-top: 5% !important; -->
-             <div class="w-100 position-relative">
-                <div class="w-50 my-auto position-absolute pos-bottom mob-hide">
-                   <img src="{{ asset('assets/images/ima_3.webp') }}" class="img-fluid" alt="">
-                </div>
+             <div class="w-100 ">
+               
                 <div class="m-auto text-center bg-white py-2 my-2 px-3 vi-full-rounded">
                    <div class=" text-center w-25 vi-gift-box m-auto">
                       <img src="{{ asset('assets/images/gift box.png') }}" class="img-fluid w-100" alt="">
                    </div>
-                   <div class="w-50 ml-auto d-flex d-sm-flex">
+                   <div class="w-75 ml-auto d-flex d-sm-flex">
                       <div class="w-50">
                          @if($get_cashout == null)
                          <h2 class=" h1 fw-bolder mt-2">Your available rewards</h2>

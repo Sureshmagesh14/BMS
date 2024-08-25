@@ -3,6 +3,10 @@
 .m-auto.h-100p.d-flex{
     display:block !important;
 }
+
+.vi-nav-bg.btn {
+    background-color: #6396b1 !important;
+}
 </style>
 <div class="container-fluid p-md-3 text-center vi-full-height vi-background-index dashboard"
     style="background-size: cover; height:auto;">
@@ -27,10 +31,10 @@
                         alt="">
                 </div> -->
                 <div class="heading">
-                    <h1 class="fw-boler vi-get-paid-head text-shadow fw-bolder">Get PAID for your opinion!</h1>
+                    <h1 class="text-white fw-boler vi-get-paid-head text-shadow fw-bolder">Get PAID for your opinion!</h1>
                 </div>
                 <div class="description">
-                    <p class="vi-bnr-para-text text-shadow">Join 40 000 South Africans and 
+                    <p class="text-white vi-bnr-para-text text-shadow">Join 40 000 South Africans and 
 make extra money.</p>
                 </div>
                 <div class="btn-class-bnr">
