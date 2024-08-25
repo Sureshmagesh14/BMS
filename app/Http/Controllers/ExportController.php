@@ -200,7 +200,7 @@ class ExportController extends Controller
                             $m_number = $basic['mobile_number'];
                             
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27' . $m_number;
+                                $mobile_number = '+27(0)' . $m_number;
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -302,7 +302,7 @@ class ExportController extends Controller
                             $m_number = $basic->mobile_number;
                             
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27' . $m_number;
+                                $mobile_number = '+27(0)' . $m_number;
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -602,7 +602,7 @@ class ExportController extends Controller
                             $m_number = $basic->mobile_number;
                             
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27' . $m_number;
+                                $mobile_number = '+27(0)' . $m_number;
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -988,7 +988,7 @@ class ExportController extends Controller
                             $m_number = $all_data->mobile;
                             
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27' . $m_number;
+                                $mobile_number = '+27(0)' . $m_number;
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -1058,7 +1058,7 @@ class ExportController extends Controller
                             $m_number = $all_data->mobile;
                             
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27' . $m_number;
+                                $mobile_number = '+27(0)' . $m_number;
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -1128,7 +1128,7 @@ class ExportController extends Controller
                             $m_number = $all_data->mobile;
                             
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27' . $m_number;
+                                $mobile_number = '+27(0)' . $m_number;
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -1197,7 +1197,7 @@ class ExportController extends Controller
                             $m_number = $all_data->mobile;
                             
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27' . $m_number;
+                                $mobile_number = '+27(0)' . $m_number;
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -1332,7 +1332,7 @@ class ExportController extends Controller
                         $m_number = $all_data->mobile;
                         
                         if (strlen($m_number) == 9) {
-                            $mobile_number = '+27' . $m_number;
+                            $mobile_number = '+27(0)' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                             $mobile_number = '+' . $m_number;
                         } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -1463,7 +1463,7 @@ class ExportController extends Controller
                         $m_number = $all_data->mobile;
                         
                         if (strlen($m_number) == 9) {
-                            $mobile_number = '+27' . $m_number;
+                            $mobile_number = '+27(0)' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                             $mobile_number = '+' . $m_number;
                         } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -1598,7 +1598,7 @@ class ExportController extends Controller
                         $m_number = $basic->mobile_number;
                         
                         if (strlen($m_number) == 9) {
-                            $mobile_number = '+27' . $m_number;
+                            $mobile_number = '+27(0)' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                             $mobile_number = '+' . $m_number;
                         } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -1926,7 +1926,7 @@ class ExportController extends Controller
                             $m_number = preg_replace('/\s+/', '',$all_data->mobile);
                           
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27' . $m_number;
+                                $mobile_number = '+27(0)' . $m_number;
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -2403,7 +2403,7 @@ class ExportController extends Controller
                                 $m_number = $basic->mobile_number;
                                 
                                 if (strlen($m_number) == 9) {
-                                    $mobile_number = '+27' . $m_number;
+                                    $mobile_number = '+27(0)' . $m_number;
                                 } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                     $mobile_number = '+' . $m_number;
                                 } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
