@@ -158,7 +158,29 @@
                             </div>
                             <div class="col-md-12 text-center d-flex">
                                 <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center text-center m-auto">
-                                   <i class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i>+27(0) {{ $data->mobile }}
+                                   <i class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i>
+                                        @php
+                                            // Clean up the mobile number by removing any whitespace
+                                            $m_number = preg_replace('/\s+/', '', $data->mobile);
+                                        
+                                            // Initialize $mobile_number to avoid undefined variable error
+                                            $mobile_number = '';
+                                        
+                                            if (strlen($m_number) == 9) {
+                                                // Prepend '+27' to 9-digit numbers
+                                                $mobile_number = '+27(0) ' . $m_number;
+                                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                                // If the number starts with '27' and has 11 digits, add '+' before '27'
+                                                $mobile_number = '+' . $m_number;
+                                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                                // If the number starts with '+27' and has 12 digits, use it as is
+                                                $mobile_number = $m_number;
+                                            } else {
+                                                // Handle unexpected formats or provide a default/fallback
+                                                $mobile_number = '';
+                                            }
+                                        @endphp
+                                        {{ $mobile_number }}
                                 </a>
                             </div>
                         </div>

@@ -787,11 +787,84 @@ class ExportController extends Controller
                         $sheet->setCellValue('U' . $rows, $essential->no_children ?? '');
                         $sheet->setCellValue('V' . $rows, $essential->no_vehicle ?? '');
                     
-                        $business_org = null; // Initialize $business_org to null
-                    
-                        if ($extended && isset($extended->business_org)) {
-                            $business_org = $extended->business_org == 'other' ? $extended->business_org_other : $extended->business_org;
+                                            
+                        // Initialize $business_org to null
+                        $business_org = null;
+
+                        // Ensure $extended is defined and has the property
+                        if (isset($extended) && is_object($extended)) {
+                            if (isset($extended->business_org)) {
+                                // Check if the business_org is 'other' and use the additional information if available
+                                if ($extended->business_org === 'other') {
+                                    // Use the business_org_other value if it exists
+                                    $business_org_code = isset($extended->business_org_other) ? $extended->business_org_other : 'Other';
+                                } else {
+                                    $business_org_code = $extended->business_org;
+                                }
+                            } else {
+                                // Default to an empty string if business_org is not set
+                                $business_org_code = '';
+                            }
+                        } else {
+                            // Default to an empty string if $extended is not an object or is null
+                            $business_org_code = '';
                         }
+
+                        // Define the mapping of business organization codes to names
+                        $businessOrgTypes = [
+                            'owner_director'  => 'Owner / director (CEO, COO, CFO)',
+                            'senior_manager'  => 'Senior Manager',
+                            'mid_level_manager'=> 'Mid-Level Manager',
+                            'team_leader'     => 'Team leader / Supervisor',
+                            'general_worker'  => 'General Worker (e.g., Admin, Call Centre Agent, Nurse, Teacher, Carer, etc.)',
+                            'worker_etc'      => 'Worker (e.g., Security Guard, Cleaner, Helper, etc.)',
+                            'other'           => 'Other', // Default 'Other' mapping
+                        ];
+
+                        // Retrieve the business organization name based on the code
+                        $business_org = isset($businessOrgTypes[$business_org_code]) ? $businessOrgTypes[$business_org_code] : ucfirst($business_org_code);
+
+                                                // Initialize $org_company to null
+                       // Initialize $org_company to null
+          
+                        // Initialize $org_company to null
+                        $org_company = null;
+
+                        // Ensure $extended is defined and is an object
+                        if (isset($extended) && is_object($extended)) {
+                            // Check if 'org_company' is set and assign its value
+                            if (isset($extended->org_company)) {
+                                $org_company_code = $extended->org_company;
+                            } else {
+                                // Default to an empty string if 'org_company' is not set
+                                $org_company_code = '';
+                            }
+                        } else {
+                            // Default to an empty string if $extended is not set or not an object
+                            $org_company_code = '';
+                        }
+
+                        // Define the mapping of organization sizes to names
+                        $orgCompanyTypes = [
+                            'just_me'        => 'Just Me (Sole Proprietor)',
+                            '2_5'            => '2-5 people',
+                            '6_10'           => '6-10 people',
+                            '11_20'          => '11-20 people',
+                            '21_30'          => '21-30 people',
+                            '31_50'          => '31-50 people',
+                            '51_100'         => '51-100 people',
+                            '101_250'        => '101-250 people',
+                            '251_500'        => '251-500 people',
+                            '500_1000'       => '500-1000 people',
+                            'more_than_1000' => 'More than 1000 people',
+                        ];
+
+                        // Debug: Check the value of $org_company_code
+                        // dd($org_company_code);
+
+                        // Retrieve the organization size name based on the code
+                        $org_company = isset($orgCompanyTypes[$org_company_code]) ? $orgCompanyTypes[$org_company_code] : '';
+                        
                     
                         $home_lang = null; // Initialize $home_lang to null
                     
@@ -816,7 +889,7 @@ class ExportController extends Controller
                         }
                     
                         $sheet->setCellValue('W' . $rows, $business_org ?? '');
-                        $sheet->setCellValue('X' . $rows, $extended->org_company ?? '');
+                        $sheet->setCellValue('X' . $rows, $org_company ?? '');
                         $sheet->setCellValue('Y' . $rows, $bank_main ?? '');
                         $sheet->setCellValue('Z' . $rows, ucfirst($home_lang?? ''));
                     
