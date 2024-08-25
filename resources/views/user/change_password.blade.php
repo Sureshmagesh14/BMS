@@ -94,15 +94,26 @@
         background-color: #6396b1;
         color: #fff;
     }
+    .bg-img{
+        background-image: url('../assets/images/Change_password_photo.jpg');
+        height:100vh;
+        background-repeat:no-repeat;
+        background-size:cover;
+        background-position: 50% 50%;
+    }
+    body{
+        overflow:hidden;
+    }
 </style>
-<section class="bg-greybg vh-100">
+<section class="bg-greybg vh-100 bg-img">
     <div class="container">
         <div class="row justify-content-center py-5">
-            <div class="col-md-6 yelow-bg text-center d-none-mobile">
+            <!-- <div class="col-md-6 yelow-bg text-center d-none-mobile">
                 <img class="img-fluid m-auto w-75" src="{{ asset('assets/images/img44.png') }}" alt="">
-            </div>
-            <div class="col-md-6 bg-white p-5">
+            </div> -->
+            <div class="col-md-6 bg-white p-5 ml-auto">
                 <div class="text-center">
+                    <h2 class="vi-common-clr vi-welcome-size fw-bolder">Change Password</h2>
 
                     <form id="reg_form" class="validation">
                         @csrf

@@ -1,4 +1,8 @@
-
+<!-- <style>
+.bg-blue {
+    background-color: #6396b1 !important;
+}
+</style> -->
 <!-- <footer class="vi-grey-bg set-postion-fixed"> -->
 <footer class="pos-fixed bg-white">
     <div class="container">
