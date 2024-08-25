@@ -1,19 +1,28 @@
 @include('user.layout.header-2')
-
+<style>
+.bg-greybg{
+    background:#90b8d0;
+}
+.bg-yellow{
+    background-color:#ffbb00;
+    border:1px solid #ffbb00;
+    border-radius:25px;
+}
+</style>
 
 <section class="bg-greybg vh-75 m-auto d-flex">
     <div class="m-auto d-flex">
     <div class="container my-2">
-        <div class="row justify-content-center mx-auto bg-white">
-            <div class="col-md-6 text-center d-flex bg-white">
+        <div class="row justify-content-center mx-auto">
+            <div class="col-md-6 text-center d-flex bg-yellow">
                 <img class="w-100 object-fit" src="{{ asset('assets/images/share.webp') }}" />
             </div>
             <div class="col-md-6  p-2 d-flex m-auto">
                 <div class="w-100">
                 <div class="qr-code text-center">
                     <!-- <h4 class="text-center">GET PAID FOR YOUR OPINION</h4> -->
-                    <h4 class="text-center">Share with your friends and family</h4>
-                    <h4 class="text-center">It's free to join</h4>
+                    <h4 class="text-center text-white">Share with your friends and family</h4>
+                    <h4 class="text-center text-white">It's free to join</h4>
                     <div class="visible-print text-center">
                         {!! QrCode::size(150)->generate(URL::to('/') . $ref_code) !!}
                     </div>
@@ -26,9 +35,9 @@
                         <img id="mail" src="{{ asset('assets/images/SM icons-04.png') }}" class="img-fluid w-10" onclick="fbs_click(this);" alt=""/>
                     </div>
                 </div>
-                <div class="text-center">
+                <div class="text-center text-white">
                     <span id="demo"> {{ URL::to('/') }}?r={{ $ref_code }}</span><br>
-                    <p class="text-secondary btn" onclick="copy('#demo')">Tap to copy link</p>
+                    <p class="text-secondary btn text-white" onclick="copy('#demo')">Tap to copy link</p>
                 </div>
                 </div>
             </div>

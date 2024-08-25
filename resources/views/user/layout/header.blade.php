@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light vi-nav-bg">
+    <nav class="navbar navbar-expand-lg navbar-light vi-nav-bg p-0">
         <div class="container">
             <a class="navbar-brand w-50 w-md-20" href="{{ route('home') }}"><img class="img-fluid"
                     src="{{ asset('user/images/small-logo.png') }}" alt=""></a>
@@ -32,7 +32,8 @@
                 </ul>
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link text-white text-uppercase fw-700" href="{{ route('about_the_brand') }}">About the Brand Surgeon</a>
+                    <a class="nav-link text-white text-uppercase fw-700" href="https://thebrandsurgeon.co.za/">About the Brand Surgeon</a>
+                        <!-- <a class="nav-link text-white text-uppercase fw-700" href="{{ route('about_the_brand') }}">About the Brand Surgeon</a> -->
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white text-uppercase fw-700" href="{{ route('login') }}">Login</a>

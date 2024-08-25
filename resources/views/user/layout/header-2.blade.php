@@ -283,6 +283,9 @@
                     <li class="nav-item pe-2">
                         <a class="nav-link" href="{{ route('user.share') }}" id="nav_share">Share</a>
                     </li>
+                    <li class="nav-item pe-2">
+                        <a class="nav-link" href="https://thebrandsurgeon.co.za/" id="nav_share">FAQ</a>
+                    </li>
                 </ul>
                 <div class="d-flex align-items-center" style="padding-right: 20px">
                     <!-- <a href="#" class="px-2"

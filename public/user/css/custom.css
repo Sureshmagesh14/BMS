@@ -85,7 +85,7 @@ tr{
   background: #04c47d;
 }
 .bg-grey-6 {
-  background-color: #EAEAEA !important;
+  background-color: #f2f3f5 !important;
 }
 .object-fit{
   object-fit: cover;
@@ -128,7 +128,7 @@ tr{
 }
 
 .bg-greybg {
-  background-color: #e6e7e6;
+  /* background-color: #90b8d0; */
 }
 
 .vi-nav-bg {
@@ -725,7 +725,7 @@ color:#6396b1 !important; */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 80%;
-  background-color: rgba(222,227,230,1);
+  background-color: #90b8d0;
 }
 
 .vi-main-btn-db,
