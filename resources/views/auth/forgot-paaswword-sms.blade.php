@@ -14,19 +14,42 @@
     label#phone-error{
         width: 100% !important;
     }
+    h2, .h2{
+        font-size: 3rem !important;
+    }
+    .fs-20{
+        font-size:20px !important;
+    }
+    .pos-abs{
+        position: absolute;
+        bottom:22px;
+        right:100px;
+    }
+    .pos-rel{
+        position:relative;
+    }
+    body{
+        overflow: hidden;
+    }
+    .w-35{
+        width:45% !important;
+    }
 </style>
 <!-- main starts -->
-<main class="forgot-pass py-5  vi-background-index ">
+<main class="forgot-pass py-5  vi-background-index pos-rel">
+<div class=" pos-abs mob-hide">
+    <img class="w-35 ml-auto d-flex" src="{{ asset('assets/images/img_1.webp') }}" alt="Forgot image" />
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-md-6 m-auto">
                 <form id="forgot_table" method="POST" action="{{ route('forgot_password_check') }}">
                     @csrf
                     <div class="text-start m-auto my-3">
-                        <h2 class="mb-0 pb-2">Forgotten your password</h2>
-                        <p class="mb-4 fw-bold h4">Please use your phone number to receive the code and link</p>
+                        <h2 class="mb-0 pb-2 text-white">Forgotten your password</h2>
+                        <p class="mb-4 fw-bold h4 text-white">Please use your phone number to receive the code and link</p>
                         <h2 class="mb-4 fw-bold h4">Account Information</h2>
-                        <label for="phone" class="fw-bolder">Mobile</label>
+                        <label for="phone" class="fw-bolder fs-20">Mobile</label>
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">+27 (0)</div>
@@ -36,7 +59,7 @@
                                
                         </div>
                         <span>Don’t include 0 in starting.</span>
-                        <div class="row">
+                        <div class="row my-2">
                         <div class="col-md-6 col-sm-12">
                         <button type="submit"
                             class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2 me-1"
@@ -56,7 +79,7 @@
                 </div>
             </div>
             <div class="col-md-5 mob-hide">
-                <img class="w-100 m-auto d-flex" src="{{ asset('assets/images/img_1.png') }}" alt="Forgot image" />
+                <!-- <img class="w-100 m-auto d-flex" src="{{ asset('assets/images/img_1.png') }}" alt="Forgot image" /> -->
 
             </div>
         </div>

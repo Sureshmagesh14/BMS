@@ -255,8 +255,8 @@
     </div>
 </div>
 
-<body class="bg-greybg">
-    <nav class="navbar navbar-expand-lg bg-white">
+<body class="bg-greybg ">
+    <nav class="navbar navbar-expand-lg bg-white navbar-light vi-nav-bg">
         <div class="container-fluid align-items-end">
             <a class="navbar-brand w-25 w-sm-75" href="{{ route('user.dashboard') }}"><img
                     class="img-fluid w-75 m-auto w-sm-100" src="{{ asset('user/images/small-logo.png') }}"
@@ -282,6 +282,9 @@
                     </li>
                     <li class="nav-item pe-2">
                         <a class="nav-link" href="{{ route('user.share') }}" id="nav_share">Share</a>
+                    </li>
+                    <li class="nav-item pe-2">
+                        <a class="nav-link" href="https://thebrandsurgeon.co.za/" id="nav_share">FAQ</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center" style="padding-right: 20px">
