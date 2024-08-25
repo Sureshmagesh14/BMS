@@ -1,9 +1,9 @@
-<style>
+<!-- <style>
 .bg-blue {
     background-color: #6396b1 !important;
 }
-</style>
-<footer class="pos-fixed bg-blue bg-white">
+</style> -->
+<footer class="pos-fixed bg-white">
     <!-- <div class="container"> -->
     <div class="container py-2">
         <div class="row justify-content-center align-items-center">

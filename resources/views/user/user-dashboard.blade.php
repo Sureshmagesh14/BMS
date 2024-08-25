@@ -150,14 +150,14 @@
                       <div class="py-3 mb-5 text-center">
                         <p class="text-center fw-bolder" style="text-transform: capitalize;">{{ $data->name }}</p>
                         <div class="row justify-content-center">
-                            <div class="col-auto">
+                            <div class="col-md-12 text-center d-flex">
                                 <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $data->email }}" target="_blank"
-                                   class="nav-link d-flex align-items-center">
+                                   class="nav-link d-flex align-items-center text-center m-auto">
                                    <i class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{ $data->email }}
                                 </a>
                             </div>
-                            <div class="col-auto">
-                                <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center">
+                            <div class="col-md-12 text-center d-flex">
+                                <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center text-center m-auto">
                                    <i class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i>+27(0) {{ $data->mobile }}
                                 </a>
                             </div>
@@ -274,7 +274,7 @@
                                </thead>
                                <tbody>
                                @foreach ($get_paid_survey as $res)
-                                  <tr>
+                               <tr>
                                      <td>
                                      @if($res->project_name_resp!='')
                                      {{ $res->project_name_resp }}
@@ -355,7 +355,7 @@
                                </thead>
                                <tbody>
                                @foreach ($get_completed_survey as $res)
-                                  <tr>
+                               <tr>
                                      <td>
                                      @if($res->project_name_resp!='')
                                     {{ $res->project_name_resp }}
@@ -435,7 +435,7 @@
                    </thead>
                    <tbody>
                    @foreach ($get_other_survey as $res)
-                      <tr>
+                   <tr>
                          <td>
                           @if($res->project_name_resp!='')
                           {{ $res->project_name_resp }}

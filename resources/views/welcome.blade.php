@@ -3,6 +3,10 @@
 .m-auto.h-100p.d-flex{
     display:block !important;
 }
+
+.vi-nav-bg.btn {
+    background-color: #6396b1 !important;
+}
 </style>
 <div class="container-fluid p-md-3 text-center vi-full-height vi-background-index dashboard"
     style="background-size: cover; height:auto;">
