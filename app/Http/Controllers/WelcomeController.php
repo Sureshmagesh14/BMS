@@ -572,10 +572,11 @@ class WelcomeController extends Controller
                 ->where('resp.is_frontend_complete', 0)
                 ->where('projects.type_id', 3)->get();
 
+          
             $get_completed_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', $resp_id)
-                ->where('resp.is_frontend_complete', 1)->get();
+                ->where('projects.closing_date', '<', Carbon::now())->get();
 
             // if($request->user()->profile_completion_id==0){
             //      return view('user.update-profile');
