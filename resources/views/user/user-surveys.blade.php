@@ -229,7 +229,11 @@ for Other Research</span>
                                     <td title="{{ $res->description }}">
                                         {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
                                     </td>
-                                    <td>{{ $res->reward }}</td>
+                                    <td>
+                                        @if($res->is_frontend_complete==1)
+                                        {{ $res->reward }}
+                                        @endif
+                                    </td>
                                     @php
                                         $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
                                     @endphp
