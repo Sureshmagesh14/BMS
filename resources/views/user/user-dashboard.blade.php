@@ -534,6 +534,22 @@
         chart: {
             height: 400,
             type: 'radialBar',
+            events: {
+                    dataPointSelection: function (event, chartContext, config) {
+                        var label = config.w.globals.labels[config.dataPointIndex];
+                        switch (label) {
+                            case 'Additional Information':
+                                    window.location.href = "{{ route('updateprofile_wizard', ['section' => 'extended']) }}";
+                                    break;
+                            case 'Your Essential Information':
+                                window.location.href = "{{ route('updateprofile_wizard', ['section' => 'essential']) }}";
+                                break;
+                            case 'Basic':
+                                window.location.href = "{{ route('updateprofile_wizard', ['section' => 'basic']) }}";
+                                break;
+                        }
+                    }
+                }
         },
         plotOptions: {
             radialBar: {

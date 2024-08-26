@@ -930,6 +930,61 @@
                                             @endisset
                                                 @isset($extended_details['home_lang_other']) value="{{ $extended_details['home_lang_other'] }}" @endisset>
                                         </div>
+
+                                        <div class="col-md-6 col-6 col-sm-12 mt-3">
+                                            <label for="secondary_home_lang">Secondary Language</label>
+                                            <select name="extended[secondary_home_lang]" id="secondary_home_lang"
+                                                onchange="show_other(this, 'secondary_home_lang')">
+                                                <option value="">Select</option>
+                                                <option value="afrikaans"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'afrikaans') selected @endif @endisset>
+                                                    Afrikaans</option>
+                                                <option value="english"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'english') selected @endif @endisset>
+                                                    English</option>
+                                                <option value="ndebele"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'ndebele') selected @endif @endisset>
+                                                    Ndebele</option>
+                                                <option value="pedi"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'pedi') selected @endif @endisset>
+                                                    Pedi</option>
+                                                <option value="sotho"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'sotho') selected @endif @endisset>
+                                                    Sotho</option>
+                                                <option value="swati"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'swati') selected @endif @endisset>
+                                                    Swati</option>
+                                                <option value="tsonga"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'tsonga') selected @endif @endisset>
+                                                    Tsonga</option>
+                                                <option value="tswana"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'tswana') selected @endif @endisset>
+                                                    Tswana</option>
+                                                <option value="venda"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'venda') selected @endif @endisset>
+                                                    Venda</option>
+                                                <option value="xhosa"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'xhosa') selected @endif @endisset>
+                                                    Xhosa</option>
+                                                <option value="zulu"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'zulu') selected @endif @endisset>
+                                                    Zulu</option>
+                                                <option value="other"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'other') selected @endif @endisset>
+                                                    Other</option>
+                                            </select>
+                                            <br>
+                                            <input type="text" name="extended[secondary_home_lang_other]"
+                                                id="secondary_home_lang_other" class="form-control"
+                                                placeholder="Please specify"
+                                                @isset($extended_details['secondary_home_lang_other'])
+                                                @if ($extended_details['secondary_home_lang_other'] == 'other') style="margin-top: 10px;" @else style="display:none;margin-top: 10px;" @endif
+                                            @else
+                                                style="display:none;margin-top: 10px;"
+                                            @endisset
+                                                @isset($extended_details['secondary_home_lang_other']) value="{{ $extended_details['secondary_home_lang_other'] }}" @endisset>
+                                        </div>
+
                                     </div>
                                 </section>
                             </div>
