@@ -2195,36 +2195,39 @@ $('#survey_thankyou_page').change(function () {
         $('#upload_image').val(0);
     }
   });
-  $('input, select, textarea').on('change', function() {
-        // Perform any validation or pre-submit actions here
-        let qus_type = $('#qus_type_survey').val();
-        if(qus_type == 'welcome_page' || qus_type == 'thank_you'){
-            let title =  $('#welcome_title').val();
-            let title1 =  $('#thankyou_title').val();
-            if((title != undefined && title!="" )|| (title1 != undefined && title1 != "" )){
-                $('#update_qus').click();
-            }
-        }else{
-            if(qus_type=='single_choice' || qus_type=='multi_choice' || qus_type=='dropdown' || qus_type=='rankorder'){
-                let choices=[];
-                $("input[name=choice]").each(function(idx, elem) {
-                    choices.push($(elem).val());
-                });
-                $('#choices_list').val(choices);
-                if(choices.length>0){
+   $('input, select, textarea').on('change', function() {
+    console.log($(this).closest('#display_logic, #skip_logic'));
+        if ($(this).closest('#display_logic, #skip_logic').length === 0) {
+            // Perform any validation or pre-submit actions here
+            let qus_type = $('#qus_type_survey').val();
+            if(qus_type == 'welcome_page' || qus_type == 'thank_you'){
+                let title =  $('#welcome_title').val();
+                let title1 =  $('#thankyou_title').val();
+                if((title != undefined && title!="" )|| (title1 != undefined && title1 != "" )){
                     $('#update_qus').click();
                 }
-            }else if(qus_type=='picturechoice'){
-                let choice_pic=[];
-                $('.img_placeholder').each(function(){
-                    choice_pic.push({'img':$(this).children('.current_image').attr('src'),'text':$(this).children('.option-action').children('textarea.choice_desc').val()});
-                });
-                $('#choices_list_pic').val(JSON.stringify(choice_pic));
-                if(choice_pic.length>0){
-                    $('#update_qus_final').click();
-                }
             }else{
-                $('#update_qus').click();
+                if(qus_type=='single_choice' || qus_type=='multi_choice' || qus_type=='dropdown' || qus_type=='rankorder'){
+                    let choices=[];
+                    $("input[name=choice]").each(function(idx, elem) {
+                        choices.push($(elem).val());
+                    });
+                    $('#choices_list').val(choices);
+                    if(choices.length>0){
+                        $('#update_qus').click();
+                    }
+                }else if(qus_type=='picturechoice'){
+                    let choice_pic=[];
+                    $('.img_placeholder').each(function(){
+                        choice_pic.push({'img':$(this).children('.current_image').attr('src'),'text':$(this).children('.option-action').children('textarea.choice_desc').val()});
+                    });
+                    $('#choices_list_pic').val(JSON.stringify(choice_pic));
+                    if(choice_pic.length>0){
+                        $('#update_qus_final').click();
+                    }
+                }else{
+                    $('#update_qus').click();
+                }
             }
         }
     });

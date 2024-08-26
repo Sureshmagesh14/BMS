@@ -574,7 +574,9 @@ class SurveyController extends Controller
                         $filename=$request->existing_image_uploaded_thankyou;
                     }else{
                         $surveyTemplate = SurveyTemplate::where(['id'=>$request->thankyou_template])->first();
-                        $filename=$surveyTemplate->image;
+                        if($surveyTemplate){
+                            $filename=$surveyTemplate->image;
+                        }
                     }
                 }
                 $TBSfilename='small-logo.png';
