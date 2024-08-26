@@ -71,8 +71,8 @@
     .bg-yellow{
         background: #fabd21;
     }
-    .bg-blue{
-        background: #2197bd;
+    .bg-blues{
+        background: #2197bd !important; 
     }
     .bg-green{
         background: #04c47d;
@@ -150,15 +150,37 @@
                       <div class="py-3 mb-5 text-center">
                         <p class="text-center fw-bolder" style="text-transform: capitalize;">{{ $data->name }}</p>
                         <div class="row justify-content-center">
-                            <div class="col-auto">
+                            <div class="col-md-12 text-center d-flex">
                                 <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $data->email }}" target="_blank"
-                                   class="nav-link d-flex align-items-center">
+                                   class="nav-link d-flex align-items-center text-center m-auto">
                                    <i class="fa fa-envelope yelow-clr pe-2" aria-hidden="true"></i> {{ $data->email }}
                                 </a>
                             </div>
-                            <div class="col-auto">
-                                <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center">
-                                   <i class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i>+27(0) {{ $data->mobile }}
+                            <div class="col-md-12 text-center d-flex">
+                                <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center text-center m-auto">
+                                   <i class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i>
+                                        @php
+                                            // Clean up the mobile number by removing any whitespace
+                                            $m_number = preg_replace('/\s+/', '', $data->mobile);
+                                        
+                                            // Initialize $mobile_number to avoid undefined variable error
+                                            $mobile_number = '';
+                                        
+                                            if (strlen($m_number) == 9) {
+                                                // Prepend '+27' to 9-digit numbers
+                                                $mobile_number = '+27(0) ' . $m_number;
+                                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                                // If the number starts with '27' and has 11 digits, add '+' before '27'
+                                                $mobile_number = '+' . $m_number;
+                                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                                // If the number starts with '+27' and has 12 digits, use it as is
+                                                $mobile_number = $m_number;
+                                            } else {
+                                                // Handle unexpected formats or provide a default/fallback
+                                                $mobile_number = '';
+                                            }
+                                        @endphp
+                                        {{ $mobile_number }}
                                 </a>
                             </div>
                         </div>
@@ -179,21 +201,21 @@
                       <h5 class="p-3 align-items-center justify-content-around small-font-sm">
                          <div class="text-center py-2">Your Rewards Breakdown </div>
                          <div class="row">
-                            <div class="col-4 rounded ">
+                            <!-- <div class="col-4 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-yellow text-white p-2 rounded mt-2 text-center m-auto">{{$get_overrall_rewards}}</div>
                                   <div class="down-triangle-yellow triangle"></div>
                                   <div class="text-center my-2">Total Rewards since {{ \Carbon\Carbon::now()->year }}</div>
                                </div>
-                            </div>
-                            <div class="col-4 rounded ">
+                            </div> -->
+                            <div class="col-6 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
-                                  <div class="bg-blue text-white p-2 rounded mt-2 text-center m-auto">{{$get_current_rewards}}</div>
+                                  <div class="bg-blues text-white p-2 rounded mt-2 text-center m-auto">{{$get_current_rewards}}</div>
                                   <div class="down-triangle-blue triangle"></div>
                                   <div class="text-center my-2">Total Rewards this year</div>
                                </div>
                             </div>
-                            <div class="col-4 rounded ">
+                            <div class="col-6 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-green text-white p-2 rounded mt-2 text-center m-auto">{{$available_points ?? '0'}}</div>
                                   <div class="down-triangle-green triangle"></div>
@@ -231,7 +253,7 @@
              </div>
              <div class="col-md-12 row2">
                 <div class="row">
-                   <div class="col-md-6 bg-white ms-0">
+                   <div class="col-md-6 bg-white ms-0 cir-border">
                       <div class="bg-white my-2 max-w-100" style="min-height: 400px;">
                          <h5 class="align-items-center justify-content-around">
                             <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
@@ -273,8 +295,8 @@
                                   </tr>
                                </thead>
                                <tbody>
-                                  @foreach ($get_paid_survey as $res)
-                                  <tr>
+                               @foreach ($get_paid_survey as $res)
+                               <tr>
                                      <td>
                                      @if($res->project_name_resp!='')
                                      {{ $res->project_name_resp }}
@@ -324,7 +346,7 @@
                          </div>
                       </div>
                    </div>
-                   <div class="col-md-6 my-sm-5-mob bg-white me-0">
+                   <div class="col-md-6 my-sm-5-mob bg-white me-0 cir-border">
                       <div class="bg-white my-2 max-w-100">
                          <h5 class=" align-items-center justify-content-around">
                             <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
@@ -354,8 +376,8 @@
                                   </tr>
                                </thead>
                                <tbody>
-                                  @foreach ($get_completed_survey as $res)
-                                  <tr>
+                               @foreach ($get_completed_survey as $res)
+                               <tr>
                                      <td>
                                      @if($res->project_name_resp!='')
                                     {{ $res->project_name_resp }}
@@ -376,7 +398,11 @@
                                         Unpaid survey
                                         @endif
                                      </td>
-                                     <td>{{ $res->reward }}</td>
+                                     <td>
+                                        @if($res->is_frontend_complete==1)
+                                        {{ $res->reward }}
+                                        @endif
+                                    </td>
                                      @php
                                      $get_link = \App\Models\Respondents::get_respondend_survey(
                                      $res->survey_link,
@@ -399,7 +425,7 @@
                 </div>
              </div>
           </div>
-          <div class="col-md-12 bg-white my-2">
+          <div class="col-md-12 bg-white my-2 cir-border">
              <div class="bg-white  max-w-100">
                 <h5 class=" align-items-center justify-content-around">
                    <div class="w-50"><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
@@ -434,8 +460,8 @@
                       </tr>
                    </thead>
                    <tbody>
-                      @foreach ($get_other_survey as $res)
-                      <tr>
+                   @foreach ($get_other_survey as $res)
+                   <tr>
                          <td>
                           @if($res->project_name_resp!='')
                           {{ $res->project_name_resp }}
@@ -525,7 +551,7 @@
     var options = {
         series: [extended_data, essential_data, basic_data],
         labels: ['Additional Information', 'Your Essential Information', 'Basic'],
-        // colors: ['#775DD0', '#00C8E1', '#FFB900'],
+        colors: ['#2197bd', '#04c47d', '#fabd21'],
         theme: {
             monochrome: {
                 enabled: false

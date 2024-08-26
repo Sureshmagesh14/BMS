@@ -91,14 +91,39 @@
         background-color: #6396b1;
         color: #fff;
     }
+    .yelow-bg2{
+        border:1px solid #ffbb00;
+        border-radius:25px;
+    }
+    .rounded-border{
+        border-radius:25px;
+    }
+    .update-button{
+        background-color:#ffbb00;
+        border:1px solid #ffbb00;
+        color:#000 !important;
+        width: fit-content;
+        width: fit-content !important;
+        margin: auto;
+        display: flex;
+    }
+    .yelow-bg2{
+        width: 100%;
+    }
+    .yelow-bg2 img{
+        width: 90% !important;
+        bottom: 0;
+    position: absolute;
+    right: 22px;
+    }
+    .pos-rel{
+        position:relative;
+    }
 </style>
 <section class="bg-greybg vh-80 d-flex">
     <div class="container m-auto">
         <div class="row justify-content-center py-2">
-            <div class="col-md-6 yelow-bg2 text-center d-none-mobile d-flex">
-                <img class="img-fluid w-100" src="{{ asset('assets/images/Update your profile picture.webp') }}" alt="">
-            </div>
-            <div class="col-md-6 bg-white p-2">
+            <div class="col-md-6 bg-white p-2 rounded-border">
                 <div class="text-center">
                     @php
                         $profile_image = $data->profile_image ?? '';
@@ -124,11 +149,16 @@
                             </div>
                         </div>
 
-                        <div class="submit-btn text-start">
+                        <div class="submit-btn text-start my-2">
                             <button type="submit" id="profile"
-                                class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 w-100">Update</button>
+                                class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 w-100 update-button">Update</button>
                         </div>
                     </form>
+                </div>
+            </div>
+            <div class="col-md-6 text-center d-none-mobile d-flex pos-rel">
+                <div class=" yelow-bg2">
+                <img class="img-fluid w-100 mx-2" src="{{ asset('assets/images/Update your profile picture.webp') }}" alt="">
                 </div>
             </div>
         </div>
