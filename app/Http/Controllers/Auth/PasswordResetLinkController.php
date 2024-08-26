@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\URL;
 use App\Models\Respondents;
 use App\Mail\ResetPasswordEmail;
 use App\Models\PasswordResetsViaPhone;
+use Exception;
 class PasswordResetLinkController extends Controller
 {
     /**
@@ -80,7 +81,7 @@ class PasswordResetLinkController extends Controller
         try {
             // Validate the token
             $resetRecord = PasswordResetsViaPhone::where('token', $request->token)
-                ->where('updated_at', '>', now())
+                // ->where('updated_at', '>', now())
                 ->first();
 
             if (!$resetRecord) {
