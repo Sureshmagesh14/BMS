@@ -105,9 +105,9 @@
         overflow:hidden;
     }
 </style>
-<section class="bg-greybg vh-100 bg-img">
-    <div class="container">
-        <div class="row justify-content-center py-5">
+<section class="bg-greybg vh-100 bg-img m-auto d-flex">
+    <div class="container m-auto d-flex">
+        <div class="row w-100 justify-content-center py-5">
             <!-- <div class="col-md-6 yelow-bg text-center d-none-mobile">
                 <img class="img-fluid m-auto w-75" src="{{ asset('assets/images/img44.png') }}" alt="">
             </div> -->
