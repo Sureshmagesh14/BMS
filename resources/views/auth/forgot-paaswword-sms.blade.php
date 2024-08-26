@@ -34,14 +34,26 @@
     .w-35{
         width:45% !important;
     }
+    
+    .vi-nav-bg{
+        background-color:#fff;
+    }
+    button#reset {
+    background-color: #6396b1;
+    color: #fff;
+}
+.vi-white-bg:hover{
+    background-color:#ccc;
+    
+}
 </style>
 <!-- main starts -->
-<main class="forgot-pass py-5  vi-background-index pos-rel">
-<div class=" pos-abs mob-hide">
+<main class="forgot-pass py-5  vi-background-index pos-rel m-auto d-flex">
+<!-- <div class=" pos-abs mob-hide">
     <img class="w-35 ml-auto d-flex" src="{{ asset('assets/images/img_1.webp') }}" alt="Forgot image" />
-    </div>
-    <div class="container">
-        <div class="row">
+    </div> -->
+    <div class="container m-auto ">
+        <div class="row m-auto ">
             <div class="col-md-6 m-auto">
                 <form id="forgot_table" method="POST" action="{{ route('forgot_password_check') }}">
                     @csrf
@@ -78,8 +90,8 @@
                 <div class="text-center m-auto d-flex flex-column">
                 </div>
             </div>
-            <div class="col-md-5 mob-hide">
-                <!-- <img class="w-100 m-auto d-flex" src="{{ asset('assets/images/img_1.png') }}" alt="Forgot image" /> -->
+            <div class="col-md-5 yelow-bg2 mob-hide br-35">
+            <img class="w-75 m-auto d-flex" src="{{ asset('assets/images/img_1.webp') }}" alt="Forgot image" /> 
 
             </div>
         </div>

@@ -128,11 +128,14 @@ tr{
 }
 
 .bg-greybg {
-  /* background-color: #90b8d0; */
+  background-color: #90b8d0;
 }
 
 .vi-nav-bg {
-  /* background-color: #6396b1; */
+  background-color: #6396b1;
+}
+.br-35{
+  border-radius: 30px;
 }
 
 .vi-grey-bg {
@@ -1194,11 +1197,11 @@ select:focus {
     color: #88c3e1 !important;
     background: unset;
   } */
-#forgot_table .vi-white-bg:hover {
+/* #forgot_table .vi-white-bg:hover {
   color: #000 !important;
   background: unset !important;
   border: 1px solid #000;
-}
+} */
 
 /* basic code pen design customized ends  */
 

@@ -103,7 +103,9 @@
     .star_require {
         color: red;
     }
-
+    .wizard > .steps a{
+        background-color:#fff;
+    }
     @media only screen and (max-width: 600px) {
         .col-sm-12 {
             width: 100% !important;
