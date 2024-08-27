@@ -97,7 +97,16 @@ class WelcomeEmail extends Mailable
                 ->subject($this->data['subject'])
                 ->with(['otp' => $this->data['otp']]);
 
-        } else {
+        } 
+        elseif ($this->data['type'] == 'mobile_change_otp') {
+
+            return $this->view('mail.email_otp_mobile_change')
+                ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->replyTo(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ->subject($this->data['subject'])
+                ->with(['otp' => $this->data['otp']]);
+        }
+        else {
 
             return $this->view('mail.new_survey')
                 ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
