@@ -197,7 +197,7 @@ class ExportController extends Controller
 
                         $mobile_number = '-';
                         if (!empty($basic['mobile_number'])) {
-                            $m_number = = preg_replace('/\s+/', '',$basic['mobile_number']);
+                            $m_number =  preg_replace('/\s+/', '',$basic['mobile_number']);
                            
                             $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
@@ -217,7 +217,7 @@ class ExportController extends Controller
                         $whatsapp_number = '-';
                         if (!empty($basic['whatsapp_number'])) {
                             
-                            $w_number = = preg_replace('/\s+/', '',$basic['whatsapp_number']);
+                            $w_number =  preg_replace('/\s+/', '',$basic['whatsapp_number']);
                             $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
                                 $whatsapp_number = '+27' . $w_number;
