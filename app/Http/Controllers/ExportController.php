@@ -281,7 +281,7 @@ class ExportController extends Controller
                     $sheet->setCellValue('E1', 'WA Number');
                     $sheet->setCellValue('F1', 'Email');
                     $sheet->setCellValue('G1', 'Age');
-                    $sheet->setCellValue('H1', 'Relationship status');
+                    $sheet->setCellValue('H1', 'Relationship Status'); // Fixed spacing
                     $sheet->setCellValue('I1', 'Ethnic Group / Race');
                     $sheet->setCellValue('J1', 'Gender');
                     $sheet->setCellValue('K1', 'Highest Education Level');
@@ -289,17 +289,20 @@ class ExportController extends Controller
                     $sheet->setCellValue('M1', 'Industry my company is in');
                     $sheet->setCellValue('N1', 'Job Title');
                     $sheet->setCellValue('O1', 'Personal Income per month');
-                    $sheet->setCellValue('P1', 'HHI per month');
-                    $sheet->setCellValue('Q1', 'Province');
-                    $sheet->setCellValue('R1', 'Area');
-                    $sheet->setCellValue('S1', 'No. of people living in your household');
-                    $sheet->setCellValue('T1', 'Number of children');
-                    $sheet->setCellValue('U1', 'Number of vehicles');
-                    $sheet->setCellValue('V1', 'Opted in');
-                    $sheet->setCellValue('W1', 'Last Updated');
+                    $sheet->setCellValue('P1', 'Personal LSM'); // Corrected to unique column
+                    $sheet->setCellValue('Q1', 'HHI per month'); // Corrected to unique column
+                    $sheet->setCellValue('R1', 'Household LSM'); // Corrected to unique column
+                    $sheet->setCellValue('S1', 'Province');
+                    $sheet->setCellValue('T1', 'Area');
+                    $sheet->setCellValue('U1', 'No. of people living in your household');
+                    $sheet->setCellValue('V1', 'Number of children');
+                    $sheet->setCellValue('W1', 'Number of vehicles');
+                    $sheet->setCellValue('X1', 'Opted in'); // Moved Opted in to column X
+                    $sheet->setCellValue('Y1', 'Last Updated'); // Moved Last Updated to column Y
 
-                    $sheet->getStyle('A1:W1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:W1')->applyFromArray($styleArray);
+
+                    $sheet->getStyle('A1:Y1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:Y1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -487,7 +490,9 @@ class ExportController extends Controller
                         $personal_income = ($p_income != null) ? $p_income->income : '-';
                         $household_income = ($h_income != null) ? $h_income->income : '-';
                         $sheet->setCellValue('O' . $rows, $personal_income);
-                        $sheet->setCellValue('P' . $rows, $household_income);
+                        $sheet->setCellValue('P' . $rows, $essential->personal_income_per_month ?? '');
+                        $sheet->setCellValue('Q' . $rows, $household_income);
+                        $sheet->setCellValue('R' . $rows, $essential->household_income_per_month ?? '');
 
                         $state = null; // Initialize $state to null
 
@@ -509,21 +514,21 @@ class ExportController extends Controller
                         $get_state = ($state != null) ? $state->state : '-';
                         $get_district = ($district != null) ? $district->district : '-';
                       
-                        $sheet->setCellValue('Q' . $rows, $get_state ?? '');
-                        $sheet->setCellValue('R' . $rows, $get_district ?? '');
-                        $sheet->setCellValue('S' . $rows, $essential->no_houehold ?? '');
-                        $sheet->setCellValue('T' . $rows, $essential->no_children ?? '');
-                        $sheet->setCellValue('U' . $rows, $essential->no_vehicle ?? '');
+                        $sheet->setCellValue('S' . $rows, $get_state ?? '');
+                        $sheet->setCellValue('T' . $rows, $get_district ?? '');
+                        $sheet->setCellValue('U' . $rows, $essential->no_houehold ?? '');
+                        $sheet->setCellValue('V' . $rows, $essential->no_children ?? '');
+                        $sheet->setCellValue('W' . $rows, $essential->no_vehicle ?? '');
 
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
 
-                        $sheet->setCellValue('V' . $rows, $opted_in);
-                        $sheet->setCellValue('W' . $rows, $updated_at);
+                        $sheet->setCellValue('X' . $rows, $opted_in);
+                        $sheet->setCellValue('Y' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':W' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':W' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('C' . $rows . ':Y' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':Y' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                     }
 
