@@ -197,29 +197,41 @@ class ExportController extends Controller
 
                         $mobile_number = '-';
                         if (!empty($basic['mobile_number'])) {
-                            $m_number = $basic['mobile_number'];
-                            
+                            $m_number = = preg_replace('/\s+/', '',$basic['mobile_number']);
+                           
+                            $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
                                 $mobile_number = '+27(0)' . $m_number;
-                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            }else if ($length == 10 && $m_number[0] == '0'){
+                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                            } 
+                            elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
                         }
 
+                       
+
                         $whatsapp_number = '-';
                         if (!empty($basic['whatsapp_number'])) {
-                            $w_number = $basic['whatsapp_number'];
                             
+                            $w_number = = preg_replace('/\s+/', '',$basic['whatsapp_number']);
+                            $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
                                 $whatsapp_number = '+27' . $w_number;
-                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            } else if ($length == 10 && $w_number[0] == '0'){
+                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                            }
+                            elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                                 $whatsapp_number = '+' . $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
                         }
+
+                       
 
                         $id = $all_data->id ?? '-';
                         $first_name = $basic['first_name'] ?? '-';
@@ -299,29 +311,40 @@ class ExportController extends Controller
 
                         $mobile_number = '-';
                         if (!empty($basic->mobile_number)) {
-                            $m_number = $basic->mobile_number;
                             
+                            $m_number = preg_replace('/\s+/', '',$basic->mobile_number);
+                            $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
                                 $mobile_number = '+27(0)' . $m_number;
-                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            } else if ($length == 10 && $m_number[0] == '0'){
+                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                            }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
                         }
 
+                       
+
                         $whatsapp_number = '-';
                         if (!empty($basic->whatsapp_number)) {
-                            $w_number = $basic->whatsapp_number;
                             
+                            $w_number = preg_replace('/\s+/', '',$basic->whatsapp_number);
+                            $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
                                 $whatsapp_number = '+27' . $w_number;
-                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            } else if ($length == 10 && $w_number[0] == '0'){
+                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                            }
+                            elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                                 $whatsapp_number = '+' . $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
                         }
+
+                      
 
                         $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
@@ -599,29 +622,40 @@ class ExportController extends Controller
 
                         $mobile_number = '-';
                         if (!empty($basic->mobile_number)) {
-                            $m_number = $basic->mobile_number;
-                            
+                           
+                            $m_number = preg_replace('/\s+/', '',$basic->mobile_number);
+                            $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
                                 $mobile_number = '+27(0)' . $m_number;
-                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            } else if ($length == 10 && $m_number[0] == '0'){
+                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                            }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
                         }
 
+                       
+
                         $whatsapp_number = '-';
                         if (!empty($basic->whatsapp_number)) {
-                            $w_number = $basic->whatsapp_number;
-                            
+                           
+                            $w_number = preg_replace('/\s+/', '',$basic->whatsapp_number);
+                            $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
                                 $whatsapp_number = '+27' . $w_number;
-                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            } else if ($length == 10 && $w_number[0] == '0'){
+                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                            }
+                            elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                                 $whatsapp_number = '+' . $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
                         }
+
+                        
 
                         $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
@@ -985,29 +1019,37 @@ class ExportController extends Controller
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
                         if (!empty($all_data->mobile)) {
-                            $m_number = $all_data->mobile;
-                            
+                            $m_number = preg_replace('/\s+/', '',$all_data->mobile);
+                            $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
                                 $mobile_number = '+27(0)' . $m_number;
-                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            } else if ($length == 10 && $m_number[0] == '0'){
+                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                            }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
                         }
 
+                       
+
                         $whatsapp_number = '-';
                         if (!empty($all_data->whatsapp)) {
-                            $w_number = $all_data->whatsapp;
-                            
+                            $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
+                            $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
                                 $whatsapp_number = '+27' . $w_number;
+                            }else if ($length == 10 && $w_number[0] == '0'){
+                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
                             } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                                 $whatsapp_number = '+' . $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
                         }
+
+                       
 
                         $sheet->setCellValue('A' . $rows, $i);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
@@ -1055,29 +1097,37 @@ class ExportController extends Controller
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
                         if (!empty($all_data->mobile)) {
-                            $m_number = $all_data->mobile;
-                            
+                         
+                            $m_number = preg_replace('/\s+/', '',$all_data->mobile);
+                            $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
                                 $mobile_number = '+27(0)' . $m_number;
-                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            } else if ($length == 10 && $m_number[0] == '0'){
+                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                            }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
                         }
 
+
                         $whatsapp_number = '-';
                         if (!empty($all_data->whatsapp)) {
                             $w_number = $all_data->whatsapp;
-                            
+                            $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
                                 $whatsapp_number = '+27' . $w_number;
-                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            } else if ($length == 10 && $w_number[0] == '0'){
+                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                            }elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                                 $whatsapp_number = '+' . $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
                         }
+
+
 
                         $sheet->setCellValue('A' . $rows, $i);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
@@ -1125,10 +1175,12 @@ class ExportController extends Controller
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
                         if (!empty($all_data->mobile)) {
-                            $m_number = $all_data->mobile;
-                            
+                            $m_number = preg_replace('/\s+/', '',$all_data->mobile);
+                            $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
                                 $mobile_number = '+27(0)' . $m_number;
+                            }else if ($length == 10 && $m_number[0] == '0'){
+                                $mobile_number = '+27(0)' . substr($m_number, 1);
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
@@ -1136,18 +1188,24 @@ class ExportController extends Controller
                             }
                         }
 
+                      
+
                         $whatsapp_number = '-';
                         if (!empty($all_data->whatsapp)) {
-                            $w_number = $all_data->whatsapp;
-                            
+                            $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
+                            $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
                                 $whatsapp_number = '+27' . $w_number;
-                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            } else if ($length == 10 && $w_number[0] == '0'){
+                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                            }elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                                 $whatsapp_number = '+' . $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
                         }
+
+
 
                         $sheet->setCellValue('A' . $rows, $i);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
@@ -1194,11 +1252,14 @@ class ExportController extends Controller
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
                         if (!empty($all_data->mobile)) {
-                            $m_number = $all_data->mobile;
+                            $m_number = preg_replace('/\s+/', '',$all_data->mobile);
+                            $length = strlen($m_number);
                             
                             if (strlen($m_number) == 9) {
                                 $mobile_number = '+27(0)' . $m_number;
-                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                            } else if ($length == 10 && $m_number[0] == '0'){
+                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                            }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
@@ -1207,17 +1268,20 @@ class ExportController extends Controller
 
                         $whatsapp_number = '-';
                         if (!empty($all_data->whatsapp)) {
-                            $w_number = $all_data->whatsapp;
-                            
+                            $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
+                            $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
                                 $whatsapp_number = '+27' . $w_number;
-                            } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                            } else if ($length == 10 && $w_number[0] == '0'){
+                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                            }elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                                 $whatsapp_number = '+' . $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
                         }
 
+                
                         $sheet->setCellValue('A' . $rows, $i);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
@@ -1329,29 +1393,35 @@ class ExportController extends Controller
 
                     $mobile_number = '-';
                     if (!empty($all_data->mobile)) {
-                        $m_number = $all_data->mobile;
-                        
+                        $m_number =  preg_replace('/\s+/', '',$all_data->mobile);
+                        $length = strlen($w_number);
                         if (strlen($m_number) == 9) {
                             $mobile_number = '+27(0)' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                             $mobile_number = '+' . $m_number;
-                        } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                        } else if ($length == 10 && $m_number[0] == '0'){
+                            $mobile_number = '+27(0)' . substr($m_number, 1);
+                        }elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                             $mobile_number = $m_number;
                         }
                     }
 
                     $whatsapp_number = '-';
                     if (!empty($all_data->whatsapp)) {
-                        $w_number = $all_data->whatsapp;
-                        
+                        $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
+                        $length = strlen($w_number);
                         if (strlen($w_number) == 9) {
                             $whatsapp_number = '+27' . $w_number;
-                        } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                        } else if ($length == 10 && $w_number[0] == '0'){
+                            $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                        }elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                             $whatsapp_number = '+' . $w_number;
                         } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                             $whatsapp_number = $w_number;
                         }
                     }
+
+                
 
                     $sheet->setCellValue('A' . $rows, $i);
                     $sheet->setCellValue('B' . $rows, $all_data->name);
@@ -1460,29 +1530,35 @@ class ExportController extends Controller
 
                     $mobile_number = '-';
                     if (!empty($all_data->mobile)) {
-                        $m_number = $all_data->mobile;
-                        
+                        $m_number =  preg_replace('/\s+/', '',$all_data->mobile);
+                        $length = strlen($w_number);
                         if (strlen($m_number) == 9) {
                             $mobile_number = '+27(0)' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                             $mobile_number = '+' . $m_number;
-                        } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                        } else if ($length == 10 && $m_number[0] == '0'){
+                            $mobile_number = '+27(0)' . substr($m_number, 1);
+                        }elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                             $mobile_number = $m_number;
                         }
                     }
 
                     $whatsapp_number = '-';
                     if (!empty($all_data->whatsapp)) {
-                        $w_number = $all_data->whatsapp;
-                        
+                        $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
+                        $length = strlen($w_number);
                         if (strlen($w_number) == 9) {
                             $whatsapp_number = '+27' . $w_number;
-                        } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                        } else if ($length == 10 && $w_number[0] == '0'){
+                            $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                        }elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                             $whatsapp_number = '+' . $w_number;
                         } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                             $whatsapp_number = $w_number;
                         }
                     }
+
+                    
 
                     $sheet->setCellValue('A' . $rows, $i);
                     $sheet->setCellValue('B' . $rows, $all_data->name);
@@ -1595,30 +1671,34 @@ class ExportController extends Controller
 
                     $mobile_number = '-';
                     if (!empty($basic->mobile_number)) {
-                        $m_number = $basic->mobile_number;
-                        
+                        $m_number = preg_replace('/\s+/', '',$all_data->mobile);
+                        $length = strlen($m_number);
                         if (strlen($m_number) == 9) {
                             $mobile_number = '+27(0)' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                             $mobile_number = '+' . $m_number;
-                        } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                        } else if ($length == 10 && $m_number[0] == '0'){
+                            $mobile_number = '+27(0)' . substr($m_number, 1);
+                        }elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                             $mobile_number = $m_number;
                         }
                     }
+                   
 
                     $whatsapp_number = '-';
                     if (!empty($basic->whatsapp_number)) {
-                        $w_number = $basic->whatsapp_number;
-                        
+                   
+                        $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
                         if (strlen($w_number) == 9) {
-                            $whatsapp_number = '+27' . $w_number;
+                            $whatsapp_number = '+27(0)' . $w_number;
                         } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                             $whatsapp_number = '+' . $w_number;
+                        }else if ($length == 10 && $m_number[0] == '0'){
+                            $whatsapp_number = '+27(0)' . substr($w_number, 1);
                         } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                             $whatsapp_number = $w_number;
                         }
                     }
-
                     $sheet->setCellValue('A' . $rows, $all_data->id);
                     $sheet->setCellValue('B' . $rows, $basic->first_name ?? '');
                     $sheet->setCellValue('C' . $rows, $basic->last_name ?? '');
@@ -1924,24 +2004,29 @@ class ExportController extends Controller
                         $mobile_number = '-';
                         if (!empty($basic->mobile_number)) {
                             $m_number = preg_replace('/\s+/', '',$all_data->mobile);
-                          
+                            $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
                                 $mobile_number = '+27(0)' . $m_number;
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                 $mobile_number = '+' . $m_number;
-                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                            } else if ($length == 10 && $m_number[0] == '0'){
+                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                            }elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
                         }
+                       
 
                         $whatsapp_number = '-';
                         if (!empty($basic->whatsapp_number)) {
                        
                             $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
                             if (strlen($w_number) == 9) {
-                                $whatsapp_number = '+27' . $w_number;
+                                $whatsapp_number = '+27(0)' . $w_number;
                             } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                                 $whatsapp_number = '+' . $w_number;
+                            }else if ($length == 10 && $m_number[0] == '0'){
+                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
@@ -2400,29 +2485,37 @@ class ExportController extends Controller
                             
                             $mobile_number = '-';
                             if (!empty($basic->mobile_number)) {
-                                $m_number = $basic->mobile_number;
-                                
+                                $m_number = preg_replace('/\s+/', '',$basic->mobile_number);
+                                $length = strlen($m_number);
                                 if (strlen($m_number) == 9) {
                                     $mobile_number = '+27(0)' . $m_number;
-                                } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                }  else if ($length == 10 && $m_number[0] == '0'){
+                                    $mobile_number = '+27(0)' . substr($m_number, 1);
+                                }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                     $mobile_number = '+' . $m_number;
                                 } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                     $mobile_number = $m_number;
                                 }
                             }
+                           
 
                             $whatsapp_number = '-';
                             if (!empty($basic->whatsapp_number)) {
-                                $w_number = $basic->whatsapp_number;
-                                
+                              
+                                $w_number = preg_replace('/\s+/', '',$basic->whatsapp_number);
+                                $length = strlen($w_number);
                                 if (strlen($w_number) == 9) {
                                     $whatsapp_number = '+27' . $w_number;
                                 } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                                     $whatsapp_number = '+' . $w_number;
-                                } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                                } else if ($length == 10 && $m_number[0] == '0'){
+                                    $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                                }
+                                elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                     $whatsapp_number = $w_number;
                                 }
                             }
+                           
                             
                             $email = $basic->email ?? '';
                             $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
