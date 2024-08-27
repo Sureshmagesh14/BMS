@@ -1207,6 +1207,7 @@ class SurveyController extends Controller
 
     private static function processSkipLogic($display_logic, $response_user_id, $survey_id, $next_qus)
     {
+       
         $push_jump = [];
         $display_qus_choice_display = json_decode($display_logic->display_qus_choice_skip); 
         $logic_type_value_display = json_decode($display_logic->skiplogic_type_value_skip); 
@@ -1259,7 +1260,52 @@ class SurveyController extends Controller
     //  exit;
        return self::checkSkipLogicConditions($display_logic, $push_jump);
     }
+   
     private static function checkSkipLogicConditions($display_logic, $push_jump)
+    {
+        $display_qus_choice_andor_display = json_decode($display_logic->display_qus_choice_andor_skip);
+
+        // Handle cases based on the structure of the array
+        if (count($display_qus_choice_andor_display) === 1 && empty($display_qus_choice_andor_display[0])) {
+            // Single empty element - treat as 'and'
+            $display_qus_choice_andor_display[0] = 'and';
+        } elseif (count($display_qus_choice_andor_display) === 2 && empty($display_qus_choice_andor_display[0]) && $display_qus_choice_andor_display[1] === 'or') {
+            // Two elements where the first is empty and the second is 'or' - treat both as 'or'
+            $display_qus_choice_andor_display[0] = 'or';
+        }
+
+        $and_condition_met = true;
+        $or_condition_met = false;
+
+        foreach ($push_jump as $index => $condition) {
+            $display_condition = $display_qus_choice_andor_display[$index];
+            $result = $condition['result'] === 'pass';
+
+            // Handle "or" condition
+            if ($display_condition === 'or') {
+                if ($result) {
+                    $or_condition_met = true; // Mark that an "or" condition passed
+                } else {
+                    $and_condition_met = false; // If "or" fails, treat as "and" and set to false
+                }
+            } else { // Handle "and" condition
+                if (!$result) {
+                    $and_condition_met = false; // If any "and" condition fails, set to false
+                }
+            }
+        }
+
+        // If there's an "or" condition and any result passed, return true
+        if ($or_condition_met) {
+            return true;
+        }
+
+        // Return true if all "and" conditions are met, otherwise return false
+        return $and_condition_met;
+    }
+
+
+    private static function checkSkipLogicConditionsOL($display_logic, $push_jump)
     {
         $display_qus_choice_andor_display = json_decode($display_logic->display_qus_choice_andor_skip);
 
