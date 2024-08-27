@@ -33,6 +33,12 @@
 .logo{
     margin:0px;
 }
+@media (max-width: 768px) {
+    .bgimg {
+        background-image:unset;
+        background-color:#9bc0d6 !important;
+    }
+}
 </style>
 <div class="container-fluid p-md-3 text-center vi-full-height vi-background-index dashboard bgimg position-relative"
     style="background-size: cover; height:auto;">
