@@ -165,7 +165,7 @@
                                         @php
                                             // Clean up the mobile number by removing any whitespace
                                             $m_number = preg_replace('/\s+/', '', $data->mobile);
-                                        
+                                            $length = strlen($m_number);
                                             // Initialize $mobile_number to avoid undefined variable error
                                             $mobile_number = '';
                                         
@@ -175,7 +175,10 @@
                                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
                                                 // If the number starts with '27' and has 11 digits, add '+' before '27'
                                                 $mobile_number = '+' . $m_number;
-                                            } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                            }else if ($length == 10 && $m_number[0] == '0'){
+                                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                                            } 
+                                            elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                                 // If the number starts with '+27' and has 12 digits, use it as is
                                                 $mobile_number = $m_number;
                                             } else {
@@ -563,6 +566,22 @@
         chart: {
             height: 400,
             type: 'radialBar',
+            events: {
+                    dataPointSelection: function (event, chartContext, config) {
+                        var label = config.w.globals.labels[config.dataPointIndex];
+                        switch (label) {
+                            case 'Additional Information':
+                                    window.location.href = "{{ route('updateprofile_wizard', ['section' => 'extended']) }}";
+                                    break;
+                            case 'Your Essential Information':
+                                window.location.href = "{{ route('updateprofile_wizard', ['section' => 'essential']) }}";
+                                break;
+                            case 'Basic':
+                                window.location.href = "{{ route('updateprofile_wizard', ['section' => 'basic']) }}";
+                                break;
+                        }
+                    }
+                }
         },
         plotOptions: {
             radialBar: {
