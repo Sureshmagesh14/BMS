@@ -92,6 +92,9 @@
     .fit-content{
         width: fit-content;
     }
+    .bg-greybg{
+        background-color:#90b8d0 !important;
+    }
     @media (max-width: 768px) {
     .row2 .col-md-6 {
         width: 100% !important; /* Adjust width for smaller screens */

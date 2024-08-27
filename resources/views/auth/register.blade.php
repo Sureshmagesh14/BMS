@@ -151,7 +151,7 @@
         }
 </style>
 <div class="container-fluid register">
-    <div class="row vi-background-index">
+    <div class="row vi-background-index mb-5">
         <div class="col-md-7 col-sm-12">
             <div class="w-100 h-100p d-flex m-auto">
             <div class="rightside text-center m-auto w-100">
