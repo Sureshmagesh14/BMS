@@ -7,8 +7,40 @@
 .vi-nav-bg.btn {
     background-color: #6396b1 !important;
 }
+.vi-nav-bg{
+    background-color: #fff !important;
+}
+.bgimg{
+    background-image: url('../assets/images/landing_page.png');
+        height:100vh;
+        background-repeat:no-repeat;
+        background-size:cover;
+        background-position: 50% 50%;
+}
+.vi-background-index{
+    background-color:unset !important;
+}
+.pos-center{
+    /* position: absolute;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    bottom: 50%; */
+}
+.vi-nav-bg.btn{
+    background-color: #2392cd !important;
+}
+.logo{
+    margin:0px;
+}
+@media (max-width: 768px) {
+    .bgimg {
+        background-image:unset;
+        background-color:#9bc0d6 !important;
+    }
+}
 </style>
-<div class="container-fluid p-md-3 text-center vi-full-height vi-background-index dashboard"
+<div class="container-fluid p-md-3 text-center vi-full-height vi-background-index dashboard bgimg position-relative"
     style="background-size: cover; height:auto;">
 
     @if(isset($data->name) && ($data->name!=''))
@@ -17,19 +49,19 @@
     </div>
     @endif
     
-    <div class="row">
-        <div class="col-md-5 col-sm-12 m-auto mob-hide mt-auto">
+    <div class="row pos-center">
+        <!-- <div class="col-md-5 col-sm-12 m-auto mob-hide mt-auto">
         <img src="{{ asset('assets/images/img_2.webp') }}" class="img-fluid w-100 m-auto hide-mobile"
                         alt="">
-        </div>
-        <div class="col-md-7 col-sm-12 m-auto h-100p d-flex">
+        </div> -->
+        <div class="col-md-7 col-sm-12 m-auto h-100p d-flex m-0">
         <img src="{{ asset('assets/images/img_2.webp') }}" class="img-fluid w-75 m-auto bg-mobile"
         alt="">
             <div class="d-flex align-items-center flex-column justify-content-between">
-                <!-- <div class="logo">
+                <div class="logo">
                     <img src="{{ asset('user/images/small-logo.png') }}" class="img-fluid w-50 m-auto hide-mobile"
                         alt="">
-                </div> -->
+                </div>
                 <div class="heading">
                     <h1 class="text-white fw-boler vi-get-paid-head text-shadow fw-bolder">Get PAID for your opinion!</h1>
                 </div>

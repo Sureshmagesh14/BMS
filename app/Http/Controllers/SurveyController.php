@@ -574,7 +574,9 @@ class SurveyController extends Controller
                         $filename=$request->existing_image_uploaded_thankyou;
                     }else{
                         $surveyTemplate = SurveyTemplate::where(['id'=>$request->thankyou_template])->first();
-                        $filename=$surveyTemplate->image;
+                        if($surveyTemplate){
+                            $filename=$surveyTemplate->image;
+                        }
                     }
                 }
                 $TBSfilename='small-logo.png';
@@ -1042,6 +1044,7 @@ class SurveyController extends Controller
     public function submitans(Request $request){
         $survey_id = $request->survey_id;
         $question_id = $request->question_id;
+       
         $response_user_id =  Auth::user()->id;
          // Create Survey History 
          $survey_history = SurveyHistory::where(['survey_id'=>$survey_id,'respondent_id'=>$response_user_id])->first();
@@ -1102,7 +1105,7 @@ class SurveyController extends Controller
                         $display_qus_choice_display = json_decode($skip_logic->display_qus_choice_skip); 
                         $logic_type_value_display = json_decode($skip_logic->skiplogic_type_value_skip); 
                         if(count($display_qus_choice_display) > 0 && count($logic_type_value_display) > 0) {
-                            if (self::processSkipLogic($skip_logic, $response_user_id,$survey_id,$qus_check)) {
+                            if (self::processSkipLogic($skip_logic, $response_user_id, $survey_id, $qus_check)) {
                                 return redirect()->route('survey.startsurvey', [$survey_id, $skip_logic->jump_type]);
                             } else {
                                 return $surveyController->displaynextQus($question_id,$survey_id,$other_details);
@@ -1170,6 +1173,7 @@ class SurveyController extends Controller
            
         }
     }
+
     public static function displayNextQus($question_id, $survey_id, $other_details)
     {
         $response_user_id = Auth::user()->id;
@@ -1179,9 +1183,12 @@ class SurveyController extends Controller
             ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
             ->orderBy('qus_order_no')
             ->first();
+       
         if (!$next_qus) {
+            // Need to check current qus skip logic
             return self::handleSurveyCompletion($survey_id, $other_details);
         }
+        
 
 
         $display_logic = json_decode($next_qus->display_logic);
@@ -1197,8 +1204,10 @@ class SurveyController extends Controller
             return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
         }
     }
+
     private static function processSkipLogic($display_logic, $response_user_id, $survey_id, $next_qus)
     {
+       
         $push_jump = [];
         $display_qus_choice_display = json_decode($display_logic->display_qus_choice_skip); 
         $logic_type_value_display = json_decode($display_logic->skiplogic_type_value_skip); 
@@ -1242,12 +1251,105 @@ class SurveyController extends Controller
         } else {
             return redirect()->route('survey.startsurvey', [$survey_id, $next_qus->id]);
         }
-       
     
+    // echo "tesgt".self::checkSkipLogicConditions($display_logic, $push_jump);
+
+    //  echo "<pre>";
+    //  print_r($display_logic);
+    //  print_r($push_jump);
+    //  exit;
        return self::checkSkipLogicConditions($display_logic, $push_jump);
     }
-    
+   
     private static function checkSkipLogicConditions($display_logic, $push_jump)
+    {
+        $display_qus_choice_andor_display = json_decode($display_logic->display_qus_choice_andor_skip);
+
+        // Handle cases based on the structure of the array
+        if (count($display_qus_choice_andor_display) === 1 && empty($display_qus_choice_andor_display[0])) {
+            // Single empty element - treat as 'and'
+            $display_qus_choice_andor_display[0] = 'and';
+        } elseif (count($display_qus_choice_andor_display) === 2 && empty($display_qus_choice_andor_display[0]) && $display_qus_choice_andor_display[1] === 'or') {
+            // Two elements where the first is empty and the second is 'or' - treat both as 'or'
+            $display_qus_choice_andor_display[0] = 'or';
+        }
+
+        $and_condition_met = true;
+        $or_condition_met = false;
+
+        foreach ($push_jump as $index => $condition) {
+            $display_condition = $display_qus_choice_andor_display[$index];
+            $result = $condition['result'] === 'pass';
+
+            // Handle "or" condition
+            if ($display_condition === 'or') {
+                if ($result) {
+                    $or_condition_met = true; // Mark that an "or" condition passed
+                } else {
+                    $and_condition_met = false; // If "or" fails, treat as "and" and set to false
+                }
+            } else { // Handle "and" condition
+                if (!$result) {
+                    $and_condition_met = false; // If any "and" condition fails, set to false
+                }
+            }
+        }
+
+        // If there's an "or" condition and any result passed, return true
+        if ($or_condition_met) {
+            return true;
+        }
+
+        // Return true if all "and" conditions are met, otherwise return false
+        return $and_condition_met;
+    }
+
+
+    private static function checkSkipLogicConditionsOL($display_logic, $push_jump)
+    {
+        $display_qus_choice_andor_display = json_decode($display_logic->display_qus_choice_andor_skip);
+
+        // If the display logic array is empty or only contains empty strings, treat it as all 'and'
+        if (empty($display_qus_choice_andor_display) || in_array('', $display_qus_choice_andor_display)) {
+            $display_qus_choice_andor_display = array_fill(0, count($push_jump), 'and');
+        }
+
+        $length = min(count($display_qus_choice_andor_display), count($push_jump));
+
+        $and_condition_met = true;
+        $or_condition_met = false;
+
+        for ($i = 0; $i < $length; $i++) {
+            $display_condition = $display_qus_choice_andor_display[$i];
+            $push_condition = $push_jump[$i]['result'];
+            $logic_type = $push_jump[$i]['logic'];
+
+            $is_positive_logic = in_array($logic_type, ['isSelected', 'isAnswered', 'contains', 'startsWith', 'endsWith', 'equalsString', 'equalToForScale']);
+            $is_negative_logic = strpos($logic_type, 'Not') !== false || in_array($logic_type, ['isNotSelected', 'isNotAnswered', 'doesNotContain', 'notEqualTo', 'notEqualToForScale']);
+
+            if ($display_condition == 'or') {
+                if ($push_condition == 'pass' && $is_positive_logic) {
+                    $or_condition_met = true;
+                } elseif ($push_condition == 'fail' && $is_negative_logic) {
+                    $or_condition_met = true;
+                }
+            } elseif ($display_condition == 'and') {
+                if (($push_condition == 'fail' && $is_positive_logic) || ($push_condition == 'pass' && $is_negative_logic)) {
+                    $and_condition_met = false;
+                }
+            }
+        }
+
+        // Final evaluation
+        if ($or_condition_met) {
+            return true; // At least one 'or' condition passed
+        }
+
+        return $and_condition_met; // All 'and' conditions passed
+    }
+
+    
+    private static function checkSkipLogicConditions1($display_logic, $push_jump)
     {
         $display_qus_choice_andor_display = json_decode($display_logic->display_qus_choice_andor_skip);
     
@@ -1255,7 +1357,7 @@ class SurveyController extends Controller
         $only_or = true;
         foreach ($display_qus_choice_andor_display as $condition) {
             if ($condition == '') {
-                $condition = 'or';
+                $condition = 'and';
             }
             if ($condition !== 'or') {
                 $only_or = false;
@@ -1309,9 +1411,6 @@ class SurveyController extends Controller
         return $and_condition_met; // All 'and' conditions passed
     }
     
-   
-
-   
     private static function processDisplayLogic($display_logic, $response_user_id, $survey_id, $next_qus)
     {
         $jump_to = 0;
@@ -1412,10 +1511,7 @@ class SurveyController extends Controller
     
         return $and_condition_met;
     }
-    
-
-   
-
+       
     private static function getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display)
     {
         switch ($qus_typeData->qus_type) {

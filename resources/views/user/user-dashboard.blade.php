@@ -92,6 +92,9 @@
     .fit-content{
         width: fit-content;
     }
+    .bg-greybg{
+        background-color:#90b8d0 !important;
+    }
     @media (max-width: 768px) {
     .row2 .col-md-6 {
         width: 100% !important; /* Adjust width for smaller screens */
@@ -158,7 +161,32 @@
                             </div>
                             <div class="col-md-12 text-center d-flex">
                                 <a href="tel:{{ $data->mobile }}" class="nav-link d-flex align-items-center text-center m-auto">
-                                   <i class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i>+27(0) {{ $data->mobile }}
+                                   <i class="fa fa-phone yelow-clr pe-2" aria-hidden="true"></i>
+                                        @php
+                                            // Clean up the mobile number by removing any whitespace
+                                            $m_number = preg_replace('/\s+/', '', $data->mobile);
+                                            $length = strlen($m_number);
+                                            // Initialize $mobile_number to avoid undefined variable error
+                                            $mobile_number = '';
+                                        
+                                            if (strlen($m_number) == 9) {
+                                                // Prepend '+27' to 9-digit numbers
+                                                $mobile_number = '+27(0) ' . $m_number;
+                                            } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                                                // If the number starts with '27' and has 11 digits, add '+' before '27'
+                                                $mobile_number = '+' . $m_number;
+                                            }else if ($length == 10 && $m_number[0] == '0'){
+                                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                                            } 
+                                            elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                                                // If the number starts with '+27' and has 12 digits, use it as is
+                                                $mobile_number = $m_number;
+                                            } else {
+                                                // Handle unexpected formats or provide a default/fallback
+                                                $mobile_number = '';
+                                            }
+                                        @endphp
+                                        {{ $mobile_number }}
                                 </a>
                             </div>
                         </div>
@@ -179,21 +207,21 @@
                       <h5 class="p-3 align-items-center justify-content-around small-font-sm">
                          <div class="text-center py-2">Your Rewards Breakdown </div>
                          <div class="row">
-                            <div class="col-4 rounded ">
+                            <!-- <div class="col-4 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-yellow text-white p-2 rounded mt-2 text-center m-auto">{{$get_overrall_rewards}}</div>
                                   <div class="down-triangle-yellow triangle"></div>
                                   <div class="text-center my-2">Total Rewards since {{ \Carbon\Carbon::now()->year }}</div>
                                </div>
-                            </div>
-                            <div class="col-4 rounded ">
+                            </div> -->
+                            <div class="col-6 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-blues text-white p-2 rounded mt-2 text-center m-auto">{{$get_current_rewards}}</div>
                                   <div class="down-triangle-blue triangle"></div>
                                   <div class="text-center my-2">Total Rewards this year</div>
                                </div>
                             </div>
-                            <div class="col-4 rounded ">
+                            <div class="col-6 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-green text-white p-2 rounded mt-2 text-center m-auto">{{$available_points ?? '0'}}</div>
                                   <div class="down-triangle-green triangle"></div>
@@ -376,7 +404,11 @@
                                         Unpaid survey
                                         @endif
                                      </td>
-                                     <td>{{ $res->reward }}</td>
+                                     <td>
+                                        @if($res->is_frontend_complete==1)
+                                        {{ $res->reward }}
+                                        @endif
+                                    </td>
                                      @php
                                      $get_link = \App\Models\Respondents::get_respondend_survey(
                                      $res->survey_link,
@@ -534,6 +566,22 @@
         chart: {
             height: 400,
             type: 'radialBar',
+            events: {
+                    dataPointSelection: function (event, chartContext, config) {
+                        var label = config.w.globals.labels[config.dataPointIndex];
+                        switch (label) {
+                            case 'Additional Information':
+                                    window.location.href = "{{ route('updateprofile_wizard', ['section' => 'extended']) }}";
+                                    break;
+                            case 'Your Essential Information':
+                                window.location.href = "{{ route('updateprofile_wizard', ['section' => 'essential']) }}";
+                                break;
+                            case 'Basic':
+                                window.location.href = "{{ route('updateprofile_wizard', ['section' => 'basic']) }}";
+                                break;
+                        }
+                    }
+                }
         },
         plotOptions: {
             radialBar: {

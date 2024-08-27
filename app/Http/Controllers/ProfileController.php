@@ -77,7 +77,7 @@ class ProfileController extends Controller
 
     public function updateprofile_wizard(Request $request){
         try {
-            
+           
             $resp_id   = Session::get('resp_id');
             $resp_name = Session::get('resp_name');
             $resp_details = Respondents::select('id','name','surname','date_of_birth','email','mobile','whatsapp')->find($resp_id);
@@ -225,20 +225,40 @@ class ProfileController extends Controller
             }else{
                 $percent3 =0;
             }
+            // Default page value
+            $page = 1;
 
-            $page = 1; // Default value
-
-            if ($percent1 == '100.0' && $percent2 == '100.0' && $percent3 == '100.0') {
-                $page = 0;
-            } elseif ($percent1 == '100.0' && $percent2 < '100.0' && $percent3 == '100.0') {
-                $page = 1;
-            } elseif ($percent1 == '100.0' && $percent3 < '100.0' && $percent2 == '100.0') {
-                $page = 2;
-            } elseif ($percent2 == '100.0' && $percent1 < '100.0' && $percent3 == '100.0') {
-                $page = 0;
+            // Check if the section parameter is provided
+            if ($request->section) {
+                switch ($request->section) {
+                    case 'basic':
+                        $page = 0;
+                        break;
+                    case 'essential':
+                        $page = 1;
+                        break;
+                    case 'extended':
+                        $page = 2;
+                        break;
+                }
             } else {
-                $page = 0; // This is redundant; it's the default value
+                // If section is not provided, determine the page based on percentages
+                if ($percent1 == '100.0' && $percent2 == '100.0' && $percent3 == '100.0') {
+                    $page = 0;
+                } elseif ($percent1 == '100.0' && $percent2 < '100.0' && $percent3 == '100.0') {
+                    $page = 1;
+                } elseif ($percent1 == '100.0' && $percent3 < '100.0' && $percent2 == '100.0') {
+                    $page = 2;
+                } elseif ($percent2 == '100.0' && $percent1 < '100.0' && $percent3 == '100.0') {
+                    $page = 0;
+                }
+                // Default value is already set to 0, so no need to set it here
             }
+
+            // The resulting value of $page is ready to be used
+
+
+           
             
             
 

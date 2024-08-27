@@ -10,6 +10,9 @@
 .vi-background-index.position-relative{
    border:1px solid #90b8d0; 
 }
+.position-relative{
+   position: relative;
+}
 </style>
 
 <section class="vi-background-index  position-relative">
@@ -29,11 +32,11 @@
                    <div class="w-75 ml-auto d-flex d-sm-flex">
                       <div class="w-50">
                          @if($get_cashout == null)
-                         <h2 class=" h1 fw-bolder mt-2">Your available rewards</h2>
-                         <h2 class="yelow-clr h1 fw-bolder mt-2">{{ $get_reward }} <span>Points</span> </h2>
-                         <p>10 points = R1</p>
+                         <h2 class=" h1 fw-bolder mt-2 position-relative">Your available rewards</h2>
+                         <h2 class="yelow-clr h1 fw-bolder mt-2 position-relative">{{ $get_reward }} <span>Points</span> </h2>
+                         <p class="position-relative">10 points = R1</p>
                          @if($get_reward >= 40)
-                         <button type="button" class="btn btn-yellow width-fit-content d-flex" id="request_press"
+                         <button type="button" class="position-relative text-center btn btn-yellow width-fit-content d-flex" id="request_press"
                             data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
                             data-bs-original-title="{{ __('Cashout Process') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
                          Request Cash Out
@@ -42,8 +45,8 @@
                          <!-- <p class="very-sm-text mt-3" style="text-align: left;">* Points value automatically change to Monetary value</p> -->
                          <!-- <p class="very-sm-text mt-3" style="text-align: left;">* Cash Outs not made expire at the end of the year and will not be re-rewarded!</p> -->
                          @else
-                         <h2 class="yelow-clr h1 fw-bolder mt-5"> @if($get_cashout->type_id == 1) Pending @elseif($get_cashout->type_id == 2)Processing @endif</h2>
-                         <h5>@if($get_cashout->amount != 0){{$get_cashout->amount / 10}} ZAR @endif</h5>
+                         <h2 class="position-relative yelow-clr h1 fw-bolder mt-5"> @if($get_cashout->type_id == 1) Pending @elseif($get_cashout->type_id == 2)Processing @endif</h2>
+                         <h5 class="position-relative">@if($get_cashout->amount != 0){{$get_cashout->amount / 10}} ZAR @endif</h5>
                          @endif
                       </div>
                       <div class="w-50">
