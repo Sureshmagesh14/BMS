@@ -866,6 +866,9 @@
                                                 <option value="other"
                                                     @isset($extended_details['bank_secondary']) @if ($extended_details['bank_secondary'] == 'other') selected @endif @endisset>
                                                     Other</option>
+                                                    <option value="I_dont_have_a_second_bank_account"
+                                                    @isset($extended_details['bank_secondary']) @if ($extended_details['bank_secondary'] == 'I_dont_have_a_second_bank_account') selected @endif @endisset>
+                                                    I don’t have a second bank account</option>
                                             </select>
                                             <br>
                                             <input type="text" name="extended[bank_secondary_other]"
@@ -974,6 +977,9 @@
                                                 <option value="other"
                                                     @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'other') selected @endif @endisset>
                                                     Other</option>
+                                                    <option value="none"
+                                                    @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'none') selected @endif @endisset>
+                                                    None</option>
                                             </select>
                                             <br>
                                             <input type="text" name="extended[secondary_home_lang_other]"
@@ -1417,7 +1423,7 @@
     });
     $(function() {
         $('#relationship_status, #gender, #ethnic_group, #education_level, #employment_status, #industry_my_company, #personal_income_per_month, #business_org,' +
-            '#household_income_per_monty, #province, #suburb, #org, #org_company, #bank_main, #home_lang, #household_income_per_month,#bank_secondary'
+            '#household_income_per_monty, #province, #suburb, #org, #org_company, #bank_main, #home_lang, #household_income_per_month,#bank_secondary,#secondary_home_lang'
         ).select2({
             height: '10%',
             width: '100%'

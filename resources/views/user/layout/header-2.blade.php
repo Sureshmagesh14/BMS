@@ -258,7 +258,7 @@
 <body class="bg-greybg ">
     <nav class="navbar navbar-expand-lg bg-white navbar-light vi-nav-bg">
         <div class="container-fluid align-items-end">
-            <a class="navbar-brand w-25 w-sm-75" href="{{ route('user.dashboard') }}"><img
+            <a class="navbar-brand w-25 w-sm-75" href="https://thebrandsurgeon.co.za/"><img
                     class="img-fluid w-75 m-auto w-sm-100" src="{{ asset('user/images/small-logo.png') }}"
                     alt=""></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
