@@ -25,6 +25,13 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Illuminate\Support\Facades\Hash;
 use Exception;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
+use Config;
+use App\Models\Project_respondent;
+use App\Mail\Respondentprojectmail;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 
 class ProfileController extends Controller
 {
@@ -402,5 +409,142 @@ class ProfileController extends Controller
             'success' => true,
             'message' => $step_word. ' Successfully'
         ]);
+    }
+
+    public function emailChangeOtpSend(Request $request){
+        try {
+            $resp_id = Session::get('resp_id');
+            $getResp =  Respondents::select('mobile','whatsapp')->where('id',$resp_id)->first();
+
+            if($getResp != null){
+                // Clean and validate phone number
+                $phone = str_replace(' ', '', $getResp->mobile);
+                
+                // Ensure phone number contains only digits
+                if (!ctype_digit($phone)) {
+                    return redirect()->route('updateprofile_wizard')->with('error', 'Invalid phone number format');
+                }
+
+                // Validate phone number length (less than or equal to 9 digits)
+                if (strlen($phone) > 9) {
+                    return redirect()->route('updateprofile_wizard')->with('error', 'Invalid phone number format: Must be 9 digits or less');
+                }
+
+                $otp = random_int(100000, 999999);
+                // Prepare SMS content
+                $smsContent = "Reset Password Notification\n\n";
+                $smsContent .= "OTP: $otp.\n";
+                $smsContent .= "If you did not change the email, no further action is required.\n";
+                $smsContent .= "This OTP will expire in 60 minutes.";
+                
+                Respondents::where('id',$resp_id)->update(['email_or_phone_change_otp' => $otp]);
+
+                // Parameters for the SMS
+                $postData = [
+                    'username' => config('constants.username'),
+                    'password' => config('constants.password'),
+                    'account'  => config('constants.account'),
+                    'da'       => config('constants.phone') . $phone, // Destination number with country code
+                    'ud'       => $smsContent, // SMS content
+                ];
+
+                // Initialize cURL session
+                $curl = curl_init();
+
+                // Set cURL options
+                curl_setopt_array($curl, [
+                    CURLOPT_URL => 'http://apihttp.pc2sms.biz/submit/single/',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => http_build_query($postData),
+                ]);
+
+                // Execute cURL session
+                $response = curl_exec($curl);
+
+                // Check for cURL execution errors
+                if ($response === false) {
+                    throw new Exception(curl_error($curl), curl_errno($curl));
+                }
+
+                // Close cURL session
+                curl_close($curl);
+
+                // Log the full response for debugging
+                Log::info('SMS API Response: ' . $response);
+
+                // Check if response indicates success
+                if (strpos($response, 'Accepted for delivery') !== false) {
+                    return view('user.email_chage_otp');
+                }
+                else {
+                    return redirect()->route('updateprofile_wizard')->with('error', 'Failed to send SMS! Please try after sometime');
+                    throw new Exception('Failed to send SMS. API response: ' . $response);
+                }
+            }
+        }
+        catch (Exception $e) {
+            // Log the exception with more details
+            Log::error('SMS API Error: ' . $e->getMessage() . ' - Code: ' . $e->getCode());
+    
+            return redirect()->route('updateprofile_wizard')->with('error', 'Failed to send SMS! Please try after sometime');
+        }
+    }
+
+    public function emailChangeOtpCheck(Request $request){
+        (int) $otp = $request->otp;
+
+        $resp_id = Session::get('resp_id');
+        $getResp =  Respondents::where('id',$resp_id)->where('email_or_phone_change_otp',$otp)->first();
+        
+        if($getResp != null){
+            Respondents::where('id',$resp_id)->update(['email_or_phone_change_otp' => 0]);
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function emailChange(Request $request){
+        $resp_id = Session::get('resp_id');
+        $email_id = $request->email_id;
+        Respondents::where('id',$resp_id)->update(['email' => $email_id]);
+
+        return redirect()->route('updateprofile_wizard')->with('status', 'Email ID Changed!');
+    }
+
+    public function mobileChangeOtpSend(Request $request){
+        try {
+
+            $resp_id = Session::get('resp_id');
+            $otp = random_int(100000, 999999);
+            Respondents::where('id',$resp_id)->update(['email_or_phone_change_otp' => $otp]);
+
+            $get_email  = Respondents::where('id', $resp_id)->first();
+            $to_address = $get_email->email;
+            // $to_address = 'bala@pabrai.com';
+
+            $data = ['subject' => 'OTP for mobile number change','type' => 'mobile_change_otp', 'otp' => $get_email->email_or_phone_change_otp];
+
+            Mail::to($to_address)->send(new WelcomeEmail($data));
+          
+            return view('user.mobile_change_otp');
+    
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function mobileChange(Request $request){
+        $resp_id = Session::get('resp_id');
+        $phone_no = $request->phone_no;
+        Respondents::where('id',$resp_id)->update(['mobile' => $phone_no]);
+
+        return redirect()->route('updateprofile_wizard')->with('status', 'Email ID Changed!');
     }
 }
