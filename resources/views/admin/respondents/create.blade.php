@@ -298,8 +298,8 @@
                                 dataFilter: function(response) {
                                     // Parse the JSON response from the server
                                     var json = JSON.parse(response);
-                                    return json.valid ? "true" :
-                                        "false"; // Return 'true' or 'false' to indicate validity
+                                    // Return validation result based on 'exists' key
+                                    return json.exists === false ? 'true' : 'false';
                                 }
                             }
                         },
