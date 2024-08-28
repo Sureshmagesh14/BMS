@@ -558,26 +558,38 @@ class RespondentsController extends Controller
                 $mobile = $post->mobile;
 
                 if (!empty($mobile)) {
-                    if (strlen($mobile) == 9) {
-                        $mobile = '+27' . $mobile;
-                    } else if (strpos($mobile, '27') === 0 && strlen($mobile) == 11) {
-                        $mobile = '+' . $mobile;
-                    } else if (strpos($mobile, '+27') === 0 && strlen($mobile) == 12) {
-                        $mobile = $mobile;
+                   
+                    $m_number = preg_replace('/\s+/', '',$mobile);
+                    $length = strlen($m_number);
+                    if (strlen($m_number) == 9) {
+                        $mobile = '27' . $m_number;
+                    } else if ($length == 10 && $m_number[0] == '0'){
+                        $mobile = '27' . substr($m_number, 1);
+                    }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
+                        $mobile = $m_number;
+                    } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
+                        $mobile = $m_number;
                     }
                 }
                 
                 
                 $whatsapp = $post->whatsapp;
                 if (!empty($whatsapp)) {
-                    if (strlen($whatsapp) == 9) {
-                        $whatsapp = '+27' . $whatsapp;
-                    } else if (strpos($whatsapp, '27') === 0 && strlen($whatsapp) == 11) {
-                        $whatsapp = '+' . $whatsapp;
-                    } else if (strpos($whatsapp, '+27') === 0 && strlen($whatsapp) == 12) {
-                        $whatsapp = $whatsapp;
+                   
+                    $w_number = preg_replace('/\s+/', '',$whatsapp);
+                    $length = strlen($w_number);
+                    if (strlen($w_number) == 9) {
+                        $whatsapp = '27' . $w_number;
+                    } else if ($length == 10 && $w_number[0] == '0'){
+                        $whatsapp = '27' . substr($w_number, 1);
+                    }
+                    elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
+                        $whatsapp = $w_number;
+                    } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
+                        $whatsapp = $w_number;
                     }
                 }
+
                 $opted_in = ($post->opted_in != null) ? date("d-m-Y", strtotime($post->opted_in)) : '';
                 $updated_at = ($post->updated_at != null) ? date("d-m-Y", strtotime($post->updated_at)) : '';
                 $accept_terms = $post->accept_terms == 1 ? 'Yes' : 'No';
