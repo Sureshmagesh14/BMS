@@ -128,7 +128,7 @@
                         @if (
                             !str_contains($errors->all()[0], 'Incorrect Email') &&
                                 !str_contains($errors->all()[0], 'Incorrect Phone No') &&
-                                !str_contains($errors->all()[0], 'Unsubscribed'))
+                                !str_contains($errors->all()[0], 'Unsubscribed') && !str_contains($errors->all()[0], 'Your account is deactivated'))
                             <div class="alert alert-danger">
                                 @foreach ($errors->all() as $message)
                                     <strong>{{ $message }}</strong> Please try again or you can <a

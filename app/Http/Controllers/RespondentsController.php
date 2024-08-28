@@ -96,6 +96,8 @@ class RespondentsController extends Controller
                 $respondents->updated_at = $request->input('updated_at');
                 $respondents->referral_code = $request->input('referral_code');
                 $respondents->accept_terms = $request->input('accept_terms');
+                $respondents->deactivated_date = $request->input('deactivated_date');
+                
                 $respondents->save();
                 $respondents->id;
                 app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
@@ -251,6 +253,7 @@ class RespondentsController extends Controller
         $respondent->active_status_id = $request->input('active_status_id', $respondent->active_status_id);
         $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
         $respondent->accept_terms = $request->input('accept_terms', $respondent->accept_terms);
+        $respondent->deactivated_date = $request->input('deactivated_date', $respondent->deactivated_date);
 
         // Save changes
         $respondent->save();
