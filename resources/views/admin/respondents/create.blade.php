@@ -257,6 +257,15 @@
         </div>
     </div>
 
+    <div class="form-group row">
+        <label for="example-search-input" class="col-md-2 col-form-label">Deactivated Date
+        </label>
+        <div class="col-md-10">
+            <input class="form-control" type="date" name="deactivated_date" id="deactivated_date">
+        </div>
+    </div>
+
+
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="respondents_create">Create New</button>
@@ -304,7 +313,7 @@
                                 data: {
                                     mobile: function() {
                                         return $('#mobile')
-                                    .val(); // Ensure this matches the input's ID or name
+                                            .val(); // Ensure this matches the input's ID or name
                                     },
                                     form_name: "usercreate"
                                 },
@@ -417,4 +426,22 @@
             input.attr("type", "password");
         }
     });
+    // Get the current date
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    // Format the date
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+
+    today = yyyy + '-' + mm + '-' + dd;
+
+    // Set the minimum date
+    document.getElementById("deactivated_date").setAttribute("min", today);
 </script>
