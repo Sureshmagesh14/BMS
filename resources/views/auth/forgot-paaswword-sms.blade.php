@@ -103,7 +103,7 @@
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script>
     $(function() {
-        $('#phone').inputmask("999 999 999");
+        $('#phone').inputmask("99 999 9999");
         $('#forgot_table').validate({
             rules: {
                 phone: {

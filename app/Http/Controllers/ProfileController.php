@@ -475,7 +475,7 @@ class ProfileController extends Controller
                 curl_close($curl);
 
                 // Log the full response for debugging
-                Log::info('SMS API Response: ' . $response);
+                // Log::info('SMS API Response: ' . $response);
 
                 // Check if response indicates success
                 if (strpos($response, 'Accepted for delivery') !== false) {
@@ -527,7 +527,6 @@ class ProfileController extends Controller
 
             $get_email  = Respondents::where('id', $resp_id)->first();
             $to_address = $get_email->email;
-            // $to_address = 'bala@pabrai.com';
 
             $data = ['subject' => 'OTP for mobile number change','type' => 'mobile_change_otp', 'otp' => $get_email->email_or_phone_change_otp];
 
@@ -545,6 +544,6 @@ class ProfileController extends Controller
         $phone_no = $request->phone_no;
         Respondents::where('id',$resp_id)->update(['mobile' => $phone_no]);
 
-        return redirect()->route('updateprofile_wizard')->with('status', 'Email ID Changed!');
+        return redirect()->route('updateprofile_wizard')->with('status', 'Mobile Changed!');
     }
 }

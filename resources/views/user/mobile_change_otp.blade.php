@@ -47,6 +47,36 @@
     
 }
 </style>
+
+<style>
+    .error {
+        color: red;
+    }
+
+    .input-group-text {
+        line-height: 2.3;
+    }
+
+
+    ::-webkit-scrollbar {
+        width: 14px;
+    }
+
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        border-radius: 10px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+    }
+</style>
 <!-- main starts -->
 <main class="forgot-pass py-5  vi-background-index pos-rel m-auto d-flex">
 <!-- <div class=" pos-abs mob-hide">
@@ -63,11 +93,11 @@
                             <p class="mb-4 fw-bold h4 text-white">OTP send your registered email.</p>
                             <label for="otp" class="fw-bolder fs-20">Enter your OTP</label>
                             <div class="input-group mb-2">
-                                <input type="number" name="otp" id="otp" placeholder="000000" class="form-control vi-border-clr border-radius-0 w-50" minlength="6">
+                                <input type="number" name="otp" id="otp" placeholder="000000" class="form-control vi-border-clr border-radius-0 w-50">
                             </div>
                             <div class="row my-2">
                                 <div class="col-md-6 col-sm-12">
-                                    <button type="button"
+                                    <button type="submit"
                                     class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2 me-1"
                                     id="check_otp">Check</button>
                                 </div>
@@ -81,13 +111,22 @@
                 </div>
 
                 <div class="email_address_class" style="display: none;">
-                    <form action="{{ route('emailChange') }}" method="POST" id="email_id_change_form">
+                    <form action="{{ route('mobileChange') }}" method="POST" id="mobile_no_change_form">
                         @csrf
+
                         <div class="text-start m-auto my-3">
-                            <label for="phone_no" class="fw-bolder fs-20">Enter your mobile number</label>
-                            <div class="input-group mb-2">
-                                <input type="text" name="phone_no" id="phone_no" class="form-control vi-border-clr border-radius-0 w-50">
+                            <div class="mobile text-start m-auto my-3">
+                                <label for="mobile" class="fw-bolder fs-20">Mobile <span class="text-danger">*</span></label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend w-15">
+                                        <div class="input-group-text">+27 (0)</div>
+                                    </div>
+                                    <input type="text" name="phone_no" id="phone_no" placeholder="819 966 078" class="form-control vi-border-clr border-radius-0 w-50"
+                                    autocomplete="off">
+                                </div>
+                                <small class="text-muted">Don’t include 0 in starting.</small>
                             </div>
+
                             <div class="row my-2">
                                 <div class="col-md-6 col-sm-12">
                                     <button type="submit" class="btn vi-nav-bg border-radius-0 text-white px-5 py-3 m-auto w-100 my-2 me-1" id="change_email">Change</button>
@@ -115,61 +154,63 @@
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script>
     $(function() {
-        $('#phone_no').inputmask("999 999 999");
-        
-        $('#email_id_change_form').validate({
+        $('form#mobile_no_change_form').validate({
             rules: {
                 phone_no: {
                     required: true,
+                    rangelength: [9, 9]
                 }
             },
             messages: {
                 phone_no: {
-                    required: "Please enter an email."
+                    required: "Please enter an mobile.",
+                    rangelength: "The length must be exactly 11 characters."
                 }
             }
         });
-    });
 
-    $("#check_otp").click(function(){
-        $('#forgot_table').validate({
+        $('form#forgot_table').validate({
             rules: {
                 otp: {
                     required: true,
-                    maxlength: 6,
-                    minlength: 6
+                    rangelength: [6, 6]
                 }
             },
             messages: {
                 otp: {
                     required: "Please enter an OTP.",
-                    minlength: "OTP must be 6 digits."
+                    rangelength: "OTP must be 6 digits."
                 }
             }
         });
+    });
 
-        $.ajax({
-            url : '{{ route("emailChangeOtpCheck") }}',
-            type : 'GET',
-            data : {
-                'otp' : $("#otp").val()
-            },
-            success : function(data) {              
-                if(data == 1){
-                    toastr.success("Success! Please change your mobile no");
-                    $(".otp_class").hide();
-                    $(".email_address_class").show();
-                }
-                else{
-                    toastr.error("OOPS! OTP is wrong.");
-                }
-            },
-            error : function(request,error)
-            {
-                alert("Request: "+JSON.stringify(request));
-            }
-        });
+    $("#check_otp").click(function(event){
+        event.preventDefault();
 
+        if ($('form#forgot_table').valid()) {
+            $.ajax({
+                url : '{{ route("emailChangeOtpCheck") }}',
+                type : 'GET',
+                data : {
+                    'otp' : $("#otp").val()
+                },
+                success : function(data) {              
+                    if(data == 1){
+                        toastr.success("Success! Please change your mobile no");
+                        $(".otp_class").hide();
+                        $(".email_address_class").show();
+                    }
+                    else{
+                        toastr.error("OOPS! OTP is wrong.");
+                    }
+                },
+                error : function(request,error)
+                {
+                    alert("Request: "+JSON.stringify(request));
+                }
+            });
+        }
     });
 </script>
 
