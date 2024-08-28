@@ -168,6 +168,7 @@
 
                                             </div>
                                             <small class="form-text text-muted">Don’t include 0 in starting.</small>
+                                            <a href="{{ route('mobileChangeOtpSend') }}">Do you want channge mobile number! Click here.</a>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="whatsapp_number">Whats App Number <span
@@ -187,6 +188,7 @@
                                             <label for="email">Email <span class="star_require">*</span></label>
                                             <input type="email" class="form-control" id="email"
                                                 name="basic[email]" value="{{ $resp_details->email }}" readonly>
+                                            <a href="{{ route('emailChangeOtpSend') }}">Do you want channge email! Click here.</a>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="date_of_birth">Date of Birth <span
@@ -1477,3 +1479,24 @@
         
     });
 </script>
+
+
+@if (count($errors) > 0)
+    @foreach ($errors->all() as $message)
+        <script>
+            toastr.error("{{ $message }}");
+        </script>
+    @endforeach
+@endif
+
+@if (Session::has('status'))
+    <script>
+        toastr.success("{{ session('status') }}");
+    </script>
+@endif
+
+@if (Session::has('error'))
+    <script>
+        toastr.error("{{ session('error') }}");
+    </script>
+@endif

@@ -75,6 +75,13 @@ Route::any('profile_save', 'ProfileController@profile_save')->middleware(['auth'
 Route::any('process_cashout', 'WelcomeController@process_cashout')->name('process_cashout');
 Route::any('complete_cashout', 'WelcomeController@complete_cashout')->name('complete_cashout');
 
+Route::any('emailChangeOtpSend', 'ProfileController@emailChangeOtpSend')->middleware(['auth', 'verified'])->name('emailChangeOtpSend');
+Route::any('emailChangeOtpCheck', 'ProfileController@emailChangeOtpCheck')->middleware(['auth', 'verified'])->name('emailChangeOtpCheck');
+Route::any('emailChange', 'ProfileController@emailChange')->middleware(['auth', 'verified'])->name('emailChange');
+
+Route::any('mobileChangeOtpSend', 'ProfileController@mobileChangeOtpSend')->middleware(['auth', 'verified'])->name('mobileChangeOtpSend');
+Route::any('mobileChange', 'ProfileController@mobileChange')->middleware(['auth', 'verified'])->name('mobileChange');
+
 /* USERS */
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
