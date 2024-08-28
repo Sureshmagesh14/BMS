@@ -386,8 +386,8 @@ class ExportController extends Controller
 
                         // Default to an empty string if $essential is null or ethnic group is not found
                         $ethnic_group = '';
-                        if ($essential && isset($essential->ethnic_group) && isset($ethnicGroups[$essential->ethnic_group])) {
-                            $ethnic_group = $ethnicGroups[$essential->ethnic_group];
+                        if ($essential && isset($essential->ethnic_group)) {
+                            $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
                         }
 
                         // Set the value in the spreadsheet
@@ -733,9 +733,8 @@ class ExportController extends Controller
 
                         // Check if $essential is not null and has the ethnic_group property
                         if ($essential && isset($essential->ethnic_group)) {
-                            $ethnic_group = isset($ethnicGroups[$essential->ethnic_group])
-                                            ? $ethnicGroups[$essential->ethnic_group]
-                                            : ''; // Default to empty string if ethnic_group is not found
+                            
+                            $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
                         }
 
                         // Set the cell value
@@ -1785,7 +1784,9 @@ class ExportController extends Controller
                     ];
 
                     // Default to an empty string if the ethnic group is not in the array
-                    $ethnic_group = isset($ethnicGroups[$essential->ethnic_group]) ? $ethnicGroups[$essential->ethnic_group] : '';
+                    if ($essential && isset($essential->ethnic_group)) {
+                        $ethnic_group = $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
+                    }
 
                     $sheet->setCellValue('I' . $rows, $ethnic_group);
                     $sheet->setCellValue('J' . $rows, $essential->gender ?? '');
@@ -2128,7 +2129,10 @@ class ExportController extends Controller
                         ];
 
                         // Default to an empty string if the ethnic group is not in the array
-                        $ethnic_group = isset($ethnicGroups[$essential->ethnic_group]) ? $ethnicGroups[$essential->ethnic_group] : '';
+                        
+                        if ($essential && isset($essential->ethnic_group)) {
+                            $ethnic_group = $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
+                        }
 
                         $sheet->setCellValue('J' . $rows, $ethnic_group);
                         $sheet->setCellValue('K' . $rows, ucfirst($essential->gender) ?? '');
@@ -2628,7 +2632,10 @@ class ExportController extends Controller
                             ];
 
                             // Default to an empty string if the ethnic group is not in the array
-                            $ethnic_group = isset($ethnicGroups[$essential->ethnic_group]) ? $ethnicGroups[$essential->ethnic_group] : '';
+                            
+                            if ($essential && isset($essential->ethnic_group)) {
+                                $ethnic_group = $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
+                            }
 
                          
                             // Initialize the gender variable with a default value
