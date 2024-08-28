@@ -228,7 +228,7 @@ class WelcomeController extends Controller
 
                 $percent3 = $resp_datas->extended_details;
                 $json_array  = json_decode($percent3, true);
-                unset($json_array['bank_main_other'],$json_array['home_lang_other'], $json_array['business_org_other']);
+                unset($json_array['bank_main_other'],$json_array['home_lang_other'], $json_array['business_org_other'],$json_array['bank_secondary_other'],$json_array['secondary_home_lang_other']);
 
                 $tot_count  = count($json_array);
            
