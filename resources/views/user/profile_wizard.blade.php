@@ -162,13 +162,13 @@
                                                     <div class="input-group-text">+27 (0)</div>
                                                 </div>
                                                 <input type="text" name="basic[mobile_number]" id="mobile_number"
-                                                    placeholder="081 966 0786"
+                                                    placeholder="08 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ $resp_details->mobile }}" maxlength="16" readonly>
 
                                             </div>
                                             <small class="form-text text-muted">Don’t include 0 in starting.</small>
-                                            <a href="{{ route('mobileChangeOtpSend') }}">Do you want channge mobile number! Click here.</a>
+                                            <a style="float: right;" href="{{ route('mobileChangeOtpSend') }}">Do you want channge mobile number! Click here.</a>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="whatsapp_number">Whats App Number <span
@@ -178,7 +178,7 @@
                                                     <div class="input-group-text">+27 (0)</div>
                                                 </div>
                                                 <input type="text" name="basic[whatsapp_number]" id="whatsapp_number"
-                                                    placeholder="081 966 0786"
+                                                    placeholder="08 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ $resp_details->whatsapp }}" maxlength="16" required>
                                             </div>
@@ -188,7 +188,7 @@
                                             <label for="email">Email <span class="star_require">*</span></label>
                                             <input type="email" class="form-control" id="email"
                                                 name="basic[email]" value="{{ $resp_details->email }}" readonly>
-                                            <a href="{{ route('emailChangeOtpSend') }}">Do you want channge email! Click here.</a>
+                                            <a style="float: right;" href="{{ route('emailChangeOtpSend') }}">Do you want channge email! Click here.</a>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="date_of_birth">Date of Birth <span
@@ -1028,8 +1028,8 @@
         var form = $("#profile_wizard_form");
 
         // Initialize Inputmask
-        $('#mobile_number').inputmask("999 999 9999");
-        $('#whatsapp_number').inputmask("999 999 9999");
+        $('#mobile_number').inputmask("99 999 9999");
+        $('#whatsapp_number').inputmask("99 999 9999");
         $('#date_of_birth').inputmask("yyyy/mm/dd", {
             "placeholder": "YYYY/MM/DD",
             onincomplete: function() {
@@ -1338,8 +1338,8 @@
         }
     });
     $(document).ready(function() {
-        $('#mobile_number').inputmask("999 999 9999");
-        $('#whatsapp_number').inputmask("999 999 9999");
+        $('#mobile_number').inputmask("99 999 9999");
+        $('#whatsapp_number').inputmask("99 999 9999");
 
         $.validator.addMethod("phoneUS", function(value, element) {
             return this.optional(element) || /^\d{3} \d{3} \d{4}$/.test(value);

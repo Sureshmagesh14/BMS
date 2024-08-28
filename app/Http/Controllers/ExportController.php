@@ -495,7 +495,7 @@ class ExportController extends Controller
 
                         $personalIncome = '';
                         if ($essential !== null && isset($essential->personal_income_per_month)) {
-                            $personalIncome = 'LSM ' . $essential->personal_income_per_month;
+                            $personalIncome = $essential->personal_income_per_month;
                         }
                         $sheet->setCellValue('P' . $rows, $personalIncome);
                         
@@ -503,7 +503,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('Q' . $rows, $household_income);
                         $householdIncome = '';
                         if ($essential !== null && isset($essential->household_income_per_month)) {
-                            $householdIncome = 'LSM ' .$essential->household_income_per_month;
+                            $householdIncome = $essential->household_income_per_month;
                         }
                         $sheet->setCellValue('R' . $rows, $householdIncome);
 
@@ -845,14 +845,14 @@ class ExportController extends Controller
                         $sheet->setCellValue('O' . $rows, $personal_income ?? '');
                         $personalIncome = '';
                         if ($essential !== null && isset($essential->personal_income_per_month)) {
-                            $personalIncome = 'LSM ' . $essential->personal_income_per_month;
+                            $personalIncome = $essential->personal_income_per_month;
                         }
                         $sheet->setCellValue('P' . $rows, $personalIncome);
                         
                         $sheet->setCellValue('Q' . $rows, $household_income ?? '');
                         $householdIncome = '';
                         if ($essential !== null && isset($essential->household_income_per_month)) {
-                            $householdIncome = 'LSM ' .$essential->household_income_per_month;
+                            $householdIncome = $essential->household_income_per_month;
                         }
                         $sheet->setCellValue('R' . $rows, $householdIncome);
 
@@ -2263,7 +2263,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('P' . $rows, $p_income);
                         $personalIncome = '';
                         if ($essential !== null && isset($essential->personal_income_per_month)) {
-                            $personalIncome = 'LSM ' . $essential->personal_income_per_month;
+                            $personalIncome = $essential->personal_income_per_month;
                         }
                         $sheet->setCellValue('Q' . $rows, $personalIncome);
                        
@@ -2271,7 +2271,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('R' . $rows, $h_income);
                         $householdIncome = '';
                         if ($essential !== null && isset($essential->household_income_per_month)) {
-                            $householdIncome = 'LSM ' .$essential->household_income_per_month;
+                            $householdIncome = $essential->household_income_per_month;
                         }
                         $sheet->setCellValue('S' . $rows, $householdIncome);
 
@@ -2663,8 +2663,8 @@ class ExportController extends Controller
                             $household_income = ($h_income != null) ? $h_income->income : '-';
                             $personal_income = ($p_income != null) ? $p_income->income : '-';
                             
-                            $personal_lsm = 'LSM '.$essential->personal_income_per_month ?? '';
-                            $household_lsm = 'LSM '.$essential->household_income_per_month ?? '';
+                            $personal_lsm = $essential->personal_income_per_month ?? '';
+                            $household_lsm = $essential->household_income_per_month ?? '';
 
                             $relationship_status = ucfirst($essential->relationship_status ?? '');
                             

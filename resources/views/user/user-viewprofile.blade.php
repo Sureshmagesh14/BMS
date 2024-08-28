@@ -123,8 +123,8 @@
         let numbers = value.replace(/[^0-9]/g, "");
         input.value = numbers;
     }
-    $('#mobile').inputmask("999 999-9999");
-    $('#whatsapp').inputmask("999 999-9999");
+    $('#mobile').inputmask("99 999 9999");
+    $('#whatsapp').inputmask("99 999 9999");
     $("#respondents_create").click(function() {
 
         if (!$("#reg_form").valid()) { // Not Valid
