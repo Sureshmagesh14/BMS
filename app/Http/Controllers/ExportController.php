@@ -561,6 +561,13 @@ class ExportController extends Controller
                     $sheet->getColumnDimension('AV')->setAutoSize(true);
                     $sheet->getColumnDimension('AW')->setAutoSize(true);
                     $sheet->getColumnDimension('AX')->setAutoSize(true);
+                    $sheet->getColumnDimension('AY')->setAutoSize(true);
+                    $sheet->getColumnDimension('AZ')->setAutoSize(true);
+                    $sheet->getColumnDimension('AX')->setAutoSize(true);
+                    $sheet->getColumnDimension('BA')->setAutoSize(true);
+                    $sheet->getColumnDimension('BB')->setAutoSize(true);
+                    $sheet->getColumnDimension('BC')->setAutoSize(true);
+                    $sheet->getColumnDimension('BD')->setAutoSize(true);
                     $sheet->setCellValue('A1', 'PID');
                     $sheet->setCellValue('B1', 'First Name');
                     $sheet->setCellValue('C1', 'Last Name');
@@ -638,8 +645,8 @@ class ExportController extends Controller
                     
                     
 
-                    $sheet->getStyle('A1:BB1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:BB1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:BD1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:BD1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -995,7 +1002,7 @@ class ExportController extends Controller
                     
                         $children_data = json_decode($all_data->children_data, true) ?? [];
                         $vehicle_data = json_decode($all_data->vehicle_data, true) ?? [];
-                        $vehicle_alpha = 'AF';
+                        $vehicle_alpha = 'AM';
                         
                         foreach ($vehicle_data as $vehicle) {
                             $brand_id = $vehicle['brand'];
@@ -1027,12 +1034,12 @@ class ExportController extends Controller
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
                     
-                        $sheet->setCellValue('BA' . $rows, $opted_in);
-                        $sheet->setCellValue('BB' . $rows, $updated_at);
+                        $sheet->setCellValue('BC' . $rows, $opted_in);
+                        $sheet->setCellValue('BD' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':BB' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':BB' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('C' . $rows . ':BD' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':BD' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                         $i++;
                     }
