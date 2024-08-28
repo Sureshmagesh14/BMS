@@ -163,10 +163,14 @@ class ExportController extends Controller
                 \DB::raw('COALESCE(respondent_profile.children_data, "") AS children_data'),
                 \DB::raw('COALESCE(respondent_profile.vehicle_data, "") AS vehicle_data'),
                 'respondent_profile.updated_at',
+                \DB::raw('JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS personal_income_per_month'),
+                \DB::raw('JSON_EXTRACT(respondent_profile.essential_details, "$.household_income_per_month") AS household_income_per_month'),
             ])
-            ->where('respondents.active_status_id',1)
+            ->where('respondents.active_status_id', 1)
+            ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) ASC')
+            ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.household_income_per_month") AS UNSIGNED) ASC')
             ->get()
-            ->unique('id'); 
+            ->unique('id');
             
          
         
