@@ -168,7 +168,7 @@
 
                                             </div>
                                             <small class="form-text text-muted">Don’t include 0 in starting.</small>
-                                            <a href="{{ route('mobileChangeOtpSend') }}">Do you want channge mobile number! Click here.</a>
+                                            <a style="float: right;" href="{{ route('mobileChangeOtpSend') }}">Do you want channge mobile number! Click here.</a>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="whatsapp_number">Whats App Number <span
@@ -188,7 +188,7 @@
                                             <label for="email">Email <span class="star_require">*</span></label>
                                             <input type="email" class="form-control" id="email"
                                                 name="basic[email]" value="{{ $resp_details->email }}" readonly>
-                                            <a href="{{ route('emailChangeOtpSend') }}">Do you want channge email! Click here.</a>
+                                            <a style="float: right;" href="{{ route('emailChangeOtpSend') }}">Do you want channge email! Click here.</a>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="date_of_birth">Date of Birth <span

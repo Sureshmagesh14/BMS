@@ -531,7 +531,7 @@ class ProfileController extends Controller
 
             $data = ['subject' => 'OTP for mobile number change','type' => 'mobile_change_otp', 'otp' => $get_email->email_or_phone_change_otp];
 
-            Mail::to($to_address)->send(new WelcomeEmail($data));
+            // Mail::to($to_address)->send(new WelcomeEmail($data));
           
             return view('user.mobile_change_otp');
     
@@ -545,6 +545,6 @@ class ProfileController extends Controller
         $phone_no = $request->phone_no;
         Respondents::where('id',$resp_id)->update(['mobile' => $phone_no]);
 
-        return redirect()->route('updateprofile_wizard')->with('status', 'Email ID Changed!');
+        return redirect()->route('updateprofile_wizard')->with('status', 'Mobile Changed!');
     }
 }
