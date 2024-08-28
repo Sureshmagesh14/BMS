@@ -491,9 +491,22 @@ class ExportController extends Controller
                         $personal_income = ($p_income != null) ? $p_income->income : '-';
                         $household_income = ($h_income != null) ? $h_income->income : '-';
                         $sheet->setCellValue('O' . $rows, $personal_income);
-                        $sheet->setCellValue('P' . $rows, $essential->personal_income_per_month ?? '');
+
+
+                        $personalIncome = '';
+                        if ($essential !== null && isset($essential->personal_income_per_month)) {
+                            $personalIncome = 'LSM ' . $essential->personal_income_per_month;
+                        }
+                        $sheet->setCellValue('P' . $rows, $personalIncome);
+                        
+                    
                         $sheet->setCellValue('Q' . $rows, $household_income);
-                        $sheet->setCellValue('R' . $rows, $essential->household_income_per_month ?? '');
+                        $householdIncome = '';
+                        if ($essential !== null && isset($essential->household_income_per_month)) {
+                            $householdIncome = 'LSM ' .$essential->household_income_per_month;
+                        }
+                        $sheet->setCellValue('R' . $rows, $householdIncome);
+
 
                         $state = null; // Initialize $state to null
 
@@ -830,10 +843,19 @@ class ExportController extends Controller
                         $sheet->setCellValue('M' . $rows, $companyName);
                         $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
                         $sheet->setCellValue('O' . $rows, $personal_income ?? '');
-                        $sheet->setCellValue('P' . $rows, $essential->personal_income_per_month ?? '');
+                        $personalIncome = '';
+                        if ($essential !== null && isset($essential->personal_income_per_month)) {
+                            $personalIncome = 'LSM ' . $essential->personal_income_per_month;
+                        }
+                        $sheet->setCellValue('P' . $rows, $personalIncome);
                         
                         $sheet->setCellValue('Q' . $rows, $household_income ?? '');
-                        $sheet->setCellValue('R' . $rows, $essential->household_income_per_month ?? '');
+                        $householdIncome = '';
+                        if ($essential !== null && isset($essential->household_income_per_month)) {
+                            $householdIncome = 'LSM ' .$essential->household_income_per_month;
+                        }
+                        $sheet->setCellValue('R' . $rows, $householdIncome);
+
                     
                         $state = null; // Initialize $state to null
                     
@@ -988,7 +1010,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('AA' . $rows, $bank_main ?? '');
                         $sheet->setCellValue('AB' . $rows, $secondary_bank_main ?? '');
                         $sheet->setCellValue('AC' . $rows, ucfirst($home_lang?? ''));
-                        $sheet->setCellValue('AD' . $rows, ucfirst($home_lang?? ''));
+                        $sheet->setCellValue('AD' . $rows, ucfirst($secondary_home_lang?? ''));
                         // Handle $children_data
                         $new_alpha = 'AE';
                         if (!empty($children_data) && is_array($children_data)) {
@@ -1022,7 +1044,11 @@ class ExportController extends Controller
                             $vehicle_alpha++;
                             $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['type'] ?? '');
                             $vehicle_alpha++;
-                            $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['brand'] ?? '');
+                            $brand = '';
+                            if (isset($vehicle) && is_array($vehicle) && isset($vehicle['brand'])) {
+                                $brand = ucfirst($vehicle['brand']);
+                            }
+                            $sheet->setCellValue($vehicle_alpha . $rows, $brand);
                             $vehicle_alpha++;
                             $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['year'] ?? '');
                             $vehicle_alpha++;
@@ -2235,10 +2261,19 @@ class ExportController extends Controller
                         }
                         
                         $sheet->setCellValue('P' . $rows, $p_income);
-                        $sheet->setCellValue('Q' . $rows, $essential->personal_income_per_month ?? '');
+                        $personalIncome = '';
+                        if ($essential !== null && isset($essential->personal_income_per_month)) {
+                            $personalIncome = 'LSM ' . $essential->personal_income_per_month;
+                        }
+                        $sheet->setCellValue('Q' . $rows, $personalIncome);
+                       
                        
                         $sheet->setCellValue('R' . $rows, $h_income);
-                        $sheet->setCellValue('S' . $rows, $essential->household_income_per_month ?? '');
+                        $householdIncome = '';
+                        if ($essential !== null && isset($essential->household_income_per_month)) {
+                            $householdIncome = 'LSM ' .$essential->household_income_per_month;
+                        }
+                        $sheet->setCellValue('S' . $rows, $householdIncome);
 
                         $state = null; // Initialize $state to null
 
