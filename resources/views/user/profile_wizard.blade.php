@@ -162,7 +162,7 @@
                                                     <div class="input-group-text">+27 (0)</div>
                                                 </div>
                                                 <input type="text" name="basic[mobile_number]" id="mobile_number"
-                                                    placeholder="081 966 0786"
+                                                    placeholder="08 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ $resp_details->mobile }}" maxlength="16" readonly>
 
@@ -178,7 +178,7 @@
                                                     <div class="input-group-text">+27 (0)</div>
                                                 </div>
                                                 <input type="text" name="basic[whatsapp_number]" id="whatsapp_number"
-                                                    placeholder="081 966 0786"
+                                                    placeholder="08 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ $resp_details->whatsapp }}" maxlength="16" required>
                                             </div>
@@ -1028,8 +1028,8 @@
         var form = $("#profile_wizard_form");
 
         // Initialize Inputmask
-        $('#mobile_number').inputmask("999 999 9999");
-        $('#whatsapp_number').inputmask("999 999 9999");
+        $('#mobile_number').inputmask("99 999 9999");
+        $('#whatsapp_number').inputmask("99 999 9999");
         $('#date_of_birth').inputmask("yyyy/mm/dd", {
             "placeholder": "YYYY/MM/DD",
             onincomplete: function() {
@@ -1338,8 +1338,8 @@
         }
     });
     $(document).ready(function() {
-        $('#mobile_number').inputmask("999 999 9999");
-        $('#whatsapp_number').inputmask("999 999 9999");
+        $('#mobile_number').inputmask("99 999 9999");
+        $('#whatsapp_number').inputmask("99 999 9999");
 
         $.validator.addMethod("phoneUS", function(value, element) {
             return this.optional(element) || /^\d{3} \d{3} \d{4}$/.test(value);

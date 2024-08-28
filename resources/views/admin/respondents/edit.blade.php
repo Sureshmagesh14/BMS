@@ -264,8 +264,8 @@
 
 <script>
     $(function() {
-        $('#mobile').inputmask("999 999 999");
-        $('#whatsapp').inputmask("999 999 999");
+        $('#mobile').inputmask("99 999 9999");
+        $('#whatsapp').inputmask("99 999 9999");
         $('#edit_respondents_form').validate({
             rules: {
                 email: {
