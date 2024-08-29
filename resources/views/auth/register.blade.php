@@ -1,9 +1,12 @@
-@include('user.layout.nomenu-header')
+@include('user.layout.header')
+<!-- @include('user.layout.nomenu-header') -->
 <style>
     .error {
         color: red;
     }
-
+    .navbar.vi-nav-bg{
+        background-color:#fff;
+    }
     .field-icon {
         float: right;
         margin-right: 12px;
@@ -18,7 +21,7 @@
     }
 
     .container {
-        padding-top: 50px;
+        /* padding-top: 50px; */
         margin: auto;
     }
 
@@ -149,6 +152,11 @@
         .reg-img{
             margin: 40px !important;
         }
+        .btn.vi-nav-bg:hover {
+    color: #fff !important;
+    background-color:#6396b1;
+    border: 1px solid #6396b1;
+}
 </style>
 <div class="container-fluid register">
     <div class="row vi-background-index mb-5">
