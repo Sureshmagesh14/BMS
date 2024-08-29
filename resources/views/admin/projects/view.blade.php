@@ -104,11 +104,7 @@
                                             <td>{{ $data->project_name_resp }}</td>
                                         </tr>
 
-                                        <tr>
-                                            <th>Email Description 1</th>
-                                            <td>{{ $data->description1 }}</td>
-                                        </tr>
-
+                                      
                                         <tr>
                                             <th>Status</th>
                                             <td>
@@ -531,6 +527,7 @@
 
     $(document).on('click', '.respondents_play_button', function(e) {
         var all_id = [];
+        var project_id = $("#project_id").val();
         var values = $("#respondents_datatable tbody tr").map(function() {
             var $this = $(this);
             if ($this.find("[type=checkbox]").is(':checked')) {
@@ -545,6 +542,11 @@
             titles = "Status > Complete";
             select_action("POST", all_id, select_value, "{{ route('project_action') }}", 'respondents_datatable', titles, "Are You Want To Change Status", "Action");
         }
+        else if (select_value == 10) {
+            titles = "Notify Respondent";
+            select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}",
+                'respondents_datatable', titles, "Are You Want Send Notification", "Action");
+        } 
         else if(select_value == "qualified"){
             var get_status = this.value;
             var edit_id = $('#edit_id').val();
