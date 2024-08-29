@@ -149,7 +149,7 @@ class QualifiedController extends Controller
                                 </li>';
                                 if (str_contains(url()->previous(), '/admin/projects')){
                                     $design .= '<li class="list-group-item">
-                                        <a href="#!" id="deattach_projects" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                        <a href="#!" id="deattach_projects" data-id="'.$all_data->id.'" data-project-id="'.$all_data->project_id.'" data-respondent-id="'.$all_data->respondent_id.'" class="rounded waves-light waves-effect">
                                             <i class="far fa-trash-alt"></i> Deattach
                                         </a>
                                     </li>';

@@ -547,6 +547,12 @@
             select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}",
                 'respondents_datatable', titles, "Are You Want Send Notification", "Action");
         } 
+        else if (select_value == 11) {
+            titles = "Notify Respondent";
+            select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}",
+                'qualified_table', titles, "Are You Want Send Notification", "Action");
+               
+        }
         else if(select_value == "qualified"){
             var get_status = this.value;
             var edit_id = $('#edit_id').val();
@@ -643,6 +649,19 @@
             else{
                 toastr.info("OOPS! Select the action");
             }
+    });
+
+    $(document).on('click', '#deattach_projects', function(e) {
+        e.preventDefault();
+        var respondent = $(this).data("respondent-id");
+        var project_id = $(this).data("project-id");
+        console.log("respondent",respondent);
+        console.log("project_id",project_id);
+        var url ="{{ route('deattach_project', ['respondent_id' => ':respondent_id', 'project_id' => ':project_id']) }}";
+        url = url.replace(':respondent_id', respondent);
+        url = url.replace(':project_id', project_id);
+
+        single_delete("POST", respondent, url, "Deattach Project Successfully", 'qualified_table');
     });
 
 </script>
