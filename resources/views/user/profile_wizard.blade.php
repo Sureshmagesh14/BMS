@@ -130,7 +130,14 @@
                     <div class="section">
                         <form action="" name="profile_wizard_form" id="profile_wizard_form">
                             <div id="profile_wizard">
-                                <h2>Basic Details</h2>
+                                @php
+                                if (!empty($basic_details['updated_at'])) {
+                                    $basic_formatted_date = \Carbon\Carbon::parse($basic_details['updated_at'])->format('Y/m/d');
+                                } else {
+                                    $basic_formatted_date = ''; // or some default value
+                                }
+                                @endphp
+                                <h2>Basic Details <br><small>(Last Updated: {{ $basic_formatted_date }})</small></h2>
                                 <section>
                                     <div class="row">
                                         <div class="col-6 col-sm-12 hide_class">
@@ -139,6 +146,8 @@
                                                 value="{{ $pid }}">
                                             <input type="hidden" name="unique_id" class="form-control unique_id"
                                                 id="get_unique_id" value="{{ $pid }}">
+                                                <input type="hidden" name="basic[updated_at]" class="form-control updated_at_basic"
+                                                id="updated_at_basic" >
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="first_name">First Name <span
@@ -216,13 +225,20 @@
                                         </div>
                                     </div>
                                 </section>
-
-
-                                <h2>Essential Details</h2>
+                                @php
+                                if (!empty($essential_details['updated_at'])) {
+                                    $formatted_date = \Carbon\Carbon::parse($essential_details['updated_at'])->format('Y/m/d');
+                                } else {
+                                    $formatted_date = ''; // or some default value
+                                }
+                                @endphp
+                                <h2>Essential Details <br><small>(Last Updated: {{ $formatted_date }})</small></h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
                                         <!-- Relationship Status -->
                                         <div class="col-12 col-md-6 mb-3">
+                                            <input type="hidden" name="essential[updated_at]" class="form-control updated_at_essential"
+                                            id="updated_at_essential" >
                                             <label for="relationship_status">Relationship Status <span
                                                     class="text-danger">*</span></label>
                                             <select name="essential[relationship_status]" id="relationship_status"
@@ -515,8 +531,14 @@
                                     </div>
                                 </section>
 
-
-                                <h2>Extended Details</h2>
+                                @php
+                                if (!empty($extended_details['updated_at'])) {
+                                    $extended_formatted_date = \Carbon\Carbon::parse($extended_details['updated_at'])->format('Y/m/d');
+                                } else {
+                                    $extended_formatted_date = ''; // or some default value
+                                }
+                                @endphp
+                                <h2>Extended Details <br><small>(Last Updated: {{ $extended_formatted_date }})</small></h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
                                         <div class="col-6 col-md-6 col-sm-12 overflow-auto">
@@ -535,6 +557,8 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <input type="hidden" name="children[updated_at]" class="form-control updated_at_children"
+                                                    id="updated_at_children" >
                                                     @php $child_key = 1; @endphp
                                                     @if ($children_set == 0)
                                                         @foreach ($child_details as $child)
@@ -617,6 +641,8 @@
                                                     @php $vehicle_key = 1; @endphp
                                                     @if ($vehicle_set == 0)
                                                         @foreach ($vehicle_details as $vehicle)
+                                                        <input type="hidden" name="vehicle[updated_at]" class="form-control updated_at_vehicle"
+                                                        id="updated_at_vehicle" >
                                                             <tr class="more_tr role_tr"
                                                                 id="vehicle_tr{{ $vehicle_key }}">
                                                                 <td>
@@ -842,6 +868,8 @@
                                                     Other</option>
                                             </select>
                                             <br>
+                                            <input type="hidden" name="extended[updated_at]" class="form-control updated_at_extended"
+                                            id="updated_at_extended" >
                                             <input type="text" name="extended[bank_main_other]"
                                                 id="bank_main_other" class="form-control"
                                                 placeholder="Please specify"

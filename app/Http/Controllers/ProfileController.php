@@ -111,7 +111,7 @@ class ProfileController extends Controller
                 $get_pid = RespondentProfile::orderBy('pid','DESC')->first();
                 $pid = ($get_pid != null) ? $get_pid->pid+1 : 1;
             }
-
+            $basic_details = ($profile != null) ? (($profile->basic_details != null) ? json_decode($profile->basic_details, true) : array()) : array();
             $essential_details = ($profile != null) ? (($profile->essential_details != null) ? json_decode($profile->essential_details, true) : array()) : array();
             $extended_details  = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
             $child_details     = ($profile != null) ? (($profile->children_data != null) ? json_decode($profile->children_data, true) : array()) : array();
@@ -276,7 +276,7 @@ class ProfileController extends Controller
 
 
   
-            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges','page'));
+            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges','page','basic_details'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -342,13 +342,26 @@ class ProfileController extends Controller
                 'pid'           => $unique_id,
                 'respondent_id' => $resp_id,
                 'basic_details' => $basic_details,
+                'updated_at'    => now() 
             );
 
             if(RespondentProfile::where('respondent_id',$resp_id)->doesntExist()){
                 RespondentProfile::insert($basic_data);
             }
             else{
-                RespondentProfile::where('respondent_id',$resp_id)->update($basic_data);
+                $current_profile = RespondentProfile::where('respondent_id', $resp_id)->first();
+                $current_basic_details = $current_profile->basic_details;
+                $current_basic_array = json_decode($current_basic_details, true);
+                $new_basic_array = json_decode($basic_details, true);
+        
+                if ($current_basic_array != $new_basic_array) {
+                    $new_basic_array['updated_at'] = date('Y-m-d H:i:s'); // update the updated_at field
+                    $basic_details = json_encode($new_basic_array);
+                    RespondentProfile::where('respondent_id',$resp_id)->update([
+                        'basic_details' => $basic_details,
+                    ]);
+                }
+              
             }
             
             $step_word = "Basic Details Updated";
@@ -378,11 +391,37 @@ class ProfileController extends Controller
                 $step_word = ($steps == 2) ? "Essential Details Added" : "Extended Details Added";
             }
             else{
-                RespondentProfile::where('respondent_id',$resp_id)->update($profile_data);
+
+              
+                $current_profile = RespondentProfile::where('respondent_id', $resp_id)->first();
+                $current_essential_details = $current_profile->essential_details;
+                $current_essential_array = json_decode($current_essential_details, true);
+                $new_essential_array = json_decode($essential_details, true);
+        
+                if ($current_essential_array != $new_essential_array) {
+                    $new_essential_array['updated_at'] = date('Y-m-d H:i:s'); // update the updated_at field
+                    $essential_details = json_encode($new_essential_array);
+                    RespondentProfile::where('respondent_id',$resp_id)->update([
+                        'essential_details' => $essential_details,
+                    ]);
+                }
+
+             
+                $current_extended_details = $current_profile->extended_details;
+                $current_extended_array = json_decode($current_extended_details, true);
+                $new_extended_array = json_decode($extended_details, true);
+        
+                if ($current_extended_array != $new_extended_array) {
+                    $new_extended_array['updated_at'] = date('Y-m-d H:i:s'); // update the updated_at field
+                    $extended_details = json_encode($new_extended_array);
+                    RespondentProfile::where('respondent_id',$resp_id)->update([
+                        'extended_details' => $extended_details,
+                    ]);
+                }
                 $step_word = ($steps == 2) ? "Essential Details Updated" : "Extended Details Updated";
             }
         }
-
+       
         $profile = RespondentProfile::where('respondent_id',$resp_id)->first();
 
         $check_basic = ($profile != null) ? (($profile->basic_details != null) ? json_decode($profile->basic_details, true) : array()) : array();
@@ -390,7 +429,7 @@ class ProfileController extends Controller
         $check_ext   = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
 
         unset($check_ess['employment_status_other'],$check_ess['industry_my_company_other']);
-        unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other']);
+        unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other'],$check_ext['bank_secondary_other'],$check_ext['secondary_home_lang_other']);
 
         if(count($check_basic) > 0 && count($check_ess) > 0 && count($check_ext) > 0){
             if(count($check_basic) == count(array_filter($check_basic)) && count($check_ess) == count(array_filter($check_ess)) && count($check_ext) == count(array_filter($check_ext))){
