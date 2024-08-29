@@ -111,7 +111,7 @@ class ProfileController extends Controller
                 $get_pid = RespondentProfile::orderBy('pid','DESC')->first();
                 $pid = ($get_pid != null) ? $get_pid->pid+1 : 1;
             }
-
+            $basic_details = ($profile != null) ? (($profile->basic_details != null) ? json_decode($profile->basic_details, true) : array()) : array();
             $essential_details = ($profile != null) ? (($profile->essential_details != null) ? json_decode($profile->essential_details, true) : array()) : array();
             $extended_details  = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
             $child_details     = ($profile != null) ? (($profile->children_data != null) ? json_decode($profile->children_data, true) : array()) : array();
@@ -276,7 +276,7 @@ class ProfileController extends Controller
 
 
   
-            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges','page'));
+            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges','page','basic_details'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());

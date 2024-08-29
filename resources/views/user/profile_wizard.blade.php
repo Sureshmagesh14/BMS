@@ -130,7 +130,14 @@
                     <div class="section">
                         <form action="" name="profile_wizard_form" id="profile_wizard_form">
                             <div id="profile_wizard">
-                                <h2>Basic Details</h2>
+                                @php
+                                if (!empty($basic_details['updated_at'])) {
+                                    $basic_formatted_date = \Carbon\Carbon::parse($basic_details['updated_at'])->format('Y/m/d');
+                                } else {
+                                    $basic_formatted_date = ''; // or some default value
+                                }
+                                @endphp
+                                <h2>Basic Details <br><small>(Last Updated: {{ $basic_formatted_date }})</small></h2>
                                 <section>
                                     <div class="row">
                                         <div class="col-6 col-sm-12 hide_class">
@@ -218,9 +225,14 @@
                                         </div>
                                     </div>
                                 </section>
-
-
-                                <h2>Essential Details</h2>
+                                @php
+                                if (!empty($essential_details['updated_at'])) {
+                                    $formatted_date = \Carbon\Carbon::parse($essential_details['updated_at'])->format('Y/m/d');
+                                } else {
+                                    $formatted_date = ''; // or some default value
+                                }
+                                @endphp
+                                <h2>Essential Details <br><small>(Last Updated: {{ $formatted_date }})</small></h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
                                         <!-- Relationship Status -->
@@ -519,8 +531,14 @@
                                     </div>
                                 </section>
 
-
-                                <h2>Extended Details</h2>
+                                @php
+                                if (!empty($extended_details['updated_at'])) {
+                                    $extended_formatted_date = \Carbon\Carbon::parse($extended_details['updated_at'])->format('Y/m/d');
+                                } else {
+                                    $extended_formatted_date = ''; // or some default value
+                                }
+                                @endphp
+                                <h2>Extended Details <br><small>(Last Updated: {{ $extended_formatted_date }})</small></h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
                                         <div class="col-6 col-md-6 col-sm-12 overflow-auto">
