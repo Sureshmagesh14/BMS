@@ -141,7 +141,7 @@
                             }
                         @endphp
 
-                        <input type="text" name="mobile_number" id="mobile" placeholder="819 966 078" class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" value="{{$result}}">
+                        <input type="text" name="mobile_number" id="mobile" placeholder="81 966 9078" class="form-control vi-border-clr border-radius-0 w-50" maxlength="16" value="{{$result}}">
                     </div>
                     
                 </div>
@@ -183,7 +183,7 @@
 
 <script src="{{ asset('assets/js/inputmask.js') }}"></script>
 <script>
-    $('#mobile').inputmask("999 999 999");
+    $('#mobile').inputmask("99 999 9999");
 
     $("#request_confirmation").click(function(){
         if($('.accept_check').prop('checked') == true){

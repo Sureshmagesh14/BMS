@@ -163,10 +163,15 @@ class ExportController extends Controller
                 \DB::raw('COALESCE(respondent_profile.children_data, "") AS children_data'),
                 \DB::raw('COALESCE(respondent_profile.vehicle_data, "") AS vehicle_data'),
                 'respondent_profile.updated_at',
+                \DB::raw('JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS personal_income_per_month'),
+                \DB::raw('JSON_EXTRACT(respondent_profile.essential_details, "$.household_income_per_month") AS household_income_per_month'),
             ])
-            ->where('respondents.active_status_id',1)
+            ->where('respondents.active_status_id', 1)
+            ->orderByRaw('CASE WHEN CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) IS NULL OR CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) = 0 THEN 1 ELSE 0 END ASC')
+            ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) ASC')
+            ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.household_income_per_month") AS UNSIGNED) ASC')
             ->get()
-            ->unique('id'); 
+            ->unique('id');
             
          
         
@@ -201,12 +206,12 @@ class ExportController extends Controller
                            
                             $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27(0)' . $m_number;
+                                $mobile_number = '27' . $m_number;
                             }else if ($length == 10 && $m_number[0] == '0'){
-                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                                $mobile_number = '27' . substr($m_number, 1);
                             } 
                             elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                                $mobile_number = '+' . $m_number;
+                                $mobile_number = $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
@@ -220,12 +225,12 @@ class ExportController extends Controller
                             $w_number =  preg_replace('/\s+/', '',$basic['whatsapp_number']);
                             $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
-                                $whatsapp_number = '+27' . $w_number;
+                                $whatsapp_number = '27' . $w_number;
                             } else if ($length == 10 && $w_number[0] == '0'){
-                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                                $whatsapp_number = '27' . substr($w_number, 1);
                             }
                             elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                                $whatsapp_number = '+' . $w_number;
+                                $whatsapp_number = $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
@@ -281,7 +286,7 @@ class ExportController extends Controller
                     $sheet->setCellValue('E1', 'WA Number');
                     $sheet->setCellValue('F1', 'Email');
                     $sheet->setCellValue('G1', 'Age');
-                    $sheet->setCellValue('H1', 'Relationship status');
+                    $sheet->setCellValue('H1', 'Relationship Status'); // Fixed spacing
                     $sheet->setCellValue('I1', 'Ethnic Group / Race');
                     $sheet->setCellValue('J1', 'Gender');
                     $sheet->setCellValue('K1', 'Highest Education Level');
@@ -289,17 +294,20 @@ class ExportController extends Controller
                     $sheet->setCellValue('M1', 'Industry my company is in');
                     $sheet->setCellValue('N1', 'Job Title');
                     $sheet->setCellValue('O1', 'Personal Income per month');
-                    $sheet->setCellValue('P1', 'HHI per month');
-                    $sheet->setCellValue('Q1', 'Province');
-                    $sheet->setCellValue('R1', 'Area');
-                    $sheet->setCellValue('S1', 'No. of people living in your household');
-                    $sheet->setCellValue('T1', 'Number of children');
-                    $sheet->setCellValue('U1', 'Number of vehicles');
-                    $sheet->setCellValue('V1', 'Opted in');
-                    $sheet->setCellValue('W1', 'Last Updated');
+                    $sheet->setCellValue('P1', 'Personal LSM'); // Corrected to unique column
+                    $sheet->setCellValue('Q1', 'HHI per month'); // Corrected to unique column
+                    $sheet->setCellValue('R1', 'Household LSM'); // Corrected to unique column
+                    $sheet->setCellValue('S1', 'Province');
+                    $sheet->setCellValue('T1', 'Area');
+                    $sheet->setCellValue('U1', 'No. of people living in your household');
+                    $sheet->setCellValue('V1', 'Number of children');
+                    $sheet->setCellValue('W1', 'Number of vehicles');
+                    $sheet->setCellValue('X1', 'Opted in'); // Moved Opted in to column X
+                    $sheet->setCellValue('Y1', 'Last Updated'); // Moved Last Updated to column Y
 
-                    $sheet->getStyle('A1:W1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:W1')->applyFromArray($styleArray);
+
+                    $sheet->getStyle('A1:Y1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:Y1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -315,11 +323,11 @@ class ExportController extends Controller
                             $m_number = preg_replace('/\s+/', '',$basic->mobile_number);
                             $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27(0)' . $m_number;
+                                $mobile_number = '27' . $m_number;
                             } else if ($length == 10 && $m_number[0] == '0'){
-                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                                $mobile_number = '27' . substr($m_number, 1);
                             }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                                $mobile_number = '+' . $m_number;
+                                $mobile_number = $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
@@ -333,12 +341,12 @@ class ExportController extends Controller
                             $w_number = preg_replace('/\s+/', '',$basic->whatsapp_number);
                             $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
-                                $whatsapp_number = '+27' . $w_number;
+                                $whatsapp_number = '27' . $w_number;
                             } else if ($length == 10 && $w_number[0] == '0'){
-                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                                $whatsapp_number = '27' . substr($w_number, 1);
                             }
                             elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                                $whatsapp_number = '+' . $w_number;
+                                $whatsapp_number = $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
@@ -369,7 +377,8 @@ class ExportController extends Controller
 
                        
                         $sheet->setCellValue('G' . $rows, $year);
-                        $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
+                        $relationshipStatus = $essential->relationship_status ?? '';
+                        $sheet->setCellValue('H' . $rows, ucfirst($relationshipStatus));
                         // Define the mapping of ethnic group codes to names
                        // Define the mapping of ethnic group codes to names
                         $ethnicGroups = [
@@ -382,8 +391,8 @@ class ExportController extends Controller
 
                         // Default to an empty string if $essential is null or ethnic group is not found
                         $ethnic_group = '';
-                        if ($essential && isset($essential->ethnic_group) && isset($ethnicGroups[$essential->ethnic_group])) {
-                            $ethnic_group = $ethnicGroups[$essential->ethnic_group];
+                        if ($essential && isset($essential->ethnic_group)) {
+                            $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
                         }
 
                         // Set the value in the spreadsheet
@@ -487,7 +496,22 @@ class ExportController extends Controller
                         $personal_income = ($p_income != null) ? $p_income->income : '-';
                         $household_income = ($h_income != null) ? $h_income->income : '-';
                         $sheet->setCellValue('O' . $rows, $personal_income);
-                        $sheet->setCellValue('P' . $rows, $household_income);
+
+
+                        $personalIncome = '';
+                        if ($essential !== null && isset($essential->personal_income_per_month)) {
+                            $personalIncome = $essential->personal_income_per_month;
+                        }
+                        $sheet->setCellValue('P' . $rows, $personalIncome);
+                        
+                    
+                        $sheet->setCellValue('Q' . $rows, $household_income);
+                        $householdIncome = '';
+                        if ($essential !== null && isset($essential->household_income_per_month)) {
+                            $householdIncome = $essential->household_income_per_month;
+                        }
+                        $sheet->setCellValue('R' . $rows, $householdIncome);
+
 
                         $state = null; // Initialize $state to null
 
@@ -509,21 +533,21 @@ class ExportController extends Controller
                         $get_state = ($state != null) ? $state->state : '-';
                         $get_district = ($district != null) ? $district->district : '-';
                       
-                        $sheet->setCellValue('Q' . $rows, $get_state ?? '');
-                        $sheet->setCellValue('R' . $rows, $get_district ?? '');
-                        $sheet->setCellValue('S' . $rows, $essential->no_houehold ?? '');
-                        $sheet->setCellValue('T' . $rows, $essential->no_children ?? '');
-                        $sheet->setCellValue('U' . $rows, $essential->no_vehicle ?? '');
+                        $sheet->setCellValue('S' . $rows, $get_state ?? '');
+                        $sheet->setCellValue('T' . $rows, $get_district ?? '');
+                        $sheet->setCellValue('U' . $rows, $essential->no_houehold ?? '');
+                        $sheet->setCellValue('V' . $rows, $essential->no_children ?? '');
+                        $sheet->setCellValue('W' . $rows, $essential->no_vehicle ?? '');
 
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
 
-                        $sheet->setCellValue('V' . $rows, $opted_in);
-                        $sheet->setCellValue('W' . $rows, $updated_at);
+                        $sheet->setCellValue('X' . $rows, $opted_in);
+                        $sheet->setCellValue('Y' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':W' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':W' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('C' . $rows . ':Y' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':Y' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                     }
 
@@ -555,7 +579,13 @@ class ExportController extends Controller
                     $sheet->getColumnDimension('AV')->setAutoSize(true);
                     $sheet->getColumnDimension('AW')->setAutoSize(true);
                     $sheet->getColumnDimension('AX')->setAutoSize(true);
-                    
+                    $sheet->getColumnDimension('AY')->setAutoSize(true);
+                    $sheet->getColumnDimension('AZ')->setAutoSize(true);
+                    $sheet->getColumnDimension('AX')->setAutoSize(true);
+                    $sheet->getColumnDimension('BA')->setAutoSize(true);
+                    $sheet->getColumnDimension('BB')->setAutoSize(true);
+                    $sheet->getColumnDimension('BC')->setAutoSize(true);
+                    $sheet->getColumnDimension('BD')->setAutoSize(true);
                     $sheet->setCellValue('A1', 'PID');
                     $sheet->setCellValue('B1', 'First Name');
                     $sheet->setCellValue('C1', 'Last Name');
@@ -571,46 +601,70 @@ class ExportController extends Controller
                     $sheet->setCellValue('M1', 'Industry my company is in');
                     $sheet->setCellValue('N1', 'Job Title');
                     $sheet->setCellValue('O1', 'Personal Income per month');
-                    $sheet->setCellValue('P1', 'HHI per month');
-                    $sheet->setCellValue('Q1', 'Province');
-                    $sheet->setCellValue('R1', 'Suburb');
-                    $sheet->setCellValue('S1', 'Metropolitan Area');
-                    $sheet->setCellValue('T1', 'No. of people living in your household');
-                    $sheet->setCellValue('U1', 'Number of children');
-                    $sheet->setCellValue('V1', 'Number of vehicles');
-                    $sheet->setCellValue('W1', 'Which best describes the role in you business / organization?');
-                    $sheet->setCellValue('X1', 'What is the number of people in your organisation / company?');
-                    $sheet->setCellValue('Y1', 'Which bank do you bank with (which is your bank main)');
-                    $sheet->setCellValue('Z1', 'Home Language');
-                    $sheet->setCellValue('AA1', 'Child 1 - Birth Year');
-                    $sheet->setCellValue('AB1', 'Child 1 - Gender');
-                    $sheet->setCellValue('AC1', 'Child 2 - Birth Year');
-                    $sheet->setCellValue('AD1', 'Child 2 - Gender');
-                    $sheet->setCellValue('AE1', 'Child 3 - Birth Year');
-                    $sheet->setCellValue('AF1', 'Child 3 - Gender');
-                    $sheet->setCellValue('AE1', 'Child 4 - Birth Year');
-                    $sheet->setCellValue('AF1', 'Child 4 - Gender');
-                    $sheet->setCellValue('AG1', 'Car 1 - Brand');
-                    $sheet->setCellValue('AH1', 'Car 1 - Type of Vechile');
-                    $sheet->setCellValue('AI1', 'Car 1 - Model');
-                    $sheet->setCellValue('AJ1', 'Car 1 - Year');
-                    $sheet->setCellValue('AK1', 'Car 2 - Brand');
-                    $sheet->setCellValue('AL1', 'Car 2 - Type of Vechile');
-                    $sheet->setCellValue('AM1', 'Car 2 - Model');
-                    $sheet->setCellValue('AN1', 'Car 2 - Year');
-                    $sheet->setCellValue('AO1', 'Car 3 - Brand');
-                    $sheet->setCellValue('AP1', 'Car 3 - Type of Vechile');
-                    $sheet->setCellValue('AQ1', 'Car 3 - Model');
-                    $sheet->setCellValue('AR1', 'Car 3 - Year');
-                    $sheet->setCellValue('AS1', 'Car 4 - Brand');
-                    $sheet->setCellValue('AT1', 'Car 4- Type of Vechile');
-                    $sheet->setCellValue('AU1', 'Car 4 - Model');
-                    $sheet->setCellValue('AV1', 'Car 4 - Year');
-                    $sheet->setCellValue('AW1', 'Opted in');
-                    $sheet->setCellValue('AX1', 'Last Updated');
+                    $sheet->setCellValue('P1', 'Personal LSM');
+                    $sheet->setCellValue('Q1', 'HHI per Month');
+                    $sheet->setCellValue('R1', 'Household LSM');
+                    $sheet->setCellValue('S1', 'Province');
+                    $sheet->setCellValue('T1', 'Suburb');
+                    $sheet->setCellValue('U1', 'Metropolitan Area');
+                    $sheet->setCellValue('V1', 'No. of people living in your household');
+                    $sheet->setCellValue('W1', 'Number of children');
+                    $sheet->setCellValue('X1', 'Number of vehicles');
+                    $sheet->setCellValue('Y1', 'Which best describes the role in your business / organization?');
+                    $sheet->setCellValue('Z1', 'What is the number of people in your organisation / company?');
+                    $sheet->setCellValue('AA1', 'Which bank do you bank with (which is your bank main)');
+                    $sheet->setCellValue('AB1', 'Which is your secondary bank?');
+                    $sheet->setCellValue('AC1', 'Home Language');
+                    $sheet->setCellValue('AD1', 'Secondary Language');
+                    
+                    // Child 1
+                    $sheet->setCellValue('AE1', 'Child 1 - Birth Year');
+                    $sheet->setCellValue('AF1', 'Child 1 - Gender');
+                    
+                    // Child 2
+                    $sheet->setCellValue('AG1', 'Child 2 - Birth Year');
+                    $sheet->setCellValue('AH1', 'Child 2 - Gender');
+                    
+                    // Child 3
+                    $sheet->setCellValue('AI1', 'Child 3 - Birth Year');
+                    $sheet->setCellValue('AJ1', 'Child 3 - Gender');
+                    
+                    // Child 4
+                    $sheet->setCellValue('AK1', 'Child 4 - Birth Year');
+                    $sheet->setCellValue('AL1', 'Child 4 - Gender');
+                    
+                    // Car 1
+                    $sheet->setCellValue('AM1', 'Car 1 - Brand');
+                    $sheet->setCellValue('AN1', 'Car 1 - Type of Vehicle');
+                    $sheet->setCellValue('AO1', 'Car 1 - Model');
+                    $sheet->setCellValue('AP1', 'Car 1 - Year');
+                    
+                    // Car 2
+                    $sheet->setCellValue('AQ1', 'Car 2 - Brand');
+                    $sheet->setCellValue('AR1', 'Car 2 - Type of Vehicle');
+                    $sheet->setCellValue('AS1', 'Car 2 - Model');
+                    $sheet->setCellValue('AT1', 'Car 2 - Year');
+                    
+                    // Car 3
+                    $sheet->setCellValue('AU1', 'Car 3 - Brand');
+                    $sheet->setCellValue('AV1', 'Car 3 - Type of Vehicle');
+                    $sheet->setCellValue('AW1', 'Car 3 - Model');
+                    $sheet->setCellValue('AX1', 'Car 3 - Year');
+                    
+                    // Car 4
+                    $sheet->setCellValue('AY1', 'Car 4 - Brand');
+                    $sheet->setCellValue('AZ1', 'Car 4 - Type of Vehicle');
+                    $sheet->setCellValue('BA1', 'Car 4 - Model');
+                    $sheet->setCellValue('BB1', 'Car 4 - Year');
+                    
+                    // Additional columns
+                    $sheet->setCellValue('BC1', 'Opted in');
+                    $sheet->setCellValue('BD1', 'Last Updated');
+                    
+                    
 
-                    $sheet->getStyle('A1:AX1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:AX1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:BD1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:BD1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -626,11 +680,11 @@ class ExportController extends Controller
                             $m_number = preg_replace('/\s+/', '',$basic->mobile_number);
                             $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27(0)' . $m_number;
+                                $mobile_number = '27' . $m_number;
                             } else if ($length == 10 && $m_number[0] == '0'){
-                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                                $mobile_number = '27' . substr($m_number, 1);
                             }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                                $mobile_number = '+' . $m_number;
+                                $mobile_number = $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
@@ -644,12 +698,12 @@ class ExportController extends Controller
                             $w_number = preg_replace('/\s+/', '',$basic->whatsapp_number);
                             $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
-                                $whatsapp_number = '+27' . $w_number;
+                                $whatsapp_number = '27' . $w_number;
                             } else if ($length == 10 && $w_number[0] == '0'){
-                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                                $whatsapp_number = '27' . substr($w_number, 1);
                             }
                             elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                                $whatsapp_number = '+' . $w_number;
+                                $whatsapp_number = $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
@@ -688,7 +742,8 @@ class ExportController extends Controller
                         $household_income = ($h_income != null) ? $h_income->income : '-';
                     
                         $sheet->setCellValue('G' . $rows, $year);
-                        $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
+                        $relationship_status = ucfirst($essential->relationship_status ?? '');
+                        $sheet->setCellValue('H' . $rows, $relationship_status);
                        // Define the mapping of ethnic group codes to names
                         $ethnicGroups = [
                             'asian'   => 'Asian',
@@ -703,9 +758,8 @@ class ExportController extends Controller
 
                         // Check if $essential is not null and has the ethnic_group property
                         if ($essential && isset($essential->ethnic_group)) {
-                            $ethnic_group = isset($ethnicGroups[$essential->ethnic_group])
-                                            ? $ethnicGroups[$essential->ethnic_group]
-                                            : ''; // Default to empty string if ethnic_group is not found
+                            
+                            $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
                         }
 
                         // Set the cell value
@@ -794,7 +848,19 @@ class ExportController extends Controller
                         $sheet->setCellValue('M' . $rows, $companyName);
                         $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
                         $sheet->setCellValue('O' . $rows, $personal_income ?? '');
-                        $sheet->setCellValue('P' . $rows, $household_income ?? '');
+                        $personalIncome = '';
+                        if ($essential !== null && isset($essential->personal_income_per_month)) {
+                            $personalIncome = $essential->personal_income_per_month;
+                        }
+                        $sheet->setCellValue('P' . $rows, $personalIncome);
+                        
+                        $sheet->setCellValue('Q' . $rows, $household_income ?? '');
+                        $householdIncome = '';
+                        if ($essential !== null && isset($essential->household_income_per_month)) {
+                            $householdIncome = $essential->household_income_per_month;
+                        }
+                        $sheet->setCellValue('R' . $rows, $householdIncome);
+
                     
                         $state = null; // Initialize $state to null
                     
@@ -814,12 +880,12 @@ class ExportController extends Controller
                         $get_state = ($state != null) ? $state->state : '-';
                         $get_district = ($district != null) ? $district->district : '-';
                     
-                        $sheet->setCellValue('Q' . $rows, $get_state ?? '');
-                        $sheet->setCellValue('R' . $rows, $get_district ?? '');
-                        $sheet->setCellValue('S' . $rows, $essential->metropolitan_area ?? '');
-                        $sheet->setCellValue('T' . $rows, $essential->no_houehold ?? '');
-                        $sheet->setCellValue('U' . $rows, $essential->no_children ?? '');
-                        $sheet->setCellValue('V' . $rows, $essential->no_vehicle ?? '');
+                        $sheet->setCellValue('S' . $rows, $get_state ?? '');
+                        $sheet->setCellValue('T' . $rows, $get_district ?? '');
+                        $sheet->setCellValue('U' . $rows, $essential->metropolitan_area ?? '');
+                        $sheet->setCellValue('V' . $rows, $essential->no_houehold ?? '');
+                        $sheet->setCellValue('W' . $rows, $essential->no_children ?? '');
+                        $sheet->setCellValue('X' . $rows, $essential->no_vehicle ?? '');
                     
                                             
                         // Initialize $business_org to null
@@ -905,6 +971,12 @@ class ExportController extends Controller
                         if ($extended && isset($extended->home_lang)) {
                             $home_lang = $extended->home_lang == 'other' ? $extended->home_lang_other : $extended->home_lang;
                         }
+
+                        $secondary_home_lang = null; // Initialize $home_lang to null
+                    
+                        if ($extended && isset($extended->secondary_home_lang)) {
+                            $secondary_home_lang = $extended->secondary_home_lang == 'other' ? $extended->secondary_home_lang_other : $extended->secondary_home_lang;
+                        }
                     
                         $bank_main = null; // Initialize $bank_main to null
                     
@@ -921,14 +993,31 @@ class ExportController extends Controller
                                 }
                             }
                         }
+
+                        $secondary_bank_main = null; // Initialize $bank_main to null
                     
-                        $sheet->setCellValue('W' . $rows, $business_org ?? '');
-                        $sheet->setCellValue('X' . $rows, $org_company ?? '');
-                        $sheet->setCellValue('Y' . $rows, $bank_main ?? '');
-                        $sheet->setCellValue('Z' . $rows, ucfirst($home_lang?? ''));
+                        if ($extended && isset($extended->bank_secondary)) {
+                            if ($extended->bank_secondary == 'other') {
+                                $secondary_bank_main = $extended->bank_secondary_other;
+                            } else {
+                                $banks = DB::table('banks')
+                                            ->where('id', $extended->bank_secondary)
+                                            ->where('active', 1)
+                                            ->first();
+                                if ($banks) {
+                                    $secondary_bank_main = $banks->bank_name;
+                                }
+                            }
+                        }
                     
+                        $sheet->setCellValue('Y' . $rows, $business_org ?? '');
+                        $sheet->setCellValue('Z' . $rows, $org_company ?? '');
+                        $sheet->setCellValue('AA' . $rows, $bank_main ?? '');
+                        $sheet->setCellValue('AB' . $rows, $secondary_bank_main ?? '');
+                        $sheet->setCellValue('AC' . $rows, ucfirst($home_lang?? ''));
+                        $sheet->setCellValue('AD' . $rows, ucfirst($secondary_home_lang?? ''));
                         // Handle $children_data
-                        $new_alpha = 'AA';
+                        $new_alpha = 'AE';
                         if (!empty($children_data) && is_array($children_data)) {
                             foreach ($children_data as $children) {
                                 $sheet->setCellValue($new_alpha . $rows, $children['date'] ?? '');
@@ -940,7 +1029,7 @@ class ExportController extends Controller
                     
                         $children_data = json_decode($all_data->children_data, true) ?? [];
                         $vehicle_data = json_decode($all_data->vehicle_data, true) ?? [];
-                        $vehicle_alpha = 'AG';
+                        $vehicle_alpha = 'AM';
                         
                         foreach ($vehicle_data as $vehicle) {
                             $brand_id = $vehicle['brand'];
@@ -960,7 +1049,11 @@ class ExportController extends Controller
                             $vehicle_alpha++;
                             $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['type'] ?? '');
                             $vehicle_alpha++;
-                            $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['brand'] ?? '');
+                            $brand = '';
+                            if (isset($vehicle) && is_array($vehicle) && isset($vehicle['brand'])) {
+                                $brand = ucfirst($vehicle['brand']);
+                            }
+                            $sheet->setCellValue($vehicle_alpha . $rows, $brand);
                             $vehicle_alpha++;
                             $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['year'] ?? '');
                             $vehicle_alpha++;
@@ -972,12 +1065,12 @@ class ExportController extends Controller
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
                     
-                        $sheet->setCellValue('AW' . $rows, $opted_in);
-                        $sheet->setCellValue('AX' . $rows, $updated_at);
+                        $sheet->setCellValue('BC' . $rows, $opted_in);
+                        $sheet->setCellValue('BD' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':AX' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':AX' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('C' . $rows . ':BD' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':BD' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                         $i++;
                     }
@@ -1022,11 +1115,11 @@ class ExportController extends Controller
                             $m_number = preg_replace('/\s+/', '',$all_data->mobile);
                             $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27(0)' . $m_number;
+                                $mobile_number = '27' . $m_number;
                             } else if ($length == 10 && $m_number[0] == '0'){
-                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                                $mobile_number = '27' . substr($m_number, 1);
                             }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                                $mobile_number = '+' . $m_number;
+                                $mobile_number =$m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
@@ -1039,11 +1132,11 @@ class ExportController extends Controller
                             $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
                             $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
-                                $whatsapp_number = '+27' . $w_number;
+                                $whatsapp_number = '27' . $w_number;
                             }else if ($length == 10 && $w_number[0] == '0'){
-                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                                $whatsapp_number = '27' . substr($w_number, 1);
                             } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                                $whatsapp_number = '+' . $w_number;
+                                $whatsapp_number = $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
@@ -1101,11 +1194,11 @@ class ExportController extends Controller
                             $m_number = preg_replace('/\s+/', '',$all_data->mobile);
                             $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27(0)' . $m_number;
+                                $mobile_number = '27' . $m_number;
                             } else if ($length == 10 && $m_number[0] == '0'){
-                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                                $mobile_number = '27' . substr($m_number, 1);
                             }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                                $mobile_number = '+' . $m_number;
+                                $mobile_number = $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
@@ -1117,11 +1210,11 @@ class ExportController extends Controller
                             $w_number = $all_data->whatsapp;
                             $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
-                                $whatsapp_number = '+27' . $w_number;
+                                $whatsapp_number = '27' . $w_number;
                             } else if ($length == 10 && $w_number[0] == '0'){
-                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                                $whatsapp_number = '27' . substr($w_number, 1);
                             }elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                                $whatsapp_number = '+' . $w_number;
+                                $whatsapp_number = $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
@@ -1178,11 +1271,11 @@ class ExportController extends Controller
                             $m_number = preg_replace('/\s+/', '',$all_data->mobile);
                             $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27(0)' . $m_number;
+                                $mobile_number = '27' . $m_number;
                             }else if ($length == 10 && $m_number[0] == '0'){
-                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                                $mobile_number = '27' . substr($m_number, 1);
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                                $mobile_number = '+' . $m_number;
+                                $mobile_number = $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
@@ -1195,11 +1288,11 @@ class ExportController extends Controller
                             $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
                             $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
-                                $whatsapp_number = '+27' . $w_number;
+                                $whatsapp_number = '27' . $w_number;
                             } else if ($length == 10 && $w_number[0] == '0'){
-                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                                $whatsapp_number = '27' . substr($w_number, 1);
                             }elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                                $whatsapp_number = '+' . $w_number;
+                                $whatsapp_number = $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
@@ -1256,11 +1349,11 @@ class ExportController extends Controller
                             $length = strlen($m_number);
                             
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27(0)' . $m_number;
+                                $mobile_number = '27' . $m_number;
                             } else if ($length == 10 && $m_number[0] == '0'){
-                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                                $mobile_number = '27' . substr($m_number, 1);
                             }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                                $mobile_number = '+' . $m_number;
+                                $mobile_number = $m_number;
                             } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
@@ -1271,11 +1364,11 @@ class ExportController extends Controller
                             $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
                             $length = strlen($w_number);
                             if (strlen($w_number) == 9) {
-                                $whatsapp_number = '+27' . $w_number;
+                                $whatsapp_number = '27' . $w_number;
                             } else if ($length == 10 && $w_number[0] == '0'){
-                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                                $whatsapp_number = '27' . substr($w_number, 1);
                             }elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                                $whatsapp_number = '+' . $w_number;
+                                $whatsapp_number = $w_number;
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
@@ -1396,11 +1489,11 @@ class ExportController extends Controller
                         $m_number =  preg_replace('/\s+/', '',$all_data->mobile);
                         $length = strlen($w_number);
                         if (strlen($m_number) == 9) {
-                            $mobile_number = '+27(0)' . $m_number;
+                            $mobile_number = '27' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                            $mobile_number = '+' . $m_number;
+                            $mobile_number = $m_number;
                         } else if ($length == 10 && $m_number[0] == '0'){
-                            $mobile_number = '+27(0)' . substr($m_number, 1);
+                            $mobile_number = '27' . substr($m_number, 1);
                         }elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                             $mobile_number = $m_number;
                         }
@@ -1411,11 +1504,11 @@ class ExportController extends Controller
                         $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
                         $length = strlen($w_number);
                         if (strlen($w_number) == 9) {
-                            $whatsapp_number = '+27' . $w_number;
+                            $whatsapp_number = '27' . $w_number;
                         } else if ($length == 10 && $w_number[0] == '0'){
-                            $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                            $whatsapp_number = '27' . substr($w_number, 1);
                         }elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                            $whatsapp_number = '+' . $w_number;
+                            $whatsapp_number = $w_number;
                         } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                             $whatsapp_number = $w_number;
                         }
@@ -1533,11 +1626,11 @@ class ExportController extends Controller
                         $m_number =  preg_replace('/\s+/', '',$all_data->mobile);
                         $length = strlen($w_number);
                         if (strlen($m_number) == 9) {
-                            $mobile_number = '+27(0)' . $m_number;
+                            $mobile_number = '27' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                            $mobile_number = '+' . $m_number;
+                            $mobile_number = $m_number;
                         } else if ($length == 10 && $m_number[0] == '0'){
-                            $mobile_number = '+27(0)' . substr($m_number, 1);
+                            $mobile_number = '27' . substr($m_number, 1);
                         }elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                             $mobile_number = $m_number;
                         }
@@ -1548,11 +1641,11 @@ class ExportController extends Controller
                         $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
                         $length = strlen($w_number);
                         if (strlen($w_number) == 9) {
-                            $whatsapp_number = '+27' . $w_number;
+                            $whatsapp_number = '27' . $w_number;
                         } else if ($length == 10 && $w_number[0] == '0'){
-                            $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                            $whatsapp_number = '27' . substr($w_number, 1);
                         }elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                            $whatsapp_number = '+' . $w_number;
+                            $whatsapp_number = $w_number;
                         } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                             $whatsapp_number = $w_number;
                         }
@@ -1674,11 +1767,11 @@ class ExportController extends Controller
                         $m_number = preg_replace('/\s+/', '',$all_data->mobile);
                         $length = strlen($m_number);
                         if (strlen($m_number) == 9) {
-                            $mobile_number = '+27(0)' . $m_number;
+                            $mobile_number = '27' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                            $mobile_number = '+' . $m_number;
+                            $mobile_number = $m_number;
                         } else if ($length == 10 && $m_number[0] == '0'){
-                            $mobile_number = '+27(0)' . substr($m_number, 1);
+                            $mobile_number = '27' . substr($m_number, 1);
                         }elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                             $mobile_number = $m_number;
                         }
@@ -1690,11 +1783,11 @@ class ExportController extends Controller
                    
                         $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
                         if (strlen($w_number) == 9) {
-                            $whatsapp_number = '+27(0)' . $w_number;
+                            $whatsapp_number = '27' . $w_number;
                         } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                            $whatsapp_number = '+' . $w_number;
+                            $whatsapp_number = $w_number;
                         }else if ($length == 10 && $m_number[0] == '0'){
-                            $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                            $whatsapp_number = '27' . substr($w_number, 1);
                         } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                             $whatsapp_number = $w_number;
                         }
@@ -1717,7 +1810,8 @@ class ExportController extends Controller
                     $household_income = ($h_income != null) ? $h_income->income : '-';
 
                     $sheet->setCellValue('G' . $rows, $year);
-                    $sheet->setCellValue('H' . $rows, $essential->relationship_statu ?? '');
+                    $relationship_status = ucfirst($essential->relationship_status ?? '');
+                    $sheet->setCellValue('H' . $rows, $relationship_status);
                     // Define the mapping of ethnic group codes to names
                     $ethnicGroups = [
                         'asian'   => 'Asian',
@@ -1728,7 +1822,9 @@ class ExportController extends Controller
                     ];
 
                     // Default to an empty string if the ethnic group is not in the array
-                    $ethnic_group = isset($ethnicGroups[$essential->ethnic_group]) ? $ethnicGroups[$essential->ethnic_group] : '';
+                    if ($essential && isset($essential->ethnic_group)) {
+                        $ethnic_group = $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
+                    }
 
                     $sheet->setCellValue('I' . $rows, $ethnic_group);
                     $sheet->setCellValue('J' . $rows, $essential->gender ?? '');
@@ -1973,25 +2069,28 @@ class ExportController extends Controller
                     $sheet->setCellValue('F1', 'WA Number');
                     $sheet->setCellValue('G1', 'Email');
                     $sheet->setCellValue('H1', 'Age');
-                    $sheet->setCellValue('I1', 'Relationship status');
+                    $sheet->setCellValue('I1', 'Relationship Status');
                     $sheet->setCellValue('J1', 'Ethnic Group / Race');
                     $sheet->setCellValue('K1', 'Gender');
                     $sheet->setCellValue('L1', 'Highest Education Level');
                     $sheet->setCellValue('M1', 'Employment Status');
-                    $sheet->setCellValue('N1', 'Industry my company is in');
+                    $sheet->setCellValue('N1', 'Industry my Company is In');
                     $sheet->setCellValue('O1', 'Job Title');
-                    $sheet->setCellValue('P1', 'Personal Income per month');
-                    $sheet->setCellValue('Q1', 'HHI per month');
-                    $sheet->setCellValue('R1', 'Province');
-                    $sheet->setCellValue('S1', 'Area');
-                    $sheet->setCellValue('T1', 'No. of people living in your household');
-                    $sheet->setCellValue('U1', 'Number of children');
-                    $sheet->setCellValue('V1', 'Number of vehicles');
-                    $sheet->setCellValue('W1', 'Opted in');
-                    $sheet->setCellValue('X1', 'Last Updated');
+                    $sheet->setCellValue('P1', 'Personal Income per Month');
+                    $sheet->setCellValue('Q1', 'Personal LSM');
+                    $sheet->setCellValue('R1', 'HHI per Month');
+                    $sheet->setCellValue('S1', 'Household LSM');
+                    $sheet->setCellValue('T1', 'Province');
+                    $sheet->setCellValue('U1', 'Area');
+                    $sheet->setCellValue('V1', 'No. of People Living in Your Household');
+                    $sheet->setCellValue('W1', 'Number of Children');
+                    $sheet->setCellValue('X1', 'Number of Vehicles');
+                    $sheet->setCellValue('Y1', 'Opted In');
+                    $sheet->setCellValue('Z1', 'Last Updated');
+                
 
-                    $sheet->getStyle('A1:X1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:X1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:Z1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:Z1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -2006,11 +2105,11 @@ class ExportController extends Controller
                             $m_number = preg_replace('/\s+/', '',$all_data->mobile);
                             $length = strlen($m_number);
                             if (strlen($m_number) == 9) {
-                                $mobile_number = '+27(0)' . $m_number;
+                                $mobile_number = '27' . $m_number;
                             } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                                $mobile_number = '+' . $m_number;
+                                $mobile_number = $m_number;
                             } else if ($length == 10 && $m_number[0] == '0'){
-                                $mobile_number = '+27(0)' . substr($m_number, 1);
+                                $mobile_number = '27' . substr($m_number, 1);
                             }elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                 $mobile_number = $m_number;
                             }
@@ -2022,11 +2121,11 @@ class ExportController extends Controller
                        
                             $w_number = preg_replace('/\s+/', '',$all_data->whatsapp);
                             if (strlen($w_number) == 9) {
-                                $whatsapp_number = '+27(0)' . $w_number;
+                                $whatsapp_number = '27' . $w_number;
                             } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                                $whatsapp_number = '+' . $w_number;
+                                $whatsapp_number = $w_number;
                             }else if ($length == 10 && $m_number[0] == '0'){
-                                $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                                $whatsapp_number = '27' . substr($w_number, 1);
                             } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                 $whatsapp_number = $w_number;
                             }
@@ -2056,7 +2155,8 @@ class ExportController extends Controller
 
                        
                         $sheet->setCellValue('H' . $rows, $year);
-                        $sheet->setCellValue('I' . $rows, $essential->relationship_statu ?? '');
+                        $relationship_status = ucfirst($essential->relationship_status ?? '');
+                        $sheet->setCellValue('I' . $rows, $relationship_status);
                         // Define the mapping of ethnic group codes to names
                         $ethnicGroups = [
                             'asian'   => 'Asian',
@@ -2067,7 +2167,10 @@ class ExportController extends Controller
                         ];
 
                         // Default to an empty string if the ethnic group is not in the array
-                        $ethnic_group = isset($ethnicGroups[$essential->ethnic_group]) ? $ethnicGroups[$essential->ethnic_group] : '';
+                        
+                        if ($essential && isset($essential->ethnic_group)) {
+                            $ethnic_group = $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
+                        }
 
                         $sheet->setCellValue('J' . $rows, $ethnic_group);
                         $sheet->setCellValue('K' . $rows, ucfirst($essential->gender) ?? '');
@@ -2163,8 +2266,19 @@ class ExportController extends Controller
                         }
                         
                         $sheet->setCellValue('P' . $rows, $p_income);
-                        $sheet->setCellValue('Q' . $rows, $h_income);
-                        
+                        $personalIncome = '';
+                        if ($essential !== null && isset($essential->personal_income_per_month)) {
+                            $personalIncome = $essential->personal_income_per_month;
+                        }
+                        $sheet->setCellValue('Q' . $rows, $personalIncome);
+                       
+                       
+                        $sheet->setCellValue('R' . $rows, $h_income);
+                        $householdIncome = '';
+                        if ($essential !== null && isset($essential->household_income_per_month)) {
+                            $householdIncome = $essential->household_income_per_month;
+                        }
+                        $sheet->setCellValue('S' . $rows, $householdIncome);
 
                         $state = null; // Initialize $state to null
 
@@ -2186,21 +2300,21 @@ class ExportController extends Controller
                         $get_state = ($state != null) ? $state->state : '-';
                         $get_district = ($district != null) ? $district->district : '-';
                       
-                        $sheet->setCellValue('R' . $rows, $get_state ?? '');
-                        $sheet->setCellValue('S' . $rows, $get_district ?? '');
-                        $sheet->setCellValue('T' . $rows, $essential->no_houehold ?? '');
-                        $sheet->setCellValue('U' . $rows, $essential->no_children ?? '');
-                        $sheet->setCellValue('V' . $rows, $essential->no_vehicle ?? '');
+                        $sheet->setCellValue('T' . $rows, $get_state ?? '');
+                        $sheet->setCellValue('U' . $rows, $get_district ?? '');
+                        $sheet->setCellValue('V' . $rows, $essential->no_houehold ?? '');
+                        $sheet->setCellValue('W' . $rows, $essential->no_children ?? '');
+                        $sheet->setCellValue('X' . $rows, $essential->no_vehicle ?? '');
 
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
 
-                        $sheet->setCellValue('W' . $rows, $opted_in);
+                        $sheet->setCellValue('Y' . $rows, $opted_in);
                         $sheet->setCellValue('X' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':X' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':X' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('C' . $rows . ':Z' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':Z' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                     }
                 
@@ -2402,7 +2516,7 @@ class ExportController extends Controller
                         $multi_choice_qus = Questions::where(['qus_type' => 'multi_choice', 'survey_id' => $survey_id])->get();
                         $rankorder_qus = Questions::where(['qus_type' => 'rankorder', 'survey_id' => $survey_id])->get();
                 
-                        $cols = ["Respondent Name", "Mobile","Whatsapp","Email","DOB","Gender","Highest Education Level","Employment Status","Industry my company","Personal Income","Household Income","Relationship Status","Ethnic Group","Province","Suburb","Date","Device ID", "Device Name", "Completion Status", "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"];
+                        $cols = ["Respondent Name", "Mobile","Whatsapp","Email","DOB","Gender","Highest Education Level","Employment Status","Industry my company","Personal Income","Personal LSM","Household Income","Household LSM","Relationship Status","Ethnic Group","Province","Suburb","Date","Device ID", "Device Name", "Completion Status", "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"];
 
                         foreach ($question as $qus) {
                             array_push($cols, $qus->question_name);
@@ -2488,11 +2602,11 @@ class ExportController extends Controller
                                 $m_number = preg_replace('/\s+/', '',$basic->mobile_number);
                                 $length = strlen($m_number);
                                 if (strlen($m_number) == 9) {
-                                    $mobile_number = '+27(0)' . $m_number;
+                                    $mobile_number = '27' . $m_number;
                                 }  else if ($length == 10 && $m_number[0] == '0'){
-                                    $mobile_number = '+27(0)' . substr($m_number, 1);
+                                    $mobile_number = '27' . substr($m_number, 1);
                                 }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                                    $mobile_number = '+' . $m_number;
+                                    $mobile_number =$m_number;
                                 } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                                     $mobile_number = $m_number;
                                 }
@@ -2505,11 +2619,11 @@ class ExportController extends Controller
                                 $w_number = preg_replace('/\s+/', '',$basic->whatsapp_number);
                                 $length = strlen($w_number);
                                 if (strlen($w_number) == 9) {
-                                    $whatsapp_number = '+27' . $w_number;
+                                    $whatsapp_number = '27' . $w_number;
                                 } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                                    $whatsapp_number = '+' . $w_number;
+                                    $whatsapp_number = $w_number;
                                 } else if ($length == 10 && $m_number[0] == '0'){
-                                    $whatsapp_number = '+27(0)' . substr($w_number, 1);
+                                    $whatsapp_number = '27' . substr($w_number, 1);
                                 }
                                 elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                     $whatsapp_number = $w_number;
@@ -2553,7 +2667,12 @@ class ExportController extends Controller
                             
                             $household_income = ($h_income != null) ? $h_income->income : '-';
                             $personal_income = ($p_income != null) ? $p_income->income : '-';
-                            $relationship_status = $essential->relationship_status ?? '';
+                            
+                            $personal_lsm = $essential->personal_income_per_month ?? '';
+                            $household_lsm = $essential->household_income_per_month ?? '';
+
+                            $relationship_status = ucfirst($essential->relationship_status ?? '');
+                            
                             // Define the mapping of ethnic group codes to names
                             $ethnicGroups = [
                                 'asian'   => 'Asian',
@@ -2564,7 +2683,10 @@ class ExportController extends Controller
                             ];
 
                             // Default to an empty string if the ethnic group is not in the array
-                            $ethnic_group = isset($ethnicGroups[$essential->ethnic_group]) ? $ethnicGroups[$essential->ethnic_group] : '';
+                            
+                            if ($essential && isset($essential->ethnic_group)) {
+                                $ethnic_group = $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
+                            }
 
                          
                             // Initialize the gender variable with a default value
@@ -2622,7 +2744,7 @@ class ExportController extends Controller
                             $get_state = ($state != null) ? $state->state : '-';
                             $get_district = ($district != null) ? $district->district : '-';
                             
-                            $result = ['Respondent Name' => $name,'Mobile'=>$mobile_number, 'Whatsapp'=>$whatsapp_number, 'Email'=>$email, 'DOB'=>$year,'Gender'=>$gender,'Highest Education Level'=>$education_level,'Employment Status'=>$employment_status,'Industry my company'=>$industry_my_company,'Personal Income'=>$personal_income,'Household Income'=>$household_income,'Relationship Status'=>$relationship_status,'Ethnic Group'=>$ethnic_group,'Province'=>$get_state,'Suburb'=>$get_district, 'Date' => $responseinfo, 'Device ID' => $deviceID, 'Device Name' => $device_name, 'Completion Status' => $completion_status, 'Browser' => $browser, 'OS' => $os, 'Device Type' => $device_type, 'Long' => $long, 'Lat' => $lat, 'Location' => $location, 'IP Address' => $ip_address, 'Language Code' => $lang_code, 'Language Name' => $lang_name];
+                            $result = ['Respondent Name' => $name,'Mobile'=>$mobile_number, 'Whatsapp'=>$whatsapp_number, 'Email'=>$email, 'DOB'=>$year,'Gender'=>$gender,'Highest Education Level'=>$education_level,'Employment Status'=>$employment_status,'Industry my company'=>$industry_my_company,'Personal Income'=>$personal_income,'Personal LSM'=>$personal_lsm,'Household Income'=>$household_income,'Household LSM'=>$household_lsm,'Relationship Status'=>$relationship_status,'Ethnic Group'=>$ethnic_group,'Province'=>$get_state,'Suburb'=>$get_district, 'Date' => $responseinfo, 'Device ID' => $deviceID, 'Device Name' => $device_name, 'Completion Status' => $completion_status, 'Browser' => $browser, 'OS' => $os, 'Device Type' => $device_type, 'Long' => $long, 'Lat' => $lat, 'Location' => $location, 'IP Address' => $ip_address, 'Language Code' => $lang_code, 'Language Name' => $lang_name];
                             
                             //dd($result);
                             

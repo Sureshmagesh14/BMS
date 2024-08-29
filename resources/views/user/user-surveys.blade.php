@@ -30,12 +30,16 @@
         display: inline-block;
         margin-bottom: 0.5rem !important;
     }
+    .cir-border{
+        border: 1px solid #fff;
+    border-radius: 25px !important;
+    }
 </style>
 <section class="bg-greybg">
     <div class="container mb-5">
         <div class="row align-items-center justify-content-center pt-5 mb-3">
 
-            <div class="bg-white my-2 w-100">
+            <div class="bg-white my-2 w-100 cir-border">
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm"> Your Paid 
 Online Surveys</span>
@@ -115,7 +119,7 @@ Online Surveys</span>
                 </div>
             </div>
             <br>
-            <div class="bg-white my-2 w-100">
+            <div class="bg-white my-2 w-100 cir-border">
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm">See If You Qualify 
 for Other Research</span>
@@ -199,7 +203,7 @@ for Other Research</span>
             </div>
             <br>
 
-            <div class="bg-white my-2 w-100">
+            <div class="bg-white my-2 w-100 cir-border">
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm"> Your Survey History</span>
                 </h4>

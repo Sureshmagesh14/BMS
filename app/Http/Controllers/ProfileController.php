@@ -25,6 +25,13 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Illuminate\Support\Facades\Hash;
 use Exception;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
+use Config;
+use App\Models\Project_respondent;
+use App\Mail\Respondentprojectmail;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 
 class ProfileController extends Controller
 {
@@ -104,7 +111,7 @@ class ProfileController extends Controller
                 $get_pid = RespondentProfile::orderBy('pid','DESC')->first();
                 $pid = ($get_pid != null) ? $get_pid->pid+1 : 1;
             }
-
+            $basic_details = ($profile != null) ? (($profile->basic_details != null) ? json_decode($profile->basic_details, true) : array()) : array();
             $essential_details = ($profile != null) ? (($profile->essential_details != null) ? json_decode($profile->essential_details, true) : array()) : array();
             $extended_details  = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
             $child_details     = ($profile != null) ? (($profile->children_data != null) ? json_decode($profile->children_data, true) : array()) : array();
@@ -269,7 +276,7 @@ class ProfileController extends Controller
 
 
   
-            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges','page'));
+            return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges','page','basic_details'));
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -335,13 +342,26 @@ class ProfileController extends Controller
                 'pid'           => $unique_id,
                 'respondent_id' => $resp_id,
                 'basic_details' => $basic_details,
+                'updated_at'    => now() 
             );
 
             if(RespondentProfile::where('respondent_id',$resp_id)->doesntExist()){
                 RespondentProfile::insert($basic_data);
             }
             else{
-                RespondentProfile::where('respondent_id',$resp_id)->update($basic_data);
+                $current_profile = RespondentProfile::where('respondent_id', $resp_id)->first();
+                $current_basic_details = $current_profile->basic_details;
+                $current_basic_array = json_decode($current_basic_details, true);
+                $new_basic_array = json_decode($basic_details, true);
+        
+                if ($current_basic_array != $new_basic_array) {
+                    $new_basic_array['updated_at'] = date('Y-m-d H:i:s'); // update the updated_at field
+                    $basic_details = json_encode($new_basic_array);
+                    RespondentProfile::where('respondent_id',$resp_id)->update([
+                        'basic_details' => $basic_details,
+                    ]);
+                }
+              
             }
             
             $step_word = "Basic Details Updated";
@@ -371,11 +391,37 @@ class ProfileController extends Controller
                 $step_word = ($steps == 2) ? "Essential Details Added" : "Extended Details Added";
             }
             else{
-                RespondentProfile::where('respondent_id',$resp_id)->update($profile_data);
+
+              
+                $current_profile = RespondentProfile::where('respondent_id', $resp_id)->first();
+                $current_essential_details = $current_profile->essential_details;
+                $current_essential_array = json_decode($current_essential_details, true);
+                $new_essential_array = json_decode($essential_details, true);
+        
+                if ($current_essential_array != $new_essential_array) {
+                    $new_essential_array['updated_at'] = date('Y-m-d H:i:s'); // update the updated_at field
+                    $essential_details = json_encode($new_essential_array);
+                    RespondentProfile::where('respondent_id',$resp_id)->update([
+                        'essential_details' => $essential_details,
+                    ]);
+                }
+
+             
+                $current_extended_details = $current_profile->extended_details;
+                $current_extended_array = json_decode($current_extended_details, true);
+                $new_extended_array = json_decode($extended_details, true);
+        
+                if ($current_extended_array != $new_extended_array) {
+                    $new_extended_array['updated_at'] = date('Y-m-d H:i:s'); // update the updated_at field
+                    $extended_details = json_encode($new_extended_array);
+                    RespondentProfile::where('respondent_id',$resp_id)->update([
+                        'extended_details' => $extended_details,
+                    ]);
+                }
                 $step_word = ($steps == 2) ? "Essential Details Updated" : "Extended Details Updated";
             }
         }
-
+       
         $profile = RespondentProfile::where('respondent_id',$resp_id)->first();
 
         $check_basic = ($profile != null) ? (($profile->basic_details != null) ? json_decode($profile->basic_details, true) : array()) : array();
@@ -383,7 +429,7 @@ class ProfileController extends Controller
         $check_ext   = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
 
         unset($check_ess['employment_status_other'],$check_ess['industry_my_company_other']);
-        unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other']);
+        unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other'],$check_ext['bank_secondary_other'],$check_ext['secondary_home_lang_other']);
 
         if(count($check_basic) > 0 && count($check_ess) > 0 && count($check_ext) > 0){
             if(count($check_basic) == count(array_filter($check_basic)) && count($check_ess) == count(array_filter($check_ess)) && count($check_ext) == count(array_filter($check_ext))){
@@ -402,5 +448,141 @@ class ProfileController extends Controller
             'success' => true,
             'message' => $step_word. ' Successfully'
         ]);
+    }
+
+    public function emailChangeOtpSend(Request $request){
+        try {
+            $resp_id = Session::get('resp_id');
+            $getResp =  Respondents::select('mobile','whatsapp')->where('id',$resp_id)->first();
+
+            if($getResp != null){
+                // Clean and validate phone number
+                $phone = str_replace(' ', '', $getResp->mobile);
+                
+                // Ensure phone number contains only digits
+                if (!ctype_digit($phone)) {
+                    return redirect()->route('updateprofile_wizard')->with('error', 'Invalid phone number format');
+                }
+
+                // Validate phone number length (less than or equal to 9 digits)
+                if (strlen($phone) > 9) {
+                    return redirect()->route('updateprofile_wizard')->with('error', 'Invalid phone number format: Must be 9 digits or less');
+                }
+
+                $otp = random_int(100000, 999999);
+                // Prepare SMS content
+                $smsContent = "Reset Password Notification\n\n";
+                $smsContent .= "OTP: $otp.\n";
+                $smsContent .= "If you did not change the email, no further action is required.\n";
+                $smsContent .= "This OTP will expire in 60 minutes.";
+                
+                Respondents::where('id',$resp_id)->update(['email_or_phone_change_otp' => $otp]);
+
+                // Parameters for the SMS
+                $postData = [
+                    'username' => config('constants.username'),
+                    'password' => config('constants.password'),
+                    'account'  => config('constants.account'),
+                    'da'       => config('constants.phone') . $phone, // Destination number with country code
+                    'ud'       => $smsContent, // SMS content
+                ];
+
+                // Initialize cURL session
+                $curl = curl_init();
+
+                // Set cURL options
+                curl_setopt_array($curl, [
+                    CURLOPT_URL => 'http://apihttp.pc2sms.biz/submit/single/',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => http_build_query($postData),
+                ]);
+
+                // Execute cURL session
+                $response = curl_exec($curl);
+
+                // Check for cURL execution errors
+                if ($response === false) {
+                    throw new Exception(curl_error($curl), curl_errno($curl));
+                }
+
+                // Close cURL session
+                curl_close($curl);
+
+                // Log the full response for debugging
+                // Log::info('SMS API Response: ' . $response);
+
+                // Check if response indicates success
+                if (strpos($response, 'Accepted for delivery') !== false) {
+                    return view('user.email_chage_otp');
+                }
+                else {
+                    return redirect()->route('updateprofile_wizard')->with('error', 'Failed to send SMS! Please try after sometime');
+                    throw new Exception('Failed to send SMS. API response: ' . $response);
+                }
+            }
+        }
+        catch (Exception $e) {
+            // Log the exception with more details
+            Log::error('SMS API Error: ' . $e->getMessage() . ' - Code: ' . $e->getCode());
+    
+            return redirect()->route('updateprofile_wizard')->with('error', 'Failed to send SMS! Please try after sometime');
+        }
+    }
+
+    public function emailChangeOtpCheck(Request $request){
+        (int) $otp = $request->otp;
+
+        $resp_id = Session::get('resp_id');
+        $getResp =  Respondents::where('id',$resp_id)->where('email_or_phone_change_otp',$otp)->first();
+        
+        if($getResp != null){
+            Respondents::where('id',$resp_id)->update(['email_or_phone_change_otp' => 0]);
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function emailChange(Request $request){
+        $resp_id = Session::get('resp_id');
+        $email_id = $request->email_id;
+        Respondents::where('id',$resp_id)->update(['email' => $email_id]);
+
+        return redirect()->route('updateprofile_wizard')->with('status', 'Email ID Changed!');
+    }
+
+    public function mobileChangeOtpSend(Request $request){
+        try {
+
+            $resp_id = Session::get('resp_id');
+            $otp = random_int(100000, 999999);
+            Respondents::where('id',$resp_id)->update(['email_or_phone_change_otp' => $otp]);
+
+            $get_email  = Respondents::where('id', $resp_id)->first();
+            $to_address = $get_email->email;
+
+            $data = ['subject' => 'OTP for mobile number change','type' => 'mobile_change_otp', 'otp' => $get_email->email_or_phone_change_otp];
+
+            Mail::to($to_address)->send(new WelcomeEmail($data));
+          
+            return view('user.mobile_change_otp');
+    
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function mobileChange(Request $request){
+        $resp_id = Session::get('resp_id');
+        $phone_no = $request->phone_no;
+        Respondents::where('id',$resp_id)->update(['mobile' => $phone_no]);
+
+        return redirect()->route('updateprofile_wizard')->with('status', 'Mobile Changed!');
     }
 }

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-
+use Carbon\Carbon;
 class LoginRequest extends FormRequest
 {
     /**
@@ -38,62 +38,49 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+    public function authenticate()
     {
-        $this->ensureIsNotRateLimited();
+        $credentials = $this->only('email', 'password');
+    
+        // Check if the email or mobile is deactivated
+        $respondent = Respondents::where('email', $credentials['email'])
+            ->orWhere('mobile', $credentials['email'])
+            ->first();
 
-        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-
-            $credentials = $this->only('email', 'password');
-
-            // $get_resp_mobile = Respondents::select('active_status_id')->where('mobile', $credentials['email'])->first();
-            // if($get_resp_mobile != null){
-            //     $get_resp_email = Respondents::select('active_status_id')->where('email', $credentials['email'])->first();
-            //     $active_status_id = $get_resp_email->active_status_id;
-            // }
-            // else{
-            //     $active_status_id = $get_resp_mobile;
-            // }
-
-            // if($active_status_id != 1){
-            //     $mess = strip_tags("<strong>Your Account was Unsubscribed.</strong>");
-            //     throw ValidationException::withMessages([
-            //         'email' => $mess,
-            //     ]);
-            // }
-
-            if (Auth::attempt(['mobile' => $credentials['email'], 'password' => $credentials['password']]))
-            {     
+        if ($respondent) {
+            // Check if the deactivated_date is set and if it's less than or equal the current date
+            if ($respondent->deactivated_date && Carbon::parse($respondent->deactivated_date)->endOfDay()->lessThanOrEqualTo(Carbon::now())) {
+                $message = strip_tags("<strong>Your account is deactivated.</strong>");
+                throw ValidationException::withMessages([
+                    'message' => $message,
+                ]);
+            }
+        }
+    
+        // Authenticate the user
+        if (!Auth::attempt($credentials, $this->boolean('remember'))) {
+            // Handle unsuccessful authentication
+            if (Auth::attempt(['mobile' => $credentials['email'], 'password' => $credentials['password']])) {
                 RateLimiter::clear($this->throttleKey());
             }
-
+    
             if (Respondents::where('email', $credentials['email'])->first() || Respondents::where('mobile', $credentials['email'])->first()) {
                 $mess = strip_tags("<strong>Incorrect Password.</strong>");
-            }
-            else{
-                if(filter_var($credentials['email'], FILTER_VALIDATE_INT) === false){
+            } else {
+                if (filter_var($credentials['email'], FILTER_VALIDATE_INT) === false) {
                     $mess = strip_tags("<strong>Incorrect Email.</strong>");
-                }
-                else{
+                } else {
                     $mess = strip_tags("<strong>Incorrect Phone No.</strong>");
                 }
             }
-
+    
             throw ValidationException::withMessages([
                 'email' => $mess,
             ]);
-            
-            // RateLimiter::hit($this->throttleKey());
-
-            // throw ValidationException::withMessages([
-            //     'email' => trans('auth.failed'),
-            // ]);
-
         }
-
+    
         RateLimiter::clear($this->throttleKey());
     }
-
     /**
      * Ensure the login request is not rate limited.
      *
