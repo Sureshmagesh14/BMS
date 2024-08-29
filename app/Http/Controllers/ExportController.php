@@ -163,10 +163,15 @@ class ExportController extends Controller
                 \DB::raw('COALESCE(respondent_profile.children_data, "") AS children_data'),
                 \DB::raw('COALESCE(respondent_profile.vehicle_data, "") AS vehicle_data'),
                 'respondent_profile.updated_at',
+                \DB::raw('JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS personal_income_per_month'),
+                \DB::raw('JSON_EXTRACT(respondent_profile.essential_details, "$.household_income_per_month") AS household_income_per_month'),
             ])
-            ->where('respondents.active_status_id',1)
+            ->where('respondents.active_status_id', 1)
+            ->orderByRaw('CASE WHEN CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) IS NULL OR CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) = 0 THEN 1 ELSE 0 END ASC')
+            ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) ASC')
+            ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.household_income_per_month") AS UNSIGNED) ASC')
             ->get()
-            ->unique('id'); 
+            ->unique('id');
             
          
         
@@ -491,9 +496,22 @@ class ExportController extends Controller
                         $personal_income = ($p_income != null) ? $p_income->income : '-';
                         $household_income = ($h_income != null) ? $h_income->income : '-';
                         $sheet->setCellValue('O' . $rows, $personal_income);
-                        $sheet->setCellValue('P' . $rows, $essential->personal_income_per_month ?? '');
+
+
+                        $personalIncome = '';
+                        if ($essential !== null && isset($essential->personal_income_per_month)) {
+                            $personalIncome = $essential->personal_income_per_month;
+                        }
+                        $sheet->setCellValue('P' . $rows, $personalIncome);
+                        
+                    
                         $sheet->setCellValue('Q' . $rows, $household_income);
-                        $sheet->setCellValue('R' . $rows, $essential->household_income_per_month ?? '');
+                        $householdIncome = '';
+                        if ($essential !== null && isset($essential->household_income_per_month)) {
+                            $householdIncome = $essential->household_income_per_month;
+                        }
+                        $sheet->setCellValue('R' . $rows, $householdIncome);
+
 
                         $state = null; // Initialize $state to null
 
@@ -561,6 +579,13 @@ class ExportController extends Controller
                     $sheet->getColumnDimension('AV')->setAutoSize(true);
                     $sheet->getColumnDimension('AW')->setAutoSize(true);
                     $sheet->getColumnDimension('AX')->setAutoSize(true);
+                    $sheet->getColumnDimension('AY')->setAutoSize(true);
+                    $sheet->getColumnDimension('AZ')->setAutoSize(true);
+                    $sheet->getColumnDimension('AX')->setAutoSize(true);
+                    $sheet->getColumnDimension('BA')->setAutoSize(true);
+                    $sheet->getColumnDimension('BB')->setAutoSize(true);
+                    $sheet->getColumnDimension('BC')->setAutoSize(true);
+                    $sheet->getColumnDimension('BD')->setAutoSize(true);
                     $sheet->setCellValue('A1', 'PID');
                     $sheet->setCellValue('B1', 'First Name');
                     $sheet->setCellValue('C1', 'Last Name');
@@ -638,8 +663,8 @@ class ExportController extends Controller
                     
                     
 
-                    $sheet->getStyle('A1:BB1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:BB1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:BD1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:BD1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -823,10 +848,19 @@ class ExportController extends Controller
                         $sheet->setCellValue('M' . $rows, $companyName);
                         $sheet->setCellValue('N' . $rows, $essential->job_title ?? '');
                         $sheet->setCellValue('O' . $rows, $personal_income ?? '');
-                        $sheet->setCellValue('P' . $rows, $essential->personal_income_per_month ?? '');
+                        $personalIncome = '';
+                        if ($essential !== null && isset($essential->personal_income_per_month)) {
+                            $personalIncome = $essential->personal_income_per_month;
+                        }
+                        $sheet->setCellValue('P' . $rows, $personalIncome);
                         
                         $sheet->setCellValue('Q' . $rows, $household_income ?? '');
-                        $sheet->setCellValue('R' . $rows, $essential->household_income_per_month ?? '');
+                        $householdIncome = '';
+                        if ($essential !== null && isset($essential->household_income_per_month)) {
+                            $householdIncome = $essential->household_income_per_month;
+                        }
+                        $sheet->setCellValue('R' . $rows, $householdIncome);
+
                     
                         $state = null; // Initialize $state to null
                     
@@ -981,7 +1015,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('AA' . $rows, $bank_main ?? '');
                         $sheet->setCellValue('AB' . $rows, $secondary_bank_main ?? '');
                         $sheet->setCellValue('AC' . $rows, ucfirst($home_lang?? ''));
-                        $sheet->setCellValue('AD' . $rows, ucfirst($home_lang?? ''));
+                        $sheet->setCellValue('AD' . $rows, ucfirst($secondary_home_lang?? ''));
                         // Handle $children_data
                         $new_alpha = 'AE';
                         if (!empty($children_data) && is_array($children_data)) {
@@ -995,7 +1029,7 @@ class ExportController extends Controller
                     
                         $children_data = json_decode($all_data->children_data, true) ?? [];
                         $vehicle_data = json_decode($all_data->vehicle_data, true) ?? [];
-                        $vehicle_alpha = 'AF';
+                        $vehicle_alpha = 'AM';
                         
                         foreach ($vehicle_data as $vehicle) {
                             $brand_id = $vehicle['brand'];
@@ -1015,7 +1049,11 @@ class ExportController extends Controller
                             $vehicle_alpha++;
                             $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['type'] ?? '');
                             $vehicle_alpha++;
-                            $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['brand'] ?? '');
+                            $brand = '';
+                            if (isset($vehicle) && is_array($vehicle) && isset($vehicle['brand'])) {
+                                $brand = ucfirst($vehicle['brand']);
+                            }
+                            $sheet->setCellValue($vehicle_alpha . $rows, $brand);
                             $vehicle_alpha++;
                             $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['year'] ?? '');
                             $vehicle_alpha++;
@@ -1027,12 +1065,12 @@ class ExportController extends Controller
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
                     
-                        $sheet->setCellValue('BA' . $rows, $opted_in);
-                        $sheet->setCellValue('BB' . $rows, $updated_at);
+                        $sheet->setCellValue('BC' . $rows, $opted_in);
+                        $sheet->setCellValue('BD' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':BB' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':BB' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('C' . $rows . ':BD' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':BD' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                         $i++;
                     }
@@ -2228,10 +2266,19 @@ class ExportController extends Controller
                         }
                         
                         $sheet->setCellValue('P' . $rows, $p_income);
-                        $sheet->setCellValue('Q' . $rows, $essential->personal_income_per_month ?? '');
+                        $personalIncome = '';
+                        if ($essential !== null && isset($essential->personal_income_per_month)) {
+                            $personalIncome = $essential->personal_income_per_month;
+                        }
+                        $sheet->setCellValue('Q' . $rows, $personalIncome);
+                       
                        
                         $sheet->setCellValue('R' . $rows, $h_income);
-                        $sheet->setCellValue('S' . $rows, $essential->household_income_per_month ?? '');
+                        $householdIncome = '';
+                        if ($essential !== null && isset($essential->household_income_per_month)) {
+                            $householdIncome = $essential->household_income_per_month;
+                        }
+                        $sheet->setCellValue('S' . $rows, $householdIncome);
 
                         $state = null; // Initialize $state to null
 
@@ -2621,8 +2668,8 @@ class ExportController extends Controller
                             $household_income = ($h_income != null) ? $h_income->income : '-';
                             $personal_income = ($p_income != null) ? $p_income->income : '-';
                             
-                            $personal_lsm = 'LSM '.$essential->personal_income_per_month ?? '';
-                            $household_lsm = 'LSM '.$essential->household_income_per_month ?? '';
+                            $personal_lsm = $essential->personal_income_per_month ?? '';
+                            $household_lsm = $essential->household_income_per_month ?? '';
 
                             $relationship_status = ucfirst($essential->relationship_status ?? '');
                             

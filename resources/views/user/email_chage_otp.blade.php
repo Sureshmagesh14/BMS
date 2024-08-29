@@ -112,12 +112,9 @@
 <!-- main ends -->
 
 @include('user.layout.forgot-footer')
-<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+
 <script>
     $(function() {
-        $('#phone').inputmask("999999");
-        
-
         $('#email_id_change_form').validate({
             rules: {
                 email_id: {

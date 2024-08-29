@@ -276,8 +276,8 @@
 <script>
     $(function() {
 
-        $('#mobile').inputmask("999 999 999");
-        $('#whatsapp').inputmask("999 999 999");
+        $('#mobile').inputmask("99 999 9999");
+        $('#whatsapp').inputmask("99 999 9999");
         $(document).ready(function() {
             $(document).ready(function() {
                 $('#respondents_form').validate({
@@ -298,8 +298,8 @@
                                 dataFilter: function(response) {
                                     // Parse the JSON response from the server
                                     var json = JSON.parse(response);
-                                    return json.valid ? "true" :
-                                        "false"; // Return 'true' or 'false' to indicate validity
+                                    // Return validation result based on 'exists' key
+                                    return json.exists === false ? 'true' : 'false';
                                 }
                             }
                         },
