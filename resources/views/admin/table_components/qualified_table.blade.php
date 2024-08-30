@@ -21,9 +21,10 @@
 <br>
 <div class="text-right">
     <div class="btn-group mr-2 qualified_table hided_option" role="group" aria-label="First group"> 
-        <select name="action_2" id="action_3" class="form-control select_box">
+        <select name="action_qualified" id="action_qualified" class="form-control select_box">
             <option value="">Select Action</option>
             <option value="3">Rewarded all qualified Respondent</option>
+            <option value="deattach_all_qualified">Deattach Selected Respondent</option>
         </select>
 
         <div class="play-button-container ml-3">
@@ -40,12 +41,13 @@
 <table id="qualified_table" class="table dt-responsive nowrap w-100">
     <thead>
         <tr>
-            {{-- <th>
+            <th>
                 <input type="checkbox" class="select_all" id="inlineForm-customCheck">
-            </th> --}}
+            </th>
             <th>Respondent ID</th>
             <th>Name</th>
             <th>Surname</th>
+            <th>Project Name</th>
             <th>Points</th>
             <th>Status</th>
             <th>Created</th>
