@@ -556,6 +556,10 @@ class QualifiedController extends Controller
     }
     
     
-    
+    public function deattach_qualfied(Request $request){
+
+        dd($request->all);
+        QualifiedRespondent::where('respondent_id',$resp_id)->where('project_id',$project_id)->delete();
+    }
 
 }

@@ -549,7 +549,7 @@
         } 
         else if (select_value == 11) {
             titles = "Notify Respondent";
-            select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}",
+            select_action("POST", all_id, project_id, "{{ route('deattach_qualfied') }}",
                 'qualified_table', titles, "Are You Want Send Notification", "Action");
                
         }
