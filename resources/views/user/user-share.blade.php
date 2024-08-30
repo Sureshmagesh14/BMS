@@ -72,7 +72,7 @@
         });
         
         $("#mail").click(function() {
-            var whatsapurl ='mailto:info@example.com?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ URL::to('/') }}?r={{ $ref_code }}';
+            var whatsapurl ='mailto:?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ URL::to('/') }}?r={{ $ref_code }}';
             window.location.href = whatsapurl;
         });
 
