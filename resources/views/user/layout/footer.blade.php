@@ -3,7 +3,7 @@
     background-color: #6396b1 !important;
 }
 </style> -->
-<footer class="pos-fixed bg-white">
+<footer class="pos-fixed bg-white h-60px">
     <!-- <div class="container"> -->
     <div class="container py-2">
         <div class="row justify-content-center align-items-center">

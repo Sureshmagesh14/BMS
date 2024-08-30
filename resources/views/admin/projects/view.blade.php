@@ -542,6 +542,11 @@
             titles = "Status > Complete";
             select_action("POST", all_id, select_value, "{{ route('project_action') }}", 'respondents_datatable', titles, "Are You Want To Change Status", "Action");
         }
+        else if (select_value == 11) {
+            titles = "Un-Assign from Project";
+            select_action("POST", all_id, project_id, "{{ route('project_unassign') }}",
+                'respondents_datatable', titles, "Are You Want To Un-Assign from Project", "Action");
+        }
         else if (select_value == 10) {
             titles = "Notify Respondent";
             select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}",

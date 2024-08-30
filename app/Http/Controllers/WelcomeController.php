@@ -170,9 +170,7 @@ class WelcomeController extends Controller
                 }
             }
             //dd($pdata);
-            if ($tot_rows == $ans_c) {
-                Respondents::where('id', $id)->update(['profile_completion_id' => 1]);
-            }
+           
 
             $resp_datas =  RespondentProfile::where('respondent_id', $id)->first();
             
@@ -258,6 +256,17 @@ class WelcomeController extends Controller
             }
 
             $completed=[$percent1,$percent2,$percent3];
+
+            $fully_completed = ($percent1 + $percent2 + $percent3) / 3;
+            
+            $fully_completed = round($fully_completed);
+            $fully_completed = (int) $fully_completed;
+
+            if(round($fully_completed)==100) {
+
+                Respondents::where('id', $id)->update(['profile_completion_id' => 1]);
+            }
+            
 
             $get_other_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
@@ -463,11 +472,12 @@ class WelcomeController extends Controller
         
 
          
-            // if($request->user()->profile_completion_id==0){
-            //     return view('user.update-profile');
-            // }else{
-            return view('user.user-rewards',compact('get_current_rewards','get_overrall_rewards'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
-            //}
+            if($request->user()->profile_completion_id==0){
+                
+                return redirect()->route('updateprofile_wizard');
+            }else{
+                return view('user.user-rewards',compact('get_current_rewards','get_overrall_rewards'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
+            }
 
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
