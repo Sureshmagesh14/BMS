@@ -170,9 +170,7 @@ class WelcomeController extends Controller
                 }
             }
             //dd($pdata);
-            if ($tot_rows == $ans_c) {
-                Respondents::where('id', $id)->update(['profile_completion_id' => 1]);
-            }
+           
 
             $resp_datas =  RespondentProfile::where('respondent_id', $id)->first();
             
@@ -258,6 +256,17 @@ class WelcomeController extends Controller
             }
 
             $completed=[$percent1,$percent2,$percent3];
+
+            $fully_completed = ($percent1 + $percent2 + $percent3) / 3;
+            
+            $fully_completed = round($fully_completed);
+            $fully_completed = (int) $fully_completed;
+
+            if(round($fully_completed)==100) {
+
+                Respondents::where('id', $id)->update(['profile_completion_id' => 1]);
+            }
+            
 
             $get_other_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
