@@ -472,11 +472,12 @@ class WelcomeController extends Controller
         
 
          
-            // if($request->user()->profile_completion_id==0){
-            //     return view('user.update-profile');
-            // }else{
-            return view('user.user-rewards',compact('get_current_rewards','get_overrall_rewards'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
-            //}
+            if($request->user()->profile_completion_id==0){
+                
+                return redirect()->route('updateprofile_wizard');
+            }else{
+                return view('user.user-rewards',compact('get_current_rewards','get_overrall_rewards'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
+            }
 
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
