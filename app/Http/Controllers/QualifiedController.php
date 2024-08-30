@@ -95,8 +95,9 @@ class QualifiedController extends Controller
     public function get_all_qualified(Request $request){
         try {
             if ($request->ajax()) {
-                $all_datas = QualifiedRespondent::select('qualified_respondent.*','respondents.name','respondents.surname')
-                    ->join('respondents','respondents.id', 'qualified_respondent.respondent_id');
+                $all_datas = QualifiedRespondent::select('qualified_respondent.*','respondents.name','respondents.surname','projects.name as project_name')
+                    ->join('respondents','respondents.id', 'qualified_respondent.respondent_id')
+                    ->join('projects','projects.id', 'qualified_respondent.project_id');
                     if(isset($request->id)){
                         if($request->inside_form == 'projects'){
                             $all_datas->where('qualified_respondent.project_id',$request->id);
@@ -106,7 +107,7 @@ class QualifiedController extends Controller
 
                 return Datatables::of($all_datas)
                     ->addColumn('select_all', function ($all_data) {
-                        return '<input class="tabel_checkbox" name="projects[]" type="checkbox" onchange="table_checkbox(this,\'projects_table\')" id="'.$all_data->id.'">';
+                        return '<input class="tabel_checkbox" name="projects[]" type="checkbox" onchange="table_checkbox(this,\'qualified_table\')" id="'.$all_data->id.'">';
                     })
                     ->addColumn('respondent_id', function ($all_data) {
                         return $all_data->respondent_id;
@@ -116,6 +117,9 @@ class QualifiedController extends Controller
                     })
                     ->addColumn('surname', function ($all_data) {
                         return $all_data->surname;
+                    })
+                    ->addColumn('project_name', function ($all_data) {
+                        return $all_data->project_name;
                     })
                     ->addColumn('points', function ($all_data) {
                         return ($all_data->points != 0) ? $all_data->points/ 10 : 0;
@@ -141,32 +145,32 @@ class QualifiedController extends Controller
                                 <i class="fa fa-tasks" aria-hidden="true"></i>
                                 <i class="mdi mdi-chevron-down"></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-center">
-                                <li class="list-group-item">
-                                    <a href="'.$view_route.'" data-bs-original-title="View Project" class="rounded waves-light waves-effect">
-                                        <i class="fa fa-eye"></i> View
-                                    </a>
-                                </li>';
-                                if (str_contains(url()->previous(), '/admin/projects')){
+                            <ul class="dropdown-menu dropdown-menu-center">';
+                                // <li class="list-group-item">
+                                //     <a href="'.$view_route.'" data-bs-original-title="View Project" class="rounded waves-light waves-effect">
+                                //         <i class="fa fa-eye"></i> View
+                                //     </a>
+                                // </li>';
+                                // if (str_contains(url()->previous(), '/admin/projects')){
+                                //     $design .= '<li class="list-group-item">
+                                //         <a href="#!" id="deattach_projects" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                //             <i class="far fa-trash-alt"></i> Deattach
+                                //         </a>
+                                //     </li>';
+                                // }
+                                // else{
+                                    // $design .= '<li class="list-group-item">
+                                    //     <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                    //         data-bs-original-title="Edit Project" class="rounded waves-light waves-effect">
+                                    //         <i class="fa fa-edit"></i> Edit
+                                    //     </a>
+                                    // </li>;
                                     $design .= '<li class="list-group-item">
-                                        <a href="#!" id="deattach_projects" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                        <a href="#!" id="deattach_qualified" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
                                             <i class="far fa-trash-alt"></i> Deattach
                                         </a>
                                     </li>';
-                                }
-                                else{
-                                    $design .= '<li class="list-group-item">
-                                        <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                            data-bs-original-title="Edit Project" class="rounded waves-light waves-effect">
-                                            <i class="fa fa-edit"></i> Edit
-                                        </a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <a href="#!" id="delete_projects" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
-                                            <i class="far fa-trash-alt"></i> Delete
-                                        </a>
-                                    </li>';
-                                }
+                                // }
                             $design .= '</ul>
                         </div>';
 
@@ -514,8 +518,9 @@ class QualifiedController extends Controller
     
     public function change_all_rewards_status(Request $request) {
         try {
+            $ids = $request->ids;
             // Fetch QualifiedRespondent records where status is 1
-            $get_status_records = QualifiedRespondent::where('status', 1)->get();
+            $get_status_records = QualifiedRespondent::whereIn('id',$ids)->where('status', 1)->get();
     
             foreach ($get_status_records as $rewards) {
                 // Retrieve points from Projects table based on project_id
@@ -543,7 +548,7 @@ class QualifiedController extends Controller
             }
     
             // Update QualifiedRespondent table status from 1 to 2
-            QualifiedRespondent::where('status', 1)->update(['status' => 2]);
+            QualifiedRespondent::whereIn('id',$ids)->where('status', 1)->update(['status' => 2]);
     
             // Return a success JSON response
             return response()->json(['success' => true, 'message' => 'Status changed successfully!']);
@@ -553,6 +558,43 @@ class QualifiedController extends Controller
             Log::error("Error in change_all_rewards_status: " . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'An error occurred. Please try again.']);
         }
+    }
+
+    public function deattach_qualified($qualified_id){
+        try {
+            if(QualifiedRespondent::where('id', $qualified_id)->exists()){
+                QualifiedRespondent::where('id', $qualified_id)->delete();
+                return response()->json([
+                    'text_status' => true,
+                    'status' => 200,
+                    'message' => 'Deattach Qualified Respondent Successfully.',
+                ]);
+            }
+            else{
+                return response()->json([
+                    'text_status' => false,
+                    'status' => 200,
+                    'message' => 'Cant find respondents or projects',
+                ]);
+            }
+        }
+        catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function deattach_all_qualified(Request $request){
+        $all_id = $request->all_id;
+
+        foreach($all_id as $id){
+            QualifiedRespondent::where('id', $id)->delete();
+        }
+
+        return response()->json([
+            'text_status' => true,
+            'status' => 200,
+            'message' => 'Deattached Selected Qualified Respondent Successfully.',
+        ]);
     }
     
     
