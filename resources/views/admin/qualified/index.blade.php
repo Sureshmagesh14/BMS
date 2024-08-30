@@ -100,9 +100,11 @@
                     }
                 },
                 columns: [
+                    { data: 'select_all', name: 'select_all', orderable: true, searchable: true },
                     { data: 'respondent_id', name: 'respondent_id', orderable: true, searchable: true },
                     { data: 'name', name: 'name', orderable: true, searchable: true },
                     { data: 'surname', name: 'surname', orderable: true, searchable: true },
+                    { data: 'project_name', name: 'project_name', orderable: true, searchable: true },
                     { data: 'points', name: 'points', orderable: true, searchable: true },
                     { data: 'status', name: 'status', orderable: true, searchable: true },
                     { data: 'created_at', name: 'created_at', orderable: true, searchable: true },
@@ -112,68 +114,86 @@
         }
     
         function select_action(method, all_id, select_value, route, table_id, titles, confirmMessage, successMessage) {
-    $.confirm({
-        title: titles,
-        content: confirmMessage,
-        autoClose: 'cancel|8000',
-        type: 'red',
-        typeAnimated: true,
-        buttons: {
-            confirm: {
-                text: 'Confirm',
-                action: function() {
-                    $.ajax({
-                        type: method,
-                        url: route,
-                        data: {
-                            _token: tempcsrf,
-                            ids: all_id,
-                            value: select_value
-                        },
-                        dataType: "json",
-                        success: function(response) {
-                            console.log("Response received:", response); // Log the response for debugging
-                            
-                            if (response.success) {
-                                toastr.success(successMessage || "Status Changed Successfully"); // Use provided successMessage or default
-                                qualified_table(); // Refresh DataTable
-                            } else {
-                                toastr.error(response.message || "An error occurred. Please try again."); // Display specific message from response
-                            }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                          
-                            toastr.error("An error occurred. Please try again.");
+            $.confirm({
+                title: titles,
+                content: confirmMessage,
+                autoClose: 'cancel|8000',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    confirm: {
+                        text: 'Confirm',
+                        action: function() {
+                            $.ajax({
+                                type: method,
+                                url: route,
+                                data: {
+                                    _token: tempcsrf,
+                                    ids: all_id,
+                                    value: select_value
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    console.log("Response received:", response); // Log the response for debugging
+                                    
+                                    if (response.success) {
+                                        toastr.success(successMessage || "Status Changed Successfully"); // Use provided successMessage or default
+                                        qualified_table(); // Refresh DataTable
+                                    } else {
+                                        toastr.error(response.message || "An error occurred. Please try again."); // Display specific message from response
+                                    }
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) {
+                                
+                                    toastr.error("An error occurred. Please try again.");
+                                }
+                            });
                         }
-                    });
+                    },
+                    cancel: function() {
+                        // Optional: code to execute on cancel
+                    }
                 }
-            },
-            cancel: function() {
-                // Optional: code to execute on cancel
-            }
+            });
         }
-    });
-}
 
     
         $(document).on('click', '.qualified_play_button', function(e) {
             e.preventDefault(); // Prevent the default action
     
             var all_id = []; // Populate this with the IDs you need
-            var select_value = $("#action_3").val();
+          
+            var values = $("#qualified_table tbody tr").map(function() {
+                var $this = $(this);
+                if ($this.find("[type=checkbox]").is(':checked')) {
+                    all_id.push($this.find("[type=checkbox]").attr('id'));
+                }
+            }).get();
+            
+            var select_value = $("#action_qualified").val();
     
             if (select_value == 3) {
                 var titles = "Status > Complete";
                 select_action("POST", all_id, select_value, "{{ route('change_all_rewards_status') }}", 'qualified_table', titles, "Are you sure you want to change status?", "Status changed successfully!");
-            } else if (select_value == "delete_all") {
-                multi_delete("POST", all_id, "{{ route('projects_multi_delete') }}", "Projects deleted successfully", 'qualified_table');
-            } else if (select_value == "export_all_project") {
-                // Add your export logic here
-            } else if (select_value == "export_survey_response") {
-                // Add your export logic here
-            } else {
+            }
+            else if (select_value == "deattach_all_qualified") {
+                multi_delete("POST", all_id, "{{ route('deattach_all_qualified') }}", "Deattach Selected Qualified Respondent Successfully", 'qualified_table');
+            }
+            else {
                 toastr.info("OOPS! Select an action");
             }
+        });
+
+        $(document).on('click', '#deattach_qualified', function(e) {
+            e.preventDefault();
+            var qualified_id = $(this).data("id");
+            respondent = '';
+
+            var url =
+                "{{ route('deattach_qualified', ['qualified_id' => ':qualified_id']) }}";
+            url = url.replace(':qualified_id', qualified_id);
+
+            single_delete("POST", respondent, url, "Deattach Qualified Respondent Successfully", 'qualified_table');
         });
     </script>
     
