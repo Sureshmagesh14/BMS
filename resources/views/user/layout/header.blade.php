@@ -16,7 +16,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light vi-nav-bg p-0 h-60px">
         <div class="container">
-            <a class="navbar-brand w-50 w-md-20" href="{{ route('home') }}"><img class="img-fluid"
+            <a class="navbar-brand w-50 w-md-20" href="{{ route('home') }}"><img class="w-75"
                     src="{{ asset('user/images/small-logo.png') }}" alt=""></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
