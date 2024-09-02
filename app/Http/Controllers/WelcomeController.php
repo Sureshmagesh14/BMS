@@ -262,7 +262,7 @@ class WelcomeController extends Controller
             $fully_completed = round($fully_completed);
             $fully_completed = (int) $fully_completed;
 
-            if(round($fully_completed)==100) {
+            if($fully_completed==100) {
 
                 Respondents::where('id', $id)->update(['profile_completion_id' => 1]);
             }
