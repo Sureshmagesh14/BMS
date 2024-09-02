@@ -23,8 +23,8 @@
     <div class="btn-group mr-2 qualified_table hided_option" role="group" aria-label="First group"> 
         <select name="action_qualified" id="action_qualified" class="form-control select_box">
             <option value="">Select Action</option>
-            <option value="3">Rewarded all qualified Respondent</option>
-            <option value="deattach_all_qualified">Deattach Selected Respondent</option>
+            <option value="3">Reward All Qualified Respondents</option>
+            <option value="deattach_all_qualified">Detach Selected Respondents</option>
         </select>
 
         <div class="play-button-container ml-3">
