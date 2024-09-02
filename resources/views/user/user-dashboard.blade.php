@@ -207,21 +207,21 @@
                       <h5 class="p-3 align-items-center justify-content-around small-font-sm">
                          <div class="text-center py-2">Your Rewards Breakdown </div>
                          <div class="row">
-                            <!-- <div class="col-4 rounded ">
+                            <div class="col-4 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-yellow text-white p-2 rounded mt-2 text-center m-auto">{{$get_overrall_rewards}}</div>
                                   <div class="down-triangle-yellow triangle"></div>
                                   <div class="text-center my-2">Total Rewards since {{ \Carbon\Carbon::now()->year }}</div>
                                </div>
-                            </div> -->
-                            <div class="col-6 rounded ">
+                            </div>
+                            <div class="col-4 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-blues text-white p-2 rounded mt-2 text-center m-auto">{{$get_current_rewards}}</div>
                                   <div class="down-triangle-blue triangle"></div>
                                   <div class="text-center my-2">Total Rewards this year</div>
                                </div>
                             </div>
-                            <div class="col-6 rounded ">
+                            <div class="col-4 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-green text-white p-2 rounded mt-2 text-center m-auto">{{$available_points ?? '0'}}</div>
                                   <div class="down-triangle-green triangle"></div>
