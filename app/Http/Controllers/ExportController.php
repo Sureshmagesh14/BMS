@@ -2168,7 +2168,7 @@ class ExportController extends Controller
                         ];
 
                         // Default to an empty string if the ethnic group is not in the array
-                        
+                        $ethnic_group = '';
                         if ($essential && isset($essential->ethnic_group)) {
                             $ethnic_group = $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
                         }
@@ -2684,7 +2684,7 @@ class ExportController extends Controller
                             ];
 
                             // Default to an empty string if the ethnic group is not in the array
-                            
+                            $ethnic_group = '';
                             if ($essential && isset($essential->ethnic_group)) {
                                 $ethnic_group = $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
                             }else{
