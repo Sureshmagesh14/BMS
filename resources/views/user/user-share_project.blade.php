@@ -72,6 +72,10 @@
                   <div class="text-center">
                   <a class="btn btn-yellow width-fit-content ml-auto" href="{{ url('survey/view', $res->builderID) }}"> Start Survey</a>
                   </div>
+                  @else 
+                  <div class="text-center">
+                  <a class="btn btn-yellow width-fit-content ml-auto" href="{{ route('login') }}"> Start Survey</a>
+                  </div>
                   @endif
 
                    <div class="text-center">

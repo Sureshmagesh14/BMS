@@ -24,7 +24,7 @@
                     <h4 class="text-center text-white">Share with your friends and family</h4>
                     <h4 class="text-center text-white">It's free to join</h4>
                     <div class="visible-print text-center">
-                        {!! QrCode::size(150)->generate(URL::to('/') . $ref_code) !!}
+                        {!! QrCode::size(150)->generate($ref_code) !!}
                     </div>
                     
                     <div class="social-icons-color d-flex justify-content-center my-3">
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="text-center text-white">
-                    <span id="demo"> {{ URL::to('/') }}?r={{ $ref_code }}</span><br>
+                    <span id="demo"> {{ $ref_code }}</span><br>
                     <p class="text-secondary btn text-white" onclick="copy('#demo')">Tap to copy link</p>
                 </div>
                 </div>
