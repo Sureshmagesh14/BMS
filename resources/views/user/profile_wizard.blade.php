@@ -482,8 +482,10 @@
                                                 <option value="">Select</option>
                                                 @foreach ($income_per_month as $income)
                                                 @php
+                                                    // Check if $personalIncomeValue is an object and get its ID, otherwise use it as is
+                                                    $personalIncomeId = is_object($personalIncomeValue) ? $personalIncomeValue->id : $personalIncomeValue;
                                                     // Disable options where the income is less than the selected personal income
-                                                    $isDisabled = $income->id < $personalIncomeValue->id;
+                                                    $isDisabled = $income->id < $personalIncomeId;
                                                 @endphp
                                                 <option value="{{ $income->id }}"
                                                     @isset($essential_details['household_income_per_month'])
@@ -492,8 +494,8 @@
                                                     @if ($isDisabled) disabled @endif>
                                                     {{ $income->income }}
                                                 </option>
-                                            @endforeach
-                                            </select>
+                                                @endforeach
+                                            </select>                                            
                                         </div>
                                         
 
