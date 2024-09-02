@@ -171,6 +171,9 @@ Route::group([
     Route::any('store_qualified_respondents', 'QualifiedController@store_qualified_respondents')->name('store_qualified_respondents');
     Route::any('project_store_qualified_respondents', 'QualifiedController@project_store_qualified_respondents')->name('project_store_qualified_respondents');
 
+    Route::any('deattach_qualified/{qualified_id}', 'QualifiedController@deattach_qualified')->name('deattach_qualified');
+    Route::any('deattach_all_qualified', 'QualifiedController@deattach_all_qualified')->name('deattach_all_qualified');
+
 
     /* Respondents MENU*/
     Route::resource('respondents', 'RespondentsController')->name('index', 'respondents.index')->name('destroy', 'respondents.destroy')
