@@ -4,9 +4,11 @@
     .error {
         color: red;
     }
-    .navbar.vi-nav-bg{
-        background-color:#fff;
+
+    .navbar.vi-nav-bg {
+        background-color: #fff;
     }
+
     .field-icon {
         float: right;
         margin-right: 12px;
@@ -21,13 +23,15 @@
         margin: auto;
         display: flex;
     }
-    .w-90{
+
+    .w-90 {
         width: 90%;
     }
-    .login_img{
+
+    .login_img {
 
         border-radius: 30px;
-    overflow: hidden;
+        overflow: hidden;
     }
 
     .rightside.text-center {
@@ -42,14 +46,23 @@
         border-radius: 25px;
     }
 
+    h2.vi-common-clr.vi-welcome-size.fw-bolder {
+        color: #ffffff;
+    }
+
+
     .container {
         /* padding-top: 50px; */
         margin: auto;
     }
 
-    .anchor{
+    .login.w-50 {
+        width: 25vh !important;
+    }
+
+    .anchor {
         text-decoration: none;
-    }   
+    }
 
     .image-cover {
         object-fit: cover;
@@ -74,8 +87,8 @@
     <div class="row vi-background-index">
         <div class="col-md-5 d-none-mobile d-flex mob-hide p-0 h-100">
             <div class="w-100 d-flex ">
-                <img src="{{ asset('assets/images/login-page_b.webp') }}" class="login_img img-fluid w-90 d-flex m-auto d-flex "
-                    alt="" />
+                <img src="{{ asset('assets/images/login-page_b.webp') }}"
+                    class="login_img img-fluid w-90 d-flex m-auto d-flex " alt="" />
             </div>
         </div>
         <div class="col-md-7 col-sm-12 h-100">
@@ -85,7 +98,7 @@
                         alt="" />
                     <h2 class="vi-common-clr vi-welcome-size fw-bolder">Welcome Back</h2>
 
-                    <p>Login with your email address</p>
+                    <h3>Login with your email address</h3>
                     <form method="POST" id="login_table" action="{{ route('login') }}">
                         @csrf
                         <div class="my-1  w-75 m-auto">
@@ -131,7 +144,8 @@
                         @if (
                             !str_contains($errors->all()[0], 'Incorrect Email') &&
                                 !str_contains($errors->all()[0], 'Incorrect Phone No') &&
-                                !str_contains($errors->all()[0], 'Unsubscribed') && !str_contains($errors->all()[0], 'Your account is deactivated'))
+                                !str_contains($errors->all()[0], 'Unsubscribed') &&
+                                !str_contains($errors->all()[0], 'Your account is deactivated'))
                             <div class="alert alert-danger">
                                 @foreach ($errors->all() as $message)
                                     <strong>{{ $message }}</strong> Please try again or you can <a
