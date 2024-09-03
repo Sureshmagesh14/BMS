@@ -177,7 +177,7 @@
 
                                             </div>
                                             <small class="form-text text-muted">Don’t include 0 in starting.</small>
-                                            <a style="float: right;" href="{{ route('mobileChangeOtpSend') }}">Do you want channge mobile number! Click here.</a>
+                                            <a style="float: right;" href="{{ route('mobileChangeOtpSend') }}">Do you want to change your mobile number? Click here.</a>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="whatsapp_number">Whats App Number <span
