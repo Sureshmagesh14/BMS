@@ -36,7 +36,7 @@
                          <h2 class="yelow-clr h1 fw-bolder mt-2 position-relative">{{ $get_reward }} <span>Points</span> </h2>
                          <p class="position-relative">10 points = R1</p>
                          @if($get_reward >= 40)
-                         <button type="button" class="position-relative text-center btn btn-yellow width-fit-content d-flex" id="request_press"
+                         <button type="button" class="position-relative text-center btn btn-yellow width-fit-content d-flex m-auto" id="request_press"
                             data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
                             data-bs-original-title="{{ __('Cashout Process') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
                          Request Cash Out

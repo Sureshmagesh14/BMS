@@ -153,10 +153,15 @@
             margin: 40px !important;
         }
         .btn.vi-nav-bg:hover {
-    color: #fff !important;
-    background-color:#6396b1;
-    border: 1px solid #6396b1;
-}
+            color: #fff !important;
+            background-color:#6396b1;
+            border: 1px solid #6396b1;
+        }
+        .curved-text {
+            font-size: 26px;
+            fill: #ffffff;
+            font-weight: bold;
+        }
 </style>
 <div class="container-fluid register">
     <div class="row vi-background-index mb-5">

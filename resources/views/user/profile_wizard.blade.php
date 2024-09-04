@@ -177,7 +177,7 @@
 
                                             </div>
                                             <small class="form-text text-muted">Don’t include 0 in starting.</small>
-                                            <a style="float: right;" href="{{ route('mobileChangeOtpSend') }}">Do you want channge mobile number! Click here.</a>
+                                            <a style="float: right;" href="{{ route('mobileChangeOtpSend') }}">Do you want to change your mobile number? Click here.</a>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="whatsapp_number">Whats App Number <span
@@ -197,7 +197,7 @@
                                             <label for="email">Email <span class="star_require">*</span></label>
                                             <input type="email" class="form-control" id="email"
                                                 name="basic[email]" value="{{ $resp_details->email }}" readonly>
-                                            <a style="float: right;" href="{{ route('emailChangeOtpSend') }}">Do you want channge email! Click here.</a>
+                                            <a style="float: right;" href="{{ route('emailChangeOtpSend') }}">Do you want to change your email? Click here.</a>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="date_of_birth">Date of Birth <span
@@ -482,8 +482,10 @@
                                                 <option value="">Select</option>
                                                 @foreach ($income_per_month as $income)
                                                 @php
+                                                    // Check if $personalIncomeValue is an object and get its ID, otherwise use it as is
+                                                    $personalIncomeId = is_object($personalIncomeValue) ? $personalIncomeValue->id : $personalIncomeValue;
                                                     // Disable options where the income is less than the selected personal income
-                                                    $isDisabled = $income->id < $personalIncomeValue->id;
+                                                    $isDisabled = $income->id < $personalIncomeId;
                                                 @endphp
                                                 <option value="{{ $income->id }}"
                                                     @isset($essential_details['household_income_per_month'])
@@ -492,8 +494,8 @@
                                                     @if ($isDisabled) disabled @endif>
                                                     {{ $income->income }}
                                                 </option>
-                                            @endforeach
-                                            </select>
+                                                @endforeach
+                                            </select>                                            
                                         </div>
                                         
 
