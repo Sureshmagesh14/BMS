@@ -319,6 +319,7 @@ class ProfileController extends Controller
         $steps = $request->step;
         $resp_id = Session::get('resp_id');
         $parse_array = array();
+  
         parse_str($request->serialize_data, $parse_array);
         $unique_id = $parse_array['unique_id'];
 
@@ -381,7 +382,7 @@ class ProfileController extends Controller
             if(isset($request->vehicle_val)){
                 $profile_data['vehicle_data'] = json_encode($request->vehicle_val);
             }
-
+          
             // if($total_ques == $total_ans){
             //     $profile_data['profile_completion'] = 1;
             // }
@@ -403,6 +404,7 @@ class ProfileController extends Controller
                     $essential_details = json_encode($new_essential_array);
                     RespondentProfile::where('respondent_id',$resp_id)->update([
                         'essential_details' => $essential_details,
+                        
                     ]);
                 }
 
@@ -416,6 +418,9 @@ class ProfileController extends Controller
                     $extended_details = json_encode($new_extended_array);
                     RespondentProfile::where('respondent_id',$resp_id)->update([
                         'extended_details' => $extended_details,
+                        'vehicle_data'=> $profile_data['vehicle_data'],
+                        'children_data'=>  $profile_data['children_data'],
+                      
                     ]);
                 }
                 $step_word = ($steps == 2) ? "Essential Details Updated" : "Extended Details Updated";
