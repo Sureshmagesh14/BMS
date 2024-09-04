@@ -2863,7 +2863,28 @@ class ExportController extends Controller
                         }
                 
                         $finalResult = getValuesUser($finalResult);
+                       // dd($finalResult);
+
+                        // Loop through the array and rearrange the elements
+                        foreach ($finalResult as &$subArray) {
+                            // Extract the values of keys 3, 4, 5, and 6
+                            $keysToMove = [17,18,19,20,21,22,23,24,25,26,27,28,29];
+                            $movedValues = [];
+                            
+                            foreach ($keysToMove as $key) {
+                                $movedValues[] = $subArray[$key];
+                                unset($subArray[$key]);
+                            }
+                            
+                            // Append the extracted values to the end of the sub-array
+                            $subArray = array_merge($subArray, $movedValues);
+                        }
+
+                        unset($subArray); // Unset reference
+
+                        // Final array
                         //dd($finalResult);
+                        
                         
                         if($survey){
                             $survey_name = $survey->title;
