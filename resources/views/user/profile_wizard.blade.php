@@ -477,7 +477,7 @@
 
 
                                         <div class="col-12 col-md-6 mb-3">
-                                            <label for="household_income_per_month">Household Income per Month <span class="text-danger">*</span></label>
+                                            <label for="household_income_per_month">Household Income Per Month <span class="text-danger">*</span></label>
                                             <select name="essential[household_income_per_month]" id="household_income_per_month" class="form-control" required>
                                                 <option value="">Select</option>
                                                 @foreach ($income_per_month as $income)
