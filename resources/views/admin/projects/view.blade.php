@@ -84,11 +84,11 @@
                                         <tr>
                                             <th>Survey Type</th>
                                             <td>
-                                                @if ($data->status_id == 2)
+                                                @if ($data->type_id == 2)
                                                     Pre-Task
-                                                @elseif($data->status_id == 3)
+                                                @elseif($data->type_id == 3)
                                                     Paid survey
-                                                @elseif($data->status_id == 4)
+                                                @elseif($data->type_id == 4)
                                                     Unpaid survey
                                                 @endif
                                             </td>
