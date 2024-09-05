@@ -126,8 +126,7 @@ for Other Research</span>
 
             <div class="bg-white my-2 w-100 cir-border">
                 <h4 class="d-flex align-items-center justify-content-around">
-                    <span class="small-font-sm"> Your Paid 
-Online Surveys</span>
+                    <span class="small-font-sm">Active Paid Online Surveys</span>
                 </h4>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTable" id="current_survey"
