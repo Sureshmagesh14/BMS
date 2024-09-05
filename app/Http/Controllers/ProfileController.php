@@ -375,6 +375,7 @@ class ProfileController extends Controller
                 'extended_details'  => $extended_details,
             );
 
+            // $profile_data = [];
             if(isset($request->child_val)){
                 $profile_data['children_data'] = json_encode($request->child_val);
             }
@@ -382,6 +383,10 @@ class ProfileController extends Controller
             if(isset($request->vehicle_val)){
                 $profile_data['vehicle_data'] = json_encode($request->vehicle_val);
             }
+
+            // Define default values to prevent undefined index warnings
+            $vehicle_data = isset($profile_data['vehicle_data']) ? $profile_data['vehicle_data'] : null;
+            $children_data = isset($profile_data['children_data']) ? $profile_data['children_data'] : null;
           
             // if($total_ques == $total_ans){
             //     $profile_data['profile_completion'] = 1;
@@ -418,8 +423,8 @@ class ProfileController extends Controller
                     $extended_details = json_encode($new_extended_array);
                     RespondentProfile::where('respondent_id',$resp_id)->update([
                         'extended_details' => $extended_details,
-                        'vehicle_data'=> $profile_data['vehicle_data'],
-                        'children_data'=>  $profile_data['children_data'],
+                        'vehicle_data'=> $vehicle_data,
+                        'children_data'=>  $children_data,
                       
                     ]);
                 }
