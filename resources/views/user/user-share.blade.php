@@ -62,12 +62,12 @@
         });
 
         $("#facebook").click(function() {
-            var facebook ='https://www.facebook.com/sharer/sharer.php?u=https://app.thebrandsurgeon.co.za/?r={{ URL::to('/') }}?r={{ $ref_code }}';
+            var facebook ='https://www.facebook.com/sharer/sharer.php?u=https://live.thebrandsurgeon.co.za/?r={{ URL::to('/') }}?r={{ $ref_code }}';
             window.location.href = facebook;
         });
      
         $("#twitter").click(function() {
-            var twitter ='https://twitter.com/intent/tweet?url=https://app.thebrandsurgeon.co.za/?r={{ URL::to('/') }}?r={{ $ref_code }}&amp;text=I think you should join The Brand Surgeon and get paid for your opinion';
+            var twitter ='https://twitter.com/intent/tweet?url=https://live.thebrandsurgeon.co.za/?r={{ URL::to('/') }}?r={{ $ref_code }}&amp;text=I think you should join The Brand Surgeon and get paid for your opinion';
             window.location.href = twitter;
         });
         
