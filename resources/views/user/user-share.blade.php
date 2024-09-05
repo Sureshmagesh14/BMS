@@ -21,8 +21,8 @@
                 <div class="w-100">
                 <div class="qr-code text-center">
                     <!-- <h4 class="text-center">GET PAID FOR YOUR OPINION</h4> -->
-                    <h4 class="text-center text-white">Share with your friends and family</h4>
-                    <h4 class="text-center text-white">It's free to join</h4>
+                    <h4 class="text-center text-white" style="font-size:35px;">Share with your friends and family</h4>
+                    <h4 class="text-center text-white"  style="font-size:35px;">It's free to join</h4>
                     <div class="visible-print text-center">
                         {!! QrCode::size(150)->generate($ref_code) !!}
                     </div>
@@ -35,9 +35,9 @@
                         <img id="mail" src="{{ asset('assets/images/SM icons-04.png') }}" class="img-fluid w-10" onclick="fbs_click(this);" alt=""/>
                     </div>
                 </div>
-                <div class="text-center text-white">
+                <div class="text-center text-white" style="font-size:25px;">
                     <span id="demo"> {{ $ref_code }}</span><br>
-                    <p class="text-secondary btn text-white" onclick="copy('#demo')">Tap to copy link</p>
+                    <p class="text-secondary btn text-white" onclick="copy('#demo')" style="font-size:20px;">Tap to copy link</p>
                 </div>
                 </div>
             </div>
