@@ -117,16 +117,16 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.min.css">
 <section class="">
     <div class="container-fluid">
-       @if ($data->profile_completion_id == 0)
-       <div class="alert alert-danger bs-alert-old-docs text-center">
-          <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile_wizard') }}">Update
-          Profile</a>
-          <br>
-          <small class="leading-none mt-1 text-danger">
-          Cash Outs and Surveys are available if your profile is up to date.
-          Please update your profile.</small>
-       </div>
-       @endif
+        @if ($data->profile_completion_id == 0)
+            <div class="alert alert-danger bs-alert-old-docs text-center">
+                <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile_wizard') }}">Update
+                Profile</a>
+                <br>
+                <small class="leading-none mt-1 text-danger">
+                Cash Outs and Surveys are available if your profile is up to date.
+                Please update your profile.</small>
+            </div>
+        @endif
        <div class="alert alert-danger bs-alert-old-docs text-center alert_message" style="display: none;"></div>
        <div class="row justify-content-center py-5 mx-auto mt-auto mb-5">
           <div class="col-md-12">

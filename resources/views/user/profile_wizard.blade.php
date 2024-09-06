@@ -554,8 +554,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th style="text-align: center;">Child</th>
-                                                        <th style="text-align: center;">DOB</th>
-                                                        <th style="text-align: center;">Gender</th>
+                                                        <th style="text-align: center;">DOB <span class="text-danger">*</span></th>
+                                                        <th style="text-align: center;">Gender <span class="text-danger">*</span></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -633,10 +633,10 @@
                                                 <thead>
                                                     <tr>
                                                         <th style="text-align: center;">Vehicle</th>
-                                                        <th style="text-align: center;">Brand</th>
-                                                        <th style="text-align: center;">Type of vehicle</th>
-                                                        <th style="text-align: center;">Model</th>
-                                                        <th style="text-align: center;">Year</th>
+                                                        <th style="text-align: center;">Brand <span class="text-danger">*</span></th>
+                                                        <th style="text-align: center;">Type of vehicle <span class="text-danger">*</span></th>
+                                                        <th style="text-align: center;">Model <span class="text-danger">*</span></th>
+                                                        <th style="text-align: center;">Year <span class="text-danger">*</span></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -856,9 +856,8 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
-                                            <label for="bank_main">Which bank do you bank with (which is your bank main)</label>
-                                            <select name="extended[bank_main]" id="bank_main"
-                                                onchange="show_other(this, 'bank_main')">
+                                            <label for="bank_main">Which bank do you bank with (which is your bank main) <span class="text-danger">*</span></label>
+                                            <select name="extended[bank_main]" id="bank_main" onchange="show_other(this, 'bank_main')" required>
                                                 <option value="">Select</option>
                                                 @foreach ($banks as $bank)
                                                     <option value="{{ $bank->id }}"
@@ -886,9 +885,9 @@
                                         
 
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
-                                            <label for="bank_secondary">Which is your secondary bank?</label>
+                                            <label for="bank_secondary">Which is your secondary bank? <span class="text-danger">*</span></label>
                                             <select name="extended[bank_secondary]" id="bank_secondary"
-                                                onchange="show_other(this, 'bank_secondary')">
+                                                onchange="show_other(this, 'bank_secondary')" required>
                                                 <option value="">Select</option>
                                                 @foreach ($banks as $bank)
                                                     <option value="{{ $bank->id }}"
@@ -915,9 +914,9 @@
                                         </div>
 
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
-                                            <label for="home_lang">Home Language</label>
+                                            <label for="home_lang">Home Language <span class="text-danger">*</span></label>
                                             <select name="extended[home_lang]" id="home_lang"
-                                                onchange="show_other(this, 'home_lang')">
+                                                onchange="show_other(this, 'home_lang')" required>
                                                 <option value="">Select</option>
                                                 <option value="afrikaans"
                                                     @isset($extended_details['home_lang']) @if ($extended_details['home_lang'] == 'afrikaans') selected @endif @endisset>
@@ -969,9 +968,9 @@
                                         </div>
 
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
-                                            <label for="secondary_home_lang">Secondary Language</label>
+                                            <label for="secondary_home_lang">Secondary Language <span class="text-danger">*</span></label>
                                             <select name="extended[secondary_home_lang]" id="secondary_home_lang"
-                                                onchange="show_other(this, 'secondary_home_lang')">
+                                                onchange="show_other(this, 'secondary_home_lang')" required>
                                                 <option value="">Select</option>
                                                 <option value="afrikaans"
                                                     @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'afrikaans') selected @endif @endisset>
@@ -1154,6 +1153,10 @@
                     };
 
                     if (currentIndex === 0 || currentIndex === 2) {
+                        if (currentIndex === 2 && !validateTables()) {
+                            // Prevent step change if validation fails
+                            return false;
+                        }
                         wizard_save(datas);
                     }
 
@@ -1170,6 +1173,11 @@
                 return true;
             },
             onFinished: function(event, currentIndex) {
+                if (currentIndex === 2 && !validateTables()) {
+                    // Prevent step change if validation fails
+                    return false;
+                }
+                
                 $.confirm({
                     title: "",
                     content: "Are you happy with the information and want to complete your profile?",
@@ -1233,6 +1241,54 @@
                 });
             }
         });
+
+        // Function to validate children_table and vehicle_table
+        function validateTables() {
+            var isValid = true;
+
+            // Validate children_table
+            $('#children_table > tbody > tr').each(function() {
+                var tdCount = $(this).find('td').length;
+
+                if(tdCount > 0){
+                    var get_date = $(this).find(".child_age").val();
+                    var get_gender = $(this).find(".child_gender").val();
+                    if (!get_date || !get_gender) {
+                        isValid = false;
+                        return false; // Break out of each loop
+                    }
+                }
+                
+            });
+
+            if (!isValid) {
+                toastr.error("Please fill out all child details.");
+                return false;
+            }
+
+            // Validate vehicle_table
+            $('#vehicle_table > tbody > tr').each(function() {
+                var tdCount = $(this).find('td').length;
+
+                if(tdCount > 0){
+                    var get_brand = $(this).find(".vehicle_brand").val();
+                    var get_type = $(this).find(".vehicle_type").val();
+                    var get_model = $(this).find(".vehicle_model").val();
+                    var get_year = $(this).find(".vehicle_year").val();
+                    if (!get_brand || !get_type || !get_model || !get_year) {
+                        isValid = false;
+                        return false; // Break out of each loop
+                    }
+                }
+            });
+
+            if (!isValid) {
+                toastr.error("Please fill out all vehicle details.");
+                return false;
+            }
+
+            return true;
+        }
 
         // Handle dynamic fields for children and vehicles
         $("#no_children").on('input focus keypress keydown', function() {
