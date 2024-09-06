@@ -144,7 +144,13 @@ class ProfileController extends Controller
             // Create an associative array for income ranges
             $incomeRanges = $income_per_month->pluck('income', 'id')->toArray();
            
-            $essential_details = json_decode($profile->essential_details, true);
+            if ($profile !== null && isset($profile->essential_details)) {
+                $essential_details = json_decode($profile->essential_details, true);
+            } else {
+                // Handle the case where $profile is null or $essential_details is not set
+                $essential_details = null; // or set a default value, or handle the error
+            }
+            
         
             // Get the selected personal income id
             $selectedPersonalIncomeId = $essential_details['personal_income_per_month'] ?? null;
@@ -282,7 +288,9 @@ class ProfileController extends Controller
             return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges','page','basic_details'));
         }
         catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            $lineNumber = $e->getLine(); // Get the line number where the exception was thrown
+    $message = $e->getMessage(); // Get the original exception message
+    throw new Exception("Error on line $lineNumber: $message");
         }
     }
 
