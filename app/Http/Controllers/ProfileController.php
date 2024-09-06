@@ -127,16 +127,19 @@ class ProfileController extends Controller
             unset($check_ess['employment_status_other'],$check_ess['industry_my_company_other']);
             unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other']);
 
+            $fully_completed = $resp_details->percentage_calc($resp_id);
+            $completion_status = ($fully_completed['full'] >= 100) ? 1 : 0;
+           
             if(count($check_basic) > 0 && count($check_ess) > 0 && count($check_ext) > 0){
                 if(count($check_basic) == count(array_filter($check_basic)) && count($check_ess) == count(array_filter($check_ess)) && count($check_ext) == count(array_filter($check_ext))){
                     Respondents::where('id',$resp_id)->update(['profile_completion_id' => 1]);
                 }
                 else{
-                    Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+                    Respondents::where('id',$resp_id)->update(['profile_completion_id' => $completion_status]);
                 }
             }
             else{
-                Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+                Respondents::where('id',$resp_id)->update(['profile_completion_id' => $completion_status]);
             }
             // Create an associative array for income ranges
             $incomeRanges = $income_per_month->pluck('income', 'id')->toArray();
@@ -327,7 +330,7 @@ class ProfileController extends Controller
         $steps = $request->step;
         $resp_id = Session::get('resp_id');
         $parse_array = array();
-  
+        $resp_details = Respondents::find($resp_id);
         parse_str($request->serialize_data, $parse_array);
         $unique_id = $parse_array['unique_id'];
 
@@ -449,16 +452,18 @@ class ProfileController extends Controller
         unset($check_ess['employment_status_other'],$check_ess['industry_my_company_other']);
         unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other'],$check_ext['bank_secondary_other'],$check_ext['secondary_home_lang_other']);
 
+        $fully_completed = $resp_details->percentage_calc($resp_id);
+        $completion_status = ($fully_completed['full'] >= 100) ? 1 : 0;
         if(count($check_basic) > 0 && count($check_ess) > 0 && count($check_ext) > 0){
             if(count($check_basic) == count(array_filter($check_basic)) && count($check_ess) == count(array_filter($check_ess)) && count($check_ext) == count(array_filter($check_ext))){
                 Respondents::where('id',$resp_id)->update(['profile_completion_id' => 1]);
             }
             else{
-                Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+                Respondents::where('id',$resp_id)->update(['profile_completion_id' => $completion_status]);
             }
         }
         else{
-            Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+            Respondents::where('id',$resp_id)->update(['profile_completion_id' => $completion_status]);
         }
        
         return response()->json([
