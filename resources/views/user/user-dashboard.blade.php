@@ -365,7 +365,7 @@
                          <h5 class=" align-items-center justify-content-around">
                             <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
                                alt="">
-                               <span class="small-font-sm">Active Paid online Surveys</span>
+                               <span class="small-font-sm">Active Paid Online Surveys</span>
                             </div>
                             <div class="px-3">
                                <ul class="navbar-nav">
