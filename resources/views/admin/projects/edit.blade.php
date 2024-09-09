@@ -285,7 +285,16 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    projects_table(); // Update your projects table
+
+                    // Check if the projects_table function is defined
+                    if (typeof projects_table === 'function') {
+                        projects_table(); // Call the function to update the projects table
+                    } else {
+                        setTimeout(function(){
+                            location.reload(); // Reload the page if the function is not defined
+                        },800);
+                        
+                    }
                 },
                 error: function(xhr, status, error) {
                     toastr.error('An error occurred: ' + error);
