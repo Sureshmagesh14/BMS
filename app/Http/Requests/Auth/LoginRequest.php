@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Models\Respondents;
+use App\Models\Project_respondent;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
+use Session;
+
 class LoginRequest extends FormRequest
 {
     /**
@@ -48,6 +51,26 @@ class LoginRequest extends FormRequest
             ->first();
 
         if ($respondent) {
+
+            //dd($respondent->id);
+
+            if (session()->has('u_proj_refer_id')) {
+
+                $referred_respondent_id = session()->get('u_proj_refer_id');
+                $project_id = session()->get('u_proj_id');
+                $resp_id = $respondent->id;
+                
+                if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->exists()){
+    
+                }else{
+              
+                    Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $resp_id]);                                
+                }
+    
+                Session::forget('u_proj_refer_id');
+                Session::forget('u_proj_id');
+            }
+
             // Check if the deactivated_date is set and if it's less than or equal the current date
             if ($respondent->deactivated_date && Carbon::parse($respondent->deactivated_date)->endOfDay()->lessThanOrEqualTo(Carbon::now())) {
                 $message = strip_tags("<strong>Your account is deactivated.</strong>");
