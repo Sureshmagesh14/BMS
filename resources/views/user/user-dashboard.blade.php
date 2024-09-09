@@ -339,7 +339,7 @@
 
                                         
                                             @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
-                                            <a href="{{ url('share_project', $res->project_link) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+                                            <a href="{{ url('share_project', [$res->project_link, base64_encode(session('resp_id'))]) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
                                             @endif 
                                             
                                         @endif
@@ -426,7 +426,7 @@
                                            @if($res->access_id==1)
                                            
                                             @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
-                                            <a href="{{ url('share_project', $res->project_link) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+                                            <a href="{{ url('share_project', [$res->project_link, base64_encode(session('resp_id'))]) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
                                             @endif 
                                            @endif
                                         </div>
