@@ -7,6 +7,7 @@ use App\Mail\WelcomeEmail;
 use App\Models\Respondents;
 use App\Models\Respondent_referrals;
 use App\Models\RespondentProfile;
+use App\Models\Project_respondent;
 use App\Providers\RouteServiceProvider;
 use DB;
 use Illuminate\Auth\Events\Registered;
@@ -123,6 +124,22 @@ class RegisteredUserController extends Controller
             ]);
             app('App\Http\Controllers\InternalReportController')->call_activity($get_role->role_id,$referred_respondent_id,'created','respondent');
             Session::forget('u_refer_id');
+        }
+        if (session()->has('u_proj_refer_id')) {
+
+            $referred_respondent_id = session()->get('u_proj_refer_id');
+            $project_id = session()->get('u_proj_id');
+            $resp_id = $id;
+            
+            if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->exists()){
+
+            }else{
+          
+                Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $resp_id]);                                
+            }
+
+            Session::forget('u_proj_refer_id');
+            Session::forget('u_proj_id');
         }
 
         event(new Registered($user));
