@@ -16,6 +16,7 @@ use App\Models\Projects;
 use App\Models\Cashout;
 use App\Models\Networks;
 use App\Models\Charities;
+use App\Models\Project_respondent;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -248,10 +249,21 @@ class WelcomeController extends Controller
     public function share_project(Request $request)
     {
         try {
-            $id=$request->id;
+     
+            $id =$request->id;
+            $user_id =$request->uid;
+            $user_id = base64_decode($user_id);
+            
+            if($user_id==''){
+                return redirect('/')->with('successMsg', 'Project not valid');
+            }
+            
             $resp_id = Session::get('resp_id');
             $resp_name = Session::get('resp_name');
             $get_res_phone = Respondents::select('whatsapp')->where('id', Session::get('resp_id'))->first();
+            
+            $r_data = Respondents::find($user_id);
+
 
             $data = Respondents::find($resp_id);
           
@@ -269,10 +281,26 @@ class WelcomeController extends Controller
                 }
             }
             
+            $project_id = $res->id;
+            if($user_id != $resp_id){
+         
+                if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->exists()){
+
+                }else{
+                    if($resp_id!=''){
+                        Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $resp_id]);
+                    }else{
+                        Session::put('u_proj_refer_id', $user_id);
+                        Session::put('u_proj_id', $project_id);
+                    }
+                    
+                }
+            }
+                        
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-            return view('user.user-share_project', compact('data', 'get_res_phone','res'));
+            return view('user.user-share_project', compact('data', 'get_res_phone','res','r_data'));
             //}
 
         } catch (Exception $e) {

@@ -25,9 +25,21 @@
 @endif
 
 <section class=" ">
+@if(isset($r_data->name) && ($r_data->name!=''))
+            <div class="alert alert-info bs-alert-old-docs text-center">
+            <strong>Referred</strong> by <span style="text-transform: capitalize;">{{$r_data->name}}</span>
+            </div>
+            @endif
+            
     <div class="container m-auto d-flex h-90vh">
+
+
+
        <div class="row justify-content-center mb-10vh w-100">
+   
+
           <div class="col-md-10 m-auto h-100vh" style="">
+           
              <!-- margin-top: 5% !important; -->
              <div class="w-100 position-relative">
                 <div class="w-40 my-auto position-absolute pos-bottom mob-hide">
