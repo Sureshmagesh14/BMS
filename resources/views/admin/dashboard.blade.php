@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xl-4">
+                <div class="col-xl-6">
                     <div class="card tasks-box">
                         <div class="card-body">
 
@@ -61,17 +61,17 @@
                     </div>
                 </div>
                 <!-- end col-->
-                <div class="col-xl-4">
+                <div class="col-xl-6">
                     <div class="card tasks-box">
                         <div class="card-body">
 
                             <h4 class="card-title mb-4">Respondent Profile Completion</h4>
-                            <div class="apex-charts" id="chart_one"></div>
+                            <div class="apex-charts" style="height: 151.387px;" id="chart_one"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-xl-4">
+                <div class="col-xl-12">
                     <div class="card tasks-box" id="tasks-box">
                         <div class="card-body">
                             <h4 class="card-title mb-4">Shareable URL to join the database</h4>
