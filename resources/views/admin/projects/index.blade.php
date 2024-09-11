@@ -14,6 +14,19 @@
     #ui-datepicker-div {
         width: 30% !important;
     }
+
+    .dataTables_wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table.dataTable {
+    width: 100% !important;
+}
+
+.dataTables_wrapper .dataTables_scroll {
+    overflow-x: auto;
+}
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
@@ -86,6 +99,7 @@
                 searching: true,
                 ordering: true,
                 dom: 'lfrtip',
+                responsive:false,
                 info: true,
                 iDisplayLength: 100,
                 lengthMenu: [
