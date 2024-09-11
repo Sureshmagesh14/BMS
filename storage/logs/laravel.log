@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [2024-09-09 09:56:58] local.ERROR: Class "App\Http\Controllers\Project_respondent" not found {"userId":1,"exception":"[object] (Error(code: 0): Class \"App\\Http\\Controllers\\Project_respondent\" not found at C:\\wamp64\\www\\bms_new\\app\\Http\\Controllers\\WelcomeController.php:286)
 [stacktrace]
 #0 C:\\wamp64\\www\\bms_new\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\WelcomeController->share_project(Object(Illuminate\\Http\\Request), 'L4W6C7RM', 'MQ==')
@@ -594,3 +595,5 @@
 #10 C:\\wamp64\\www\\bms_new\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #11 {main}
 "} 
+=======
+>>>>>>> 5696d1728671742943cabd309db7934ba5805211

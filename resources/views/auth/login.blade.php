@@ -46,7 +46,7 @@
         border-radius: 25px;
     }
 
-    h2.vi-common-clr.vi-welcome-size.fw-bolder {
+    h1.vi-common-clr.vi-welcome-size.fw-bolder {
         color: #ffffff;
     }
 
@@ -75,7 +75,11 @@
     .h-100 {
         height: 100vh !important;
     }
-
+    @media only screen and (min-width: 768px) {
+    h1 {
+        font-size: 50px !important;
+    }
+}
 
     @media only screen and (max-width: 600px) {
         .login .w-75 {
@@ -96,9 +100,9 @@
                 <div class="rightside text-center">
                     <img src="{{ asset('user/images/small-logo.png') }}" class="img-fluid w-50 login m-auto mb-4"
                         alt="" />
-                    <h2 class="vi-common-clr vi-welcome-size fw-bolder">Welcome Back</h2>
+                    <h1 class="vi-common-clr vi-welcome-size fw-bolder">Welcome Back</h1>
 
-                    <h3>Login with your email address</h3>
+                    <h2>Login with your email address</h2>
                     <form method="POST" id="login_table" action="{{ route('login') }}">
                         @csrf
                         <div class="my-1  w-75 m-auto">
