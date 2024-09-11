@@ -34,7 +34,7 @@
                          @if($get_cashout == null)
                          <h2 class=" h1 fw-bolder mt-2 position-relative">Your available rewards</h2>
                          <h2 class="yelow-clr h1 fw-bolder mt-2 position-relative">{{ $get_reward }} <span>Points</span> </h2>
-                         <p class="position-relative">10 points = R1</p>
+                         <p class="position-relative h1 mb-3">10 points = R1</p>
                          @if($get_reward >= 40)
                          <button type="button" class="position-relative text-center btn btn-yellow width-fit-content d-flex m-auto" id="request_press"
                             data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
@@ -76,17 +76,17 @@
                       </div>
                       <h2 class="text-left mt-3">T's and C's</h2>
                       <ul>
-                         <li class=" mt-3" style="text-align: left;">
+                         <li class=" mt-3 fs-12" style="text-align: left;">
                             We have to use points because we are not a bank - these will change to rands
                             when you get paid (10 points = R1)
                          </li>
-                         <li class=" mt-3" style="text-align: left;">
+                         <li class=" mt-3 fs-12" style="text-align: left;">
                             You can only cash out when you have 400 points (R40) or more
                          </li>
-                         <li class=" mt-3" style="text-align: left;">
+                         <li class=" mt-3 fs-12" style="text-align: left;">
                             Points expire 1 year after being rewarded (please see Ts and Cs)
                          </li>
-                         <li class=" mt-3" style="text-align: left;">
+                         <li class=" mt-3 fs-12" style="text-align: left;">
                             We pay for your banking details to be encrypted and securely stored additional safety
                          </li>
                       </ul>
