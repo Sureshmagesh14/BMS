@@ -86,7 +86,7 @@
     margin: 10px;
     }
     .center-col{
-        width:calc(33% - 20px);
+        width:calc(40% - 20px);
         margin:0px 10px;
     }
     .fit-content{
@@ -131,7 +131,7 @@
        <div class="row justify-content-center py-5 mx-auto mt-auto mb-5">
           <div class="col-md-12">
              <div class="row">
-                <div class="col-md-4 vi-light-grey bg-white cir-border">
+                <div class="col-md-2 vi-light-grey bg-white cir-border">
                    <div class="logo bg-white pt-3">
                     @if ($data->profile_image != null)
                     <div class="avatar-preview d-flex justify-content-center align-items-center">
@@ -202,26 +202,26 @@
                 
                    </div>
                 </div>
-                <div class="col-md-4 bg-white cir-border center-col">
+                <div class="col-md-5 bg-white cir-border center-col">
                    <div class=" max-w-100 h-100p " >
                       <h5 class="p-3 align-items-center justify-content-around small-font-sm">
                          <div class="text-center py-2">Your Rewards Breakdown </div>
                          <div class="row">
-                            <div class="col-4 rounded ">
+                            <div class="col-2 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-yellow text-white p-2 rounded mt-2 text-center m-auto">{{$get_overrall_rewards}}</div>
                                   <div class="down-triangle-yellow triangle"></div>
                                   <div class="text-center my-2">Total Rewards since {{ \Carbon\Carbon::now()->year }}</div>
                                </div>
                             </div>
-                            <div class="col-4 rounded ">
+                            <div class="col-5 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-blues text-white p-2 rounded mt-2 text-center m-auto">{{$get_current_rewards}}</div>
                                   <div class="down-triangle-blue triangle"></div>
                                   <div class="text-center my-2">Total Rewards this year</div>
                                </div>
                             </div>
-                            <div class="col-4 rounded ">
+                            <div class="col-5 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-green text-white p-2 rounded mt-2 text-center m-auto">{{$available_points ?? '0'}}</div>
                                   <div class="down-triangle-green triangle"></div>
@@ -253,7 +253,7 @@
               
 
 
-                <div class="col-md-4 bg-white cir-border">
+                <div class="col-md-5 bg-white cir-border">
                    <div class="max-w-100 h-100p " style="">
                       <div class="text-center p-2">
                          <div id="radial_multi_chart" class="chart--container">
