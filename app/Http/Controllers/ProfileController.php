@@ -124,8 +124,7 @@ class ProfileController extends Controller
             $check_ess   = ($profile != null) ? (($profile->essential_details != null) ? json_decode($profile->essential_details, true) : array()) : array();
             $check_ext   = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
 
-            unset($check_ess['employment_status_other'],$check_ess['industry_my_company_other']);
-            unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other']);
+         
 
             $fully_completed = $resp_details->percentage_calc($resp_id);
             $completion_status = ($fully_completed['full'] >= 100) ? 1 : 0;
@@ -449,10 +448,10 @@ class ProfileController extends Controller
         $check_ess   = ($profile != null) ? (($profile->essential_details != null) ? json_decode($profile->essential_details, true) : array()) : array();
         $check_ext   = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
 
-        unset($check_ess['employment_status_other'],$check_ess['industry_my_company_other']);
-        unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other'],$check_ext['bank_secondary_other'],$check_ext['secondary_home_lang_other']);
+      
 
         $fully_completed = $resp_details->percentage_calc($resp_id);
+        // dd($fully_completed);
         $completion_status = ($fully_completed['full'] >= 100) ? 1 : 0;
         if(count($check_basic) > 0 && count($check_ess) > 0 && count($check_ext) > 0){
             if(count($check_basic) == count(array_filter($check_basic)) && count($check_ess) == count(array_filter($check_ess)) && count($check_ext) == count(array_filter($check_ext))){
