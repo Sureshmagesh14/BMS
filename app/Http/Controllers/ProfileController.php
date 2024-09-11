@@ -124,24 +124,32 @@ class ProfileController extends Controller
             $check_ess   = ($profile != null) ? (($profile->essential_details != null) ? json_decode($profile->essential_details, true) : array()) : array();
             $check_ext   = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
 
-            unset($check_ess['employment_status_other'],$check_ess['industry_my_company_other']);
-            unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other']);
+         
 
+            $fully_completed = $resp_details->percentage_calc($resp_id);
+            $completion_status = ($fully_completed['full'] >= 100) ? 1 : 0;
+           
             if(count($check_basic) > 0 && count($check_ess) > 0 && count($check_ext) > 0){
                 if(count($check_basic) == count(array_filter($check_basic)) && count($check_ess) == count(array_filter($check_ess)) && count($check_ext) == count(array_filter($check_ext))){
                     Respondents::where('id',$resp_id)->update(['profile_completion_id' => 1]);
                 }
                 else{
-                    Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+                    Respondents::where('id',$resp_id)->update(['profile_completion_id' => $completion_status]);
                 }
             }
             else{
-                Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+                Respondents::where('id',$resp_id)->update(['profile_completion_id' => $completion_status]);
             }
             // Create an associative array for income ranges
             $incomeRanges = $income_per_month->pluck('income', 'id')->toArray();
            
-            $essential_details = json_decode($profile->essential_details, true);
+            if ($profile !== null && isset($profile->essential_details)) {
+                $essential_details = json_decode($profile->essential_details, true);
+            } else {
+                // Handle the case where $profile is null or $essential_details is not set
+                $essential_details = null; // or set a default value, or handle the error
+            }
+            
         
             // Get the selected personal income id
             $selectedPersonalIncomeId = $essential_details['personal_income_per_month'] ?? null;
@@ -279,7 +287,9 @@ class ProfileController extends Controller
             return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges','page','basic_details'));
         }
         catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            $lineNumber = $e->getLine(); // Get the line number where the exception was thrown
+    $message = $e->getMessage(); // Get the original exception message
+    throw new Exception("Error on line $lineNumber: $message");
         }
     }
 
@@ -319,6 +329,7 @@ class ProfileController extends Controller
         $steps = $request->step;
         $resp_id = Session::get('resp_id');
         $parse_array = array();
+        $resp_details = Respondents::find($resp_id);
         parse_str($request->serialize_data, $parse_array);
         $unique_id = $parse_array['unique_id'];
 
@@ -374,6 +385,7 @@ class ProfileController extends Controller
                 'extended_details'  => $extended_details,
             );
 
+            // $profile_data = [];
             if(isset($request->child_val)){
                 $profile_data['children_data'] = json_encode($request->child_val);
             }
@@ -382,6 +394,10 @@ class ProfileController extends Controller
                 $profile_data['vehicle_data'] = json_encode($request->vehicle_val);
             }
 
+            // Define default values to prevent undefined index warnings
+            $vehicle_data = isset($profile_data['vehicle_data']) ? $profile_data['vehicle_data'] : null;
+            $children_data = isset($profile_data['children_data']) ? $profile_data['children_data'] : null;
+          
             // if($total_ques == $total_ans){
             //     $profile_data['profile_completion'] = 1;
             // }
@@ -403,6 +419,7 @@ class ProfileController extends Controller
                     $essential_details = json_encode($new_essential_array);
                     RespondentProfile::where('respondent_id',$resp_id)->update([
                         'essential_details' => $essential_details,
+                        
                     ]);
                 }
 
@@ -416,6 +433,9 @@ class ProfileController extends Controller
                     $extended_details = json_encode($new_extended_array);
                     RespondentProfile::where('respondent_id',$resp_id)->update([
                         'extended_details' => $extended_details,
+                        'vehicle_data'=> $vehicle_data,
+                        'children_data'=>  $children_data,
+                      
                     ]);
                 }
                 $step_word = ($steps == 2) ? "Essential Details Updated" : "Extended Details Updated";
@@ -428,19 +448,21 @@ class ProfileController extends Controller
         $check_ess   = ($profile != null) ? (($profile->essential_details != null) ? json_decode($profile->essential_details, true) : array()) : array();
         $check_ext   = ($profile != null) ? (($profile->extended_details != null) ? json_decode($profile->extended_details, true) : array()) : array();
 
-        unset($check_ess['employment_status_other'],$check_ess['industry_my_company_other']);
-        unset($check_ext['bank_main_other'],$check_ext['home_lang_other'], $check_ext['business_org_other'],$check_ext['bank_secondary_other'],$check_ext['secondary_home_lang_other']);
+      
 
+        $fully_completed = $resp_details->percentage_calc($resp_id);
+        // dd($fully_completed);
+        $completion_status = ($fully_completed['full'] >= 100) ? 1 : 0;
         if(count($check_basic) > 0 && count($check_ess) > 0 && count($check_ext) > 0){
             if(count($check_basic) == count(array_filter($check_basic)) && count($check_ess) == count(array_filter($check_ess)) && count($check_ext) == count(array_filter($check_ext))){
                 Respondents::where('id',$resp_id)->update(['profile_completion_id' => 1]);
             }
             else{
-                Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+                Respondents::where('id',$resp_id)->update(['profile_completion_id' => $completion_status]);
             }
         }
         else{
-            Respondents::where('id',$resp_id)->update(['profile_completion_id' => 0]);
+            Respondents::where('id',$resp_id)->update(['profile_completion_id' => $completion_status]);
         }
        
         return response()->json([

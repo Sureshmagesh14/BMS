@@ -16,6 +16,7 @@ use App\Models\Projects;
 use App\Models\Cashout;
 use App\Models\Networks;
 use App\Models\Charities;
+use App\Models\Project_respondent;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -148,7 +149,7 @@ class WelcomeController extends Controller
 
             $id = Session::get('resp_id');
             $data = Respondents::find($id);
-
+            
             $pdata = DB::table('survey as t1')
             ->select('t1.id', 't1.qus_count', DB::raw('SUM(IF(t2.id IS NOT NULL, 1, 0)) AS ans_count'))
             ->leftJoin('survey_response as t2', 't1.id', '=', 't2.survey_id')
@@ -171,83 +172,6 @@ class WelcomeController extends Controller
             }
             //dd($pdata);
            
-
-            $resp_datas =  RespondentProfile::where('respondent_id', $id)->first();
-            
-
-            if(isset($resp_datas->basic_details) && ($resp_datas->basic_details!='')){
-
-                $percent1 = $resp_datas->basic_details;
-                $json_array  = json_decode($percent1, true);
-                $tot_count  = count($json_array);
-             
-                $fill_count =0;
-                foreach ($json_array as $key => $value) {
-                    if (!strlen($value)) {
-                       
-                    }else{
-                        $fill_count ++;
-                    }
-                }
-
-                $percent1 = ($fill_count/$tot_count)*100;
-                $percent1 = round($percent1);
-
-            }else{
-                $percent1 =0;
-            }
-            
-            if(isset($resp_datas->essential_details) && ($resp_datas->essential_details!='')){
-
-                $percent2 = $resp_datas->essential_details;
-                
-                $json_array  = json_decode($percent2, true);
-                unset($json_array['employment_status_other'],$json_array['industry_my_company_other']);
-                $tot_count  = count($json_array);
-              
-                $fill_count =0;
-                foreach ($json_array as $key => $value) {
-                    if (!strlen($value)) {
-                       
-                    }else{
-                        $fill_count ++;
-                    }
-                }
-
-                $percent2 = ($fill_count/$tot_count)*100;
-                $percent2 = round($percent2);
-
-
-            }else{
-                $percent2 =0;
-            }
-
-            if(isset($resp_datas->extended_details) && ($resp_datas->extended_details!='')){
-
-                $percent3 = $resp_datas->extended_details;
-                $json_array  = json_decode($percent3, true);
-                unset($json_array['bank_main_other'],$json_array['home_lang_other'], $json_array['business_org_other'],$json_array['bank_secondary_other'],$json_array['secondary_home_lang_other']);
-
-                $tot_count  = count($json_array);
-           
-                $fill_count =0;
-                foreach ($json_array as $key => $value) {
-                    if (!strlen($value)) {
-                       
-                    }else{
-                        $fill_count ++;
-                    }
-                }
-
-                $percent3 = ($fill_count/$tot_count)*100;
-                $percent3 = round($percent3);
-
-            }else{
-                $percent3 =0;
-            }
-            
-
-           
             if ($tot_rows == 0) {
                 $percentage = 0;
             } else {
@@ -255,15 +179,16 @@ class WelcomeController extends Controller
                 $percentage = round($percentage);
             }
 
-            $completed=[$percent1,$percent2,$percent3];
+            $percentage_calc = $data->percentage_calc($id);
+            $completed=[$percentage_calc['percent1'],$percentage_calc['percent2'],$percentage_calc['percent3']];
 
-            $fully_completed = ($percent1 + $percent2 + $percent3) / 3;
+            
+            $fully_completed = $percentage_calc['full'];
             
             $fully_completed = round($fully_completed);
             $fully_completed = (int) $fully_completed;
 
             if($fully_completed==100) {
-
                 Respondents::where('id', $id)->update(['profile_completion_id' => 1]);
             }
             
@@ -324,10 +249,21 @@ class WelcomeController extends Controller
     public function share_project(Request $request)
     {
         try {
-            $id=$request->id;
+     
+            $id =$request->id;
+            $user_id =$request->uid;
+            $user_id = base64_decode($user_id);
+            
+            if($user_id==''){
+                return redirect('/')->with('successMsg', 'Project not valid');
+            }
+            
             $resp_id = Session::get('resp_id');
             $resp_name = Session::get('resp_name');
             $get_res_phone = Respondents::select('whatsapp')->where('id', Session::get('resp_id'))->first();
+            
+            $r_data = Respondents::find($user_id);
+
 
             $data = Respondents::find($resp_id);
           
@@ -345,10 +281,26 @@ class WelcomeController extends Controller
                 }
             }
             
+            $project_id = $res->id;
+            if($user_id != $resp_id){
+         
+                if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->exists()){
+
+                }else{
+                    if($resp_id!=''){
+                        Project_respondent::insert(['project_id' => $project_id, 'respondent_id' => $resp_id]);
+                    }else{
+                        Session::put('u_proj_refer_id', $user_id);
+                        Session::put('u_proj_id', $project_id);
+                    }
+                    
+                }
+            }
+                        
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
             // }else{
-            return view('user.user-share_project', compact('data', 'get_res_phone','res'));
+            return view('user.user-share_project', compact('data', 'get_res_phone','res','r_data'));
             //}
 
         } catch (Exception $e) {

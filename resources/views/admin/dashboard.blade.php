@@ -21,7 +21,14 @@
     .card.tasks-box {
         height: 233px;
     }
+    
+    .card-body {
+        overflow: auto; /* Allows the content to scroll */
+        /* display: flex; */
+        flex-direction: column;
+    }
 </style>
+
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
@@ -44,7 +51,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xl-4">
+                <div class="col-xl-6">
                     <div class="card tasks-box">
                         <div class="card-body">
 
@@ -54,29 +61,32 @@
                     </div>
                 </div>
                 <!-- end col-->
-                <div class="col-xl-4">
+                <div class="col-xl-6">
                     <div class="card tasks-box">
                         <div class="card-body">
 
                             <h4 class="card-title mb-4">Respondent Profile Completion</h4>
-                            <div class="apex-charts" id="chart_one"></div>
+                            <div class="apex-charts" style="height: 151.387px;" id="chart_one"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-xl-4">
+                <div class="col-xl-12">
                     <div class="card tasks-box" id="tasks-box">
                         <div class="card-body">
                             <h4 class="card-title mb-4">Shareable URL to join the database</h4>
                             <p class="">Copy below share link to share with friends and
                                 family </p>
                             <div class="col-sm-12 d-flex">
-                                <input class="form-control mr-1" id="survey"
-                                    value="{{ URL::to('/') }}?r={{ $share_link->share_link }}" readonly type="text"
-                                    name="SearchString" placeholder="Search">
-                                <button type="submit" class="btn btn-default btn-info"
-                                    onclick="copy_link();">Copy</button>
+                                <div class="input-group mb-3">
+                                    <input type="text" value="{{ URL::to('/') }}?r={{ $share_link->share_link }}" readonly type="text"
+                                    name="SearchString"   class="form-control" id="survey" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                      <span  onclick="copy_link();" class="input-group-text" id="basic-addon2">Copy</span>
+                                    </div>
+                                  </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -277,10 +287,20 @@
                         text: 'Respondent Status {{ $tot }} total'
                     },
                     responsive: [{
+                        breakpoint: 768, // Adjust for different breakpoints as needed
+                        options: {
+                            chart: {
+                                width: '90%' // Adjust width for medium screens
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }, {
                         breakpoint: 480,
                         options: {
                             chart: {
-                                width: 200
+                                width: '100%' // Full width on small screens
                             },
                             legend: {
                                 position: 'bottom'
@@ -323,10 +343,20 @@
                         text: 'Respondent Profile Completion {{ $tot }} total'
                     },
                     responsive: [{
+                        breakpoint: 768, // Adjust for different breakpoints as needed
+                        options: {
+                            chart: {
+                                width: '90%' // Adjust width for medium screens
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }, {
                         breakpoint: 480,
                         options: {
                             chart: {
-                                width: 200
+                                width: '100%' // Full width on small screens
                             },
                             legend: {
                                 position: 'bottom'

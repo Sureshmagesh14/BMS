@@ -25,9 +25,21 @@
 @endif
 
 <section class=" ">
+@if(isset($r_data->name) && ($r_data->name!=''))
+            <div class="alert alert-info bs-alert-old-docs text-center">
+            <strong>Referred</strong> by <span style="text-transform: capitalize;">{{$r_data->name}}</span>
+            </div>
+            @endif
+            
     <div class="container m-auto d-flex h-90vh">
+
+
+
        <div class="row justify-content-center mb-10vh w-100">
+   
+
           <div class="col-md-10 m-auto h-100vh" style="">
+           
              <!-- margin-top: 5% !important; -->
              <div class="w-100 position-relative">
                 <div class="w-40 my-auto position-absolute pos-bottom mob-hide">
@@ -115,10 +127,18 @@
             window.location.href = twitter;
         });
         
-        $("#mail").click(function() {
+        $("#mail123").click(function() {
             var whatsapurl ='mailto:?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ url('share_project', $res->project_link) }}';
             window.location.href = whatsapurl;
         });
+
+        $("#mail").click(function() {
+         var subject = "I think you should join The Brand Surgeon";
+         var body = "Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you'd be interested in checking it out. Here’s the link to the project:\n\n" + "{{ url('share_project', $res->project_link) }}\n\nBest regards,\n[Your Name]";
+         var mailtoUrl = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+         window.location.href = mailtoUrl;
+      });
+
 
       
        
