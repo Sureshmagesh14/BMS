@@ -1231,7 +1231,7 @@
                                 };
 
                                 wizard_save(datas);
-                                window.location.href = "{{ route('user.dashboard') }}";
+                                // window.location.href = "{{ route('user.dashboard') }}";
                             }
                         },
                         cancel: function() {
