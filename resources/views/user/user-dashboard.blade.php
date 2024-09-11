@@ -86,7 +86,7 @@
     margin: 10px;
     }
     .center-col{
-        width:calc(33% - 20px);
+        width:calc(40% - 20px);
         margin:0px 10px;
     }
     .fit-content{
@@ -117,21 +117,21 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.min.css">
 <section class="">
     <div class="container-fluid">
-       @if ($data->profile_completion_id == 0)
-       <div class="alert alert-danger bs-alert-old-docs text-center">
-          <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile_wizard') }}">Update
-          Profile</a>
-          <br>
-          <small class="leading-none mt-1 text-danger">
-          Cash Outs and Surveys are available if your profile is up to date.
-          Please update your profile.</small>
-       </div>
-       @endif
+        @if ($data->profile_completion_id == 0)
+            <div class="alert alert-danger bs-alert-old-docs text-center">
+                <strong>Alert</strong> Profile Incomplete <a href="{{ route('updateprofile_wizard') }}">Update
+                Profile</a>
+                <br>
+                <small class="leading-none mt-1 text-danger">
+                Cash Outs and Surveys are available if your profile is up to date.
+                Please update your profile.</small>
+            </div>
+        @endif
        <div class="alert alert-danger bs-alert-old-docs text-center alert_message" style="display: none;"></div>
        <div class="row justify-content-center py-5 mx-auto mt-auto mb-5">
           <div class="col-md-12">
              <div class="row">
-                <div class="col-md-4 vi-light-grey bg-white cir-border">
+                <div class="col-md-2 vi-light-grey bg-white cir-border">
                    <div class="logo bg-white pt-3">
                     @if ($data->profile_image != null)
                     <div class="avatar-preview d-flex justify-content-center align-items-center">
@@ -202,26 +202,26 @@
                 
                    </div>
                 </div>
-                <div class="col-md-4 bg-white cir-border center-col">
+                <div class="col-md-5 bg-white cir-border center-col">
                    <div class=" max-w-100 h-100p " >
                       <h5 class="p-3 align-items-center justify-content-around small-font-sm">
                          <div class="text-center py-2">Your Rewards Breakdown </div>
                          <div class="row">
-                            <div class="col-4 rounded ">
+                            <div class="col-2 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-yellow text-white p-2 rounded mt-2 text-center m-auto">{{$get_overrall_rewards}}</div>
                                   <div class="down-triangle-yellow triangle"></div>
                                   <div class="text-center my-2">Total Rewards since {{ \Carbon\Carbon::now()->year }}</div>
                                </div>
                             </div>
-                            <div class="col-4 rounded ">
+                            <div class="col-5 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-blues text-white p-2 rounded mt-2 text-center m-auto">{{$get_current_rewards}}</div>
                                   <div class="down-triangle-blue triangle"></div>
                                   <div class="text-center my-2">Total Rewards this year</div>
                                </div>
                             </div>
-                            <div class="col-4 rounded ">
+                            <div class="col-5 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-green text-white p-2 rounded mt-2 text-center m-auto">{{$available_points ?? '0'}}</div>
                                   <div class="down-triangle-green triangle"></div>
@@ -253,7 +253,7 @@
               
 
 
-                <div class="col-md-4 bg-white cir-border">
+                <div class="col-md-5 bg-white cir-border">
                    <div class="max-w-100 h-100p " style="">
                       <div class="text-center p-2">
                          <div id="radial_multi_chart" class="chart--container">
@@ -269,32 +269,117 @@
                          <h5 class="align-items-center justify-content-around">
                             <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
                                alt="">
-                               <span class="small-font-sm">Your Paid 
-                               Online Surveys</span>
+                               <span class="small-font-sm">See if You Qualify for Research</span>
+                            </div>
+                            
+                         </h5>
+                         <div class="">
+
+                            <!-- starts -->
+
+                            <table class="table table-striped table-bordered table-hover dataTable" id="DataTables_Table_0" style="width: 100%;" aria-describedby="example_info">
+                            <thead>
+                                <tr>
+                                    <th>NAME </th>
+                                    <th>DATE </th>
+                                    <th>TYPE OF SURVEY </th>
+                                    <th>REWARD POINTS</th>
+                                    <th>ACTION </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach ($get_other_survey as $res)
+                            <tr>
+                                    <td>
+                                    @if($res->project_name_resp!='')
+                                    {{ $res->project_name_resp }}
+                                    @else 
+                                    {{ $res->name }}
+                                    @endif 
+                                    
+                                    </td>
+                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                    <td title="{{ $res->description }}">
+                                        @if ($res->type_id == 1) 
+                                        Pre-Screener
+                                        @elseif ($res->type_id == 2) 
+                                        Pre-Task
+                                        @elseif ($res->type_id == 3) 
+                                        Paid survey
+                                        @elseif ($res->type_id == 4) 
+                                        Unpaid survey
+                                        @endif
+                                        <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
+                                    </td>
+                                    <td>{{ $res->reward }}</td>
+                                    @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
+                                    <!-- @if ($data->profile_completion_id == 0)
+                                        <td> Profile Incomple </td>
+                                        @else 
+                                            @if ($get_link != null)
+                                                <td><a target="_blank"
+                                                        href="{{ url('survey/view', $get_link->builderID) }}"
+                                                        class="btn btn-yellow">START</a></td>
+                                            @else
+                                                <td>No Survey</td>
+                                            @endif
+                                        @endif -->
+                                    @if ($data->profile_completion_id == 0)
+                                    <td> 
+                                    <a href="{{ route('updateprofile_wizard') }}">
+                                    To continue please complete your profile
+                                    </a>
+                                            </td>
+                                    @else
+                                    @if ($get_link != null)
+                                    <td>
+                                        <div class="social-icons text-md-end text-lg-end text-sm-start">
+                                        <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #fbbd0a;"></i></a>
+                                        @if($res->access_id==1)
+
+                                        
+                                            @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
+                                            <a href="{{ url('share_project', [$res->project_link, base64_encode(session('resp_id'))]) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+                                            @endif 
+                                            
+                                        @endif
+                                        </div>
+                                    </td>
+                                    @else
+                                    <td>No Survey</td>
+                                    @endif
+                                    @endif
+                                </tr>
+                                @endforeach
+                            </tbody>
+                            </table>
+                            
+                            <!-- ends -->
+
+                           
+                         </div>
+                      </div>
+                   </div>
+                   <div class="col-md-6 my-sm-5-mob bg-white me-0 cir-border">
+                      <div class="bg-white my-2 max-w-100">
+                         <h5 class=" align-items-center justify-content-around">
+                            <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
+                               alt="">
+                               <span class="small-font-sm">Active Paid Online Surveys</span>
                             </div>
                             <div class="px-3">
                                <ul class="navbar-nav">
-                                  <li class="nav-item dropdown w-30 flex-right ml-auto">
-                                     <a class="btn btn-yellow width-fit-content d-flex ml-auto" href="{{ route('user.cashouts') }}">Cashout
+                                  <li class="nav-item dropdown ml-auto">
+                                     <a class="btn btn-yellow width-fit-content ml-auto" href="{{ route('user.cashouts') }}">Cashout
                                      History</a>
                                      </a>
-                                     {{-- 
-                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('user.cashouts') }}">Cashout
-                                           History</a>
-                                        </li>
-                                        <!-- <li>
-                                           <hr class="dropdown-divider" />
-                                           </li>
-                                           <li><a class="dropdown-item" href="#">Unclaimed Rewards</a></li> -->
-                                     </ul>
-                                     --}}
                                   </li>
                                </ul>
                             </div>
                          </h5>
                          <div class="">
-                            <table class="table table-striped table-bordered table-hover dataTable"
+
+                         <table class="table table-striped table-bordered table-hover dataTable"
                                id="DataTables_Table_1" style="width: 100%;" aria-describedby="completed_info">
                                <thead>
                                   <tr>
@@ -337,11 +422,11 @@
                                      @if ($get_link != null)
                                      <td>
                                         <div class="social-icons text-md-end text-lg-end text-sm-start">
-                                           <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #fbbd0a;"></i></a>
+                                           <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #fbbd0a;"></i></a> 
                                            @if($res->access_id==1)
                                            
                                             @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
-                                            <a href="{{ url('share_project', $res->project_link) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+                                            <a href="{{ url('share_project', [$res->project_link, base64_encode(session('resp_id'))]) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
                                             @endif 
                                            @endif
                                         </div>
@@ -354,28 +439,36 @@
                                   @endforeach
                                </tbody>
                             </table>
+
+                            
                          </div>
                       </div>
                    </div>
-                   <div class="col-md-6 my-sm-5-mob bg-white me-0 cir-border">
-                      <div class="bg-white my-2 max-w-100">
-                         <h5 class=" align-items-center justify-content-around">
-                            <div><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
-                               alt="">
-                               <span class="small-font-sm">Your Survey History</span>
-                            </div>
-                            <div class="px-3">
-                               <ul class="navbar-nav">
-                                  <li class="nav-item dropdown ml-auto">
-                                     <a class="btn btn-yellow width-fit-content ml-auto" href="{{ route('user.cashouts') }}">Cashout
-                                     History</a>
-                                     </a>
-                                  </li>
-                               </ul>
-                            </div>
-                         </h5>
-                         <div class="">
-                            <table class="table table-striped table-bordered table-hover dataTable"
+                </div>
+             </div>
+          </div>
+          <div class="col-md-12 bg-white my-2 cir-border">
+             <div class="bg-white  max-w-100">
+                <h5 class=" align-items-center justify-content-around">
+                   <div class="w-50"><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
+                      alt=""> <span class="small-font-sm">Your Survey History</span> </div>
+
+                      <div class="px-3">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown w-30 flex-right ml-auto">
+                            <a class="btn btn-yellow width-fit-content d-flex ml-auto" href="{{ route('user.cashouts') }}">Cashout
+                                History</a>
+                                </a>
+                            </li>
+                        </ul>
+                      </div>
+                    
+                   
+                </h5>
+                <!-- starts -->
+
+                
+                <table class="table table-striped table-bordered table-hover dataTable"
                                id="DataTables_Table_2" style="width: 100%;" aria-describedby="completed_info">
                                <thead>
                                   <tr>
@@ -430,112 +523,7 @@
                                   @endforeach
                                </tbody>
                             </table>
-                         </div>
-                      </div>
-                   </div>
-                </div>
-             </div>
-          </div>
-          <div class="col-md-12 bg-white my-2 cir-border">
-             <div class="bg-white  max-w-100">
-                <h5 class=" align-items-center justify-content-around">
-                   <div class="w-50"><img class="w-5 me-2 ms-3 my-3" src="{{ asset('user/images/icons/1c-07.png') }}"
-                      alt=""> <span class="small-font-sm">See if You Qualify for Other Research</span> </div>
-                   <div class="px-3">
-                      <!-- <ul class="navbar-nav">
-                         <li class="nav-item dropdown">
-                             <a class="nav-link dropdown-toggle p-3 me-2" href="#" role="button"
-                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                 ...
-                             </a>
-                             <ul class="dropdown-menu">
-                                 <li><a class="dropdown-item" href="#">View Profile</a></li>
-                                 <li>
-                                     <hr class="dropdown-divider" />
-                                 </li>
-                                 <li><a class="dropdown-item" href="#">Sign Out</a></li>
-                             </ul>
-                         </li>
-                         </ul> -->
-                   </div>
-                </h5>
-                <table class="table table-striped table-bordered table-hover dataTable" id="DataTables_Table_0"
-                   style="width: 100%;" aria-describedby="example_info">
-                   <thead>
-                      <tr>
-                         <th>NAME </th>
-                         <th>DATE </th>
-                         <th>TYPE OF SURVEY </th>
-                         <th>REWARD POINTS</th>
-                         <th>ACTION </th>
-                      </tr>
-                   </thead>
-                   <tbody>
-                   @foreach ($get_other_survey as $res)
-                   <tr>
-                         <td>
-                          @if($res->project_name_resp!='')
-                          {{ $res->project_name_resp }}
-                          @else 
-                          {{ $res->name }}
-                          @endif 
-                          
-                         </td>
-                         <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
-                         <td title="{{ $res->description }}">
-                            @if ($res->type_id == 1) 
-                            Pre-Screener
-                            @elseif ($res->type_id == 2) 
-                            Pre-Task
-                            @elseif ($res->type_id == 3) 
-                            Paid survey
-                            @elseif ($res->type_id == 4) 
-                            Unpaid survey
-                            @endif
-                            <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
-                         </td>
-                         <td>{{ $res->reward }}</td>
-                         @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
-                         <!-- @if ($data->profile_completion_id == 0)
-                            <td> Profile Incomple </td>
-                            @else 
-                                @if ($get_link != null)
-                                    <td><a target="_blank"
-                                            href="{{ url('survey/view', $get_link->builderID) }}"
-                                            class="btn btn-yellow">START</a></td>
-                                @else
-                                    <td>No Survey</td>
-                                @endif
-                            @endif -->
-                         @if ($data->profile_completion_id == 0)
-                         <td> 
-                         <a href="{{ route('updateprofile_wizard') }}">
-                         To continue please complete your profile
-                         </a>
-                                 </td>
-                         @else
-                         @if ($get_link != null)
-                         <td>
-                            <div class="social-icons text-md-end text-lg-end text-sm-start">
-                               <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #fbbd0a;"></i></a>
-                               @if($res->access_id==1)
-
-                               
-                                @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
-                                <a href="{{ url('share_project', $res->project_link) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
-                                @endif 
-                                
-                               @endif
-                            </div>
-                         </td>
-                         @else
-                         <td>No Survey</td>
-                         @endif
-                         @endif
-                      </tr>
-                      @endforeach
-                   </tbody>
-                </table>
+                <!-- ends -->
              </div>
           </div>
        </div>

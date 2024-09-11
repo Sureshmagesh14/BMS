@@ -95,7 +95,7 @@
         color: #fff;
     }
     .bg-img{
-        background-image: url('../assets/images/Change_password_photo.jpg');
+        /* background-image: url('../assets/images/Change_password_photo.jpg'); */
         height:100vh;
         background-repeat:no-repeat;
         background-size:cover;
@@ -104,15 +104,24 @@
     body{
         overflow:hidden;
     }
+    .yelow-bg{
+        border: 1px solid #ffbb00;
+    border-radius: 25px
+    }
+    .rounded-border{
+        border-radius: 25px;
+    }
 </style>
 <section class="bg-greybg vh-100 bg-img m-auto d-flex">
     <div class="container m-auto d-flex">
         <div class="row w-100 justify-content-center py-5">
-            <!-- <div class="col-md-6 yelow-bg text-center d-none-mobile">
-                <img class="img-fluid m-auto w-75" src="{{ asset('assets/images/img44.png') }}" alt="">
-            </div> -->
-            <div class="col-md-6 bg-white p-5 ml-auto">
-                <div class="text-center">
+            <div class="col-md-6 text-center d-none-mobile">
+                <div class="w-90 yelow-bg  h-100">
+                <img class="img-fluid m-auto w-100" src="{{ asset('assets/images/Update your profile picture.webp') }}" alt="">
+            </div>
+            </div>
+            <div class="col-md-6 bg-white p-5 ml-2 rounded-border">
+                <div class="text-center ml-2">
                     <h2 class="vi-common-clr vi-welcome-size fw-bolder">Change Password</h2>
 
                     <form id="reg_form" class="validation">
