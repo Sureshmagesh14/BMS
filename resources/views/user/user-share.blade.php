@@ -71,9 +71,16 @@
             window.location.href = twitter;
         });
         
-        $("#mail").click(function() {
+        $("#mail123").click(function() {
             var whatsapurl ='mailto:?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ $ref_code }}';
             window.location.href = whatsapurl;
+        });
+
+        $("#mail").click(function() {
+            var subject = "I think you should join The Brand Surgeon";
+            var body = "I think you should join The Brand Surgeon and get paid for your opinion - {{ $ref_code }}";
+            var mailtoUrl = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+            window.location.href = mailtoUrl;
         });
 
       
