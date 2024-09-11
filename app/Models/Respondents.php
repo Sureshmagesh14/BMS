@@ -69,6 +69,7 @@ class Respondents extends Authenticatable
 
             $percent1 = $resp_datas->basic_details;
             $json_array  = json_decode($percent1, true);
+            unset($json_array['updated_at']);
             $tot_count  = count($json_array);
             
             $fill_count =0;
@@ -93,13 +94,13 @@ class Respondents extends Authenticatable
             
             $json_array  = json_decode($percent2, true);
             if($json_array['employment_status']=='working_and_studying' || $json_array['employment_status'] ==='emp_full_time' || $json_array['employment_status'] ==='emp_part_time' || $json_array['employment_status'] ==='self'){
-                unset($json_array['employment_status_other'],$json_array['industry_my_company_other']);
+                unset($json_array['employment_status_other'],$json_array['industry_my_company_other'],$json_array['updated_at']);
             }else{
-                unset($json_array['employment_status_other'],$json_array['industry_my_company_other'],$json_array['job_title'],$json_array['industry_my_company']);
+                unset($json_array['employment_status_other'],$json_array['industry_my_company_other'],$json_array['job_title'],$json_array['industry_my_company'],$json_array['updated_at']);
             }
             
             $tot_count  = count($json_array);
-            
+         
             $fill_count =0;
             foreach ($json_array as $key => $value) {
                 if (!strlen($value)) {
@@ -131,7 +132,8 @@ class Respondents extends Authenticatable
                     $json_array['home_lang_other'],
                     $json_array['business_org_other'],
                     $json_array['bank_secondary_other'],
-                    $json_array['secondary_home_lang_other']
+                    $json_array['secondary_home_lang_other'],
+                    $json_array['updated_at'],
                 );
             } else {
                 unset(
@@ -141,7 +143,8 @@ class Respondents extends Authenticatable
                     $json_array['bank_secondary_other'],
                     $json_array['secondary_home_lang_other'],
                     $json_array['business_org'],
-                    $json_array['org_company']
+                    $json_array['org_company'],
+                    $json_array['updated_at'],
                 );
             }
         
