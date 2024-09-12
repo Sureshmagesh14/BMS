@@ -117,7 +117,7 @@
         <div class="row w-100 justify-content-center py-5">
             <div class="col-md-6 text-center d-none-mobile">
                 <div class="w-90 yelow-bg  h-100">
-                <img class="img-fluid m-auto w-100" src="{{ asset('assets/images/Update your profile picture.webp') }}" alt="">
+                    <img class="img-fluid m-auto w-50" src="https://live.thebrandsurgeon.co.za/assets/images/forgot-password-bg.png" alt="">
             </div>
             </div>
             <div class="col-md-6 bg-white p-5 ml-2 rounded-border">
