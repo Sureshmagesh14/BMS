@@ -77,7 +77,7 @@
         });
 
         $("#mail").click(function() {
-            var subject = "I think you should join The Brand Surgeon";
+            var subject = "Get paid for your opinion - Join The Brand Surgeon for free";
             var body = "I think you should join The Brand Surgeon and get paid for your opinion - {{ $ref_code }}";
             var mailtoUrl = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
             window.location.href = mailtoUrl;

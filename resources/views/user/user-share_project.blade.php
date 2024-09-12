@@ -133,7 +133,7 @@
         });
 
         $("#mail").click(function() {
-         var subject = "I think you should join The Brand Surgeon";
+         var subject = "Get paid for your opinion - Join The Brand Surgeon for free";
          var body = "Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you'd be interested in checking it out. Here’s the link to the project:\n\n" + "{{ url('share_project', $res->project_link) }}\n\nBest regards,\n[Your Name]";
          var mailtoUrl = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
          window.location.href = mailtoUrl;
