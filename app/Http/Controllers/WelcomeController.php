@@ -928,7 +928,6 @@ class WelcomeController extends Controller
                 );
             }
 
-            dd($insert_array);
 
             DB::table('cashouts')->insert($insert_array);
 
