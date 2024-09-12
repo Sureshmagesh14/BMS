@@ -19,8 +19,7 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Project Name *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name" oninput="validateProjectName()"
-                required>
+            <input type="text" class="form-control" id="name" name="name" required>
             <div id="name-error" class="text-danger"></div>
         </div>
     </div>
