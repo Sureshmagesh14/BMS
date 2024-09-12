@@ -111,13 +111,17 @@
     .rounded-border{
         border-radius: 25px;
     }
+    .py-5 {
+        padding-top: 3rem !important;
+        padding-bottom: 11rem !important;
+    }
 </style>
 <section class="bg-greybg vh-100 bg-img m-auto d-flex">
     <div class="container m-auto d-flex">
         <div class="row w-100 justify-content-center py-5">
             <div class="col-md-6 text-center d-none-mobile">
                 <div class="w-90 yelow-bg  h-100">
-                    <img class="img-fluid m-auto w-50" src="https://live.thebrandsurgeon.co.za/assets/images/forgot-password-bg.png" alt="">
+                    <img class="img-fluid m-auto w-50" src="{{ asset('assets/images/forgot-password-bg.png') }}" alt="Forgot Password">
             </div>
             </div>
             <div class="col-md-6 bg-white p-5 ml-2 rounded-border">
