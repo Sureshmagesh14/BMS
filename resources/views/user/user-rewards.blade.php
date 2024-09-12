@@ -32,7 +32,7 @@
                    <div class="w-75 ml-auto d-flex d-sm-flex">
                       <div class="w-50">
                          @if($get_cashout == null)
-                         <h2 class=" h1 fw-bolder mt-2 position-relative">Your available rewards</h2>
+                         <h2 class=" h1 fw-bolder mt-2 position-relative">Your Available Rewards                        </h2>
                          <h2 class="yelow-clr h1 fw-bolder mt-2 position-relative">{{ $get_reward }} <span>Points</span> </h2>
                          <p class="position-relative h1 mb-3">10 points = R1</p>
                          @if($get_reward >= 40)
@@ -51,20 +51,20 @@
                       </div>
                       <div class="w-50">
                          @if($get_cashout == null)
-                         <h2 class=" h1 fw-bolder mt-2">Your reward history</h2>
+                         <h2 class=" h1 fw-bolder mt-2">Your Reward History</h2>
                          <div class="d-flex w-100">
                             <div class="col-5 col-xs-6 rounded m-1">
                                <div class="bg-grey-6 p-2 m-2 w-100 h-100p rounded">
                                   <div class="bg-yellow text-white p-2 w-100 rounded mt-2 text-center m-auto">{{$get_overrall_rewards}}</div>
                                   <div class="down-triangle-yellow triangle"></div>
-                                  <div class="my-2">Total Rewards since {{ \Carbon\Carbon::now()->year }}</div>
+                                  <div class="my-2">Total Rewards Since {{ \Carbon\Carbon::now()->year }}</div>
                                </div>
                             </div>
                             <div class="col-5 col-xs-6 rounded m-1">
                                <div class="bg-grey-6 p-2 m-2 w-100 h-100p rounded">
                                   <div class="bg-blue text-white p-2 w-100 rounded mt-2 text-center m-auto">{{$get_current_rewards}}</div>
                                   <div class="down-triangle-blue triangle"></div>
-                                  <div class="my-2">Total Rewards this year</div>
+                                  <div class="my-2">Total Rewards this Year</div>
                                </div>
                             </div>
                          </div>
