@@ -49,7 +49,7 @@ Route::any('dashboard', 'WelcomeController@user_dashboard')->middleware(['auth',
 Route::any('view_client_survey_list', 'WelcomeController@view_client_survey_list')->middleware(['auth', 'verified'])->name('client.survey');
 Route::any('profile-edit', 'WelcomeController@user_profile')->middleware(['auth', 'verified'])->name('user.profile');
 Route::any('share', 'WelcomeController@user_share')->middleware(['auth', 'verified'])->name('user.share');
-Route::any('share_project/{id}/{uid}', 'WelcomeController@share_project')->where('id', '[A-Za-z0-9]+')->name('share_project');
+Route::any('share_project/{id}/{uid?}', 'WelcomeController@share_project')->where('id', '[A-Za-z0-9]+')->name('share_project');
 Route::any('rewards', 'WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
 Route::any('surveys', 'WelcomeController@user_surveys')->middleware(['auth', 'verified'])->name('user.surveys');
 Route::any('viewprofile', 'WelcomeController@user_viewprofile')->middleware(['auth', 'verified'])->name('user.viewprofile');
@@ -71,7 +71,7 @@ Route::any('updateprofile_wizard', 'ProfileController@updateprofile_wizard')->mi
 Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'verified'])->name('get_suburb');
 Route::any('get_area', 'ProfileController@get_area')->middleware(['auth', 'verified'])->name('get_area');
 Route::any('profile_save', 'ProfileController@profile_save')->middleware(['auth', 'verified'])->name('profile_save');
-
+Route::any('user_get_branch_code', 'WelcomeController@user_get_branch_code')->name('user_get_branch_code');
 Route::any('process_cashout', 'WelcomeController@process_cashout')->name('process_cashout');
 Route::any('complete_cashout', 'WelcomeController@complete_cashout')->name('complete_cashout');
 
@@ -111,6 +111,7 @@ Route::group([
     Route::any('users_multi_delete', 'UsersController@users_multi_delete')->name('users_multi_delete');
     Route::any('users_action', 'UsersController@users_action')->name('users_action');
     Route::any('user_email_id_check', 'UsersController@user_email_id_check')->name('user_email_id_check');
+
 
     /* Internal Reports MENU*/
     Route::controller(InternalReportController::class)->group(function () {

@@ -11,7 +11,6 @@ use App\Models\Rewards;
 use App\Models\Users;
 use App\Models\PasswordResetsViaPhone;
 use App\Mail\ResetPasswordEmail;
-
 use App\Models\Projects;
 use App\Models\Cashout;
 use App\Models\Networks;
@@ -246,17 +245,22 @@ class WelcomeController extends Controller
         }
     }
     
-    public function share_project(Request $request)
+    public function share_project($id, $uid = null)
     {
         try {
-     
-            $id =$request->id;
-            $user_id =$request->uid;
+            
+            if (is_null($uid)) {
+                // Handle the case when $uid is null
+                //return redirect('dashboard')->witherror('User is null or not provided.');
+                return redirect('dashboard')->with(['error' => 'User is null or not provided.']);
+
+            }
+            
+            $id =$id;
+            $user_id =$uid;
             $user_id = base64_decode($user_id);
             
-            if($user_id==''){
-                return redirect('/')->with('successMsg', 'Project not valid');
-            }
+           
             
             $resp_id = Session::get('resp_id');
             $resp_name = Session::get('resp_name');
@@ -929,7 +933,6 @@ class WelcomeController extends Controller
                 );
             }
 
-            dd($insert_array);
 
             DB::table('cashouts')->insert($insert_array);
 
@@ -1554,7 +1557,13 @@ class WelcomeController extends Controller
     }
 
     
-    
+    public function user_get_branch_code(Request $request){
+        $bank_id = $request->bank_id;
+        $branch_code=Banks::where('id',$bank_id)->first();
+        $repsonse=$branch_code->branch_code;
+
+        return response()->json(['repsonse' => $repsonse], 200);
+    }
     
 
 }
