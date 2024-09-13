@@ -244,24 +244,11 @@
 
     });
 
-    function validateProjectName() {
-        var input = document.getElementById("name");
-        var errorDiv = document.getElementById("name-error");
-        var regex = /^[A-Za-z0-9\-]+$/;
-        var value = input.value;
+   
 
-        if (!regex.test(value)) {
-            errorDiv.textContent = "Only letters, numbers, and dashes are allowed.";
-            input.setCustomValidity("Invalid input");
-        } else {
-            errorDiv.textContent = "";
-            input.setCustomValidity("");
-        }
-    }
     $("#projects_create").click(function() {
-        validateProjectName(); // Validate the project name before form submission
-
-        if (!$("#projects_form")[0].checkValidity()) { // Not Valid
+      
+        if (!$("#projects_form").valid()) { // Not Vali
             return false;
         } else {
             var data = $('#projects_form').serialize();
