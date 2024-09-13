@@ -78,7 +78,7 @@
             <div class="form-group row">
                 <label for="example-text-input" class="col-md-3 col-form-label">Bank *</label>
                 <div class="col-md-9">
-                    <select name="bank_value" class="form-control">
+                    <select name="bank_value" class="form-control" id="bank_name">
                         <option value="">Select Bank</option>
                         @foreach ($banks as $bank)
                             <option value="{{$bank->id}}">{{$bank->bank_name}} - {{$bank->branch_code}}</option>
@@ -90,7 +90,8 @@
             <div class="form-group row">
                 <label for="example-text-input" class="col-md-3 col-form-label">Branch Name *</label>
                 <div class="col-md-9">
-                    <input type="text" name="branch_name" class="form-control">
+                    <input type="text" name="branch" id="branch" class="form-control" readonly>
+                    <input type="hidden" name="branch_name" id="branch_name" class="form-control">
                 </div>
             </div>
         
@@ -195,6 +196,28 @@
             $("#accept_value").val("0");
             $(".accept_error").show();
         }
+    });
+
+    $("#bank_name").change(function() {
+        var bank_id = this.value;
+        $.ajax({
+
+            type: "GET",
+            url: "{{ route('user_get_branch_code') }}",
+            data: {
+                "bank_id": bank_id,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                $("#branch_name").val(data.repsonse);
+                $("#branch").val(data.repsonse);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
     });
    
     function method_change(get_this){

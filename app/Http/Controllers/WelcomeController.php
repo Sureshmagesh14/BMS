@@ -11,7 +11,6 @@ use App\Models\Rewards;
 use App\Models\Users;
 use App\Models\PasswordResetsViaPhone;
 use App\Mail\ResetPasswordEmail;
-
 use App\Models\Projects;
 use App\Models\Cashout;
 use App\Models\Networks;
@@ -929,7 +928,6 @@ class WelcomeController extends Controller
                 );
             }
 
-            dd($insert_array);
 
             DB::table('cashouts')->insert($insert_array);
 
@@ -1554,7 +1552,13 @@ class WelcomeController extends Controller
     }
 
     
-    
+    public function user_get_branch_code(Request $request){
+        $bank_id = $request->bank_id;
+        $branch_code=Banks::where('id',$bank_id)->first();
+        $repsonse=$branch_code->branch_code;
+
+        return response()->json(['repsonse' => $repsonse], 200);
+    }
     
 
 }
