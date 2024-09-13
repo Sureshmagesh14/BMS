@@ -2559,7 +2559,9 @@ class ExportController extends Controller
 
                         foreach ($surveyResponseUsers as $userID) {
                             $user = Respondents::where('id', $userID)->first();
-                            $resp_name = $user->name.' '.$user->surname;
+                            $fname = $user->name ?? '';
+                            $surname = $user->surname ?? '';
+                            $resp_name = $fname.' '.$surname;
                             $starttime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "asc")->first();
                             $endtime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
                             $startedAt = $starttime->created_at;
