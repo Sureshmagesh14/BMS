@@ -49,7 +49,7 @@ Route::any('dashboard', 'WelcomeController@user_dashboard')->middleware(['auth',
 Route::any('view_client_survey_list', 'WelcomeController@view_client_survey_list')->middleware(['auth', 'verified'])->name('client.survey');
 Route::any('profile-edit', 'WelcomeController@user_profile')->middleware(['auth', 'verified'])->name('user.profile');
 Route::any('share', 'WelcomeController@user_share')->middleware(['auth', 'verified'])->name('user.share');
-Route::any('share_project/{id}/{uid}', 'WelcomeController@share_project')->where('id', '[A-Za-z0-9]+')->name('share_project');
+Route::any('share_project/{id}/{uid?}', 'WelcomeController@share_project')->where('id', '[A-Za-z0-9]+')->name('share_project');
 Route::any('rewards', 'WelcomeController@user_rewards')->middleware(['auth', 'verified'])->name('user.rewards');
 Route::any('surveys', 'WelcomeController@user_surveys')->middleware(['auth', 'verified'])->name('user.surveys');
 Route::any('viewprofile', 'WelcomeController@user_viewprofile')->middleware(['auth', 'verified'])->name('user.viewprofile');
