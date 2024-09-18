@@ -173,11 +173,11 @@
                                                 <input type="text" name="basic[mobile_number]" id="mobile_number"
                                                     placeholder="08 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
-                                                    value="{{ $resp_details->mobile }}" maxlength="16" readonly>
+                                                    value="{{ $resp_details->mobile }}" maxlength="16" >
 
                                             </div>
                                             <small class="form-text text-muted">Don’t include 0 in starting.</small>
-                                            <a style="float: right;" href="{{ route('mobileChangeOtpSend') }}">Do you want to change your mobile number? Click here.</a>
+                                            {{-- <a style="float: right;" href="{{ route('mobileChangeOtpSend') }}">Do you want to change your mobile number? Click here.</a> --}}
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="whatsapp_number">Whats App Number <span
@@ -196,8 +196,8 @@
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="email">Email <span class="star_require">*</span></label>
                                             <input type="email" class="form-control" id="email"
-                                                name="basic[email]" value="{{ $resp_details->email }}" readonly>
-                                            <a style="float: right;" href="{{ route('emailChangeOtpSend') }}">Do you want to change your email? Click here.</a>
+                                                name="basic[email]" value="{{ $resp_details->email }}" >
+                                            {{-- <a style="float: right;" href="{{ route('emailChangeOtpSend') }}">Do you want to change your email? Click here.</a> --}}
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="date_of_birth">Date of Birth <span
