@@ -43,7 +43,7 @@ class ExportController extends Controller
 
     public function export_all(Request $request)
     {
-
+       
         try {
 
             $module       = $request->module;
@@ -2894,7 +2894,8 @@ class ExportController extends Controller
                         }else{
                             $survey_name = "Survey-".$survey_id;
                         }
-                
+                        $survey_name = $this->sanitizeSheetName($survey_name);
+
                         $sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $survey_name);
                         $spreadsheet->addSheet($sheet, 0);
                         $spreadsheet->setActiveSheetIndex(0);
@@ -2915,7 +2916,7 @@ class ExportController extends Controller
                     }else{
                         $fileName = 'Survey_Report_' . $project_id . '_' . date('Y-m-d') . '.xlsx';
                     }
-
+                    
                     $filePath = storage_path('app/public/' . $fileName);
                 
                     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
@@ -2952,5 +2953,21 @@ class ExportController extends Controller
             // Throw a new exception with the formatted message
             throw new \Exception($errorMessage);
         }
+    }
+
+    public function sanitizeSheetName($name) {
+        // Remove invalid characters
+        $invalidChars = ['\\', '/', '*', '?', ':', '[', ']'];
+        $name = str_replace($invalidChars, '', $name);
+        
+        // Trim leading and trailing spaces
+        $name = trim($name);
+        
+        // Ensure name is within the allowed length
+        if (strlen($name) > 31) {
+            $name = substr($name, 0, 31);
+        }
+    
+        return $name;
     }
 }
