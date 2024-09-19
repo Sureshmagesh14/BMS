@@ -268,7 +268,7 @@ class WelcomeController extends Controller
             $get_res_phone = Respondents::select('whatsapp')->where('id', Session::get('resp_id'))->first();
             
             $r_data = Respondents::find($user_id);
-
+            
 
             $data = Respondents::find($resp_id);
           
