@@ -88,7 +88,7 @@
             </div>
         
             <div class="form-group row">
-                <label for="example-text-input" class="col-md-3 col-form-label">Branch Name *</label>
+                <label for="example-text-input" class="col-md-3 col-form-label">Branch Code *</label>
                 <div class="col-md-9">
                     <input type="text" name="branch" id="branch" class="form-control" readonly>
                     <input type="hidden" name="branch_name" id="branch_name" class="form-control">
@@ -112,10 +112,10 @@
 
         <div class="airtime_mobile_data_method" style="display: none;">
             <div class="form-group row">
-                <label for="example-text-input" class="col-md-3 col-form-label">Telkom *</label>
+                <label for="example-text-input" class="col-md-3 col-form-label">Network Service Provider *</label>
                 <div class="col-md-9">
                     <select name="network" class="form-control">
-                        <option value="">Select Telkom</option>
+                        <option value="">Select Network Service Provider</option>
                         @foreach ($networks as $network)
                             <option value="{{$network->id}}">{{$network->name}}</option>
                         @endforeach
@@ -151,10 +151,10 @@
 
         <div class="donations_method" style="display: none;">
             <div class="form-group row">
-                <label for="example-text-input" class="col-md-3 col-form-label">Telkom *</label>
+                <label for="example-text-input" class="col-md-3 col-form-label">Organisation *</label>
                 <div class="col-md-9">
                     <select name="charitie" class="form-control">
-                        <option value="">Select Telkom</option>
+                        <option value="">Select Organisation</option>
                         @foreach ($charities as $charitie)
                             <option value="{{$charitie->id}}">{{$charitie->name}}</option>
                         @endforeach
