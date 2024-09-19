@@ -402,7 +402,7 @@ class WelcomeController extends Controller
                         $insert_array = array(
                             'respondent_id' => $resp_id,
                             'project_id'    => $proj_id,
-                            'points'        => $rew_id,
+                            'points'        => $rew_id*10,
                             'status_id'     => 1,
                         );
 
