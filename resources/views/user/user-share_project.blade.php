@@ -115,7 +115,7 @@
         $('#nav_share').addClass('active');
    
         $("#whatsap").click(function() {
-            var whatsapurl ='https://wa.me/?text=I think you should join The Brand Surgeon and get paid for your opinion - {{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  ';
+            var whatsapurl ='https://wa.me/?text=Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you\'d be interested in checking it out. Here\'s the link to the project\n {{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  ';
             window.location.href = whatsapurl;
         });
 
@@ -125,18 +125,13 @@
         });
      
         $("#twitter").click(function() {
-            var twitter ='https://twitter.com/intent/tweet?url={{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  &amp;text=I think you should join The Brand Surgeon and get paid for your opinion';
+            var twitter ='https://twitter.com/intent/tweet?url={{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  &amp;text=Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you\'d be interested in checking it out. Here\'s the link to the project\n';
             window.location.href = twitter;
         });
-        
-        $("#mail123").click(function() {
-            var whatsapurl ='mailto:?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  ';
-            window.location.href = whatsapurl;
-        });
-
+       
         $("#mail").click(function() {
          var subject = "Get paid for your opinion - Join The Brand Surgeon for free";
-         var body = "Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you'd be interested in checking it out. Here’s the link to the project:\n\n" + "{{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  \n\nBest regards,\n[Your Name]";
+         var body = "Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you\'d be interested in checking it out. Here\'s the link to the project\n\n" + "{{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  \n\nBest regards,\n[Your Name]";
          var mailtoUrl = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
          window.location.href = mailtoUrl;
       });
