@@ -124,10 +124,16 @@
             window.location.href = facebook;
         });
      
+
         $("#twitter").click(function() {
-            var twitter ='https://twitter.com/intent/tweet?url={{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  &amp;text=Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you\'d be interested in checking it out. Here\'s the link to the project\n';
-            window.location.href = twitter;
-        });
+            var twitterUrl = encodeURIComponent('{{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}');
+            var tweetText = encodeURIComponent("Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you'd be interested in checking it out. Here's the link to the project");
+
+            var twitter = `https://twitter.com/intent/tweet?url=${twitterUrl}&text=${tweetText}`;
+            
+            window.open(twitter, '_blank');
+         });
+
        
         $("#mail").click(function() {
          var subject = "Get paid for your opinion - Join The Brand Surgeon for free";
