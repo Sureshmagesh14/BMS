@@ -895,6 +895,7 @@ class WelcomeController extends Controller
     {
         $resp_id        = Session::get('resp_id');
         $method         = $request->method;
+        $bank_type_id   = $request->bank_type_id;
         $banks          = $request->bank_value;
         $account_number = $request->account_number;
         $reward         = $request->reward;
@@ -910,6 +911,7 @@ class WelcomeController extends Controller
                 $insert_array = array(
                     'respondent_id'  => $resp_id,
                     'bank_id'        => $banks,
+                    'bank_type_id'   => $bank_type_id,
                     'type_id'        => 1,
                     'account_number' => $account_number,
                     'amount'         => $reward,
