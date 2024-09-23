@@ -96,6 +96,17 @@
             </div>
         
             <div class="form-group row">
+                <label for="example-search-input" class="col-md-3 col-form-label">Account Type *</label>
+                <div class="col-md-9">
+                    <select name="bank_type_id" class="form-control" id="bank_type_id">
+                        <option value="">Please Select an account type</option>
+                        <option value="0">Cheque</option>
+                        <option value="1">Savings</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
                 <label for="example-search-input" class="col-md-3 col-form-label">Account Number *</label>
                 <div class="col-md-9">
                     <input type="text" name="account_number" class="form-control">
