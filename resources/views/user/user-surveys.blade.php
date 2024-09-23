@@ -83,7 +83,7 @@ for Other Research</span>
                                          
                                             <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
                                         </td>
-                                        <td>{{ $res->reward }}</td>
+                                        <td>{{ $res->reward*10 }}</td>
                                         @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
 
                                       
@@ -104,7 +104,7 @@ for Other Research</span>
                         @if($res->access_id==1)
 
                             @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
-                            <a href="{{ url('share_project', $res->project_link) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+                            <a href="{{ url('share_project', [$res->project_link, base64_encode(session('resp_id'))]) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
                             @endif
                             
                         @endif
@@ -166,7 +166,7 @@ for Other Research</span>
                                          
                                             <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
                                         </td>
-                                        <td>{{ $res->reward }}</td>
+                                        <td>{{ $res->reward*10 }}</td>
                                         @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
 
 
@@ -185,7 +185,7 @@ for Other Research</span>
                                         <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #fbbd0a;"></i></a>
                                         @if($res->access_id==1)
                                             @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
-                                            <a href="{{ url('share_project', $res->project_link) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
+                                            <a href="{{ url('share_project', [$res->project_link, base64_encode(session('resp_id'))]) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
                                             @endif
                                         @endif
                                         </div>
@@ -236,7 +236,7 @@ for Other Research</span>
                                     </td>
                                     <td>
                                         @if($res->is_frontend_complete==1)
-                                        {{ $res->reward }}
+                                        {{ $res->reward*10 }}
                                         @endif
                                     </td>
                                     @php

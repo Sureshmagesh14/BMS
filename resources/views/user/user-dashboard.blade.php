@@ -420,7 +420,7 @@
                                         Unpaid survey
                                         @endif
                                      </td>
-                                     <td>{{ $res->reward }}</td>
+                                     <td>{{ $res->reward*10 }}</td>
                                      @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
                                      @if ($data->profile_completion_id == 0)
                                      <td> 
@@ -512,7 +512,7 @@
                                      </td>
                                      <td>
                                         @if($res->is_frontend_complete==1)
-                                        {{ $res->reward }}
+                                        {{ $res->reward*10 }} 
                                         @endif
                                     </td>
                                      @php

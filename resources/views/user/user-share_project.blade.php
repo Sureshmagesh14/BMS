@@ -65,7 +65,7 @@
                    <div class="col-md-6 col-sm-12">
                    <div class="visible-print text-right my-2 ml-auto width-fitcontet">
                        
-                        {!! QrCode::size(150)->generate(url('share_project', $res->project_link)) !!}
+                        {!! QrCode::size(150)->generate(url('share_project', [$res->project_link, base64_encode($r_data->id)])) !!}
 
                     </div>
                     </div>
@@ -91,7 +91,9 @@
                   @endif
 
                    <div class="text-center">
-                   <span id="demo"> {{ url('share_project', $res->project_link) }}</span><br>
+                   <span id="demo"> 
+                   {{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  
+                   </span><br>
                    <p class="text-secondary btn" onclick="copy('#demo')">Tap to copy link</p>
                 </div>
                    </div>
@@ -113,28 +115,29 @@
         $('#nav_share').addClass('active');
    
         $("#whatsap").click(function() {
-            var whatsapurl ='https://wa.me/?text=I think you should join The Brand Surgeon and get paid for your opinion - {{ url('share_project', $res->project_link) }}';
+            var whatsapurl ='https://wa.me/?text=Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you\'d be interested in checking it out. Here\'s the link to the project\n {{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  ';
             window.location.href = whatsapurl;
         });
 
         $("#facebook").click(function() {
-            var facebook ='https://www.facebook.com/sharer/sharer.php?u={{ url('share_project', $res->project_link) }}';
+            var facebook ='https://www.facebook.com/sharer/sharer.php?u={{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  ';
             window.location.href = facebook;
         });
      
-        $("#twitter").click(function() {
-            var twitter ='https://twitter.com/intent/tweet?url={{ url('share_project', $res->project_link) }}&amp;text=I think you should join The Brand Surgeon and get paid for your opinion';
-            window.location.href = twitter;
-        });
-        
-        $("#mail123").click(function() {
-            var whatsapurl ='mailto:?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ url('share_project', $res->project_link) }}';
-            window.location.href = whatsapurl;
-        });
 
+        $("#twitter").click(function() {
+            var twitterUrl = encodeURIComponent('{{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}');
+            var tweetText = encodeURIComponent("Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you'd be interested in checking it out. Here's the link to the project");
+
+            var twitter = `https://twitter.com/intent/tweet?url=${twitterUrl}&text=${tweetText}`;
+            
+            window.open(twitter, '_blank');
+         });
+
+       
         $("#mail").click(function() {
          var subject = "Get paid for your opinion - Join The Brand Surgeon for free";
-         var body = "Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you'd be interested in checking it out. Here’s the link to the project:\n\n" + "{{ url('share_project', $res->project_link) }}\n\nBest regards,\n[Your Name]";
+         var body = "Hi,\n\nI came across The Brand Surgeon, where you can share your opinion and get paid for it. I thought you\'d be interested in checking it out. Here\'s the link to the project\n\n" + "{{ url('share_project', [$res->project_link, base64_encode($r_data->id)]) }}  \n\nBest regards,\n[Your Name]";
          var mailtoUrl = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
          window.location.href = mailtoUrl;
       });
