@@ -96,6 +96,17 @@
             </div>
         
             <div class="form-group row">
+                <label for="example-search-input" class="col-md-3 col-form-label">Account Type *</label>
+                <div class="col-md-9">
+                    <select name="bank_type_id" class="form-control" id="bank_type_id">
+                        <option value="">Please Select an account type</option>
+                        <option value="0">Cheque</option>
+                        <option value="1">Savings</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
                 <label for="example-search-input" class="col-md-3 col-form-label">Account Number *</label>
                 <div class="col-md-9">
                     <input type="text" name="account_number" class="form-control">
@@ -176,7 +187,7 @@
         </div>
         
         <div class="modal-footer hide_footer" style="display: none;">
-            <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+            <button type="button" id="" class="btn btn-light" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary" id="request_confirmation">Request Confirmation</button>
         </div>
     </form>
@@ -251,4 +262,7 @@
             $(".donations_method").hide();
         }
     }
+    $(document).on('click', ".btn.btn-light, .btn.close", function() {
+        $('#commonModal').modal('hide');
+    });
 </script>
