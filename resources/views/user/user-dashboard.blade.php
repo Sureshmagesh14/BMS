@@ -231,7 +231,13 @@
                             </div>
                             <div class="col-4 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
-                                  <div class="bg-green text-white p-2 rounded mt-2 text-center m-auto">{{$available_points ?? '0'}}</div>
+                                  <div class="bg-green text-white p-2 rounded mt-2 text-center m-auto">
+                                  @if($get_cashout == null)  
+                                  {{$available_points ?? '0'}}
+                                  @else 
+                                  0
+                                  @endif
+                                  </div>
                                   <div class="down-triangle-green triangle"></div>
                                   <div class="text-center my-2">Your Available Points for Cash Out</div>
                                </div>
@@ -241,12 +247,31 @@
                                   <div class="col-6 my-auto">10 points = R1</div>
                                   <div class="col-6 my-auto">
                                 @if ($data->profile_completion_id == 1)
+
+                                @if($get_cashout == null)
+
                                     @if($get_reward >= 40)
                                     <a class="btn btn-yellow width-fit-content ml-auto d-flex" id="request_press"
                                     data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
                                     data-bs-original-title="{{ __('Cashout Process') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">Request Cash Out</a>
                                     @endif
 
+                               @else
+                               <span class="my-auto" style="float:right;">
+                                
+                                    @if(is_null($get_cashout->type_id))
+
+                                    @elseif($get_cashout->type_id == 1)
+                                    Pending
+                                    @elseif($get_cashout->type_id == 2)
+                                    Processing
+                                    @endif
+                                    &nbsp;&nbsp;=
+                                    @if($get_cashout->amount != 0){{$get_cashout->amount / 10}} ZAR @endif
+                               </span>
+                               @endif
+
+                                    
                                     @else 
                                     <a class="btn btn-yellow width-fit-content ml-auto d-flex" href="{{ route('updateprofile_wizard') }}">Request Cash Out</a>
                                 @endif
