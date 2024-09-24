@@ -187,7 +187,7 @@
         </div>
         
         <div class="modal-footer hide_footer" style="display: none;">
-            <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+            <button type="button" id="" class="btn btn-light" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary" id="request_confirmation">Request Confirmation</button>
         </div>
     </form>
@@ -262,4 +262,7 @@
             $(".donations_method").hide();
         }
     }
+    $(document).on('click', ".btn.btn-light, .btn.close", function() {
+        $('#commonModal').modal('hide');
+    });
 </script>
