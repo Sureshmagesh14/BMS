@@ -43,7 +43,7 @@ class ExportController extends Controller
 
     public function export_all(Request $request)
     {
-
+       
         try {
 
             $module       = $request->module;
@@ -2517,7 +2517,7 @@ class ExportController extends Controller
                         $multi_choice_qus = Questions::where(['qus_type' => 'multi_choice', 'survey_id' => $survey_id])->get();
                         $rankorder_qus = Questions::where(['qus_type' => 'rankorder', 'survey_id' => $survey_id])->get();
                 
-                        $cols = ["Respondent Name", "Mobile","Whatsapp","Email","Age","Gender","Highest Education Level","Employment Status","Industry my company","Personal Income","Personal LSM","Household Income","Household LSM","Relationship Status","Ethnic Group","Province","Suburb","Date","Device ID", "Device Name", "Completion Status", "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"];
+                        $cols = ["Respondent Name", "Mobile","Whatsapp","Email","Age","Gender","Highest Education Level","Employment Status","Industry my company","Personal Income","Personal LSM","Household Income","Household LSM","Relationship Status","Ethnic Group","Province","Metropolitan Area","Date","Device ID", "Device Name", "Completion Status", "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"];
 
                         foreach ($question as $qus) {
                             array_push($cols, $qus->question_name);
@@ -2750,7 +2750,7 @@ class ExportController extends Controller
                             $get_state = ($state != null) ? $state->state : '-';
                             $get_district = ($district != null) ? $district->district : '-';
                             
-                            $result = ['Respondent Name' => $name,'Mobile'=>$mobile_number, 'Whatsapp'=>$whatsapp_number, 'Email'=>$email, 'Age'=>$year,'Gender'=>$gender,'Highest Education Level'=>$education_level,'Employment Status'=>$employment_status,'Industry my company'=>$industry_my_company,'Personal Income'=>$personal_income,'Personal LSM'=>$personal_lsm,'Household Income'=>$household_income,'Household LSM'=>$household_lsm,'Relationship Status'=>$relationship_status,'Ethnic Group'=>$ethnic_group,'Province'=>$get_state,'Suburb'=>$get_district, 'Date' => $responseinfo, 'Device ID' => $deviceID, 'Device Name' => $device_name, 'Completion Status' => $completion_status, 'Browser' => $browser, 'OS' => $os, 'Device Type' => $device_type, 'Long' => $long, 'Lat' => $lat, 'Location' => $location, 'IP Address' => $ip_address, 'Language Code' => $lang_code, 'Language Name' => $lang_name];
+                            $result = ['Respondent Name' => $name,'Mobile'=>$mobile_number, 'Whatsapp'=>$whatsapp_number, 'Email'=>$email, 'Age'=>$year,'Gender'=>$gender,'Highest Education Level'=>$education_level,'Employment Status'=>$employment_status,'Industry my company'=>$industry_my_company,'Personal Income'=>$personal_income,'Personal LSM'=>$personal_lsm,'Household Income'=>$household_income,'Household LSM'=>$household_lsm,'Relationship Status'=>$relationship_status,'Ethnic Group'=>$ethnic_group,'Province'=>$get_state,'Metropolitan Area'=>$get_district, 'Date' => $responseinfo, 'Device ID' => $deviceID, 'Device Name' => $device_name, 'Completion Status' => $completion_status, 'Browser' => $browser, 'OS' => $os, 'Device Type' => $device_type, 'Long' => $long, 'Lat' => $lat, 'Location' => $location, 'IP Address' => $ip_address, 'Language Code' => $lang_code, 'Language Name' => $lang_name];
                             
                             //dd($result);
                             
@@ -2894,7 +2894,8 @@ class ExportController extends Controller
                         }else{
                             $survey_name = "Survey-".$survey_id;
                         }
-                
+                        $survey_name = $this->sanitizeSheetName($survey_name);
+
                         $sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $survey_name);
                         $spreadsheet->addSheet($sheet, 0);
                         $spreadsheet->setActiveSheetIndex(0);
@@ -2915,7 +2916,7 @@ class ExportController extends Controller
                     }else{
                         $fileName = 'Survey_Report_' . $project_id . '_' . date('Y-m-d') . '.xlsx';
                     }
-
+                    
                     $filePath = storage_path('app/public/' . $fileName);
                 
                     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
@@ -2952,5 +2953,21 @@ class ExportController extends Controller
             // Throw a new exception with the formatted message
             throw new \Exception($errorMessage);
         }
+    }
+
+    public function sanitizeSheetName($name) {
+        // Remove invalid characters
+        $invalidChars = ['\\', '/', '*', '?', ':', '[', ']'];
+        $name = str_replace($invalidChars, '', $name);
+        
+        // Trim leading and trailing spaces
+        $name = trim($name);
+        
+        // Ensure name is within the allowed length
+        if (strlen($name) > 31) {
+            $name = substr($name, 0, 31);
+        }
+    
+        return $name;
     }
 }

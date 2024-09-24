@@ -88,13 +88,24 @@
             </div>
         
             <div class="form-group row">
-                <label for="example-text-input" class="col-md-3 col-form-label">Branch Name *</label>
+                <label for="example-text-input" class="col-md-3 col-form-label">Branch Code *</label>
                 <div class="col-md-9">
                     <input type="text" name="branch" id="branch" class="form-control" readonly>
                     <input type="hidden" name="branch_name" id="branch_name" class="form-control">
                 </div>
             </div>
         
+            <div class="form-group row">
+                <label for="example-search-input" class="col-md-3 col-form-label">Account Type *</label>
+                <div class="col-md-9">
+                    <select name="bank_type_id" class="form-control" id="bank_type_id">
+                        <option value="">Please Select an account type</option>
+                        <option value="0">Cheque</option>
+                        <option value="1">Savings</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="form-group row">
                 <label for="example-search-input" class="col-md-3 col-form-label">Account Number *</label>
                 <div class="col-md-9">
@@ -112,10 +123,10 @@
 
         <div class="airtime_mobile_data_method" style="display: none;">
             <div class="form-group row">
-                <label for="example-text-input" class="col-md-3 col-form-label">Telkom *</label>
+                <label for="example-text-input" class="col-md-3 col-form-label">Network Service Provider *</label>
                 <div class="col-md-9">
                     <select name="network" class="form-control">
-                        <option value="">Select Telkom</option>
+                        <option value="">Select Network Service Provider</option>
                         @foreach ($networks as $network)
                             <option value="{{$network->id}}">{{$network->name}}</option>
                         @endforeach
@@ -151,10 +162,10 @@
 
         <div class="donations_method" style="display: none;">
             <div class="form-group row">
-                <label for="example-text-input" class="col-md-3 col-form-label">Telkom *</label>
+                <label for="example-text-input" class="col-md-3 col-form-label">Organisation *</label>
                 <div class="col-md-9">
                     <select name="charitie" class="form-control">
-                        <option value="">Select Telkom</option>
+                        <option value="">Select Organisation</option>
                         @foreach ($charities as $charitie)
                             <option value="{{$charitie->id}}">{{$charitie->name}}</option>
                         @endforeach
@@ -176,7 +187,7 @@
         </div>
         
         <div class="modal-footer hide_footer" style="display: none;">
-            <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+            <button type="button" id="" class="btn btn-light" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary" id="request_confirmation">Request Confirmation</button>
         </div>
     </form>
@@ -251,4 +262,7 @@
             $(".donations_method").hide();
         }
     }
+    $(document).on('click', ".btn.btn-light, .btn.close", function() {
+        $('#commonModal').modal('hide');
+    });
 </script>
