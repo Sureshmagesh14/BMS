@@ -66,8 +66,8 @@
                           
                            </h2>
                            <h5 class="position-relative">
-                              @if($get_cashout->amount != 0)
-                                 {{$get_cashout->amount / 10}} ZAR 
+                              @if(isset($get_cashout) && $get_cashout->amount != 0)
+                                 {{$get_cashout->amount / 10}} ZAR
                               @endif
                            </h5>
                         @endif
