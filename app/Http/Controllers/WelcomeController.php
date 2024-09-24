@@ -239,7 +239,20 @@ class WelcomeController extends Controller
             //     return view('user.update-profile');
             // }else{
 
-            return view('user.user-dashboard', compact('request','data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points','get_reward'));
+
+            $get_cashout = DB::table('respondents as resp')->select('resp.account_number', 'resp.account_holder', 'cashouts.*')
+            ->join('cashouts', 'resp.id', 'cashouts.respondent_id')
+            ->where('cashouts.type_id', '!=', 3)
+            ->where('resp.id', $id)->orderBy('cashouts.id', 'DESC')->first();
+
+            if ($get_cashout != null) {
+                $get_bank = DB::table('banks')->where('id', $get_cashout->bank_id)->first();
+            } else {
+                $get_bank = null;
+            }
+
+            
+            return view('user.user-dashboard', compact('request','data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points','get_reward','get_cashout'));
             //}
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -1066,6 +1079,7 @@ class WelcomeController extends Controller
     }
 
     public function process_cashout(){
+        
         //status id 5 - ApprovedForProcessing
         $now = new Carbon();
         $today = $now->toDateTimeString();
@@ -1106,6 +1120,9 @@ class WelcomeController extends Controller
                 //status id =2 Processing                
                 $data=array('status_id'=>2,'updated_at'=>$today);
                 Cashout::where('id',$cashout->id)->update($data);
+
+                DB::table('cash_tracking')->insert(['status_id'=>2,'created_at'=>$today,'updated_at'=>$today,'cashout_id'=>$cashout->id]);
+        
             }
 
         } catch (\Exception $e) {
