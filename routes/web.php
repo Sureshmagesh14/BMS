@@ -96,6 +96,7 @@ Route::group([
     'middleware' => 'admin',
 ], function () {
     Route::any('dashboard', 'Auth\AdminLoginController@admin_dashboard')->name('admin.dashboard');
+    Route::any('resp_db_import', 'Auth\AdminLoginController@resp_db_import')->name('resp_db_import');
 
     Route::any('get_activity_data', 'Auth\AdminLoginController@get_activity_data')->name('get_activity_data');
     Route::get('signout', 'Auth\AdminLoginController@signOut')->name('signout');
