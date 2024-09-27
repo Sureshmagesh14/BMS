@@ -225,7 +225,7 @@ class WelcomeController extends Controller
             $currentYear=Carbon::now()->year;
 
             $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
-            ->whereYear(column: 'created_at', $currentYear)
+            ->whereYear('created_at', $currentYear)
             ->sum('points');
 
             $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
@@ -1127,7 +1127,7 @@ class WelcomeController extends Controller
         //dd($cashouts);
 
         $batch = $this->generateBatchFile($cashouts);
-        $key = env('NETCASH_KEY');
+        $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
      
         $this->soapWrapper->add('netcash', function ($service) {
             $service
@@ -1191,8 +1191,7 @@ class WelcomeController extends Controller
                 $batchType = "PaySalaries";
                 $description = "My Test Batch";
                 $vendorKey = '24ade73c-98cf-47b3-99be-cc7b867b3080';
-                
-                $serviceKey = env('NETCASH_KEY');
+                $serviceKey = '0f70ac77-065a-4246-9126-55977b40ae3d';
 
                 $records = [
                     ['accountNumber' => '2044060104', 'branchCode' => '470010', 'amount' => 1.00]
@@ -1204,7 +1203,7 @@ class WelcomeController extends Controller
                 //$batch = $this->generateBatchFile($cashouts);
                 //dd($batchFilePath);
 
-                $key = env('NETCASH_KEY');
+                $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
 
                 $response = $this->batchFileUpload($key, $batchFilePath);
                 dd($response);
@@ -1335,7 +1334,7 @@ class WelcomeController extends Controller
         $instruction = 'Realtime';
         $batchName = 'My Creditor batch2222222sadasda';
         $vendorKey = '24ade73c-98cf-47b3-99be-cc7b867b3080';
-        $serviceKey = env('NETCASH_KEY');
+        $serviceKey = '0f70ac77-065a-4246-9126-55977b40ae3d';
         // $date = Carbon::now()->addDay()->format('Ymd');
         $date = Carbon::now()->format('Ymd');
 
