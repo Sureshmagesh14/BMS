@@ -367,24 +367,43 @@ class WelcomeController extends Controller
             
             $get_res = DB::table('rewards')->where('respondent_id', $resp_id)->where('respondent_id', $resp_id)->get();
 
-            $get_res = DB::table('rewards')
-                        ->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at', 'rewards.created_at')
-                        ->leftJoin('cashouts', 'rewards.cashout_id', '=', 'cashouts.id') // Change to leftJoin for cashouts
-                        ->join('projects', 'rewards.project_id', '=', 'projects.id')
-                        ->where('rewards.respondent_id', $resp_id)
-                        ->where('rewards.status_id', 2)
-                        ->orderby('rewards.id', 'DESC')                        
-                        ->get();
+            // $get_res = DB::table('rewards')
+            //             ->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at', 'rewards.created_at')
+            //             ->leftJoin('cashouts', 'rewards.cashout_id', '=', 'cashouts.id') // Change to leftJoin for cashouts
+            //             ->join('projects', 'rewards.project_id', '=', 'projects.id')
+            //             ->where('rewards.respondent_id', $resp_id)
+            //             ->where('rewards.status_id', 2)
+            //             ->orderby('rewards.id', 'DESC')                        
+            //             ->get();
 
+            $get_res = DB::table('cashouts')
+                    ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.updated_at')
+                    ->where('cashouts.respondent_id', '=', $resp_id)
+                    ->where('cashouts.status_id', 2)
+                    ->get();
+
+            $get_res_out = DB::table('cashouts')
+                    ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.updated_at')
+                    ->where('cashouts.respondent_id', '=', $resp_id)
+                    ->where('cashouts.status_id', 2)
+                    ->get();
      
 
-            $get_res_out = DB::table('rewards')
-                        ->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at', 'rewards.created_at')
-                        ->leftJoin('cashouts', 'rewards.cashout_id', '=', 'cashouts.id') // Change to leftJoin for cashouts
-                        ->join('projects', 'rewards.project_id', '=', 'projects.id')
-                        ->where('rewards.respondent_id', '=', $resp_id)
-                        ->where('rewards.status_id', 1)
+            // $get_res_out = DB::table('rewards')
+            //             ->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at', 'rewards.created_at')
+            //             ->leftJoin('cashouts', 'rewards.cashout_id', '=', 'cashouts.id')
+            //             ->join('projects', 'rewards.project_id', '=', 'projects.id')
+            //             ->where('rewards.respondent_id', '=', $resp_id)
+            //             ->where('rewards.status_id', 1)
+            //             ->get();
+
+
+                        $get_res_out = DB::table('cashouts')
+                        ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.updated_at')
+                        ->where('cashouts.respondent_id', '=', $resp_id)
+                        ->where('cashouts.status_id', 1)
                         ->get();
+
                     
 
             // if($request->user()->profile_completion_id==0){
