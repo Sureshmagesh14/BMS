@@ -1415,7 +1415,7 @@ class ExportController extends Controller
                     'respondents.email',
                     'respondents.mobile',
                     'respondents.whatsapp',
-                    DB::raw('SUM(cashouts.amount) as total_cashout'), // Use SUM() to get the sum of the amount
+                    DB::raw('SUM(cashouts.amount) as total_cashout'), 
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 1 THEN 1 END) as pending'),
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 4 THEN 1 END) as declined'),
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 3 THEN 1 END) as complete'),
