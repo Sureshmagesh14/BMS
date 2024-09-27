@@ -252,7 +252,7 @@ class WelcomeController extends Controller
 
             $get_cashout = DB::table('respondents as resp')->select('resp.account_number', 'resp.account_holder', 'cashouts.*')
             ->join('cashouts', 'resp.id', 'cashouts.respondent_id')
-            ->where('cashouts.type_id', '!=', 3)
+            //->where('cashouts.type_id', '!=', 3)
             ->where('resp.id', $id)->orderBy('cashouts.id', 'DESC')->first();
 
             if ($get_cashout != null) {
@@ -428,7 +428,7 @@ class WelcomeController extends Controller
 
             $get_cashout = DB::table('respondents as resp')->select('resp.account_number', 'resp.account_holder', 'cashouts.*')
                 ->join('cashouts', 'resp.id', 'cashouts.respondent_id')
-                ->where('cashouts.type_id', '!=', 3)
+                //->where('cashouts.type_id', '!=', 3)
                 ->where('resp.id', $resp_id)->orderBy('cashouts.id', 'DESC')->first();
 
             if ($get_cashout != null) {
@@ -436,7 +436,7 @@ class WelcomeController extends Controller
             } else {
                 $get_bank = null;
             }
-
+            
             $get_resp = DB::table('project_respondent as resp')->select('resp.*', 'projects.reward')
                 ->join('projects', 'resp.project_id', 'projects.id')
                 ->where('resp.respondent_id', $resp_id)

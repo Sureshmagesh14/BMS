@@ -259,11 +259,11 @@
                                @else
                                <span class="my-auto" style="float:right;">
                                 
-                                    @if(is_null($get_cashout->type_id))
+                                    @if(is_null($get_cashout->status_id))
 
-                                    @elseif($get_cashout->type_id == 1)
+                                    @elseif($get_cashout->status_id == 1)
                                     Pending
-                                    @elseif($get_cashout->type_id == 2)
+                                    @elseif($get_cashout->status_id == 2)
                                     Processing
                                     @endif
                                     &nbsp;&nbsp;=
