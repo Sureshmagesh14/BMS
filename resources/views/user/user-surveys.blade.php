@@ -217,8 +217,8 @@ for Other Research</span>
                                 <th>DATE </th>
                                 <th>TASK </th>
                                 <th>AMOUNT </th>
-                                <!-- <th>ACTION </th> -->
-                                <th>STATUS </th>
+                                <th>ACTION </th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -243,22 +243,16 @@ for Other Research</span>
                                     @php
                                         $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
                                     @endphp
-                                    <!-- @if ($get_link != null)
+                                    @if ($get_link != null)
                                         <td>
                                             <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
                                                 class="btn btn-yellow">DETAIL</a>
                                             </td>
                                     @else
                                         <td>No Survey</td>
-                                    @endif -->
+                                    @endif
 
-                                    <td>
-                                        @if($res->is_frontend_complete==1)
-                                        Completed 
-                                        @else 
-                                        Not Joined
-                                        @endif
-                                     </td>
+                                   
                                 </tr>
                             @endforeach
                         </tbody>

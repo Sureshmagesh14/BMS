@@ -509,8 +509,8 @@
                                      <th>DATE </th>
                                      <th>TYPE OF SURVEY </th>
                                      <th>REWARD POINTS </th>
-                                     <!-- <th>ACTION </th> -->
-                                     <th>STATUS </th>
+                                     <th>ACTION </th>
+                                     
                                   </tr>
                                </thead>
                                <tbody>
@@ -549,22 +549,16 @@
                                      $res->survey_link,
                                      );
                                      @endphp
-                                     <!-- @if ($get_link != null)
+                                     @if ($get_link != null)
                                      <td>
                                         <a class="btn btn-yellow" target="_blank"
                                         href="{{ url('survey/view', $get_link->builderID) }}">DETAIL</a>
                                      </td>
                                      @else
                                      <td>No Survey</td>
-                                     @endif -->
+                                     @endif
 
-                                     <td>
-                                        @if($res->is_frontend_complete==1)
-                                        Completed 
-                                        @else 
-                                        Not Joined
-                                        @endif
-                                     </td>
+                                    
                                   </tr>
                                   @endforeach
                                </tbody>
