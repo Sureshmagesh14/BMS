@@ -1487,7 +1487,7 @@ class ExportController extends Controller
                     $mobile_number = '-';
                     if (!empty($all_data->mobile)) {
                         $m_number =  preg_replace('/\s+/', '',$all_data->mobile);
-                        $length = strlen($w_number);
+                        $length = strlen($m_number);
                         if (strlen($m_number) == 9) {
                             $mobile_number = '27' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
