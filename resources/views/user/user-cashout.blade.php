@@ -77,7 +77,9 @@
                                         {{ $res->amount / 10 }}
                                     </td>
                                     <td>
-                                        @php
+
+                                    {{$res->status_id}}
+                                        <!-- @php
                                             if ($res->status_id == 0) {
                                                 $stats = 'Failed';
                                             } elseif ($res->status_id == 1) {
@@ -93,10 +95,10 @@
                                             }
                                         @endphp
 
-                                        {{ $stats }}
+                                        {{ $stats }} -->
                                     </td>
                                     <td>
-                                        {{ $res->updated_at }}
+                                        {{ $res->created_at }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -152,7 +154,8 @@
                                         {{ $res->amount / 10 }}
                                     </td>
                                     <td>
-                                        @php
+                                        {{$res->status_id}}
+                                        <!-- @php
                                             if ($res->status_id == 0) {
                                                 $stats = 'Failed';
                                             } elseif ($res->status_id == 1) {
@@ -168,10 +171,10 @@
                                             }
                                         @endphp
 
-                                        {{ $stats }}
+                                        {{ $stats }} -->
                                     </td>
                                     <td>
-                                        {{ $res->updated_at }}
+                                        {{ $res->created_at }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -202,7 +205,8 @@
             responsive: true,
             "oLanguage": {
                 "sEmptyTable": "No Cashout Summary Found"
-            }
+            },
+            "ordering": false // Disable internal DataTable ordering
         });
 
     });

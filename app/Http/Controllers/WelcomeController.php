@@ -210,7 +210,17 @@ class WelcomeController extends Controller
             $get_completed_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', $id)
-                ->where('projects.closing_date', '<', Carbon::now())->get();
+                ->where('projects.closing_date', '<', Carbon::now())
+                ->orderBy('projects.id','DESC')
+                ->get();
+
+            $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+            ->join('projects', 'resp.project_id', 'projects.id')
+            ->where('resp.respondent_id', $id)
+            ->orderBy('projects.id','DESC')
+            ->get();
+
+            //dd($get_completed_survey);
 
             $currentYear=Carbon::now()->year;
 
@@ -354,20 +364,28 @@ class WelcomeController extends Controller
 
             $resp_id = Session::get('resp_id');
             $resp_name = Session::get('resp_name');
-
+            
             $get_res = DB::table('rewards')->where('respondent_id', $resp_id)->where('respondent_id', $resp_id)->get();
 
-            $get_res = DB::table('rewards')->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at')
-                ->join('cashouts', 'rewards.cashout_id', 'cashouts.id')
-                ->join('projects', 'rewards.project_id', 'projects.id')
-                ->where('rewards.respondent_id', '=', $resp_id)->get();
+            $get_res = DB::table('rewards')
+                        ->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at', 'rewards.created_at')
+                        ->leftJoin('cashouts', 'rewards.cashout_id', '=', 'cashouts.id') // Change to leftJoin for cashouts
+                        ->join('projects', 'rewards.project_id', '=', 'projects.id')
+                        ->where('rewards.respondent_id', $resp_id)
+                        ->where('rewards.status_id', 2)
+                        ->orderby('rewards.id', 'DESC')                        
+                        ->get();
 
-            $get_res_out = DB::table('rewards')->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at')
-                ->join('cashouts', 'rewards.cashout_id', 'cashouts.id')
-                ->join('projects', 'rewards.project_id', 'projects.id')
-                ->where('rewards.respondent_id', '=', $resp_id)
-                ->where('cashouts.status_id', 1)
-                ->orWhere('cashouts.status_id', 2)->get();
+     
+
+            $get_res_out = DB::table('rewards')
+                        ->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at', 'rewards.created_at')
+                        ->leftJoin('cashouts', 'rewards.cashout_id', '=', 'cashouts.id') // Change to leftJoin for cashouts
+                        ->join('projects', 'rewards.project_id', '=', 'projects.id')
+                        ->where('rewards.respondent_id', '=', $resp_id)
+                        ->where('rewards.status_id', 1)
+                        ->get();
+                    
 
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
@@ -552,11 +570,18 @@ class WelcomeController extends Controller
                 ->where('resp.is_frontend_complete', 0)
                 ->where('projects.type_id', 3)->get();
 
-          
-            $get_completed_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
-                ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
+            $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+                ->join('projects', 'resp.project_id', 'projects.id')
                 ->where('resp.respondent_id', $resp_id)
-                ->where('projects.closing_date', '<', Carbon::now())->get();
+                ->orderBy('projects.id','DESC')
+                ->get();
+          
+            // $get_completed_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+            //     ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
+            //     ->where('resp.respondent_id', $resp_id)
+            //     ->where('projects.closing_date', '<', Carbon::now())
+            //     ->orderBy('projects.id','DESC')
+            //     ->get();
 
             // if($request->user()->profile_completion_id==0){
             //      return view('user.update-profile');

@@ -344,7 +344,7 @@
                                         @endif
                                         <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
                                     </td>
-                                    <td>{{ $res->reward }}</td>
+                                    <td>{{ $res->reward*10 }}</td>
                                     @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
                                     <!-- @if ($data->profile_completion_id == 0)
                                         <td> Profile Incomple </td>
@@ -509,13 +509,17 @@
                                      <th>DATE </th>
                                      <th>TYPE OF SURVEY </th>
                                      <th>REWARD POINTS </th>
-                                     <th>ACTION </th>
+                                     <!-- <th>ACTION </th> -->
+                                     <th>STATUS </th>
                                   </tr>
                                </thead>
                                <tbody>
                                @foreach ($get_completed_survey as $res)
                                <tr>
                                      <td>
+                                        
+                                     <!-- {{ $res->id }} -->
+
                                      @if($res->project_name_resp!='')
                                     {{ $res->project_name_resp }}
                                     @else 
@@ -545,13 +549,22 @@
                                      $res->survey_link,
                                      );
                                      @endphp
-                                     @if ($get_link != null)
-                                     <td><a class="btn btn-yellow" target="_blank"
+                                     <!-- @if ($get_link != null)
+                                     <td>
+                                        <a class="btn btn-yellow" target="_blank"
                                         href="{{ url('survey/view', $get_link->builderID) }}">DETAIL</a>
                                      </td>
                                      @else
                                      <td>No Survey</td>
-                                     @endif
+                                     @endif -->
+
+                                     <td>
+                                        @if($res->is_frontend_complete==1)
+                                        Completed 
+                                        @else 
+                                        Not Joined
+                                        @endif
+                                     </td>
                                   </tr>
                                   @endforeach
                                </tbody>
@@ -682,7 +695,8 @@
             responsive: true,
             "oLanguage": {
                 "sEmptyTable": "No Completed Survey Found"
-            }
+            },
+            "ordering": false // Disable internal DataTable ordering
         });
     });
 
