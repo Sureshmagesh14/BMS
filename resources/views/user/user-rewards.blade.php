@@ -48,10 +48,18 @@
                          <h2 class="position-relative yelow-clr h1 fw-bolder mt-5"> 
                            @if(is_null($get_cashout->status_id))
                                 
+                           @elseif($get_cashout->status_id == 0)
+                           Failed
                            @elseif($get_cashout->status_id == 1)
-                                 Pending
+                           Pending
                            @elseif($get_cashout->status_id == 2)
-                                 Processing
+                           Processing
+                           @elseif($get_cashout->status_id == 3)
+                           Complete
+                           @elseif($get_cashout->status_id == 4)
+                           Declined
+                           @elseif($get_cashout->status_id == 5)
+                           Approved For Processing
                            @endif
                        </h2>
                          <h5 class="position-relative">@if($get_cashout->amount != 0){{$get_cashout->amount / 10}} ZAR @endif</h5>

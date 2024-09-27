@@ -249,6 +249,12 @@ class WelcomeController extends Controller
             //     return view('user.update-profile');
             // }else{
 
+            // const Pending = 1;
+            // const ApprovedForProcessing = 5;
+            // const Processing = 2;
+            // const Complete = 3;
+            // const Declined = 4;
+            // const Failed = 0;
 
             $get_cashout = DB::table('respondents as resp')->select('resp.account_number', 'resp.account_holder', 'cashouts.*')
             ->join('cashouts', 'resp.id', 'cashouts.respondent_id')
@@ -260,7 +266,7 @@ class WelcomeController extends Controller
             } else {
                 $get_bank = null;
             }
-
+            //dd($get_cashout);
             
             return view('user.user-dashboard', compact('request','data', 'get_paid_survey', 'get_other_survey', 'get_completed_survey', 'percentage','completed','get_current_rewards','get_overrall_rewards','available_points','get_reward','get_cashout'));
             //}
@@ -379,32 +385,16 @@ class WelcomeController extends Controller
             $get_res = DB::table('cashouts')
                     ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.updated_at')
                     ->where('cashouts.respondent_id', '=', $resp_id)
-                    ->where('cashouts.status_id', 2)
+                    ->where('cashouts.status_id', 3)                    
                     ->get();
 
             $get_res_out = DB::table('cashouts')
                     ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.updated_at')
                     ->where('cashouts.respondent_id', '=', $resp_id)
-                    ->where('cashouts.status_id', 2)
+                    ->where('cashouts.status_id', '!=', 3)
                     ->get();
      
-
-            // $get_res_out = DB::table('rewards')
-            //             ->select('rewards.points', 'cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'projects.name', 'cashouts.updated_at', 'rewards.created_at')
-            //             ->leftJoin('cashouts', 'rewards.cashout_id', '=', 'cashouts.id')
-            //             ->join('projects', 'rewards.project_id', '=', 'projects.id')
-            //             ->where('rewards.respondent_id', '=', $resp_id)
-            //             ->where('rewards.status_id', 1)
-            //             ->get();
-
-
-                        $get_res_out = DB::table('cashouts')
-                        ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.updated_at')
-                        ->where('cashouts.respondent_id', '=', $resp_id)
-                        ->where('cashouts.status_id', 1)
-                        ->get();
-
-                    
+                   
 
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');

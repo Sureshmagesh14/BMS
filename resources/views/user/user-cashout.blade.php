@@ -96,7 +96,7 @@
                                         {{ $stats }}
                                     </td>
                                     <td>
-                                        {{ $res->created_at }}
+                                        {{ $res->updated_at }}
                                     </td>
                                 </tr>
                             @endforeach

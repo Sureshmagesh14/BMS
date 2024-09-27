@@ -258,14 +258,26 @@
 
                                @else
                                <span class="my-auto" style="float:right;">
-                                
+                                    
+                                        
+
                                     @if(is_null($get_cashout->status_id))
 
+                                    @elseif($get_cashout->status_id == 0)
+                                    Failed
                                     @elseif($get_cashout->status_id == 1)
                                     Pending
                                     @elseif($get_cashout->status_id == 2)
                                     Processing
+                                    @elseif($get_cashout->status_id == 3)
+                                    Complete
+                                    @elseif($get_cashout->status_id == 4)
+                                    Declined
+                                    @elseif($get_cashout->status_id == 5)
+                                    Approved For Processing
                                     @endif
+
+                                
                                     &nbsp;&nbsp;=
                                     @if($get_cashout->amount != 0){{$get_cashout->amount / 10}} ZAR @endif
                                </span>
