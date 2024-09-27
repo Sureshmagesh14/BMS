@@ -61,21 +61,37 @@
                         @if($get_cashout != null)
                          <h2 class=" h1 fw-bolder mt-2">Your Reward History</h2>
                          <div class="d-flex w-100">
-                            <div class="col-5 col-xs-6 rounded m-1">
+                            <div class="col-3 col-xs-6 rounded m-1">
                                <div class="bg-grey-6 p-2 m-2 w-100 h-100p rounded">
                                   <div class="bg-yellow text-white p-2 w-100 rounded mt-2 text-center m-auto">{{$get_overrall_rewards}}</div>
                                   <div class="down-triangle-yellow triangle"></div>
                                   <div class="my-2">Total Rewards Since {{ \Carbon\Carbon::now()->year }}</div>
                                </div>
                             </div>
-                            <div class="col-5 col-xs-6 rounded m-1">
+                            <div class="col-3 col-xs-6 rounded m-1">
                                <div class="bg-grey-6 p-2 m-2 w-100 h-100p rounded">
                                   <div class="bg-blue text-white p-2 w-100 rounded mt-2 text-center m-auto">{{$get_current_rewards}}</div>
                                   <div class="down-triangle-blue triangle"></div>
                                   <div class="my-2">Total Rewards this Year</div>
                                </div>
                             </div>
+                            <div class="col-3 col-xs-6 rounded m-1">
+                               <div class="bg-grey-6 p-2 m-2 w-100 h-100p rounded">
+                                  <div class="bg-green text-white p-2 w-100 rounded mt-2 text-center m-auto">
+                                  @if($get_cashout == null)  
+                                  {{$available_points ?? '0'}}
+                                  @else 
+                                  0
+                                  @endif
+                                  </div>
+                                  <div class="down-triangle-green triangle"></div>
+                                  <div class="my-2">
+                                  Your Available Points for Cash Out
+                                  </div>
+                               </div>
+                            </div>
                          </div>
+                         
                          @endif
                       </div>
                    </div>

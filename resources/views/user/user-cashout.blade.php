@@ -42,9 +42,9 @@
                         aria-describedby="cashout_info">
                         <thead>
                             <tr>
-                                <th>Project </th>
+                              
                                 <th>Type </th>
-                                <th>Points </th>
+                               
                                 <th>Amount </th>
                                 <th>Status </th>
                                 <th>Date</th>
@@ -53,7 +53,7 @@
                         <tbody>
                             @foreach ($get_res as $res)
                                 <tr>
-                                    <td>{{ $res->name }}</td>
+                                   
                                     <td>
                                         @php
                                             if ($res->type_id == 1) {
@@ -70,16 +70,14 @@
                                         @endphp
                                         {{ $types }}
                                     </td>
-                                    <td>
-                                        {{ $res->points }}
-                                    </td>
+                                   
                                     <td>
                                         {{ $res->amount / 10 }}
                                     </td>
                                     <td>
 
-                                    {{$res->status_id}}
-                                        <!-- @php
+                                   
+                                        @php
                                             if ($res->status_id == 0) {
                                                 $stats = 'Failed';
                                             } elseif ($res->status_id == 1) {
@@ -95,7 +93,7 @@
                                             }
                                         @endphp
 
-                                        {{ $stats }} -->
+                                        {{ $stats }}
                                     </td>
                                     <td>
                                         {{ $res->created_at }}
@@ -119,9 +117,8 @@
                         aria-describedby="cashout_info">
                         <thead>
                             <tr>
-                                <th>Project </th>
-                                <th>Type </th>
-                                <th>Points </th>
+                             
+                                <th>Type </th>                                
                                 <th>Amount </th>
                                 <th>Status </th>
                                 <th>Date</th>
@@ -130,7 +127,7 @@
                         <tbody>
                             @foreach ($get_res_out as $res)
                                 <tr>
-                                    <td>{{ $res->name }}</td>
+                                   
                                     <td>
                                         @php
                                             if ($res->type_id == 1) {
@@ -147,15 +144,13 @@
                                         @endphp
                                         {{ $types }}
                                     </td>
-                                    <td>
-                                        {{ $res->points }}
-                                    </td>
+                                   
                                     <td>
                                         {{ $res->amount / 10 }}
                                     </td>
                                     <td>
-                                        {{$res->status_id}}
-                                        <!-- @php
+                                       
+                                        @php
                                             if ($res->status_id == 0) {
                                                 $stats = 'Failed';
                                             } elseif ($res->status_id == 1) {
@@ -171,10 +166,10 @@
                                             }
                                         @endphp
 
-                                        {{ $stats }} -->
+                                        {{ $stats }}
                                     </td>
                                     <td>
-                                        {{ $res->created_at }}
+                                        {{ $res->updated_at }}
                                     </td>
                                 </tr>
                             @endforeach

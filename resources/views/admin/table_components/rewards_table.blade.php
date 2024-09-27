@@ -5,7 +5,7 @@
             <select name="rewards_select_box" id="rewards_select_box" class="form-control rewards_select_box">
                 <option value="">Select Action</option>
                 <option value="1">Status > Approved</option>
-                <option value="2">Delete Rewards</option>
+                <!-- <option value="2">Delete Rewards</option> -->
             </select>
             <div class="play-button-container ml-3">
                 <a class="play-button user_play_button">
