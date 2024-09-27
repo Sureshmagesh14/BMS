@@ -66,7 +66,7 @@
                          @endif
                       </div>
                       <div class="w-50">
-                        @if($get_cashout != null)
+                        
                          <h2 class=" h1 fw-bolder mt-2">Your Reward History</h2>
                          <div class="d-flex w-100">
                             <div class="col-3 col-xs-6 rounded m-1">
@@ -100,7 +100,6 @@
                             </div>
                          </div>
                          
-                         @endif
                       </div>
                    </div>
                    <div class="w-50 ml-auto">

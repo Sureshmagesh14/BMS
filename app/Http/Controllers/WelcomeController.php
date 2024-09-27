@@ -217,6 +217,7 @@ class WelcomeController extends Controller
             $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
             ->join('projects', 'resp.project_id', 'projects.id')
             ->where('resp.respondent_id', $id)
+            ->where('resp.is_frontend_complete','!=',0)
             ->orderBy('projects.id','DESC')
             ->get();
 
@@ -240,10 +241,11 @@ class WelcomeController extends Controller
             $available_points = DB::table('rewards')
             ->where('respondent_id', Session::get('resp_id'))
             ->where('status_id', 2)
+            ->whereNull('cashout_id')
             ->groupBy('respondent_id')
             ->sum('points');
-
-            $get_reward = Rewards::where('respondent_id', $id)->where('status_id', 2)->sum('points');
+            
+            $get_reward = Rewards::where('respondent_id', $id)->where('status_id', 2)->whereNull('cashout_id')->sum('points');
        
             // if($request->user()->profile_completion_id==0){
             //     return view('user.update-profile');
@@ -258,7 +260,7 @@ class WelcomeController extends Controller
 
             $get_cashout = DB::table('respondents as resp')->select('resp.account_number', 'resp.account_holder', 'cashouts.*')
             ->join('cashouts', 'resp.id', 'cashouts.respondent_id')
-            //->where('cashouts.type_id', '!=', 3)
+            ->where('cashouts.status_id', '!=', 3)
             ->where('resp.id', $id)->orderBy('cashouts.id', 'DESC')->first();
 
             if ($get_cashout != null) {
@@ -414,18 +416,20 @@ class WelcomeController extends Controller
             $resp_id = Session::get('resp_id');
             $resp_name = Session::get('resp_name');
 
-            $get_reward = Rewards::where('respondent_id', $resp_id)->where('status_id', 2)->sum('points');
+            $get_reward = Rewards::where('respondent_id', $resp_id)->where('status_id', 2)->whereNull('cashout_id')->sum('points');
 
+            
             $get_cashout = DB::table('respondents as resp')->select('resp.account_number', 'resp.account_holder', 'cashouts.*')
-                ->join('cashouts', 'resp.id', 'cashouts.respondent_id')
-                //->where('cashouts.type_id', '!=', 3)
-                ->where('resp.id', $resp_id)->orderBy('cashouts.id', 'DESC')->first();
+            ->join('cashouts', 'resp.id', 'cashouts.respondent_id')
+            ->where('cashouts.status_id', '!=', 3)
+            ->where('resp.id', $resp_id)->orderBy('cashouts.id', 'DESC')->first();
 
             if ($get_cashout != null) {
                 $get_bank = DB::table('banks')->where('id', $get_cashout->bank_id)->first();
             } else {
                 $get_bank = null;
             }
+            //dd($get_cashout);
             
             $get_resp = DB::table('project_respondent as resp')->select('resp.*', 'projects.reward')
                 ->join('projects', 'resp.project_id', 'projects.id')
@@ -467,13 +471,19 @@ class WelcomeController extends Controller
             })
             ->sum('points');
         
-
+            $available_points = DB::table('rewards')
+            ->where('respondent_id', Session::get('resp_id'))
+            ->where('status_id', 2)
+            ->whereNull('cashout_id')
+            ->groupBy('respondent_id')
+            ->sum('points');
+                        
          
             if($request->user()->profile_completion_id==0){
                 
                 return redirect()->route('updateprofile_wizard');
             }else{
-                return view('user.user-rewards',compact('get_current_rewards','get_overrall_rewards'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
+                return view('user.user-rewards',compact('get_current_rewards','get_overrall_rewards','available_points'))->with('get_reward', $get_reward)->with('get_cashout', $get_cashout)->with('get_bank', $get_bank);
             }
 
         } catch (Exception $e) {
@@ -582,6 +592,7 @@ class WelcomeController extends Controller
             $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('projects', 'resp.project_id', 'projects.id')
                 ->where('resp.respondent_id', $resp_id)
+                ->where('resp.is_frontend_complete','!=',0)
                 ->orderBy('projects.id','DESC')
                 ->get();
           
@@ -984,7 +995,13 @@ class WelcomeController extends Controller
             }
 
 
-            DB::table('cashouts')->insert($insert_array);
+            $insert_id = DB::table('cashouts')->insertGetId($insert_array);
+
+            Rewards::where('respondent_id', $resp_id)
+                    ->whereNull('cashout_id') // Check if cashout_id is NULL
+                    ->update(['cashout_id' => $insert_id]);
+
+
 
             return redirect()->back()->withsuccess('Request Send Successfully');
         }

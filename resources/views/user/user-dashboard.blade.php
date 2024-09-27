@@ -232,11 +232,9 @@
                             <div class="col-4 rounded ">
                                <div class="bg-grey-6 p-2 m-2 w-100 m-h-180 rounded">
                                   <div class="bg-green text-white p-2 rounded mt-2 text-center m-auto">
-                                  @if($get_cashout == null)  
+                                 
                                   {{$available_points ?? '0'}}
-                                  @else 
-                                  0
-                                  @endif
+                                  
                                   </div>
                                   <div class="down-triangle-green triangle"></div>
                                   <div class="text-center my-2">Your Available Points for Cash Out</div>
@@ -249,7 +247,7 @@
                                 @if ($data->profile_completion_id == 1)
 
                                 @if($get_cashout == null)
-
+                                    
                                     @if($get_reward >= 40)
                                     <a class="btn btn-yellow width-fit-content ml-auto d-flex" id="request_press"
                                     data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
