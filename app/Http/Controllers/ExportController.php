@@ -1398,14 +1398,31 @@ class ExportController extends Controller
             }
             else if ($module == 'Cashout') {
                 
-                $all_datas = Cashout::select('cashouts.*','respondents.id as resp_id','respondents.name','respondents.surname','respondents.email','respondents.mobile','respondents.whatsapp',
-                    DB::raw('COUNT(cashouts.id) as total_cashout'),
+                // $all_datas = Cashout::select('cashouts.*','respondents.id as resp_id','respondents.name','respondents.surname','respondents.email','respondents.mobile','respondents.whatsapp',
+                //     DB::raw('COUNT(cashouts.amount) as total_cashout'),
+                //     DB::raw('COUNT(CASE WHEN cashouts.status_id = 1 THEN 1 END) as pending'),
+                //     DB::raw('COUNT(CASE WHEN cashouts.status_id = 4 THEN 1 END) as declined'),
+                //     DB::raw('COUNT(CASE WHEN cashouts.status_id = 3 THEN 1 END) as complete'),
+                //     DB::raw('COUNT(CASE WHEN cashouts.status_id = 0 THEN 1 END) as failed')
+                // )
+                // ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
+
+                $all_datas = Cashout::select(
+                    'cashouts.*',
+                    'respondents.id as resp_id',
+                    'respondents.name',
+                    'respondents.surname',
+                    'respondents.email',
+                    'respondents.mobile',
+                    'respondents.whatsapp',
+                    DB::raw('SUM(cashouts.amount) as total_cashout'), // Use SUM() to get the sum of the amount
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 1 THEN 1 END) as pending'),
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 4 THEN 1 END) as declined'),
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 3 THEN 1 END) as complete'),
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 0 THEN 1 END) as failed')
                 )
                 ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
+                
             
             if($from != null && $to != null){
                 $all_datas = $all_datas->whereBetween('cashouts.created_at', [$from, $to]);
