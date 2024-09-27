@@ -225,7 +225,7 @@ class WelcomeController extends Controller
             $currentYear=Carbon::now()->year;
 
             $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
-            ->whereYear('created_at', $currentYear)
+            ->whereYear(column: 'created_at', $currentYear)
             ->sum('points');
 
             $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
