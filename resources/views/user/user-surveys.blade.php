@@ -218,6 +218,7 @@ for Other Research</span>
                                 <th>TASK </th>
                                 <th>AMOUNT </th>
                                 <th>ACTION </th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -243,11 +244,15 @@ for Other Research</span>
                                         $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
                                     @endphp
                                     @if ($get_link != null)
-                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
-                                                class="btn btn-yellow">DETAIL</a></td>
+                                        <td>
+                                            <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
+                                                class="btn btn-yellow">DETAIL</a>
+                                            </td>
                                     @else
                                         <td>No Survey</td>
                                     @endif
+
+                                   
                                 </tr>
                             @endforeach
                         </tbody>
@@ -291,7 +296,8 @@ for Other Research</span>
             responsive: true,
             "oLanguage": {
                 "sEmptyTable": "No Completed Survey Found"
-            }
+            },
+            "ordering": false // Disable internal DataTable ordering
         });
 
     });

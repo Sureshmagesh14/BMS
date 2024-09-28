@@ -46,37 +46,60 @@
                          <!-- <p class="very-sm-text mt-3" style="text-align: left;">* Cash Outs not made expire at the end of the year and will not be re-rewarded!</p> -->
                          @else
                          <h2 class="position-relative yelow-clr h1 fw-bolder mt-5"> 
-                           @if(is_null($get_cashout->type_id))
+                           @if(is_null($get_cashout->status_id))
                                 
-                           @elseif($get_cashout->type_id == 1)
-                                 Pending
-                           @elseif($get_cashout->type_id == 2)
-                                 Processing
+                           @elseif($get_cashout->status_id == 0)
+                           Failed
+                           @elseif($get_cashout->status_id == 1)
+                           Pending
+                           @elseif($get_cashout->status_id == 2)
+                           Processing
+                           @elseif($get_cashout->status_id == 3)
+                           Complete
+                           @elseif($get_cashout->status_id == 4)
+                           Declined
+                           @elseif($get_cashout->status_id == 5)
+                           Approved For Processing
                            @endif
                        </h2>
                          <h5 class="position-relative">@if($get_cashout->amount != 0){{$get_cashout->amount / 10}} ZAR @endif</h5>
                          @endif
                       </div>
                       <div class="w-50">
-                        @if($get_cashout != null)
+                        
                          <h2 class=" h1 fw-bolder mt-2">Your Reward History</h2>
                          <div class="d-flex w-100">
-                            <div class="col-5 col-xs-6 rounded m-1">
+                            <div class="col-3 col-xs-6 rounded m-1">
                                <div class="bg-grey-6 p-2 m-2 w-100 h-100p rounded">
                                   <div class="bg-yellow text-white p-2 w-100 rounded mt-2 text-center m-auto">{{$get_overrall_rewards}}</div>
                                   <div class="down-triangle-yellow triangle"></div>
                                   <div class="my-2">Total Rewards Since {{ \Carbon\Carbon::now()->year }}</div>
                                </div>
                             </div>
-                            <div class="col-5 col-xs-6 rounded m-1">
+                            <div class="col-3 col-xs-6 rounded m-1">
                                <div class="bg-grey-6 p-2 m-2 w-100 h-100p rounded">
                                   <div class="bg-blue text-white p-2 w-100 rounded mt-2 text-center m-auto">{{$get_current_rewards}}</div>
                                   <div class="down-triangle-blue triangle"></div>
                                   <div class="my-2">Total Rewards this Year</div>
                                </div>
                             </div>
+                            <div class="col-3 col-xs-6 rounded m-1">
+                               <div class="bg-grey-6 p-2 m-2 w-100 h-100p rounded">
+                                  <div class="bg-green text-white p-2 w-100 rounded mt-2 text-center m-auto">
+                                  @if($get_cashout == null)  
+                                  {{$available_points ?? '0'}}
+                                  @else 
+                                  0
+                                  @endif
+                                  </div>
+                                  <div class="down-triangle-green triangle"></div>
+                                  <div class="my-2">
+                                  Your Available Points for Cash Out
+                                  </div>
+                               </div>
+                            </div>
                          </div>
-                         @endif
+                         
                       </div>
                    </div>
                    <div class="w-50 ml-auto">
