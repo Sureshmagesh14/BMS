@@ -122,7 +122,7 @@ class QualifiedController extends Controller
                         return $all_data->project_name;
                     })
                     ->addColumn('points', function ($all_data) {
-                        return ($all_data->points != 0) ? $all_data->points/ 10 : 0;
+                        return ($all_data->points != 0) ? $all_data->points : 0;
                     })
                     ->addColumn('status', function ($all_data) {
                         return ($all_data->status == 1) ? 'Qualified' : 'Not-Qualified';
