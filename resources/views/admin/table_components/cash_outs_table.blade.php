@@ -92,6 +92,7 @@
             <th>Type</th>
             <th>Status</th>
             <th>Amount</th>
+            <th>Points</th>
             <th>Respondent</th>
             <th>Action</th>
         </tr>

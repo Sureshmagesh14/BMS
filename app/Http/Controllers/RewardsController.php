@@ -86,6 +86,9 @@ class RewardsController extends Controller
                             return '-';
                         }
                     })
+                    ->addColumn('points', function ($all_data) {
+                        return $all_data->points / 10;
+                    })
                     ->addColumn('respondent_id', function ($all_data) {
                         return $all_data->rname.' - '.$all_data->remail.' - '.$all_data->rmobile;
                     })

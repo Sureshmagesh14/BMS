@@ -800,6 +800,9 @@
                                                 <option value="worker_etc"
                                                     @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'worker_etc') selected @endif @endisset>
                                                     Worker (e.g., Security Guard, Cleaner, Helper, etc.)</option>
+                                                <option value="recruiter"
+                                                    @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'Recruiter') selected @endif @endisset>
+                                                    Recruiter</option>
                                                 <option value="other"
                                                     @isset($extended_details['business_org']) @if ($extended_details['business_org'] == 'other') selected @endif @endisset>
                                                     Other</option>

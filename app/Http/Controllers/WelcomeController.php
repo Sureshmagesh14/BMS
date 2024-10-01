@@ -228,7 +228,8 @@ class WelcomeController extends Controller
             $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
             ->whereYear('created_at', $currentYear)
             ->sum('points');
-
+            
+            
             $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
             ->where(function ($query) use ($currentYear) {
                 $query->whereYear('created_at', '<', $currentYear) // Filters past year data
