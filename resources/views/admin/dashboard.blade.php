@@ -27,6 +27,9 @@
         /* display: flex; */
         flex-direction: column;
     }
+    #resp_db_import{
+        display: none;
+    }
 </style>
 
 <!-- ============================================================== -->
