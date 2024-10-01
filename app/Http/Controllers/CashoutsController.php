@@ -98,6 +98,10 @@ class CashoutsController extends Controller
                     $amount = $all_data->amount/10;
                     return $amount;
                 })
+                ->addColumn('points', function ($all_data) {
+                    $points = floor($all_data->amount / 10) * 10;
+                    return $points;
+                })
                 ->addColumn('respondent_id', function ($all_data) {
                     return $all_data->name.' - '.$all_data->email.' - '.$all_data->mobile;
                 })
