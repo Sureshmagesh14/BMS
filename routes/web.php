@@ -73,8 +73,11 @@ Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'v
 Route::any('get_area', 'ProfileController@get_area')->middleware(['auth', 'verified'])->name('get_area');
 Route::any('profile_save', 'ProfileController@profile_save')->middleware(['auth', 'verified'])->name('profile_save');
 Route::any('user_get_branch_code', 'WelcomeController@user_get_branch_code')->name('user_get_branch_code');
+
+//cron payments
 Route::any('process_cashout', 'WelcomeController@process_cashout')->name('process_cashout');
 Route::any('complete_cashout', 'WelcomeController@complete_cashout')->name('complete_cashout');
+//cron payments
 
 Route::any('emailChangeOtpSend', 'ProfileController@emailChangeOtpSend')->middleware(['auth', 'verified'])->name('emailChangeOtpSend');
 Route::any('emailChangeOtpCheck', 'ProfileController@emailChangeOtpCheck')->middleware(['auth', 'verified'])->name('emailChangeOtpCheck');
@@ -96,6 +99,7 @@ Route::group([
     'middleware' => 'admin',
 ], function () {
     Route::any('dashboard', 'Auth\AdminLoginController@admin_dashboard')->name('admin.dashboard');
+    Route::any('resp_db_import', 'Auth\AdminLoginController@resp_db_import')->name('resp_db_import');
 
     Route::any('get_activity_data', 'Auth\AdminLoginController@get_activity_data')->name('get_activity_data');
     Route::get('signout', 'Auth\AdminLoginController@signOut')->name('signout');

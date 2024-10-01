@@ -122,7 +122,7 @@ class QualifiedController extends Controller
                         return $all_data->project_name;
                     })
                     ->addColumn('points', function ($all_data) {
-                        return ($all_data->points != 0) ? $all_data->points/ 10 : 0;
+                        return ($all_data->points != 0) ? floor($all_data->points / 10) * 10 : 0;
                     })
                     ->addColumn('status', function ($all_data) {
                         return ($all_data->status == 1) ? 'Qualified' : 'Not-Qualified';
@@ -533,7 +533,7 @@ class QualifiedController extends Controller
                         'respondent_id' => $rewards->respondent_id,
                         'user_id' => $rewards->respondent_id, // Assuming user_id is same as respondent_id
                         'project_id' => $rewards->project_id,
-                        'points' => $get_points->reward,
+                        'points' => $get_points->reward*10,
                         'status_id' => 2,
                         'created_at' => now(), // Assuming now() returns current timestamp
                     ];

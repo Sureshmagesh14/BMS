@@ -21,104 +21,112 @@
         background-color: #edbf1b;
         color: white;
     }
+
     .form-control-sm {
         height: calc(1.5em + 0.5rem + 2px) !important;
         line-height: 1.5 !important;
 
     }
+
     label {
         display: inline-block;
         margin-bottom: 0.5rem !important;
     }
-    .cir-border{
+
+    .cir-border {
         border: 1px solid #fff;
-    border-radius: 25px !important;
+        border-radius: 25px !important;
     }
 </style>
 <section class="bg-greybg">
     <div class="container mb-5">
         <div class="row align-items-center justify-content-center pt-5 mb-3">
 
-          
+
             <div class="bg-white my-2 w-100 cir-border">
                 <h4 class="d-flex align-items-center justify-content-around">
-                    <span class="small-font-sm">See If You Qualify 
-for Other Research</span>
+                    <span class="small-font-sm">See If You Qualify
+                        for Other Research</span>
                 </h4>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTable" id="current_survey1"
                         style="width: 100%;" aria-describedby="current_survey1">
                         <thead>
+                            <tr>
+                                <th>NAME </th>
+                                <th>DATE </th>
+                                <th>TYPE OF SURVEY </th>
+                                <th>REWARD POINTS</th>
+                                <th>ACTION </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($get_other_survey as $res)
                                 <tr>
-                                    <th>NAME </th>
-                                    <th>DATE </th>
-                                    <th>TYPE OF SURVEY </th>
-                                    <th>REWARD POINTS</th>
-                                    <th>ACTION </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($get_other_survey as $res)
-                                    <tr>
-                                        <td>
-                                        @if($res->project_name_resp!='')
-                                        {{ $res->project_name_resp }}
-                                        @else 
-                                        {{ $res->name }}
-                                        @endif 
-                                        
-                                        </td>
-                                        <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
-                                        <td title="{{ $res->description }}">
-
-                                        @if ($res->type_id == 1) 
-                                        Pre-Screener
-                                        @elseif ($res->type_id == 2) 
-                                        Pre-Task
-                                        @elseif ($res->type_id == 3) 
-                                        Paid survey
-                                        @elseif ($res->type_id == 4) 
-                                        Unpaid survey
+                                    <td>
+                                        @if ($res->project_name_resp != '')
+                                            {{ $res->project_name_resp }}
+                                        @else
+                                            {{ $res->name }}
                                         @endif
-                                         
-                                            <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
+
+                                    </td>
+                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                    <td title="{{ $res->description }}">
+
+                                        @if ($res->type_id == 1)
+                                            Pre-Screener
+                                        @elseif ($res->type_id == 2)
+                                            Pre-Task
+                                        @elseif ($res->type_id == 3)
+                                            Paid survey
+                                        @elseif ($res->type_id == 4)
+                                            Unpaid survey
+                                        @endif
+
+                                        <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
+                                    </td>
+                                    <td>{{ $res->reward * 10 }}</td>
+                                    @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
+
+
+
+                                    @if ($profile_data->profile_completion_id == 0)
+                                        <td>
+                                            <a href="{{ route('updateprofile_wizard') }}">
+                                                To continue please complete your profile
+                                            </a>
                                         </td>
-                                        <td>{{ $res->reward*10 }}</td>
-                                        @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
+                                    @else
+                                        @if ($get_link != null)
+                                            <td>
 
-                                      
+                                                <div class="social-icons text-md-end text-lg-end text-sm-start">
 
-                @if ($profile_data->profile_completion_id == 0)
-                    <td> 
-                    <a href="{{ route('updateprofile_wizard') }}">
-                    To continue please complete your profile
-                         </a>
-                    </td>
-                @else
-                    @if ($get_link != null)
-                        <td>
+                                                    <a target="_blank"
+                                                        href="{{ url('survey/view', $get_link->builderID) }}"><i
+                                                            class="fa fa-play" aria-hidden="true" title="Start"
+                                                            style="background-color: #fbbd0a;"></i></a>
+                                                    @if ($res->access_id == 1)
+                                                        @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
+                                                            <a
+                                                                href="{{ url('share_project', [$res->project_link, base64_encode(session('resp_id'))]) }}"><i
+                                                                    class="fa fa-share-square" aria-hidden="true"
+                                                                    title="Share"
+                                                                    style="background-color: #fbbd0a;"></i></a>
+                                                        @endif
+                                                    @endif
+                                                </div>
 
-                        <div class="social-icons text-md-end text-lg-end text-sm-start">
+                                            </td>
+                                        @else
+                                            <td>No Survey</td>
+                                        @endif
+                                    @endif
 
-                        <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #fbbd0a;"></i></a>
-                        @if($res->access_id==1)
-
-                            @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
-                            <a href="{{ url('share_project', [$res->project_link, base64_encode(session('resp_id'))]) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
-                            @endif
-                            
-                        @endif
-                        </div>
-
-                        </td>
-                    @else
-                        <td>No Survey</td>
-                    @endif
-                @endif
-                                            
-                                    </tr>
-                                @endforeach
-                            </tbody>
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -132,73 +140,80 @@ for Other Research</span>
                     <table class="table table-striped table-bordered table-hover dataTable" id="current_survey"
                         style="width: 100%;" aria-describedby="current_survey">
                         <thead>
-                                <tr>
-                                    <th>NAME </th>
-                                    <th>DATE </th>
-                                    <th>TYPE OF SURVEY </th>
-                                    <th>REWARD POINTS </th>
-                                    <th>ACTION </th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                            <tr>
+                                <th>NAME </th>
+                                <th>DATE </th>
+                                <th>TYPE OF SURVEY </th>
+                                <th>REWARD POINTS </th>
+                                <th>ACTION </th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             @foreach ($get_paid_survey as $res)
-                                    <tr>
-                                        <td>
-                                        @if($res->project_name_resp!='')
-                                        {{ $res->project_name_resp }}
-                                        @else 
-                                        {{ $res->name }}
-                                        @endif 
-                                        
-                                        </td>
-                                        <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
-                                        <td title="{{ $res->description }}">
-
-                                        @if ($res->type_id == 1) 
-                                        Pre-Screener
-                                        @elseif ($res->type_id == 2) 
-                                        Pre-Task
-                                        @elseif ($res->type_id == 3) 
-                                        Paid survey
-                                        @elseif ($res->type_id == 4) 
-                                        Unpaid survey
+                                <tr>
+                                    <td>
+                                        @if ($res->project_name_resp != '')
+                                            {{ $res->project_name_resp }}
+                                        @else
+                                            {{ $res->name }}
                                         @endif
-                                         
-                                            <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
-                                        </td>
-                                        <td>{{ $res->reward*10 }}</td>
-                                        @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
 
-
-                                @if ($profile_data->profile_completion_id == 0)
-                                    <td> 
-                                    <a href="{{ route('updateprofile_wizard') }}">
-                                    To continue please complete your profile
-                                    </a>
                                     </td>
-                                @else
-                                    @if ($get_link != null)
-                                        <td>
+                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                    <td title="{{ $res->description }}">
 
-                                        <div class="social-icons text-md-end text-lg-end text-sm-start">
-
-                                        <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}" ><i class="fa fa-play" aria-hidden="true" title="Start" style="background-color: #fbbd0a;"></i></a>
-                                        @if($res->access_id==1)
-                                            @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
-                                            <a href="{{ url('share_project', [$res->project_link, base64_encode(session('resp_id'))]) }}"><i class="fa fa-share-square" aria-hidden="true" title="Share" style="background-color: #fbbd0a;"></i></a>
-                                            @endif
+                                        @if ($res->type_id == 1)
+                                            Pre-Screener
+                                        @elseif ($res->type_id == 2)
+                                            Pre-Task
+                                        @elseif ($res->type_id == 3)
+                                            Paid survey
+                                        @elseif ($res->type_id == 4)
+                                            Unpaid survey
                                         @endif
-                                        </div>
 
+                                        <!-- {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }} -->
+                                    </td>
+                                    <td>{{ $res->reward * 10 }}</td>
+                                    @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
+
+
+                                    @if ($profile_data->profile_completion_id == 0)
+                                        <td>
+                                            <a href="{{ route('updateprofile_wizard') }}">
+                                                To continue please complete your profile
+                                            </a>
                                         </td>
                                     @else
-                                        <td>No Survey</td>
+                                        @if ($get_link != null)
+                                            <td>
+
+                                                <div class="social-icons text-md-end text-lg-end text-sm-start">
+
+                                                    <a target="_blank"
+                                                        href="{{ url('survey/view', $get_link->builderID) }}"><i
+                                                            class="fa fa-play" aria-hidden="true" title="Start"
+                                                            style="background-color: #fbbd0a;"></i></a>
+                                                    @if ($res->access_id == 1)
+                                                        @if (Carbon\Carbon::parse($res->created_at)->toDateString() >= '2024-08-23')
+                                                            <a
+                                                                href="{{ url('share_project', [$res->project_link, base64_encode(session('resp_id'))]) }}"><i
+                                                                    class="fa fa-share-square" aria-hidden="true"
+                                                                    title="Share"
+                                                                    style="background-color: #fbbd0a;"></i></a>
+                                                        @endif
+                                                    @endif
+                                                </div>
+
+                                            </td>
+                                        @else
+                                            <td>No Survey</td>
+                                        @endif
                                     @endif
-                                @endif
-                                                            
-                                    </tr>
-                                @endforeach
-                            </tbody>
+
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -218,36 +233,41 @@ for Other Research</span>
                                 <th>TASK </th>
                                 <th>AMOUNT </th>
                                 <th>ACTION </th>
+
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($get_completed_survey as $res)
                                 <tr>
                                     <td>
-                                    @if($res->project_name_resp!='')
-                                    {{ $res->project_name_resp }}
-                                    @else 
-                                    {{ $res->name }}
-                                    @endif 
+                                        @if ($res->project_name_resp != '')
+                                            {{ $res->project_name_resp }}
+                                        @else
+                                            {{ $res->name }}
+                                        @endif
                                     </td>
                                     <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                     <td title="{{ $res->description }}">
                                         {{ Illuminate\Support\Str::limit($res->description, $limit = 10, $end = '...') }}
                                     </td>
                                     <td>
-                                        @if($res->is_frontend_complete==1)
-                                        {{ $res->reward*10 }}
+                                        @if ($res->is_frontend_complete == 1)
+                                            {{ $res->reward * 10 }}
                                         @endif
                                     </td>
                                     @php
                                         $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link);
                                     @endphp
                                     @if ($get_link != null)
-                                        <td><a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
-                                                class="btn btn-yellow">DETAIL</a></td>
+                                        <td>
+                                            <a target="_blank" href="{{ url('survey/view', $get_link->builderID) }}"
+                                                class="btn btn-yellow">DETAIL</a>
+                                        </td>
                                     @else
                                         <td>No Survey</td>
                                     @endif
+
+
                                 </tr>
                             @endforeach
                         </tbody>
@@ -291,7 +311,8 @@ for Other Research</span>
             responsive: true,
             "oLanguage": {
                 "sEmptyTable": "No Completed Survey Found"
-            }
+            },
+            "ordering": false // Disable internal DataTable ordering
         });
 
     });

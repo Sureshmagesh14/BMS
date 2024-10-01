@@ -27,13 +27,17 @@
         display: inline-block;
         margin-bottom: 0.5rem !important;
     }
+    .cir-border {
+        border: 1px solid #fff;
+        border-radius: 25px !important;
+    }
 </style>
 <section class="bg-greybg vh-100">
     <div class="container">
         <div class="row align-items-center justify-content-center pt-5">
 
 <!-- cashout summarry -->
-            <div class="bg-white my-2 max-w-100">
+            <div class="bg-white my-2 max-w-100 cir-border">
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm">Cashout Summary</span>
                 </h4>
@@ -42,9 +46,9 @@
                         aria-describedby="cashout_info">
                         <thead>
                             <tr>
-                                <th>Project </th>
+                              
                                 <th>Type </th>
-                                <th>Points </th>
+                               
                                 <th>Amount </th>
                                 <th>Status </th>
                                 <th>Date</th>
@@ -53,7 +57,7 @@
                         <tbody>
                             @foreach ($get_res as $res)
                                 <tr>
-                                    <td>{{ $res->name }}</td>
+                                   
                                     <td>
                                         @php
                                             if ($res->type_id == 1) {
@@ -70,13 +74,13 @@
                                         @endphp
                                         {{ $types }}
                                     </td>
-                                    <td>
-                                        {{ $res->points }}
-                                    </td>
+                                   
                                     <td>
                                         {{ $res->amount / 10 }}
                                     </td>
                                     <td>
+
+                                   
                                         @php
                                             if ($res->status_id == 0) {
                                                 $stats = 'Failed';
@@ -108,7 +112,7 @@
 
             <!-- outstanding  -->
 
-            <div class="bg-white my-2 max-w-100">
+            <div class="bg-white my-2 max-w-100 cir-border">
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm">Outstanding Cash Outs</span>
                 </h4>
@@ -117,9 +121,8 @@
                         aria-describedby="cashout_info">
                         <thead>
                             <tr>
-                                <th>Project </th>
-                                <th>Type </th>
-                                <th>Points </th>
+                             
+                                <th>Type </th>                                
                                 <th>Amount </th>
                                 <th>Status </th>
                                 <th>Date</th>
@@ -128,7 +131,7 @@
                         <tbody>
                             @foreach ($get_res_out as $res)
                                 <tr>
-                                    <td>{{ $res->name }}</td>
+                                   
                                     <td>
                                         @php
                                             if ($res->type_id == 1) {
@@ -145,13 +148,12 @@
                                         @endphp
                                         {{ $types }}
                                     </td>
-                                    <td>
-                                        {{ $res->points }}
-                                    </td>
+                                   
                                     <td>
                                         {{ $res->amount / 10 }}
                                     </td>
                                     <td>
+                                       
                                         @php
                                             if ($res->status_id == 0) {
                                                 $stats = 'Failed';
@@ -202,7 +204,8 @@
             responsive: true,
             "oLanguage": {
                 "sEmptyTable": "No Cashout Summary Found"
-            }
+            },
+            "ordering": false // Disable internal DataTable ordering
         });
 
     });

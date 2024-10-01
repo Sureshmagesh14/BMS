@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Users;
 use App\Models\UserEvents;
+use App\Models\Respondents;
+use App\Models\RespondentProfile;
 use DB;
 use Session;
 use Exception;
@@ -95,24 +97,24 @@ class AdminLoginController extends Controller
                 $incomplete = DB::table('respondents')->where("profile_completion_id",0)->count();
                 $tot=$complete+$incomplete;
                
-                $act_per= number_format( $active_val/$tot * 100, 2 ) . ' %';
+                $act_per= ($tot > 0) ? number_format( $active_val/$tot * 100, 2 ) . ' %' : 0;
               
 
-                $dec_per=number_format( $deactive_val/$tot * 100, 2 ) . ' %';
+                $dec_per=($tot > 0) ? number_format( $deactive_val/$tot * 100, 2 ) . ' %' : 0;
             
 
-                $unsub_pre=number_format( $unsub_val/$tot * 100, 2 ) . ' %';
+                $unsub_pre=($tot > 0) ? number_format( $unsub_val/$tot * 100, 2 ) . ' %' : 0;
           
 
-                $pen_per=number_format( $pending_val/$tot * 100, 2 ) . ' %';
+                $pen_per=($tot > 0) ? number_format( $pending_val/$tot * 100, 2 ) . ' %' : 0;
                
 
-                $bla_per=number_format( $black_val/$tot * 100, 2 ) . ' %';
+                $bla_per=($tot > 0) ? number_format( $black_val/$tot * 100, 2 ) . ' %' : 0;
                 
 
-                $comp_per=number_format( $complete/$tot * 100, 2 ) . ' %';
+                $comp_per=($tot > 0) ? number_format( $complete/$tot * 100, 2 ) . ' %' : 0;
               
-                $incomp_per=number_format( $incomplete/$tot * 100, 2 ) . ' %';
+                $incomp_per=($tot > 0) ? number_format( $incomplete/$tot * 100, 2 ) . ' %' : 0;
 
                 $share_link  = DB::table('users')->select('share_link')->where("id",Auth::guard('admin')->user()->id)->first();
                
@@ -352,5 +354,203 @@ class AdminLoginController extends Controller
         }
     }
 
+    public function get_education($data, $type){
+
+        if($type == 'education'){
+            $array = array(
+                'Matric' => 'matric',
+                'Post Matric Courses / Higher Certificate' => 'post_matric_courses',
+                'Post Matric Diploma' => 'post_matric_diploma',
+                'Undergrad University Degree' => 'ug',
+                'Post Grad Degree - Honours, Masters, PhD, MBA' => 'pg',
+                'School But No Matric' => 'school_no_metric'
+            );
+
+            if (array_key_exists($data, $array)) {
+                return $array[$data];
+            } else {
+                return null;
+            }
+        }
+        else if($type == "employment"){
+            $array = array(
+                'Employed Full-Time' => 'emp_full_time',
+                'Employed Part-Time' => 'emp_part_time',
+                'Self-Employed' => 'self',
+                'Studying' => 'study',
+                'Working & Studying' => 'working_and_studying',
+                'Stay at Home Person' => 'home_person',
+                'Retired' => 'retired',
+                'Unemployed' => 'unemployed',
+                'Stay at Home Person' => 'home_person',
+            );
+
+            if (array_key_exists($data, $array)) {
+                return $array[$data];
+            } else {
+                return null;
+            }
+        }
+        else if($type == "role_organization"){
+            $array = array(
+                'Owner / director (CEO, COO, CFO)' => 'owner_director',
+                'Senior Manager' => 'senior_manager',
+                'Mid-Level Manager' => 'mid_level_manager',
+                'Team leader / Supervisor' => 'team_leader',
+                'General Worker (e.g., Admin, Call Centre Agent, Nurse, Teacher, Carer, etc.)' => 'general_worker',
+                'Worker (e.g., Security Guard, Cleaner, Helper, etc.)' => 'worker_etc',
+                'Recruiter' => 'recruiter',
+            );
+
+            if (array_key_exists($data, $array)) {
+                return $array[$data];
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public function resp_db_import(Request $request){
+        $total = $request->total;
+        $count_ass = $request->count_ass;
+        $get_import_data = DB::table('profile_data')->where('imported_status',0)->take($total)->get();
+        $password = Hash::make('Change@123');
+
+        foreach($get_import_data as $resp){
+            $resp_id = $resp->id;
+            $no_vehicle = 0;
+            $no_children = 0;
+
+            if($resp->car_3_brand != null && $resp->car_3_brand != ''){
+                $no_vehicle = 3;
+            }
+            else if($resp->car_2_brand != null && $resp->car_2_brand != ''){
+                $no_vehicle = 2;
+            }
+            else if($resp->car_1_brand != null && $resp->car_1_brand != ''){
+                $no_vehicle = 1;
+            }
+
+            if($resp->child_4_birth != null && $resp->child_4_birth != ''){
+                $no_children = 4;
+            }
+            else if($resp->child_4_birth != null && $resp->child_4_birth != ''){
+                $no_children = 3;
+            }
+            else if($resp->child_4_birth != null && $resp->child_4_birth != ''){
+                $no_children = 2;
+            }
+            else if($resp->child_4_birth != null && $resp->child_4_birth != ''){
+                $no_children = 1;
+            }
+            
+            $respondent_insert = array(
+                'id'        => $resp_id,
+                'name'      => $resp->fname,
+                'surname'   => $resp->lname,
+                'date_of_birth' => $resp->dob,
+                'email'     => $resp->main_email,
+                'mobile'    => $resp->pnumber,
+                'whatsapp'  => $resp->whatsapp,
+                'bank_name' => $resp->bank_main,
+                'password'  => $password,
+                'opted_in'  => $resp->opted_id,
+                'active_status_id' => ($resp->blacklist > 0 ? 5 : ($resp->unregistered > 0 ? 6 : 0))
+            );
+
+            $basic_details = array(
+                'email'           => $resp->main_email,
+                'last_name'       => $resp->fname,
+                'first_name'      => $resp->lname,
+                'updated_at'      => date('Y-m-d H:i:s'),
+                'mobile_number'   => $resp->pnumber,
+                'whatsapp_number' => $resp->whatsapp
+            );
+
+            $get_industry_in = DB::table('industry_company')->where(DB::raw('REPLACE(company, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->industry_my_company) . '%')->first();
+            $get_percenal_income = DB::table('income_per_month')->where(DB::raw('REPLACE(income, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->personal_income) . '%')->first();
+            $get_house_income = DB::table('income_per_month')->where(DB::raw('REPLACE(income, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->personal_income) . '%')->first();
+            $get_bank = DB::table('banks')->where(DB::raw('REPLACE(bank_name, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->bank_main) . '%')->first();
+
+            $essential_details = array(
+                'gender'                     => ($resp->gender == 'Male') ? 'male' : 'female',
+                'suburb'                     => '',
+                'province'                   => '',
+                'metropolitan_area'          => '',
+                'job_title'                  => $resp->job_title,
+                'no_vehicle'                 => $no_vehicle,
+                'no_children'                => $no_children,
+                'ethnic_group'               => ($resp->ethnic_group_race != null && $resp->ethnic_group_race != '') ? strtolower($resp->ethnic_group_race) : null,
+                'education_level'            => $this->get_education($resp->highest_level_education, 'education'),
+                'employment_status'          => $this->get_education($resp->highest_level_education, 'employment'),
+                'industry_my_company'        => ($get_industry_in != null) ? $get_industry_in->id : 0,
+                'relationship_status'        => ($resp->relationship_status != null && $resp->relationship_status != '') ? strtolower($resp->relationship_status) : null,
+                'personal_income_per_month'  => ($get_percenal_income != null) ? $get_percenal_income->id : 0,
+                'household_income_per_month' => ($get_house_income != null) ? $get_house_income->id : 0,
+                'updated_at'                 => date('Y-m-d H:i:s')
+            );
+
+            $extended_details = array(
+                'bank_main'                 => ($get_bank != null) ? $get_bank->id : 0,
+                'home_lang'                 => ($resp->home_language != null && $resp->home_language != '') ? strtolower($resp->home_language) : null,
+                'updated_at'                => date('Y-m-d H:i:s'),
+                'org_company'               => $this->get_education($resp->role_business_organization, 'role_organization'),
+            );
+
+            $child_detials = array();
+            $car_detials   = array();
+
+            $resp_profile = array(
+                'pid'               => $resp_id,
+                'respondent_id'     => $resp_id,
+                'basic_details'     => json_encode($basic_details),
+                'essential_details' => json_encode($essential_details),
+                'extended_details'  => json_encode($extended_details),
+            );
+
+            if($no_children > 0){
+                for($ch = 1; $ch <= $no_children; $ch++){
+                    $child_birth_var = 'child_'.$ch.'_birth';
+                    $child_gender_var = 'child_'.$ch.'_gender';
+
+                    $child_json = array(
+                        "date" => $resp->$child_birth_var,
+                        "gender" => ($resp->$child_gender_var == "Male") ? 'male' : 'female'
+                    );
+
+                    array_push($child_detials, $child_json);
+                }
+
+                $resp_profile['children_data'] = json_encode($child_detials);
+            }
+
+            if($no_vehicle > 0){
+                for($ch = 1; $ch <= $no_vehicle; $ch++){
+                    $car_brand_var   = 'car_'.$ch.'_brand';
+                    $car_model_var   = 'car_'.$ch.'_model';
+                    $car_vehicle_var = 'car_'.$ch.'_vehicle';
+                    $car_year_var    = 'car_'.$ch.'_year';
+
+                    $car_json = array(
+                        "type" => ($resp->$car_vehicle_var != null && $resp->$car_vehicle_var != '') ? strtolower($resp->$car_vehicle_var) : null,
+                        "year" => $resp->$car_year_var,
+                        "brand" => $resp->$car_brand_var,
+                        "model" => ($resp->$car_model_var != null && $resp->$car_model_var != '') ? strtolower($resp->$car_model_var) : null,
+                    );
+
+                    array_push($car_detials, $car_json);
+                }
+
+                $resp_profile['vehicle_data'] = json_encode($car_detials);
+            }
+           
+
+            Respondents::insert($respondent_insert);
+            RespondentProfile::insert($resp_profile);
+            DB::table('profile_data')->where('id',$resp_id)->update(['imported_status' => 1]);
+        }
+
+        return $count_ass;
+    }
     
 }

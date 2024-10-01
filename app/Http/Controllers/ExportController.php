@@ -1398,32 +1398,63 @@ class ExportController extends Controller
             }
             else if ($module == 'Cashout') {
                 
-                $all_datas = Cashout::select('cashouts.*','respondents.id as resp_id','respondents.name','respondents.surname','respondents.email','respondents.mobile','respondents.whatsapp',
-                    DB::raw('COUNT(cashouts.id) as total_cashout'),
+                // $all_datas = Cashout::select('cashouts.*','respondents.id as resp_id','respondents.name','respondents.surname','respondents.email','respondents.mobile','respondents.whatsapp',
+                //     DB::raw('COUNT(cashouts.amount) as total_cashout'),
+                //     DB::raw('COUNT(CASE WHEN cashouts.status_id = 1 THEN 1 END) as pending'),
+                //     DB::raw('COUNT(CASE WHEN cashouts.status_id = 4 THEN 1 END) as declined'),
+                //     DB::raw('COUNT(CASE WHEN cashouts.status_id = 3 THEN 1 END) as complete'),
+                //     DB::raw('COUNT(CASE WHEN cashouts.status_id = 0 THEN 1 END) as failed')
+                // )
+                // ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
+
+                $all_datas123 = Respondents::select(
+                    'respondents.id as resp_id',
+                    'respondents.name',
+                    'respondents.surname',
+                    'respondents.email',
+                    'respondents.mobile',
+                    'respondents.whatsapp',
+                    DB::raw('SUM(cashouts.amount) as total_cashout'), 
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 1 THEN 1 END) as pending'),
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 4 THEN 1 END) as declined'),
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 3 THEN 1 END) as complete'),
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 0 THEN 1 END) as failed')
                 )
-                ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
-            
-            if($from != null && $to != null){
-                $all_datas = $all_datas->whereBetween('cashouts.created_at', [$from, $to]);
-            }
-            
-            if($respondents != ""){
-                $all_datas = $all_datas->whereIn('cashouts.respondent_id', [$respondents]);
-            }
-            
-            if($cashout_type != ""){
-                $all_datas = $all_datas->where('cashouts.type_id', $cashout_type);
-            }
-            
-            $all_datas = $all_datas
-                ->groupBy('respondents.id')
-                ->orderBy("cashouts.id", "desc")
-                ->take(20)
-                ->get();
+                ->leftJoin('cashouts', 'respondents.id', '=', 'cashouts.respondent_id');
+
+                $all_datas = Respondents::select(
+                    'respondents.id as resp_id',
+                    'respondents.name',
+                    'respondents.surname',
+                    'respondents.email',
+                    'respondents.mobile',
+                    'respondents.whatsapp',
+                    DB::raw('SUM(CASE WHEN cashouts.status_id = 3 THEN cashouts.amount ELSE 0 END) as total_complete_cashout'), 
+                    DB::raw('SUM(CASE WHEN cashouts.status_id = 1 THEN cashouts.amount ELSE 0 END) as pending'),
+                    DB::raw('SUM(CASE WHEN cashouts.status_id = 4 THEN cashouts.amount ELSE 0 END) as declined'),
+                    DB::raw('SUM(CASE WHEN cashouts.status_id = 0 THEN cashouts.amount ELSE 0 END) as failed')
+                )
+                ->leftJoin('cashouts', 'respondents.id', '=', 'cashouts.respondent_id')
+                ->groupBy('respondents.id'); // Don't forget to group by respondent ID
+    
+                
+                if ($from != null && $to != null) {
+                    $all_datas = $all_datas->whereBetween('cashouts.created_at', [$from, $to]);
+                }
+
+                if ($respondents != "") {
+                    $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                }
+
+                if ($cashout_type != "") {
+                    $all_datas = $all_datas->where('cashouts.type_id', $cashout_type);
+                }
+
+                $all_datas = $all_datas
+                    ->groupBy('respondents.id')
+                    ->orderBy("respondents.id", "desc")  // Use respondents.id for consistent ordering
+                    ->get();
+
             
                 $sheet->setCellValue('A1', 'PID');
                 $sheet->setCellValue('B1', 'First Name');
@@ -1487,7 +1518,7 @@ class ExportController extends Controller
                     $mobile_number = '-';
                     if (!empty($all_data->mobile)) {
                         $m_number =  preg_replace('/\s+/', '',$all_data->mobile);
-                        $length = strlen($w_number);
+                        $length = strlen($m_number);
                         if (strlen($m_number) == 9) {
                             $mobile_number = '27' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
@@ -1523,7 +1554,7 @@ class ExportController extends Controller
                     $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
-                    $sheet->setCellValue('H' . $rows, $all_data->total_cashout);
+                    $sheet->setCellValue('H' . $rows, $all_data->total_complete_cashout);
                     $sheet->setCellValue('I' . $rows, ($get_incentive > 0) ? $get_incentive/10 : 0);
                     $sheet->setCellValue('J' . $rows, $all_data->failed);
                     $sheet->setCellValue('K' . $rows, $all_data->pending);
@@ -1541,7 +1572,7 @@ class ExportController extends Controller
 
                     $sheet->setCellValue('O' . $rows, $project_total);
                     $sheet->getStyle('O' . $rows)->getAlignment()->setWrapText(true);
-                    $sheet->setCellValue('P' . $rows, date('Y-m-d',strtotime($all_data->created_at)));
+                    $sheet->setCellValue('P' . $rows, ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '');
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                     $sheet->getStyle('C' . $rows . ':P' . $rows)->applyFromArray($styleArray2);
