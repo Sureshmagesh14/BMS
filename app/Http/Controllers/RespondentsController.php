@@ -539,7 +539,7 @@ class RespondentsController extends Controller
     
                 // Prepare age based on date_of_birth
                 $age = '-';
-                if ($post->date_of_birth != null) {
+                if ($post->date_of_birth && $post->date_of_birth !== '0000-00-00') {
                     $bday = new \DateTime($post->date_of_birth);
                     $today = new \DateTime();
                     $diff = $today->diff($bday);
@@ -592,7 +592,7 @@ class RespondentsController extends Controller
                     }
                 }
 
-                $opted_in = ($post->opted_in != null) ? date("d-m-Y", strtotime($post->opted_in)) : '';
+                $opted_in = ($post->opted_in && $post->opted_in !== '0000-00-00 00:00:00') ? date("d-m-Y", strtotime($post->opted_in)) : '-';
                 $updated_at = ($post->updated_at != null) ? date("d-m-Y", strtotime($post->updated_at)) : '';
                 $accept_terms = $post->accept_terms == 1 ? 'Yes' : 'No';
                 $referral_code = strlen($post->referral_code) > 10 ? substr($post->referral_code, 0, 10) . '...' : $post->referral_code;
