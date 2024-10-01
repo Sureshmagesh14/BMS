@@ -455,6 +455,7 @@ class AdminLoginController extends Controller
                 'bank_name' => $resp->bank_main,
                 'password'  => $password,
                 'opted_in'  => $resp->opted_id,
+                'active_status_id' => ($resp->blacklist > 0 ? 5 : ($resp->unregistered > 0 ? 6 : 0))
             );
 
             $basic_details = array(
