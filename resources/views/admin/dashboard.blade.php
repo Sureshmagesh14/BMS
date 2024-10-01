@@ -27,6 +27,9 @@
         /* display: flex; */
         flex-direction: column;
     }
+    #resp_db_import{
+        display: none;
+    }
 </style>
 
 <!-- ============================================================== -->
@@ -41,6 +44,7 @@
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
                         <h4 class="mb-0">Dashboard</h4>
+                        <button class="btn btn-primary" id="resp_db_import">Respondent DB Import</button>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">BMS</a></li>
@@ -380,4 +384,41 @@
                         toastr.error('No Survey Link Found');
                     }
                 }
+
+                $('#resp_db_import').click(function(event) {
+                    var status   = $(this).attr('id');
+                    var tempcsrf = '{!! csrf_token() !!}';
+                    
+                    $.post("{{route('resp_db_import')}}", {_token:tempcsrf,total:5000,'count_ass':1},
+                    function (resp, textStatus, jqXHR) {
+                        $.post('{{ route("resp_db_import")}}', {_token:tempcsrf,total:5000,'count_ass':2},
+                        function (resp, textStatus, jqXHR) {
+                            $.post('{{ route("resp_db_import")}}', {_token: tempcsrf,total:5000,'count_ass':3},
+                            function (resp, textStatus, jqXHR) {
+                                $.post('{{ route("resp_db_import")}}', {_token: tempcsrf,total:5000,'count_ass':4},
+                                function (resp, textStatus, jqXHR) { 
+                                    $.post('{{ route("resp_db_import")}}', {_token: tempcsrf,total:5000,'count_ass':5},
+                                    function (resp, textStatus, jqXHR) {
+                                        $.post('{{ route("resp_db_import")}}', {_token: tempcsrf,total:5000,'count_ass':6},
+                                        function (resp, textStatus, jqXHR) {
+                                            $.post('{{ route("resp_db_import")}}', {_token: tempcsrf,total:5000,'count_ass':7},
+                                            function (resp, textStatus, jqXHR) {
+                                                $.post('{{ route("resp_db_import")}}', {_token: tempcsrf,total:5000,'count_ass':8},
+                                                function (resp, textStatus, jqXHR) {
+                                                    $.post('{{ route("resp_db_import")}}', {_token: tempcsrf,total:5000,'count_ass':9},
+                                                    function (resp, textStatus, jqXHR) {
+                                                        $.post('{{ route("resp_db_import")}}', {_token: tempcsrf,total:5000,'count_ass':10},
+                                                        function (resp, textStatus, jqXHR) {
+                                                            console.log(resp);
+                                                        });
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
             </script>
