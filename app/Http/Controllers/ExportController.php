@@ -1407,8 +1407,7 @@ class ExportController extends Controller
                 // )
                 // ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
 
-                $all_datas = Cashout::select(
-                    'cashouts.*',
+                $all_datas = Respondents::select(
                     'respondents.id as resp_id',
                     'respondents.name',
                     'respondents.surname',
@@ -1421,26 +1420,25 @@ class ExportController extends Controller
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 3 THEN 1 END) as complete'),
                     DB::raw('COUNT(CASE WHEN cashouts.status_id = 0 THEN 1 END) as failed')
                 )
-                ->join('respondents', 'respondents.id', '=', 'cashouts.respondent_id');
+                ->leftJoin('cashouts', 'respondents.id', '=', 'cashouts.respondent_id');
                 
-            
-            if($from != null && $to != null){
-                $all_datas = $all_datas->whereBetween('cashouts.created_at', [$from, $to]);
-            }
-            
-            if($respondents != ""){
-                $all_datas = $all_datas->whereIn('cashouts.respondent_id', [$respondents]);
-            }
-            
-            if($cashout_type != ""){
-                $all_datas = $all_datas->where('cashouts.type_id', $cashout_type);
-            }
-            
-            $all_datas = $all_datas
-                ->groupBy('respondents.id')
-                ->orderBy("cashouts.id", "desc")
-                ->take(20)
-                ->get();
+                if ($from != null && $to != null) {
+                    $all_datas = $all_datas->whereBetween('cashouts.created_at', [$from, $to]);
+                }
+
+                if ($respondents != "") {
+                    $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
+                }
+
+                if ($cashout_type != "") {
+                    $all_datas = $all_datas->where('cashouts.type_id', $cashout_type);
+                }
+
+                $all_datas = $all_datas
+                    ->groupBy('respondents.id')
+                    ->orderBy("respondents.id", "desc")  // Use respondents.id for consistent ordering
+                    ->get();
+
             
                 $sheet->setCellValue('A1', 'PID');
                 $sheet->setCellValue('B1', 'First Name');

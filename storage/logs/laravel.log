@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [2024-10-01 08:59:45] local.ERROR: The "--columns" option does not exist. {"exception":"[object] (Symfony\\Component\\Console\\Exception\\RuntimeException(code: 0): The \"--columns\" option does not exist. at C:\\wamp64\\www\\bms_new\\vendor\\symfony\\console\\Input\\ArgvInput.php:223)
 [stacktrace]
 #0 C:\\wamp64\\www\\bms_new\\vendor\\symfony\\console\\Input\\ArgvInput.php(150): Symfony\\Component\\Console\\Input\\ArgvInput->addLongOption('columns', 'uri,name,action...')
@@ -43,3 +44,5 @@
 #10 C:\\wamp64\\www\\bms_new\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #11 {main}
 "} 
+=======
+>>>>>>> e1420da79cd646a8e5e50ddc1ec8ca19c2a8af56

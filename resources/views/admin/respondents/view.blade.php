@@ -859,106 +859,48 @@
         url = url + '/' + id;
         document.location.href = url;
     }
-
-    /* Projects Inner Page */
     function projects_table() {
-        $('#projects_table').dataTable().fnDestroy();
-        $('#projects_table').DataTable({
-            searching: true,
-            ordering: true,
-            dom: 'lfrtip',
-            info: true,
-            iDisplayLength: 10,
-            lengthMenu: [
-                [10, 50, 100, -1],
-                [10, 50, 100, "All"]
-            ],
-            ajax: {
-                url: "{{ route('get_all_projects') }}",
-                data: {
-                    _token: tempcsrf,
-                    id: '{{ $data->id }}',
-                    inside_form: 'respondents',
+            $('#projects_table').dataTable().fnDestroy();
+            $('#projects_table').DataTable({
+                searching: true,
+                ordering: true,
+                dom: 'lfrtip',
+                responsive:false,
+                info: true,
+                iDisplayLength: 100,
+                lengthMenu: [
+                    [100, 50, 25, -1],
+                    [100, 50, 25, "All"]
+                ],
+                ajax: {
+                    url: "{{ route('get_all_projects') }}",
+                    data: {
+                        _token: tempcsrf,
+                        id: '{{ $data->id }}',
+                        inside_form: 'respondents',
+                    },
+                    error: function(xhr, error, thrown) {
+                        alert("undefind error");
+                    }
                 },
-                error: function(xhr, error, thrown) {
-                    alert("undefind error");
-                }
-            },
-            columns: [{
-                    data: 'select_all',
-                    name: 'select_all',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'id_show',
-                    name: 'id_show',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'numbers',
-                    name: 'numbers',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'client',
-                    name: 'client',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'name',
-                    name: 'name',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'creator',
-                    name: 'creator',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'type',
-                    name: 'type',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'reward_amount',
-                    name: 'reward_amount',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'project_link',
-                    name: 'project_link',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'created',
-                    name: 'created',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'status',
-                    name: 'status',
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: true,
-                    searchable: true
-                }
-            ]
-        });
-    }
+                columns: [
+                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
+                    { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
+                    { data: 'numbers',name: 'numbers',orderable: true,searchable: true },
+                    { data: 'client',name: 'client',orderable: true,searchable: true },
+                    { data: 'name',name: 'name',orderable: true,searchable: true },
+                    { data: 'creator',name: 'creator',orderable: true,searchable: true },
+                    { data: 'type',name: 'type',orderable: true,searchable: true },
+                    { data: 'reward_amount',name: 'reward_amount',orderable: true,searchable: true },
+                   
+                    { data: 'created',name: 'created',orderable: true,searchable: true },
+                    { data: 'status',name: 'status',orderable: true,searchable: true },
+                    { data: 'action',name: 'action',orderable: true,searchable: true }
+                ]
+            });
+        }
+
+   
 
     function cashout_type(get_this) {
         type = $(get_this).val();
@@ -1024,6 +966,12 @@
                     name: 'amount',
                     orderable: true,
                     searchable: true
+                },
+                { 
+                    data: 'points',
+                    name: 'points',
+                    orderable: true,
+                    searchable: true 
                 },
                 {
                     data: 'respondent_id',
