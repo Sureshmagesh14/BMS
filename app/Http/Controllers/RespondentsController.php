@@ -550,6 +550,8 @@ class RespondentsController extends Controller
                     2 => 'Deactivated',
                     3 => 'Unsubscribed',
                     4 => 'Pending',
+                    5 => 'Blocked',
+                    6 => 'Unregistred'
                 ];
 
             
