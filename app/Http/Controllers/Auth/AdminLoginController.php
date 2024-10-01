@@ -413,7 +413,7 @@ class AdminLoginController extends Controller
     public function resp_db_import(Request $request){
         $total = $request->total;
         $count_ass = $request->count_ass;
-        $get_import_data = DB::table('book1')->where('imported_status',0)->take($total)->get();
+        $get_import_data = DB::table('profile_data')->where('imported_status',0)->take($total)->get();
         $password = Hash::make('Change@123');
 
         foreach($get_import_data as $resp){
@@ -448,12 +448,13 @@ class AdminLoginController extends Controller
                 'id'        => $resp_id,
                 'name'      => $resp->fname,
                 'surname'   => $resp->lname,
+                'date_of_birth' => $resp->dob,
                 'email'     => $resp->main_email,
                 'mobile'    => $resp->pnumber,
                 'whatsapp'  => $resp->whatsapp,
                 'bank_name' => $resp->bank_main,
                 'password'  => $password,
-                'opted_in'  => $resp->opted_in,
+                'opted_in'  => $resp->opted_id,
             );
 
             $basic_details = array(
@@ -545,7 +546,7 @@ class AdminLoginController extends Controller
 
             Respondents::insert($respondent_insert);
             RespondentProfile::insert($resp_profile);
-            DB::table('book1')->where('id',$resp_id)->update(['imported_status' => 1]);
+            DB::table('profile_data')->where('id',$resp_id)->update(['imported_status' => 1]);
         }
 
         return $count_ass;
