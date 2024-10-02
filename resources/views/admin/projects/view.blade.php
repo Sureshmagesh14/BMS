@@ -325,9 +325,9 @@
     $(document).on('change', '.rewards_select_box', function(e) {
         var all_id = [];
         values = $(this).val();
-
+      
         if (values == 2) {
-            var values = $("#user_table tbody tr").map(function() {
+            var values = $("#rewards_table tbody tr").map(function() {
                 var $this = $(this);
                 if ($this.find("[type=checkbox]").is(':checked')) {
                     all_id.push($this.find("[type=checkbox]").attr('id'));

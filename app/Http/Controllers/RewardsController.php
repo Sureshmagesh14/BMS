@@ -319,7 +319,7 @@ class RewardsController extends Controller
     public function rewards_multi_delete(Request $request){
         try {
             $all_id = $request->all_id;
-          
+            
             foreach($all_id as $id){
                 $rewards = Rewards::find($id);
                 $rewards->delete();
