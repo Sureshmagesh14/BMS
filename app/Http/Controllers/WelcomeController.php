@@ -449,6 +449,7 @@ class WelcomeController extends Controller
                             'project_id'    => $proj_id,
                             'points'        => $rew_id*10,
                             'status_id'     => 1,
+                            'created_at'    => now(),
                         );
 
                         if ($resp_id > 0) {
@@ -529,6 +530,7 @@ class WelcomeController extends Controller
                             'project_id'    => $proj_id,
                             'points'        => $rew_id,
                             'status_id'     => 1,
+                            'created_at'    => now(),
                         );
 
                         if ($resp_id > 0) {
@@ -974,6 +976,7 @@ class WelcomeController extends Controller
                     'type_id'        => 1,
                     'account_number' => $account_number,
                     'amount'         => $reward,
+                    'created_at'    => now(),
                 );
                 DB::table('respondents')->where('id', $resp_id)->update(['account_number' => $account_number, 'account_holder' => $holder_name]);
             }
@@ -984,6 +987,7 @@ class WelcomeController extends Controller
                     'mobile_number'  => $result_mobile,
                     'type_id'        => ($method == "Airtime") ? 2 : 3,
                     'amount'         => $reward,
+                    'created_at'    => now(),
                 );
             }
             else if($method == "Donations"){
@@ -992,6 +996,7 @@ class WelcomeController extends Controller
                     'charity_id'    => $charitie,
                     'type_id'       => 4,
                     'amount'        => $reward,
+                    'created_at'    => now(),
                 );
             }
 
