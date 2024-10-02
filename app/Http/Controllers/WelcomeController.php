@@ -395,6 +395,7 @@ class WelcomeController extends Controller
                             'project_id'    => $proj_id,
                             'points'        => $rew_id,
                             'status_id'     => 1,
+                            'created_at'     => now(),
                         );
 
                         if ($resp_id > 0) {
@@ -783,6 +784,7 @@ class WelcomeController extends Controller
                 'type_id' => 1,
                 'account_number' => $account_number,
                 'amount' => $reward,
+                'created_at' =>now(),
             );
 
             DB::table('cashouts')->insert($insert_array);
