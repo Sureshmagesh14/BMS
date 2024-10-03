@@ -320,10 +320,13 @@ class RewardsController extends Controller
         try {
             $all_id = $request->all_id;
             
-            foreach($all_id as $id){
-                $rewards = Rewards::find($id);
-                $rewards->delete();
-            }
+            // foreach($all_id as $id){
+            //     $rewards = Rewards::find($id);
+            //     $rewards->delete();
+            // }
+
+            Rewards::whereIn('id', $all_id)->whereNull('cashout_id')->delete();
+
             // $get_cashout = DB::table('respondents as resp')->select('resp.account_number', 'resp.account_holder', 'cashouts.*')
             // ->join('cashouts', 'resp.id', 'cashouts.respondent_id')
             // ->where('cashouts.type_id', '!=', 3)
