@@ -227,22 +227,26 @@ class WelcomeController extends Controller
 
             $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
             ->whereYear('created_at', $currentYear)
+            ->whereNull('deleted_at') // Exclude soft-deleted records
             ->sum('points');
             
             
             $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
             ->where(function ($query) use ($currentYear) {
                 $query->whereYear('created_at', '<', $currentYear) // Filters past year data
-                      ->orWhere(function ($query) use ($currentYear) {
-                          $query->whereYear('created_at', $currentYear); // Filters current year data
-                      });
+                    ->orWhere(function ($query) use ($currentYear) {
+                        $query->whereYear('created_at', $currentYear); // Filters current year data
+                    });
             })
+            ->whereNull('deleted_at') // Exclude trashed records
             ->sum('points');
+
 
             $available_points = DB::table('rewards')
             ->where('respondent_id', Session::get('resp_id'))
             ->where('status_id', 2)
             ->whereNull('cashout_id')
+            ->whereNull('deleted_at') // Exclude trashed records
             ->groupBy('respondent_id')
             ->sum('points');
             
@@ -449,6 +453,7 @@ class WelcomeController extends Controller
                             'project_id'    => $proj_id,
                             'points'        => $rew_id*10,
                             'status_id'     => 1,
+                            'created_at'    => now(),
                         );
 
                         if ($resp_id > 0) {
@@ -459,8 +464,10 @@ class WelcomeController extends Controller
             }
 
             $currentYear=Carbon::now()->year;
+            
             $get_current_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
             ->whereYear('created_at', $currentYear)
+            ->whereNull('deleted_at') // Exclude trashed records
             ->sum('points');
 
             $get_overrall_rewards = Rewards::where('respondent_id', Session::get('resp_id'))
@@ -470,12 +477,14 @@ class WelcomeController extends Controller
                           $query->whereYear('created_at', $currentYear); // Filters current year data
                       });
             })
+            ->whereNull('deleted_at') // Exclude trashed records
             ->sum('points');
         
             $available_points = DB::table('rewards')
             ->where('respondent_id', Session::get('resp_id'))
             ->where('status_id', 2)
             ->whereNull('cashout_id')
+            ->whereNull('deleted_at') // Exclude trashed records
             ->groupBy('respondent_id')
             ->sum('points');
                         
@@ -529,6 +538,7 @@ class WelcomeController extends Controller
                             'project_id'    => $proj_id,
                             'points'        => $rew_id,
                             'status_id'     => 1,
+                            'created_at'    => now(),
                         );
 
                         if ($resp_id > 0) {
@@ -974,6 +984,7 @@ class WelcomeController extends Controller
                     'type_id'        => 1,
                     'account_number' => $account_number,
                     'amount'         => $reward,
+                    'created_at'    => now(),
                 );
                 DB::table('respondents')->where('id', $resp_id)->update(['account_number' => $account_number, 'account_holder' => $holder_name]);
             }
@@ -984,6 +995,7 @@ class WelcomeController extends Controller
                     'mobile_number'  => $result_mobile,
                     'type_id'        => ($method == "Airtime") ? 2 : 3,
                     'amount'         => $reward,
+                    'created_at'    => now(),
                 );
             }
             else if($method == "Donations"){
@@ -992,6 +1004,7 @@ class WelcomeController extends Controller
                     'charity_id'    => $charitie,
                     'type_id'       => 4,
                     'amount'        => $reward,
+                    'created_at'    => now(),
                 );
             }
 
