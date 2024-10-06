@@ -31,20 +31,25 @@
                    </div>
                    <div class="w-75 ml-auto d-flex d-sm-flex">
                       <div class="w-50">
-                         @if($get_cashout == null)
+                      
+                         
                          <h2 class=" h1 fw-bolder mt-2 position-relative">Your Available Rewards                        </h2>
                          <h2 class="yelow-clr h1 fw-bolder mt-2 position-relative">{{ $get_reward }} <span>Points</span> </h2>
                          <p class="position-relative h1 mb-3">10 points = R1</p>
-                         @if($get_reward >= 40)
-                         <button type="button" class="position-relative text-center btn btn-yellow width-fit-content d-flex m-auto" id="request_press"
-                            data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
-                            data-bs-original-title="{{ __('Cashout Process') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
-                         Request Cash Out
-                         </button>
-                         @endif
-                         <!-- <p class="very-sm-text mt-3" style="text-align: left;">* Points value automatically change to Monetary value</p> -->
-                         <!-- <p class="very-sm-text mt-3" style="text-align: left;">* Cash Outs not made expire at the end of the year and will not be re-rewarded!</p> -->
-                         @else
+
+                      
+
+                                 @if($get_reward >= 40)
+                                 <button type="button" class="position-relative text-center btn btn-yellow width-fit-content d-flex m-auto" id="request_press"
+                                    data-url="{{ route('cashout_form') }}" data-size="xl" data-ajax-popup="true"
+                                    data-bs-original-title="{{ __('Cashout Process') }}" data-bs-toggle="tooltip" data-value="{{ $get_reward }}">
+                                 Request Cash Out
+                                 </button>
+                                 @endif
+
+                        
+                        
+                         @if($get_cashout != null)
                          <h2 class="position-relative yelow-clr h1 fw-bolder mt-5"> 
                            @if(is_null($get_cashout->status_id))
                                 

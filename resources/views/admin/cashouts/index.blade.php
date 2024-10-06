@@ -151,6 +151,7 @@
                     { data: 'type_id',name: 'type_id',orderable: true,searchable: true },
                     { data: 'status_id',name: 'status_id',orderable: true,searchable: true },
                     { data: 'amount',name: 'amount',orderable: true,searchable: true },
+                    { data: 'points',name: 'points',orderable: true,searchable: true },
                     { data: 'respondent_id',name: 'respondent_id',orderable: true,searchable: true },
                     { data: 'action',name: 'action',orderable: true,searchable: true }
                 ]

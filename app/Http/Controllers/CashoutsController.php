@@ -10,6 +10,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use App\Models\Users;
+use Exception;
 class CashoutsController extends Controller
 {   
     public function cashouts()
@@ -97,6 +98,10 @@ class CashoutsController extends Controller
                 ->addColumn('amount', function ($all_data) {
                     $amount = $all_data->amount/10;
                     return $amount;
+                })
+                ->addColumn('points', function ($all_data) {
+                    $points = floor($all_data->amount / 10) * 10;
+                    return $points;
                 })
                 ->addColumn('respondent_id', function ($all_data) {
                     return $all_data->name.' - '.$all_data->email.' - '.$all_data->mobile;

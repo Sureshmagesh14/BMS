@@ -27,13 +27,17 @@
         display: inline-block;
         margin-bottom: 0.5rem !important;
     }
+    .cir-border {
+        border: 1px solid #fff;
+        border-radius: 25px !important;
+    }
 </style>
 <section class="bg-greybg vh-100">
     <div class="container">
         <div class="row align-items-center justify-content-center pt-5">
 
 <!-- cashout summarry -->
-            <div class="bg-white my-2 max-w-100">
+            <div class="bg-white my-2 max-w-100 cir-border">
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm">Cashout Summary</span>
                 </h4>
@@ -108,7 +112,7 @@
 
             <!-- outstanding  -->
 
-            <div class="bg-white my-2 max-w-100">
+            <div class="bg-white my-2 max-w-100 cir-border">
                 <h4 class="d-flex align-items-center justify-content-around">
                     <span class="small-font-sm">Outstanding Cash Outs</span>
                 </h4>

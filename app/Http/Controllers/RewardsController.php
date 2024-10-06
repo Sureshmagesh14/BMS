@@ -86,6 +86,9 @@ class RewardsController extends Controller
                             return '-';
                         }
                     })
+                    ->addColumn('points', function ($all_data) {
+                        return $all_data->points / 10;
+                    })
                     ->addColumn('respondent_id', function ($all_data) {
                         return $all_data->rname.' - '.$all_data->remail.' - '.$all_data->rmobile;
                     })
@@ -316,11 +319,18 @@ class RewardsController extends Controller
     public function rewards_multi_delete(Request $request){
         try {
             $all_id = $request->all_id;
-          
+            
             foreach($all_id as $id){
-                $rewards = Rewards::find($id);
-                $rewards->delete();
+            
+                $rewards = Rewards::where('id', $id)->whereNull('cashout_id')->first();
+                if ($rewards) {
+                    $rewards->delete();
+                }
+                
             }
+
+            
+            
             // $get_cashout = DB::table('respondents as resp')->select('resp.account_number', 'resp.account_holder', 'cashouts.*')
             // ->join('cashouts', 'resp.id', 'cashouts.respondent_id')
             // ->where('cashouts.type_id', '!=', 3)

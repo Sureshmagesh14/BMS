@@ -41,12 +41,22 @@
                         @php $status='-'; @endphp
                     @endif
 
-                    {{ $data->amount / 10 }}
+                    {{ $status }}
                 </td>
             </tr>
             <tr>
                 <th>Amount (R)</th>
                 <td>{{ $data->amount / 10 }}</td>
+            </tr>
+            <tr>
+                <th>Points</th>
+                <td>
+                    @php
+                        $points = floor($data->amount / 10) * 10;
+                    @endphp
+                    
+                    {{ $points }}
+                </td>
             </tr>
             <tr>
                 <th>Respondent</th>
