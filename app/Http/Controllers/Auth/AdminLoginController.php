@@ -415,9 +415,9 @@ class AdminLoginController extends Controller
         $count_ass = $request->count_ass;
         $get_import_data = DB::table('profile_data')->where('imported_status',0)->take($total)->get();
         $password = Hash::make('Change@123');
-
+        $resp_inc_get = Respondents::orderBy('id','DESC')->first();
+        $res_inc = ($resp_inc_get != null) ? ($resp_inc_get->id + 1) : 1;
         foreach($get_import_data as $resp){
-            $resp_id = $resp->id;
             $no_vehicle = 0;
             $no_children = 0;
 
@@ -445,7 +445,7 @@ class AdminLoginController extends Controller
             }
             
             $respondent_insert = array(
-                'id'        => $resp_id,
+                'id'        => $resp->id,
                 'name'      => $resp->fname,
                 'surname'   => $resp->lname,
                 'date_of_birth' => $resp->dob,
@@ -501,8 +501,8 @@ class AdminLoginController extends Controller
             $car_detials   = array();
 
             $resp_profile = array(
-                'pid'               => $resp_id,
-                'respondent_id'     => $resp_id,
+                'pid'               => $resp->id,
+                'respondent_id'     => $resp->id,
                 'basic_details'     => json_encode($basic_details),
                 'essential_details' => json_encode($essential_details),
                 'extended_details'  => json_encode($extended_details),
@@ -547,7 +547,8 @@ class AdminLoginController extends Controller
 
             Respondents::insert($respondent_insert);
             RespondentProfile::insert($resp_profile);
-            DB::table('profile_data')->where('id',$resp_id)->update(['imported_status' => 1]);
+            DB::table('profile_data')->where('id',$resp->id)->update(['imported_status' => 1]);
+            $res_inc++;
         }
 
         return $count_ass;

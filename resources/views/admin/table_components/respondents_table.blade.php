@@ -101,6 +101,7 @@
                                 <option value="2">Deactivated</option>
                                 <option value="3">Unsubscribed</option>
                                 <option value="5">Blacklisted</option>
+                                <option value="6">Unregistered</option>
                             </select>
                         </li>
                         <li class="mb-3">
