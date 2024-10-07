@@ -1139,6 +1139,7 @@ class ProjectsController extends Controller
                             'project_id'    => $proj_id,
                             'points'        => $rew_id,
                             'status_id'     => 1,
+                            'created_at'    => now(),
                         );
 
                         if ($resp_id > 0) {
