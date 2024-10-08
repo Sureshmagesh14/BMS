@@ -1537,6 +1537,8 @@ class WelcomeController extends Controller
             if (strlen($phone) > 9) {
                 return redirect()->back()->with('error', 'Invalid phone number format: Must be 9 digits or less');
             }
+
+            $phone = '27' . $phone; // Add the prefix
     
             // Check if the phone number exists
             $user = Respondents::where('mobile', $phone)
