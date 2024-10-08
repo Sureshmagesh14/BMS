@@ -91,7 +91,7 @@ class AdminLoginController extends Controller
                 $active_val   = DB::table('respondents')->where("active_status_id",1)->count();
                 $deactive_val = DB::table('respondents')->where("active_status_id",2)->count();
                 $unsub_val    = DB::table('respondents')->where("active_status_id",3)->count();
-                $pending_val  = DB::table('respondents')->where("active_status_id",5)->count();
+                $pending_val  = DB::table('respondents')->where("active_status_id",4)->count();
                 $black_val    = DB::table('respondents')->where("active_status_id",5)->count();
                 $complete = DB::table('respondents')->where("profile_completion_id",1)->count();
                 $incomplete = DB::table('respondents')->where("profile_completion_id",0)->count();
@@ -103,7 +103,7 @@ class AdminLoginController extends Controller
                 $dec_per=($tot > 0) ? number_format( $deactive_val/$tot * 100, 2 ) . ' %' : 0;
             
 
-                $unsub_pre=($tot > 0) ? number_format( $unsub_val/$tot * 100, 2 ) . ' %' : 0;
+                $unsub_per=($tot > 0) ? number_format( $unsub_val/$tot * 100, 2 ) . ' %' : 0;
           
 
                 $pen_per=($tot > 0) ? number_format( $pending_val/$tot * 100, 2 ) . ' %' : 0;
@@ -185,7 +185,7 @@ class AdminLoginController extends Controller
 
                 //dd($dashboard_data);
                 $dashboard_data='';
-;                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val','black_val','pending_val','complete','incomplete','tot','comp_per','incomp_per','act_per','dec_per','unsub_pre','pen_per','bla_per','share_link','dashboard_data'));
+;                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val','black_val','pending_val','complete','incomplete','tot','comp_per','incomp_per','act_per','dec_per','unsub_per','pen_per','bla_per','share_link','dashboard_data'));
                 
                 return redirect("/")->withSuccess('You are not allowed to access');
             }
