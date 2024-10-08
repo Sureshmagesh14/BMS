@@ -25,6 +25,7 @@ See if you qualify!
 <p>
     Points {{ $reward }}
 </p>
+<br><a href="{{ route('dashboard') }}" target="_blank">Click here</a>
 <hr>
 @endif
 <!-- <br><br>
