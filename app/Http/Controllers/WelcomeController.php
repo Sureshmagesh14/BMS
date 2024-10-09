@@ -1570,13 +1570,13 @@ class WelcomeController extends Controller
             $smsContent .= $resetUrl . "\n\n";  // Include the reset URL
             $smsContent .= "If you did not request a password reset, no further action is required.\n";
             $smsContent .= "This password reset link will expire in 60 minutes.";
-    
+
             // Parameters for the SMS
             $postData = [
                 'username' => config('constants.username'),
                 'password' => config('constants.password'),
                 'account'  => config('constants.account'),
-                'da'       => config('constants.phone') . $phone, // Destination number with country code
+                'da'       => $phone, // Destination number with country code
                 'ud'       => $smsContent, // SMS content
             ];
     

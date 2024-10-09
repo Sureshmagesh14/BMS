@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Searchable;
 use DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Models\RespondentTags; 
 class Respondents extends Authenticatable 
 {
     use HasApiTokens, HasFactory, Notifiable, Searchable, SoftDeletes;
@@ -177,4 +177,9 @@ class Respondents extends Authenticatable
 
         return $array_send;
     }
+
+    public function respondentTags()
+{
+    return $this->hasMany(RespondentTags::class, 'respondent_id', 'id');
+}
 }
