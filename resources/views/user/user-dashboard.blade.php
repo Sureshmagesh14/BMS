@@ -687,13 +687,13 @@
         $('#DataTables_Table_0').DataTable({
             responsive: true,
             "oLanguage": {
-                "sEmptyTable": "No Paid Online Surveys Found"
+                "sEmptyTable": "No Qualify for other Research Found"
             }
         });
         $('#DataTables_Table_1').DataTable({
             responsive: true,
             "oLanguage": {
-                "sEmptyTable": "No Qualify for Other Research Found"
+                "sEmptyTable": "No Paid Online Surveys Found"
             }
         });
         $('#DataTables_Table_2').DataTable({
