@@ -97,7 +97,7 @@
             <div class="input-group">
                 <div class="input-group-text">+27(0)</div>
                 <input type="text" class="form-control" id="mobile" name="mobile" autocomplete="off"
-                    value="{{ $respondents->mobile }}" maxlength="16">
+                value="{{ str_replace('27', '', $respondents->mobile) }}" maxlength="16">
             </div>
             <small class="form-text text-muted">Don’t include 0 in starting.</small>
         </div>
@@ -111,7 +111,7 @@
             <div class="input-group">
                 <div class="input-group-text">+27(0)</div>
                 <input type="text" class="form-control" id="whatsapp" name="whatsapp"
-                    placeholder="Don’t include 0 in starting." autocomplete="off" value="{{ $respondents->whatsapp }}"
+                    placeholder="Don’t include 0 in starting." autocomplete="off" value="{{ str_replace('27', '', $respondents->whatsapp) }}"
                     maxlength="16">
                 <span id="mobile-error" class="invalid-feedback"></span>
             </div>
