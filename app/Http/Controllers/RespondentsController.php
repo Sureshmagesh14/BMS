@@ -584,7 +584,7 @@ class RespondentsController extends Controller
                     } else if ($length == 10 && $m_number[0] == '0'){
                         $mobile = '27' . substr($m_number, 1);
                     }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                        $mobile = $m_number;
+                        $mobile = '+'.$m_number;
                     } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                         $mobile = $m_number;
                     }
@@ -602,7 +602,7 @@ class RespondentsController extends Controller
                         $whatsapp = '27' . substr($w_number, 1);
                     }
                     elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                        $whatsapp = $w_number;
+                        $whatsapp = '+'. $w_number;
                     } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                         $whatsapp = $w_number;
                     }
