@@ -51,7 +51,17 @@ class RegisteredUserController extends Controller
             'password_register' => ['required', Rules\Password::defaults()->min(6)],
         ]);
         $ref_code = substr(md5(time()), 0, 8);
+
         $ref_code = ('r' . $ref_code);
+        $mobile = str_replace(' ', '', $request->mobile);
+        if (!str_starts_with($mobile, '27')) {
+            $mobile = '27' . ltrim($mobile, '0'); // Remove leading 0 if present
+        }
+
+        $whatsapp = str_replace(' ', '', $request->whatsapp);
+        if (!str_starts_with($whatsapp, '27')) {
+            $whatsapp = '27' . ltrim($whatsapp, '0'); // Remove leading 0 if present
+        }
 
         $user = Respondents::create([
             'name' => $request->name,
@@ -59,8 +69,8 @@ class RegisteredUserController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'id_passport' => $request->id_passport,
             'email' => $request->email,
-            'mobile' => str_replace(' ', '', $request->mobile),
-            'whatsapp' => str_replace(' ', '', $request->whatsapp),
+            'mobile' => $mobile,
+            'whatsapp' => $whatsapp,
             'password' => Hash::make($request->password_register),
             'referral_code' => $ref_code,
         ]);
