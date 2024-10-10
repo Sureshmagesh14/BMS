@@ -605,6 +605,7 @@
                         $('#panel').tokenInput("clear");
                         $('#respondents_survey').tokenInput("clear");
                         $('#respondents').tokenInput("clear");
+                        $('#projects').tokenInput("clear");
 
                     }, 9000); // Adjust the delay as needed
                 });
