@@ -50,7 +50,7 @@
                             <h4 class="card-title"></h4>
 
 
-                            <form action="{{ url('admin/export_all') }}" method="post">
+                            <form id="exportForm" action="{{ url('admin/export_all') }}" method="post">
                                 @csrf
 
                                 <div class="form-group row">
@@ -83,7 +83,7 @@
                                 </div>
 
 
-                                
+
 
                                 <div class="form-group row date_range" style="display: none;">
                                     <label class="col-md-2 col-form-label">Date Range</label>
@@ -136,7 +136,7 @@
                                     </div>
                                 </div>
 
-                               
+
                                 <div class="form-group row show_resp">
                                     <label class="col-md-2 col-form-label">Status</label>
                                     <div class="col-md-10">
@@ -162,7 +162,8 @@
                                         <div class="custom-control custom-radio mb-3">
                                             <input type="radio" id="Unsubscribed" name="resp_status"
                                                 class="custom-control-input" value="Unsubscribed">
-                                            <label class="custom-control-label" for="Unsubscribed">Unsubscribed</label>
+                                            <label class="custom-control-label"
+                                                for="Unsubscribed">Unsubscribed</label>
                                         </div>
 
                                     </div>
@@ -192,8 +193,8 @@
                                     <label class="col-md-2 col-form-label">Projects</label>
                                     <div class="col-md-10">
 
-                                        <input class="form-control" type="text" id="projects"
-                                            name="projects[]" value="{{ request()->get('q') }}">
+                                        <input class="form-control" type="text" id="projects" name="projects[]"
+                                            value="{{ request()->get('q') }}">
                                     </div>
                                 </div>
 
@@ -201,8 +202,8 @@
                                     <label class="col-md-2 col-form-label">Panel Name</label>
                                     <div class="col-md-10">
 
-                                        <input class="form-control" type="text" id="panel"
-                                            name="panel[]" value="{{ request()->get('q') }}">
+                                        <input class="form-control" type="text" id="panel" name="panel[]"
+                                            value="{{ request()->get('q') }}">
                                     </div>
                                 </div>
 
@@ -255,7 +256,7 @@
                                     </div>
                                 </div>
 
-                                
+
                                 <div class="form-group row show_month">
                                     <label class="col-md-2 col-form-label">Month</label>
                                     <div class="col-md-10">
@@ -327,7 +328,7 @@
                     $(".methods").hide();
                     $(".show_cashout_type").hide();
                     $(".respondents_survey").hide();
-                    
+
                     $("#module").val("");
                     $("#year").val("");
                     $("#month").val("");
@@ -340,12 +341,12 @@
                         }
                     });
 
-                    
+
                     $('#methods').on('change', function() {
                         if (this.value == 'projects_type') {
                             $(".projects").show();
                             $(".respondents_survey").hide();
-                        } else{
+                        } else {
                             $(".projects").hide();
                             $(".respondents_survey").show();
                         }
@@ -381,7 +382,7 @@
                             $(".show_user").hide();
                             $(".report_type").show();
                             $(".respondents").hide();
-                            $(".date_range").hide(); 
+                            $(".date_range").hide();
                             $(".respondents_survey").hide();
                             $(".projects").hide();
                             $(".show_pro_type").hide();
@@ -447,7 +448,7 @@
                             $(".show_month").show();
                             $(".show_role").show();
                             $(".show_action").show();
-                            $(".show_resp").hide(); 
+                            $(".show_resp").hide();
                             $(".respondents_survey").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
@@ -460,7 +461,7 @@
                             $(".projects").hide();
                             $(".panel").hide();
                             $(".show_cashout_type").hide();
-                        }else if (this.value == 'Panel') {
+                        } else if (this.value == 'Panel') {
                             $(".show_year").hide();
                             $(".show_month").hide();
                             $(".show_role").hide();
@@ -478,9 +479,8 @@
                             $(".methods").hide();
                             $(".projects").hide();
                             $(".show_cashout_type").hide();
-                           
-                        }
-                        else if (this.value == 'Survey') {
+
+                        } else if (this.value == 'Survey') {
                             $(".methods").show();
                             $(".show_year").hide();
                             $(".show_month").hide();
@@ -497,8 +497,7 @@
                             $(".date_range").hide();
                             $(".panel").hide();
                             $(".show_cashout_type").hide();
-                        } 
-                        else {
+                        } else {
                             $(".show_user").hide();
                             $(".projects").hide();
                             $(".show_year").hide();
@@ -557,7 +556,7 @@
                         theme: "bootstrap"
                     });
 
-                 
+
                     $("#panel").tokenInput("{{ route('tags_search_result') }}", {
                         propertyToSearch: "name",
                         tokenValue: "id",
@@ -598,5 +597,15 @@
                     $('#attach_respondents_form').validate({
                         ignore: ':hidden:not("#respondents")'
                     });
+                });
+                document.getElementById('exportForm').addEventListener('submit', function(event) {
+                    // Reset the form after a short delay to allow for the export process
+                    setTimeout(() => {
+                        this.reset(); // Reset the form fields
+                        $('#panel').tokenInput("clear");
+                        $('#respondents_survey').tokenInput("clear");
+                        $('#respondents').tokenInput("clear");
+
+                    }, 3000); // Adjust the delay as needed
                 });
             </script>
