@@ -1147,7 +1147,7 @@ class ExportController extends Controller
 
                        
 
-                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('A' . $rows, value: $all_data->id);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
                         $sheet->setCellValue('D' . $rows, $mobile_number);
@@ -1225,7 +1225,7 @@ class ExportController extends Controller
 
 
 
-                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
                         $sheet->setCellValue('D' . $rows, $mobile_number);
@@ -1303,7 +1303,7 @@ class ExportController extends Controller
 
 
 
-                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
                         $sheet->setCellValue('D' . $rows, $mobile_number);
@@ -1378,7 +1378,7 @@ class ExportController extends Controller
                         }
 
                 
-                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
                         $sheet->setCellValue('D' . $rows, $mobile_number);
@@ -1550,7 +1550,7 @@ class ExportController extends Controller
 
                 
 
-                    $sheet->setCellValue('A' . $rows, $i);
+                    $sheet->setCellValue('A' . $rows, $all_data->resp_id);
                     $sheet->setCellValue('B' . $rows, $all_data->name);
                     $sheet->setCellValue('C' . $rows, $all_data->surname);
                     $sheet->setCellValue('D' . $rows, $mobile_number);
@@ -1687,7 +1687,7 @@ class ExportController extends Controller
 
                     
 
-                    $sheet->setCellValue('A' . $rows, $i);
+                    $sheet->setCellValue('A' . $rows, $all_data->id);
                     $sheet->setCellValue('B' . $rows, $all_data->name);
                     $sheet->setCellValue('C' . $rows, $all_data->surname);
                     $sheet->setCellValue('D' . $rows, $mobile_number);
