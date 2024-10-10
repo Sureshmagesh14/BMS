@@ -73,7 +73,7 @@ class PasswordResetLinkController extends Controller
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'mobile' => 'required|digits:9',
+          
             'password' => 'required|min:6|confirmed',
             'token' => 'required|string',
         ]);
