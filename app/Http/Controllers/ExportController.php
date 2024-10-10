@@ -1658,7 +1658,7 @@ class ExportController extends Controller
                     $mobile_number = '-';
                     if (!empty($all_data->mobile)) {
                         $m_number =  preg_replace('/\s+/', '',$all_data->mobile);
-                        $length = strlen($m_number);
+                        $length = strlen($w_number);
                         if (strlen($m_number) == 9) {
                             $mobile_number = '27' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
@@ -1710,8 +1710,8 @@ class ExportController extends Controller
                     $sheet->setCellValue('G' . $rows, $status);
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                    $sheet->getStyle('C' . $rows . ':G' . $rows)->applyFromArray($styleArray2);
-                    $sheet->getStyle('C' . $rows . ':G' . $rows)->getAlignment()->setIndent(1);
+                    $sheet->getStyle('C' . $rows . ':F' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':F' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
                     $i++;
                 }
@@ -2972,10 +2972,14 @@ class ExportController extends Controller
                 $writer = new Xls($spreadsheet);
             }
             
-            $writer->save("../public/" . $fileName); 
+            $writer->save(public_path() . '/' . $fileName);
 
-            header("Content-Type: application/vnd.ms-excel");
-            return redirect(url('/') . "/" . $fileName);
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="' . $fileName . '"');
+            header('Content-Length: ' . filesize(public_path() . '/' . $fileName));
+            
+            readfile(public_path() . '/' . $fileName);
+            exit;
         } catch (Exception $e) {
             $errorMessage = sprintf(
                 "Error: %s in %s on line %d",
