@@ -1710,8 +1710,8 @@ class ExportController extends Controller
                     $sheet->setCellValue('G' . $rows, $status);
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                    $sheet->getStyle('C' . $rows . ':F' . $rows)->applyFromArray($styleArray2);
-                    $sheet->getStyle('C' . $rows . ':F' . $rows)->getAlignment()->setIndent(1);
+                    $sheet->getStyle('C' . $rows . ':G' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':G' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
                     $i++;
                 }
