@@ -42,6 +42,14 @@
         font-size: 1.2rem;
         font-weight: bold;
     }
+
+    .loader-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
@@ -323,8 +331,11 @@
                                     <div class="spinner-border" role="status">
                                         <span class="sr-only">Loading...</span>
                                     </div>
-                                    <p>Exporting data, please wait...</p>
+                                    <p class="loader-text">
+                                        Exporting data, please wait...
+                                    </p>
                                 </div>
+
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Export</button>
                                 </div>
