@@ -606,6 +606,6 @@
                         $('#respondents_survey').tokenInput("clear");
                         $('#respondents').tokenInput("clear");
 
-                    }, 3000); // Adjust the delay as needed
+                    }, 9000); // Adjust the delay as needed
                 });
             </script>

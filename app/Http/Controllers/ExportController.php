@@ -2972,10 +2972,14 @@ class ExportController extends Controller
                 $writer = new Xls($spreadsheet);
             }
             
-            $writer->save("../public/" . $fileName); 
+            $writer->save(public_path() . '/' . $fileName);
 
-            header("Content-Type: application/vnd.ms-excel");
-            return redirect(url('/') . "/" . $fileName);
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="' . $fileName . '"');
+            header('Content-Length: ' . filesize(public_path() . '/' . $fileName));
+            
+            readfile(public_path() . '/' . $fileName);
+            exit;
         } catch (Exception $e) {
             $errorMessage = sprintf(
                 "Error: %s in %s on line %d",
