@@ -16,6 +16,32 @@
     .apexcharts-legend.apexcharts-align-center.position-right {
         top: 38px !important;
     }
+
+    #loader {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        /* Dark background */
+        z-index: 9999;
+        /* On top of everything */
+        text-align: center;
+    }
+
+    #loader .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    #loader p {
+        color: white;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
@@ -50,7 +76,7 @@
                             <h4 class="card-title"></h4>
 
 
-                            <form id="exportForm" action="{{ url('admin/export_all') }}" method="post">
+                            <form action="{{ url('admin/export_all') }}" id="export_form" method="post">
                                 @csrf
 
                                 <div class="form-group row">
@@ -291,7 +317,14 @@
                                         </select>
                                     </div>
                                 </div>
-
+                                <!-- Loader Element -->
+                                <div id="loader"
+                                    style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <p>Exporting data, please wait...</p>
+                                </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Export</button>
                                 </div>
@@ -598,15 +631,49 @@
                         ignore: ':hidden:not("#respondents")'
                     });
                 });
-                document.getElementById('exportForm').addEventListener('submit', function(event) {
-                    // Reset the form after a short delay to allow for the export process
-                    setTimeout(() => {
-                        this.reset(); // Reset the form fields
-                        $('#panel').tokenInput("clear");
-                        $('#respondents_survey').tokenInput("clear");
-                        $('#respondents').tokenInput("clear");
-                        $('#projects').tokenInput("clear");
+                document.getElementById("export_form").addEventListener("submit", function(event) {
 
-                    }, 9000); // Adjust the delay as needed
+
+                    disablePage(); // Disable the page and show loader
+
+                    // Create a FormData object to capture the form fields
+                    let formData = new FormData(this);
+
+                    // Send AJAX request
+                    fetch("{{ url('admin/export_all') }}", {
+                            method: "POST",
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            enablePage(); // Re-enable the page
+
+                        })
+                        .catch(error => {
+                            enablePage(); // Re-enable on error
+
+                        });
                 });
+
+                function disablePage() {
+                    console.log("vl");
+                    document.querySelector("body").style.pointerEvents = 'none';
+
+                    // Show a loader or message (optional)
+                    document.getElementById("loader").style.display = 'block';
+
+
+
+
+
+                }
+
+                function enablePage() {
+                    document.querySelector("body").style.pointerEvents = 'auto';
+                    document.getElementById("loader").style.display = 'none';
+
+                }
             </script>
