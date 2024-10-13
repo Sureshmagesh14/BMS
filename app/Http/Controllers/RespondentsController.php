@@ -81,7 +81,13 @@ class RespondentsController extends Controller
                 $respondents->date_of_birth = $request->input('date_of_birth');
                 $respondents->id_passport = $request->input('id_passport');
                 $mobile= str_replace(' ', '', $request->mobile);
+                if (!str_starts_with($mobile, '27')) {
+                    $mobile = '27' . ltrim($mobile, '0'); // Remove leading 0 if present
+                }
                 $whatsapp = str_replace(' ', '', $request->whatsapp);
+                if (!str_starts_with($whatsapp, '27')) {
+                    $whatsapp = '27' . ltrim($whatsapp, '0'); // Remove leading 0 if present
+                }
                 $password = Hash::make($request->input('password'));
                 $respondents->password = $password;
                 $respondents->mobile = $mobile;
@@ -240,8 +246,18 @@ class RespondentsController extends Controller
         $respondent->surname = $request->input('surname', $respondent->surname);
         $respondent->date_of_birth = $request->input('date_of_birth', $respondent->date_of_birth);
         $respondent->id_passport = $request->input('id_passport', $respondent->id_passport);
-        $respondent->mobile = str_replace(' ', '', $request->input('mobile', $respondent->mobile));
-        $respondent->whatsapp = str_replace(' ', '', $request->input('whatsapp', $respondent->whatsapp));
+        $mobile= str_replace(' ', '', $request->mobile);
+        if (!str_starts_with($mobile, '27')) {
+            $mobile = '27' . ltrim($mobile, '0'); // Remove leading 0 if present
+        }
+        $respondent->mobile = $mobile;
+
+        $whatsapp= str_replace(' ', '', $request->whatsapp);
+        if (!str_starts_with($whatsapp, '27')) {
+            $whatsapp = '27' . ltrim($whatsapp, '0'); // Remove leading 0 if present
+        }
+        $respondent->whatsapp = $whatsapp;
+
         $password = Hash::make($request->input('password'));
         $respondent->password = $password;
         $respondent->email = $email;
@@ -568,7 +584,7 @@ class RespondentsController extends Controller
                     } else if ($length == 10 && $m_number[0] == '0'){
                         $mobile = '27' . substr($m_number, 1);
                     }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                        $mobile = $m_number;
+                        $mobile = '+'.$m_number;
                     } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                         $mobile = $m_number;
                     }
@@ -586,7 +602,7 @@ class RespondentsController extends Controller
                         $whatsapp = '27' . substr($w_number, 1);
                     }
                     elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                        $whatsapp = $w_number;
+                        $whatsapp = '+'. $w_number;
                     } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                         $whatsapp = $w_number;
                     }

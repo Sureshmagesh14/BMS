@@ -76,7 +76,7 @@
                                         <tr>
                                             <th>Mobile Number</th>
                                             @if (isset($data->mobile))
-                                                @php $mobile='+27 '.$data->mobile;@endphp
+                                                @php $mobile='+'.$data->mobile;@endphp
                                             @else
                                                 @php $mobile='';@endphp
                                             @endif
@@ -86,7 +86,7 @@
                                         <tr>
                                             <th>Whatsapp Number</th>
                                             @if (isset($data->whatsapp))
-                                                @php $whatsapp='+27 '.$data->whatsapp;@endphp
+                                                @php $whatsapp='+'.$data->whatsapp;@endphp
                                             @else
                                                 @php $whatsapp='';@endphp
                                             @endif
