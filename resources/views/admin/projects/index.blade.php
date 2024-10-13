@@ -150,7 +150,7 @@ table.dataTable {
                 }
             }).get();
 
-            select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $(".hided_option").val();
+            var select_value = $("#action_2").val();
 
             if(select_value == 3){
                 titles = "Status > Complete";
