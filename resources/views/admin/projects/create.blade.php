@@ -131,7 +131,7 @@
     </div>
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Email Description 1
+        <label for="example-search-input" class="col-md-2 col-form-label">Email Description 
         </label>
         <div class="col-md-10">
             <textarea class="form-control" name="description1" id="description1"></textarea>

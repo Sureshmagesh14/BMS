@@ -167,9 +167,12 @@ class ExportController extends Controller
                 \DB::raw('JSON_EXTRACT(respondent_profile.essential_details, "$.household_income_per_month") AS household_income_per_month'),
             ])
             ->where('respondents.active_status_id', 1)
-            ->whereDoesntHave('respondentTags', function ($query) {
-                $query->where('tag_id', 1);
-            })
+            ->whereNotExists(function ($query) {
+                $query->select(\DB::raw(1))
+                    ->from('respondent_tag')
+                    ->whereColumn('respondent_tag.respondent_id', '=', 'respondents.id')
+                    ->where('respondent_tag.tag_id', 1);
+            }) // Exclude respondents with tag_id = 1
             ->orderByRaw('CASE WHEN CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) IS NULL OR CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) = 0 THEN 1 ELSE 0 END ASC')
             ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) ASC')
             ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.household_income_per_month") AS UNSIGNED) ASC')
