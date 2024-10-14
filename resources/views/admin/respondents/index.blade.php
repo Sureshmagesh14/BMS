@@ -185,12 +185,17 @@
 
             select_value = (all_id.length != 0) ? $(".respondents_select_box").val() : 0;
 
-            if(select_value == 3){
-                titles = "Status > Complete";
-                select_action("POST", all_id, select_value, "{{ route('project_action') }}", 'respondents_datatable', titles, "Are You Want To Change Status", "Action");
-            }
-            else if(select_value == "delete_all"){
+            
+            if(select_value == "delete_all"){
                 multi_delete("POST", all_id, "{{ route('respondents_multi_delete') }}", "Respondents Deleted", 'respondents_datatable');
+            }
+            else if(select_value == 10){
+                titles = "Notify to the Respondent";
+                select_action("POST", all_id, select_value, "{{ route('notify_respondent') }}", 'respondents_datatable', titles, "Are You Want To Change Status", "Action");
+            }
+            else if(select_value == 11){
+                titles = "Do you want unassign the project";
+                select_action("POST", all_id, select_value, "{{ route('project_unassign') }}", 'respondents_datatable', titles, "Are You Want To Change Status", "Action");
             }
             else if(select_value == "qualified"){
                 var get_status = this.value;
@@ -231,6 +236,10 @@
 
                     }
                 });
+            }
+            else if(select_value != ""){
+                titles = "Status > Complete";
+                select_action("POST", all_id, select_value, "{{ route('respondent_action') }}", 'respondents_datatable', titles, "Are You Want To Change Status", "Action");
             }
             else{
                 toastr.info("OOPS! Select the action");
