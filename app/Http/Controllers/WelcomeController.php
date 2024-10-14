@@ -973,7 +973,11 @@ class WelcomeController extends Controller
         $mobile_network = $request->network;
         $mobile_number  = $request->mobile_number;
         $charitie       = $request->charitie;
-        $result_mobile  = '27' . str_replace(' ', '', $mobile_number); // Remove all spaces
+        $mobile_number = str_replace(' ', '', $mobile_number); // Remove all spaces
+
+       
+        $result_mobile = $mobile_number;
+        
 
         if ($reward != 0) {
             if($method == "EFT"){
@@ -1158,7 +1162,7 @@ class WelcomeController extends Controller
         //dd($cashouts);
 
         $batch = $this->generateBatchFile($cashouts);
-        $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
+        $key =  env('NETCASH_KEY');
      
         $this->soapWrapper->add('netcash', function ($service) {
             $service
@@ -1222,7 +1226,7 @@ class WelcomeController extends Controller
                 $batchType = "PaySalaries";
                 $description = "My Test Batch";
                 $vendorKey = '24ade73c-98cf-47b3-99be-cc7b867b3080';
-                $serviceKey = '0f70ac77-065a-4246-9126-55977b40ae3d';
+                $serviceKey =  env('NETCASH_KEY');;
 
                 $records = [
                     ['accountNumber' => '2044060104', 'branchCode' => '470010', 'amount' => 1.00]
@@ -1234,7 +1238,7 @@ class WelcomeController extends Controller
                 //$batch = $this->generateBatchFile($cashouts);
                 //dd($batchFilePath);
 
-                $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
+                $key = env('NETCASH_KEY');;
 
                 $response = $this->batchFileUpload($key, $batchFilePath);
                 dd($response);
@@ -1365,7 +1369,7 @@ class WelcomeController extends Controller
         $instruction = 'Realtime';
         $batchName = 'My Creditor batch2222222sadasda';
         $vendorKey = '24ade73c-98cf-47b3-99be-cc7b867b3080';
-        $serviceKey = '0f70ac77-065a-4246-9126-55977b40ae3d';
+        $serviceKey =  env('NETCASH_KEY');
         // $date = Carbon::now()->addDay()->format('Ymd');
         $date = Carbon::now()->format('Ymd');
 
@@ -1533,13 +1537,7 @@ class WelcomeController extends Controller
                 return redirect()->back()->with('error', 'Invalid phone number format');
             }
     
-            // Validate phone number length (less than or equal to 9 digits)
-            if (strlen($phone) > 9) {
-                return redirect()->back()->with('error', 'Invalid phone number format: Must be 9 digits or less');
-            }
 
-            $phone = '27' . $phone; // Add the prefix
-    
             // Check if the phone number exists
             $user = Respondents::where('mobile', $phone)
                 ->orWhere('whatsapp', $phone)

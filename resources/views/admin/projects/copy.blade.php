@@ -2,25 +2,28 @@
     <input type="hidden" id="id" name="id" value="{{ $projects->id }}">
     @csrf
     <div class="form-group row">
-        <label for="example-text-input" class="col-md-2 col-form-label">Name / Code *</label>
+        <label for="example-text-input" class="col-md-2 col-form-label">Project Number *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="number" name="number" value="{{ $projects->number }}" required>
+            <input type="text" class="form-control" id="number" name="number" value="{{ $projects->number }}"
+                required>
         </div>
     </div>
 
     <div class="form-group row">
-        <label for="example-text-input" class="col-md-2 col-form-label">Client *
+        <label for="example-text-input" class="col-md-2 col-form-label">Client Name *
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="client" name="client" value="{{ $projects->client }}" required>
+            <input type="text" class="form-control" id="client" name="client" value="{{ $projects->client }}"
+                required>
         </div>
     </div>
 
-
     <div class="form-group row">
-        <label for="example-text-input" class="col-md-2 col-form-label">Name *</label>
+        <label for="example-text-input" class="col-md-2 col-form-label">Project Name *</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="name" name="name" value="{{ $projects->name }}" required>
+            <input type="text" class="form-control" id="name" name="name"
+                value="{{ $projects->name }}" required>
+            <div id="name-error" class="text-danger"></div>
         </div>
     </div>
 
@@ -30,8 +33,8 @@
             <select id="user" name="user" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">Choose an option</option>
                 @foreach ($users as $user)
-                    <option @if($projects->user_id  == $user->id) selected @endif
-                    value="{{$user->id}}">{{$user->name}} {{$user->surname}}</option>
+                    <option @if ($projects->user_id == $user->id) selected @endif value="{{ $user->id }}">
+                        {{ $user->name }} {{ $user->surname }}</option>
                 @endforeach
             </select>
         </div>
@@ -40,23 +43,23 @@
 
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Type *
+        <label for="example-search-input" class="col-md-2 col-form-label">Survey Type *
         </label>
         <div class="col-md-10">
             <select id="type_id" name="type_id" class="w-full form-control form-select" required>
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
-                <option @if($projects->type_id==1) selected @endif value="1">
+                {{-- <option @if ($projects->type_id == 1) selected @endif value="1">
                     Pre-Screener
-                </option>
-                <option @if($projects->type_id==2) selected @endif value="2">
+                </option> --}}
+                <option @if ($projects->type_id == 2) selected @endif value="2">
                     Pre-Task
                 </option>
-                <option @if($projects->type_id==3) selected @endif value="3">
+                <option @if ($projects->type_id == 3) selected @endif value="3">
                     Paid survey
                 </option>
-                <option @if($projects->type_id==4) selected @endif value="4">
+                <option @if ($projects->type_id == 4) selected @endif value="4">
                     Unpaid survey
                 </option>
             </select>
@@ -80,9 +83,24 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Project Link
         </label>
         <div class="col-md-10">
+            @if ($projects->project_link != null)
+                @php $project_link=$projects->project_link; @endphp
+            @else
+                @php $project_link=$refcode; @endphp
+            @endif
+            <input type="url" class="form-control" id="project_link" value="{{ url('share_project', $project_link) }}" disabled>
 
-            <input type="url" class="form-control" id="project_link" value="{{ url('share_project', $refcode) }}" disabled>
-            <input type="hidden" class="form-control" name="project_link" value="{{ $refcode }}">
+            <input type="hidden" class="form-control" name="project_link" value="{{ $project_link }}">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="example-search-input" class="col-md-2 col-form-label">Project Name for Respondents *
+
+        </label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="project_name_resp" name="project_name_resp"
+                value="{{ $projects->project_name_resp }}" required>
         </div>
     </div>
 
@@ -94,16 +112,16 @@
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
-                <option @if($projects->status_id==1) selected @endif  value="1">
+                <option @if ($projects->status_id == 1) selected @endif value="1">
                     Pending
                 </option>
-                <option @if($projects->status_id==2) selected @endif value="2">
+                <option @if ($projects->status_id == 2) selected @endif value="2">
                     Active
                 </option>
-                <option @if($projects->status_id==3) selected @endif value="3">
+                <option @if ($projects->status_id == 3) selected @endif value="3">
                     Completed
                 </option>
-                <option @if($projects->status_id==4) selected @endif value="4">
+                <option @if ($projects->status_id == 4) selected @endif value="4">
                     Cancelled
                 </option>
             </select>
@@ -111,7 +129,7 @@
     </div>
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Description
+        <label for="example-search-input" class="col-md-2 col-form-label">Email Subject
         </label>
         <div class="col-md-10">
             <textarea class="form-control" name="description" id="description">{{ $projects->description }}</textarea>
@@ -119,35 +137,40 @@
     </div>
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Email Description 1
+        <label for="example-search-input" class="col-md-2 col-form-label">Email Description 
         </label>
         <div class="col-md-10">
             <textarea class="form-control" name="description1" id="description1">{{ $projects->description1 }}</textarea>
         </div>
     </div>
 
-    <div class="form-group row">
+
+
+    {{-- <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Email Description 2 (Pre-task only)
 
         </label>
         <div class="col-md-10">
-            <input type="text" class="form-control" id="description2" name="description2" value="{{ $projects->description2 }}">
+            <input type="text" class="form-control" id="description2" name="description2"
+                value="{{ $projects->description2 }}">
         </div>
-    </div>
+    </div> --}}
 
-    <div class="form-group row">
+    {{-- <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Survey Duration (Minutes) *</label>
         <div class="col-md-10">
-            <input type="number" class="form-control" id="survey_duration" name="survey_duration" value="{{ $projects->survey_duration }}" required>
+            <input type="number" class="form-control" id="survey_duration" name="survey_duration"
+                value="{{ $projects->survey_duration }}">
 
         </div>
-    </div>
+    </div> --}}
 
     <div class="form-group row">
         <label for="example-search-input" class="col-md-2 col-form-label">Live Date *
         </label>
         <div class="col-md-10">
-            <input type="date" class="form-control" id="published_date" name="published_date" value="{{date('Y-m-d', strtotime($projects->published_date))}}" required>
+            <input type="date" class="form-control" id="published_date" name="published_date"
+                value="{{ date('Y-m-d', strtotime($projects->published_date)) }}" required>
         </div>
     </div>
 
@@ -155,7 +178,8 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Closing Date
         </label>
         <div class="col-md-10">
-            <input type="date" class="form-control" id="closing_date" name="closing_date" value="{{date('Y-m-d', strtotime($projects->closing_date))}}">
+            <input type="date" class="form-control" id="closing_date" name="closing_date"
+                value="{{ date('Y-m-d', strtotime($projects->closing_date)) }}" required>
         </div>
     </div>
 
@@ -169,19 +193,19 @@
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
-            
-                <option @if($projects->access_id==1) selected @endif value="1">
+
+                <option @if ($projects->access_id == 1) selected @endif value="1">
                     Shareable
                 </option>
-                <option @if($projects->access_id==2) selected @endif value="2">
-                    Assigned
+                <option @if ($projects->access_id == 2) selected @endif value="2">
+                    Unique
                 </option>
             </select>
         </div>
     </div>
 
     <div class="form-group row">
-        <label for="example-search-input" class="col-md-2 col-form-label">Survey Link *
+        <label for="example-search-input" class="col-md-2 col-form-label">Survey name *
         </label>
         <div class="col-md-10">
             <select id="survey_link" name="survey_link" class="w-full form-control form-select" required>
@@ -196,6 +220,23 @@
             </select>
         </div>
     </div>
+
+    <div class="form-group row">
+        <label for="example-search-input" class="col-md-2 col-form-label">Survey Link
+        </label>
+        <div class="col-md-10">
+            @php $survey_link=\App\Models\Projects::get_survey($projects->survey_link); @endphp
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" value="{{ url('survey/view', $survey_link->builderID) }}"
+                    name="survey" id="survey" readonly>
+                <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2" onclick="copy_link();">Copy</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
