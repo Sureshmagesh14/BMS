@@ -80,13 +80,17 @@ class RespondentsController extends Controller
                 $respondents->surname = $request->input('surname');
                 $respondents->date_of_birth = $request->input('date_of_birth');
                 $respondents->id_passport = $request->input('id_passport');
-                $mobile= str_replace(' ', '', $request->mobile);
-                if (!str_starts_with($mobile, '27')) {
-                    $mobile = '27' . ltrim($mobile, '0'); // Remove leading 0 if present
+                if(isset($request->mobile)){
+                    $mobile= str_replace(' ', '', $request->mobile);
+                    if (!str_starts_with($mobile, '27')) {
+                        $mobile = '27' . ltrim($mobile, '0'); // Remove leading 0 if present
+                    }
                 }
-                $whatsapp = str_replace(' ', '', $request->whatsapp);
-                if (!str_starts_with($whatsapp, '27')) {
-                    $whatsapp = '27' . ltrim($whatsapp, '0'); // Remove leading 0 if present
+                if(isset($request->whatsapp)){
+                    $whatsapp = str_replace(' ', '', $request->whatsapp);
+                    if (!str_starts_with($whatsapp, '27')) {
+                        $whatsapp = '27' . ltrim($whatsapp, '0'); // Remove leading 0 if present
+                    }
                 }
                 $password = Hash::make($request->input('password'));
                 $respondents->password = $password;
@@ -246,16 +250,20 @@ class RespondentsController extends Controller
         $respondent->surname = $request->input('surname', $respondent->surname);
         $respondent->date_of_birth = $request->input('date_of_birth', $respondent->date_of_birth);
         $respondent->id_passport = $request->input('id_passport', $respondent->id_passport);
-        $mobile= str_replace(' ', '', $request->mobile);
-        if (!str_starts_with($mobile, '27')) {
-            $mobile = '27' . ltrim($mobile, '0'); // Remove leading 0 if present
+        if(isset($request->mobile)){
+            $mobile= str_replace(' ', '', $request->mobile);
+            if (!str_starts_with($mobile, '27')) {
+                $mobile = '27' . ltrim($mobile, '0'); // Remove leading 0 if present
+            }
         }
         $respondent->mobile = $mobile;
-
-        $whatsapp= str_replace(' ', '', $request->whatsapp);
-        if (!str_starts_with($whatsapp, '27')) {
-            $whatsapp = '27' . ltrim($whatsapp, '0'); // Remove leading 0 if present
+        if(isset($request->whatsapp)){
+            $whatsapp= str_replace(' ', '', $request->whatsapp);
+            if (!str_starts_with($whatsapp, '27')) {
+                $whatsapp = '27' . ltrim($whatsapp, '0'); // Remove leading 0 if present
+            }
         }
+       
         $respondent->whatsapp = $whatsapp;
 
         $password = Hash::make($request->input('password'));

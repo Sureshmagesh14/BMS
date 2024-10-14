@@ -150,8 +150,8 @@ table.dataTable {
                 }
             }).get();
 
-            var select_value = $("#action_2").val();
-
+          
+            var select_value = (all_id.length != 0) ? $("#action_2").val() : 0;
             if(select_value == 3){
                 titles = "Status > Complete";
                 select_action("POST", all_id, select_value, "{{ route('project_action') }}", 'projects_table', titles, "Are You Want To Change Status", "Action");

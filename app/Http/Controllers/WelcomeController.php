@@ -973,7 +973,11 @@ class WelcomeController extends Controller
         $mobile_network = $request->network;
         $mobile_number  = $request->mobile_number;
         $charitie       = $request->charitie;
-        $result_mobile  = '27' . str_replace(' ', '', $mobile_number); // Remove all spaces
+        $mobile_number = str_replace(' ', '', $mobile_number); // Remove all spaces
+
+       
+        $result_mobile = $mobile_number;
+        
 
         if ($reward != 0) {
             if($method == "EFT"){
@@ -1533,13 +1537,7 @@ class WelcomeController extends Controller
                 return redirect()->back()->with('error', 'Invalid phone number format');
             }
     
-            // Validate phone number length (less than or equal to 9 digits)
-            if (strlen($phone) > 9) {
-                return redirect()->back()->with('error', 'Invalid phone number format: Must be 9 digits or less');
-            }
 
-            $phone = '27' . $phone; // Add the prefix
-    
             // Check if the phone number exists
             $user = Respondents::where('mobile', $phone)
                 ->orWhere('whatsapp', $phone)
