@@ -70,7 +70,13 @@
 
                                         <tr>
                                             <th>Date Of Birth</th>
-                                            <td>{{ date('Y-m-d', strtotime($data->date_of_birth)) }}</td>
+                                            <td>
+                                                @if (!empty($data->date_of_birth) && $data->date_of_birth !== '0000-00-00')
+                                                    {{ date('Y-m-d', strtotime($data->date_of_birth)) }}
+                                                @else
+                                                    {{ '-' }}
+                                                @endif
+                                            </td>
                                         </tr>
 
                                         <tr>
@@ -100,20 +106,24 @@
                                         <tr>
                                             <th>Age</th>
                                             @php
-                                            $age = '-';
-                                            if (!empty($data->date_of_birth) && $data->date_of_birth !== '0000-00-00') {
-                                                $bday = new \DateTime($data->date_of_birth);
-                                                $today = new \DateTime();
-                                                $diff = $today->diff($bday);
-                                                $age = sprintf('%d years %d months %d days', $diff->y, $diff->m, $diff->d);
-                                            } else {
-                                                $age = '';
-                                            }
-                                        @endphp
-                                        
-                                      
-                                        
-
+                                                $age = '-';
+                                                if (
+                                                    !empty($data->date_of_birth) &&
+                                                    $data->date_of_birth !== '0000-00-00'
+                                                ) {
+                                                    $bday = new \DateTime($data->date_of_birth);
+                                                    $today = new \DateTime();
+                                                    $diff = $today->diff($bday);
+                                                    $age = sprintf(
+                                                        '%d years %d months %d days',
+                                                        $diff->y,
+                                                        $diff->m,
+                                                        $diff->d,
+                                                    );
+                                                } else {
+                                                    $age = '';
+                                                }
+                                            @endphp
                                             <td>{{ $age }} </td>
                                         </tr>
                                         <tr>
