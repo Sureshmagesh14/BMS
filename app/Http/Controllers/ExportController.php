@@ -366,8 +366,12 @@ class ExportController extends Controller
                         $sheet->setCellValue('D' . $rows, $mobile_number ?? '');
                         $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
+                        $dob = $basic->date_of_birth ?? '';
+                        $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
+                            ? (date('Y') - date('Y', strtotime($dob))) 
+                            : '-';
 
-                        $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+                      
 
                         $employment_status = null; // Initialize $employment_status to null
 
@@ -724,7 +728,10 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
                     
-                        $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+                        $dob = $basic->date_of_birth ?? '';
+                        $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
+                            ? (date('Y') - date('Y', strtotime($dob))) 
+                            : '-';
                     
                         $employment_status = isset($essential) && $essential->employment_status == 'other' ? $essential->employment_status_other : ($essential ? $essential->employment_status : null);
                         $industry_my_company = isset($essential) && $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : ($essential ? $essential->industry_my_company : null);
@@ -1836,7 +1843,10 @@ class ExportController extends Controller
                     $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $basic->email ?? '');
 
-                    $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+                    $dob = $basic->date_of_birth ?? '';
+                    $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
+                            ? (date('Y') - date('Y', strtotime($dob))) 
+                            : '-';
 
                     $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
                     $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
@@ -2177,7 +2187,10 @@ class ExportController extends Controller
                         $sheet->setCellValue('F' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('G' . $rows, $basic->email ?? '');
 
-                        $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+                        $dob = $basic->date_of_birth ?? '';
+                        $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
+                            ? (date('Y') - date('Y', strtotime($dob))) 
+                            : '-';
 
                         $employment_status = null; // Initialize $employment_status to null
 
