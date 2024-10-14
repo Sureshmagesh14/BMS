@@ -161,6 +161,7 @@ Route::group([
     Route::any('project_unassign', 'ProjectsController@project_unassign')->name('project_unassign');    
     Route::any('notify_respondent', 'ProjectsController@notify_respondent')->name('notify_respondent');  
     Route::any('get_project_status', 'ProjectsController@get_project_status')->name('get_project_status');
+    Route::any('respondent_action', 'ProjectsController@respondent_action')->name('respondent_action');
     
       
     

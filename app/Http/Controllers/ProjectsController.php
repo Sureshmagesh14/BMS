@@ -864,6 +864,26 @@ class ProjectsController extends Controller
         }
     }
 
+    public function respondent_action(Request $request){
+        try {
+            $all_id = $request->all_id;
+            $value  = $request->value;
+           
+            foreach($all_id as $id){
+                $tags = Respondents::where('id',$id)->update(['active_status_id' => $value]);
+            }
+            
+            return response()->json([
+                'status'=>200,
+                'success' => true,
+                'message'=>'Status Changed'
+            ]);
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function get_survey_link(Request $request){
         $survey_id = $request->survey_id;
         $app_url=config('app.url'); 
