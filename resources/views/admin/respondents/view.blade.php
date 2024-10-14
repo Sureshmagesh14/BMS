@@ -64,6 +64,11 @@
                                         </tr>
 
                                         <tr>
+                                            <th>Email</th>
+                                            <td>{{ $data->email }}</td>
+                                        </tr>
+
+                                        <tr>
                                             <th>Date Of Birth</th>
                                             <td>{{ date('Y-m-d', strtotime($data->date_of_birth)) }}</td>
                                         </tr>
@@ -75,38 +80,41 @@
 
                                         <tr>
                                             <th>Mobile Number</th>
-                                            @if (isset($data->mobile))
-                                                @php $mobile='+'.$data->mobile;@endphp
-                                            @else
-                                                @php $mobile='';@endphp
-                                            @endif
+                                            @php
+                                                $mobile = !empty($data->mobile) ? '+' . $data->mobile : '';
+                                            @endphp
+
                                             <td>{{ $mobile }}</td>
                                         </tr>
 
                                         <tr>
                                             <th>Whatsapp Number</th>
-                                            @if (isset($data->whatsapp))
-                                                @php $whatsapp='+'.$data->whatsapp;@endphp
-                                            @else
-                                                @php $whatsapp='';@endphp
-                                            @endif
+                                            @php
+                                                $whatsapp = !empty($data->whatsapp) ? '+' . $data->whatsapp : '';
+                                            @endphp
+
+
                                             <td>{{ $whatsapp }}</td>
                                         </tr>
 
                                         <tr>
                                             <th>Age</th>
-                                            @if (isset($data->date_of_birth))
-                                                @php
-                                                    $dateOfBirth = $data->date_of_birth;
-                                                    $today = date('Y-m-d');
-                                                    $diff = date_diff(date_create($dateOfBirth), date_create($today));
-                                                    $date = $diff->format('%y') . ' Years';
-                                                @endphp
-                                            @else
-                                                @php $date='';  @endphp
-                                            @endif
+                                            @php
+                                            $age = '-';
+                                            if (!empty($data->date_of_birth) && $data->date_of_birth !== '0000-00-00') {
+                                                $bday = new \DateTime($data->date_of_birth);
+                                                $today = new \DateTime();
+                                                $diff = $today->diff($bday);
+                                                $age = sprintf('%d years %d months %d days', $diff->y, $diff->m, $diff->d);
+                                            } else {
+                                                $age = '';
+                                            }
+                                        @endphp
+                                        
+                                      
+                                        
 
-                                            <td>{{ $date }} </td>
+                                            <td>{{ $age }} </td>
                                         </tr>
                                         <tr>
                                             <th>Bank Name</th>
@@ -841,16 +849,17 @@
     $(document).on('change', '.rewards_select_box', function(e) {
         var all_id = [];
         values = $(this).val();
-     
+
         if (values == 2) {
-           
+
             var values = $("#rewards_table tbody tr").map(function() {
                 var $this = $(this);
                 if ($this.find("[type=checkbox]").is(':checked')) {
                     all_id.push($this.find("[type=checkbox]").attr('id'));
                 }
             }).get();
-            multi_delete("POST", all_id, "{{ route('rewards_multi_delete') }}", "Rewards Deleted",'rewards_table');
+            multi_delete("POST", all_id, "{{ route('rewards_multi_delete') }}", "Rewards Deleted",
+                'rewards_table');
         }
     });
 
@@ -859,48 +868,103 @@
         url = url + '/' + id;
         document.location.href = url;
     }
-    function projects_table() {
-            $('#projects_table').dataTable().fnDestroy();
-            $('#projects_table').DataTable({
-                searching: true,
-                ordering: true,
-                dom: 'lfrtip',
-                responsive:false,
-                info: true,
-                iDisplayLength: 100,
-                lengthMenu: [
-                    [100, 50, 25, -1],
-                    [100, 50, 25, "All"]
-                ],
-                ajax: {
-                    url: "{{ route('get_all_projects') }}",
-                    data: {
-                        _token: tempcsrf,
-                        id: '{{ $data->id }}',
-                        inside_form: 'respondents',
-                    },
-                    error: function(xhr, error, thrown) {
-                        alert("undefind error");
-                    }
-                },
-                columns: [
-                    { data: 'select_all',name: 'select_all',orderable: false,searchable: false },
-                    { data: 'id_show',name: 'id_show',orderable: true,searchable: true },
-                    { data: 'numbers',name: 'numbers',orderable: true,searchable: true },
-                    { data: 'client',name: 'client',orderable: true,searchable: true },
-                    { data: 'name',name: 'name',orderable: true,searchable: true },
-                    { data: 'creator',name: 'creator',orderable: true,searchable: true },
-                    { data: 'type',name: 'type',orderable: true,searchable: true },
-                    { data: 'reward_amount',name: 'reward_amount',orderable: true,searchable: true },
-                   
-                    { data: 'created',name: 'created',orderable: true,searchable: true },
-                    { data: 'status',name: 'status',orderable: true,searchable: true },
-                    { data: 'action',name: 'action',orderable: true,searchable: true }
-                ]
-            });
-        }
 
-   
+    function projects_table() {
+        $('#projects_table').dataTable().fnDestroy();
+        $('#projects_table').DataTable({
+            searching: true,
+            ordering: true,
+            dom: 'lfrtip',
+            responsive: false,
+            info: true,
+            iDisplayLength: 100,
+            lengthMenu: [
+                [100, 50, 25, -1],
+                [100, 50, 25, "All"]
+            ],
+            ajax: {
+                url: "{{ route('get_all_projects') }}",
+                data: {
+                    _token: tempcsrf,
+                    id: '{{ $data->id }}',
+                    inside_form: 'respondents',
+                },
+                error: function(xhr, error, thrown) {
+                    alert("undefind error");
+                }
+            },
+            columns: [{
+                    data: 'select_all',
+                    name: 'select_all',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'id_show',
+                    name: 'id_show',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'numbers',
+                    name: 'numbers',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'client',
+                    name: 'client',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'name',
+                    name: 'name',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'creator',
+                    name: 'creator',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'type',
+                    name: 'type',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'reward_amount',
+                    name: 'reward_amount',
+                    orderable: true,
+                    searchable: true
+                },
+
+                {
+                    data: 'created',
+                    name: 'created',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'status',
+                    name: 'status',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: true,
+                    searchable: true
+                }
+            ]
+        });
+    }
+
+
 
     function cashout_type(get_this) {
         type = $(get_this).val();
@@ -967,11 +1031,11 @@
                     orderable: true,
                     searchable: true
                 },
-                { 
+                {
                     data: 'points',
                     name: 'points',
                     orderable: true,
-                    searchable: true 
+                    searchable: true
                 },
                 {
                     data: 'respondent_id',
@@ -1012,12 +1076,36 @@
                     alert("undefind error");
                 }
             },
-            columns: [
-                {data: 'select_all',name: 'select_all',orderable: false,searchable: false},
-                {data: 'id_show',name: 'id_show',orderable: true,searchable: true},
-                {data: 'name',name: 'name',orderable: true,searchable: true},
-                {data: 'colour',name: 'colour',orderable: true,searchable: true},
-                {data: 'action',name: 'action',orderable: false,searchable: false}
+            columns: [{
+                    data: 'select_all',
+                    name: 'select_all',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'id_show',
+                    name: 'id_show',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'name',
+                    name: 'name',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'colour',
+                    name: 'colour',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
             ]
         });
     }
