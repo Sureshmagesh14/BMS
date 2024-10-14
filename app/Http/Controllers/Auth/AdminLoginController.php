@@ -460,8 +460,8 @@ class AdminLoginController extends Controller
 
             $basic_details = array(
                 'email'           => $resp->main_email,
-                'last_name'       => $resp->fname,
-                'first_name'      => $resp->lname,
+                'first_name'      => $resp->fname,
+                'last_name'       => $resp->lname,
                 'updated_at'      => date('Y-m-d H:i:s'),
                 'mobile_number'   => $resp->pnumber,
                 'whatsapp_number' => $resp->whatsapp
