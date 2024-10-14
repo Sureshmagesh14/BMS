@@ -1116,9 +1116,7 @@ class ExportController extends Controller
                         $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                     }
 
-                    if($from != null && $to != null){
-                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
-                    }
+                  
                         
                     $all_datas = $all_datas->get();
 
@@ -1192,10 +1190,6 @@ class ExportController extends Controller
                     
                     if($respondents != ""){
                         $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
-                    }
-
-                    if($from != null && $to != null){
-                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
                     }
                         
                     $all_datas = $all_datas->get();
@@ -1350,9 +1344,7 @@ class ExportController extends Controller
                         if($respondents != ""){
                             $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                         }
-                        if($from != null && $to != null){
-                            $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
-                        }
+                       
                     $all_datas = $all_datas->get();
 
                     foreach ($all_datas as $all_data) {
