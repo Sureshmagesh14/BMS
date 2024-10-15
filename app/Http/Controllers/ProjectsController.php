@@ -870,7 +870,7 @@ class ProjectsController extends Controller
             $value  = $request->value;
            
             foreach($all_id as $id){
-                $tags = Respondents::where('id',$id)->update(['active_status_id' => $value]);
+                $tags = Respondents::where('id',$id)->update(['active_status_id' => $value,'created_by'=>Auth::guard('admin')->user()->id]);
             }
             
             return response()->json([

@@ -98,7 +98,7 @@
                 <div class="input-group-text">+27(0)</div>
                 <input type="text" class="form-control" id="mobile" name="mobile" autocomplete="off"
                 value="{{ str_starts_with($respondents->mobile, '27') ? ltrim(substr($respondents->mobile, 2), '0') : ltrim($respondents->mobile, '0') }}"
-                maxlength="16">
+                maxlength="16" required>
             </div>
             <small class="form-text text-muted">Don’t include 0 in starting.</small>
         </div>

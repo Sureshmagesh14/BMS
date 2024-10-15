@@ -197,110 +197,115 @@ class RespondentsController extends Controller
         }
 
     }
-
+    public function update(Request $request, string $id)
+    {
+        try {
+            // Define validation rules and messages
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'active_status_id' => 'required|integer',
+                'accept_terms' => 'required|boolean',
+                'mobile' => 'nullable|string', // Optional mobile validation
+                'whatsapp' => 'nullable|string', // Optional whatsapp validation
+                'password' => 'nullable|string|min:8', // Optional password validation
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 400,
+                    'errors' => $validator->messages(),
+                ]);
+            }
+    
+            // Normalize email for comparison
+            $email = trim(strtolower($request->input('email')));
+    
+            // Check if email already exists for another respondent
+            $existingRespondent = Respondents::where('email', $email)
+                ->where('id', '!=', $id) // Exclude current respondent ID
+                ->first();
+    
+            if ($existingRespondent) {
+                return response()->json([
+                    'status' => 400,
+                    'error' => 'Email already exists.',
+                    'message' => 'Email already exists.',
+                ]);
+            }
+    
+            // Find the respondent by ID
+            $respondent = Respondents::find($id);
+    
+            if (!$respondent) {
+                return response()->json([
+                    'status' => 404,
+                    'error' => 'No Respondent Found.',
+                    'message' => 'No Respondent Found.',
+                ]);
+            }
+    
+            // Update respondent details
+            $respondent->name = $request->input('name', $respondent->name);
+            $respondent->surname = $request->input('surname', $respondent->surname);
+            $respondent->date_of_birth = $request->input('date_of_birth', $respondent->date_of_birth);
+            $respondent->id_passport = $request->input('id_passport', $respondent->id_passport);
+    
+            // Normalize mobile and whatsapp numbers
+            $mobile = $request->input('mobile') ? str_replace(' ', '', $request->input('mobile')) : $respondent->mobile;
+            if ($mobile && !str_starts_with($mobile, '27')) {
+                $mobile = '27' . ltrim($mobile, '0');
+            }
+            $respondent->mobile = $mobile;
+    
+            $whatsapp = $request->input('whatsapp') ? str_replace(' ', '', $request->input('whatsapp')) : $respondent->whatsapp;
+            if ($whatsapp && !str_starts_with($whatsapp, '27')) {
+                $whatsapp = '27' . ltrim($whatsapp, '0');
+            }
+            $respondent->whatsapp = $whatsapp;
+    
+            // Update password only if provided
+            if ($request->has('password')) {
+                $respondent->password = Hash::make($request->input('password'));
+            }
+    
+            // Update other fields
+            $respondent->email = $email;
+            $respondent->bank_name = $request->input('bank_name', $respondent->bank_name);
+            $respondent->branch_code = $request->input('branch_code', $respondent->branch_code);
+            $respondent->account_type = $request->input('account_type', $respondent->account_type);
+            $respondent->account_holder = $request->input('account_holder', $respondent->account_holder);
+            $respondent->account_number = $request->input('account_number', $respondent->account_number);
+            $respondent->active_status_id = $request->input('active_status_id', $respondent->active_status_id);
+            $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
+            $respondent->accept_terms = $request->input('accept_terms', $respondent->accept_terms);
+            $respondent->deactivated_date = $request->input('deactivated_date', $respondent->deactivated_date);
+    
+            // Save changes
+            $respondent->save();
+    
+            // Log the update activity
+            app('App\Http\Controllers\InternalReportController')
+                ->call_activity(Auth::guard('admin')->user()->role_id, Auth::guard('admin')->user()->id, 'updated', 'respondent');
+    
+            return response()->json([
+                'status' => 200,
+                'last_insert_id' => $respondent->id,
+                'message' => 'Respondent Updated.',
+            ]);
+    
+        } catch (\Exception $e) { // Make sure to import Exception
+            // Handle and log the exception
+            return response()->json([
+                'status' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-{
-    try {
-        // Define validation rules and messages
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'active_status_id' => 'required|integer',
-            'accept_terms' => 'required|boolean',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 400,
-                'errors' => $validator->messages(),
-            ]);
-        }
-
-        // Normalize email for comparison
-        $email = trim(strtolower($request->input('email')));
-
-        // Check if email already exists for another respondent
-        $existingRespondent = Respondents::where('email', $email)
-            ->where('id', '!=', $id) // Exclude current respondent ID
-            ->first();
-
-        if ($existingRespondent) {
-            return response()->json([
-                'status' => 400,
-                'error' => 'Email already exists.',
-                'message' => 'Email already exists.',
-            ]);
-        }
-
-        // Find the respondent by ID
-        $respondent = Respondents::find($id);
-
-        if (!$respondent) {
-            return response()->json([
-                'status' => 404,
-                'error' => 'No Respondent Found.',
-                'message' => 'No Respondent Found.',
-            ]);
-        }
-
-        // Update respondent details
-        $respondent->name = $request->input('name', $respondent->name);
-        $respondent->surname = $request->input('surname', $respondent->surname);
-        $respondent->date_of_birth = $request->input('date_of_birth', $respondent->date_of_birth);
-        $respondent->id_passport = $request->input('id_passport', $respondent->id_passport);
-        if(isset($request->mobile)){
-            $mobile= str_replace(' ', '', $request->mobile);
-            if (!str_starts_with($mobile, '27')) {
-                $mobile = '27' . ltrim($mobile, '0'); // Remove leading 0 if present
-            }
-        }
-        $respondent->mobile = $mobile;
-        if(isset($request->whatsapp)){
-            $whatsapp= str_replace(' ', '', $request->whatsapp);
-            if (!str_starts_with($whatsapp, '27')) {
-                $whatsapp = '27' . ltrim($whatsapp, '0'); // Remove leading 0 if present
-            }
-        }
-       
-        $respondent->whatsapp = $whatsapp;
-
-        $password = Hash::make($request->input('password'));
-        $respondent->password = $password;
-        $respondent->email = $email;
-        $respondent->bank_name = $request->input('bank_name', $respondent->bank_name);
-        $respondent->branch_code = $request->input('branch_code', $respondent->branch_code);
-        $respondent->account_type = $request->input('account_type', $respondent->account_type);
-        $respondent->account_holder = $request->input('account_holder', $respondent->account_holder);
-        $respondent->account_number = $request->input('account_number', $respondent->account_number);
-        $respondent->active_status_id = $request->input('active_status_id', $respondent->active_status_id);
-        $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
-        $respondent->accept_terms = $request->input('accept_terms', $respondent->accept_terms);
-        $respondent->deactivated_date = $request->input('deactivated_date', $respondent->deactivated_date);
-
-        // Save changes
-        $respondent->save();
-
-        // Log the update activity
-        app('App\Http\Controllers\InternalReportController')
-            ->call_activity(Auth::guard('admin')->user()->role_id, Auth::guard('admin')->user()->id, 'updated', 'respondent');
-
-        return response()->json([
-            'status' => 200,
-            'last_insert_id' => $respondent->id,
-            'message' => 'Respondent Updated.',
-        ]);
-
-    } catch (Exception $e) {
-        // Handle and log the exception
-        return response()->json([
-            'status' => 500,
-            'error' => 'An error occurred while updating the respondent.',
-        ]);
-    }
-}
-
+    
     /**
      * Remove the specified resource from storage.
      */
