@@ -659,4 +659,34 @@ class UsersController extends Controller
             throw new Exception($e->getMessage());
         }
     }
+
+    public function users_search_result(Request $request) {
+        try {
+            $searchValue = $request->input('q'); // Use input method for clarity
+            
+            // Initialize an empty array for respondents
+            $respondents = [];
+    
+            if ($request->filled('q')) {
+                $respondents_data = Users::search($searchValue)
+                    ->query(function ($query) {
+                        $query->whereNull('deleted_at');
+                    })
+                    ->orderBy('id', 'ASC')
+                    ->get();
+    
+                // Populate the respondents array if there are results
+                foreach ($respondents_data as $resp) {
+                    $respondents[] = [
+                        'id' => $resp->id,
+                        'name' => $resp->name . ' - ' . $resp->surname,
+                    ];
+                }
+            }
+    
+            return response()->json($respondents); // Return JSON response properly
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500); // Return JSON error response
+        }
+    }
 }
