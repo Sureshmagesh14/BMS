@@ -21,6 +21,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use App\Models\RespondentProfile;
 use App\Models\RespondentTags;
 use App\Models\IndustryCompany;
+use App\Models\Users;
 
 class ExportController extends Controller
 {
@@ -1162,7 +1163,12 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
-                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $user_name = Users::where('id', $all_data->created_by)->first();
+                        if ($user_name) {
+                            $sheet->setCellValue('H' . $rows, $user_name->name . ' ' . $user_name->surname);
+                        } else {
+                            $sheet->setCellValue('H' . $rows, ''); // or some default value if user is not found
+                        }
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
@@ -1236,7 +1242,13 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
-                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $user_name = Users::where('id', $all_data->created_by)->first();
+                        if ($user_name) {
+                            $sheet->setCellValue('H' . $rows, $user_name->name . ' ' . $user_name->surname);
+                        } else {
+                            $sheet->setCellValue('H' . $rows, ''); // or some default value if user is not found
+                        }
+                        
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
@@ -1387,7 +1399,12 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
-                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $user_name = Users::where('id', $all_data->created_by)->first();
+                        if ($user_name) {
+                            $sheet->setCellValue('H' . $rows, $user_name->name . ' ' . $user_name->surname);
+                        } else {
+                            $sheet->setCellValue('H' . $rows, ''); // or some default value if user is not found
+                        }
                         // $sheet->setCellValue('I' . $rows, $all_data->created_by);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
@@ -2411,9 +2428,9 @@ class ExportController extends Controller
                 foreach ($all_datas as $all_data) {
                     $sheet->setCellValue('A' . $rows, $i);
                     $sheet->setCellValue('B' . $rows, $all_data->name.$all_data->surname);
-                    $sheet->setCellValue('C' . $rows, $all_data->action);
-                    $sheet->setCellValue('D' . $rows, $all_data->type);
-                    $sheet->setCellValue('E' . $rows, $all_data->month);
+                    $sheet->setCellValue('C' . $rows, ucfirst($all_data->action));
+                    $sheet->setCellValue('D' . $rows, ucfirst($all_data->type));
+                    $sheet->setCellValue('E' . $rows, ucfirst($all_data->month));
                     $sheet->setCellValue('F' . $rows, $all_data->year);
                     $sheet->setCellValue('G' . $rows, $all_data->count);
                     $sheet->getRowDimension($rows)->setRowHeight(20);
@@ -2431,25 +2448,33 @@ class ExportController extends Controller
             }
             else if ($module == 'Team Activity') {
                 // Build the base query
-                $query = UserEvents::select('users.name', 'users.surname', 'user_events.user_id')
-                                ->join('users', 'user_events.user_id', 'users.id')
-                                ->where('user_events.type', '=', 'respondent');
+
+                 // Base query
+            $query = DB::table('users as u')
+            ->select('u.id',
+                DB::raw('CONCAT(u.name, " ", u.surname) AS full_name'),
+                DB::raw('SUM(CASE WHEN user_events.action = "created" THEN user_events.count ELSE 0 END) AS createCount'),
+                DB::raw('SUM(CASE WHEN user_events.action = "updated" THEN user_events.count ELSE 0 END) AS updateCount'),
+                DB::raw('SUM(CASE WHEN user_events.action = "deactivated" THEN user_events.count ELSE 0 END) AS deactCount')
+            )
+            ->leftJoin('user_events', 'u.id', '=', 'user_events.user_id') 
+            ->where('user_events.type', '=', 'respondent')
+            ->groupBy('u.id'); // Group by user_id
+
+              
             
                 // Apply filters if provided
                 if ($respondents != "") {
                     $query->whereIn('user_events.user_id', [$respondents]);
                 }
             
-                if ($from != null && $to != null) {
-                    $query->whereDate('user_events.created_at', '>=', $from)
-                          ->whereDate('user_events.created_at', '<=', $to);
-                }
+               
             
                 // Group by user_id to avoid duplication
-                $query->groupBy('user_events.user_id', 'users.name', 'users.surname');
+              
             
                 // Fetch all data
-                $all_datas = $query->orderBy("users.name")->get();
+                $all_datas = $query->orderBy("u.name")->get();
             
                 $sheet->setCellValue('A1', 'Name of team member');
                 $sheet->setCellValue('B1', 'Total recruited respondents');
@@ -2462,40 +2487,16 @@ class ExportController extends Controller
                 $rows = 2;
                 foreach ($all_datas as $data) {
                     // Count total recruited respondents for this specific user
-                    $total_created = UserEvents::where('user_id', $data->user_id)
-                                                ->where('action', 'created')
-                                                ->where('type', 'respondent');
-                    if ($from != null && $to != null) {
-                        $total_created->whereDate('created_at', '>=', $from)
-                                      ->whereDate('created_at', '<=', $to);
-                    }
-                    $total_created = $total_created->count();
-            
-                    // Count total deactivated respondents for this specific user
-                    $total_deactivated = UserEvents::where('user_id', $data->user_id)
-                                                    ->where('action', 'deleted')
-                                                    ->where('type', 'respondent');
-                    if ($from != null && $to != null) {
-                        $total_deactivated->whereDate('created_at', '>=', $from)
-                                          ->whereDate('created_at', '<=', $to);
-                    }
-                    $total_deactivated = $total_deactivated->count();
-            
-                    // Count total blacklisted respondents for this specific user
-                    $total_blacklisted = UserEvents::where('user_id', $data->user_id)
-                                                    ->where('action', 'deactivated')
-                                                    ->where('type', 'respondent');
-                    if ($from != null && $to != null) {
-                        $total_blacklisted->whereDate('created_at', '>=', $from)
-                                          ->whereDate('created_at', '<=', $to);
-                    }
-                    $total_blacklisted = $total_blacklisted->count();
+                 
+                  
+                 
+                  
             
                     // Set values for each row
-                    $sheet->setCellValue('A' . $rows, $data->name . " " . $data->surname);
-                    $sheet->setCellValue('B' . $rows, $total_created);
-                    $sheet->setCellValue('C' . $rows, $total_deactivated);
-                    $sheet->setCellValue('D' . $rows, $total_blacklisted);
+                    $sheet->setCellValue('A' . $rows, $data->full_name);
+                    $sheet->setCellValue('B' . $rows, $data->createCount);
+                    $sheet->setCellValue('C' . $rows, $data->updateCount);
+                    $sheet->setCellValue('D' . $rows, $data->deactCount);
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                     $sheet->getStyle('C' . $rows . ':D' . $rows)->applyFromArray($styleArray2);

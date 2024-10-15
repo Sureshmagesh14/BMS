@@ -97,8 +97,8 @@
             <div class="input-group">
                 <div class="input-group-text">+27(0)</div>
                 <input type="text" class="form-control" id="mobile" name="mobile" autocomplete="off"
-                value="{{ str_starts_with($respondents->mobile, '27') ? ltrim(substr($respondents->mobile, 2), '0') : ltrim($respondents->mobile, '0') }}"
-                maxlength="16">
+                    value="{{ str_starts_with($respondents->mobile, '27') ? ltrim(substr($respondents->mobile, 2), '0') : ltrim($respondents->mobile, '0') }}"
+                    maxlength="16" required>
             </div>
             <small class="form-text text-muted">Don’t include 0 in starting.</small>
         </div>
@@ -112,10 +112,10 @@
             <div class="input-group">
                 <div class="input-group-text">+27(0)</div>
                 <input type="text" class="form-control" id="whatsapp" name="whatsapp"
-                placeholder="Don’t include 0 in starting." autocomplete="off"
-                value="{{ str_starts_with($respondents->whatsapp, '27') ? ltrim(substr($respondents->whatsapp, 2), '0') : ltrim($respondents->whatsapp, '0') }}"
-                maxlength="16">
-         
+                    placeholder="Don’t include 0 in starting." autocomplete="off"
+                    value="{{ str_starts_with($respondents->whatsapp, '27') ? ltrim(substr($respondents->whatsapp, 2), '0') : ltrim($respondents->whatsapp, '0') }}"
+                    maxlength="16">
+
                 <span id="mobile-error" class="invalid-feedback"></span>
             </div>
             <small class="form-text text-muted">Don’t include 0 in starting.</small>
@@ -153,41 +153,41 @@
     </div>
 
     {{-- <div class="form-group row"> --}}
-        {{-- <label for="example-search-input" class="col-md-2 col-form-label">Branch Code
+    {{-- <label for="example-search-input" class="col-md-2 col-form-label">Branch Code
         </label> --}}
-        <div class="col-md-10">
-            <input type="hidden" class="form-control" id="branch_code" autocomplete="off"
-                value="{{ $respondents->branch_code }}" readonly>
-            <input type="hidden" class="form-control" id="branch" name="branch_code"
-                value="{{ $respondents->branch_code }}">
-        </div>
+    <div class="col-md-10">
+        <input type="hidden" class="form-control" id="branch_code" autocomplete="off"
+            value="{{ $respondents->branch_code }}" readonly>
+        <input type="hidden" class="form-control" id="branch" name="branch_code"
+            value="{{ $respondents->branch_code }}">
+    </div>
     {{-- </div> --}}
 
     {{-- <div class="form-group row"> --}}
-        {{-- <label for="example-search-input" class="col-md-2 col-form-label">Account Type --}}
-        </label>
-        <div class="col-md-10">
-            <input type="hidden" class="form-control" id="account_type" placeholder="Enter Your Account Type"
-                autocomplete="off" name="account_type" value="{{ $respondents->account_type }}">
-        </div>
+    {{-- <label for="example-search-input" class="col-md-2 col-form-label">Account Type --}}
+    </label>
+    <div class="col-md-10">
+        <input type="hidden" class="form-control" id="account_type" placeholder="Enter Your Account Type"
+            autocomplete="off" name="account_type" value="{{ $respondents->account_type }}">
+    </div>
     {{-- </div> --}}
 
     {{-- <div class="form-group row"> --}}
-        {{-- <label for="example-search-input" class="col-md-2 col-form-label">Account Holder --}}
-        </label>
-        <div class="col-md-10">
-            <input type="hidden" class="form-control" id="account_holder" placeholder="Enter Your Account Holder"
-                autocomplete="off" name="account_holder" value="{{ $respondents->account_holder }}">
-        </div>
+    {{-- <label for="example-search-input" class="col-md-2 col-form-label">Account Holder --}}
+    </label>
+    <div class="col-md-10">
+        <input type="hidden" class="form-control" id="account_holder" placeholder="Enter Your Account Holder"
+            autocomplete="off" name="account_holder" value="{{ $respondents->account_holder }}">
+    </div>
     {{-- </div> --}}
 
     {{-- <div class="form-group row"> --}}
-        {{-- <label for="example-search-input" class="col-md-2 col-form-label">Account Number --}}
-        </label>
-        <div class="col-md-10">
-            <input type="hidden" class="form-control" id="account_number" placeholder="Enter Your Account Number"
-                autocomplete="off" name="account_number" value="{{ $respondents->account_number }}">
-        </div>
+    {{-- <label for="example-search-input" class="col-md-2 col-form-label">Account Number --}}
+    </label>
+    <div class="col-md-10">
+        <input type="hidden" class="form-control" id="account_number" placeholder="Enter Your Account Number"
+            autocomplete="off" name="account_number" value="{{ $respondents->account_number }}">
+    </div>
     {{-- </div> --}}
 
     <div class="form-group row">
@@ -222,7 +222,7 @@
         </label>
         <div class="col-md-10">
             <input type="date" class="form-control" id="updated_at" name="updated_at"
-                value="{{ $respondents->updated_at }}">
+                value="{{ \Carbon\Carbon::parse($respondents->updated_at)->format('Y-m-d') }}">
         </div>
     </div>
     @php
@@ -262,7 +262,8 @@
         <label for="example-search-input" class="col-md-2 col-form-label">Deactivated Date
         </label>
         <div class="col-md-10">
-            <input class="form-control" type="date" name="deactivated_date" id="deactivated_date" value="{{ $respondents->deactivated_date }}">
+            <input type="date" class="form-control" id="deactivated_date" name="deactivated_date"
+                value="{{ \Carbon\Carbon::parse($respondents->deactivated_date)->format('Y-m-d') }}">
         </div>
     </div>
 
@@ -273,86 +274,96 @@
 </form>
 
 
+
+
 <script>
     $(function() {
-        $('#mobile').inputmask("99 999 9999");
-        $('#whatsapp').inputmask("99 999 9999");
-        $('#edit_respondents_form').validate({
-            rules: {
-                email: {
-                    required: true,
-                    email: true,
-                    remote: {
-                        url: '{{ route('user_respondent_id_check') }}',
-                        type: "GET",
-                        data: {
-                            form_name: "useredit",
-                            id: function() {
-                                return '{{ $respondents->id }}'; // Ensure this variable is properly rendered in the template
+
+
+        $(document).ready(function() {
+
+            $('#edit_respondents_form').validate({
+                rules: {
+                    email: {
+                        required: true,
+                        email: true,
+                        remote: {
+                            url: '{{ route('user_respondent_id_check') }}',
+                            type: "GET",
+                            data: {
+                                form_name: "useredit",
+                                id: function() {
+                                    return '{{ $respondents->id }}'; // Ensure this variable is properly rendered in the template
+                                },
+                                email: function() {
+                                    return $('#email')
+                                .val(); // Ensure email field value is sent
+                                }
                             },
-                            email: function() {
-                                return $('#email').val(); // Ensure email field value is sent
+                            dataFilter: function(response) {
+                                // Parse the JSON response
+                                var json = JSON.parse(response);
+                                // Return validation result based on 'exists' key
+                                return json.exists === false ? 'true' : 'false';
                             }
-                        },
-                        dataFilter: function(response) {
-                            // Parse the JSON response
-                            var json = JSON.parse(response);
-                            // Return validation result based on 'exists' key
-                            return json.exists === false ? 'true' : 'false';
                         }
+                    },
+                    mobile: {
+                        required: true,
+                        remote: {
+                            url: '{{ route('user_respondent_mobile_check') }}',
+                            type: "GET",
+                            data: {
+                                form_name: "useredit",
+                                id: function() {
+                                    return '{{ $respondents->id }}'; // Ensure this variable is properly rendered in the template
+                                },
+                                mobile: function() {
+                                    return $('#mobile')
+                                .val(); // Ensure email field value is sent
+                                }
+                            },
+                            dataFilter: function(response) {
+                                var json = JSON.parse(response);
+                                return json.valid ? "true" : "false";
+                            }
+                        }
+                    },
+                    password: {
+                        minlength: 8
+                    },
+                    cpassword: {
+                        minlength: 8,
+                        equalTo: "#password"
                     }
                 },
-                mobile: {
-                    required: true,
-                    remote: {
-                        url: '{{ route('user_respondent_mobile_check') }}',
-                        type: "GET",
-                        data: {
-                            form_name: "useredit",
-                            id: function() {
-                                return '{{ $respondents->id }}'; // Ensure this variable is properly rendered in the template
-                            },
-                            mobile: function() {
-                                return $('#mobile').val(); // Ensure email field value is sent
-                            }
-                        },
-                        dataFilter: function(response) {
-                            var json = JSON.parse(response);
-                            return json.valid ? "true" : "false";
-                        }
+                messages: {
+                    email: {
+                        remote: "{{ __('Email Name already exists!') }}"
+                    },
+                    mobile: {
+                        remote: "Mobile number already exists!" // Error message for mobile number
                     }
                 },
-                password: {
-                    minlength: 8
+                errorElement: "span", // HTML element for error messages
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback'); // Add a class for styling
+                    element.closest('.form-group').append(
+                        error); // Append the error message to the form group
                 },
-                cpassword: {
-                    minlength: 8,
-                    equalTo: "#password"
-                }
-            },
-            messages: {
-                email: {
-                    remote: "{{ __('Email Name already exists!') }}"
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid').removeClass(
+                        'is-valid'); // Add class for invalid state
                 },
-                mobile: {
-                    remote: "Mobile number already exists!" // Error message for mobile number
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid').addClass(
+                        'is-valid'); // Add class for valid state
                 }
-            },
-            errorElement: "span", // HTML element for error messages
-            errorPlacement: function(error, element) {
-                error.addClass('invalid-feedback'); // Add a class for styling
-                element.closest('.form-group').append(
-                    error); // Append the error message to the form group
-            },
-            highlight: function(element, errorClass, validClass) {
-                $(element).addClass('is-invalid').removeClass(
-                    'is-valid'); // Add class for invalid state
-            },
-            unhighlight: function(element, errorClass, validClass) {
-                $(element).removeClass('is-invalid').addClass(
-                    'is-valid'); // Add class for valid state
-            }
+            });
+
         });
+
+
 
     });
 
@@ -386,11 +397,29 @@
                     if (response.message == 'Email already exists.') {
                         toastr.error(response.message);
                         $("#commonModal").modal('hide');
-                        respondents_datatable();
+                        if (typeof respondents_datatable === 'function') {
+                            respondents_datatable
+                        (); // Call the function to update the projects table
+                        } else {
+                            setTimeout(function() {
+                                location
+                            .reload(); // Reload the page if the function is not defined
+                            }, 800);
+
+                        }
                     } else {
                         toastr.success(response.message);
                         $("#commonModal").modal('hide');
-                        respondents_datatable();
+                        if (typeof respondents_datatable === 'function') {
+                            respondents_datatable
+                        (); // Call the function to update the projects table
+                        } else {
+                            setTimeout(function() {
+                                location
+                            .reload(); // Reload the page if the function is not defined
+                            }, 800);
+
+                        }
                     }
 
                 },
@@ -400,6 +429,7 @@
             });
         }
     });
+
     $("#bank_name").change(function() {
         var bank_id = this.value;
         $.ajax({
@@ -421,6 +451,7 @@
             }
         });
     });
+
     $(".toggle-password").click(function() {
 
         $(this).toggleClass("fa-eye fa-eye-slash");
@@ -431,23 +462,5 @@
             input.attr("type", "password");
         }
     });
-
-     // Get the current date
-     var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-
-    // Format the date
-    if (dd < 10) {
-        dd = '0' + dd;
-    }
-    if (mm < 10) {
-        mm = '0' + mm;
-    }
-
-    today = yyyy + '-' + mm + '-' + dd;
-
-    // Set the minimum date
-    document.getElementById("deactivated_date").setAttribute("min", today);
+    // Get the current date
 </script>
