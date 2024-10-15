@@ -249,18 +249,26 @@ class ExportController extends Controller
                         $first_name = $basic['first_name'] ?? '-';
                         $last_name = $basic['last_name'] ?? '-';
                         $email = $basic['email'] ?? '-';
-                        $date_of_birth = isset($basic['date_of_birth']) ? $basic['date_of_birth'] : null;
-                    
-                        // Calculate age if date_of_birth is available
+                        $dob = $basic['date_of_birth'] ?? '-';
                         $age = '-';
-                        if (!empty($date_of_birth) && $date_of_birth != '0000-00-00') {
-                            // Create DateTime objects
-                            $dob = new DateTime($date_of_birth);
-                            $now = new DateTime();
+                        
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $dobDated = Respondents::select('date_of_birth')->where('id', $id)->first();
                             
-                            // Calculate age
-                            $diff = $now->diff($dob);
-                            $age = $diff->y; // This will give the age in years
+                            if ($dobDated && !empty($dobDated->date_of_birth)) {
+                                $dob = $dobDated->date_of_birth;
+                            } else {
+                                $dob = ''; // Handle the case where there's no date of birth found
+                            }
+                        }
+                        
+                        if (!empty($dob) && $dob !== '0000-00-00') {
+                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                            
+                            if ($dobDate) {
+                                $now = new DateTime();
+                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            }
                         }
                     
                         // Set cell values
@@ -271,7 +279,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $email);
                         $sheet->setCellValue('G' . $rows, $age);
-                        $sheet->setCellValue('H' . $rows, $date_of_birth ?: '-');
+                        $sheet->setCellValue('H' . $rows, $dob ?: '-');
                     
                         // Set row height
                         $sheet->getRowDimension($rows)->setRowHeight(20);
@@ -368,9 +376,21 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
                         $dob = $basic->date_of_birth ?? '';
-                        $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
-                            ? (date('Y') - date('Y', strtotime($dob))) 
-                            : '-';
+                        $age = '-';
+                        
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $dobDated = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                            $dob = $dobDated->date_of_birth ?? '';
+                        }
+                        
+                        if (!empty($dob) && $dob !== '0000-00-00') {
+                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                            
+                            if ($dobDate) {
+                                $now = new DateTime();
+                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            }
+                        }
 
                       
 
@@ -387,7 +407,7 @@ class ExportController extends Controller
                         }
 
                        
-                        $sheet->setCellValue('G' . $rows, $year);
+                        $sheet->setCellValue('G' . $rows, $age);
                         $relationshipStatus = $essential->relationship_status ?? '';
                         $sheet->setCellValue('H' . $rows, ucfirst($relationshipStatus));
                         // Define the mapping of ethnic group codes to names
@@ -730,10 +750,23 @@ class ExportController extends Controller
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
                     
                         $dob = $basic->date_of_birth ?? '';
-                        $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
-                            ? (date('Y') - date('Y', strtotime($dob))) 
-                            : '-';
-                    
+                        $age = '-';
+                        
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $dobDated = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                            $dob = $dobDated->date_of_birth ?? '';
+                        }
+                        
+                        if (!empty($dob) && $dob !== '0000-00-00') {
+                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                            
+                            if ($dobDate) {
+                                $now = new DateTime();
+                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            }
+                        }
+                        
+                   
                         $employment_status = isset($essential) && $essential->employment_status == 'other' ? $essential->employment_status_other : ($essential ? $essential->employment_status : null);
                         $industry_my_company = isset($essential) && $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : ($essential ? $essential->industry_my_company : null);
                     
@@ -755,7 +788,7 @@ class ExportController extends Controller
                         $personal_income = ($p_income != null) ? $p_income->income : '-';
                         $household_income = ($h_income != null) ? $h_income->income : '-';
                     
-                        $sheet->setCellValue('G' . $rows, $year);
+                        $sheet->setCellValue('G' . $rows, $age);
                         $relationship_status = ucfirst($essential->relationship_status ?? '');
                         $sheet->setCellValue('H' . $rows, $relationship_status);
                        // Define the mapping of ethnic group codes to names
