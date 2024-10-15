@@ -208,6 +208,7 @@ class AdminLoginController extends Controller
                     DB::raw('SUM(CASE WHEN user_events.action = "deactivated" THEN user_events.count ELSE 0 END) AS deactCount')
                 )
                 ->leftJoin('user_events', 'u.id', '=', 'user_events.user_id') // Use leftJoin to include users with no events
+                ->where('user_events.type', '=', 'respondent')
                 ->groupBy('u.id'); // Group by user_id
     
             // Apply filters based on year and month
