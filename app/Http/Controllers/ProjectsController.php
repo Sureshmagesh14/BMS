@@ -868,12 +868,22 @@ class ProjectsController extends Controller
         try {
             $all_id = $request->all_id;
             $value  = $request->value;
-           
+         
             foreach($all_id as $id){
                 $tags = Respondents::where('id',$id)->update(['active_status_id' => $value,'created_by'=>Auth::guard('admin')->user()->id]);
             }
-            app('App\Http\Controllers\InternalReportController')
-            ->call_activity(Auth::guard('admin')->user()->role_id, Auth::guard('admin')->user()->id, 'deactivated', 'respondent');
+           
+            $actions = [
+                1 => 'activated',
+                2 => 'deactivated',
+                3 => 'unsubscribed'
+            ];
+    
+            if (isset($actions[$value])) {
+                app('App\Http\Controllers\InternalReportController')
+                    ->call_activity(Auth::guard('admin')->user()->role_id, Auth::guard('admin')->user()->id, $actions[$value], 'respondent');
+            }
+            
             return response()->json([
                 'status'=>200,
                 'success' => true,
