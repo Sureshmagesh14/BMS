@@ -243,10 +243,10 @@
                                 "data": "createCount"
                             },
                             {
-                                "data": "updateCount"
+                                "data": "deactCount" 
                             },
                             {
-                                "data": "deactCount"
+                                "data": "updateCount"
                             },
 
                         ],

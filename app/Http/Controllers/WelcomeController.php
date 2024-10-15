@@ -974,10 +974,9 @@ class WelcomeController extends Controller
         $mobile_number  = $request->mobile_number;
         $charitie       = $request->charitie;
         $mobile_number = str_replace(' ', '', $mobile_number); // Remove all spaces
-
        
-        $result_mobile = $mobile_number;
-        
+        $result_mobile  = '27' . str_replace(' ', '', $mobile_number); // Remove all spaces
+      
 
         if ($reward != 0) {
             if($method == "EFT"){
@@ -1537,7 +1536,10 @@ class WelcomeController extends Controller
                 return redirect()->back()->with('error', 'Invalid phone number format');
             }
     
-
+           // Prefix the phone number with '27' if it doesn't already start with it
+            if (substr($phone, 0, 2) !== '27') {
+                $phone = '27' . $phone;
+            }
             // Check if the phone number exists
             $user = Respondents::where('mobile', $phone)
                 ->orWhere('whatsapp', $phone)
