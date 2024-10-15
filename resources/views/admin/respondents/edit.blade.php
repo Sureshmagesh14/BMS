@@ -75,7 +75,7 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Date Of Birth </label>
         <div class="col-md-10">
-            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
+            <input type="text" class="form-control" id="date_of_birth" name="date_of_birth"
                 value="{{ $respondents->date_of_birth }}">
         </div>
     </div>
@@ -275,12 +275,22 @@
 
 
 
-
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script>
     $(function() {
 
 
         $(document).ready(function() {
+
+            $('#date_of_birth').inputmask("yyyy/mm/dd", {
+                "placeholder": "YYYY/MM/DD",
+                onincomplete: function() {
+                    $(this).val('');
+                }
+            });
+
+            $('#mobile').inputmask("99 999 9999");
+            $('#whatsapp').inputmask("99 999 9999");
 
             $('#edit_respondents_form').validate({
                 rules: {
