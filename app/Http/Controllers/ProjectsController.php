@@ -872,7 +872,8 @@ class ProjectsController extends Controller
             foreach($all_id as $id){
                 $tags = Respondents::where('id',$id)->update(['active_status_id' => $value,'created_by'=>Auth::guard('admin')->user()->id]);
             }
-            
+            app('App\Http\Controllers\InternalReportController')
+            ->call_activity(Auth::guard('admin')->user()->role_id, Auth::guard('admin')->user()->id, 'deactivated', 'respondent');
             return response()->json([
                 'status'=>200,
                 'success' => true,

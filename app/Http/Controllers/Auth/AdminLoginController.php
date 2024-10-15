@@ -197,49 +197,24 @@ class AdminLoginController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-
     public function get_activity_data(Request $request) {
         if ($request->ajax()) {
             // Base query
             $query = DB::table('users as u')
-                ->select('u.id', DB::raw('CONCAT(u.name, " ", u.surname) AS full_name'))
-                ->selectSub(function ($query) {
-                    $query->select(DB::raw('count(*)'))
-                        ->from('user_events')
-                        ->whereColumn('user_events.user_id', 'u.id')
-                        ->where('user_events.action', 'created')
-                        ->where('user_events.type', 'respondent');
-                }, 'createCount')
-                ->selectSub(function ($query) {
-                    $query->select(DB::raw('count(*)'))
-                        ->from('user_events')
-                        ->whereColumn('user_events.user_id', 'u.id')
-                        ->where('user_events.action', 'updated')
-                        ->where('user_events.type', 'respondent');
-                }, 'updateCount')
-                ->selectSub(function ($query) {
-                    $query->select(DB::raw('count(*)'))
-                        ->from('user_events')
-                        ->whereColumn('user_events.user_id', 'u.id')
-                        ->where('user_events.action', 'deactivated')
-                        ->where('user_events.type', 'respondent');
-                }, 'deactCount');
+                ->select('u.id',
+                    DB::raw('CONCAT(u.name, " ", u.surname) AS full_name'),
+                    DB::raw('SUM(CASE WHEN user_events.action = "created" THEN user_events.count ELSE 0 END) AS createCount'),
+                    DB::raw('SUM(CASE WHEN user_events.action = "updated" THEN user_events.count ELSE 0 END) AS updateCount'),
+                    DB::raw('SUM(CASE WHEN user_events.action = "deactivated" THEN user_events.count ELSE 0 END) AS deactCount')
+                )
+                ->leftJoin('user_events', 'u.id', '=', 'user_events.user_id') // Use leftJoin to include users with no events
+                ->groupBy('u.id'); // Group by user_id
     
-           
-            // Apply filters based on DataTables search input
-            // if (!empty($request->input('year')) || !empty($request->input('month'))) {
-            //     $year = $request->input('year');
-            //     $month = $request->input('month');
-            //     $query->where(function ($query) use ($year,$month) {
-            //         $query->orWhere('user_events.year','=',$year)
-            //                   ->orWhere('user_events.month','=',$month);
-            //     });
-            // }
-
+            // Apply filters based on year and month
             if ($request->filled('year') || $request->filled('month')) {
                 $year = $request->input('year');
                 $month = $request->input('month');
-                
+    
                 $query->whereExists(function ($subQuery) use ($year, $month) {
                     $subQuery->select(DB::raw(1))
                              ->from('user_events')
@@ -254,32 +229,28 @@ class AdminLoginController extends Controller
                              });
                 });
             }
-            
-
-              
-        
     
             // Count total records before pagination
             $totalRecords = $query->count();
     
             // Ordering and pagination
-            $query->offset($request->input('start'))
-                  ->limit($request->input('length'));
-    
-            // Get data
-            $data = $query->get();
+            $data = $query->offset($request->input('start'))
+                          ->limit($request->input('length'))
+                          ->get();
     
             // Prepare JSON response for DataTables
             $json_data = [
                 "draw" => intval($request->input('draw')),
                 "recordsTotal" => $totalRecords,
-                "recordsFiltered" => $totalRecords, // For simplicity, assuming no search filter on server
+                "recordsFiltered" => $totalRecords, // This can be adjusted based on filtered results
                 "data" => $data,
             ];
     
             return response()->json($json_data);
         }
     }
+    
+    
 
     public function admin_password_reset_save(Request $request){
         $request->validate([
