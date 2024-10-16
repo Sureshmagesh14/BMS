@@ -1475,8 +1475,7 @@
     // Extract numerical values from the personal income range
     var personalIncomeRange = personalIncomeText.match(/\d+/g);
     if (!personalIncomeRange || personalIncomeRange.length < 2) {
-        console.error("Selected personal income range is invalid.");
-        return;
+        toastr.error("Selected personal income range is invalid.");
     }
     
     // Convert to integers
@@ -1492,8 +1491,7 @@
         var householdIncomeRange = householdIncomeText.match(/\d+/g);
         
         if (!householdIncomeRange || householdIncomeRange.length < 2) {
-            console.error("Household income range is invalid for option: " + householdIncomeText);
-            return;
+            toastr.error("Household income range is invalid for option: " + householdIncomeText);
         }
         
         // Convert to integers

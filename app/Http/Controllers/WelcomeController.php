@@ -1366,7 +1366,7 @@ class WelcomeController extends Controller
     {
         $total = 0;
         $instruction = 'Realtime';
-        $batchName = 'My Creditor batch2222222sadasda';
+        $batchName = 'My Creditor batch ' . date('Y_m_d');
         $vendorKey = '24ade73c-98cf-47b3-99be-cc7b867b3080';
         $serviceKey =  env('NETCASH_KEY');
         // $date = Carbon::now()->addDay()->format('Ymd');
