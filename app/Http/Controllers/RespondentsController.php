@@ -114,7 +114,24 @@ class RespondentsController extends Controller
                 app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
                 $ref=array('respondent_id'=>$respondents->id,'user_id'=>Auth::guard('admin')->user()->id,'created_at'=>date("Y-m-d H:i:s A"));
                 DB::table('respondent_referrals')->insert($ref);
-         
+
+                $basic_details = array(
+                    'email'           => $request->input('email'),
+                    'first_name'      => $request->input('name'),
+                    'last_name'       => $request->input('surname'),
+                    'updated_at'      => date('Y-m-d H:i:s'),
+                    'date_of_birth'   => $request->input('date_of_birth'),
+                    'mobile_number'   => $mobile,
+                    'whatsapp_number' => $whatsapp
+                );
+
+                $basic_insert = array(
+                    'respondent_id' => $respondents->id,
+                    'pid'           => $respondents->id,
+                    'basic_detials' => json_encode($basic_details)
+                );
+
+                RespondentProfile::insert($basic_insert);
 
                 //email starts
                 $id =$respondents->id;
@@ -284,6 +301,22 @@ class RespondentsController extends Controller
     
             // Save changes
             $respondent->save();
+
+            $basic_details = array(
+                'email'           => $email,
+                'first_name'      => $request->input('name', $respondent->name),
+                'last_name'       => $request->input('surname', $respondent->surname),
+                'updated_at'      => date('Y-m-d H:i:s'),
+                'date_of_birth'   => $request->input('date_of_birth', $respondent->date_of_birth),
+                'mobile_number'   => $mobile,
+                'whatsapp_number' => $whatsapp
+            );
+
+            $basic_insert = array(
+                'basic_detials' => json_encode($basic_details)
+            );
+
+            RespondentProfile::where('respondent_id', $id)->update($basic_insert);
     
             // Log the update activity
             app('App\Http\Controllers\InternalReportController')
