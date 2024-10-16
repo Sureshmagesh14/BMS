@@ -390,10 +390,20 @@
 
                     $('input[type=radio][name=type_method]').change(function() {
                         if (this.value == 'Individual') {
-                            $(".users_list").show();
+                            $(".respondents").show();
                         } else if (this.value == 'All') {
-                            $(".users_list").hide();
+                            $(".respondents").hide();
                         }
+
+                         // Check if module is "Team Activity" when type_method is Individual
+                        if (this.value == 'Individual' && $("#module").val() == "Team Activity") {
+                            $(".users_list").show();
+                            $(".respondents").hide();
+                        } else {
+                            $(".users_list").hide();
+                          
+                        }
+
                     });
 
 
