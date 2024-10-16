@@ -107,6 +107,7 @@ class RespondentsController extends Controller
                 $respondents->referral_code = $request->input('referral_code');
                 $respondents->accept_terms = $request->input('accept_terms');
                 $respondents->deactivated_date = $request->input('deactivated_date');
+                $respondent->created_by = Auth::guard('admin')->user()->id;
                 
                 $respondents->save();
                 $respondents->id;
@@ -279,6 +280,7 @@ class RespondentsController extends Controller
             $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
             $respondent->accept_terms = $request->input('accept_terms', $respondent->accept_terms);
             $respondent->deactivated_date = $request->input('deactivated_date', $respondent->deactivated_date);
+            $respondent->created_by = Auth::guard('admin')->user()->id;
     
             // Save changes
             $respondent->save();
