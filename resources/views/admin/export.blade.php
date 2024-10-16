@@ -250,6 +250,16 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group row users_list">
+                                    <label class="col-md-2 col-form-label">User</label>
+                                    <div class="col-md-10">
+
+                                        <input class="form-control" type="text" id="users"
+                                            name="users[]" value="{{ request()->get('q') }}">
+                                    </div>
+                                </div>
+
+
                                 <div class="form-group row respondents_survey">
                                     <label class="col-md-2 col-form-label">Respondents</label>
                                     <div class="col-md-10">
@@ -370,6 +380,7 @@
                     $(".show_action").hide();
                     $(".show_pro_type").hide();
                     $(".methods").hide();
+                    $(".users_list").hide();
                     $(".show_cashout_type").hide();
                     $(".respondents_survey").hide();
 
@@ -379,9 +390,9 @@
 
                     $('input[type=radio][name=type_method]').change(function() {
                         if (this.value == 'Individual') {
-                            $(".respondents").show();
+                            $(".users_list").show();
                         } else if (this.value == 'All') {
-                            $(".respondents").hide();
+                            $(".users_list").hide();
                         }
                     });
 
@@ -414,6 +425,7 @@
                             $(".panel").hide();
                             $(".methods").hide();
                             $(".respondents_survey").hide();
+                            $(".users_list").hide();
                             $(".show_cashout_type").hide();
                         } else if (this.value == 'Respondents info') {
                             $(".show_year").hide();
@@ -432,6 +444,7 @@
                             $(".show_pro_type").hide();
                             $(".methods").hide();
                             $(".panel").hide();
+                            $(".users_list").hide();
                             $(".show_cashout_type").hide();
                         } else if ((this.value == 'Cashout')) {
                             $(".show_year").hide();
@@ -450,6 +463,7 @@
                             $(".show_pro_type").hide();
                             $(".date_range").show();
                             $(".panel").hide();
+                            $(".users_list").hide();
                             $(".show_cashout_type").show();
                         } else if (this.value == 'Rewards') {
                             $(".methods").show();
@@ -467,6 +481,7 @@
                             $(".projects").hide();
                             $(".show_pro_type").hide();
                             $(".date_range").hide();
+                            $(".users_list").hide();
                             $(".panel").hide();
                             $(".show_cashout_type").hide();
                         } else if (this.value == 'Team Activity') {
@@ -479,7 +494,7 @@
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").show();
-                            $(".respondents").show();
+                            $(".respondents").hide();
                             $(".show_pro_type").hide();
                             $(".report_type").show();
                             $(".date_range").show();
@@ -496,6 +511,7 @@
                             $(".respondents_survey").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
+                            $(".users_list").hide();
                             $(".show_user").show();
                             $(".respondents").hide();
                             $(".report_type").hide();
@@ -511,6 +527,7 @@
                             $(".show_role").hide();
                             $(".show_action").hide();
                             $(".show_resp").hide();
+                            $(".users_list").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
@@ -535,6 +552,7 @@
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
+                            $(".users_list").hide();
                             $(".respondents").hide();
                             $(".projects").hide();
                             $(".show_pro_type").hide();
@@ -558,6 +576,7 @@
                             $(".show_pro_type").show();
                             $(".date_range").show();
                             $(".methods").hide();
+                            $(".users_list").hide();
                             $(".panel").hide();
                             $(".show_cashout_type").hide();
                             $(".respondents_survey").hide();
@@ -668,7 +687,23 @@
 
                         });
                 });
-
+                $("#users").tokenInput("{{ route('users_search_result') }}", {
+                        propertyToSearch: "name",
+                        tokenValue: "id",
+                        tokenDelimiter: ",",
+                        hintText: "{{ __('Search Users... By(ID, Name, Surname, Mobile)') }}",
+                        noResultsText: "{{ __('Users not found.') }}",
+                        searchingText: "{{ __('Searching...') }}",
+                        deleteText: "&#215;",
+                        minChars: 2,
+                        tokenLimit: 20,
+                        zindex: 9999,
+                        animateDropdown: false,
+                        resultsLimit: 20,
+                        deleteText: "&times;",
+                        preventDuplicates: true,
+                        theme: "bootstrap"
+                    });
                 function disablePage() {
                     console.log("vl");
                     document.querySelector("body").style.pointerEvents = 'none';

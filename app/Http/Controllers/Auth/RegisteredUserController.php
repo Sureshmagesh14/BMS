@@ -46,7 +46,7 @@ class RegisteredUserController extends Controller
             'surname' => ['required', 'string', 'max:255'],
             'mobile' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11',
             'whatsapp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11',
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . Respondents::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . Respondents::class],
             'date_of_birth' => ['required', 'string', 'max:255'],
             'password_register' => ['required', Rules\Password::defaults()->min(6)],
         ]);
