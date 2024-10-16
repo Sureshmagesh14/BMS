@@ -255,7 +255,7 @@
                                     @endif
 
 
-                               <!-- @if($get_cashout != null)
+                               {{-- @if($get_cashout != null)
                                <span class="my-auto" style="float:right;">
                                     
                                         
@@ -280,12 +280,12 @@
                                     &nbsp;&nbsp;=
                                     @if($get_cashout->amount != 0){{$get_cashout->amount / 10}} ZAR @endif
                                </span>
-                               @endif
+                               @endif --}}
 
                                     
-                                else 
-                                    <a class="btn btn-yellow width-fit-content ml-auto d-flex" href="{{ route('updateprofile_wizard') }}">Request Cash Out</a>
-                                @endif -->
+                                {{-- @else 
+                                    <a class="btn btn-yellow width-fit-content ml-auto d-flex" href="{{ route('updateprofile_wizard') }}">Request Cash Out</a> --}}
+                                @endif
                                 </div>
                                </div>
                             </div>
