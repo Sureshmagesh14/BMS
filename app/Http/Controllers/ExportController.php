@@ -2483,33 +2483,48 @@ class ExportController extends Controller
                 // Build the base query
 
                  // Base query
-            $query = DB::table('users as u')
-            ->select('u.id',
-                DB::raw('CONCAT(u.name, " ", u.surname) AS full_name'),
-                DB::raw('SUM(CASE WHEN user_events.action = "created" THEN user_events.count ELSE 0 END) AS createCount'),
-                DB::raw('SUM(CASE WHEN user_events.action = "updated" THEN user_events.count ELSE 0 END) AS updateCount'),
-                DB::raw('SUM(CASE WHEN user_events.action = "deactivated" THEN user_events.count ELSE 0 END) AS deactCount')
-            )
-            ->leftJoin('user_events', 'u.id', '=', 'user_events.user_id') 
-            ->where('user_events.type', '=', 'respondent')
-            ->groupBy('u.id'); // Group by user_id
-
-              $users = ($request->users != null) ? implode(',', array_filter($request->users)) : null;
-               // Add condition for user_ids if provided
+                 $query = DB::table('users as u')
+                 ->select('u.id',
+                     DB::raw('CONCAT(u.name, " ", u.surname) AS full_name'),
+                     DB::raw('SUM(CASE WHEN user_events.action = "created" THEN user_events.count ELSE 0 END) AS createCount'),
+                     DB::raw('SUM(CASE WHEN user_events.action = "updated" THEN user_events.count ELSE 0 END) AS updateCount'),
+                     DB::raw('SUM(CASE WHEN user_events.action = "deactivated" THEN user_events.count ELSE 0 END) AS deactCount')
+                 )
+                 ->leftJoin('user_events', 'u.id', '=', 'user_events.user_id')
+                 ->where('user_events.type', '=', 'respondent')
+                 ->groupBy('u.id'); // Group by user_id
+             
+                // Filter by user_ids if provided
                 $users = ($request->users != null) ? array_filter($request->users) : null;
                 if (!empty($users)) {
                     $query->whereIn('user_events.user_id', $users);
                 }
-
-                if (isset($request->start)) {
-                    $query->where('user_events.created_at', '>=', $request->start);
+                
+                // Initialize start and end variables
+                $start = null;
+                $end = null;
+                
+                // Check and convert start date if provided
+                if (!empty($request->start)) {
+                    $start = \Carbon\Carbon::createFromFormat('d-m-Y', $request->start)->startOfDay();
                 }
-                if (isset($request->end)) {
-                    $query->where('user_events.created_at', '<=', $request->end);
+                
+                // Check and convert end date if provided
+                if (!empty($request->end)) {
+                    $end = \Carbon\Carbon::createFromFormat('d-m-Y', $request->end)->endOfDay();
                 }
-        
+                
+                // Apply the date filters only if they are set
+                if ($start) {
+                    $query->where('user_events.created_at', '>=', $start);
+                }
+                if ($end) {
+                    $query->where('user_events.created_at', '<=', $end);
+                }
+                
                 // Fetch all data
                 $all_datas = $query->orderBy("u.name")->get();
+           
             
                 $sheet->setCellValue('A1', 'Name of team member');
                 $sheet->setCellValue('B1', 'Total recruited respondents');
