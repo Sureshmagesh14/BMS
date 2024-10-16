@@ -116,6 +116,7 @@ Route::group([
     Route::any('users_multi_delete', 'UsersController@users_multi_delete')->name('users_multi_delete');
     Route::any('users_action', 'UsersController@users_action')->name('users_action');
     Route::any('user_email_id_check', 'UsersController@user_email_id_check')->name('user_email_id_check');
+    Route::any('users_search_result', 'UsersController@users_search_result')->name('users_search_result');
 
 
     /* Internal Reports MENU*/
