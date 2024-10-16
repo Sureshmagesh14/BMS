@@ -2494,18 +2494,18 @@ class ExportController extends Controller
             ->where('user_events.type', '=', 'respondent')
             ->groupBy('u.id'); // Group by user_id
 
-              
-            
-                // Apply filters if provided
-                if ($respondents != "") {
-                    $query->whereIn('user_events.user_id', [$respondents]);
+              $users = ($request->users != null) ? implode(',', array_filter($request->users)) : null;
+               // Add condition for user_ids if provided
+                $users = ($request->users != null) ? array_filter($request->users) : null;
+                if (!empty($users)) {
+                    $query->whereIn('user_events.user_id', $users);
                 }
-            
-               
-            
-                // Group by user_id to avoid duplication
-              
-            
+
+                // Add condition for created_at date range if both dates are provided
+                if (!empty($request->start) && !empty($request->end)) {
+                    $query->whereBetween('user_events.created_at', [$request->start, $request->end]);
+                }
+        
                 // Fetch all data
                 $all_datas = $query->orderBy("u.name")->get();
             
