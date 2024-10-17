@@ -225,12 +225,12 @@
                     orderable: true,
                     searchable: true
                 },
-                {
-                    data: 'project_link',
-                    name: 'project_link',
-                    orderable: true,
-                    searchable: true
-                },
+                // {
+                //     data: 'project_link',
+                //     name: 'project_link',
+                //     orderable: true,
+                //     searchable: true
+                // },
                 {
                     data: 'created',
                     name: 'created',
