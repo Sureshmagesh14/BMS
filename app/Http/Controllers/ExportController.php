@@ -2529,7 +2529,7 @@ class ExportController extends Controller
                 $sheet->setCellValue('A1', 'Name of team member');
                 $sheet->setCellValue('B1', 'Total recruited respondents');
                 $sheet->setCellValue('C1', 'Total deactivated respondents');
-                $sheet->setCellValue('D1', 'Total blacklisted respondents');
+                $sheet->setCellValue('D1', 'Total respondents updated');
             
                 $sheet->getStyle('A1:D1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
                 $sheet->getStyle('A1:D1')->applyFromArray($styleArray);
@@ -2545,8 +2545,8 @@ class ExportController extends Controller
                     // Set values for each row
                     $sheet->setCellValue('A' . $rows, $data->full_name);
                     $sheet->setCellValue('B' . $rows, $data->createCount);
-                    $sheet->setCellValue('C' . $rows, $data->updateCount);
-                    $sheet->setCellValue('D' . $rows, $data->deactCount);
+                    $sheet->setCellValue('C' . $rows, $data->deactCount);
+                    $sheet->setCellValue('D' . $rows, $data->updateCount);
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                     $sheet->getStyle('C' . $rows . ':D' . $rows)->applyFromArray($styleArray2);
