@@ -64,7 +64,7 @@
         <div class="form-group row">
             <label for="example-text-input" class="col-md-3 col-form-label">Cashout Methods</label>
             <div class="col-md-9">
-                <select name="method" class="form-control" required onchange="method_change(this)">
+                <select name="methods" class="form-control" required onchange="method_change(this)">
                     <option value="">Select Method</option>
                     <option value="EFT">EFT Deposit</option>
                     <option value="Airtime">Airtime</option>
