@@ -313,7 +313,7 @@ class RespondentsController extends Controller
             );
 
             $basic_insert = array(
-                'basic_detials' => json_encode($basic_details)
+                'basic_details' => json_encode($basic_details)
             );
 
             RespondentProfile::where('respondent_id', $id)->update($basic_insert);
