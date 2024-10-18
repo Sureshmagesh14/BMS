@@ -531,7 +531,7 @@ class QualifiedController extends Controller
                     // Prepare data to insert into Rewards table
                     $all_record = [
                         'respondent_id' => $rewards->respondent_id,
-                        'user_id' => $rewards->respondent_id, // Assuming user_id is same as respondent_id
+                        'user_id' => $get_points->user_id, 
                         'project_id' => $rewards->project_id,
                         'points' => $get_points->reward*10,
                         'status_id' => 2,
