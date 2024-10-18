@@ -248,7 +248,8 @@ class ContentsController extends Controller
                     $edit_route = route("contents.edit",$all_data->id);
                     $view_route = route("contents.show",$all_data->id);
 
-                    return '<div class="col-md-2">
+                    
+                    $design = '<div class="col-md-2">
                         <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
                             title="Action" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-tasks" aria-hidden="true"></i>
@@ -260,20 +261,24 @@ class ContentsController extends Controller
                                     data-bs-original-title="View Content" class="waves-light waves-effect">
                                     <i class="fa fa-eye"></i> View
                                 </a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                    data-bs-original-title="Edit Content" class="rounded waves-light waves-effect">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#!" id="delete_content" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
-                                    <i class="far fa-trash-alt"></i> Delete
-                                </a>
-                            </li>
-                        </ul>
+                            </li>';
+                            if (Auth::guard('admin')->user()->role_id == 1){
+                                $design .= '<li class="list-group-item">
+                                    <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                        data-bs-original-title="Edit Content" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" id="delete_content" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
+                                        <i class="far fa-trash-alt"></i> Delete
+                                    </a>
+                                </li>';
+                            }
+                        $design .= '</ul>
                     </div>';
+
+                    return $design;
                 })
                 ->rawColumns(['id_show','select_all','action','active','data'])      
                 ->make(true);

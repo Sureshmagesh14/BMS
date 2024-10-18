@@ -321,8 +321,8 @@ class UsersController extends Controller
                     $edit_route = route("users.edit",$all_data->id);
                     $view_route = route("users.show",$all_data->id);
 
-
-                    $design = '<div class="col-md-2">
+                    if (Auth::guard('admin')->user()->role_id == 1){
+                        $design = '<div class="col-md-2">
                             <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
                                 title="Action" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-tasks" aria-hidden="true"></i>
@@ -347,6 +347,33 @@ class UsersController extends Controller
                                 </li>
                             </ul>
                         </div>';
+                    }
+                    else if(Auth::guard('admin')->user()->role_id == 3){
+                        $design = '<div class="col-md-2">
+                            <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                                title="Action" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-tasks" aria-hidden="true"></i>
+                                <i class="mdi mdi-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li class="list-group-item">
+                                    <a href="'.$view_route.'" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-eye"></i> View
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                        data-bs-original-title="Edit User" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>';
+                    }
+                    else{
+                        $design = '';
+                    }
+                    
 
                     if(Auth::guard('admin')->user()->role_id == 1){
                         return $design;
