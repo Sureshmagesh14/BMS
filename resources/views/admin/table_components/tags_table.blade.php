@@ -22,7 +22,7 @@
 
 
 
-    @if (Auth::guard('admin')->user()->role_id == 1)
+    
 
         @if (str_contains(Request::url(), '/admin/respondents'))
 
@@ -82,7 +82,7 @@
                 </div>
             </div>
         @endif
-    @endif
+   
 </div>
 
 

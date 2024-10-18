@@ -92,8 +92,11 @@
                                     <div class="col-md-10">
                                         <select name="module" id="module" class="form-control">
                                             <option value="">Select</option>
-                                            <option value="Respondents info">Respondents Info</option>
-                                            <option value="Respondents">Respondents</option>
+                                            @if (Auth::guard('admin')->user()->role_id == 1)
+                                                <option value="Respondents info">Respondents Info</option>
+                                                <option value="Respondents">Respondents</option>
+                                            @endif
+                                            
                                             <option value="Projects">Projects</option>
                                             <option value="Rewards">Rewards</option>
                                             <option value="Cashout">Cashout</option>
