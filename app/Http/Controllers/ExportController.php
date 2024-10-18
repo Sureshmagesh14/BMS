@@ -1484,6 +1484,8 @@ class ExportController extends Controller
                     'respondents.email',
                     'respondents.mobile',
                     'respondents.whatsapp',
+                    'cashouts.type_id',
+                    'cashouts.created_at',
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 3 THEN cashouts.amount ELSE 0 END) as total_complete_cashout'), 
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 1 THEN cashouts.amount ELSE 0 END) as pending'),
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 4 THEN cashouts.amount ELSE 0 END) as declined'),
@@ -1627,7 +1629,7 @@ class ExportController extends Controller
 
                     $sheet->setCellValue('O' . $rows, $project_total);
                     $sheet->getStyle('O' . $rows)->getAlignment()->setWrapText(true);
-                    $sheet->setCellValue('P' . $rows, ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '');
+                    $sheet->setCellValue('P' . $rows, ($all_data->created_at != null) ? date("d-m-Y", strtotime($all_data->created_at)) : '');
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                     $sheet->getStyle('C' . $rows . ':P' . $rows)->applyFromArray($styleArray2);
