@@ -963,7 +963,7 @@ class WelcomeController extends Controller
     public function cashout_sent(Request $request)
     {
         $resp_id        = Session::get('resp_id');
-        $method         = $request->method;
+        $method         = $request->methods;
         $bank_type_id   = $request->bank_type_id;
         $banks          = $request->bank_value;
         $account_number = $request->account_number;
