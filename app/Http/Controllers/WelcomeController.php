@@ -996,7 +996,7 @@ class WelcomeController extends Controller
                     'respondent_id'  => $resp_id,
                     'mobile_network' => $mobile_network,
                     'mobile_number'  => $result_mobile,
-                    'type_id'        => ($method == "Airtime") ? 2 : 3,
+                    'type_id'        => ($method == "Airtime") ? 3 : 2,
                     'amount'         => $reward,
                     'created_at'    => now(),
                 );
