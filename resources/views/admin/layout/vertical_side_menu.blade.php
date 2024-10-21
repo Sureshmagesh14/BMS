@@ -118,13 +118,15 @@
                 @endif
 
                
-                <li>
-                    <a href="{{ route('cashouts') }}" class=" waves-effect">
-                        <i class="fas fa-money-bill"></i>
-                        <span class="menu-item" key="t-chat">Cash Outs</span>
-                    </a>
-                </li>
-               
+                @if (Auth::guard('admin')->user()->role_id != 3)
+                    <li>
+                        <a href="{{ route('cashouts') }}" class=" waves-effect">
+                            <i class="fas fa-money-bill"></i>
+                            <span class="menu-item" key="t-chat">Cash Outs</span>
+                        </a>
+                    </li>
+                @endif
+                
 
                 {{-- <li>
                     <a href="{{route('actions')}}" class=" waves-effect">
@@ -218,7 +220,7 @@
                 </li>
                 
 
-                @if (Auth::guard('admin')->user()->role_id != 2)
+                @if (Auth::guard('admin')->user()->role_id == 1)
                     <li class="menu-title" key="t-apps">Downloads </li>
 
                     <li>
