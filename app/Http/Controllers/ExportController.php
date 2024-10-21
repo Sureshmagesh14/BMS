@@ -1314,7 +1314,12 @@ class ExportController extends Controller
                     if($from != null && $to != null){
                         $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
                     }
-                        
+                    $all_datas = $all_datas->whereNotExists(function ($query) {
+                        $query->select(\DB::raw(1))
+                            ->from('respondent_tag')
+                            ->whereColumn('respondent_tag.respondent_id', '=', 'respondents.id')
+                            ->where('respondent_tag.tag_id', 1);
+                    }); // Exclude respondents with tag_id = 1
                     $all_datas = $all_datas->get();
 
                     foreach ($all_datas as $all_data) {
@@ -1431,7 +1436,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('D' . $rows, $mobile_number);
                         $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
-                        $sheet->setCellValue('G' . $rows, $all_data->updated_at);
+                        $sheet->setCellValue('G' . $rows, $all_data->created_at);
                         $user_name = Users::where('id', $all_data->created_by)->first();
                         if ($user_name) {
                             $sheet->setCellValue('H' . $rows, $user_name->name . ' ' . $user_name->surname);
@@ -1484,6 +1489,8 @@ class ExportController extends Controller
                     'respondents.email',
                     'respondents.mobile',
                     'respondents.whatsapp',
+                    'cashouts.type_id',
+                    'cashouts.created_at',
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 3 THEN cashouts.amount ELSE 0 END) as total_complete_cashout'), 
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 1 THEN cashouts.amount ELSE 0 END) as pending'),
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 4 THEN cashouts.amount ELSE 0 END) as declined'),
@@ -1627,7 +1634,7 @@ class ExportController extends Controller
 
                     $sheet->setCellValue('O' . $rows, $project_total);
                     $sheet->getStyle('O' . $rows)->getAlignment()->setWrapText(true);
-                    $sheet->setCellValue('P' . $rows, ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '');
+                    $sheet->setCellValue('P' . $rows, ($all_data->created_at != null) ? date("d-m-Y", strtotime($all_data->created_at)) : '');
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                     $sheet->getStyle('C' . $rows . ':P' . $rows)->applyFromArray($styleArray2);

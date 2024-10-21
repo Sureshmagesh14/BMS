@@ -100,7 +100,7 @@
                                         {{ $stats }}
                                     </td>
                                     <td>
-                                        {{ $res->updated_at }}
+                                        {{ $res->created_at }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -173,7 +173,7 @@
                                         {{ $stats }}
                                     </td>
                                     <td>
-                                        {{ $res->updated_at }}
+                                        {{ $res->created_at }}
                                     </td>
                                 </tr>
                             @endforeach
