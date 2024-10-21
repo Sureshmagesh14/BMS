@@ -23,7 +23,9 @@ See if you qualify!
 
 <b> Paying</b><br>
 <p>
-    Points {{ $reward }}
+    Points {{ $reward }}<br>
+
+    You can access the <a href="{{ route('user.dashboard') }}">Dashboard</a> for more details.
 </p>
 <hr>
 @endif
