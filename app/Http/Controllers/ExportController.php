@@ -1314,7 +1314,12 @@ class ExportController extends Controller
                     if($from != null && $to != null){
                         $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
                     }
-                        
+                    $all_datas = $all_datas->whereNotExists(function ($query) {
+                        $query->select(\DB::raw(1))
+                            ->from('respondent_tag')
+                            ->whereColumn('respondent_tag.respondent_id', '=', 'respondents.id')
+                            ->where('respondent_tag.tag_id', 1);
+                    }); // Exclude respondents with tag_id = 1
                     $all_datas = $all_datas->get();
 
                     foreach ($all_datas as $all_data) {
@@ -1431,7 +1436,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('D' . $rows, $mobile_number);
                         $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
-                        $sheet->setCellValue('G' . $rows, $all_data->updated_at);
+                        $sheet->setCellValue('G' . $rows, $all_data->created_at);
                         $user_name = Users::where('id', $all_data->created_by)->first();
                         if ($user_name) {
                             $sheet->setCellValue('H' . $rows, $user_name->name . ' ' . $user_name->surname);

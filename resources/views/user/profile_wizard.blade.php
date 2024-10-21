@@ -1468,46 +1468,46 @@
                 }
             }
         });
-        $('#personal_income_per_month').on('change', function() {
-    // Get the selected personal income value
-    var personalIncomeText = $(this).find('option:selected').text();
-    
-    // Extract numerical values from the personal income range
-    var personalIncomeRange = personalIncomeText.match(/\d+/g);
-    if (!personalIncomeRange || personalIncomeRange.length < 2) {
-        toastr.error("Selected personal income range is invalid.");
-    }
-    
-    // Convert to integers
-    var personalIncomeMin = parseInt(personalIncomeRange[0].replace(/\D/g, ''), 10);
-    var personalIncomeMax = parseInt(personalIncomeRange[1].replace(/\D/g, ''), 10);
-
-    // Get the household income options
-    var householdIncomeOptions = $('#household_income_per_month').find('option');
-    
-    // Filter the household income options based on the selected personal income
-    householdIncomeOptions.each(function() {
-        var householdIncomeText = $(this).text();
-        var householdIncomeRange = householdIncomeText.match(/\d+/g);
+       
+    // Event listener for personal income change
+    $('#personal_income_per_month').on('change', function() {
+        // Get the selected personal income value
+        var personalIncomeText = $(this).find('option:selected').text();
         
-        if (!householdIncomeRange || householdIncomeRange.length < 2) {
-            toastr.error("Household income range is invalid for option: " + householdIncomeText);
-        }
+        // Extract numerical values from the personal income range
+        var personalIncomeRange = personalIncomeText.match(/\d+/g);
+        
+        // Validate the personal income range
+    
         
         // Convert to integers
-        var householdIncomeMin = parseInt(householdIncomeRange[0].replace(/\D/g, ''), 10);
-        var householdIncomeMax = parseInt(householdIncomeRange[1].replace(/\D/g, ''), 10);
+        var personalIncomeMin = parseInt(personalIncomeRange[0], 10);
+        var personalIncomeMax = parseInt(personalIncomeRange[1], 10);
 
-        // Disable options where household income is less than the personal income minimum
-        if (householdIncomeMin < personalIncomeMin) {
-            $(this).prop('disabled', true);
-        } else {
-            $(this).prop('disabled', false);
-        }
+        // Get the household income options
+        var householdIncomeOptions = $('#household_income_per_month').find('option');
+        
+        // Filter the household income options based on the selected personal income
+        householdIncomeOptions.each(function() {
+            var householdIncomeText = $(this).text();
+            var householdIncomeRange = householdIncomeText.match(/\d+/g);
+            
+            // Validate the household income range
+            if (!householdIncomeRange || householdIncomeRange.length < 2) {
+            
+                $(this).prop('disabled', true); // Disable invalid options
+                return; // Exit this iteration
+            }
+            
+            // Convert to integers
+            var householdIncomeMin = parseInt(householdIncomeRange[0], 10);
+            var householdIncomeMax = parseInt(householdIncomeRange[1], 10);
+
+            // Disable options where household income is less than the personal income minimum
+            $(this).prop('disabled', householdIncomeMin < personalIncomeMin);
+        });
     });
-});
-
-
+      
 
     });
     $(function() {
