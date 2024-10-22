@@ -395,9 +395,10 @@ class ProfileController extends Controller
             }
 
             // Define default values to prevent undefined index warnings
+
             $vehicle_data = isset($profile_data['vehicle_data']) ? $profile_data['vehicle_data'] : null;
             $children_data = isset($profile_data['children_data']) ? $profile_data['children_data'] : null;
-          
+       
             // if($total_ques == $total_ans){
             //     $profile_data['profile_completion'] = 1;
             // }
@@ -433,9 +434,8 @@ class ProfileController extends Controller
                     $extended_details = json_encode($new_extended_array);
                     RespondentProfile::where('respondent_id',$resp_id)->update([
                         'extended_details' => $extended_details,
-                        'vehicle_data'=> $vehicle_data,
-                        'children_data'=>  $children_data,
-                      
+                        'vehicle_data' => $vehicle_data ?? $current_profile->vehicle_data,
+                        'children_data' => $children_data ?? $current_profile->children_data,
                     ]);
                 }
                 $step_word = ($steps == 2) ? "Essential Details Updated" : "Extended Details Updated";

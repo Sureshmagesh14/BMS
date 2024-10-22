@@ -1655,6 +1655,39 @@ class WelcomeController extends Controller
 
         return response()->json(['repsonse' => $repsonse], 200);
     }
+
+
+    public function update_out(Request $request)
+{
+    $resp_id = Session::get('resp_id');
+
+    // Check if the respondent ID exists in the session
+    if (!$resp_id) {
+        return redirect()->back()->with('error', 'Respondent ID not found in session.');
+    }
+
+    try {
+        // Find the respondent
+        $respondent = Respondents::find($resp_id);
+
+        // Check if the respondent exists
+        if (!$respondent) {
+            return redirect()->back()->with('error', 'Respondent not found.');
+        }
+
+        // Update the opted status
+        $respondent->opted_status = 1;
+        $respondent->save();
+
+        return redirect()->back()->with('success', 'Opted status updated successfully.');
+    } catch (\Exception $e) {
+        // Log the exception or handle it as needed
+        \Log::error('Failed to update opted status: ' . $e->getMessage());
+
+        return redirect()->back()->with('error', 'An error occurred while updating the opted status. Please try again.');
+    }
+}
+
     
 
 }

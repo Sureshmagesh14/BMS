@@ -1,4 +1,4 @@
-@if (Auth::guard('admin')->user()->role_id == 1)
+@if (Auth::guard('admin')->user()->role_id != 3)
     <div class="text-right">
         @if (str_contains(Request::url(), '/admin/respondents'))
             <a href="#!" data-url="{{ route('attach_projects', ['respondent_id' => $respondent_id]) }}" data-size="xl"
@@ -26,7 +26,7 @@
                 {{-- <optgroup label="Standalone Actions">
                     <option value="export_all_project">Export - All Projects</option>
                 </optgroup> --}}
-                @if (Auth::guard('admin')->user()->role_id == 1)
+                @if (Auth::guard('admin')->user()->role_id != 3)
                     <optgroup label="Delete Project">
                         <option value="delete_all">Delete Selected</option>
                     </optgroup>
