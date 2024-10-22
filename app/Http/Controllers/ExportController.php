@@ -2933,11 +2933,29 @@ class ExportController extends Controller
                                             $result[$matrix_qus] = 'Skip';
                                         }
                                     } else {
-                                        foreach (json_decode($qus->qus_ans) as $matrix_qus) {
-                                            $matrixQus = SurveyResponse::where(['survey_id' => $survey_id,  'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
-                                            $output_matrix_qus = $matrixQus ? $matrixQus->answer : '-';
-                                            $result[$matrix_qus] = $output_matrix_qus;
+                                        $matrix_qus = json_decode($qus->qus_ans);
+                                        $matrixQus = SurveyResponse::where(['survey_id' => $survey_id,  'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
+                                        $matrixAnswers = $matrixQus ? json_decode($matrixQus->answer, true) : [];
+                                        foreach ($martirx_qus as $index => $matrix_qus) {
+                                            $answerFound = false;
+                                            foreach ($matrixAnswers as $answer) {
+                                                if (trim($answer['qus']) === trim($matrix_qus)) {
+                                                    $result[$matrix_qus] = $answer['ans']; 
+                                                    $answerFound = true;
+                                                    break; 
+                                                }
+                                            }
+                                            if (!$answerFound) {
+                                                $result[$matrix_qus] = '-'; 
+                                            }
                                         }
+
+                                        // foreach (json_decode($qus->qus_ans) as $matrix_qus) {
+                                        //     $matrixQus = SurveyResponse::where(['survey_id' => $survey_id,  'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
+
+                                        //     $output_matrix_qus = $matrixQus ? $matrixQus->answer : '-';
+                                        //     $result[$matrix_qus] = $output_matrix_qus;
+                                        // }
                                     }
                                 } else {
                                     $result[$qus->question_name] = $output;
