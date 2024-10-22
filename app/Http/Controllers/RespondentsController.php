@@ -679,7 +679,7 @@ class RespondentsController extends Controller
                     'updated_at' => $updated_at,
                  'referral_code' => '<div class="text-container" title="' . htmlspecialchars($post->referral_code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($referral_code, ENT_QUOTES, 'UTF-8') . '</div>',
                     'accept_terms' => $accept_terms,
-                    'id_show' => (Auth::guard('admin')->user()->role_id == 1) ? '<a href="' . $view_route . '" class="rounded waves-light waves-effect">' . $post->id . '</a>' : '<a href="#">' . $post->id . '</a>',
+                    'id_show' => (Auth::guard('admin')->user()->role_id != 3) ? '<a href="' . $view_route . '" class="rounded waves-light waves-effect">' . $post->id . '</a>' : '<a href="#">' . $post->id . '</a>',
                 ];
     
                 // Add options for each row based on user permissions

@@ -85,7 +85,7 @@
                 
                 ?>
 
-                @if (Auth::guard('admin')->user()->role_id == 1)
+                @if (Auth::guard('admin')->user()->role_id != 3)
                     <li>
                         <a href="{{ $templateRoute }}" class="waves-effect">
                             <i class="fas fa-poll"></i>
@@ -146,7 +146,7 @@
                     </li>
                 @endif
 
-                @if (Auth::guard('admin')->user()->role_id == 1)
+                @if (Auth::guard('admin')->user()->role_id != 3)
                     <li>
                         <a href="{{ route('respondents.index') }}" class=" waves-effect">
                             <i class="fas fa-user-friends"></i>
@@ -200,7 +200,9 @@
                             </span>
                         </a>
                     </li>
+                @endif
 
+                @if (Auth::guard('admin')->user()->role_id != 3)
                     <li>
                         <a href="{{ route('qualified_respondent.index') }}" class=" waves-effect">
                             <i class="fa fa-certificate" aria-hidden="true"></i>
@@ -209,6 +211,7 @@
                         </a>
                     </li>
                 @endif
+                
 
                 
                 <li>
@@ -220,7 +223,7 @@
                 </li>
                 
 
-                @if (Auth::guard('admin')->user()->role_id == 1)
+                @if (Auth::guard('admin')->user()->role_id != 3)
                     <li class="menu-title" key="t-apps">Downloads </li>
 
                     <li>

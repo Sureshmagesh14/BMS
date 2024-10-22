@@ -29,7 +29,7 @@
                         <div class="card-body">
 
                             <div class="mb-0">
-                                @if (Auth::guard('admin')->user()->role_id == 1)
+                                @if (Auth::guard('admin')->user()->role_id != 3)
                                     <div class="text-right">
 
                                         <div class="btn-group mr-2">
@@ -176,7 +176,7 @@
                     </div>
                     <!-- end card -->
                     
-                    @if (Auth::guard('admin')->user()->role_id == 1)
+                    @if (Auth::guard('admin')->user()->role_id != 3)
                         <!-- rewards start page title -->
                         <div class="row">
                             <div class="col-12">
