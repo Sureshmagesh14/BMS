@@ -68,6 +68,8 @@ Route::post('image_update', 'WelcomeController@image_update')->middleware(['auth
 Route::any('terms_and_conditions', 'WelcomeController@terms_and_conditions')->middleware(['auth', 'verified'])->name('terms_and_conditions');
 Route::any('survey_share', 'WelcomeController@survey_share')->middleware(['auth', 'verified'])->name('user.survey_share');
 
+Route::any('update_out', 'WelcomeController@update_out')->name('update_out');
+
 Route::any('updateprofile_wizard', 'ProfileController@updateprofile_wizard')->middleware(['auth', 'verified'])->name('updateprofile_wizard');
 Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'verified'])->name('get_suburb');
 Route::any('get_area', 'ProfileController@get_area')->middleware(['auth', 'verified'])->name('get_area');
