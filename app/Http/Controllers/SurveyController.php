@@ -2535,8 +2535,9 @@ class SurveyController extends Controller
                                 break;
                         }
                     }
+                    \Log::info('Limit - '.$limit.' QuotaLimit -' . (int)$quota->quota_limit);
                     // If the quota limit is reached, return the redirection question
-                    if ($limit >= (int)$quota->quota_limit) {
+                    if ($limit > (int)$quota->quota_limit) {
        
                         return $quota->redirection_qus;
                     }
