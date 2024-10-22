@@ -305,12 +305,51 @@ class SurveyController extends Controller
         $qus_type='';
         if($currentQus){
             $qus_type=$questionTypes[$currentQus->qus_type];
-            $display_logic=Questions::where('id', '<', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
-            $display_logic_matrix=Questions::where('id', '<', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
-            $skip_logic=Questions::where('id', '<=', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you','matrix_qus'])->pluck('question_name', 'id')->toArray();
-            $skip_logic_matrix=Questions::where('id', '<=', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
-            $jump_to=Questions::where('id', '>', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
-            $jump_to_tq=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->pluck('question_name', 'id')->toArray();
+            // Ques ID based old logic
+            // $display_logic=Questions::where('id', '<', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+            // $display_logic_matrix=Questions::where('id', '<', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
+            // $skip_logic=Questions::where('id', '<=', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you','matrix_qus'])->pluck('question_name', 'id')->toArray();
+            // $skip_logic_matrix=Questions::where('id', '<=', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
+            // $jump_to=Questions::where('id', '>', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+            // $jump_to_tq=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->pluck('question_name', 'id')->toArray();
+
+            // New Logic based on qus_order_no
+            // Display logic for questions where qus_order_no is less than the current question's order
+            $display_logic = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
+            ->where('survey_id', $survey->id)
+            ->whereNotIn('id', [$currentQus->id])
+            ->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you'])
+            ->pluck('question_name', 'id')->toArray();
+
+            $display_logic_matrix = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
+            ->where('qus_type', 'matrix_qus')
+            ->where('survey_id', $survey->id)
+            ->whereNotIn('id', [$currentQus->id])
+            ->get();
+
+            // Skip logic for questions where qus_order_no is less than or equal to the current question's order
+            $skip_logic = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
+            ->where('survey_id', $survey->id)
+            ->whereNotIn('qus_type', ['welcome_page', 'thank_you', 'matrix_qus'])
+            ->pluck('question_name', 'id')->toArray();
+
+            $skip_logic_matrix = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
+            ->where('qus_type', 'matrix_qus')
+            ->where('survey_id', $survey->id)
+            ->whereNotIn('id', [$currentQus->id])
+            ->get();
+
+            // Jump-to logic for questions where qus_order_no is greater than the current question's order
+            $jump_to = Questions::where('qus_order_no', '>', $currentQus->qus_order_no)
+            ->where('survey_id', $survey->id)
+            ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
+            ->pluck('question_name', 'id')->toArray();
+
+            // Jump to thank-you page question
+            $jump_to_tq = Questions::where('survey_id', $survey->id)
+            ->where('qus_type', 'thank_you')
+            ->pluck('question_name', 'id')->toArray();
+
 
         }else{
             $skip_logic=[];
@@ -321,7 +360,7 @@ class SurveyController extends Controller
             $jump_to=[];
         }
 
-        
+          
         $pagetype=$request->pagetype;
         if($pagetype=='preview'){
             $question1=Questions::where('id', '>', $currentQus->id)->where('survey_id', $survey->id)->orderBy('id')->first();
