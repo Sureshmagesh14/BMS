@@ -174,6 +174,7 @@ class ExportController extends Controller
                     ->whereColumn('respondent_tag.respondent_id', '=', 'respondents.id')
                     ->where('respondent_tag.tag_id', 1);
             }) // Exclude respondents with tag_id = 1
+            ->orderBy('respondents.id', 'ASC')
             ->orderByRaw('CASE WHEN CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) IS NULL OR CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) = 0 THEN 1 ELSE 0 END ASC')
             ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) ASC')
             ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.household_income_per_month") AS UNSIGNED) ASC')
@@ -1152,7 +1153,7 @@ class ExportController extends Controller
 
                   
                         
-                    $all_datas = $all_datas->get();
+                    $all_datas = $all_datas->orderBy('respondents.id', 'ASC')->get();
 
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
@@ -1231,7 +1232,7 @@ class ExportController extends Controller
                         $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                     }
                         
-                    $all_datas = $all_datas->get();
+                    $all_datas = $all_datas->orderBy('respondents.id', 'ASC')->get();
 
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
@@ -1320,7 +1321,7 @@ class ExportController extends Controller
                             ->whereColumn('respondent_tag.respondent_id', '=', 'respondents.id')
                             ->where('respondent_tag.tag_id', 1);
                     }); // Exclude respondents with tag_id = 1
-                    $all_datas = $all_datas->get();
+                    $all_datas = $all_datas->orderBy('respondents.id', 'ASC')->get();
 
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
@@ -1395,7 +1396,7 @@ class ExportController extends Controller
                             $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                         }
                        
-                    $all_datas = $all_datas->get();
+                    $all_datas = $all_datas->orderBy('respondents.id', 'ASC')->get();
 
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
@@ -1514,7 +1515,7 @@ class ExportController extends Controller
 
                 $all_datas = $all_datas
                     ->groupBy('respondents.id')
-                    ->orderBy("respondents.id", "desc")  // Use respondents.id for consistent ordering
+                    ->orderBy("respondents.id", "ASC")  // Use respondents.id for consistent ordering
                     ->get();
 
             
@@ -1671,6 +1672,7 @@ class ExportController extends Controller
                         $join->on('rewards.respondent_id', '=', 'respondents.id');
                     })
                     ->where('respondents.active_status_id',1)
+                    ->orderBy('respondents.id', 'ASC')
                     ->get([
                         'respondents.id',
                         'respondents.name',
@@ -1688,7 +1690,9 @@ class ExportController extends Controller
                     if($projects != ""){
                         $all_datas = $all_datas->whereIn('rewards.project_id', [$projects]);
                     }
-                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)
+                    ->orderBy('respondents.id', 'ASC')
+                    ->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -2125,7 +2129,7 @@ class ExportController extends Controller
                       $query->whereIn('respondent_tag.respondent_id', $respondents);
                   })
                   ->where('respondents.active_status_id', 1)
-                  ->orderBy('respondent_tag.id', 'desc')
+                  ->orderBy('respondents.id', 'asc')
                   ->get();
           
                 // $query = DB::table('respondent_tag')
@@ -2530,7 +2534,7 @@ class ExportController extends Controller
                 }
                 
                 // Fetch all data
-                $all_datas = $query->orderBy("u.name")->get();
+                $all_datas = $query->orderBy('u.id','asc')->get();
            
             
                 $sheet->setCellValue('A1', 'Name of team member');
