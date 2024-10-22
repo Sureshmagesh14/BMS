@@ -208,19 +208,24 @@
                                                 id="date_of_birth" name="basic[date_of_birth]"
                                                 value="{{ $resp_details->date_of_birth }}" required>
 
-                                            @if ($resp_details->date_of_birth != null)
+                                                @if ($resp_details->date_of_birth != null)
                                                 <code>
                                                     @php
-                                                        $bday = new \DateTime($resp_details->date_of_birth);
-                                                        $today = new \DateTime(date('m.d.y'));
-                                                        $diff = $today->diff($bday);
-                                                        $age = $diff->y . ' Years';
+                                                        if ($resp_details->date_of_birth === '0000-00-00') {
+                                                            $age = '';
+                                                        } else {
+                                                            $bday = new \DateTime($resp_details->date_of_birth);
+                                                            $today = new \DateTime();
+                                                            $diff = $today->diff($bday);
+                                                            $age = $diff->y . ' Years';
+                                                        }
                                                     @endphp
                                                 </code>
                                                 <small id="agecal" class="text-danger">{{ $age }}</small>
                                             @else
                                                 <span id="agecal"></span>
                                             @endif
+                                            
 
                                         </div>
                                     </div>
@@ -571,10 +576,11 @@
                                                                 </td>
                                                                 <td>
                                                                     <input type="text"
-                                                                        id="children_child_{{ $child_key }}"
-                                                                        class="form-control child_age"
-                                                                        name="children[dob_{{ $child_key }}][]"
-                                                                        value="{{ $child['date'] }}">
+                                                                    id="children_child_{{ $child_key }}"
+                                                                    class="form-control child_age"
+                                                                    name="children[dob_{{ $child_key }}][]"
+                                                                    value="{{ $child['date'] === '0000-00-00' ? '0000/00/00' : str_replace('-', '/', $child['date']) }}">
+
                                                                 </td>
                                                                 <td>
                                                                     <select id="gender_{{ $child_key }}"
