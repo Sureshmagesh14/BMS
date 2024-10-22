@@ -2930,7 +2930,7 @@ class ExportController extends Controller
                                         }
                                     } else {
                                         foreach (json_decode($qus->qus_ans) as $matrix_qus) {
-                                            $matrixQus = SurveyResponse::where(['survey_id' => $survey_id, 'matrix_qus' => $matrix_qus, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
+                                            $matrixQus = SurveyResponse::where(['survey_id' => $survey_id,  'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
                                             $output_matrix_qus = $matrixQus ? $matrixQus->answer : '-';
                                             $result[$matrix_qus] = $output_matrix_qus;
                                         }
