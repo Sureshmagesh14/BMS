@@ -390,13 +390,13 @@ class WelcomeController extends Controller
             //             ->get();
 
             $get_res = DB::table('cashouts')
-                    ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.updated_at')
+                    ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.created_at')
                     ->where('cashouts.respondent_id', '=', $resp_id)
                     ->where('cashouts.status_id', 3)                    
                     ->get();
 
             $get_res_out = DB::table('cashouts')
-                    ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.updated_at')
+                    ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.created_at')
                     ->where('cashouts.respondent_id', '=', $resp_id)
                     ->where('cashouts.status_id', '!=', 3)
                     ->get();
