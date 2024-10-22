@@ -4,3 +4,15 @@
 [2024-10-22 05:29:57] local.INFO: Limit - 3 QuotaLimit -3  
 [2024-10-22 05:31:05] local.INFO: Limit - 3 QuotaLimit -3  
 [2024-10-22 05:32:06] local.INFO: Limit - 4 QuotaLimit -3  
+[2024-10-22 06:51:38] local.ERROR: Array and string offset access syntax with curly braces is no longer supported {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Array and string offset access syntax with curly braces is no longer supported at C:\\xampp\\htdocs\\BMS\\vendor\\phpoffice\\phpexcel\\Classes\\PHPExcel\\Shared\\String.php:529)
+[stacktrace]
+#0 {main}
+"} 
+[2024-10-22 06:53:41] local.ERROR: Array and string offset access syntax with curly braces is no longer supported {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Array and string offset access syntax with curly braces is no longer supported at C:\\xampp\\htdocs\\BMS\\vendor\\phpoffice\\phpexcel\\Classes\\PHPExcel\\Calculation.php:2189)
+[stacktrace]
+#0 {main}
+"} 
+[2024-10-22 06:55:06] local.ERROR: Array and string offset access syntax with curly braces is no longer supported {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Array and string offset access syntax with curly braces is no longer supported at C:\\xampp\\htdocs\\BMS\\vendor\\phpoffice\\phpexcel\\Classes\\PHPExcel\\Worksheet\\AutoFilter.php:733)
+[stacktrace]
+#0 {main}
+"} 
