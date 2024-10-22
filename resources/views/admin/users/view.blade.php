@@ -33,13 +33,15 @@
                     <div class="card">
 
                         <div class="card-body">
-                            <div class="text-right">
-                                <a href="#!" data-url="{{ route('users.edit', $data->id) }}" data-size="xl"
-                                    data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="Edit Users"
-                                    data-bs-toggle="tooltip" id="create">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                            </div>
+                            @if (Auth::guard('admin')->user()->role_id == 1 || Auth::guard('admin')->user()->id == $data->id)
+                                <div class="text-right">
+                                    <a href="#!" data-url="{{ route('users.edit', $data->id) }}" data-size="xl"
+                                        data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="Edit Users"
+                                        data-bs-toggle="tooltip" id="create">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            @endif
                             <div class="mb-0">
                                 <input type="hidden" id="tag_id" value="{{$data->id}}">
                                 <table class="table">
