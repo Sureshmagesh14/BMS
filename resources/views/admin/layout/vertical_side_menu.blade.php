@@ -137,14 +137,12 @@
 
                 <li class="menu-title" key="t-pages">Database</li>
 
-                @if (Auth::guard('admin')->user()->role_id == 1 || Auth::guard('admin')->user()->role_id == 3)
-                    <li>
-                        <a href="{{ route('projects.index') }}" class="waves-effect">
-                            <i class="fas fa-project-diagram"></i>
-                            <span class="menu-item" key="t-calendar">Projects</span>
-                        </a>
-                    </li>
-                @endif
+                <li>
+                    <a href="{{ route('projects.index') }}" class="waves-effect">
+                        <i class="fas fa-project-diagram"></i>
+                        <span class="menu-item" key="t-calendar">Projects</span>
+                    </a>
+                </li>
 
                 @if (Auth::guard('admin')->user()->role_id != 3)
                     <li>
