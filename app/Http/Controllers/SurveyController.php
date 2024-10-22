@@ -29,6 +29,12 @@ use Artesaos\SEOTools\Facades\SEOTools;
 // PDF Report
 use Dompdf\Dompdf;
 use Dompdf\Options;
+
+// CSV
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 class SurveyController extends Controller
 {
     public function folder()
@@ -2879,13 +2885,9 @@ class SurveyController extends Controller
             }
             array_push($finalResult,$result);
         }
-        //     echo "<pre>";
-        //   print_r($finalResult);
-        //   exit;
+       
         $data = getValues($finalResult);
-        // echo "<pre>";
-        // print_r($data);
-        // exit;
+       
         if($type == 'csv'){
             // Generate a dynamic filename based on the current timestamp
             $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.csv';
@@ -2905,17 +2907,7 @@ class SurveyController extends Controller
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
             ]);
         }else{
-            // // Generate a dynamic filename based on the current timestamp
-            // $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.xlsx';
-
-            // // Generate the Excel content
-            // $excelContent = $this->generateExcelContent($data);
-
-            // // Store the Excel file
-            // Storage::put($filename, $excelContent);
-
-            // // Return a download response
-            // return response()->download(storage_path('app/' . $filename), $filename);
+          
              // Generate the Excel content and store the file directly
             $filename = $survey->title.'_Report_' . now()->format('YmdHis') . '.xlsx';
             $filePath = storage_path('app/' . $filename);
@@ -3165,6 +3157,43 @@ class SurveyController extends Controller
     }
     
     private function generateAndStoreExcelContent($data, $filePath)
+    {
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        // Define yellow background style
+        $yellowBackgroundStyle = [
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => 'FFFF00', // Yellow color
+                ],
+            ],
+        ];
+
+        // Set data into the spreadsheet
+        foreach ($data as $rowIndex => $row) {
+            foreach ($row as $columnIndex => $value) {
+                // Convert column index to alphabetic column name (e.g., 1 -> A, 2 -> B, ...)
+                $columnName = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex + 1);
+                $cellReference = $columnName . ($rowIndex + 1);
+
+                // Set the cell value
+                $worksheet->setCellValue($cellReference, $value);
+
+                // Apply yellow background to the first row
+                if ($rowIndex === 0) {
+                    $worksheet->getStyle($cellReference)->applyFromArray($yellowBackgroundStyle);
+                }
+            }
+        }
+
+        // Create a writer object and save the file directly to the specified path
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save($filePath);
+    }
+
+    private function generateAndStoreExcelContentOLD($data, $filePath)
     {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $worksheet = $spreadsheet->getActiveSheet();
