@@ -33,7 +33,7 @@
                     </a>
                 </li>
 
-
+                @if (Auth::guard('admin')->user()->status_id != 2)
                 <li class="menu-title" key="t-apps">Admin</li>
 
                 <li>
@@ -231,7 +231,7 @@
                         </a>
                     </li>
                 @endif
-
+                @endif
             </ul>
         </div>
         <!-- Sidebar -->
