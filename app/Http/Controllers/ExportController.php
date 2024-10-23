@@ -252,12 +252,12 @@ class ExportController extends Controller
                         $email = $basic['email'] ?? '-';
                         $dob = $basic['date_of_birth'] ?? '-';
                         $age = '-';
-                        
-                        if (empty($dob) || $dob === '0000-00-00') {
-                            $dobDated = Respondents::select('date_of_birth')->where('id', $id)->first();
-                            
-                            if ($dobDated && !empty($dobDated->date_of_birth)) {
-                                $dob = $dobDated->date_of_birth;
+
+                        $get_resp = Respondents::select('date_of_birth')->where('id', $id)->first();
+
+                        if($get_resp != null){
+                            if ($get_resp && !empty($get_resp->date_of_birth)) {
+                                $dob = $get_resp->date_of_birth;
 
                                 $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
                                 if ($dobDate) {
@@ -269,11 +269,20 @@ class ExportController extends Controller
                             }
                         }
                         else{
-                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
-                            
-                            if ($dobDate) {
-                                $now = new DateTime();
-                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                                
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                                else{
+                                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    }
+                                }
                             }
                         }
                     
@@ -384,22 +393,35 @@ class ExportController extends Controller
                         $dob = $basic->date_of_birth ?? '';
                         $age = '-';
                         
-                        if (empty($dob) || $dob === '0000-00-00') {
-                            $dobDated = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
-                            $dob = $dobDated->date_of_birth ?? '';
+                        $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                        if($get_resp != null){
+                            if ($get_resp && !empty($get_resp->date_of_birth)) {
+                                $dob = $get_resp->date_of_birth;
 
-                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
-                            if ($dobDate) {
-                                $now = new DateTime();
-                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                            } else {
+                                $dob = ''; // Handle the case where there's no date of birth found
                             }
                         }
                         else{
-                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
-                            
-                            if ($dobDate) {
-                                $now = new DateTime();
-                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                                
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                                else{
+                                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    }
+                                }
                             }
                         }
                         
@@ -763,23 +785,35 @@ class ExportController extends Controller
                         $dob = $basic->date_of_birth ?? '';
                         $age = '-';
                         
-                        if (empty($dob) || $dob === '0000-00-00') {
-                            $dobDated = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
-                            $dob = $dobDated->date_of_birth ?? '';
+                        $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                        if($get_resp != null){
+                            if ($get_resp && !empty($get_resp->date_of_birth)) {
+                                $dob = $get_resp->date_of_birth;
 
-                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
-                            
-                            if ($dobDate) {
-                                $now = new DateTime();
-                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                            } else {
+                                $dob = ''; // Handle the case where there's no date of birth found
                             }
                         }
                         else{
-                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
-                            
-                            if ($dobDate) {
-                                $now = new DateTime();
-                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                                
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                                else{
+                                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    }
+                                }
                             }
                         }
                         
