@@ -91,11 +91,9 @@
                             <div class="col-3 col-xs-6 rounded m-1">
                                <div class="bg-grey-6 p-2 m-2 w-100 h-100p rounded">
                                   <div class="bg-green text-white p-2 w-100 rounded mt-2 text-center m-auto">
-                                  @if($get_cashout == null)  
+                    
                                   {{$available_points ?? '0'}}
-                                  @else 
-                                  0
-                                  @endif
+                            
                                   </div>
                                   <div class="down-triangle-green triangle"></div>
                                   <div class="my-2">
