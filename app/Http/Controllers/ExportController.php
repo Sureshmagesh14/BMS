@@ -387,9 +387,14 @@ class ExportController extends Controller
                         if (empty($dob) || $dob === '0000-00-00') {
                             $dobDated = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
                             $dob = $dobDated->date_of_birth ?? '';
+
+                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                            if ($dobDate) {
+                                $now = new DateTime();
+                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            }
                         }
-                        
-                        if (!empty($dob) && $dob !== '0000-00-00') {
+                        else{
                             $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
                             
                             if ($dobDate) {
@@ -397,7 +402,7 @@ class ExportController extends Controller
                                 $age = $now->diff($dobDate)->y; // Get the difference in years
                             }
                         }
-
+                        
                       
 
                         $employment_status = null; // Initialize $employment_status to null
@@ -761,9 +766,15 @@ class ExportController extends Controller
                         if (empty($dob) || $dob === '0000-00-00') {
                             $dobDated = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
                             $dob = $dobDated->date_of_birth ?? '';
+
+                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                            
+                            if ($dobDate) {
+                                $now = new DateTime();
+                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            }
                         }
-                        
-                        if (!empty($dob) && $dob !== '0000-00-00') {
+                        else{
                             $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
                             
                             if ($dobDate) {
