@@ -193,7 +193,7 @@ class UsersController extends Controller
                     $users->password = Hash::make($request->password);
                     $users->role_id = $request->input('role_id');
                     $users->status_id = $request->input('status_id');
-                    $users->share_link = $request->input('share_link');
+                    // $users->share_link = $request->input('share_link');
                     $users->update();
                     $users->id;
                     return response()->json([
