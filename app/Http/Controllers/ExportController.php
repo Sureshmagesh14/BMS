@@ -2036,24 +2036,62 @@ class ExportController extends Controller
                 $fileName = $module . "_" . $resp_type . "_" . date('ymd') . "." . $type;
             }
             else if ($module == 'Projects') {
+                // $all_datas = Projects::leftJoin('users', function ($join) {
+                //         $join->on('users.id', '=', 'projects.user_id');
+                //     });
+
+                //     if($from != null && $to != null){
+                //         $all_datas = $all_datas->whereDate('projects.created_at', '>=', $from)->whereDate('projects.created_at', '<=', $to);
+                //     }
+
+                // $all_datas = $all_datas->get([
+                //     'users.name as uname',
+                //     'users.surname',
+                //     'projects.number',
+                //     'projects.name',
+                //     'projects.published_date',
+                //     'projects.closing_date',
+                //     'projects.total_responnded_attended',
+                //     'projects.total_responded_recruited',
+                // ]);
+
+                // use Illuminate\Support\Facades\DB;
+
                 $all_datas = Projects::leftJoin('users', function ($join) {
                         $join->on('users.id', '=', 'projects.user_id');
-                    });
+                    })
+                    ->leftJoin('project_respondent', 'project_respondent.project_id', '=', 'projects.id')
+                    ->leftJoin('qualified_respondent', 'qualified_respondent.project_id', '=', 'projects.id');
 
-                    if($from != null && $to != null){
-                        $all_datas = $all_datas->whereDate('projects.created_at', '>=', $from)->whereDate('projects.created_at', '<=', $to);
-                    }
+                // Apply date filters if provided
+                if ($from != null && $to != null) {
+                    $all_datas = $all_datas->whereDate('projects.created_at', '>=', $from)
+                                        ->whereDate('projects.created_at', '<=', $to);
+                }
 
-                $all_datas = $all_datas->get([
+                // Select fields with COUNT aggregation
+                $all_datas = $all_datas->select(
                     'users.name as uname',
                     'users.surname',
                     'projects.number',
                     'projects.name',
                     'projects.published_date',
                     'projects.closing_date',
-                    'projects.total_responnded_attended',
-                    'projects.total_responded_recruited',
-                ]);
+                    DB::raw('COUNT(DISTINCT project_respondent.respondent_id) as total_responnded_attended'),
+                    DB::raw('COUNT(DISTINCT qualified_respondent.respondent_id) as total_responded_recruited')
+                )
+                ->groupBy(
+                    'projects.id',  // Group by necessary fields to avoid incorrect aggregation
+                    'users.name',
+                    'users.surname',
+                    'projects.number',
+                    'projects.name',
+                    'projects.published_date',
+                    'projects.closing_date'
+                )
+                ->get();
+
+
 
                 $sheet->setCellValue('A1', 'Project Number & Project Name');
                 $sheet->setCellValue('B1', 'PM Name');
@@ -2067,7 +2105,7 @@ class ExportController extends Controller
                 $rows = 2;
                 $i = 1;
                 foreach ($all_datas as $all_data) {
-                    $sheet->setCellValue('A' . $rows, $all_data->number.' '.$all_data->name);
+                    $sheet->setCellValue('A' . $rows, $all_data->number.' '.$all_data->name.' '.$all_data->id);
                     $sheet->setCellValue('B' . $rows, $all_data->uname.$all_data->surname);
                     if(isset($all_data->published_date)){
                         $published_date=date("d-m-Y", strtotime($all_data->published_date));

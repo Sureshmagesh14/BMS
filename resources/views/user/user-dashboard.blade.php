@@ -146,7 +146,7 @@
         </div>
         @elseif ($data->active_status_id == 3 && $data->profile_completion_id == 0 &&  $data->opted_status==0)
             <div class="alert alert-danger bs-alert-old-docs text-center">
-                <strong>OPT IN TO EARN</strong> <br>Ensure you get considered for surveys & earn rewards! <a href="{{ route('update_out') }}">OPT IN</a>
+                <strong>OPT IN TO EARN</strong> <br>Ensure you get considered for surveys & earn rewards! <a href="{{ route('update_out') }}">OPT OUT</a>
                 <br>
             </div>
         @elseif ($data->profile_completion_id == 1)
@@ -233,7 +233,7 @@
                                 </div>
                                 <div class="mt-3 d-flex justify-content-center">
                                     <button class="btn btn-primary rounded-pill" id="opt_out">
-                                        Opted In
+                                        Opt Out
                                     </button>
                                 </div>
                                 
