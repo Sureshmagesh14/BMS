@@ -294,7 +294,7 @@ class RespondentsController extends Controller
             $respondent->account_holder = $request->input('account_holder', $respondent->account_holder);
             $respondent->account_number = $request->input('account_number', $respondent->account_number);
             $respondent->active_status_id = $request->input('active_status_id', $respondent->active_status_id);
-            $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
+            // $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
             $respondent->accept_terms = $request->input('accept_terms', $respondent->accept_terms);
             $respondent->deactivated_date = $request->input('deactivated_date', $respondent->deactivated_date);
             $respondent->created_by = Auth::guard('admin')->user()->id;
