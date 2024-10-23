@@ -197,31 +197,33 @@ class WelcomeController extends Controller
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                    $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id','!=', 3)->get();
 
             $get_paid_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id', 3)->get();
 
-            $get_completed_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
-                ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
+      
+            $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+                ->join('projects', 'resp.project_id', 'projects.id')
                 ->where('resp.respondent_id', $id)
-                ->where('projects.closing_date', '<', Carbon::now())
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '!=', 0)
+                            ->orWhere('projects.status_id', '=', 3); 
+                })
                 ->orderBy('projects.id','DESC')
                 ->get();
-
-            $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
-            ->join('projects', 'resp.project_id', 'projects.id')
-            ->where('resp.respondent_id', $id)
-            ->where('resp.is_frontend_complete','!=',0)
-            ->orderBy('projects.id','DESC')
-            ->get();
-
-            //dd($get_completed_survey);
+           
 
             $currentYear=Carbon::now()->year;
 
@@ -590,20 +592,29 @@ class WelcomeController extends Controller
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $resp_id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                    $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id','!=', 3)->get();
 
             $get_paid_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $resp_id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id', 3)->get();
 
             $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('projects', 'resp.project_id', 'projects.id')
                 ->where('resp.respondent_id', $resp_id)
-                ->where('resp.is_frontend_complete','!=',0)
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '!=', 0)
+                            ->orWhere('projects.status_id', '=', 3); 
+                })
                 ->orderBy('projects.id','DESC')
                 ->get();
           
