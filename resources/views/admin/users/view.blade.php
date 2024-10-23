@@ -172,7 +172,7 @@
                 url: "{{ route('get_all_projects') }}",
                 data: {
                     _token: tempcsrf,
-                    id: '{{ $data->id }}',
+                    user_id: '{{ $data->id }}',
                     inside_form: 'users',
                 },
                 error: function(xhr, error, thrown) {
