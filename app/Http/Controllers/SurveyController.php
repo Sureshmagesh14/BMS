@@ -29,6 +29,12 @@ use Artesaos\SEOTools\Facades\SEOTools;
 // PDF Report
 use Dompdf\Dompdf;
 use Dompdf\Options;
+
+// CSV
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 class SurveyController extends Controller
 {
     public function folder()
@@ -299,12 +305,51 @@ class SurveyController extends Controller
         $qus_type='';
         if($currentQus){
             $qus_type=$questionTypes[$currentQus->qus_type];
-            $display_logic=Questions::where('id', '<', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
-            $display_logic_matrix=Questions::where('id', '<', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
-            $skip_logic=Questions::where('id', '<=', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you','matrix_qus'])->pluck('question_name', 'id')->toArray();
-            $skip_logic_matrix=Questions::where('id', '<=', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
-            $jump_to=Questions::where('id', '>', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
-            $jump_to_tq=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->pluck('question_name', 'id')->toArray();
+            // Ques ID based old logic
+            // $display_logic=Questions::where('id', '<', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+            // $display_logic_matrix=Questions::where('id', '<', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
+            // $skip_logic=Questions::where('id', '<=', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you','matrix_qus'])->pluck('question_name', 'id')->toArray();
+            // $skip_logic_matrix=Questions::where('id', '<=', $currentQus->id)->where(['qus_type'=>'matrix_qus','survey_id'=>$survey->id])->whereNotIn('id',[$currentQus->id])->get();
+            // $jump_to=Questions::where('id', '>', $currentQus->id)->where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->pluck('question_name', 'id')->toArray();
+            // $jump_to_tq=Questions::where(['survey_id'=>$survey->id,'qus_type'=>'thank_you'])->pluck('question_name', 'id')->toArray();
+
+            // New Logic based on qus_order_no
+            // Display logic for questions where qus_order_no is less than the current question's order
+            $display_logic = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
+            ->where('survey_id', $survey->id)
+            ->whereNotIn('id', [$currentQus->id])
+            ->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you'])
+            ->pluck('question_name', 'id')->toArray();
+
+            $display_logic_matrix = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
+            ->where('qus_type', 'matrix_qus')
+            ->where('survey_id', $survey->id)
+            ->whereNotIn('id', [$currentQus->id])
+            ->get();
+
+            // Skip logic for questions where qus_order_no is less than or equal to the current question's order
+            $skip_logic = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
+            ->where('survey_id', $survey->id)
+            ->whereNotIn('qus_type', ['welcome_page', 'thank_you', 'matrix_qus'])
+            ->pluck('question_name', 'id')->toArray();
+
+            $skip_logic_matrix = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
+            ->where('qus_type', 'matrix_qus')
+            ->where('survey_id', $survey->id)
+            ->whereNotIn('id', [$currentQus->id])
+            ->get();
+
+            // Jump-to logic for questions where qus_order_no is greater than the current question's order
+            $jump_to = Questions::where('qus_order_no', '>', $currentQus->qus_order_no)
+            ->where('survey_id', $survey->id)
+            ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
+            ->pluck('question_name', 'id')->toArray();
+
+            // Jump to thank-you page question
+            $jump_to_tq = Questions::where('survey_id', $survey->id)
+            ->where('qus_type', 'thank_you')
+            ->pluck('question_name', 'id')->toArray();
+
 
         }else{
             $skip_logic=[];
@@ -315,7 +360,7 @@ class SurveyController extends Controller
             $jump_to=[];
         }
 
-        
+          
         $pagetype=$request->pagetype;
         if($pagetype=='preview'){
             $question1=Questions::where('id', '>', $currentQus->id)->where('survey_id', $survey->id)->orderBy('id')->first();
@@ -1084,7 +1129,7 @@ class SurveyController extends Controller
         $surveyres->deleted_at=0;
         $surveyController = new SurveyController;
         $quotacheck = $surveyController->checkquota($survey_id,$question_id,$user_ans);
-       
+        
         if($quotacheck == 'limitavailable'){
             $surveyres->save();
         }else{
@@ -2535,8 +2580,9 @@ class SurveyController extends Controller
                                 break;
                         }
                     }
+                    \Log::info('Limit - '.$limit.' QuotaLimit -' . (int)$quota->quota_limit);
                     // If the quota limit is reached, return the redirection question
-                    if ($limit >= (int)$quota->quota_limit) {
+                    if ($limit > (int)$quota->quota_limit) {
        
                         return $quota->redirection_qus;
                     }
@@ -2878,13 +2924,9 @@ class SurveyController extends Controller
             }
             array_push($finalResult,$result);
         }
-        //     echo "<pre>";
-        //   print_r($finalResult);
-        //   exit;
+       
         $data = getValues($finalResult);
-        // echo "<pre>";
-        // print_r($data);
-        // exit;
+       
         if($type == 'csv'){
             // Generate a dynamic filename based on the current timestamp
             $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.csv';
@@ -2904,17 +2946,7 @@ class SurveyController extends Controller
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
             ]);
         }else{
-            // // Generate a dynamic filename based on the current timestamp
-            // $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.xlsx';
-
-            // // Generate the Excel content
-            // $excelContent = $this->generateExcelContent($data);
-
-            // // Store the Excel file
-            // Storage::put($filename, $excelContent);
-
-            // // Return a download response
-            // return response()->download(storage_path('app/' . $filename), $filename);
+          
              // Generate the Excel content and store the file directly
             $filename = $survey->title.'_Report_' . now()->format('YmdHis') . '.xlsx';
             $filePath = storage_path('app/' . $filename);
@@ -3096,10 +3128,21 @@ class SurveyController extends Controller
                                 $result[$matrix_qus] = 'Skip';
                             }
                         } else {
-                            foreach (json_decode($qus->qus_ans) as $matrix_qus) {
-                                $matrixQus = SurveyResponse::where(['survey_id' => $survey_id, 'matrix_qus' => $matrix_qus, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
-                                $output_matrix_qus = $matrixQus ? $matrixQus->answer : '-';
-                                $result[$matrix_qus] = $output_matrix_qus;
+                            $matrix_qus = json_decode($qus->qus_ans);
+                            $matrixQus = SurveyResponse::where(['survey_id' => $survey_id,  'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
+                            $matrixAnswers = $matrixQus ? json_decode($matrixQus->answer, true) : [];
+                            foreach ($martirx_qus as $index => $matrix_qus) {
+                                $answerFound = false;
+                                foreach ($matrixAnswers as $answer) {
+                                    if (trim($answer['qus']) === trim($matrix_qus)) {
+                                        $result[$matrix_qus] = $answer['ans']; 
+                                        $answerFound = true;
+                                        break; 
+                                    }
+                                }
+                                if (!$answerFound) {
+                                    $result[$matrix_qus] = '-'; 
+                                }
                             }
                         }
                     } else {
@@ -3164,6 +3207,43 @@ class SurveyController extends Controller
     }
     
     private function generateAndStoreExcelContent($data, $filePath)
+    {
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        // Define yellow background style
+        $yellowBackgroundStyle = [
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => 'FFFF00', // Yellow color
+                ],
+            ],
+        ];
+
+        // Set data into the spreadsheet
+        foreach ($data as $rowIndex => $row) {
+            foreach ($row as $columnIndex => $value) {
+                // Convert column index to alphabetic column name (e.g., 1 -> A, 2 -> B, ...)
+                $columnName = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex + 1);
+                $cellReference = $columnName . ($rowIndex + 1);
+
+                // Set the cell value
+                $worksheet->setCellValue($cellReference, $value);
+
+                // Apply yellow background to the first row
+                if ($rowIndex === 0) {
+                    $worksheet->getStyle($cellReference)->applyFromArray($yellowBackgroundStyle);
+                }
+            }
+        }
+
+        // Create a writer object and save the file directly to the specified path
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save($filePath);
+    }
+
+    private function generateAndStoreExcelContentOLD($data, $filePath)
     {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $worksheet = $spreadsheet->getActiveSheet();

@@ -27,13 +27,15 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="text-right">
-                                <a href="#!" data-url="{{ route('tags.edit', $data->id) }}" data-size="xl"
-                                    data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="Edit Panel"
-                                    data-bs-toggle="tooltip" id="create">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                            </div>
+                            @if (Auth::guard('admin')->user()->role_id == 1)
+                                <div class="text-right">
+                                    <a href="#!" data-url="{{ route('tags.edit', $data->id) }}" data-size="xl"
+                                        data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="Edit Panel"
+                                        data-bs-toggle="tooltip" id="create">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            @endif
                             <div class="mb-0">
                                 <table class="table">
                                     <tbody>
@@ -70,22 +72,25 @@
 
                 </div> <!-- end col -->
             </div> <!-- end row -->
-            <div class="text-right">
 
-                <a href="#!" data-url="{{ route('attach_resp_tags', ['tags_id' => $data->id]) }}" data-size="xl"
-                    data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attach Panel') }}"
-                    class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip"
-                    id="create">
-                    Attach Panel
-                </a>
+            @if (Auth::guard('admin')->user()->role_id == 1)
+                <div class="text-right">
 
-                <a href="#!" data-url="{{ route('import_resp_tags', ['panel_id' => $data->id]) }}" data-size="xl"
-                    data-ajax-popup="true" class="btn btn-primary"
-                    data-bs-original-title="{{ __('Import - Respondents to Panels') }}" class="btn btn-primary"
-                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-                    Import Panels
-                </a>
-            </div>
+                    <a href="#!" data-url="{{ route('attach_resp_tags', ['tags_id' => $data->id]) }}" data-size="xl"
+                        data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attach Panel') }}"
+                        class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip"
+                        id="create">
+                        Attach Panel
+                    </a>
+
+                    <a href="#!" data-url="{{ route('import_resp_tags', ['panel_id' => $data->id]) }}" data-size="xl"
+                        data-ajax-popup="true" class="btn btn-primary"
+                        data-bs-original-title="{{ __('Import - Respondents to Panels') }}" class="btn btn-primary"
+                        data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                        Import Panels
+                    </a>
+                </div>
+            @endif
             <br>
             <div class="row">
 
