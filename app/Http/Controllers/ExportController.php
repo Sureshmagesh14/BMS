@@ -3021,7 +3021,7 @@ class ExportController extends Controller
                                             $result[$matrix_qus] = 'Skip';
                                         }
                                     } else {
-                                        $matrix_qus = json_decode($qus->qus_ans);
+                                        $martirx_qus = json_decode($qus->qus_ans);
                                         $matrixQus = SurveyResponse::where(['survey_id' => $survey_id,  'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
                                         $matrixAnswers = $matrixQus ? json_decode($matrixQus->answer, true) : [];
                                         foreach ($martirx_qus as $index => $matrix_qus) {

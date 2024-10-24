@@ -107,7 +107,7 @@ class RespondentsController extends Controller
                 $respondents->referral_code = $request->input('referral_code');
                 $respondents->accept_terms = $request->input('accept_terms');
                 $respondents->deactivated_date = $request->input('deactivated_date');
-                $respondent->created_by = Auth::guard('admin')->user()->id;
+                $respondents->created_by = Auth::guard('admin')->user()->id;
                 
                 $respondents->save();
                 $respondents->id;
@@ -128,7 +128,7 @@ class RespondentsController extends Controller
                 $basic_insert = array(
                     'respondent_id' => $respondents->id,
                     'pid'           => $respondents->id,
-                    'basic_detials' => json_encode($basic_details)
+                    'basic_details' => json_encode($basic_details)
                 );
 
                 RespondentProfile::insert($basic_insert);

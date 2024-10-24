@@ -84,6 +84,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'mobile' => str_replace(' ', '', $request->mobile),
             'whatsapp' => str_replace(' ', '', $request->whatsapp),
+            'updated_at'=>now()
         );
 
         $basic_data = array(

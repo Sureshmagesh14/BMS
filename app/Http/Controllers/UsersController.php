@@ -190,7 +190,10 @@ class UsersController extends Controller
                     $users->surname = $request->input('surname');
                     $users->id_passport = $request->input('id_passport');
                     $users->email = $request->input('email');
-                    $users->password = Hash::make($request->password);
+                  // Only update password if provided
+                    if ($request->has('password') && $request->input('password') !== null) {
+                        $users->password = Hash::make($request->input('password'));
+                    }
                     $users->role_id = $request->input('role_id');
                     $users->status_id = $request->input('status_id');
                     // $users->share_link = $request->input('share_link');
