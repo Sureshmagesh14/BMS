@@ -672,6 +672,7 @@
                                                                     <select class="form-control vehicle_type"
                                                                         id="type_{{ $vehicle_key }}"
                                                                         name="vehicle[type_{{ $vehicle_key }}][]">
+                                                                        <option value="">Select</option>
                                                                         <option value="sedan"
                                                                             @isset($vehicle['type']) @if ('sedan' == $vehicle['type']) selected @endif @endisset>
                                                                             Sedan</option>
@@ -1240,7 +1241,12 @@
                                 };
 
                                 wizard_save(datas);
+                                var delayTime = 3000; // Change this to your desired time
+
+                            setTimeout(function() {
                                 window.location.href = "{{ route('user.dashboard') }}";
+                            }, delayTime);
+                             
                             }
                         },
                         cancel: function() {
@@ -1345,6 +1351,7 @@
                         '</select></td>' +
                         '<td><select class="form-control vehicle_type" id="type_' + vehicles +
                         '" name="vehicle[type_' + vehicles + '][]">' +
+                        '<option value="">Select</option>' +
                         '<option value="sedan">Sedan</option>' +
                         '<option value="coupe">Coupe</option>' +
                         '<option value="sports_car">Sports Car</option>' +
