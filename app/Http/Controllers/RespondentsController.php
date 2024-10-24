@@ -683,7 +683,7 @@ class RespondentsController extends Controller
                 ];
     
                 // Add options for each row based on user permissions
-                if (Auth::guard('admin')->user()->role_id == 1 || Auth::guard('admin')->user()->id == $post->id) {
+                if (Auth::guard('admin')->user()->role_id != 3) {
                     $nestedData['options'] = '<div class="col-md-2">
                         <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
                             title="Action" aria-haspopup="true" aria-expanded="false">
