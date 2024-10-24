@@ -35,7 +35,7 @@
 
                             <div class="mb-0">
 
-                                @if (Auth::guard('admin')->user()->role_id == 1)
+                                @if (Auth::guard('admin')->user()->role_id != 3)
                                     <div class="text-right">
                                         <a href="#!" data-url="{{ route('respondents.edit', $data->id) }}"
                                             data-size="xl" data-ajax-popup="true" class="btn btn-primary"

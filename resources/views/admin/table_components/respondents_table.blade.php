@@ -5,7 +5,7 @@
         @php $projects_id = '0'; @endphp
     @endisset
 
-    @if (Auth::guard('admin')->user()->role_id == 1)
+    @if (Auth::guard('admin')->user()->role_id != 3)
         @if (str_contains(Request::url(), '/admin/projects'))
             <a href="#!" data-url="{{ route('attach_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
                 data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attach Respondents') }}"
@@ -31,7 +31,7 @@
     @endif
     <br><br>
 
-    @if (Auth::guard('admin')->user()->role_id == 1)
+    @if (Auth::guard('admin')->user()->role_id != 3)
         <div class="btn-group mr-2 respondents_datatable hided_option" role="group" aria-label="First group" style="display: none;">
 
             {{-- ACTION --}}
