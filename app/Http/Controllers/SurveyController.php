@@ -2635,7 +2635,7 @@ class SurveyController extends Controller
         $multi_choice_qus=Questions::where(['qus_type'=>'multi_choice','survey_id'=>$survey_id])->get();
         $rankorder_qus=Questions::where(['qus_type'=>'rankorder','survey_id'=>$survey_id])->get();
 
-        $cols = ["Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name"];
+        $cols = [];
         foreach($question as $qus){
             array_push($cols,$qus->question_name);
         }
@@ -2702,6 +2702,7 @@ class SurveyController extends Controller
         $question = Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
                 
         $surveyResponseUsers =  SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+        array_push($cols,"Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
         $finalResult =[$cols];
         foreach($surveyResponseUsers as $userID){
             $user = Respondents::where('id', '=' , $userID)->first();
@@ -2763,7 +2764,7 @@ class SurveyController extends Controller
                 $completion_status = 'Partially Completed';
             }
 
-            $result =['Respondent Name'=>$name,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name];
+            $result =[];
             foreach($question as $qus){
                 $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
                 if($respone){
@@ -2922,6 +2923,7 @@ class SurveyController extends Controller
                     $result[$qus->question_name]=$output;
                 }
             }
+            $result = array_merge($result,['Respondent Name'=>$name,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name]);
             array_push($finalResult,$result);
         }
        
