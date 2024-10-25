@@ -23,16 +23,15 @@
 
 
     
+        @if (Auth::guard('admin')->user()->role_id != 3)
+            @if (str_contains(Request::url(), '/admin/respondents'))
 
-        @if (str_contains(Request::url(), '/admin/respondents'))
+                @isset($respondent_id)
+                    @php $respondent_id = $respondent_id; @endphp
+                @else
+                    @php $respondent_id = '0'; @endphp
+                @endisset
 
-            @isset($respondent_id)
-                @php $respondent_id = $respondent_id; @endphp
-            @else
-                @php $respondent_id = '0'; @endphp
-            @endisset
-
-            @if (Auth::guard('admin')->user()->role_id == 1)
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <a href="#!" data-url="{{ route('attach_tags', ['respondent_id' => $respondent_id]) }}"  data-size="xl" data-ajax-popup="true" class="btn btn-primary mr-2"
                         data-bs-original-title="{{ __('Attach Panel') }}" class="btn btn-primary" data-size="xl"
@@ -46,13 +45,13 @@
                         Import Panels
                     </a>
                 </div>
+            @else
+                <a href="#!" data-url="{{ route('tags.create') }}" data-size="xl" data-ajax-popup="true"
+                    class="btn btn-primary" data-bs-original-title="{{ __('Create Pannel') }}" class="btn btn-primary"
+                    data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                    Create Panels
+                </a>
             @endif
-        @else
-            <a href="#!" data-url="{{ route('tags.create') }}" data-size="xl" data-ajax-popup="true"
-                class="btn btn-primary" data-bs-original-title="{{ __('Create Pannel') }}" class="btn btn-primary"
-                data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-                Create Panels
-            </a>
         @endif
         <br><br>
 

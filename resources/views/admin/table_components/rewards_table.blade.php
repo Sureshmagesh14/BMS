@@ -5,7 +5,7 @@
             <select name="rewards_select_box" id="rewards_select_box" class="form-control rewards_select_box">
                 <option value="">Select Action</option>
                 <option value="1">Status > Approved</option>
-                @if (Auth::guard('admin')->user()->role_id == 1)
+                @if (Auth::guard('admin')->user()->role_id != 3)
                     <option value="2">Delete Rewards</option>
                 @endif
             </select>

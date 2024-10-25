@@ -323,12 +323,19 @@ class ProjectsController extends Controller
     public function get_all_projects(Request $request) {
 		
         try {
+            
             if ($request->ajax()) {
                 $all_datas = Projects::select('projects.*','projects.name as uname')
                     ->join('users', 'users.id', '=', 'projects.user_id');
                     if(isset($request->id)){
                         if($request->inside_form == 'respondents'){
                             $all_datas->join('project_respondent','project_respondent.project_id', 'projects.id')->where('project_respondent.respondent_id',$request->id);
+                        }
+                    }
+
+                    if(isset($request->user_id)){
+                        if($request->inside_form == 'users'){
+                            $all_datas->where('projects.user_id',$request->user_id);
                         }
                     }
                 $all_datas = $all_datas->orderby("id","desc")->get();

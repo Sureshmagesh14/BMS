@@ -107,7 +107,7 @@ class RespondentsController extends Controller
                 $respondents->referral_code = $request->input('referral_code');
                 $respondents->accept_terms = $request->input('accept_terms');
                 $respondents->deactivated_date = $request->input('deactivated_date');
-                $respondent->created_by = Auth::guard('admin')->user()->id;
+                $respondents->created_by = Auth::guard('admin')->user()->id;
                 
                 $respondents->save();
                 $respondents->id;
@@ -128,7 +128,7 @@ class RespondentsController extends Controller
                 $basic_insert = array(
                     'respondent_id' => $respondents->id,
                     'pid'           => $respondents->id,
-                    'basic_detials' => json_encode($basic_details)
+                    'basic_details' => json_encode($basic_details)
                 );
 
                 RespondentProfile::insert($basic_insert);
@@ -294,7 +294,7 @@ class RespondentsController extends Controller
             $respondent->account_holder = $request->input('account_holder', $respondent->account_holder);
             $respondent->account_number = $request->input('account_number', $respondent->account_number);
             $respondent->active_status_id = $request->input('active_status_id', $respondent->active_status_id);
-            $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
+            // $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
             $respondent->accept_terms = $request->input('accept_terms', $respondent->accept_terms);
             $respondent->deactivated_date = $request->input('deactivated_date', $respondent->deactivated_date);
             $respondent->created_by = Auth::guard('admin')->user()->id;
@@ -683,7 +683,7 @@ class RespondentsController extends Controller
                 ];
     
                 // Add options for each row based on user permissions
-                if (Auth::guard('admin')->user()->role_id == 1 || Auth::guard('admin')->user()->id == $post->id) {
+                if (Auth::guard('admin')->user()->role_id != 3) {
                     $nestedData['options'] = '<div class="col-md-2">
                         <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
                             title="Action" aria-haspopup="true" aria-expanded="false">
