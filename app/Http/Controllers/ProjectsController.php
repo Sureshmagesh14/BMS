@@ -650,7 +650,15 @@ class ProjectsController extends Controller
                     $to_address = $resp->email;
                     //$to_address = 'hemanathans1@gmail.com';
                     $resp_name = $resp->name.' '.$resp->surname;
-                    $proj_name = $proj->name;
+                   
+                    if ($proj->project_name_resp != ''){
+
+                        $proj_name = $proj->project_name_resp;
+                    }else{
+                        $proj_name = $proj->name;
+                    }
+                   
+
                     $survey_duration = $proj->survey_duration;
                     $reward = $proj->reward;
                     
@@ -824,7 +832,13 @@ class ProjectsController extends Controller
                     $to_address = $resp->email;
                     //$to_address = 'hemanathans1@gmail.com';
                     $resp_name = $resp->name.' '.$resp->surname;
-                    $proj_name = $proj->name;
+
+                    if ($proj->project_name_resp != ''){
+
+                        $proj_name = $proj->project_name_resp;
+                    }else{
+                        $proj_name = $proj->name;
+                    }
 
                     $data = ['subject' => 'New Survey Assigned','name' => $resp_name,'project' => $proj_name,'type' => 'new_project'];
                 
@@ -978,7 +992,13 @@ class ProjectsController extends Controller
                             if ($project && $respondent) {
                                 $to_address = $respondent->email;
                                 $resp_name = $respondent->name . ' ' . $respondent->surname;
-                                $proj_name = $project->name;
+
+                                if ($proj->project_name_resp != ''){
+
+                                    $proj_name = $proj->project_name_resp;
+                                }else{
+                                    $proj_name = $proj->name;
+                                }
     
                                 $data = [
                                     'subject' => 'New Survey Assigned',

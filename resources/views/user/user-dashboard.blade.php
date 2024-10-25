@@ -428,11 +428,17 @@
                                                                 <div
                                                                     class="social-icons text-md-end text-lg-end text-sm-start">
                                                                     @if ($res->status_id == 2)
-                                                                        <a target="_blank"
-                                                                            href="{{ url('survey/view', $get_link->builderID) }}"><i
-                                                                                class="fa fa-play" aria-hidden="true"
-                                                                                title="Start"
-                                                                                style="background-color: #fbbd0a;"></i></a>
+                                                                       
+
+                                                                                @if (\Carbon\Carbon::parse($res->published_date)->lessThanOrEqualTo(\Carbon\Carbon::today()))
+                                                                                    <a target="_blank" 
+                                                                                    href="{{ url('survey/view', $get_link->builderID) }}">
+                                                                                        <i class="fa fa-play" 
+                                                                                        aria-hidden="true" 
+                                                                                        title="Start" 
+                                                                                        style="background-color: #fbbd0a;"></i>
+                                                                                    </a>
+                                                                                @endif
                                                                     @endif
 
 
@@ -517,7 +523,9 @@
                                                         @endif
                                                     </td>
                                                     <td>{{ $res->reward * 10 }}</td>
-                                                    @php $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); @endphp
+                                                    @php 
+                                                    $get_link = \App\Models\Respondents::get_respondend_survey($res->survey_link); 
+                                                    @endphp
                                                     @if ($data->profile_completion_id == 0)
                                                         <td>
                                                             <a href="{{ route('updateprofile_wizard') }}">
@@ -529,11 +537,20 @@
                                                                 <div
                                                                     class="social-icons text-md-end text-lg-end text-sm-start">
                                                                     @if ($res->status_id == 2)
-                                                                        <a target="_blank"
-                                                                            href="{{ url('survey/view', $get_link->builderID) }}"><i
-                                                                                class="fa fa-play" aria-hidden="true"
-                                                                                title="Start"
-                                                                                style="background-color: #fbbd0a;"></i></a>
+
+                                                                    @if (\Carbon\Carbon::parse($res->published_date)->lessThanOrEqualTo(\Carbon\Carbon::today()))
+                                                                        <a target="_blank" 
+                                                                        href="{{ url('survey/view', $get_link->builderID) }}">
+                                                                            <i class="fa fa-play" 
+                                                                            aria-hidden="true" 
+                                                                            title="Start" 
+                                                                            style="background-color: #fbbd0a;"></i>
+                                                                        </a>
+                                                                    @endif
+
+
+
+
                                                                     @endif
 
                                                                     @if ($res->access_id == 1)
