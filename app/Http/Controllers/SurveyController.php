@@ -3260,7 +3260,8 @@ class SurveyController extends Controller
             }else{
                 $survey_name = "Survey-".$survey_id;
             }
-    
+            $survey_name = preg_replace('/[\\/*?:[\]]/', '', $survey_name);
+
             $sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $survey_name);
             $spreadsheet->addSheet($sheet, 0);
             $spreadsheet->setActiveSheetIndex(0);
