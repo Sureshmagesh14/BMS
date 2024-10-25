@@ -103,10 +103,17 @@
 
                                                 <div class="social-icons text-md-end text-lg-end text-sm-start">
                                                    @if($res->status_id==2) 
-                                                    <a target="_blank"
-                                                        href="{{ url('survey/view', $get_link->builderID) }}"><i
-                                                            class="fa fa-play" aria-hidden="true" title="Start"
-                                                            style="background-color: #fbbd0a;"></i></a>
+                                         
+                                                            @if (\Carbon\Carbon::parse($res->published_date)->lessThanOrEqualTo(\Carbon\Carbon::today()))
+                                                                <a target="_blank" 
+                                                                href="{{ url('survey/view', $get_link->builderID) }}">
+                                                                    <i class="fa fa-play" 
+                                                                    aria-hidden="true" 
+                                                                    title="Start" 
+                                                                    style="background-color: #fbbd0a;"></i>
+                                                                </a>
+                                                            @endif
+                                                            
                                                     @endif
 
                                                     @if ($res->access_id == 1)
@@ -192,10 +199,16 @@
 
                                                 <div class="social-icons text-md-end text-lg-end text-sm-start">
                                                    @if($res->status_id==2) 
-                                                    <a target="_blank"
-                                                        href="{{ url('survey/view', $get_link->builderID) }}"><i
-                                                            class="fa fa-play" aria-hidden="true" title="Start"
-                                                            style="background-color: #fbbd0a;"></i></a>
+                                                
+                                                            @if (\Carbon\Carbon::parse($res->published_date)->lessThanOrEqualTo(\Carbon\Carbon::today()))
+                                                                <a target="_blank" 
+                                                                href="{{ url('survey/view', $get_link->builderID) }}">
+                                                                    <i class="fa fa-play" 
+                                                                    aria-hidden="true" 
+                                                                    title="Start" 
+                                                                    style="background-color: #fbbd0a;"></i>
+                                                                </a>
+                                                            @endif
                                                     @endif 
                                                     
                                                     @if ($res->access_id == 1)
