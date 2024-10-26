@@ -315,29 +315,45 @@ class SurveyController extends Controller
 
             // New Logic based on qus_order_no
             // Display logic for questions where qus_order_no is less than the current question's order
-            $display_logic = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
-            ->where('survey_id', $survey->id)
-            ->whereNotIn('id', [$currentQus->id])
-            ->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you'])
-            ->pluck('question_name', 'id')->toArray();
+            // $display_logic = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
+            // ->where('survey_id', $survey->id)
+            // ->whereNotIn('id', [$currentQus->id])
+            // ->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you'])
+            // ->pluck('question_name', 'id')->toArray();
 
-            $display_logic_matrix = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
-            ->where('qus_type', 'matrix_qus')
-            ->where('survey_id', $survey->id)
-            ->whereNotIn('id', [$currentQus->id])
-            ->get();
+            // $display_logic_matrix = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
+            // ->where('qus_type', 'matrix_qus')
+            // ->where('survey_id', $survey->id)
+            // ->whereNotIn('id', [$currentQus->id])
+            // ->get();
+             // New Logic based on all qus
+            $display_logic = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
+                ->where('survey_id', $survey->id)
+                ->whereNotIn('id', [$currentQus->id])
+                ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
+                ->orderBy('qus_order_no')
+                ->get(['id', 'question_name', 'qus_type', 'qus_ans']);
+
 
             // Skip logic for questions where qus_order_no is less than or equal to the current question's order
+            // $skip_logic = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
+            // ->where('survey_id', $survey->id)
+            // ->whereNotIn('qus_type', ['welcome_page', 'thank_you', 'matrix_qus'])
+            // ->pluck('question_name', 'id')->toArray();
+
+            // $skip_logic_matrix = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
+            // ->where('qus_type', 'matrix_qus')
+            // ->where('survey_id', $survey->id)
+            // ->whereNotIn('id', [$currentQus->id])
+            // ->get();
+            //New Logic based on all qus 
             $skip_logic = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
             ->where('survey_id', $survey->id)
-            ->whereNotIn('qus_type', ['welcome_page', 'thank_you', 'matrix_qus'])
-            ->pluck('question_name', 'id')->toArray();
+            ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
+            ->orderBy('qus_order_no')
+            ->get(['id', 'question_name', 'qus_type', 'qus_ans']);
+            $skip_logic_matrix =[];
 
-            $skip_logic_matrix = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
-            ->where('qus_type', 'matrix_qus')
-            ->where('survey_id', $survey->id)
-            ->whereNotIn('id', [$currentQus->id])
-            ->get();
 
             // Jump-to logic for questions where qus_order_no is greater than the current question's order
             $jump_to = Questions::where('qus_order_no', '>', $currentQus->qus_order_no)
@@ -350,7 +366,7 @@ class SurveyController extends Controller
             ->where('qus_type', 'thank_you')
             ->pluck('question_name', 'id')->toArray();
 
-
+            $display_logic_matrix=[];
         }else{
             $skip_logic=[];
             $display_logic_matrix=[];
