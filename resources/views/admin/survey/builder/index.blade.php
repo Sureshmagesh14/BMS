@@ -100,7 +100,7 @@
             <a class="setbackground" target="_blank" href="{{route('survey.responses',$survey->id)}}" ><i data-feather="download-cloud"></i> </a>
         </div>
     </div>
-
+    
     <div data-simplebar class="sidebar-menu-scroll">
 
         <!--- Sidemenu -->
@@ -876,23 +876,24 @@
                                                         <div class="col-md-4">
                                                             {{ Form::text('display_type',"Question" , array('id'=>'display_type','class' => 'form-control','readonly'=>true)) }}
                                                         </div>
+                                                      
                                                         <div class="@if($key>0) col-md-4 @else col-md-8 @endif ">
                                                             <div class="form-group mb-0">
                                                                 <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
                                                                     <option value="">Choose ...</option>
-                                                                    @foreach($display_logic as $question)
-                                                                        @if($question->qus_type !== 'matrix_qus')
-                                                                            <option value="{{ $question->id }}" {{ $v1 == $question->id ? 'selected' : '' }}>
-                                                                                {{ $question->question_name }}
+                                                                    @foreach($display_logic as $disqus)
+                                                                        @if($disqus['qus_type'] !== 'matrix_qus')
+                                                                            <option value="{{ $disqus['id'] }}" {{ $v1 == $disqus['id'] ? 'selected' : '' }}>
+                                                                                {{ $disqus['question_name'] }}
                                                                             </option>
                                                                         @else
-                                                                            <optgroup label="{{ $question->question_name }}">
+                                                                            <optgroup label="{{ $disqus['question_name'] }}">
                                                                                 @php
-                                                                                    $qusvalue1 = $question->qus_ans ? json_decode($question->qus_ans, true) : [];
+                                                                                    $qusvalue1 = $disqus['qus_ans'] ? json_decode($disqus['qus_ans'], true) : [];
                                                                                     $existing_qus_matrix = isset($qusvalue1['matrix_qus']) ? explode(",", $qusvalue1['matrix_qus']) : [];
                                                                                 @endphp
                                                                                 @foreach($existing_qus_matrix as $key1 => $qus)
-                                                                                    <option value="{{ $question->id }}_{{ $key1 }}" {{ $v1 == $question->id . '_' . $key1 ? 'selected' : '' }}>
+                                                                                    <option value="{{ $disqus['id'] }}_{{ $key1 }}" {{ $v1 == $disqus['id'] . '_' . $key1 ? 'selected' : '' }}>
                                                                                         {{ $qus }}
                                                                                     </option>
                                                                                 @endforeach
@@ -1020,20 +1021,29 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <div class="form-group mb-0">
-                                                                <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
+                                                            <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
                                                                     <option value="">Choose ...</option>
-                                                                    @foreach($display_logic as $key=>$value)
-                                                                        <option value="{{$key}}">{{$value}}</option>
+                                                                    @foreach($display_logic as $disqus)
+                                                                        @if($disqus['qus_type'] !== 'matrix_qus')
+                                                                            <option value="{{ $disqus['id'] }}">
+                                                                                {{ $disqus['question_name'] }}
+                                                                            </option>
+                                                                        @else
+                                                                            <optgroup label="{{ $disqus['question_name'] }}">
+                                                                                @php
+                                                                                    $qusvalue1 = $disqus['qus_ans'] ? json_decode($disqus['qus_ans'], true) : [];
+                                                                                    $existing_qus_matrix = isset($qusvalue1['matrix_qus']) ? explode(",", $qusvalue1['matrix_qus']) : [];
+                                                                                @endphp
+                                                                                @foreach($existing_qus_matrix as $key1 => $qus)
+                                                                                    <option value="{{ $disqus['id'] }}_{{ $key1 }}">
+                                                                                        {{ $qus }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </optgroup>
+                                                                        @endif
                                                                     @endforeach
-                                                                    @foreach($display_logic_matrix as $key=>$value) 
-                                                                        <optgroup label="{{$value->question_name}}">
-                                                                            <?php $qusvalue1 = json_decode($value->qus_ans); 
-                                                                            $exiting_qus_matrix=$qusvalue1!=null ? explode(",",$qusvalue1->matrix_qus): []; $i=0; ?>
-                                                                            @foreach($exiting_qus_matrix as $key1=>$qus) 
-                                                                                <option value="{{$value->id}}_{{$key1}}">{{$qus}}</option>
-                                                                            @endforeach
-                                                                        </optgroup>
-                                                                    @endforeach
+
+                                                                   
                                                                 </select>
                                                             </div>
                                                         </div>
