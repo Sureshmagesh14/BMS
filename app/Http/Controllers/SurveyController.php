@@ -375,8 +375,8 @@ class SurveyController extends Controller
             $jump_to_tq=[];
             $jump_to=[];
         }
-
-          
+        
+        
         $pagetype=$request->pagetype;
         if($pagetype=='preview'){
             $question1=Questions::where('id', '>', $currentQus->id)->where('survey_id', $survey->id)->orderBy('id')->first();
