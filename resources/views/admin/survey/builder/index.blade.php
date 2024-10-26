@@ -880,34 +880,27 @@
                                                             <div class="form-group mb-0">
                                                                 <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
                                                                     <option value="">Choose ...</option>
-                                                                    @foreach($display_logic as $key=>$value)
-                                                                        @if($v1 == $key)
-                                                                        <option selected value="{{$key}}">{{$value}}</option>
-                                                                        @else 
-                                                                        <option value="{{$key}}">{{$value}}</option>
+                                                                    @foreach($display_logic as $question)
+                                                                        @if($question->qus_type !== 'matrix_qus')
+                                                                            <option value="{{ $question->id }}" {{ $v1 == $question->id ? 'selected' : '' }}>
+                                                                                {{ $question->question_name }}
+                                                                            </option>
+                                                                        @else
+                                                                            <optgroup label="{{ $question->question_name }}">
+                                                                                @php
+                                                                                    $qusvalue1 = $question->qus_ans ? json_decode($question->qus_ans, true) : [];
+                                                                                    $existing_qus_matrix = isset($qusvalue1['matrix_qus']) ? explode(",", $qusvalue1['matrix_qus']) : [];
+                                                                                @endphp
+                                                                                @foreach($existing_qus_matrix as $key1 => $qus)
+                                                                                    <option value="{{ $question->id }}_{{ $key1 }}" {{ $v1 == $question->id . '_' . $key1 ? 'selected' : '' }}>
+                                                                                        {{ $qus }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </optgroup>
                                                                         @endif
                                                                     @endforeach
-                                                                    @foreach($display_logic_matrix as $key=>$value) 
-                                                                        <optgroup label="{{$value->question_name}}">
-                                                                            <?php if($value!=null){
-                                                                                if($value->qus_ans!=null){
-                                                                                    $qusvalue1 = json_decode($value->qus_ans); 
-                                                                                }else{
-                                                                                    $qusvalue1=[];
-                                                                                }
-                                                                            }else{
-                                                                                $qusvalue1=[];
-                                                                            }
-                                                                            $exiting_qus_matrix=$qusvalue1!=null ? explode(",",$qusvalue1->matrix_qus): []; $i=0; ?>
-                                                                            @foreach($exiting_qus_matrix as $key1=>$qus) 
-                                                                                @if($v1 == $value->id.'_'.$key1)
-                                                                                    <option selected value="{{$value->id}}_{{$key1}}">{{$qus}} </option>
-                                                                                @else 
-                                                                                    <option value="{{$value->id}}_{{$key1}}">{{$qus}} </option>
-                                                                                @endif
-                                                                            @endforeach
-                                                                        </optgroup>
-                                                                    @endforeach
+
+                                                                   
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -1111,34 +1104,27 @@
                                                     <div class="form-group mb-0">
                                                         <select class="skip_qus_choice form-control" name="skip_qus_choice" data-placeholder="Choose ...">
                                                             <option value="">Choose ...</option>
-                                                            @foreach($skip_logic as $key=>$value)
-                                                                @if($v1 == $key)
-                                                                <option selected value="{{$key}}">{{$value}}</option>
-                                                                @else 
-                                                                <option value="{{$key}}">{{$value}}</option>
+                                                            @foreach($skip_logic as $question)
+                                                                @if($question['qus_type'] == 'matrix_qus')
+                                                                    <optgroup label="{{ $question['question_name'] }}">
+                                                                        @php
+                                                                            $matrixQuestions = $question['qus_ans'] ? json_decode($question['qus_ans'])->matrix_qus ?? '' : '';
+                                                                            $matrixQuestionsArray = $matrixQuestions ? explode(',', $matrixQuestions) : [];
+                                                                        @endphp
+                                                                        @foreach($matrixQuestionsArray as $index => $matrixQus)
+                                                                            <option value="{{ $question['id'] }}_{{ $index }}"
+                                                                                    {{ $v1 == $question['id'].'_'.$index ? 'selected' : '' }}>
+                                                                                {{ $matrixQus }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </optgroup>
+                                                                @else
+                                                                    <option value="{{ $question['id'] }}" {{ $v1 == $question['id'] ? 'selected' : '' }}>
+                                                                        {{ $question['question_name'] }}
+                                                                    </option>
                                                                 @endif
                                                             @endforeach
-                                                            @foreach($skip_logic_matrix as $key=>$value) 
-                                                                <optgroup label="{{$value->question_name}}">
-                                                                    <?php if($value!=null){
-                                                                        if($value->qus_ans!=null){
-                                                                            $qusvalue1 = json_decode($value->qus_ans); 
-                                                                        }else{
-                                                                            $qusvalue1=[];
-                                                                        }
-                                                                    }else{
-                                                                        $qusvalue1=[];
-                                                                    }
-                                                                    $exiting_qus_matrix=$qusvalue1!=null ? explode(",",$qusvalue1->matrix_qus): []; $i=0; ?>
-                                                                    @foreach($exiting_qus_matrix as $key1=>$qus) 
-                                                                        @if($v1 == $value->id.'_'.$key1)
-                                                                            <option selected value="{{$value->id}}_{{$key1}}">{{$qus}} </option>
-                                                                        @else 
-                                                                            <option value="{{$value->id}}_{{$key1}}">{{$qus}} </option>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </optgroup>
-                                                            @endforeach
+
                                                         </select>
                                                     </div>
                                                 </div>
@@ -1905,7 +1891,7 @@ $("html body").delegate('.removechoicelist_display', "click", function() {
     }
     
 });
-$("html body").delegate('.addchoicelist_display', "click", function() {  
+$("html body").delegate('.addchoicelist_display1', "click", function() {  
     // $(this).parent().parent().remove();  
     let appendDiv='<div class="logic_section_display_row"><div class="row"><div class="col-md-4"><select class="display_qus_choice_andor form-control" name="display_qus_choice_andor" data-placeholder="Choose ..."><option value="and">AND</option><option value="or">OR</option></select></div><div class="col-md-4"><input id="display_type" class="form-control" readonly="" name="display_type" type="text" value="Question"></div><div class="col-md-4"><div class="form-group mb-0"><select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ..."><option value="">Choose ...</option>';
     let display_qus=$('#display_qus').val();
@@ -1928,6 +1914,57 @@ $("html body").delegate('.addchoicelist_display', "click", function() {
     $(this).parent().parent().parent().parent().after(appendDiv);
 
 });
+$("html body").delegate('.addchoicelist_display', "click", function() {  
+    let appendDiv = `
+        <div class="logic_section_display_row">
+            <div class="row">
+                <div class="col-md-4">
+                    <select class="display_qus_choice_andor form-control" name="display_qus_choice_andor" data-placeholder="Choose ...">
+                        <option value="and">AND</option>
+                        <option value="or">OR</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input id="display_type" class="form-control" readonly="" name="display_type" type="text" value="Question">
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-0">
+                        <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
+                            <option value="">Choose ...</option>`;
+
+    // Parse display_qus from the hidden input
+    let display_qus = JSON.parse($('#display_qus').val());
+
+    // Loop through each question to build the options
+    display_qus.forEach((question) => {
+        if (question.qus_type === 'matrix_qus') {
+            // If matrix question, create an optgroup
+            appendDiv += `<optgroup label="${question.question_name}">`;
+
+            let qusAnswers = question.qus_ans ? JSON.parse(question.qus_ans) : {};
+            let matrixQuestions = qusAnswers.matrix_qus ? qusAnswers.matrix_qus.split(',') : [];
+
+            matrixQuestions.forEach((matrixQus, index) => {
+                appendDiv += `<option value="${question.id}_${index}">${matrixQus}</option>`;
+            });
+
+            appendDiv += `</optgroup>`;
+        } else {
+            // Regular question
+            appendDiv += `<option value="${question.id}">${question.question_name}</option>`;
+        }
+    });
+
+    appendDiv += `</select>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+    // Append the new section to the DOM
+    $(this).closest('.logic_section_display_row').after(appendDiv);
+});
+
 $("html body").delegate('.logic_type_value_display', "change", function() {    
     let val=$(this).val();
     if(val=='isAnswered' || val=='isNotAnswered'){
@@ -2016,26 +2053,71 @@ $("html body").delegate('.removechoicelist_skip', "click", function() {
     
 });
 $("html body").delegate('.addchoicelist_skip', "click", function() {  
-    // $(this).parent().parent().remove();  
-    let appendDiv='<div class="logic_section_skip_row"><div class="row"><div class="col-md-4"><select class="skip_qus_choice_andor form-control" name="skip_qus_choice_andor" data-placeholder="Choose ..."><option value="and">AND</option><option value="or">OR</option></select></div><div class="col-md-4"><input id="skip_type" class="form-control" readonly="" name="skip_type" type="text" value="Question"></div><div class="col-md-4"><div class="form-group mb-0"><select class="skip_qus_choice form-control" name="skip_qus_choice" data-placeholder="Choose ..."><option value="">Choose ...</option>';
-    let skip_qus=$('#skip_qus').val();
-    skip_qus=JSON.parse(skip_qus);
-    Object.entries(skip_qus).forEach(([key, value]) => {
-        appendDiv+='<option value="'+key+'">'+value+'</option>';
+    // let appendDiv='<div class="logic_section_skip_row"><div class="row"><div class="col-md-4"><select class="skip_qus_choice_andor form-control" name="skip_qus_choice_andor" data-placeholder="Choose ..."><option value="and">AND</option><option value="or">OR</option></select></div><div class="col-md-4"><input id="skip_type" class="form-control" readonly="" name="skip_type" type="text" value="Question"></div><div class="col-md-4"><div class="form-group mb-0"><select class="skip_qus_choice form-control" name="skip_qus_choice" data-placeholder="Choose ..."><option value="">Choose ...</option>';
+    // let skip_qus=$('#skip_qus').val();
+    // skip_qus=JSON.parse(skip_qus);
+    // Object.entries(skip_qus).forEach(([key, value]) => {
+    //     appendDiv+='<option value="'+key+'">'+value+'</option>';
+    // });
+    // let skip_qus_matrix=$('#skip_qus_matrix').val();
+    // skip_qus_matrix=JSON.parse(skip_qus_matrix);
+    // Object.entries(skip_qus_matrix).forEach(([key, value]) => {
+    //     appendDiv+='<optgroup label="'+value.question_name+'">';
+    //     let option1=JSON.parse(value.qus_ans);
+    //     option1=option1?.matrix_qus.split(',');
+    //     Object.entries(option1).forEach(([key, value1]) => {
+    //         appendDiv+='<option value="'+value.id+'_'+key+'">'+value1+'</option>';
+    //     });
+    //     appendDiv+='</optgroup>';
+    // });
+    // appendDiv+='</select></div></div></div></div>';
+    // $(this).parent().parent().parent().parent().after(appendDiv);
+    let appendDiv = `
+        <div class="logic_section_skip_row">
+            <div class="row">
+                <div class="col-md-4">
+                    <select class="skip_qus_choice_andor form-control" name="skip_qus_choice_andor" data-placeholder="Choose ...">
+                        <option value="and">AND</option>
+                        <option value="or">OR</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input id="skip_type" class="form-control" readonly name="skip_type" type="text" value="Question">
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-0">
+                        <select class="skip_qus_choice form-control" name="skip_qus_choice" data-placeholder="Choose ...">
+                            <option value="">Choose ...</option>`;
+
+    let skipLogic = JSON.parse($('#skip_qus').val());
+
+    Object.entries(skipLogic).forEach(([index, question]) => {
+        if (question.qus_type === 'matrix_qus') {
+            // Matrix question with optgroup
+            appendDiv += `<optgroup label="${question.question_name}">`;
+
+            let matrixQuestions = question.qus_ans ? JSON.parse(question.qus_ans).matrix_qus.split(',') : [];
+            matrixQuestions.forEach((matrixQuestion, matrixIndex) => {
+                appendDiv += `<option value="${question.id}_${matrixIndex}">${matrixQuestion}</option>`;
+            });
+
+            appendDiv += `</optgroup>`;
+        } else {
+            // Regular question as a single option
+            appendDiv += `<option value="${question.id}">${question.question_name}</option>`;
+        }
     });
-    let skip_qus_matrix=$('#skip_qus_matrix').val();
-    skip_qus_matrix=JSON.parse(skip_qus_matrix);
-    Object.entries(skip_qus_matrix).forEach(([key, value]) => {
-        appendDiv+='<optgroup label="'+value.question_name+'">';
-        let option1=JSON.parse(value.qus_ans);
-        option1=option1?.matrix_qus.split(',');
-        Object.entries(option1).forEach(([key, value1]) => {
-            appendDiv+='<option value="'+value.id+'_'+key+'">'+value1+'</option>';
-        });
-        appendDiv+='</optgroup>';
-    });
-    appendDiv+='</select></div></div></div></div>';
+
+    appendDiv += `
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
     $(this).parent().parent().parent().parent().after(appendDiv);
+
 
 });
 $("html body").delegate('.logic_type_value_skip', "change", function() {    
