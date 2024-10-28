@@ -1576,7 +1576,7 @@ class ExportController extends Controller
                 $sheet->setCellValue('E1', 'WA Number');
                 $sheet->setCellValue('F1', 'Email');
                 $sheet->setCellValue('G1', 'Cashout Type');
-                $sheet->setCellValue('H1', 'Total cash paid');
+                $sheet->setCellValue('H1', 'Total Cashouts paid');
                 $sheet->setCellValue('I1', 'Value of incentives paid');
                 $sheet->setCellValue('J1', 'Total cashouts unpaid');
                 $sheet->setCellValue('K1', 'Pending cashout');
