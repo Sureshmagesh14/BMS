@@ -2381,8 +2381,20 @@ class SurveyController extends Controller
         if (!$survey) {  
             return "Survey not found.";
         }
-    
-        $surveyquotas = SurveyQuotas::where(['survey_id' => $survey_id, 'question_id' => $current_question_id])->get();
+        $quotaQues=Questions::where(['id'=>$current_question_id])->first();
+
+        $modified_question_ids = []; 
+        if ($quotaQues->qus_type == 'matrix_qus') {
+            $qus_ans = json_decode($quotaQues->qus_ans);
+            $matrixQus = $qus_ans != null ? explode(",", $qus_ans->matrix_qus) : [];
+            foreach ($matrixQus as $index => $matrixValue) {
+                $modified_question_id = $current_question_id . '_' . $index;
+                $modified_question_ids[] = $modified_question_id; // Add to array
+            }
+            $surveyquotas = SurveyQuotas::where('survey_id', $survey_id)->whereIn('question_id', $modified_question_ids)->get();
+        }else{
+            $surveyquotas = SurveyQuotas::where(['survey_id' => $survey_id, 'question_id' => $current_question_id])->get();
+        }
    
         if ($surveyquotas->isEmpty()) {
             return "limitavailable";
@@ -2397,28 +2409,49 @@ class SurveyController extends Controller
     
                 $limit = 0;
                 $quota_match = false;
-    
+                
                 // Check if the current user's answer matches the quota criteria
                 switch ($quota->option_type) {
                     case 'isSelected':
-                        if (is_array($current_user_ans)) {
-                            if (in_array($quota->option_value, $current_user_ans)) {
-                                $quota_match = true;
+                        if ($quotaQues->qus_type == 'matrix_qus') {
+                            $current_user_ans = json_decode($current_user_ans, true);
+                            foreach ($current_user_ans as $user_ans) {
+                                if (isset($user_ans['ans']) && $user_ans['ans'] === $quota->option_value) {
+                                    $quota_match = true;
+                                    break;
+                                }
                             }
-                        } else {
-                            if ($current_user_ans == $quota->option_value) {
-                                $quota_match = true;
+                        } else{
+                            if (is_array($current_user_ans)) {
+                                if (in_array($quota->option_value, $current_user_ans)) {
+                                    $quota_match = true;
+                                }
+                            } else {
+                                if ($current_user_ans == $quota->option_value) {
+                                    $quota_match = true;
+                                }
                             }
                         }
                         break;
                     case 'isNotSelected':
-                        if (is_array($current_user_ans)) {
-                            if (!in_array($quota->option_value, $current_user_ans)) {
-                                $quota_match = true;
+                        if ($quotaQues->qus_type == 'matrix_qus') {
+                            $current_user_ans = json_decode($current_user_ans, true);
+                            $quota_match = true;
+                            foreach ($current_user_ans as $user_ans) {
+                                if (isset($user_ans['ans']) && $user_ans['ans'] === $quota->option_value) {
+                                    $quota_match = false;
+                                    break;
+                                }
                             }
                         } else {
-                            if ($current_user_ans != $quota->option_value) {
-                                $quota_match = true;
+                            if (is_array($current_user_ans)) {
+                                if (!in_array($quota->option_value, $current_user_ans)) {
+                                    $quota_match = true;
+                                }
+                            } else {
+                                if ($current_user_ans != $quota->option_value) {
+                                    $quota_match = true;
+                                }
                             }
                         }
                         break;
