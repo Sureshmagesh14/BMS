@@ -282,7 +282,7 @@ class RespondentsController extends Controller
             $respondent->whatsapp = $whatsapp;
     
             // Update password only if provided
-            if ($request->has('password')) {
+            if ($request->has('password') && $request->input('password') !== null) {
                 $respondent->password = Hash::make($request->input('password'));
             }
     
