@@ -1844,9 +1844,7 @@ class SurveyController extends Controller
     
     private static function handleSurveyCompletion($survey_id, $other_details)
     {
-        $surveyRec = Survey::find($survey_id);
-        Survey::where(['id' => $survey_id])->increment('completed_count');
-    
+        $surveyRec = Survey::find($survey_id);    
         $next_qus = Questions::where(['survey_id' => $survey_id, 'qus_type' => 'thank_you','survey_thankyou_page'=>1])->first();
         if ($next_qus) {
             self::saveSurveyResponse($survey_id, $next_qus->id, $other_details, 'thankyou_submitted');
@@ -1860,6 +1858,7 @@ class SurveyController extends Controller
     
     private static function saveSurveyResponse($survey_id, $question_id, $other_details, $answer)
     {
+        Survey::where(['id' => $survey_id])->increment('completed_count');
         $surveyres = new SurveyResponse();
         $surveyres->other_details = json_encode($other_details);
         $surveyres->survey_id = $survey_id;
@@ -2777,9 +2776,20 @@ class SurveyController extends Controller
             if($completedRes){
                 $completion_status = 'Completed';
             }else{
-                $completion_status = 'Partially Completed';
+                if($survey->started_count <= 0){
+                    $started_count =  \App\Models\SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->count();
+                }else{
+                    $started_count = $survey->started_count;
+                }
+              
+                $partially_completed =(int)$started_count - (int)$survey->completed_count;
+                if($partially_completed <=0){
+                    $completion_status = 'Completed';
+                }else{
+                    $completion_status = 'Partially Completed';
+                }
+               
             }
-
             $result =[];
             foreach($question as $qus){
                 $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
@@ -3104,7 +3114,19 @@ class SurveyController extends Controller
                 if($completedRes){
                     $completion_status = 'Completed';
                 }else{
-                    $completion_status = 'Partially Completed';
+                    if($survey->started_count <= 0){
+                        $started_count =  \App\Models\SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->count();
+                    }else{
+                        $started_count = $survey->started_count;
+                    }
+                  
+                    $partially_completed =(int)$started_count - (int)$survey->completed_count;
+                    if($partially_completed <=0){
+                        $completion_status = 'Completed';
+                    }else{
+                        $completion_status = 'Partially Completed';
+                    }
+                   
                 }
 
                 $result =[];
