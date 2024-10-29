@@ -2809,18 +2809,18 @@ class SurveyController extends Controller
             if($completedRes){
                 $completion_status = 'Completed';
             }else{
-                if($survey->started_count <= 0){
-                    $started_count =  \App\Models\SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->count();
-                }else{
-                    $started_count = $survey->started_count;
-                }
+                // if($survey->started_count <= 0){
+                //     $started_count =  \App\Models\SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->count();
+                // }else{
+                //     $started_count = $survey->started_count;
+                // }
               
-                $partially_completed =(int)$started_count - (int)$survey->completed_count;
-                if($partially_completed <=0){
-                    $completion_status = 'Completed';
-                }else{
+                // $partially_completed =(int)$started_count - (int)$survey->completed_count;
+                // if($partially_completed <=0){
+                //     $completion_status = 'Completed';
+                // }else{
                     $completion_status = 'Partially Completed';
-                }
+                // }
                
             }
             $result =[];
@@ -3147,18 +3147,18 @@ class SurveyController extends Controller
                 if($completedRes){
                     $completion_status = 'Completed';
                 }else{
-                    if($survey->started_count <= 0){
-                        $started_count =  \App\Models\SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->count();
-                    }else{
-                        $started_count = $survey->started_count;
-                    }
+                    // if($survey->started_count <= 0){
+                    //     $started_count =  \App\Models\SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->count();
+                    // }else{
+                    //     $started_count = $survey->started_count;
+                    // }
                   
-                    $partially_completed =(int)$started_count - (int)$survey->completed_count;
-                    if($partially_completed <=0){
-                        $completion_status = 'Completed';
-                    }else{
+                    // $partially_completed =(int)$started_count - (int)$survey->completed_count;
+                    // if($partially_completed <=0){
+                    //     $completion_status = 'Completed';
+                    // }else{
                         $completion_status = 'Partially Completed';
-                    }
+                    // }
                    
                 }
 
