@@ -252,8 +252,8 @@
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
-                <option @if ($respondents->accept_terms == 0) selected @endif value="0">No</option>
-                <option @if ($respondents->accept_terms == 1) selected @endif value="1">Yes</option>
+                <option @if ($respondents->accept_terms == 0) selected @endif value="0">Yes</option>
+                <option @if ($respondents->accept_terms == 1) selected @endif value="1">No</option>
             </select>
         </div>
     </div>
