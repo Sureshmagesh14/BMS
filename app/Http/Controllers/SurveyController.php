@@ -327,9 +327,9 @@ class SurveyController extends Controller
             // ->whereNotIn('id', [$currentQus->id])
             // ->get();
              // New Logic based on all qus
-            $display_logic = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
+            $display_logic = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
                 ->where('survey_id', $survey->id)
-                ->whereNotIn('id', [$currentQus->id])
+                // ->whereNotIn('id', [$currentQus->id])
                 ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
                 ->orderBy('qus_order_no')
                 ->get(['id', 'question_name', 'qus_type', 'qus_ans']);
@@ -2414,7 +2414,9 @@ class SurveyController extends Controller
                 switch ($quota->option_type) {
                     case 'isSelected':
                         if ($quotaQues->qus_type == 'matrix_qus') {
-                            $current_user_ans = json_decode($current_user_ans, true);
+                            if (is_string($current_user_ans)) {
+                                $current_user_ans = json_decode($current_user_ans, true);
+                            }                            
                             foreach ($current_user_ans as $user_ans) {
                                 if (isset($user_ans['ans']) && $user_ans['ans'] === $quota->option_value) {
                                     $quota_match = true;
@@ -2435,8 +2437,10 @@ class SurveyController extends Controller
                         break;
                     case 'isNotSelected':
                         if ($quotaQues->qus_type == 'matrix_qus') {
-                            $current_user_ans = json_decode($current_user_ans, true);
-                            $quota_match = true;
+                           
+                            if (is_string($current_user_ans)) {
+                                $current_user_ans = json_decode($current_user_ans, true);
+                            } 
                             foreach ($current_user_ans as $user_ans) {
                                 if (isset($user_ans['ans']) && $user_ans['ans'] === $quota->option_value) {
                                     $quota_match = false;
