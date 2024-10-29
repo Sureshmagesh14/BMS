@@ -248,10 +248,10 @@
                     Choose an option
                 </option>
                 <option value="0">
-                    No
+                    Yes
                 </option>
                 <option value="1">
-                    Yes
+                    No
                 </option>
             </select>
         </div>
