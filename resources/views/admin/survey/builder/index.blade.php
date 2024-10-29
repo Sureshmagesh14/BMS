@@ -1256,17 +1256,25 @@
                                                 <div class="form-group mb-0">
                                                     <select class="skip_qus_choice form-control" name="skip_qus_choice" data-placeholder="Choose ...">
                                                         <option value="">Choose ...</option>
-                                                        @foreach($skip_logic as $key=>$value)
-                                                            <option value="{{$key}}">{{$value}}</option>
-                                                        @endforeach
-                                                        @foreach($skip_logic_matrix as $key=>$value) 
-                                                            <optgroup label="{{$value->question_name}}">
-                                                                <?php $qusvalue1 = json_decode($value->qus_ans); 
-                                                                $exiting_qus_matrix=$qusvalue1!=null ? explode(",",$qusvalue1->matrix_qus): []; $i=0; ?>
-                                                                @foreach($exiting_qus_matrix as $key1=>$qus) 
-                                                                    <option value="{{$value->id}}_{{$key1}}">{{$qus}}</option>
-                                                                @endforeach
-                                                            </optgroup>
+                                                        @foreach($skip_logic as $question)
+                                                            @if($question['qus_type'] == 'matrix_qus')
+                                                                <optgroup label="{{ $question['question_name'] }}">
+                                                                    @php
+                                                                        $matrixQuestions = $question['qus_ans'] ? json_decode($question['qus_ans'])->matrix_qus ?? '' : '';
+                                                                        $matrixQuestionsArray = $matrixQuestions ? explode(',', $matrixQuestions) : [];
+                                                                    @endphp
+                                                                    @foreach($matrixQuestionsArray as $index => $matrixQus)
+                                                                        <option value="{{ $question['id'] }}_{{ $index }}"
+                                                                                {{ $v1 == $question['id'].'_'.$index ? 'selected' : '' }}>
+                                                                            {{ $matrixQus }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </optgroup>
+                                                            @else
+                                                                <option value="{{ $question['id'] }}" {{ $v1 == $question['id'] ? 'selected' : '' }}>
+                                                                    {{ $question['question_name'] }}
+                                                                </option>
+                                                            @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
