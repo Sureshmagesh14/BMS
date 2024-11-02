@@ -704,7 +704,7 @@ class RespondentsController extends Controller
                         // If coming from projects page
                         $nestedData['options'] .= '<li class="list-group-item">
                             <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                <i class="far fa-trash-alt"></i> De-attach
+                                <i class="far fa-trash-alt"></i> Detach
                             </a>
                         </li>';
                     }else if(str_contains(url()->previous(), '/admin/tags')){
@@ -716,7 +716,7 @@ class RespondentsController extends Controller
                         </li>';
                         $nestedData['options'] .= '<li class="list-group-item">
                             <a id="deattach_tags" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                <i class="far fa-trash-alt"></i> De-attach
+                                <i class="far fa-trash-alt"></i> Detach
                             </a>
                         </li>';
                     } else {
