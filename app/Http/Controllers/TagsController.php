@@ -282,7 +282,7 @@ class TagsController extends Controller
                                         else{
                                             $design .= '<li class="list-group-item">
                                                 <a href="#!" id="deattach_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
-                                                    <i class="far fa-trash-alt"></i> De-attach
+                                                    <i class="far fa-trash-alt"></i> Detach
                                                 </a>
                                             </li>';
                                         }
