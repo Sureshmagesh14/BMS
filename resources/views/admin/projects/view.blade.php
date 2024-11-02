@@ -518,7 +518,7 @@
         if (select_value == 11) {
             titles = "Un-Assign from Project";
             select_action("POST", all_id, project_id, "{{ route('project_unassign') }}",
-                'respondents_datatable', titles, "Are You Want To Un-Assign from Project", "Action");
+                'respondents_datatable', titles, "Confirm that you want to Un-Assign respondents from Project", "Action");
         } else if (select_value == 10) {
             titles = "Notify Respondent";
             select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}",
@@ -551,7 +551,7 @@
         else if (select_value == 11) {
             titles = "Un-Assign from Project";
             select_action("POST", all_id, project_id, "{{ route('project_unassign') }}",
-                'respondents_datatable', titles, "Are You Want To Un-Assign from Project", "Action");
+                'respondents_datatable', titles, "Confirm that you want to Un-Assign respondents from Project", "Confirm");
         }
         else if (select_value == 10) {
             titles = "Notify Respondent";
