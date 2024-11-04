@@ -173,7 +173,8 @@
                                                 <input type="text" name="basic[mobile_number]" id="mobile_number"
                                                     placeholder="08 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
-                                                    value="{{ $resp_details->mobile }}" maxlength="16" >
+                                                     value="{{ str_starts_with($resp_details->mobile, '27') ? ltrim(substr($resp_details->mobile, 2), '0') : ltrim($resp_details->mobile, '0') }}"
+                                                  maxlength="16" >
 
                                             </div>
                                             <small class="form-text text-muted">Don’t include 0 in starting.</small>
@@ -189,7 +190,8 @@
                                                 <input type="text" name="basic[whatsapp_number]" id="whatsapp_number"
                                                     placeholder="08 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
-                                                    value="{{ $resp_details->whatsapp }}" maxlength="16" required>
+                                                    value="{{ str_starts_with($resp_details->whatsapp, '27') ? ltrim(substr($resp_details->whatsapp, 2), '0') : ltrim($resp_details->whatsapp, '0') }}"
+                                                     maxlength="16" required>
                                             </div>
                                             <small class="form-text text-muted">Don’t include 0 in starting.</small>
                                         </div>
