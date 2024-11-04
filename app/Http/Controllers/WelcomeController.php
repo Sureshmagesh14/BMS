@@ -16,6 +16,7 @@ use App\Models\Cashout;
 use App\Models\Networks;
 use App\Models\Charities;
 use App\Models\Project_respondent;
+use App\Services\SendGrid\SendGridService;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -1151,8 +1152,53 @@ class WelcomeController extends Controller
                 //dd($cashouts);
                 
                 $to_address = $cash->email;
-                $data = ['subject' => 'Cashout Created','type' => 'cash_create'];
-                Mail::to($to_address)->send(new WelcomeEmail($data));
+                $resp_name = $cash->name;
+                $points = $cash->amount;
+
+                if($cash->type_id==1){
+                    
+                    $req_type = 'EFT';
+
+                }else if($cash->type_id==1){
+                    
+                    $req_type = 'Data';
+
+                }else if($cash->type_id==1){
+                    
+                    $req_type = 'Airtime';
+
+                }else if($cash->type_id==1){
+                    
+                    $req_type = 'Donation';
+
+                }else{
+                    
+                    $req_type = '';
+                }
+                
+                // $data = ['subject' => 'Cashout Created','type' => 'cash_create'];
+                // Mail::to($to_address)->send(new WelcomeEmail($data));
+
+                // mail starts
+
+                $dynamicData = [
+                    'points' => $points,
+                    'date_requested' => date('d-m-Y'),
+                    'first_name' => $resp_name,
+                    'rand_value' => 'R ' . ($points / 10),
+                    'payment_method' => strtoupper($req_type)
+                ];
+
+                $sendgrid = new SendGridService();
+                $sendgrid->setFrom();
+                $sendgrid->setDynamicData($dynamicData);
+                $sendgrid->setSubject('New Cashout Created');
+                $sendgrid->setToEmail($to_address, $resp_name);
+                $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
+                $sendgrid->send();
+
+                return response()->json(['message' => 'Cashout created successfully'], 200);
+
             }
         }
     }

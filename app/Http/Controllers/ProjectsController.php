@@ -653,7 +653,9 @@ class ProjectsController extends Controller
 
                 //email starts
                 if($proj->name!='')
-                {
+                {   
+                 
+                    $resp_name = $resp->name;
                     $to_address = $resp->email;
                     //$to_address = 'hemanathans1@gmail.com';
                     $resp_name = $resp->name.' '.$resp->surname;
@@ -670,20 +672,94 @@ class ProjectsController extends Controller
                     $reward = $proj->reward;
                     
                     if($proj->description!=''){
-                        $proj_subject = $proj->description;
+                        $proj_desc = $proj->description;
                     }else{
-                        $proj_subject = 'Get paid for your opinion - Join The Brand Surgeon for free';
+                        $proj_desc = 'Get paid for your opinion - Join The Brand Surgeon for free';
                     }
                     
                     if($proj->description1!=''){
-                        $proj_content = $proj->description1;
+                        $proj_desc1 = $proj->description1;
                     }else{
-                        $proj_content = '';
+                        $proj_desc1 = '';
                     }
 
-                    $data = ['subject' => $proj_subject, 'proj_content'=>$proj_content, 'name' => $resp_name,'project' => $proj_name,'reward' => $reward,'survey_duration' => $survey_duration,'type' => 'project_notification'];
+                    if($proj->description2!=''){
+                        $proj_desc2 = $proj->description2;
+                    }else{
+                        $proj_desc2 = '';
+                    }
+
+            
+                    $project_link = route('user.dashboard');
+
+                    // $data = ['subject' => $proj_desc, 'proj_content'=>$proj_desc, 'name' => $resp_name,'project' => $proj_name,'reward' => $reward,'survey_duration' => $survey_duration,'type' => 'project_notification'];
                 
-                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                    // Mail::to($to_address)->send(new WelcomeEmail($data));
+
+                    // mail starts
+
+            
+                    if($proj->type_id==1){
+                        $subject = 'New Pre-Screener Survey';
+                        $templateId = 'd-5079fe69fe5d404e9019b2eeb9243739';
+                        $dynamicData = [
+                            'url_link' => $project_link,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'rand_value' => 'R' . $proj->reward,
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'duration' => $survey_duration,
+                            'survery_duration' => '',
+                        ];
+                    }
+                    
+                    if($proj->type_id==2){
+                        $subject = 'New Pre-Task Survey';
+                        $templateId = 'd-9951ddd319244eb79980954158650a5b';
+                        $dynamicData = [
+                            'url_link' => $project_link,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'description2' => ($proj_desc2 !== null) ? $proj_desc2: '',
+                            'survery_duration' => $survey_duration,
+                        ];
+                    }
+                    if($proj->type_id==3){
+                        $subject = 'New Paid Survey';
+                        $templateId = 'd-4252fb83805545ffbcbf9e3dd904e895';
+                        $dynamicData = [
+                            'points' => $reward * 10,
+                            'url_link' => $project_link,
+                            'survery_duration' => $survey_duration,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'rand_value' => 'R' . $proj->reward,
+                            'duration' => $survey_duration,
+                        ];
+                    }
+            
+                    if($proj->type_id==4){
+                        $subject = 'New Un-Paid Survey';
+                        $templateId = 'd-09c056d840114f90bc7088eea56e3e97';
+                        $dynamicData = [
+                            'points' => $proj->reward * 10,
+                            'url_link' => $project_link,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'duration' => $survey_duration,
+                            'survery_duration' => '',
+                        ];
+                    }
+            
+                    $dynamicData['first_name'] = $resp_name;
+            
+                    $sendgrid = new SendGridService();
+                    $sendgrid->setFrom();
+                    $sendgrid->setSubject($subject);
+                    $sendgrid->setTemplateId($templateId);
+                    $sendgrid->setDynamicData($dynamicData);
+                    $sendgrid->setToEmail($to_address, $resp_name);
+                    $sendgrid->send();
+                    
                 }
                 //email ends
             }
@@ -846,10 +922,100 @@ class ProjectsController extends Controller
                     }else{
                         $proj_name = $proj->name;
                     }
+                    $project_link = route('user.dashboard');
+                    
+                    $survey_duration = $proj->survey_duration;
+                    $reward = $proj->reward;
+                    
+                    if($proj->description!=''){
+                        $proj_desc = $proj->description;
+                    }else{
+                        $proj_desc = 'Get paid for your opinion - Join The Brand Surgeon for free';
+                    }
+                    
+                    if($proj->description1!=''){
+                        $proj_desc1 = $proj->description1;
+                    }else{
+                        $proj_desc1 = '';
+                    }
 
-                    $data = ['subject' => 'New Survey Assigned','name' => $resp_name,'project' => $proj_name,'type' => 'new_project'];
+                    if($proj->description2!=''){
+                        $proj_desc2 = $proj->description2;
+                    }else{
+                        $proj_desc2 = '';
+                    }
+                    
+                    // $data = ['subject' => 'New Survey Assigned','name' => $resp_name,'project' => $proj_name,'type' => 'new_project'];
                 
-                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                    // Mail::to($to_address)->send(new WelcomeEmail($data));
+
+
+                    // mail starts
+            
+                    if($proj->type_id==1){
+                        $subject = 'New Pre-Screener Survey';
+                        $templateId = 'd-5079fe69fe5d404e9019b2eeb9243739';
+                        $dynamicData = [
+                            'url_link' => $project_link,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'rand_value' => 'R' . $proj->reward,
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'duration' => $survey_duration,
+                            'survery_duration' => '',
+                        ];
+                    }
+                    
+                    if($proj->type_id==2){
+                        $subject = 'New Pre-Task Survey';
+                        $templateId = 'd-9951ddd319244eb79980954158650a5b';
+                        $dynamicData = [
+                            'url_link' => $project_link,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'description2' => ($proj_desc2 !== null) ? $proj_desc2: '',
+                            'survery_duration' => $survey_duration,
+                        ];
+                    }
+                    if($proj->type_id==3){
+                        $subject = 'New Paid Survey';
+                        $templateId = 'd-4252fb83805545ffbcbf9e3dd904e895';
+                        $dynamicData = [
+                            'points' => $reward * 10,
+                            'url_link' => $project_link,
+                            'survery_duration' => $survey_duration,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'rand_value' => 'R' . $proj->reward,
+                            'duration' => $survey_duration,
+                        ];
+                    }
+            
+                    if($proj->type_id==4){
+                        $subject = 'New Un-Paid Survey';
+                        $templateId = 'd-09c056d840114f90bc7088eea56e3e97';
+                        $dynamicData = [
+                            'points' => $proj->reward * 10,
+                            'url_link' => $project_link,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'duration' => $survey_duration,
+                            'survery_duration' => '',
+                        ];
+                    }
+            
+                    $dynamicData['first_name'] = $resp_name;
+            
+                    $sendgrid = new SendGridService();
+                    $sendgrid->setFrom();
+                    $sendgrid->setSubject($subject);
+                    $sendgrid->setTemplateId($templateId);
+                    $sendgrid->setDynamicData($dynamicData);
+                    $sendgrid->setToEmail($to_address, $resp_name);
+                    $sendgrid->send();
+                    
+                }
+                //email ends
+                    
                 }
                 //email ends
 
@@ -1006,15 +1172,106 @@ class ProjectsController extends Controller
                                 }else{
                                     $proj_name = $proj->name;
                                 }
+                                
+                                $project_link = route('user.dashboard');
+                                
+                                $survey_duration = $proj->survey_duration;
+                                $reward = $proj->reward;
+                                
+                                if($proj->description!=''){
+                                    $proj_desc = $proj->description;
+                                }else{
+                                    $proj_desc = 'Get paid for your opinion - Join The Brand Surgeon for free';
+                                }
+                                
+                                if($proj->description1!=''){
+                                    $proj_desc1 = $proj->description1;
+                                }else{
+                                    $proj_desc1 = '';
+                                }
+            
+                                if($proj->description2!=''){
+                                    $proj_desc2 = $proj->description2;
+                                }else{
+                                    $proj_desc2 = '';
+                                }
+
+                                // $data = [
+                                //     'subject' => 'New Survey Assigned',
+                                //     'name' => $resp_name,
+                                //     'project' => $proj_name,
+                                //     'type' => 'new_project'
+                                // ];
     
-                                $data = [
-                                    'subject' => 'New Survey Assigned',
-                                    'name' => $resp_name,
-                                    'project' => $proj_name,
-                                    'type' => 'new_project'
-                                ];
-    
-                                Mail::to($to_address)->send(new WelcomeEmail($data));
+                                // Mail::to($to_address)->send(new WelcomeEmail($data));
+
+                                // mail starts
+            
+                                if($proj->type_id==1){
+                                    $subject = 'New Pre-Screener Survey';
+                                    $templateId = 'd-5079fe69fe5d404e9019b2eeb9243739';
+                                    $dynamicData = [
+                                        'url_link' => $project_link,
+                                        'description' => ($proj_desc !== null) ? $proj_desc: '',
+                                        'rand_value' => 'R' . $proj->reward,
+                                        'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                                        'duration' => $survey_duration,
+                                        'survery_duration' => '',
+                                    ];
+                                }
+                                
+                                if($proj->type_id==2){
+                                    $subject = 'New Pre-Task Survey';
+                                    $templateId = 'd-9951ddd319244eb79980954158650a5b';
+                                    $dynamicData = [
+                                        'url_link' => $project_link,
+                                        'description' => ($proj_desc !== null) ? $proj_desc: '',
+                                        'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                                        'description2' => ($proj_desc2 !== null) ? $proj_desc2: '',
+                                        'survery_duration' => $survey_duration,
+                                    ];
+                                }
+
+                                if($proj->type_id==3){
+                                    $subject = 'New Paid Survey';
+                                    $templateId = 'd-4252fb83805545ffbcbf9e3dd904e895';
+                                    $dynamicData = [
+                                        'points' => $reward * 10,
+                                        'url_link' => $project_link,
+                                        'survery_duration' => $survey_duration,
+                                        'description' => ($proj_desc !== null) ? $proj_desc: '',
+                                        'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                                        'rand_value' => 'R' . $proj->reward,
+                                        'duration' => $survey_duration,
+                                    ];
+                                }
+                        
+                                if($proj->type_id==4){
+                                    $subject = 'New Un-Paid Survey';
+                                    $templateId = 'd-09c056d840114f90bc7088eea56e3e97';
+                                    $dynamicData = [
+                                        'points' => $proj->reward * 10,
+                                        'url_link' => $project_link,
+                                        'description' => ($proj_desc !== null) ? $proj_desc: '',
+                                        'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                                        'duration' => $survey_duration,
+                                        'survery_duration' => '',
+                                    ];
+                                }
+                        
+                                $dynamicData['first_name'] = $resp_name;
+                        
+                                $sendgrid = new SendGridService();
+                                $sendgrid->setFrom();
+                                $sendgrid->setSubject($subject);
+                                $sendgrid->setTemplateId($templateId);
+                                $sendgrid->setDynamicData($dynamicData);
+                                $sendgrid->setToEmail($to_address, $resp_name);
+                                $sendgrid->send();
+                                
+                            }
+                            
+                            //email ends
                             }
                         }
                     }
