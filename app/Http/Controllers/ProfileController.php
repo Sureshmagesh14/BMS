@@ -272,18 +272,6 @@ class ProfileController extends Controller
 
             // The resulting value of $page is ready to be used
 
-
-           
-            
-            
-
-        
-           
-
-
-
-
-  
             return view('user.profile_wizard', compact('pid','resp_details','state','industry_company','income_per_month','banks','essential_details','extended_details','get_suburb','get_area','child_details','vehicle_details','vehicle_master','get_year','children_set','vehicle_set', 'personalIncomeValue','incomeRanges','page','basic_details'));
         }
         catch (Exception $e) {
@@ -338,13 +326,30 @@ class ProfileController extends Controller
         $extended_details  = json_encode($parse_array['extended']);
 
         if($steps == 1){
+            $mobile = str_replace(' ', '', $parse_array['basic']['mobile_number']); 
+          
+            // Remove leading zero if present and add "27" prefix if it doesn't already start with "27"
+            if (!str_starts_with($mobile, '27')) {
+                $mobile = '27' . ltrim($mobile, '0');
+            }
+
+            $whatsapp = str_replace(' ', '', $parse_array['basic']['whatsapp_number']); 
+          
+            // Remove leading zero if present and add "27" prefix if it doesn't already start with "27"
+            if (!str_starts_with($whatsapp, '27')) {
+                $whatsapp = '27' . ltrim($whatsapp, '0');
+            }
+      
+            // Debug output
+          
+           
             $resp_save = array(
                 'name'          => $parse_array['basic']['first_name'],
                 'surname'       => $parse_array['basic']['last_name'],
                 'date_of_birth' => $parse_array['basic']['date_of_birth'],
                 'email'         => $parse_array['basic']['email'],
-                'mobile'        =>  str_replace(' ', '', $parse_array['basic']['mobile_number']),
-                'whatsapp'      => str_replace(' ', '', $parse_array['basic']['whatsapp_number'])
+                'mobile'        =>  str_replace(' ', '', $mobile),
+                'whatsapp'      => str_replace(' ', '', $whatsapp)
             );
          
             Respondents::where('id',$resp_id)->update($resp_save);
