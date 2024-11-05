@@ -42,7 +42,8 @@ Route::any('admin', 'Auth\AdminLoginController@showLoginForm')->name('admin.show
 Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.login'); //.....Admin Login
 Route::any('admin/forgot_password', 'Auth\AdminLoginController@forgot_password')->name('admin.forgot_password');
 Route::any('email', 'WelcomeController@email')->name('email');
-
+Route::any('respondent_mobile_check', 'WelcomeController@respondent_mobile_check')->name('respondent_mobile_check');
+Route::any('respondent_whatsap_check', 'WelcomeController@respondent_whatsap_check')->name('respondent_whatsap_check');
 Route::get('password_reset_sms/{token}/{phone}', 'WelcomeController@password_reset_sms')->name('password.sms');
 Route::post('password/reset', 'Auth\PasswordResetLinkController@resetPassword')->name('password.reset.sms');
 Route::any('email', 'WelcomeController@email')->name('email');
