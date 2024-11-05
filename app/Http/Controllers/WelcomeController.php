@@ -1745,6 +1745,100 @@ class WelcomeController extends Controller
     }
 }
 
+public function respondent_mobile_check(Request $request)
+{
+    // Retrieve the mobile number from the request
+    $mobileNumber = '27' . $request->input('basic.mobile_number'); // Assuming mobile numbers start with '27'
+
+    // Remove all non-numeric characters (leaving only digits)
+    $onlyNumbers = preg_replace('/\D/', '', $mobileNumber);
+
+    // Extract the ID (if any)
+    $id = $request->input('id');
+
+    // Remove spaces from the mobile number
+    $mobile = preg_replace('/\s+/', '', $mobileNumber);  // Remove all spaces
+
+    // Check if mobile number is provided
+    if (empty($mobile)) {
+        return response()->json(['valid' => false, 'message' => 'Mobile number is required.']);
+    }
+
+    // Check if the email ID is provided and validate it
+    $email = $request->input('email');  // Assuming the email is in the request
+
+    // If email is provided, check if it already exists in the database
+    if ($email) {
+        $emailExists = DB::table('respondents')->where('email', $email);
+        
+        if ($id) {
+            // If ID exists, exclude the current respondent from the check
+            $emailExists->where('id', '!=', $id);
+        }
+
+        $emailExists = $emailExists->exists();
+
+        if ($emailExists) {
+            return response()->json(['valid' => false, 'message' => 'Email address already exists.']);
+        }
+    }
+
+    // Check if the mobile number already exists (similar to email check)
+    $mobileExists = DB::table('respondents')->where('mobile', $mobile);
+    
+    if ($id) {
+        // If ID exists, exclude the current respondent from the check
+        $mobileExists->where('id', '!=', $id);
+    }
+
+    $mobileExists = $mobileExists->exists();
+
+    if ($mobileExists) {
+        return response()->json(['valid' => false, 'message' => 'Mobile number already exists.']);
+    }
+
+    // If neither mobile nor email exists, return valid
+    return response()->json(['valid' => true]);
+}
+
+
+public function respondent_whatsap_check(Request $request)
+{
+
+    $mobileNumber = '27' . $request->input('basic.whatsapp_number'); // Assuming mobile numbers start with '27'
+    
+    // Remove all non-numeric characters (leaving only digits)
+    $onlyNumbers = preg_replace('/\D/', '', $mobileNumber);
+    
+    // Check if the length of numeric characters is less than 9
+    if (strlen($onlyNumbers) < 9) {
+        return response()->json(['valid' => false, 'message' => 'Invalid whatsapp number format.'], 400);
+    }
+
+    // Extract the ID and clean up the mobile number
+    $id = $request->input('id');
+    $mobile = preg_replace('/\s+/', '', $mobileNumber);  // Remove all spaces
+
+    // If no mobile number is provided, consider it valid (you can adjust this depending on your requirements)
+    if (empty($mobile)) {
+        return response()->json(['valid' => true]); 
+    }
+
+    // Build the query to check if the mobile number exists
+    $query = DB::table('respondents')
+        ->where('whatsapp', $mobile);
+
+    if ($id) {
+        // Exclude current respondent if ID is provided
+        $query->where('id', '!=', $id);
+    }
+
+    // Check if the mobile number exists
+    $exists = $query->exists();
+
+    // Return JSON response
+    return response()->json(['valid' => !$exists]); // Return 'valid' true if it does not exist
+}
     
 
 }
