@@ -251,25 +251,40 @@ class ExportController extends Controller
                         $last_name = $basic['last_name'] ?? '-';
                         $email = $basic['email'] ?? '-';
                         $dob = $basic['date_of_birth'] ?? '-';
-                        $age = '-';
+                        $age = ''; // Set initial age to empty
                         
-                        if (empty($dob) || $dob === '0000-00-00') {
-                            $dobDated = Respondents::select('date_of_birth')->where('id', $id)->first();
-                            
-                            if ($dobDated && !empty($dobDated->date_of_birth)) {
-                                $dob = $dobDated->date_of_birth;
+                        $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                        if ($get_resp != null) {
+                            if (!empty($get_resp->date_of_birth)) {
+                                $dob = $get_resp->date_of_birth;
+                        
+                                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
                             } else {
                                 $dob = ''; // Handle the case where there's no date of birth found
                             }
+                        } else {
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                } else {
+                                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    }
+                                }
+                            }
                         }
                         
-                        if (!empty($dob) && $dob !== '0000-00-00') {
-                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
-                            
-                            if ($dobDate) {
-                                $now = new DateTime();
-                                $age = $now->diff($dobDate)->y; // Get the difference in years
-                            }
+                        // Ensure age is empty if dob is not set or invalid
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $age = ''; // Set age to empty if date of birth is empty or invalid
                         }
                     
                         // Set cell values
@@ -377,22 +392,42 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
                         $dob = $basic->date_of_birth ?? '';
-                        $age = '-';
+                        $age = ''; // Set initial age to empty
                         
-                        if (empty($dob) || $dob === '0000-00-00') {
-                            $dobDated = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
-                            $dob = $dobDated->date_of_birth ?? '';
-                        }
+                        $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                        if ($get_resp != null) {
+                            if (!empty($get_resp->date_of_birth)) {
+                                $dob = $get_resp->date_of_birth;
                         
-                        if (!empty($dob) && $dob !== '0000-00-00') {
-                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
-                            
-                            if ($dobDate) {
-                                $now = new DateTime();
-                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                            } else {
+                                $dob = ''; // Handle the case where there's no date of birth found
+                            }
+                        } else {
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                } else {
+                                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    }
+                                }
                             }
                         }
-
+                        
+                        // Ensure age is empty if dob is not set or invalid
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $age = ''; // Set age to empty if date of birth is empty or invalid
+                        }
+                        
                       
 
                         $employment_status = null; // Initialize $employment_status to null
@@ -751,20 +786,40 @@ class ExportController extends Controller
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
                     
                         $dob = $basic->date_of_birth ?? '';
-                        $age = '-';
+                        $age = ''; // Set initial age to empty
                         
-                        if (empty($dob) || $dob === '0000-00-00') {
-                            $dobDated = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
-                            $dob = $dobDated->date_of_birth ?? '';
+                        $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                        if ($get_resp != null) {
+                            if (!empty($get_resp->date_of_birth)) {
+                                $dob = $get_resp->date_of_birth;
+                        
+                                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                            } else {
+                                $dob = ''; // Handle the case where there's no date of birth found
+                            }
+                        } else {
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                } else {
+                                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    }
+                                }
+                            }
                         }
                         
-                        if (!empty($dob) && $dob !== '0000-00-00') {
-                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
-                            
-                            if ($dobDate) {
-                                $now = new DateTime();
-                                $age = $now->diff($dobDate)->y; // Get the difference in years
-                            }
+                        // Ensure age is empty if dob is not set or invalid
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $age = ''; // Set age to empty if date of birth is empty or invalid
                         }
                         
                    
@@ -1526,7 +1581,7 @@ class ExportController extends Controller
                 $sheet->setCellValue('E1', 'WA Number');
                 $sheet->setCellValue('F1', 'Email');
                 $sheet->setCellValue('G1', 'Cashout Type');
-                $sheet->setCellValue('H1', 'Total cash paid');
+                $sheet->setCellValue('H1', 'Total Cashouts paid');
                 $sheet->setCellValue('I1', 'Value of incentives paid');
                 $sheet->setCellValue('J1', 'Total cashouts unpaid');
                 $sheet->setCellValue('K1', 'Pending cashout');
@@ -1617,11 +1672,11 @@ class ExportController extends Controller
                     $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
-                    $sheet->setCellValue('H' . $rows, $all_data->total_complete_cashout);
+                    $sheet->setCellValue('H' . $rows, $all_data->total_complete_cashout/10);
                     $sheet->setCellValue('I' . $rows, ($get_incentive > 0) ? $get_incentive/10 : 0);
                     $sheet->setCellValue('J' . $rows, $all_data->failed);
                     $sheet->setCellValue('K' . $rows, $all_data->pending);
-                    $sheet->setCellValue('L' . $rows, $all_data->declined);
+                    $sheet->setCellValue('L' . $rows, $all_data->declined/10);
                     $sheet->setCellValue('M' . $rows, $all_data->complete);
                     $sheet->setCellValue('N' . $rows, ($get_incentive_owed > 0) ? $get_incentive_owed/10 : 0);
                     $get_project = Projects::select('projects.id','projects.name')->join('project_respondent as resp','projects.id','resp.project_id')
@@ -1855,6 +1910,7 @@ class ExportController extends Controller
                 $i = 1;
               
                 foreach ($all_datas as $all_data) {
+                    dd($all_datas);
                     $basic = json_decode($all_data->basic_details);
                     $essential = json_decode($all_data->essential_details);
                     $extended  = json_decode($all_data->extended_details);
@@ -1895,11 +1951,43 @@ class ExportController extends Controller
                     $sheet->setCellValue('D' . $rows, $mobile_number);
                     $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $basic->email ?? '');
-
                     $dob = $basic->date_of_birth ?? '';
-                    $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
-                            ? (date('Y') - date('Y', strtotime($dob))) 
-                            : '-';
+                    $age = ''; // Set initial age to empty
+                    
+                    $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                    if ($get_resp != null) {
+                        if (!empty($get_resp->date_of_birth)) {
+                            $dob = $get_resp->date_of_birth;
+                    
+                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                            if ($dobDate) {
+                                $now = new DateTime();
+                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            }
+                        } else {
+                            $dob = ''; // Handle the case where there's no date of birth found
+                        }
+                    } else {
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                            if ($dobDate) {
+                                $now = new DateTime();
+                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            } else {
+                                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Ensure age is empty if dob is not set or invalid
+                    if (empty($dob) || $dob === '0000-00-00') {
+                        $age = ''; // Set age to empty if date of birth is empty or invalid
+                    }
+                  
 
                     $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
                     $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
@@ -1909,7 +1997,7 @@ class ExportController extends Controller
                     $personal_income = ($p_income != null) ? $p_income->income : '-';
                     $household_income = ($h_income != null) ? $h_income->income : '-';
 
-                    $sheet->setCellValue('G' . $rows, $year);
+                    $sheet->setCellValue('G' . $rows, $age);
                     $relationship_status = ucfirst($essential->relationship_status ?? '');
                     $sheet->setCellValue('H' . $rows, $relationship_status);
                     // Define the mapping of ethnic group codes to names
@@ -2036,24 +2124,62 @@ class ExportController extends Controller
                 $fileName = $module . "_" . $resp_type . "_" . date('ymd') . "." . $type;
             }
             else if ($module == 'Projects') {
+                // $all_datas = Projects::leftJoin('users', function ($join) {
+                //         $join->on('users.id', '=', 'projects.user_id');
+                //     });
+
+                //     if($from != null && $to != null){
+                //         $all_datas = $all_datas->whereDate('projects.created_at', '>=', $from)->whereDate('projects.created_at', '<=', $to);
+                //     }
+
+                // $all_datas = $all_datas->get([
+                //     'users.name as uname',
+                //     'users.surname',
+                //     'projects.number',
+                //     'projects.name',
+                //     'projects.published_date',
+                //     'projects.closing_date',
+                //     'projects.total_responnded_attended',
+                //     'projects.total_responded_recruited',
+                // ]);
+
+                // use Illuminate\Support\Facades\DB;
+
                 $all_datas = Projects::leftJoin('users', function ($join) {
                         $join->on('users.id', '=', 'projects.user_id');
-                    });
+                    })
+                    ->leftJoin('project_respondent', 'project_respondent.project_id', '=', 'projects.id')
+                    ->leftJoin('qualified_respondent', 'qualified_respondent.project_id', '=', 'projects.id');
 
-                    if($from != null && $to != null){
-                        $all_datas = $all_datas->whereDate('projects.created_at', '>=', $from)->whereDate('projects.created_at', '<=', $to);
-                    }
+                // Apply date filters if provided
+                if ($from != null && $to != null) {
+                    $all_datas = $all_datas->whereDate('projects.created_at', '>=', $from)
+                                        ->whereDate('projects.created_at', '<=', $to);
+                }
 
-                $all_datas = $all_datas->get([
+                // Select fields with COUNT aggregation
+                $all_datas = $all_datas->select(
                     'users.name as uname',
                     'users.surname',
                     'projects.number',
                     'projects.name',
                     'projects.published_date',
                     'projects.closing_date',
-                    'projects.total_responnded_attended',
-                    'projects.total_responded_recruited',
-                ]);
+                    DB::raw('COUNT(DISTINCT project_respondent.respondent_id) as total_responnded_attended'),
+                    DB::raw('COUNT(DISTINCT qualified_respondent.respondent_id) as total_responded_recruited')
+                )
+                ->groupBy(
+                    'projects.id',  // Group by necessary fields to avoid incorrect aggregation
+                    'users.name',
+                    'users.surname',
+                    'projects.number',
+                    'projects.name',
+                    'projects.published_date',
+                    'projects.closing_date'
+                )
+                ->get();
+
+
 
                 $sheet->setCellValue('A1', 'Project Number & Project Name');
                 $sheet->setCellValue('B1', 'PM Name');
@@ -2067,7 +2193,7 @@ class ExportController extends Controller
                 $rows = 2;
                 $i = 1;
                 foreach ($all_datas as $all_data) {
-                    $sheet->setCellValue('A' . $rows, $all_data->number.' '.$all_data->name);
+                    $sheet->setCellValue('A' . $rows, $all_data->number.' '.$all_data->name.' '.$all_data->id);
                     $sheet->setCellValue('B' . $rows, $all_data->uname.$all_data->surname);
                     if(isset($all_data->published_date)){
                         $published_date=date("d-m-Y", strtotime($all_data->published_date));
@@ -2720,8 +2846,8 @@ class ExportController extends Controller
                            }
                             //    Essential Details
                             $mobile_number = '-';
-                            if (!empty($basic->mobile_number)) {
-                                $m_number = preg_replace('/\s+/', '',$basic->mobile_number);
+                            if (!empty($mobile)) {
+                                $m_number = preg_replace('/\s+/', '',$mobile);
                                 $length = strlen($m_number);
                                 if (strlen($m_number) == 9) {
                                     $mobile_number = '27' . $m_number;
@@ -2743,7 +2869,7 @@ class ExportController extends Controller
                                     $whatsapp_number = '27' . $w_number;
                                 } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                                     $whatsapp_number = $w_number;
-                                } else if ($length == 10 && $m_number[0] == '0'){
+                                } else if ($length == 10 && $w_number[0] == '0'){
                                     $whatsapp_number = '27' . substr($w_number, 1);
                                 }
                                 elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
@@ -2753,7 +2879,43 @@ class ExportController extends Controller
                         
                             
                             $email = $basic->email ?? '';
-                            $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+                            $dob = $basic->date_of_birth ?? '';
+                            $age = ''; // Set initial age to empty
+                            
+                            $get_resp = Respondents::select('date_of_birth')->where('id', $userID)->first();
+                            if ($get_resp != null) {
+                                if (!empty($get_resp->date_of_birth)) {
+                                    $dob = $get_resp->date_of_birth;
+                            
+                                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    }
+                                } else {
+                                    $dob = ''; // Handle the case where there's no date of birth found
+                                }
+                            } else {
+                                if (empty($dob) || $dob === '0000-00-00') {
+                                    $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    } else {
+                                        $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                        if ($dobDate) {
+                                            $now = new DateTime();
+                                            $age = $now->diff($dobDate)->y; // Get the difference in years
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // Ensure age is empty if dob is not set or invalid
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $age = ''; // Set age to empty if date of birth is empty or invalid
+                            }
+                  
 
                             $employment_status = null;
 

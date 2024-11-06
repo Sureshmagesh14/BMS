@@ -42,7 +42,8 @@ Route::any('admin', 'Auth\AdminLoginController@showLoginForm')->name('admin.show
 Route::any('admin/login', 'Auth\AdminLoginController@adminLogin')->name('admin.login'); //.....Admin Login
 Route::any('admin/forgot_password', 'Auth\AdminLoginController@forgot_password')->name('admin.forgot_password');
 Route::any('email', 'WelcomeController@email')->name('email');
-
+Route::any('respondent_mobile_check', 'WelcomeController@respondent_mobile_check')->name('respondent_mobile_check');
+Route::any('respondent_whatsap_check', 'WelcomeController@respondent_whatsap_check')->name('respondent_whatsap_check');
 Route::get('password_reset_sms/{token}/{phone}', 'WelcomeController@password_reset_sms')->name('password.sms');
 Route::post('password/reset', 'Auth\PasswordResetLinkController@resetPassword')->name('password.reset.sms');
 Route::any('email', 'WelcomeController@email')->name('email');
@@ -67,6 +68,8 @@ Route::any('change_profile', 'WelcomeController@change_profile')->middleware(['a
 Route::post('image_update', 'WelcomeController@image_update')->middleware(['auth', 'verified'])->name('user.image_update');
 Route::any('terms_and_conditions', 'WelcomeController@terms_and_conditions')->middleware(['auth', 'verified'])->name('terms_and_conditions');
 Route::any('survey_share', 'WelcomeController@survey_share')->middleware(['auth', 'verified'])->name('user.survey_share');
+
+Route::any('update_out', 'WelcomeController@update_out')->name('update_out');
 
 Route::any('updateprofile_wizard', 'ProfileController@updateprofile_wizard')->middleware(['auth', 'verified'])->name('updateprofile_wizard');
 Route::any('get_suburb', 'ProfileController@get_suburb')->middleware(['auth', 'verified'])->name('get_suburb');

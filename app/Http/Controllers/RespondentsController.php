@@ -107,7 +107,7 @@ class RespondentsController extends Controller
                 $respondents->referral_code = $request->input('referral_code');
                 $respondents->accept_terms = $request->input('accept_terms');
                 $respondents->deactivated_date = $request->input('deactivated_date');
-                $respondent->created_by = Auth::guard('admin')->user()->id;
+                $respondents->created_by = Auth::guard('admin')->user()->id;
                 
                 $respondents->save();
                 $respondents->id;
@@ -128,7 +128,7 @@ class RespondentsController extends Controller
                 $basic_insert = array(
                     'respondent_id' => $respondents->id,
                     'pid'           => $respondents->id,
-                    'basic_detials' => json_encode($basic_details)
+                    'basic_details' => json_encode($basic_details)
                 );
 
                 RespondentProfile::insert($basic_insert);
@@ -282,7 +282,7 @@ class RespondentsController extends Controller
             $respondent->whatsapp = $whatsapp;
     
             // Update password only if provided
-            if ($request->has('password')) {
+            if ($request->has('password') && $request->input('password') !== null) {
                 $respondent->password = Hash::make($request->input('password'));
             }
     
@@ -294,7 +294,7 @@ class RespondentsController extends Controller
             $respondent->account_holder = $request->input('account_holder', $respondent->account_holder);
             $respondent->account_number = $request->input('account_number', $respondent->account_number);
             $respondent->active_status_id = $request->input('active_status_id', $respondent->active_status_id);
-            $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
+            // $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
             $respondent->accept_terms = $request->input('accept_terms', $respondent->accept_terms);
             $respondent->deactivated_date = $request->input('deactivated_date', $respondent->deactivated_date);
             $respondent->created_by = Auth::guard('admin')->user()->id;
@@ -658,7 +658,7 @@ class RespondentsController extends Controller
 
                 $opted_in = ($post->opted_in && $post->opted_in !== '0000-00-00 00:00:00') ? date("d-m-Y", strtotime($post->opted_in)) : '-';
                 $updated_at = ($post->updated_at != null) ? date("d-m-Y", strtotime($post->updated_at)) : '';
-                $accept_terms = $post->accept_terms == 1 ? 'Yes' : 'No';
+                $accept_terms = $post->accept_terms == 0 ? 'Yes' : 'No';
                 $referral_code = strlen($post->referral_code) > 10 ? substr($post->referral_code, 0, 10) . '...' : $post->referral_code;
 
                 // Build each row of data
@@ -679,11 +679,11 @@ class RespondentsController extends Controller
                     'updated_at' => $updated_at,
                  'referral_code' => '<div class="text-container" title="' . htmlspecialchars($post->referral_code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($referral_code, ENT_QUOTES, 'UTF-8') . '</div>',
                     'accept_terms' => $accept_terms,
-                    'id_show' => '<a href="' . $view_route . '" class="rounded waves-light waves-effect">' . $post->id . '</a>',
+                    'id_show' => (Auth::guard('admin')->user()->role_id != 3) ? '<a href="' . $view_route . '" class="rounded waves-light waves-effect">' . $post->id . '</a>' : '<a href="#">' . $post->id . '</a>',
                 ];
     
                 // Add options for each row based on user permissions
-                if (Auth::guard('admin')->user()->role_id == 1 || Auth::guard('admin')->user()->id == $post->id) {
+                if (Auth::guard('admin')->user()->role_id != 3) {
                     $nestedData['options'] = '<div class="col-md-2">
                         <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
                             title="Action" aria-haspopup="true" aria-expanded="false">
@@ -704,7 +704,7 @@ class RespondentsController extends Controller
                         // If coming from projects page
                         $nestedData['options'] .= '<li class="list-group-item">
                             <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                <i class="far fa-trash-alt"></i> De-attach
+                                <i class="far fa-trash-alt"></i> Detach
                             </a>
                         </li>';
                     }else if(str_contains(url()->previous(), '/admin/tags')){
@@ -716,7 +716,7 @@ class RespondentsController extends Controller
                         </li>';
                         $nestedData['options'] .= '<li class="list-group-item">
                             <a id="deattach_tags" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                <i class="far fa-trash-alt"></i> De-attach
+                                <i class="far fa-trash-alt"></i> Detach
                             </a>
                         </li>';
                     } else {

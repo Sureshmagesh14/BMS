@@ -52,7 +52,7 @@ class LoginRequest extends FormRequest
 
         if ($respondent) {
 
-            //dd($respondent->id);
+
 
             if (session()->has('u_proj_refer_id')) {
 
@@ -72,7 +72,7 @@ class LoginRequest extends FormRequest
             }
 
             // Check if the deactivated_date is set and if it's less than or equal the current date
-            if ($respondent->deactivated_date && Carbon::parse($respondent->deactivated_date)->endOfDay()->lessThanOrEqualTo(Carbon::now())) {
+            if ($respondent->deactivated_date && Carbon::parse($respondent->deactivated_date)->endOfDay()->lessThanOrEqualTo(Carbon::now()) || $respondent->active_status_id==5) {
                 $message = strip_tags("<strong>Your account is deactivated.</strong>");
                 throw ValidationException::withMessages([
                     'message' => $message,

@@ -35,14 +35,17 @@
 
                             <div class="mb-0">
 
-                                <div class="text-right">
-                                    <a href="#!" data-url="{{ route('respondents.edit', $data->id) }}"
-                                        data-size="xl" data-ajax-popup="true" class="btn btn-primary"
-                                        data-bs-original-title="Edit Respondents" data-bs-toggle="tooltip"
-                                        id="create">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                </div>
+                                @if (Auth::guard('admin')->user()->role_id != 3)
+                                    <div class="text-right">
+                                        <a href="#!" data-url="{{ route('respondents.edit', $data->id) }}"
+                                            data-size="xl" data-ajax-popup="true" class="btn btn-primary"
+                                            data-bs-original-title="Edit Respondents" data-bs-toggle="tooltip"
+                                            id="create">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                @endif
+                                
                                 <div class="col-md-12">
                                     <h4><span class="badge badge-secondary">Basic</span></h4>
                                 </div>
@@ -181,7 +184,7 @@
                                         </tr>
                                         <tr>
                                             <th>Accepted Terms</th>
-                                            @if ($data->accept_terms == 1)
+                                            @if ($data->accept_terms == 0)
                                                 @php $accept_terms='Yes'; @endphp
                                             @else
                                                 @php $accept_terms='No'; @endphp

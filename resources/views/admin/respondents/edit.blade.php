@@ -11,6 +11,14 @@
         width: 100% !important;
     }
 
+    span#whatsapp-error {
+        padding-left: 200px;
+    }
+
+    span#date_of_birth-error {
+        padding-left: 200px;
+    }
+
     label#whatsapp-error {
         width: 100% !important;
     }
@@ -252,8 +260,8 @@
                 <option value="" selected="selected" disabled="disabled">
                     Choose an option
                 </option>
-                <option @if ($respondents->accept_terms == 0) selected @endif value="0">No</option>
-                <option @if ($respondents->accept_terms == 1) selected @endif value="1">Yes</option>
+                <option @if ($respondents->accept_terms == 0) selected @endif value="0">Yes</option>
+                <option @if ($respondents->accept_terms == 1) selected @endif value="1">No</option>
             </select>
         </div>
     </div>
@@ -280,197 +288,241 @@
     $(function() {
 
 
-        $(document).ready(function() {
 
-            $('#date_of_birth').inputmask("yyyy/mm/dd", {
-                "placeholder": "YYYY/MM/DD",
-                onincomplete: function() {
-                    $(this).val('');
-                }
-            });
+        $('#date_of_birth').inputmask("yyyy/mm/dd", {
+            "placeholder": "YYYY/MM/DD",
+            onincomplete: function() {
+                $(this).val('');
+            }
+        });
 
-            $('#mobile').inputmask("99 999 9999");
-            $('#whatsapp').inputmask("99 999 9999");
+        $('#mobile').inputmask("99 999 9999");
+        $('#whatsapp').inputmask("99 999 9999");
 
-            $('#edit_respondents_form').validate({
-                rules: {
-                    email: {
-                        required: true,
-                        email: true,
-                        remote: {
-                            url: '{{ route('user_respondent_id_check') }}',
-                            type: "GET",
-                            data: {
-                                form_name: "useredit",
-                                id: function() {
-                                    return '{{ $respondents->id }}'; // Ensure this variable is properly rendered in the template
-                                },
-                                email: function() {
-                                    return $('#email')
-                                .val(); // Ensure email field value is sent
-                                }
+        $('#edit_respondents_form').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                    remote: {
+                        url: '{{ route('user_respondent_id_check') }}',
+                        type: "GET",
+                        data: {
+                            form_name: "useredit",
+                            id: function() {
+                                return '{{ $respondents->id }}'; // Ensure this variable is properly rendered in the template
                             },
-                            dataFilter: function(response) {
-                                // Parse the JSON response
-                                var json = JSON.parse(response);
-                                // Return validation result based on 'exists' key
-                                return json.exists === false ? 'true' : 'false';
+                            email: function() {
+                                return $('#email')
+                                    .val(); // Ensure email field value is sent
                             }
+                        },
+                        dataFilter: function(response) {
+                            // Parse the JSON response
+                            var json = JSON.parse(response);
+                            // Return validation result based on 'exists' key
+                            return json.exists === false ? 'true' : 'false';
                         }
-                    },
-                    mobile: {
-                        required: true,
-                        remote: {
-                            url: '{{ route('user_respondent_mobile_check') }}',
-                            type: "GET",
-                            data: {
-                                form_name: "useredit",
-                                id: function() {
-                                    return '{{ $respondents->id }}'; // Ensure this variable is properly rendered in the template
-                                },
-                                mobile: function() {
-                                    return $('#mobile')
-                                .val(); // Ensure email field value is sent
-                                }
-                            },
-                            dataFilter: function(response) {
-                                var json = JSON.parse(response);
-                                return json.valid ? "true" : "false";
-                            }
-                        }
-                    },
-                    password: {
-                        minlength: 8
-                    },
-                    cpassword: {
-                        minlength: 8,
-                        equalTo: "#password"
                     }
                 },
-                messages: {
-                    email: {
-                        remote: "{{ __('Email Name already exists!') }}"
-                    },
-                    mobile: {
-                        remote: "Mobile number already exists!" // Error message for mobile number
+                // Date of birth validation
+                date_of_birth: {
+                    required: true,
+                    date: true,
+                    date_of_birth_check: true // Custom date validation (not in the future)
+                },
+                mobile: {
+                    required: true,
+                    minlength: 11, // Minimum length of 11 digits
+                    maxlength: 11, // Maximum length of 11 digits
+                    mobile_format: true, // Custom validation to allow digits, spaces, and optional underscore at the end
+                    remote: {
+                        url: '{{ route('user_respondent_mobile_check') }}',
+                        type: "GET",
+                        data: {
+                            form_name: "useredit",
+                            id: function() {
+                                return '{{ $respondents->id }}'; // Ensure this variable is properly rendered in the template
+                            },
+                            mobile: function() {
+                                return $('#mobile')
+                                    .val(); // Ensure email field value is sent
+                            }
+                        },
+                        dataFilter: function(response) {
+                            var json = JSON.parse(response);
+                            return json.valid ? "true" : "false";
+                        }
                     }
                 },
-                errorElement: "span", // HTML element for error messages
-                errorPlacement: function(error, element) {
-                    error.addClass('invalid-feedback'); // Add a class for styling
-                    element.closest('.form-group').append(
-                        error); // Append the error message to the form group
+                whatsapp: {
+                    required: true,
+                    minlength: 11, // Minimum length of 11 digits
+                    maxlength: 11, // Maximum length of 11 digits
+                    mobile_format: true, // Custom validation to allow digits, spaces, and optional underscore at the end
                 },
-                highlight: function(element, errorClass, validClass) {
-                    $(element).addClass('is-invalid').removeClass(
-                        'is-valid'); // Add class for invalid state
+                password: {
+                    minlength: 8
                 },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid').addClass(
-                        'is-valid'); // Add class for valid state
+                cpassword: {
+                    minlength: 8,
+                    equalTo: "#password"
                 }
-            });
-
+            },
+            messages: {
+                email: {
+                    remote: "{{ __('Email Name already exists!') }}"
+                },
+                mobile: {
+                    remote: "Mobile number already exists!",
+                    minlength: "Mobile number must be exactly 11 digits.",
+                    maxlength: "Mobile number must be exactly 11 digits.",
+                    mobile_format: "Invalid Mobile Number Format."
+                },
+                whatsapp: {
+                    remote: "Whatsapp number already exists!",
+                    minlength: "Whatsapp number must be exactly 11 digits.",
+                    maxlength: "Whatsapp number must be exactly 11 digits.",
+                    mobile_format: "Invalid Whatsapp Number Format."
+                },
+                date_of_birth: {
+                    date: "Please enter a valid date.",
+                    date_of_birth_check: "Date of birth cannot be in the future."
+                }
+            },
+            errorElement: "span", // HTML element for error messages
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback'); // Add a class for styling
+                element.closest('.form-group').append(
+                    error); // Append the error message to the form group
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid').removeClass(
+                    'is-valid'); // Add class for invalid state
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid').addClass(
+                    'is-valid'); // Add class for valid state
+            }
         });
 
 
 
-    });
-
-    $.validator.addMethod("validate_email", function(value, element) {
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+        $.validator.addMethod("date_of_birth_check", function(value, element) {
+            var dateOfBirth = new Date(value);
+            var today = new Date();
+            // Compare the entered date with today's date
+            if (dateOfBirth > today) {
+                return false; // Date should not be in the future
+            }
             return true;
-        } else {
-            return false;
-        }
-    }, "Please enter a valid email address.");
+        }, "Date of birth cannot be in the future.");
 
-    $("#respondents_edit").click(function() {
-        if (!$("#edit_respondents_form").valid()) { // Not Valid
-            return false;
-        } else {
-            var data = $('#edit_respondents_form').serialize();
-            var id = $("#id").val();
-            var url_set = "{{ route('respondents.update', ':id') }}";
-            url_set = url_set.replace(':id', id);
+        // Custom method to validate mobile format (only digits, spaces, and underscore at the end)
+        $.validator.addMethod("mobile_format", function(value, element) {
+            // Regex allows digits, spaces, and one underscore at the end
+            return /^(\d{2} \d{3} \d{4})(_|)?$/.test(
+            value); // This regex allows the underscore only at the end
+        }, "Invalid Mobile Number Format");
+
+
+
+        $.validator.addMethod("validate_email", function(value, element) {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+                return true;
+            } else {
+                return false;
+            }
+        }, "Please enter a valid email address.");
+
+        $("#respondents_edit").click(function() {
+            if (!$("#edit_respondents_form").valid()) { // Not Valid
+                return false;
+            } else {
+                var data = $('#edit_respondents_form').serialize();
+                var id = $("#id").val();
+                var url_set = "{{ route('respondents.update', ':id') }}";
+                url_set = url_set.replace(':id', id);
+                $.ajax({
+                    type: 'PUT',
+                    url: url_set,
+                    data: data,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        $('#respondents_edit').html('....Please wait');
+                    },
+                    success: function(response) {
+                        if (response.message == 'Email already exists.') {
+                            toastr.error(response.message);
+                            $("#commonModal").modal('hide');
+                            if (typeof respondents_datatable === 'function') {
+                                respondents_datatable
+                                    (); // Call the function to update the projects table
+                            } else {
+                                setTimeout(function() {
+                                    location
+                                        .reload(); // Reload the page if the function is not defined
+                                }, 800);
+
+                            }
+                        } else {
+                            toastr.success(response.message);
+                            $("#commonModal").modal('hide');
+                            if (typeof respondents_datatable === 'function') {
+                                respondents_datatable
+                                    (); // Call the function to update the projects table
+                            } else {
+                                setTimeout(function() {
+                                    location
+                                        .reload(); // Reload the page if the function is not defined
+                                }, 800);
+
+                            }
+                        }
+
+                    },
+                    complete: function(response) {
+                        $('#respondents_edit').html('Create New');
+                    }
+                });
+            }
+        });
+
+        $("#bank_name").change(function() {
+            var bank_id = this.value;
             $.ajax({
-                type: 'PUT',
-                url: url_set,
-                data: data,
+
+                type: "GET",
+                url: "{{ route('get_branch_code') }}",
+                data: {
+                    "bank_id": bank_id,
+                },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                beforeSend: function() {
-                    $('#respondents_edit').html('....Please wait');
+                success: function(data) {
+                    $("#branch_code").val(data.repsonse);
+                    $("#branch").val(data.repsonse);
                 },
-                success: function(response) {
-                    if (response.message == 'Email already exists.') {
-                        toastr.error(response.message);
-                        $("#commonModal").modal('hide');
-                        if (typeof respondents_datatable === 'function') {
-                            respondents_datatable
-                        (); // Call the function to update the projects table
-                        } else {
-                            setTimeout(function() {
-                                location
-                            .reload(); // Reload the page if the function is not defined
-                            }, 800);
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
 
-                        }
-                    } else {
-                        toastr.success(response.message);
-                        $("#commonModal").modal('hide');
-                        if (typeof respondents_datatable === 'function') {
-                            respondents_datatable
-                        (); // Call the function to update the projects table
-                        } else {
-                            setTimeout(function() {
-                                location
-                            .reload(); // Reload the page if the function is not defined
-                            }, 800);
-
-                        }
-                    }
-
-                },
-                complete: function(response) {
-                    $('#respondents_edit').html('Create New');
                 }
             });
-        }
-    });
+        });
 
-    $("#bank_name").change(function() {
-        var bank_id = this.value;
-        $.ajax({
+        $(".toggle-password").click(function() {
 
-            type: "GET",
-            url: "{{ route('get_branch_code') }}",
-            data: {
-                "bank_id": bank_id,
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-                $("#branch_code").val(data.repsonse);
-                $("#branch").val(data.repsonse);
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
             }
         });
-    });
 
-    $(".toggle-password").click(function() {
-
-        $(this).toggleClass("fa-eye fa-eye-slash");
-        var input = $($(this).attr("toggle"));
-        if (input.attr("type") == "password") {
-            input.attr("type", "text");
-        } else {
-            input.attr("type", "password");
-        }
     });
     // Get the current date
 </script>

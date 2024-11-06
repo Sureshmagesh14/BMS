@@ -16,6 +16,7 @@ use App\Models\Cashout;
 use App\Models\Networks;
 use App\Models\Charities;
 use App\Models\Project_respondent;
+use App\Services\SendGrid\SendGridService;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -197,31 +198,33 @@ class WelcomeController extends Controller
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                    $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id','!=', 3)->get();
 
             $get_paid_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id', 3)->get();
 
-            $get_completed_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
-                ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
+      
+            $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+                ->join('projects', 'resp.project_id', 'projects.id')
                 ->where('resp.respondent_id', $id)
-                ->where('projects.closing_date', '<', Carbon::now())
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '!=', 0)
+                            ->orWhere('projects.status_id', '=', 3); 
+                })
                 ->orderBy('projects.id','DESC')
                 ->get();
-
-            $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
-            ->join('projects', 'resp.project_id', 'projects.id')
-            ->where('resp.respondent_id', $id)
-            ->where('resp.is_frontend_complete','!=',0)
-            ->orderBy('projects.id','DESC')
-            ->get();
-
-            //dd($get_completed_survey);
+           
 
             $currentYear=Carbon::now()->year;
 
@@ -590,20 +593,29 @@ class WelcomeController extends Controller
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $resp_id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                    $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id','!=', 3)->get();
 
             $get_paid_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $resp_id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id', 3)->get();
 
             $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('projects', 'resp.project_id', 'projects.id')
                 ->where('resp.respondent_id', $resp_id)
-                ->where('resp.is_frontend_complete','!=',0)
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '!=', 0)
+                            ->orWhere('projects.status_id', '=', 3); 
+                })
                 ->orderBy('projects.id','DESC')
                 ->get();
           
@@ -859,7 +871,7 @@ class WelcomeController extends Controller
 
                         $nestedData['options'] .= '<li class="list-group-item">
                                     <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                        <i class="far fa-trash-alt"></i> De-attach
+                                        <i class="far fa-trash-alt"></i> Detach
                                     </a>
                                 </li>';
                     } else {
@@ -1140,8 +1152,53 @@ class WelcomeController extends Controller
                 //dd($cashouts);
                 
                 $to_address = $cash->email;
-                $data = ['subject' => 'Cashout Created','type' => 'cash_create'];
-                Mail::to($to_address)->send(new WelcomeEmail($data));
+                $resp_name = $cash->name;
+                $points = $cash->amount;
+
+                if($cash->type_id==1){
+                    
+                    $req_type = 'EFT';
+
+                }else if($cash->type_id==1){
+                    
+                    $req_type = 'Data';
+
+                }else if($cash->type_id==1){
+                    
+                    $req_type = 'Airtime';
+
+                }else if($cash->type_id==1){
+                    
+                    $req_type = 'Donation';
+
+                }else{
+                    
+                    $req_type = '';
+                }
+                
+                // $data = ['subject' => 'Cashout Created','type' => 'cash_create'];
+                // Mail::to($to_address)->send(new WelcomeEmail($data));
+
+                // mail starts
+
+                $dynamicData = [
+                    'points' => $points,
+                    'date_requested' => date('d-m-Y'),
+                    'first_name' => $resp_name,
+                    'rand_value' => 'R ' . ($points / 10),
+                    'payment_method' => strtoupper($req_type)
+                ];
+
+                $sendgrid = new SendGridService();
+                $sendgrid->setFrom();
+                $sendgrid->setDynamicData($dynamicData);
+                $sendgrid->setSubject('New Cashout Created');
+                $sendgrid->setToEmail($to_address, $resp_name);
+                $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
+                $sendgrid->send();
+
+                return response()->json(['message' => 'Cashout created successfully'], 200);
+
             }
         }
     }
@@ -1655,6 +1712,133 @@ class WelcomeController extends Controller
 
         return response()->json(['repsonse' => $repsonse], 200);
     }
+
+
+    public function update_out(Request $request)
+{
+    $resp_id = Session::get('resp_id');
+
+    // Check if the respondent ID exists in the session
+    if (!$resp_id) {
+        return redirect()->back()->with('error', 'Respondent ID not found in session.');
+    }
+
+    try {
+        // Find the respondent
+        $respondent = Respondents::find($resp_id);
+
+        // Check if the respondent exists
+        if (!$respondent) {
+            return redirect()->back()->with('error', 'Respondent not found.');
+        }
+
+        // Update the opted status
+        $respondent->opted_status = 1;
+        $respondent->save();
+
+        return redirect()->back()->with('success', 'Opted status updated successfully.');
+    } catch (\Exception $e) {
+        // Log the exception or handle it as needed
+        \Log::error('Failed to update opted status: ' . $e->getMessage());
+
+        return redirect()->back()->with('error', 'An error occurred while updating the opted status. Please try again.');
+    }
+}
+
+public function respondent_mobile_check(Request $request)
+{
+    // Retrieve the mobile number from the request
+    $mobileNumber = '27' . $request->input('basic.mobile_number'); // Assuming mobile numbers start with '27'
+
+    // Remove all non-numeric characters (leaving only digits)
+    $onlyNumbers = preg_replace('/\D/', '', $mobileNumber);
+
+    // Extract the ID (if any)
+    $id = $request->input('id');
+
+    // Remove spaces from the mobile number
+    $mobile = preg_replace('/\s+/', '', $mobileNumber);  // Remove all spaces
+
+    // Check if mobile number is provided
+    if (empty($mobile)) {
+        return response()->json(['valid' => false, 'message' => 'Mobile number is required.']);
+    }
+
+    // Check if the email ID is provided and validate it
+    $email = $request->input('email');  // Assuming the email is in the request
+
+    // If email is provided, check if it already exists in the database
+    if ($email) {
+        $emailExists = DB::table('respondents')->where('email', $email);
+        
+        if ($id) {
+            // If ID exists, exclude the current respondent from the check
+            $emailExists->where('id', '!=', $id);
+        }
+
+        $emailExists = $emailExists->exists();
+
+        if ($emailExists) {
+            return response()->json(['valid' => false, 'message' => 'Email address already exists.']);
+        }
+    }
+
+    // Check if the mobile number already exists (similar to email check)
+    $mobileExists = DB::table('respondents')->where('mobile', $mobile);
+    
+    if ($id) {
+        // If ID exists, exclude the current respondent from the check
+        $mobileExists->where('id', '!=', $id);
+    }
+
+    $mobileExists = $mobileExists->exists();
+
+    if ($mobileExists) {
+        return response()->json(['valid' => false, 'message' => 'Mobile number already exists.']);
+    }
+
+    // If neither mobile nor email exists, return valid
+    return response()->json(['valid' => true]);
+}
+
+
+public function respondent_whatsap_check(Request $request)
+{
+
+    $mobileNumber = '27' . $request->input('basic.whatsapp_number'); // Assuming mobile numbers start with '27'
+    
+    // Remove all non-numeric characters (leaving only digits)
+    $onlyNumbers = preg_replace('/\D/', '', $mobileNumber);
+    
+    // Check if the length of numeric characters is less than 9
+    if (strlen($onlyNumbers) < 9) {
+        return response()->json(['valid' => false, 'message' => 'Invalid whatsapp number format.'], 400);
+    }
+
+    // Extract the ID and clean up the mobile number
+    $id = $request->input('id');
+    $mobile = preg_replace('/\s+/', '', $mobileNumber);  // Remove all spaces
+
+    // If no mobile number is provided, consider it valid (you can adjust this depending on your requirements)
+    if (empty($mobile)) {
+        return response()->json(['valid' => true]); 
+    }
+
+    // Build the query to check if the mobile number exists
+    $query = DB::table('respondents')
+        ->where('whatsapp', $mobile);
+
+    if ($id) {
+        // Exclude current respondent if ID is provided
+        $query->where('id', '!=', $id);
+    }
+
+    // Check if the mobile number exists
+    $exists = $query->exists();
+
+    // Return JSON response
+    return response()->json(['valid' => !$exists]); // Return 'valid' true if it does not exist
+}
     
 
 }
