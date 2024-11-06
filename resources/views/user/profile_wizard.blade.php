@@ -1135,7 +1135,10 @@
                                 return $('input[name="basic[mobile_number]"]').val().replace(
                                     /[\s_]+/g, ''); // Remove spaces and underscores
                             },
-                            form_name: "profile_wizard_form"
+                            form_name: "profile_wizard_form",
+                            id: function() {
+                                return '{{ $pid }}'; // Ensure this variable is properly rendered in the template
+                            },
                         },
                         dataFilter: function(response) {
                             var json = JSON.parse(response);
@@ -1157,7 +1160,10 @@
                                 return $('input[name="basic[whatsapp_number]"]').val().replace(
                                     /[\s_]+/g, ''); // Remove spaces and underscores
                             },
-                            form_name: "profile_wizard_form"
+                            form_name: "profile_wizard_form",
+                            id: function() {
+                                return '{{ $pid }}'; // Ensure this variable is properly rendered in the template
+                            },
                         },
                         dataFilter: function(response) {
                             var json = JSON.parse(response);
