@@ -1672,11 +1672,11 @@ class ExportController extends Controller
                     $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
-                    $sheet->setCellValue('H' . $rows, $all_data->total_complete_cashout);
+                    $sheet->setCellValue('H' . $rows, $all_data->total_complete_cashout/10);
                     $sheet->setCellValue('I' . $rows, ($get_incentive > 0) ? $get_incentive/10 : 0);
                     $sheet->setCellValue('J' . $rows, $all_data->failed);
                     $sheet->setCellValue('K' . $rows, $all_data->pending);
-                    $sheet->setCellValue('L' . $rows, $all_data->declined);
+                    $sheet->setCellValue('L' . $rows, $all_data->declined/10);
                     $sheet->setCellValue('M' . $rows, $all_data->complete);
                     $sheet->setCellValue('N' . $rows, ($get_incentive_owed > 0) ? $get_incentive_owed/10 : 0);
                     $get_project = Projects::select('projects.id','projects.name')->join('project_respondent as resp','projects.id','resp.project_id')
