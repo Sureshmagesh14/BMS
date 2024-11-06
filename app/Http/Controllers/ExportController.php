@@ -251,14 +251,13 @@ class ExportController extends Controller
                         $last_name = $basic['last_name'] ?? '-';
                         $email = $basic['email'] ?? '-';
                         $dob = $basic['date_of_birth'] ?? '-';
-                        $age = '-';
-
-                        $get_resp = Respondents::select('date_of_birth')->where('id', $id)->first();
-
-                        if($get_resp != null){
-                            if ($get_resp && !empty($get_resp->date_of_birth)) {
+                        $age = ''; // Set initial age to empty
+                        
+                        $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                        if ($get_resp != null) {
+                            if (!empty($get_resp->date_of_birth)) {
                                 $dob = $get_resp->date_of_birth;
-
+                        
                                 $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
                                 if ($dobDate) {
                                     $now = new DateTime();
@@ -267,16 +266,13 @@ class ExportController extends Controller
                             } else {
                                 $dob = ''; // Handle the case where there's no date of birth found
                             }
-                        }
-                        else{
+                        } else {
                             if (empty($dob) || $dob === '0000-00-00') {
                                 $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
-                                
                                 if ($dobDate) {
                                     $now = new DateTime();
                                     $age = $now->diff($dobDate)->y; // Get the difference in years
-                                }
-                                else{
+                                } else {
                                     $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
                                     if ($dobDate) {
                                         $now = new DateTime();
@@ -284,6 +280,11 @@ class ExportController extends Controller
                                     }
                                 }
                             }
+                        }
+                        
+                        // Ensure age is empty if dob is not set or invalid
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $age = ''; // Set age to empty if date of birth is empty or invalid
                         }
                     
                         // Set cell values
@@ -391,13 +392,13 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
                         $dob = $basic->date_of_birth ?? '';
-                        $age = '-';
+                        $age = ''; // Set initial age to empty
                         
                         $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
-                        if($get_resp != null){
-                            if ($get_resp && !empty($get_resp->date_of_birth)) {
+                        if ($get_resp != null) {
+                            if (!empty($get_resp->date_of_birth)) {
                                 $dob = $get_resp->date_of_birth;
-
+                        
                                 $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
                                 if ($dobDate) {
                                     $now = new DateTime();
@@ -406,16 +407,13 @@ class ExportController extends Controller
                             } else {
                                 $dob = ''; // Handle the case where there's no date of birth found
                             }
-                        }
-                        else{
+                        } else {
                             if (empty($dob) || $dob === '0000-00-00') {
                                 $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
-                                
                                 if ($dobDate) {
                                     $now = new DateTime();
                                     $age = $now->diff($dobDate)->y; // Get the difference in years
-                                }
-                                else{
+                                } else {
                                     $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
                                     if ($dobDate) {
                                         $now = new DateTime();
@@ -423,6 +421,11 @@ class ExportController extends Controller
                                     }
                                 }
                             }
+                        }
+                        
+                        // Ensure age is empty if dob is not set or invalid
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $age = ''; // Set age to empty if date of birth is empty or invalid
                         }
                         
                       
@@ -783,13 +786,13 @@ class ExportController extends Controller
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
                     
                         $dob = $basic->date_of_birth ?? '';
-                        $age = '-';
+                        $age = ''; // Set initial age to empty
                         
                         $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
-                        if($get_resp != null){
-                            if ($get_resp && !empty($get_resp->date_of_birth)) {
+                        if ($get_resp != null) {
+                            if (!empty($get_resp->date_of_birth)) {
                                 $dob = $get_resp->date_of_birth;
-
+                        
                                 $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
                                 if ($dobDate) {
                                     $now = new DateTime();
@@ -798,16 +801,13 @@ class ExportController extends Controller
                             } else {
                                 $dob = ''; // Handle the case where there's no date of birth found
                             }
-                        }
-                        else{
+                        } else {
                             if (empty($dob) || $dob === '0000-00-00') {
                                 $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
-                                
                                 if ($dobDate) {
                                     $now = new DateTime();
                                     $age = $now->diff($dobDate)->y; // Get the difference in years
-                                }
-                                else{
+                                } else {
                                     $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
                                     if ($dobDate) {
                                         $now = new DateTime();
@@ -815,6 +815,11 @@ class ExportController extends Controller
                                     }
                                 }
                             }
+                        }
+                        
+                        // Ensure age is empty if dob is not set or invalid
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $age = ''; // Set age to empty if date of birth is empty or invalid
                         }
                         
                    
@@ -1946,11 +1951,43 @@ class ExportController extends Controller
                     $sheet->setCellValue('D' . $rows, $mobile_number);
                     $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $basic->email ?? '');
-
                     $dob = $basic->date_of_birth ?? '';
-                    $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
-                            ? (date('Y') - date('Y', strtotime($dob))) 
-                            : '-';
+                    $age = ''; // Set initial age to empty
+                    
+                    $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                    if ($get_resp != null) {
+                        if (!empty($get_resp->date_of_birth)) {
+                            $dob = $get_resp->date_of_birth;
+                    
+                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                            if ($dobDate) {
+                                $now = new DateTime();
+                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            }
+                        } else {
+                            $dob = ''; // Handle the case where there's no date of birth found
+                        }
+                    } else {
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                            if ($dobDate) {
+                                $now = new DateTime();
+                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            } else {
+                                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Ensure age is empty if dob is not set or invalid
+                    if (empty($dob) || $dob === '0000-00-00') {
+                        $age = ''; // Set age to empty if date of birth is empty or invalid
+                    }
+                  
 
                     $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
                     $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
@@ -1960,7 +1997,7 @@ class ExportController extends Controller
                     $personal_income = ($p_income != null) ? $p_income->income : '-';
                     $household_income = ($h_income != null) ? $h_income->income : '-';
 
-                    $sheet->setCellValue('G' . $rows, $year);
+                    $sheet->setCellValue('G' . $rows, $age);
                     $relationship_status = ucfirst($essential->relationship_status ?? '');
                     $sheet->setCellValue('H' . $rows, $relationship_status);
                     // Define the mapping of ethnic group codes to names
@@ -2830,14 +2867,14 @@ class ExportController extends Controller
                            
                             
                             $email = $basic->email ?? '';
-                            $age = '-';
-
+                            $dob = $basic->date_of_birth ?? '';
+                            $age = ''; // Set initial age to empty
+                            
                             $get_resp = Respondents::select('date_of_birth')->where('id', $userID)->first();
-    
-                            if($get_resp != null){
-                                if ($get_resp && !empty($get_resp->date_of_birth)) {
+                            if ($get_resp != null) {
+                                if (!empty($get_resp->date_of_birth)) {
                                     $dob = $get_resp->date_of_birth;
-    
+                            
                                     $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
                                     if ($dobDate) {
                                         $now = new DateTime();
@@ -2846,16 +2883,13 @@ class ExportController extends Controller
                                 } else {
                                     $dob = ''; // Handle the case where there's no date of birth found
                                 }
-                            }
-                            else{
+                            } else {
                                 if (empty($dob) || $dob === '0000-00-00') {
                                     $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
-                                    
                                     if ($dobDate) {
                                         $now = new DateTime();
                                         $age = $now->diff($dobDate)->y; // Get the difference in years
-                                    }
-                                    else{
+                                    } else {
                                         $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
                                         if ($dobDate) {
                                             $now = new DateTime();
@@ -2864,6 +2898,12 @@ class ExportController extends Controller
                                     }
                                 }
                             }
+                            
+                            // Ensure age is empty if dob is not set or invalid
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $age = ''; // Set age to empty if date of birth is empty or invalid
+                            }
+                  
 
                             $employment_status = null;
 
