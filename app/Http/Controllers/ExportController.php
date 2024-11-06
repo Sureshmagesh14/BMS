@@ -2605,7 +2605,11 @@ class ExportController extends Controller
                             $row = $data[$i];
                             $rearrangedRow = [];
                             foreach ($header as $key) {
-                                $rearrangedRow[] = $row[$key] ?? '';
+                                if (isset($row[$key])) {
+                                    $rearrangedRow[] = $row[$key];
+                                } else {
+                                    $rearrangedRow[] = '';
+                                }
                             }
                             $values[] = $rearrangedRow;
                         }
@@ -2614,97 +2618,107 @@ class ExportController extends Controller
                     }
                     foreach ($survey_IDs as $survey_id) {
                         // Custom array data to export
-                        $survey = Survey::where(['id' => $survey_id])->first();
-                    
-                        $question = Questions::where(['survey_id' => $survey_id])->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you', 'rankorder', 'multi_choice'])->get();
-                        $matrix_qus = Questions::where(['qus_type' => 'matrix_qus', 'survey_id' => $survey_id])->get();
-                        $multi_choice_qus = Questions::where(['qus_type' => 'multi_choice', 'survey_id' => $survey_id])->get();
-                        $rankorder_qus = Questions::where(['qus_type' => 'rankorder', 'survey_id' => $survey_id])->get();
-                
-                        $cols = ["Respondent Name", "Mobile","Whatsapp","Email","Age","Gender","Highest Education Level","Employment Status","Industry my company","Personal Income","Personal LSM","Household Income","Household LSM","Relationship Status","Ethnic Group","Province","Metropolitan Area","Date","Device ID", "Device Name", "Completion Status", "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"];
-
-                        foreach ($question as $qus) {
-                            array_push($cols, $qus->question_name);
-                        }
-                        foreach ($multi_choice_qus as $qus) {
-                            $qus_ans = json_decode($qus->qus_ans);
-                            $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                            foreach ($choices as $qus1) {
-                                array_push($cols, $qus->question_name . '_' . $qus1);
-                            }
-                        }
-                        foreach ($rankorder_qus as $qus) {
-                            $qus_ans = json_decode($qus->qus_ans);
-                            $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                            foreach ($choices as $qus1) {
-                                array_push($cols, $qus->question_name . '_' . $qus1);
-                            }
-                        }
-                        foreach ($matrix_qus as $qus) {
-                            $qus = json_decode($qus->qus_ans);
-                            array_push($cols, $qus->question_name);
-                            $exiting_qus_matrix = $qus != null ? explode(",", $qus->matrix_qus) : [];
-                            foreach ($exiting_qus_matrix as $qus1) {
-                                array_push($cols, $qus1);
-                            }
-                        }
-                
-                    
-                
-                        // Get Survey Data
-                        $question = Questions::where(['survey_id' => $survey_id])->whereNotIn('qus_type', ['welcome_page', 'thank_you'])->get();
-                        
-                        if($methods=='respondents_type'){
-                            $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id,'response_user_id'=>$user_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
-                        }else{
-                            $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
-                        }
-                        $finalResult = [$cols];
-
-                        foreach ($surveyResponseUsers as $userID) {
-                            $user = Respondents::where('id', $userID)->first();
-                            $fname = $user->name ?? '';
-                            $surname = $user->surname ?? '';
-                            $resp_name = $fname.' '.$surname;
-                            $starttime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "asc")->first();
-                            $endtime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
-                            $startedAt = $starttime->created_at;
-                            $endedAt = $endtime->created_at;
-                            $time = $endedAt->diffInSeconds($startedAt);
-                            $responseinfo = $startedAt->toDayDateTimeString() . ' | ' . $time . ' seconds';
-                            $other_details = json_decode($endtime->other_details);
-                            $deviceID = $other_details->device_id ?? '';
-                            $device_name = $other_details->device_name ?? '';
-                            $browser = $other_details->browser ?? '';
-                            $os = $other_details->os ?? '';
-                            $device_type = '';
-                            $lang_name = $other_details->lang_name ?? '';
-                            $long = $other_details->long ?? '';
-                            $lat = $other_details->lat ?? '';
-                            $location = $other_details->location ?? '';
-                            $ip_address = $other_details->ip_address ?? '';
-                            $lang_code = $other_details->lang_code ?? '';
-                            $name = $resp_name ?? 'Anonymous';
-                
-                            $completedRes = SurveyResponse::where(['response_user_id' => $userID, 'survey_id' => $survey_id, 'answer' => 'thankyou_submitted'])->first();
-
-                            $profile = RespondentProfile::where('respondent_id',$userID)->first();
-                            if(isset($profile->basic_details)){
-                                $basic = json_decode($profile->basic_details);
-                            }else{
-                                $basic = array();
-                            }
+                       $survey = Survey::where(['id'=>$survey_id])->first();
+                       $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you','rankorder','multi_choice'])->get();
+                       $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
+                       $multi_choice_qus=Questions::where(['qus_type'=>'multi_choice','survey_id'=>$survey_id])->get();
+                       $rankorder_qus=Questions::where(['qus_type'=>'rankorder','survey_id'=>$survey_id])->get();
+           
+                       $cols = [];
+                       foreach($question as $qus){
+                           array_push($cols,$qus->question_name);
+                       }
+                       foreach($multi_choice_qus as $qus){
+                           $qus_ans = json_decode($qus->qus_ans); 
+                           $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                           foreach($choices as $qus1){
+                               array_push($cols,$qus->question_name.'_'.$qus1);
+                           }
+                       }
+                       foreach($rankorder_qus as $qus){
+                           $qus_ans = json_decode($qus->qus_ans); 
+                           // array_push($cols,$qus->question_name);
+                           $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                           foreach($choices as $qus1){
+                               array_push($cols,$qus->question_name.'_'.$qus1);
+                           }
+                       }
+                       foreach($matrix_qus as $qus){
+                           $qus = json_decode($qus->qus_ans); 
+                           array_push($cols,$qus->question_name);
+                           $exiting_qus_matrix= $qus!=null ? explode(",",$qus->matrix_qus): []; $i=0;
+                           foreach($exiting_qus_matrix as $qus1){
+                               array_push($cols,$qus1);
+                           }
+                       }
+           
+                       // Get Survey Data 
+                       $question = Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+                               
+                       $surveyResponseUsers =  SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+                       array_push($cols,"Respondent Name","Mobile","Whatsapp","Email","Age","Gender","Highest Education Level","Employment Status","Industry my company","Personal Income","Personal LSM","Household Income","Household LSM","Relationship Status","Ethnic Group","Province","Metropolitan Area", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
+                       $finalResult =[$cols];
+                       foreach($surveyResponseUsers as $userID){
+                           $user = Respondents::where('id', '=' , $userID)->first();
+                           $starttime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "asc")->first();
+                           $endtime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
+                           $startedAt = $starttime->created_at;
+                           $endedAt = $endtime->created_at;
+                           $time = $endedAt->diffInSeconds($startedAt); 
+                           $responseinfo = $startedAt->toDayDateTimeString().' | '.$time.' seconds';
+                           $other_details = json_decode($endtime->other_details);
+                           $deviceID = '';
+                           $device_name ='';
+                           $browser =''; $os ='';$device_type='';
+                           $lang_name =''; $long='';$lat =''; $location=''; $ip_address =''; $lang_code =''; $lang_name ='';
+           
+                           if(isset($other_details->device_id)){
+                               $deviceID = $other_details->device_id;
+                           }
+                           if(isset($other_details->device_name)){
+                               $device_name = $other_details->device_name;
+                           }
+                           if(isset($other_details->browser)){
+                               $browser = $other_details->browser;
+                           }
+                           if(isset($other_details->os)){
+                               $os = $other_details->os;
+                           }
+                           if(isset($other_details->lang_name)){
+                               $lang_name = $other_details->lang_name;
+                           }
+                           if(isset($other_details->lang_code)){
+                               $lang_code = $other_details->lang_code;
+                           }
+                           if(isset($other_details->ip_address)){
+                               $ip_address = $other_details->ip_address;
+                           }
+                           if(isset($other_details->location)){
+                               $location = $other_details->location;
+                           }
+                           if(isset($other_details->lat)){
+                               $lat = $other_details->lat;
+                           }
+                           if(isset($other_details->long)){
+                               $long = $other_details->long;
+                           }
+                           if(isset($other_details->lang_name)){
+                               $lang_name = $other_details->lang_name;
+                           }
+                           $name = 'Anonymous';
+                           if(isset($user->name)){
+                               $name = $user->name;
+                           }
+           
+                           $completedRes = SurveyResponse::where(['response_user_id'=>$userID ,'survey_id'=>$survey_id,'answer'=>'thankyou_submitted'])->first();
+           
+                           if($completedRes){
+                               $completion_status = 'Completed';
+                           }else{
                             
-                            if(isset($profile->essential_details)){
-                                $essential = json_decode($profile->essential_details);
-                            }else{
-                                $essential = array();
-                            }
-                            
-                            //dd($essential);
-
-                            $completion_status = $completedRes ? 'Completed' : 'Partially Completed';
-                            
+                                $completion_status = 'Partially Completed';                              
+                           }
+                            //    Essential Details
                             $mobile_number = '-';
                             if (!empty($basic->mobile_number)) {
                                 $m_number = preg_replace('/\s+/', '',$basic->mobile_number);
@@ -2719,11 +2733,10 @@ class ExportController extends Controller
                                     $mobile_number = $m_number;
                                 }
                             }
-                           
 
                             $whatsapp_number = '-';
                             if (!empty($basic->whatsapp_number)) {
-                              
+                            
                                 $w_number = preg_replace('/\s+/', '',$basic->whatsapp_number);
                                 $length = strlen($w_number);
                                 if (strlen($w_number) == 9) {
@@ -2737,7 +2750,7 @@ class ExportController extends Controller
                                     $whatsapp_number = $w_number;
                                 }
                             }
-                           
+                        
                             
                             $email = $basic->email ?? '';
                             $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
@@ -2798,7 +2811,7 @@ class ExportController extends Controller
                                 $ethnic_group = '';
                             }
 
-                         
+                        
                             // Initialize the gender variable with a default value
                             $gender = '';
 
@@ -2807,7 +2820,7 @@ class ExportController extends Controller
                                 // Set the gender value, ensuring it's properly capitalized
                                 $gender = ucfirst($essential->gender);
                             }
-                           
+                        
                             $education_level = '';
 
                             // Check if $essential is not null and has the education_level property
@@ -2853,183 +2866,191 @@ class ExportController extends Controller
 
                             $get_state = ($state != null) ? $state->state : '-';
                             $get_district = ($district != null) ? $district->district : '-';
-                            
-                            $result = ['Respondent Name' => $name,'Mobile'=>$mobile_number, 'Whatsapp'=>$whatsapp_number, 'Email'=>$email, 'Age'=>$year,'Gender'=>$gender,'Highest Education Level'=>$education_level,'Employment Status'=>$employment_status,'Industry my company'=>$industry_my_company,'Personal Income'=>$personal_income,'Personal LSM'=>$personal_lsm,'Household Income'=>$household_income,'Household LSM'=>$household_lsm,'Relationship Status'=>$relationship_status,'Ethnic Group'=>$ethnic_group,'Province'=>$get_state,'Metropolitan Area'=>$get_district, 'Date' => $responseinfo, 'Device ID' => $deviceID, 'Device Name' => $device_name, 'Completion Status' => $completion_status, 'Browser' => $browser, 'OS' => $os, 'Device Type' => $device_type, 'Long' => $long, 'Lat' => $lat, 'Location' => $location, 'IP Address' => $ip_address, 'Language Code' => $lang_code, 'Language Name' => $lang_name];
-                            
-                            //dd($result);
-                            
-                            foreach ($question as $qus) {
-                                $respone = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
-                                $output = $respone ? ($respone->skip == 'yes' ? 'Skip' : $respone->answer) : '-';
-                
-                                if ($qus->qus_type == 'likert') {
-                                    $qusvalue = json_decode($qus->qus_ans);
-                                    $left_label = $qusvalue->left_label ?? 'Least Likely';
-                                    $middle_label = $qusvalue->middle_label ?? 'Neutral';
-                                    $right_label = $qusvalue->right_label ?? 'Most Likely';
-                                    $likert_range = $qusvalue->likert_range ?? 10;
-                                    $output = intval($output);
-                                    $likert_label = $output;
-                
-                                    if ($likert_range <= 4 && $output <= 4) {
-                                        $likert_label = $output <= 2 ? $left_label : $right_label;
-                                    } else if ($likert_range >= 5 && $output >= 5) {
-                                        if ($likert_range == 5) {
-                                            if ($output <= 2) {
-                                                $likert_label = $left_label;
-                                            } else if ($output == 3) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        } else if ($likert_range == 6) {
-                                            if ($output <= 2) {
-                                                $likert_label = $left_label;
-                                            } else if ($output <= 4) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        } else if ($likert_range == 7) {
-                                            if ($output <= 2) {
-                                                $likert_label = $left_label;
-                                            } else if ($output <= 5) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        } else if ($likert_range == 8) {
-                                            if ($output <= 3) {
-                                                $likert_label = $left_label;
-                                            } else if ($output <= 5) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        } else if ($likert_range == 9) {
-                                            if ($output <= 3) {
-                                                $likert_label = $left_label;
-                                            } else if ($output <= 6) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        } else if ($likert_range == 10) {
-                                            if ($output <= 3) {
-                                                $likert_label = $left_label;
-                                            } else if ($output <= 7) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        }
-                                    }
-                
-                                    $result[$qus->question_name] = $likert_label;
-                                } else if ($qus->qus_type == 'matrix_qus') {
-                                    $result[$qus->question_name] = '';
-                                    if ($output == 'Skip') {
-                                        foreach (json_decode($qus->qus_ans) as $matrix_qus) {
-                                            $result[$matrix_qus] = 'Skip';
-                                        }
-                                    } else {
-                                        $martirx_qus = json_decode($qus->qus_ans);
-                                        $matrixQus = SurveyResponse::where(['survey_id' => $survey_id,  'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
-                                        $matrixAnswers = $matrixQus ? json_decode($matrixQus->answer, true) : [];
-                                        foreach ($martirx_qus as $index => $matrix_qus) {
-                                            $answerFound = false;
-                                            foreach ($matrixAnswers as $answer) {
-                                                if (trim($answer['qus']) === trim($matrix_qus)) {
-                                                    $result[$matrix_qus] = $answer['ans']; 
-                                                    $answerFound = true;
-                                                    break; 
-                                                }
-                                            }
-                                            if (!$answerFound) {
-                                                $result[$matrix_qus] = '-'; 
-                                            }
-                                        }
-
-                                        // foreach (json_decode($qus->qus_ans) as $matrix_qus) {
-                                        //     $matrixQus = SurveyResponse::where(['survey_id' => $survey_id,  'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
-
-                                        //     $output_matrix_qus = $matrixQus ? $matrixQus->answer : '-';
-                                        //     $result[$matrix_qus] = $output_matrix_qus;
-                                        // }
-                                    }
-                                } else {
-                                    $result[$qus->question_name] = $output;
-                                }
-                            }
-                
-                            foreach ($multi_choice_qus as $qus) {
-                                $qus_ans = json_decode($qus->qus_ans);
-                                $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                                $multichoicesResult = [];
-                                foreach ($choices as $choice) {
-                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
-                                    $multichoicesResult[$qus->question_name . '_' . $choice] = $answer ? 'Yes' : 'No';
-                                }
-                                $result = array_merge($result, $multichoicesResult);
-                            }
-                
-                            foreach ($rankorder_qus as $qus) {
-                                $qus_ans = json_decode($qus->qus_ans);
-                                $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                                $rankorderResult = [];
-                                foreach ($choices as $choice) {
-                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
-                                    $rankorderResult[$qus->question_name . '_' . $choice] = $answer ? $answer->rank_ans : 'No';
-                                }
-                                $result = array_merge($result, $rankorderResult);
-                            }
-                
-                            $finalResult[] = $result;
-                        }
-                
-                        $finalResult = getValuesUser($finalResult);
-                       // dd($finalResult);
-
-                        // Loop through the array and rearrange the elements
-                        foreach ($finalResult as &$subArray) {
-                            // Extract the values of keys 3, 4, 5, and 6
-                            $keysToMove = [17,18,19,20,21,22,23,24,25,26,27,28,29];
-                            $movedValues = [];
-                            
-                            foreach ($keysToMove as $key) {
-                                $movedValues[] = $subArray[$key];
-                                unset($subArray[$key]);
-                            }
-                            
-                            // Append the extracted values to the end of the sub-array
-                            $subArray = array_merge($subArray, $movedValues);
-                        }
-
-                        unset($subArray); // Unset reference
-
-                        // Final array
-                        //dd($finalResult);
-                        
-                        
-                        if($survey){
-                            $survey_name = $survey->title;
-                        }else{
-                            $survey_name = "Survey-".$survey_id;
-                        }
-                        $survey_name = $this->sanitizeSheetName($survey_name);
-
-                        $sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $survey_name);
-                        $spreadsheet->addSheet($sheet, 0);
-                        $spreadsheet->setActiveSheetIndex(0);
-                        $sheet = $spreadsheet->getActiveSheet();
-                
-                        // Export Data to Excel
-                        $sheet->fromArray($finalResult, null, 'A1', false, false);
-                
-                        foreach (range('A', $sheet->getHighestDataColumn()) as $col) {
-                            $sheet->getColumnDimension($col)->setAutoSize(true);
-                        }
-                    }
+                            //    Essential Details Ends
+                           $result =[];
+                           foreach($question as $qus){
+                               $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
+                               if($respone){
+                                   if($respone->skip == 'yes'){
+                                       $output = 'Skip';
+                                   }else{
+                                       $output = $respone->answer;
+                                   }
+                               }else{
+                                   $output = '-';
+                               }
+                               if($qus->qus_type == 'likert'){
+                                   $qusvalue = json_decode($qus->qus_ans);
+                                   $left_label = 'Least Likely';
+                                   $middle_label = 'Netural';
+                                   $right_label = 'Most Likely';
+                                   $likert_range = 10;
+                                   if(isset($qusvalue->right_label)){
+                                       $right_label = $qusvalue->right_label;
+                                   }
+                                   if(isset($qusvalue->middle_label)){
+                                       $middle_label = $qusvalue->middle_label;
+                                   }
+                                   if(isset($qusvalue->likert_range)){
+                                       $likert_range = $qusvalue->likert_range;
+                                   }
+                                   if(isset($qusvalue->left_label)){
+                                       $left_label = $qusvalue->left_label;
+                                   }
+                                   $output = intval($output);
+                                   $likert_label = $output;
+                                   if($likert_range <= 4 && $output <= 4){
+                                       if($output == 1 || $output == 2){
+                                           $likert_label = $left_label;
+                                       }else{
+                                           $likert_label = $right_label;
+                                       }
+                                   }else if($likert_range >= 5 && $output >=5){
+                                       if($likert_range == 5){
+                                           if($output == 1 || $output == 2){
+                                               $likert_label = $left_label;
+                                           }else if($output == 3){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 4 || $output == 5){
+                                               $likert_label = $right_label;
+                                           }
+                                       }else if($likert_range == 6){
+                                           if($output == 1 || $output == 2){
+                                               $likert_label = $left_label;
+                                           }else if($output == 3 || $output == 4){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 5 || $output == 6){
+                                               $likert_label = $right_label;
+                                           }
+                                       }else if($likert_range == 7){
+                                           if($output == 1 || $output == 2){
+                                               $likert_label = $left_label;
+                                           }else if($output == 3 || $output == 4 || $output == 5){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 6 || $output == 7){
+                                               $likert_label = $right_label;
+                                           }
+                                       }else if($likert_range == 8){
+                                           if($output == 1 || $output == 2 || $output == 3){
+                                               $likert_label = $left_label;
+                                           }else if($output == 4 || $output == 5){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 6 || $output == 7 || $output == 8){
+                                               $likert_label = $right_label;
+                                           }
+                                       }else if($likert_range == 9){
+                                           if($output == 1 || $output == 2 || $output == 3){
+                                               $likert_label = $left_label;
+                                           }else if($output == 4 || $output == 5 || $output == 6){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 7 || $output == 8 || $output == 9){
+                                               $likert_label = $right_label;
+                                           }
+                                       }else if($likert_range == 10){
+                                           if($output == 1 || $output == 2 || $output == 3){
+                                               $likert_label = $left_label;
+                                           }else if($output == 4 || $output == 5 || $output == 6 || $output == 7){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 8 || $output == 9 || $output == 10){
+                                               $likert_label = $right_label;
+                                           }
+                                       }
+                                   }
+                                   $tempresult = [$qus->question_name => $likert_label];
+                                   $result[$qus->question_name]= $likert_label;
+           
+                               }
+                               else if($qus->qus_type == 'matrix_qus'){
+                                   $result[$qus->question_name]=''; 
+                                   if($output=='Skip'){
+                                       $qusvalue = json_decode($qus->qus_ans); 
+                                       $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
+                                       foreach($exiting_qus_matrix as $op){
+                                           $result[$op]='Skip'; 
+                                       }
+                                   }else{
+                                       $output = json_decode($output);
+                                       if($output!=null)
+                                       foreach($output as $op){
+                                           $tempresult = [$op->qus =>$op->ans];
+                                           $result[$op->qus]=$op->ans; 
+                                       }
+                                   }
+                                   
+                               }else if($qus->qus_type == 'rankorder'){
+                                   // $result[$qus->question_name]=''; 
+                                   $qus_ans = json_decode($qus->qus_ans); 
+                                   $output = json_decode($output,true);
+                                   $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                                   foreach($choices as $qus1){
+                                       // echo "<pre>";
+                                       // print_r($qus1);
+                                       if($output!=null){
+                                           foreach($output as $op){
+                                               if($qus1 == $op['id']){
+                                                   $arrId= $qus->question_name.'_'.$qus1;
+                                                   $result[$arrId]=$op['val'];
+                                               }
+                                           }
+                                       }
+                                   
+                                   }
+                               
+                               }else if($qus->qus_type == 'multi_choice'){
+                                   // $result[$qus->question_name]=''; 
+                                   $qus_ans = json_decode($qus->qus_ans); 
+                                   $output = explode(",", $output);
+                                   $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                                   foreach($choices as $qus1){
+                                       if($output!=null){
+                                           foreach($output as $op){
+                                               if($qus1 == $op){
+                                                   $arrId= $qus->question_name.'_'.$qus1;
+                                                   $result[$arrId]=$op;
+                                               }
+                                           }
+                                       }
+                                   }
+                               
+                               }else if($qus->qus_type == 'photo_capture'){
+                                   $img = $output;
+                                   $tempresult = [$qus->question_name =>$img];
+                                   $result[$qus->question_name]=$img;
+                               }else if($qus->qus_type=='upload'){
+                                   $output1=asset('uploads/survey/'.$output);
+                                   $img = $output1;
+                                   $tempresult = [$qus->question_name =>$img];
+                                   $result[$qus->question_name]=$img;
+                               }else{
+                                   $tempresult = [$qus->question_name =>$output];
+                                   $result[$qus->question_name]=$output;
+                               }
+                           }
+                           $result = array_merge($result,['Respondent Name'=>$name,'Mobile'=>$mobile_number, 'Whatsapp'=>$whatsapp_number, 'Email'=>$email, 'Age'=>$year,'Gender'=>$gender,'Highest Education Level'=>$education_level,'Employment Status'=>$employment_status,'Industry my company'=>$industry_my_company,'Personal Income'=>$personal_income,'Personal LSM'=>$personal_lsm,'Household Income'=>$household_income,'Household LSM'=>$household_lsm,'Relationship Status'=>$relationship_status,'Ethnic Group'=>$ethnic_group,'Province'=>$get_state,'Metropolitan Area'=>$get_district,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name]);
+                           array_push($finalResult,$result);
+                       }
+                   
+                       $data = getValuesUser($finalResult);
+                       if($survey){
+                           $survey_name = $survey->title;
+                       }else{
+                           $survey_name = "Survey-".$survey_id;
+                       }
+                       $survey_name = preg_replace('/[\\/*?:[\]]/', '', $survey_name);
+                       $survey_name = substr($survey_name, 0, 31);
+           
+                       $sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $survey_name);
+                       $spreadsheet->addSheet($sheet, 0);
+                       $spreadsheet->setActiveSheetIndex(0);
+                       $sheet = $spreadsheet->getActiveSheet();
+               
+                       // Export Data to Excel
+                       $sheet->fromArray($finalResult, null, 'A1', false, false);
+               
+                       foreach (range('A', $sheet->getHighestDataColumn()) as $col) {
+                           $sheet->getColumnDimension($col)->setAutoSize(true);
+                       }
+                   }
                 
                     $spreadsheet->removeSheetByIndex(count($spreadsheet->getSheetNames()) - 1);
                     
