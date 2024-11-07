@@ -35,6 +35,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+
 class SurveyController extends Controller
 {
     public function folder()
@@ -3466,7 +3467,7 @@ class SurveyController extends Controller
             }
         }else{
             $respondents->email = $request->input('email');
-            $respondents->password = "SurveyBMS@2024";
+            $respondents->password = Hash::make("SurveyBMS@2024");
             $respondents->type = "temporary";
             $respondents->save();
             $user = Respondents::find($respondents->id);
