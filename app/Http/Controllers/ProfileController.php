@@ -241,7 +241,7 @@ class ProfileController extends Controller
                 $percent3 =0;
             }
             // Default page value
-            $page = 1;
+            $page = 0;
 
             // Check if the section parameter is provided
             if ($request->section) {
