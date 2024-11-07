@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Excel;
 use Illuminate\Support\Facades\Storage;
 
+
 // Word Cloud 
 use Artesaos\SEOTools\Facades\SEOTools;
 // PDF Report
@@ -2562,7 +2563,7 @@ class SurveyController extends Controller
         
         $respondents->name = $request->input('name');
         $respondents->email = $request->input('email');
-        $respondents->password = "SurveyBMS@2024";
+        $respondents->password = Hash::make("SurveyBMS@2024");
         $respondents->type = "temporary";
         $respondents->save();
        
