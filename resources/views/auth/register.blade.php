@@ -333,7 +333,7 @@
 @include('user.layout.footer')
 
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 @if (count($errors) > 0)
     @foreach ($errors->all() as $message)
@@ -572,16 +572,24 @@
 
         var today = new Date();
 
+        // If the date of birth is greater than today, handle the situation
+        if (new Date(date_of_birth) > today) {
+            toastr.error('Date of Birth cannot be in the future.');
+           
+            document.getElementById('agecal').innerText = '';  // Clear previous results
+            return;  // Exit the function early
+        }
+
         var out;
 
-        out = diffDate(new Date(date_of_birth), new Date(today));
+        // Calculate age and other date differences
+        out = diffDate(new Date(date_of_birth), today);
         display(out);
 
         function diffDate(startDate, endDate) {
             var b = moment(startDate),
                 a = moment(endDate),
-                intervals1 = ['Years', 'Months', 'Days'],
-                intervals = ['Years'],
+                intervals = ['Years'],  // You can add 'Months' or 'Days' here if needed
                 out = {};
 
             for (var i = 0; i < intervals.length; i++) {
@@ -589,13 +597,14 @@
                 b.add(diff, intervals[i]);
                 out[intervals[i]] = diff;
             }
+
             return out;
         }
 
         function display(obj) {
             var str = '';
-            for (key in obj) {
-                str = str + obj[key] + ' ' + key + ' '
+            for (var key in obj) {
+                str = str + obj[key] + ' ' + key + ' ';
             }
             console.log("str", str);
             document.getElementById('agecal').innerText = str;
