@@ -1547,6 +1547,8 @@ class ExportController extends Controller
                     'respondents.whatsapp',
                     'cashouts.type_id',
                     'cashouts.created_at',
+                    DB::raw('COUNT(CASE WHEN cashouts.status_id = 3 THEN 1 END) as total_complete_count'),
+                    DB::raw('COUNT(CASE WHEN cashouts.status_id = 1 THEN 1 END) as total_pending_count'),
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 3 THEN cashouts.amount ELSE 0 END) as total_complete_cashout'), 
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 1 THEN cashouts.amount ELSE 0 END) as pending'),
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 4 THEN cashouts.amount ELSE 0 END) as declined'),
@@ -1672,13 +1674,13 @@ class ExportController extends Controller
                     $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
-                    $sheet->setCellValue('H' . $rows, $all_data->total_complete_cashout/10);
-                    $sheet->setCellValue('I' . $rows, ($get_incentive > 0) ? $get_incentive/10 : 0);
-                    $sheet->setCellValue('J' . $rows, $all_data->failed);
-                    $sheet->setCellValue('K' . $rows, $all_data->pending);
+                    $sheet->setCellValue('H' . $rows, $all_data->total_complete_count);
+                    $sheet->setCellValue('I' . $rows, $all_data->total_complete_cashout/10);
+                    $sheet->setCellValue('J' . $rows, $all_data->total_pending_count);
+                    $sheet->setCellValue('K' . $rows, $all_data->pending/10);
                     $sheet->setCellValue('L' . $rows, $all_data->declined/10);
-                    $sheet->setCellValue('M' . $rows, $all_data->complete);
-                    $sheet->setCellValue('N' . $rows, ($get_incentive_owed > 0) ? $get_incentive_owed/10 : 0);
+                    $sheet->setCellValue('M' . $rows, $all_data->total_complete_cashout/10);
+                    $sheet->setCellValue('N' . $rows, $all_data->pending/10);
                     $get_project = Projects::select('projects.id','projects.name')->join('project_respondent as resp','projects.id','resp.project_id')
                         ->where('resp.respondent_id',$all_data->resp_id)
                         ->groupBy('projects.id')
