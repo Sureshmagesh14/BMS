@@ -21,6 +21,7 @@ use App\Mail\WelcomeEmail;
 
 use App\Imports\RespondentsImport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Services\SendGridService;
 
 class ProjectsController extends Controller
 {
