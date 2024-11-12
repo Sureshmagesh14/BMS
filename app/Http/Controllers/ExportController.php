@@ -1555,6 +1555,7 @@ class ExportController extends Controller
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 0 THEN cashouts.amount ELSE 0 END) as failed')
                 )
                 ->leftJoin('cashouts', 'respondents.id', '=', 'cashouts.respondent_id')
+                ->whereNull('cashouts.deleted_at')
                 ->groupBy('respondents.id'); // Don't forget to group by respondent ID
     
                 
@@ -2919,6 +2920,22 @@ class ExportController extends Controller
                             }
                   
 
+                            $all_data = RespondentProfile::where('respondent_id', $userID)->first();
+
+                            //dd($all_data->basic_details);
+                            if ($all_data) {
+                                $basic = json_decode($all_data->basic_details);
+                                $essential = json_decode($all_data->essential_details);
+                            }
+
+                            $dob = $basic->date_of_birth ?? '';
+                            $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
+                            ? (date('Y') - date('Y', strtotime($dob))) 
+                            : '-';
+
+
+                            //dd($essential);
+                            
                             $employment_status = null;
 
                             if (isset($essential) && is_array($essential) && !empty($essential)) {
@@ -3281,5 +3298,5 @@ class ExportController extends Controller
     
         return $name;
     }
-    
+
 }
