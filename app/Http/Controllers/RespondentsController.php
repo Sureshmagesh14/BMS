@@ -282,7 +282,7 @@ class RespondentsController extends Controller
             $respondent->whatsapp = $whatsapp;
     
             // Update password only if provided
-            if ($request->has('password')) {
+            if ($request->has('password') && $request->input('password') !== null) {
                 $respondent->password = Hash::make($request->input('password'));
             }
     
@@ -658,7 +658,7 @@ class RespondentsController extends Controller
 
                 $opted_in = ($post->opted_in && $post->opted_in !== '0000-00-00 00:00:00') ? date("d-m-Y", strtotime($post->opted_in)) : '-';
                 $updated_at = ($post->updated_at != null) ? date("d-m-Y", strtotime($post->updated_at)) : '';
-                $accept_terms = $post->accept_terms == 1 ? 'Yes' : 'No';
+                $accept_terms = $post->accept_terms == 0 ? 'Yes' : 'No';
                 $referral_code = strlen($post->referral_code) > 10 ? substr($post->referral_code, 0, 10) . '...' : $post->referral_code;
 
                 // Build each row of data
@@ -704,7 +704,7 @@ class RespondentsController extends Controller
                         // If coming from projects page
                         $nestedData['options'] .= '<li class="list-group-item">
                             <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                <i class="far fa-trash-alt"></i> De-attach
+                                <i class="far fa-trash-alt"></i> Detach
                             </a>
                         </li>';
                     }else if(str_contains(url()->previous(), '/admin/tags')){
@@ -716,7 +716,7 @@ class RespondentsController extends Controller
                         </li>';
                         $nestedData['options'] .= '<li class="list-group-item">
                             <a id="deattach_tags" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                <i class="far fa-trash-alt"></i> De-attach
+                                <i class="far fa-trash-alt"></i> Detach
                             </a>
                         </li>';
                     } else {

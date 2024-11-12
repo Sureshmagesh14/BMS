@@ -184,7 +184,7 @@
                                         </tr>
                                         <tr>
                                             <th>Accepted Terms</th>
-                                            @if ($data->accept_terms == 1)
+                                            @if ($data->accept_terms == 0)
                                                 @php $accept_terms='Yes'; @endphp
                                             @else
                                                 @php $accept_terms='No'; @endphp

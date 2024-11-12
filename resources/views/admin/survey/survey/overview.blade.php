@@ -105,13 +105,15 @@
                                 }else{
                                     $started_count = $survey->started_count;
                                 }
-                                if($survey->completed_count > 0 && $started_count!=0){
-                                        $completionRate = ($survey->completed_count / $started_count) * 100; 
+                                $completed_count =  \App\Models\SurveyResponse::where(['survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->groupBy('response_user_id')->count();
+
+                                if($completed_count > 0 && $started_count!=0){
+                                        $completionRate = ($completed_count / $started_count) * 100; 
                                 }else{
                                     $completionRate = 0;
                                 } 
                                
-                                $partially_completed =(int)$started_count - (int)$survey->completed_count;
+                                $partially_completed =(int)$started_count - (int)$completed_count;
                                 if($survey->started_count == 0){
                                     $survey->completed_count = 0;
                                     $partially_completed =0;
@@ -152,7 +154,7 @@
                                     <div class="fx-colum ml--lg">
                                         <h3 class="ss-text ss-text__size--h3 ss-text__weight--normal ss-text__color--grey mb--xs">Completed</h3>
                                         <div class="fx-row fx-ai--end">
-                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: 'Source Serif Pro';">{{$survey->completed_count}}</h1>
+                                            <h1 class="ss-text ss-text__size--jumbo ss-text__weight--bold ss-text__color--black ss-text__family--serif ss-text__line-height--normal" style="font-family: 'Source Serif Pro';">{{$completed_count}}</h1>
                                         </div>
                                     </div>
                                 </div>

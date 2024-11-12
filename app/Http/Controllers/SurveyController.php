@@ -35,6 +35,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+
 class SurveyController extends Controller
 {
     public function folder()
@@ -315,29 +316,45 @@ class SurveyController extends Controller
 
             // New Logic based on qus_order_no
             // Display logic for questions where qus_order_no is less than the current question's order
-            $display_logic = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
-            ->where('survey_id', $survey->id)
-            ->whereNotIn('id', [$currentQus->id])
-            ->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you'])
-            ->pluck('question_name', 'id')->toArray();
+            // $display_logic = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
+            // ->where('survey_id', $survey->id)
+            // ->whereNotIn('id', [$currentQus->id])
+            // ->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you'])
+            // ->pluck('question_name', 'id')->toArray();
 
-            $display_logic_matrix = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
-            ->where('qus_type', 'matrix_qus')
-            ->where('survey_id', $survey->id)
-            ->whereNotIn('id', [$currentQus->id])
-            ->get();
+            // $display_logic_matrix = Questions::where('qus_order_no', '<', $currentQus->qus_order_no)
+            // ->where('qus_type', 'matrix_qus')
+            // ->where('survey_id', $survey->id)
+            // ->whereNotIn('id', [$currentQus->id])
+            // ->get();
+             // New Logic based on all qus
+            $display_logic = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
+                ->where('survey_id', $survey->id)
+                // ->whereNotIn('id', [$currentQus->id])
+                ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
+                ->orderBy('qus_order_no')
+                ->get(['id', 'question_name', 'qus_type', 'qus_ans']);
+
 
             // Skip logic for questions where qus_order_no is less than or equal to the current question's order
+            // $skip_logic = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
+            // ->where('survey_id', $survey->id)
+            // ->whereNotIn('qus_type', ['welcome_page', 'thank_you', 'matrix_qus'])
+            // ->pluck('question_name', 'id')->toArray();
+
+            // $skip_logic_matrix = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
+            // ->where('qus_type', 'matrix_qus')
+            // ->where('survey_id', $survey->id)
+            // ->whereNotIn('id', [$currentQus->id])
+            // ->get();
+            //New Logic based on all qus 
             $skip_logic = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
             ->where('survey_id', $survey->id)
-            ->whereNotIn('qus_type', ['welcome_page', 'thank_you', 'matrix_qus'])
-            ->pluck('question_name', 'id')->toArray();
+            ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
+            ->orderBy('qus_order_no')
+            ->get(['id', 'question_name', 'qus_type', 'qus_ans']);
+            $skip_logic_matrix =[];
 
-            $skip_logic_matrix = Questions::where('qus_order_no', '<=', $currentQus->qus_order_no)
-            ->where('qus_type', 'matrix_qus')
-            ->where('survey_id', $survey->id)
-            ->whereNotIn('id', [$currentQus->id])
-            ->get();
 
             // Jump-to logic for questions where qus_order_no is greater than the current question's order
             $jump_to = Questions::where('qus_order_no', '>', $currentQus->qus_order_no)
@@ -350,7 +367,7 @@ class SurveyController extends Controller
             ->where('qus_type', 'thank_you')
             ->pluck('question_name', 'id')->toArray();
 
-
+            $display_logic_matrix=[];
         }else{
             $skip_logic=[];
             $display_logic_matrix=[];
@@ -359,8 +376,8 @@ class SurveyController extends Controller
             $jump_to_tq=[];
             $jump_to=[];
         }
-
-          
+        
+        
         $pagetype=$request->pagetype;
         if($pagetype=='preview'){
             $question1=Questions::where('id', '>', $currentQus->id)->where('survey_id', $survey->id)->orderBy('id')->first();
@@ -1828,9 +1845,7 @@ class SurveyController extends Controller
     
     private static function handleSurveyCompletion($survey_id, $other_details)
     {
-        $surveyRec = Survey::find($survey_id);
-        Survey::where(['id' => $survey_id])->increment('completed_count');
-    
+        $surveyRec = Survey::find($survey_id);    
         $next_qus = Questions::where(['survey_id' => $survey_id, 'qus_type' => 'thank_you','survey_thankyou_page'=>1])->first();
         if ($next_qus) {
             self::saveSurveyResponse($survey_id, $next_qus->id, $other_details, 'thankyou_submitted');
@@ -1844,6 +1859,7 @@ class SurveyController extends Controller
     
     private static function saveSurveyResponse($survey_id, $question_id, $other_details, $answer)
     {
+        Survey::where(['id' => $survey_id])->increment('completed_count');
         $surveyres = new SurveyResponse();
         $surveyres->other_details = json_encode($other_details);
         $surveyres->survey_id = $survey_id;
@@ -2366,8 +2382,20 @@ class SurveyController extends Controller
         if (!$survey) {  
             return "Survey not found.";
         }
-    
-        $surveyquotas = SurveyQuotas::where(['survey_id' => $survey_id, 'question_id' => $current_question_id])->get();
+        $quotaQues=Questions::where(['id'=>$current_question_id])->first();
+
+        $modified_question_ids = []; 
+        if ($quotaQues->qus_type == 'matrix_qus') {
+            $qus_ans = json_decode($quotaQues->qus_ans);
+            $matrixQus = $qus_ans != null ? explode(",", $qus_ans->matrix_qus) : [];
+            foreach ($matrixQus as $index => $matrixValue) {
+                $modified_question_id = $current_question_id . '_' . $index;
+                $modified_question_ids[] = $modified_question_id; // Add to array
+            }
+            $surveyquotas = SurveyQuotas::where('survey_id', $survey_id)->whereIn('question_id', $modified_question_ids)->get();
+        }else{
+            $surveyquotas = SurveyQuotas::where(['survey_id' => $survey_id, 'question_id' => $current_question_id])->get();
+        }
    
         if ($surveyquotas->isEmpty()) {
             return "limitavailable";
@@ -2382,28 +2410,53 @@ class SurveyController extends Controller
     
                 $limit = 0;
                 $quota_match = false;
-    
+                
                 // Check if the current user's answer matches the quota criteria
                 switch ($quota->option_type) {
                     case 'isSelected':
-                        if (is_array($current_user_ans)) {
-                            if (in_array($quota->option_value, $current_user_ans)) {
-                                $quota_match = true;
+                        if ($quotaQues->qus_type == 'matrix_qus') {
+                            if (is_string($current_user_ans)) {
+                                $current_user_ans = json_decode($current_user_ans, true);
+                            }                            
+                            foreach ($current_user_ans as $user_ans) {
+                                if (isset($user_ans['ans']) && $user_ans['ans'] === $quota->option_value) {
+                                    $quota_match = true;
+                                    break;
+                                }
                             }
-                        } else {
-                            if ($current_user_ans == $quota->option_value) {
-                                $quota_match = true;
+                        } else{
+                            if (is_array($current_user_ans)) {
+                                if (in_array($quota->option_value, $current_user_ans)) {
+                                    $quota_match = true;
+                                }
+                            } else {
+                                if ($current_user_ans == $quota->option_value) {
+                                    $quota_match = true;
+                                }
                             }
                         }
                         break;
                     case 'isNotSelected':
-                        if (is_array($current_user_ans)) {
-                            if (!in_array($quota->option_value, $current_user_ans)) {
-                                $quota_match = true;
+                        if ($quotaQues->qus_type == 'matrix_qus') {
+                           
+                            if (is_string($current_user_ans)) {
+                                $current_user_ans = json_decode($current_user_ans, true);
+                            } 
+                            foreach ($current_user_ans as $user_ans) {
+                                if (isset($user_ans['ans']) && $user_ans['ans'] === $quota->option_value) {
+                                    $quota_match = false;
+                                    break;
+                                }
                             }
                         } else {
-                            if ($current_user_ans != $quota->option_value) {
-                                $quota_match = true;
+                            if (is_array($current_user_ans)) {
+                                if (!in_array($quota->option_value, $current_user_ans)) {
+                                    $quota_match = true;
+                                }
+                            } else {
+                                if ($current_user_ans != $quota->option_value) {
+                                    $quota_match = true;
+                                }
                             }
                         }
                         break;
@@ -2635,7 +2688,7 @@ class SurveyController extends Controller
         $multi_choice_qus=Questions::where(['qus_type'=>'multi_choice','survey_id'=>$survey_id])->get();
         $rankorder_qus=Questions::where(['qus_type'=>'rankorder','survey_id'=>$survey_id])->get();
 
-        $cols = ["Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name"];
+        $cols = [];
         foreach($question as $qus){
             array_push($cols,$qus->question_name);
         }
@@ -2702,6 +2755,7 @@ class SurveyController extends Controller
         $question = Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
                 
         $surveyResponseUsers =  SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+        array_push($cols,"Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
         $finalResult =[$cols];
         foreach($surveyResponseUsers as $userID){
             $user = Respondents::where('id', '=' , $userID)->first();
@@ -2760,10 +2814,21 @@ class SurveyController extends Controller
             if($completedRes){
                 $completion_status = 'Completed';
             }else{
-                $completion_status = 'Partially Completed';
+                // if($survey->started_count <= 0){
+                //     $started_count =  \App\Models\SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->count();
+                // }else{
+                //     $started_count = $survey->started_count;
+                // }
+              
+                // $partially_completed =(int)$started_count - (int)$survey->completed_count;
+                // if($partially_completed <=0){
+                //     $completion_status = 'Completed';
+                // }else{
+                    $completion_status = 'Partially Completed';
+                // }
+               
             }
-
-            $result =['Respondent Name'=>$name,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name];
+            $result =[];
             foreach($question as $qus){
                 $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
                 if($respone){
@@ -2922,6 +2987,7 @@ class SurveyController extends Controller
                     $result[$qus->question_name]=$output;
                 }
             }
+            $result = array_merge($result,['Respondent Name'=>$name,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name]);
             array_push($finalResult,$result);
         }
        
@@ -2976,7 +3042,11 @@ class SurveyController extends Controller
                 $row = $data[$i];
                 $rearrangedRow = [];
                 foreach ($header as $key) {
-                    $rearrangedRow[] = $row[$key] ?? '';
+                    if (isset($row[$key])) {
+                        $rearrangedRow[] = $row[$key];
+                    } else {
+                        $rearrangedRow[] = '';
+                    }
                 }
                 $values[] = $rearrangedRow;
             }
@@ -2984,204 +3054,291 @@ class SurveyController extends Controller
             return $values;
         }
         foreach ($survey_IDs as $survey_id) {
-            // Custom array data to export
-            $survey = Survey::where(['id' => $survey_id])->first();
-          
-            $question = Questions::where(['survey_id' => $survey_id])->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you', 'rankorder', 'multi_choice'])->get();
-            $matrix_qus = Questions::where(['qus_type' => 'matrix_qus', 'survey_id' => $survey_id])->get();
-            $multi_choice_qus = Questions::where(['qus_type' => 'multi_choice', 'survey_id' => $survey_id])->get();
-            $rankorder_qus = Questions::where(['qus_type' => 'rankorder', 'survey_id' => $survey_id])->get();
-    
-            $cols = ["Respondent Name", "Date", "Device ID", "Device Name", "Completion Status", "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"];
-            foreach ($question as $qus) {
-                array_push($cols, $qus->question_name);
+             // Custom array data to export
+            $survey = Survey::where(['id'=>$survey_id])->first();
+            $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you','rankorder','multi_choice'])->get();
+            $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
+            $multi_choice_qus=Questions::where(['qus_type'=>'multi_choice','survey_id'=>$survey_id])->get();
+            $rankorder_qus=Questions::where(['qus_type'=>'rankorder','survey_id'=>$survey_id])->get();
+
+            $cols = [];
+            foreach($question as $qus){
+                array_push($cols,$qus->question_name);
             }
-            foreach ($multi_choice_qus as $qus) {
-                $qus_ans = json_decode($qus->qus_ans);
-                $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                foreach ($choices as $qus1) {
-                    array_push($cols, $qus->question_name . '_' . $qus1);
+            foreach($multi_choice_qus as $qus){
+                $qus_ans = json_decode($qus->qus_ans); 
+                $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                foreach($choices as $qus1){
+                    array_push($cols,$qus->question_name.'_'.$qus1);
                 }
             }
-            foreach ($rankorder_qus as $qus) {
-                $qus_ans = json_decode($qus->qus_ans);
-                $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                foreach ($choices as $qus1) {
-                    array_push($cols, $qus->question_name . '_' . $qus1);
+            foreach($rankorder_qus as $qus){
+                $qus_ans = json_decode($qus->qus_ans); 
+                // array_push($cols,$qus->question_name);
+                $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                foreach($choices as $qus1){
+                    array_push($cols,$qus->question_name.'_'.$qus1);
                 }
             }
-            foreach ($matrix_qus as $qus) {
-                $qus = json_decode($qus->qus_ans);
-                array_push($cols, $qus->question_name);
-                $exiting_qus_matrix = $qus != null ? explode(",", $qus->matrix_qus) : [];
-                foreach ($exiting_qus_matrix as $qus1) {
-                    array_push($cols, $qus1);
+            foreach($matrix_qus as $qus){
+                $qus = json_decode($qus->qus_ans); 
+                array_push($cols,$qus->question_name);
+                $exiting_qus_matrix= $qus!=null ? explode(",",$qus->matrix_qus): []; $i=0;
+                foreach($exiting_qus_matrix as $qus1){
+                    array_push($cols,$qus1);
                 }
             }
-    
-           
-    
-            // Get Survey Data
-            $question = Questions::where(['survey_id' => $survey_id])->whereNotIn('qus_type', ['welcome_page', 'thank_you'])->get();
-    
-            $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id,'response_user_id'=>$user_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
-            $finalResult = [$cols];
-            foreach ($surveyResponseUsers as $userID) {
-                $user = Respondents::where('id', $userID)->first();
-                $starttime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "asc")->first();
-                $endtime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
+
+            // Get Survey Data 
+            $question = Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+                    
+            $surveyResponseUsers =  SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+            array_push($cols,"Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
+            $finalResult =[$cols];
+            foreach($surveyResponseUsers as $userID){
+                $user = Respondents::where('id', '=' , $userID)->first();
+                $starttime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "asc")->first();
+                $endtime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
                 $startedAt = $starttime->created_at;
                 $endedAt = $endtime->created_at;
-                $time = $endedAt->diffInSeconds($startedAt);
-                $responseinfo = $startedAt->toDayDateTimeString() . ' | ' . $time . ' seconds';
+                $time = $endedAt->diffInSeconds($startedAt); 
+                $responseinfo = $startedAt->toDayDateTimeString().' | '.$time.' seconds';
                 $other_details = json_decode($endtime->other_details);
-                $deviceID = $other_details->device_id ?? '';
-                $device_name = $other_details->device_name ?? '';
-                $browser = $other_details->browser ?? '';
-                $os = $other_details->os ?? '';
-                $device_type = '';
-                $lang_name = $other_details->lang_name ?? '';
-                $long = $other_details->long ?? '';
-                $lat = $other_details->lat ?? '';
-                $location = $other_details->location ?? '';
-                $ip_address = $other_details->ip_address ?? '';
-                $lang_code = $other_details->lang_code ?? '';
-                $name = $user->name ?? 'Anonymous';
-    
-                $completedRes = SurveyResponse::where(['response_user_id' => $userID, 'survey_id' => $survey_id, 'answer' => 'thankyou_submitted'])->first();
-                $completion_status = $completedRes ? 'Completed' : 'Partially Completed';
-    
-                $result = ['Respondent Name' => $name, 'Date' => $responseinfo, 'Device ID' => $deviceID, 'Device Name' => $device_name, 'Completion Status' => $completion_status, 'Browser' => $browser, 'OS' => $os, 'Device Type' => $device_type, 'Long' => $long, 'Lat' => $lat, 'Location' => $location, 'IP Address' => $ip_address, 'Language Code' => $lang_code, 'Language Name' => $lang_name];
-    
-                foreach ($question as $qus) {
-                    $respone = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
-                    $output = $respone ? ($respone->skip == 'yes' ? 'Skip' : $respone->answer) : '-';
-    
-                    if ($qus->qus_type == 'likert') {
+                $deviceID = '';
+                $device_name ='';
+                $browser =''; $os ='';$device_type='';
+                $lang_name =''; $long='';$lat =''; $location=''; $ip_address =''; $lang_code =''; $lang_name ='';
+
+                if(isset($other_details->device_id)){
+                    $deviceID = $other_details->device_id;
+                }
+                if(isset($other_details->device_name)){
+                    $device_name = $other_details->device_name;
+                }
+                if(isset($other_details->browser)){
+                    $browser = $other_details->browser;
+                }
+                if(isset($other_details->os)){
+                    $os = $other_details->os;
+                }
+                if(isset($other_details->lang_name)){
+                    $lang_name = $other_details->lang_name;
+                }
+                if(isset($other_details->lang_code)){
+                    $lang_code = $other_details->lang_code;
+                }
+                if(isset($other_details->ip_address)){
+                    $ip_address = $other_details->ip_address;
+                }
+                if(isset($other_details->location)){
+                    $location = $other_details->location;
+                }
+                if(isset($other_details->lat)){
+                    $lat = $other_details->lat;
+                }
+                if(isset($other_details->long)){
+                    $long = $other_details->long;
+                }
+                if(isset($other_details->lang_name)){
+                    $lang_name = $other_details->lang_name;
+                }
+                $name = 'Anonymous';
+                if(isset($user->name)){
+                    $name = $user->name;
+                }
+
+                $completedRes = SurveyResponse::where(['response_user_id'=>$userID ,'survey_id'=>$survey_id,'answer'=>'thankyou_submitted'])->first();
+
+                if($completedRes){
+                    $completion_status = 'Completed';
+                }else{
+                    // if($survey->started_count <= 0){
+                    //     $started_count =  \App\Models\SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->count();
+                    // }else{
+                    //     $started_count = $survey->started_count;
+                    // }
+                  
+                    // $partially_completed =(int)$started_count - (int)$survey->completed_count;
+                    // if($partially_completed <=0){
+                    //     $completion_status = 'Completed';
+                    // }else{
+                        $completion_status = 'Partially Completed';
+                    // }
+                   
+                }
+
+                $result =[];
+                foreach($question as $qus){
+                    $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
+                    if($respone){
+                        if($respone->skip == 'yes'){
+                            $output = 'Skip';
+                        }else{
+                            $output = $respone->answer;
+                        }
+                    }else{
+                        $output = '-';
+                    }
+                    if($qus->qus_type == 'likert'){
                         $qusvalue = json_decode($qus->qus_ans);
-                        $left_label = $qusvalue->left_label ?? 'Least Likely';
-                        $middle_label = $qusvalue->middle_label ?? 'Neutral';
-                        $right_label = $qusvalue->right_label ?? 'Most Likely';
-                        $likert_range = $qusvalue->likert_range ?? 10;
+                        $left_label = 'Least Likely';
+                        $middle_label = 'Netural';
+                        $right_label = 'Most Likely';
+                        $likert_range = 10;
+                        if(isset($qusvalue->right_label)){
+                            $right_label = $qusvalue->right_label;
+                        }
+                        if(isset($qusvalue->middle_label)){
+                            $middle_label = $qusvalue->middle_label;
+                        }
+                        if(isset($qusvalue->likert_range)){
+                            $likert_range = $qusvalue->likert_range;
+                        }
+                        if(isset($qusvalue->left_label)){
+                            $left_label = $qusvalue->left_label;
+                        }
                         $output = intval($output);
                         $likert_label = $output;
-    
-                        if ($likert_range <= 4 && $output <= 4) {
-                            $likert_label = $output <= 2 ? $left_label : $right_label;
-                        } else if ($likert_range >= 5 && $output >= 5) {
-                            if ($likert_range == 5) {
-                                if ($output <= 2) {
+                        if($likert_range <= 4 && $output <= 4){
+                            if($output == 1 || $output == 2){
+                                $likert_label = $left_label;
+                            }else{
+                                $likert_label = $right_label;
+                            }
+                        }else if($likert_range >= 5 && $output >=5){
+                            if($likert_range == 5){
+                                if($output == 1 || $output == 2){
                                     $likert_label = $left_label;
-                                } else if ($output == 3) {
+                                }else if($output == 3){
                                     $likert_label = $middle_label;
-                                } else {
+                                }else if($output == 4 || $output == 5){
                                     $likert_label = $right_label;
                                 }
-                            } else if ($likert_range == 6) {
-                                if ($output <= 2) {
+                            }else if($likert_range == 6){
+                                if($output == 1 || $output == 2){
                                     $likert_label = $left_label;
-                                } else if ($output <= 4) {
+                                }else if($output == 3 || $output == 4){
                                     $likert_label = $middle_label;
-                                } else {
+                                }else if($output == 5 || $output == 6){
                                     $likert_label = $right_label;
                                 }
-                            } else if ($likert_range == 7) {
-                                if ($output <= 2) {
+                            }else if($likert_range == 7){
+                                if($output == 1 || $output == 2){
                                     $likert_label = $left_label;
-                                } else if ($output <= 5) {
+                                }else if($output == 3 || $output == 4 || $output == 5){
                                     $likert_label = $middle_label;
-                                } else {
+                                }else if($output == 6 || $output == 7){
                                     $likert_label = $right_label;
                                 }
-                            } else if ($likert_range == 8) {
-                                if ($output <= 3) {
+                            }else if($likert_range == 8){
+                                if($output == 1 || $output == 2 || $output == 3){
                                     $likert_label = $left_label;
-                                } else if ($output <= 5) {
+                                }else if($output == 4 || $output == 5){
                                     $likert_label = $middle_label;
-                                } else {
+                                }else if($output == 6 || $output == 7 || $output == 8){
                                     $likert_label = $right_label;
                                 }
-                            } else if ($likert_range == 9) {
-                                if ($output <= 3) {
+                            }else if($likert_range == 9){
+                                if($output == 1 || $output == 2 || $output == 3){
                                     $likert_label = $left_label;
-                                } else if ($output <= 6) {
+                                }else if($output == 4 || $output == 5 || $output == 6){
                                     $likert_label = $middle_label;
-                                } else {
+                                }else if($output == 7 || $output == 8 || $output == 9){
                                     $likert_label = $right_label;
                                 }
-                            } else if ($likert_range == 10) {
-                                if ($output <= 3) {
+                            }else if($likert_range == 10){
+                                if($output == 1 || $output == 2 || $output == 3){
                                     $likert_label = $left_label;
-                                } else if ($output <= 7) {
+                                }else if($output == 4 || $output == 5 || $output == 6 || $output == 7){
                                     $likert_label = $middle_label;
-                                } else {
+                                }else if($output == 8 || $output == 9 || $output == 10){
                                     $likert_label = $right_label;
                                 }
                             }
                         }
-    
-                        $result[$qus->question_name] = $likert_label;
-                    } else if ($qus->qus_type == 'matrix_qus') {
-                        $result[$qus->question_name] = '';
-                        if ($output == 'Skip') {
-                            foreach (json_decode($qus->qus_ans) as $matrix_qus) {
-                                $result[$matrix_qus] = 'Skip';
+                        $tempresult = [$qus->question_name => $likert_label];
+                        $result[$qus->question_name]= $likert_label;
+
+                    }
+                    else if($qus->qus_type == 'matrix_qus'){
+                        $result[$qus->question_name]=''; 
+                        if($output=='Skip'){
+                            $qusvalue = json_decode($qus->qus_ans); 
+                            $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
+                            foreach($exiting_qus_matrix as $op){
+                                $result[$op]='Skip'; 
                             }
-                        } else {
-                            $martirx_qus = json_decode($qus->qus_ans);
-                            $matrixQus = SurveyResponse::where(['survey_id' => $survey_id,  'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
-                            $matrixAnswers = $matrixQus ? json_decode($matrixQus->answer, true) : [];
-                            foreach ($martirx_qus as $index => $matrix_qus) {
-                                $answerFound = false;
-                                foreach ($matrixAnswers as $answer) {
-                                    if (trim($answer['qus']) === trim($matrix_qus)) {
-                                        $result[$matrix_qus] = $answer['ans']; 
-                                        $answerFound = true;
-                                        break; 
+                        }else{
+                            $output = json_decode($output);
+                            if($output!=null)
+                            foreach($output as $op){
+                                $tempresult = [$op->qus =>$op->ans];
+                                $result[$op->qus]=$op->ans; 
+                            }
+                        }
+                        
+                    }else if($qus->qus_type == 'rankorder'){
+                        // $result[$qus->question_name]=''; 
+                        $qus_ans = json_decode($qus->qus_ans); 
+                        $output = json_decode($output,true);
+                        $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                        foreach($choices as $qus1){
+                            // echo "<pre>";
+                            // print_r($qus1);
+                            if($output!=null){
+                                foreach($output as $op){
+                                    if($qus1 == $op['id']){
+                                        $arrId= $qus->question_name.'_'.$qus1;
+                                        $result[$arrId]=$op['val'];
                                     }
                                 }
-                                if (!$answerFound) {
-                                    $result[$matrix_qus] = '-'; 
+                            }
+                        
+                        }
+                    
+                    }else if($qus->qus_type == 'multi_choice'){
+                        // $result[$qus->question_name]=''; 
+                        $qus_ans = json_decode($qus->qus_ans); 
+                        $output = explode(",", $output);
+                        $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                        foreach($choices as $qus1){
+                            if($output!=null){
+                                foreach($output as $op){
+                                    if($qus1 == $op){
+                                        $arrId= $qus->question_name.'_'.$qus1;
+                                        $result[$arrId]=$op;
+                                    }
                                 }
                             }
                         }
-                    } else {
-                        $result[$qus->question_name] = $output;
+                    
+                    }else if($qus->qus_type == 'photo_capture'){
+                        $img = $output;
+                        $tempresult = [$qus->question_name =>$img];
+                        $result[$qus->question_name]=$img;
+                    }else if($qus->qus_type=='upload'){
+                        $output1=asset('uploads/survey/'.$output);
+                        $img = $output1;
+                        $tempresult = [$qus->question_name =>$img];
+                        $result[$qus->question_name]=$img;
+                    }else{
+                        $tempresult = [$qus->question_name =>$output];
+                        $result[$qus->question_name]=$output;
                     }
                 }
-    
-                foreach ($multi_choice_qus as $qus) {
-                    $qus_ans = json_decode($qus->qus_ans);
-                    $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                    $multichoicesResult = [];
-                    foreach ($choices as $choice) {
-                        $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
-                        $multichoicesResult[$qus->question_name . '_' . $choice] = $answer ? 'Yes' : 'No';
-                    }
-                    $result = array_merge($result, $multichoicesResult);
-                }
-    
-                foreach ($rankorder_qus as $qus) {
-                    $qus_ans = json_decode($qus->qus_ans);
-                    $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                    $rankorderResult = [];
-                    foreach ($choices as $choice) {
-                        $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
-                        $rankorderResult[$qus->question_name . '_' . $choice] = $answer ? $answer->rank_ans : 'No';
-                    }
-                    $result = array_merge($result, $rankorderResult);
-                }
-    
-                $finalResult[] = $result;
+                $result = array_merge($result,['Respondent Name'=>$name,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name]);
+                array_push($finalResult,$result);
             }
-    
-            $finalResult = getValuesUser($finalResult);
+        
+            $data = getValuesUser($finalResult);
             if($survey){
                 $survey_name = $survey->title;
             }else{
                 $survey_name = "Survey-".$survey_id;
             }
-    
+            $survey_name = preg_replace('/[\\/*?:[\]]/', '', $survey_name);
+            $survey_name = substr($survey_name, 0, 31);
+
             $sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $survey_name);
             $spreadsheet->addSheet($sheet, 0);
             $spreadsheet->setActiveSheetIndex(0);
@@ -3310,7 +3467,7 @@ class SurveyController extends Controller
             }
         }else{
             $respondents->email = $request->input('email');
-            $respondents->password = "SurveyBMS@2024";
+            $respondents->password = Hash::make("SurveyBMS@2024");
             $respondents->type = "temporary";
             $respondents->save();
             $user = Respondents::find($respondents->id);

@@ -295,7 +295,14 @@ class RewardsController extends Controller
                     $to_address = $resp->email;
                     //$to_address = 'hemanathans1@gmail.com';
                     $resp_name = $resp->name.' '.$resp->surname;
-                    $proj_name = $proj->name;
+                   
+                    if ($res->project_name_resp != ''){
+
+                        $proj_name = $proj->project_name_resp;
+                    }else{
+                        $proj_name = $proj->name;
+                    }
+                   
                     $data = ['subject' => 'Rewards Approved','name' => $resp_name,'project' => $proj_name,'type' => 'reward_approve'];
                 
                     Mail::to($to_address)->send(new WelcomeEmail($data));
