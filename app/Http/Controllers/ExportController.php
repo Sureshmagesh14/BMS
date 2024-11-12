@@ -2928,14 +2928,16 @@ class ExportController extends Controller
                                 $essential = json_decode($all_data->essential_details);
                             }
 
-                            $dob = $basic->date_of_birth ?? '';
-                            $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
-                            ? (date('Y') - date('Y', strtotime($dob))) 
-                            : '-';
+                            if (isset($basic) && is_array($basic) && !empty($basic)) {
+                                $dob = $basic->date_of_birth ?? '';
+                                $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') ? (date('Y') - date('Y', strtotime($dob))) : '-';
+                            }else{
+                                $year = '';
+                            }
 
 
                             //dd($essential);
-                            
+
                             $employment_status = null;
 
                             if (isset($essential) && is_array($essential) && !empty($essential)) {
@@ -2953,7 +2955,7 @@ class ExportController extends Controller
 
                             $p_income = null; // Initialize $p_income to null
 
-                            if ($essential && isset($essential->personal_income_per_month)) {
+                            if (isset($essential) && isset($essential->personal_income_per_month)) {
                                 $p_income = DB::table('income_per_month')
                                                 ->where('id', $essential->personal_income_per_month)
                                                 ->first();
@@ -2961,7 +2963,7 @@ class ExportController extends Controller
 
                             $h_income = null; // Initialize $h_income to null
 
-                            if ($essential && isset($essential->household_income_per_month)) {
+                            if (isset($essential) && isset($essential->household_income_per_month)) {
                                 $h_income = DB::table('income_per_month')
                                                 ->where('id', $essential->household_income_per_month)
                                                 ->first();
@@ -2986,7 +2988,7 @@ class ExportController extends Controller
 
                             // Default to an empty string if the ethnic group is not in the array
                             $ethnic_group = '';
-                            if ($essential && isset($essential->ethnic_group)) {
+                            if (isset($essential) && isset($essential->ethnic_group)) {
                                 $ethnic_group = $ethnic_group = ucfirst($essential->ethnic_group) ?? '';
                             }else{
                                 $ethnic_group = '';
@@ -2997,7 +2999,7 @@ class ExportController extends Controller
                             $gender = '';
 
                             // Check if $essential is not null and has the gender property
-                            if ($essential && isset($essential->gender)) {
+                            if (isset($essential) && isset($essential->gender)) {
                                 // Set the gender value, ensuring it's properly capitalized
                                 $gender = ucfirst($essential->gender);
                             }
@@ -3005,7 +3007,7 @@ class ExportController extends Controller
                             $education_level = '';
 
                             // Check if $essential is not null and has the education_level property
-                            if ($essential && isset($essential->education_level)) {
+                            if (isset($essential) && isset($essential->education_level)) {
                                 switch ($essential->education_level) {
                                     case 'matric':
                                         $education_level = 'Matric';
@@ -3032,14 +3034,14 @@ class ExportController extends Controller
                             }
                             $state = null; // Initialize $state to null
 
-                            if ($essential && isset($essential->province)) {
+                            if (isset($essential) && isset($essential->province)) {
                                 $state = DB::table('state')
                                             ->where('id', $essential->province)
                                             ->first();
                             }
                             $district = null; // Initialize $district to null
 
-                            if ($essential && isset($essential->suburb)) {
+                            if (isset($essential) && isset($essential->suburb)) {
                                 $district = DB::table('district')
                                             ->where('id', $essential->suburb)
                                             ->first();
