@@ -1264,14 +1264,13 @@
                                                                         $matrixQuestionsArray = $matrixQuestions ? explode(',', $matrixQuestions) : [];
                                                                     @endphp
                                                                     @foreach($matrixQuestionsArray as $index => $matrixQus)
-                                                                        <option value="{{ $question['id'] }}_{{ $index }}"
-                                                                                {{ $v1 == $question['id'].'_'.$index ? 'selected' : '' }}>
+                                                                        <option value="{{ $question['id'] }}_{{ $index }}">
                                                                             {{ $matrixQus }}
                                                                         </option>
                                                                     @endforeach
                                                                 </optgroup>
                                                             @else
-                                                                <option value="{{ $question['id'] }}" {{ $v1 == $question['id'] ? 'selected' : '' }}>
+                                                                <option value="{{ $question['id'] }}">
                                                                     {{ $question['question_name'] }}
                                                                 </option>
                                                             @endif
