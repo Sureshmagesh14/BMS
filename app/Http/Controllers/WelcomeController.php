@@ -83,22 +83,22 @@ class WelcomeController extends Controller
             $id = 1;
             $data = Contents::find($id);
 
-            $dynamicData = [
-                'points' => 20,
-                'date_requested' => date('d-m-Y'),
-                'first_name' => 'tetst user',
-                'rand_value' => 'R ' . (20 / 10),
-                'payment_method' => strtoupper('test')
-            ];
+            // $dynamicData = [
+            //     'points' => 20,
+            //     'date_requested' => date('d-m-Y'),
+            //     'first_name' => 'tetst user',
+            //     'rand_value' => 'R ' . (20 / 10),
+            //     'payment_method' => strtoupper('test')
+            // ];
 
-            $sendgrid = new SendGridService();
-            $sendgrid->setFrom();
-            $sendgrid->setDynamicData($dynamicData);
-            $sendgrid->setSubject('New Cashout Created');
-            $sendgrid->setToEmail('hemanathans1@gmail.com', 'test user');
-            $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
-            $sendgrid->send();
-            
+            // $sendgrid = new SendGridService();
+            // $sendgrid->setFrom();
+            // $sendgrid->setDynamicData($dynamicData);
+            // $sendgrid->setSubject('New Cashout Created');
+            // $sendgrid->setToEmail('hemanathans1@gmail.com', 'test user');
+            // $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
+            // $sendgrid->send();
+
             return view('user.user-terms', compact('data'));
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
