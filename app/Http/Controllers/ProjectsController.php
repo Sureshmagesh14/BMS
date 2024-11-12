@@ -18,6 +18,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Exception;
 use Config;
 use App\Mail\WelcomeEmail;
+use App\Services\SendGridService;
 
 use App\Imports\RespondentsImport;
 use Maatwebsite\Excel\Facades\Excel;

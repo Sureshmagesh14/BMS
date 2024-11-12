@@ -1555,8 +1555,9 @@ class ExportController extends Controller
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 0 THEN cashouts.amount ELSE 0 END) as failed')
                 )
                 ->leftJoin('cashouts', 'respondents.id', '=', 'cashouts.respondent_id')
+                ->whereNull('cashouts.deleted_at') 
                 ->groupBy('respondents.id'); // Don't forget to group by respondent ID
-    
+                    
                 
                 if ($from != null && $to != null) {
                     $all_datas = $all_datas->whereBetween('cashouts.created_at', [$from, $to]);
@@ -1574,7 +1575,8 @@ class ExportController extends Controller
                     ->groupBy('respondents.id')
                     ->orderBy("respondents.id", "ASC")  // Use respondents.id for consistent ordering
                     ->get();
-
+                
+                //dd($all_datas);
             
                 $sheet->setCellValue('A1', 'PID');
                 $sheet->setCellValue('B1', 'First Name');
@@ -2885,6 +2887,7 @@ class ExportController extends Controller
                             $age = ''; // Set initial age to empty
                             
                             $get_resp = Respondents::select('date_of_birth')->where('id', $userID)->first();
+                            
                             if ($get_resp != null) {
                                 if (!empty($get_resp->date_of_birth)) {
                                     $dob = $get_resp->date_of_birth;
@@ -2917,7 +2920,22 @@ class ExportController extends Controller
                             if (empty($dob) || $dob === '0000-00-00') {
                                 $age = ''; // Set age to empty if date of birth is empty or invalid
                             }
-                  
+
+                            $all_data = RespondentProfile::where('respondent_id', $userID)->first();
+                            
+                            //dd($all_data->basic_details);
+                            if ($all_data) {
+                                $basic = json_decode($all_data->basic_details);
+                                $essential = json_decode($all_data->essential_details);
+                            }
+
+                            $dob = $basic->date_of_birth ?? '';
+                            $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
+                            ? (date('Y') - date('Y', strtotime($dob))) 
+                            : '-';
+                            
+                           
+                            //dd($essential);
 
                             $employment_status = null;
 
@@ -3202,7 +3220,8 @@ class ExportController extends Controller
                        }
                        $survey_name = preg_replace('/[\\/*?:[\]]/', '', $survey_name);
                        $survey_name = substr($survey_name, 0, 31);
-           
+                       
+
                        $sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $survey_name);
                        $spreadsheet->addSheet($sheet, 0);
                        $spreadsheet->setActiveSheetIndex(0);
