@@ -26,9 +26,8 @@ class RewardsController extends Controller
         catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-        
-       
     }
+    
     public function get_all_rewards(Request $request) {
 		
         try {
