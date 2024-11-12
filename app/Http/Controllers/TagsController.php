@@ -263,16 +263,17 @@ class TagsController extends Controller
                                         <a href="'.$view_route.'" data-bs-original-title="View Panel" class="rounded waves-light waves-effect">
                                             <i class="fa fa-eye"></i> View
                                         </a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
-                                            data-bs-original-title="Edit Panel" class="rounded waves-light waves-effect">
-                                            <i class="fa fa-edit"></i> Edit
-                                        </a>
                                     </li>';
                                     if(Auth::guard('admin')->user()->role_id == 1){
                                         if(str_contains(url()->current(), '/admin/respondents')){
-                                            $design .= '<li class="list-group-item">
+                                            $design .= '
+                                            <li class="list-group-item">
+                                                <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                                    data-bs-original-title="Edit Panel" class="rounded waves-light waves-effect">
+                                                    <i class="fa fa-edit"></i> Edit
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item">
                                                 <a href="#!" id="delete_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
                                                     <i class="far fa-trash-alt"></i> Delete
                                                 </a>
@@ -281,7 +282,7 @@ class TagsController extends Controller
                                         else{
                                             $design .= '<li class="list-group-item">
                                                 <a href="#!" id="deattach_tags" data-id="'.$all_data->id.'" class="rounded waves-light waves-effect">
-                                                    <i class="far fa-trash-alt"></i> De-attach
+                                                    <i class="far fa-trash-alt"></i> Detach
                                                 </a>
                                             </li>';
                                         }

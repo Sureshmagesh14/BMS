@@ -5,7 +5,9 @@
             <select name="rewards_select_box" id="rewards_select_box" class="form-control rewards_select_box">
                 <option value="">Select Action</option>
                 <option value="1">Status > Approved</option>
-                <option value="2">Delete Rewards</option>
+                @if (Auth::guard('admin')->user()->role_id != 3)
+                    <option value="2">Delete Rewards</option>
+                @endif
             </select>
             <div class="play-button-container ml-3">
                 <a class="play-button user_play_button">

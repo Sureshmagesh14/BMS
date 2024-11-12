@@ -243,10 +243,10 @@
                                 "data": "createCount"
                             },
                             {
-                                "data": "updateCount"
+                                "data": "deactCount" 
                             },
                             {
-                                "data": "deactCount"
+                                "data": "updateCount"
                             },
 
                         ],
@@ -263,8 +263,8 @@
                     series: [{{ $active_val }}, {{ $pending_val }}, {{ $deactive_val }}, {{ $unsub_val }},
                         {{ $black_val }}
                     ],
-                    labels: ['Active {{ $act_per }}', 'Pending {{ $dec_per }}', 'Deactivated {{ $unsub_pre }}',
-                        'Unsubscribed {{ $pen_per }}', 'Blacklisted {{ $bla_per }}'
+                    labels: ['Active {{ $act_per }}', 'Pending {{ $pen_per }}', 'Deactivated {{ $dec_per }}',
+                        'Unsubscribed {{ $unsub_per }}', 'Blacklisted {{ $bla_per }}'
                     ],
                     chart: {
                         width: 380,

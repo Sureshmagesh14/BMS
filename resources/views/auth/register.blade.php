@@ -333,7 +333,7 @@
 @include('user.layout.footer')
 
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 @if (count($errors) > 0)
     @foreach ($errors->all() as $message)
@@ -392,7 +392,9 @@
                 },
                 mobile: {
                     required: true,
-                 
+                    minlength: 11, // Minimum length of 11 digits
+                    maxlength: 11, // Maximum length of 11 digits
+                    mobile_format: true, // Custom validation to allow digits, spaces, and optional underscore at the end
                     remote: {
                         url: "{{ route('check_phone_name') }}",
                         data: {
@@ -401,7 +403,17 @@
                         type: "GET"
                     }
                 },
-
+                date_of_birth: {
+                    required: true,
+                    date: true,
+                    date_of_birth_check: true // Custom date validation (not in the future)
+                },
+                whatsapp: {
+                    required: true,
+                    minlength: 11, // Minimum length of 11 digits
+                    maxlength: 11, // Maximum length of 11 digits
+                    mobile_format: true, // Custom validation to allow digits, spaces, and optional underscore at the end
+                },
                 password_register: {
                     required: true,
                     minlength: 6
@@ -421,8 +433,22 @@
                 email: {
                     remote: mess
                 },
+               
                 mobile: {
-                    remote: 'Mobile Number Already Exists',
+                    remote: "Mobile number already exists!",
+                    minlength: "Mobile number must be exactly 11 digits.",
+                    maxlength: "Mobile number must be exactly 11 digits.",
+                    mobile_format: "Invalid Mobile Number Format."
+                },
+                whatsapp: {
+                    remote: "Whatsapp number already exists!",
+                    minlength: "Whatsapp number must be exactly 11 digits.",
+                    maxlength: "Whatsapp number must be exactly 11 digits.",
+                    mobile_format: "Invalid Whatsapp Number Format."
+                },
+                date_of_birth: {
+                    date: "Please enter a valid date.",
+                    date_of_birth_check: "Date of birth cannot be in the future."
                 },
                 "terms": {
                     required: function() {
@@ -435,6 +461,23 @@
             //     return false; // for demo
             // }
         });
+           // Custom method to check if date of birth is not in the future
+           $.validator.addMethod("date_of_birth_check", function(value, element) {
+            var dateOfBirth = new Date(value);
+            var today = new Date();
+            // Compare the entered date with today's date
+            if (dateOfBirth > today) {
+                return false; // Date should not be in the future
+            }
+            return true;
+        }, "Date of birth cannot be in the future.");
+
+        // Custom method to validate mobile format (only digits, spaces, and underscore at the end)
+        $.validator.addMethod("mobile_format", function(value, element) {
+            // Regex allows digits, spaces, and one underscore at the end
+            return /^(\d{2} \d{3} \d{4})(_|)?$/.test(
+            value); // This regex allows the underscore only at the end
+        }, "Invalid Mobile Number Format");
     });
 
     $(function() {
@@ -529,16 +572,24 @@
 
         var today = new Date();
 
+        // If the date of birth is greater than today, handle the situation
+        if (new Date(date_of_birth) > today) {
+            toastr.error('Date of Birth cannot be in the future.');
+           
+            document.getElementById('agecal').innerText = '';  // Clear previous results
+            return;  // Exit the function early
+        }
+
         var out;
 
-        out = diffDate(new Date(date_of_birth), new Date(today));
+        // Calculate age and other date differences
+        out = diffDate(new Date(date_of_birth), today);
         display(out);
 
         function diffDate(startDate, endDate) {
             var b = moment(startDate),
                 a = moment(endDate),
-                intervals1 = ['Years', 'Months', 'Days'],
-                intervals = ['Years'],
+                intervals = ['Years'],  // You can add 'Months' or 'Days' here if needed
                 out = {};
 
             for (var i = 0; i < intervals.length; i++) {
@@ -546,13 +597,14 @@
                 b.add(diff, intervals[i]);
                 out[intervals[i]] = diff;
             }
+
             return out;
         }
 
         function display(obj) {
             var str = '';
-            for (key in obj) {
-                str = str + obj[key] + ' ' + key + ' '
+            for (var key in obj) {
+                str = str + obj[key] + ' ' + key + ' ';
             }
             console.log("str", str);
             document.getElementById('agecal').innerText = str;

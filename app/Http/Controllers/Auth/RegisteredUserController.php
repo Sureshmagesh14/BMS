@@ -46,12 +46,22 @@ class RegisteredUserController extends Controller
             'surname' => ['required', 'string', 'max:255'],
             'mobile' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11',
             'whatsapp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11',
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . Respondents::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . Respondents::class],
             'date_of_birth' => ['required', 'string', 'max:255'],
             'password_register' => ['required', Rules\Password::defaults()->min(6)],
         ]);
         $ref_code = substr(md5(time()), 0, 8);
+
         $ref_code = ('r' . $ref_code);
+        $mobile = str_replace(' ', '', $request->mobile);
+        if (!str_starts_with($mobile, '27')) {
+            $mobile = '27' . ltrim($mobile, '0'); // Remove leading 0 if present
+        }
+
+        $whatsapp = str_replace(' ', '', $request->whatsapp);
+        if (!str_starts_with($whatsapp, '27')) {
+            $whatsapp = '27' . ltrim($whatsapp, '0'); // Remove leading 0 if present
+        }
 
         $user = Respondents::create([
             'name' => $request->name,
@@ -59,8 +69,8 @@ class RegisteredUserController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'id_passport' => $request->id_passport,
             'email' => $request->email,
-            'mobile' => str_replace(' ', '', $request->mobile),
-            'whatsapp' => str_replace(' ', '', $request->whatsapp),
+            'mobile' => $mobile,
+            'whatsapp' => $whatsapp,
             'password' => Hash::make($request->password_register),
             'referral_code' => $ref_code,
         ]);
@@ -74,6 +84,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'mobile' => str_replace(' ', '', $request->mobile),
             'whatsapp' => str_replace(' ', '', $request->whatsapp),
+            'updated_at'=>now()
         );
 
         $basic_data = array(

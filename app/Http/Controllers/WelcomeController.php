@@ -16,6 +16,7 @@ use App\Models\Cashout;
 use App\Models\Networks;
 use App\Models\Charities;
 use App\Models\Project_respondent;
+use App\Services\SendGrid\SendGridService;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -81,6 +82,23 @@ class WelcomeController extends Controller
         try {
             $id = 1;
             $data = Contents::find($id);
+
+            $dynamicData = [
+                'points' => 20,
+                'date_requested' => date('d-m-Y'),
+                'first_name' => 'tetst user',
+                'rand_value' => 'R ' . (20 / 10),
+                'payment_method' => strtoupper('test')
+            ];
+
+            $sendgrid = new SendGridService();
+            $sendgrid->setFrom();
+            $sendgrid->setDynamicData($dynamicData);
+            $sendgrid->setSubject('New Cashout Created');
+            $sendgrid->setToEmail('hemanathans1@gmail.com', 'test user');
+            $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
+            $sendgrid->send();
+            
             return view('user.user-terms', compact('data'));
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -197,31 +215,33 @@ class WelcomeController extends Controller
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                    $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id','!=', 3)->get();
 
             $get_paid_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id', 3)->get();
 
-            $get_completed_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
-                ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
+      
+            $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
+                ->join('projects', 'resp.project_id', 'projects.id')
                 ->where('resp.respondent_id', $id)
-                ->where('projects.closing_date', '<', Carbon::now())
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '!=', 0)
+                            ->orWhere('projects.status_id', '=', 3); 
+                })
                 ->orderBy('projects.id','DESC')
                 ->get();
-
-            $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
-            ->join('projects', 'resp.project_id', 'projects.id')
-            ->where('resp.respondent_id', $id)
-            ->where('resp.is_frontend_complete','!=',0)
-            ->orderBy('projects.id','DESC')
-            ->get();
-
-            //dd($get_completed_survey);
+           
 
             $currentYear=Carbon::now()->year;
 
@@ -390,13 +410,13 @@ class WelcomeController extends Controller
             //             ->get();
 
             $get_res = DB::table('cashouts')
-                    ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.updated_at')
+                    ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.created_at')
                     ->where('cashouts.respondent_id', '=', $resp_id)
                     ->where('cashouts.status_id', 3)                    
                     ->get();
 
             $get_res_out = DB::table('cashouts')
-                    ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.updated_at')
+                    ->select('cashouts.type_id', 'cashouts.status_id', 'cashouts.amount', 'cashouts.created_at')
                     ->where('cashouts.respondent_id', '=', $resp_id)
                     ->where('cashouts.status_id', '!=', 3)
                     ->get();
@@ -590,20 +610,29 @@ class WelcomeController extends Controller
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $resp_id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                    $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id','!=', 3)->get();
 
             $get_paid_survey = DB::table('projects')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('project_respondent as resp', 'projects.id', 'resp.project_id')
                 ->where('resp.respondent_id', '=', $resp_id)
                 ->where('projects.closing_date', '>=', Carbon::now())
-                ->where('resp.is_frontend_complete', 0)
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '=', 0)
+                            ->Where('projects.status_id', '=', 2); 
+                })
                 ->where('projects.type_id', 3)->get();
 
             $get_completed_survey = DB::table('project_respondent as resp')->select('projects.*', 'resp.is_complete', 'resp.is_frontend_complete')
                 ->join('projects', 'resp.project_id', 'projects.id')
                 ->where('resp.respondent_id', $resp_id)
-                ->where('resp.is_frontend_complete','!=',0)
+                ->where(function($query) {
+                        $query->where('resp.is_frontend_complete', '!=', 0)
+                            ->orWhere('projects.status_id', '=', 3); 
+                })
                 ->orderBy('projects.id','DESC')
                 ->get();
           
@@ -859,7 +888,7 @@ class WelcomeController extends Controller
 
                         $nestedData['options'] .= '<li class="list-group-item">
                                     <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                        <i class="far fa-trash-alt"></i> De-attach
+                                        <i class="far fa-trash-alt"></i> Detach
                                     </a>
                                 </li>';
                     } else {
@@ -963,7 +992,7 @@ class WelcomeController extends Controller
     public function cashout_sent(Request $request)
     {
         $resp_id        = Session::get('resp_id');
-        $method         = $request->method;
+        $method         = $request->methods;
         $bank_type_id   = $request->bank_type_id;
         $banks          = $request->bank_value;
         $account_number = $request->account_number;
@@ -973,7 +1002,10 @@ class WelcomeController extends Controller
         $mobile_network = $request->network;
         $mobile_number  = $request->mobile_number;
         $charitie       = $request->charitie;
+        $mobile_number = str_replace(' ', '', $mobile_number); // Remove all spaces
+       
         $result_mobile  = '27' . str_replace(' ', '', $mobile_number); // Remove all spaces
+      
 
         if ($reward != 0) {
             if($method == "EFT"){
@@ -993,7 +1025,7 @@ class WelcomeController extends Controller
                     'respondent_id'  => $resp_id,
                     'mobile_network' => $mobile_network,
                     'mobile_number'  => $result_mobile,
-                    'type_id'        => ($method == "Airtime") ? 2 : 3,
+                    'type_id'        => ($method == "Airtime") ? 3 : 2,
                     'amount'         => $reward,
                     'created_at'    => now(),
                 );
@@ -1137,8 +1169,53 @@ class WelcomeController extends Controller
                 //dd($cashouts);
                 
                 $to_address = $cash->email;
-                $data = ['subject' => 'Cashout Created','type' => 'cash_create'];
-                Mail::to($to_address)->send(new WelcomeEmail($data));
+                $resp_name = $cash->name;
+                $points = $cash->amount;
+
+                if($cash->type_id==1){
+                    
+                    $req_type = 'EFT';
+
+                }else if($cash->type_id==1){
+                    
+                    $req_type = 'Data';
+
+                }else if($cash->type_id==1){
+                    
+                    $req_type = 'Airtime';
+
+                }else if($cash->type_id==1){
+                    
+                    $req_type = 'Donation';
+
+                }else{
+                    
+                    $req_type = '';
+                }
+                
+                // $data = ['subject' => 'Cashout Created','type' => 'cash_create'];
+                // Mail::to($to_address)->send(new WelcomeEmail($data));
+
+                // mail starts
+
+                $dynamicData = [
+                    'points' => $points,
+                    'date_requested' => date('d-m-Y'),
+                    'first_name' => $resp_name,
+                    'rand_value' => 'R ' . ($points / 10),
+                    'payment_method' => strtoupper($req_type)
+                ];
+
+                $sendgrid = new SendGridService();
+                $sendgrid->setFrom();
+                $sendgrid->setDynamicData($dynamicData);
+                $sendgrid->setSubject('New Cashout Created');
+                $sendgrid->setToEmail($to_address, $resp_name);
+                $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
+                $sendgrid->send();
+
+                return response()->json(['message' => 'Cashout created successfully'], 200);
+
             }
         }
     }
@@ -1158,7 +1235,7 @@ class WelcomeController extends Controller
         //dd($cashouts);
 
         $batch = $this->generateBatchFile($cashouts);
-        $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
+        $key =  env('NETCASH_KEY');
      
         $this->soapWrapper->add('netcash', function ($service) {
             $service
@@ -1222,7 +1299,7 @@ class WelcomeController extends Controller
                 $batchType = "PaySalaries";
                 $description = "My Test Batch";
                 $vendorKey = '24ade73c-98cf-47b3-99be-cc7b867b3080';
-                $serviceKey = '0f70ac77-065a-4246-9126-55977b40ae3d';
+                $serviceKey =  env('NETCASH_KEY');;
 
                 $records = [
                     ['accountNumber' => '2044060104', 'branchCode' => '470010', 'amount' => 1.00]
@@ -1234,7 +1311,7 @@ class WelcomeController extends Controller
                 //$batch = $this->generateBatchFile($cashouts);
                 //dd($batchFilePath);
 
-                $key = '0f70ac77-065a-4246-9126-55977b40ae3d';
+                $key = env('NETCASH_KEY');;
 
                 $response = $this->batchFileUpload($key, $batchFilePath);
                 dd($response);
@@ -1363,9 +1440,9 @@ class WelcomeController extends Controller
     {
         $total = 0;
         $instruction = 'Realtime';
-        $batchName = 'My Creditor batch2222222sadasda';
+        $batchName = 'My Creditor batch ' . date('Y_m_d');
         $vendorKey = '24ade73c-98cf-47b3-99be-cc7b867b3080';
-        $serviceKey = '0f70ac77-065a-4246-9126-55977b40ae3d';
+        $serviceKey =  env('NETCASH_KEY');
         // $date = Carbon::now()->addDay()->format('Ymd');
         $date = Carbon::now()->format('Ymd');
 
@@ -1533,11 +1610,10 @@ class WelcomeController extends Controller
                 return redirect()->back()->with('error', 'Invalid phone number format');
             }
     
-            // Validate phone number length (less than or equal to 9 digits)
-            if (strlen($phone) > 9) {
-                return redirect()->back()->with('error', 'Invalid phone number format: Must be 9 digits or less');
+           // Prefix the phone number with '27' if it doesn't already start with it
+            if (substr($phone, 0, 2) !== '27') {
+                $phone = '27' . $phone;
             }
-    
             // Check if the phone number exists
             $user = Respondents::where('mobile', $phone)
                 ->orWhere('whatsapp', $phone)
@@ -1568,13 +1644,13 @@ class WelcomeController extends Controller
             $smsContent .= $resetUrl . "\n\n";  // Include the reset URL
             $smsContent .= "If you did not request a password reset, no further action is required.\n";
             $smsContent .= "This password reset link will expire in 60 minutes.";
-    
+
             // Parameters for the SMS
             $postData = [
                 'username' => config('constants.username'),
                 'password' => config('constants.password'),
                 'account'  => config('constants.account'),
-                'da'       => config('constants.phone') . $phone, // Destination number with country code
+                'da'       => $phone, // Destination number with country code
                 'ud'       => $smsContent, // SMS content
             ];
     
@@ -1653,6 +1729,133 @@ class WelcomeController extends Controller
 
         return response()->json(['repsonse' => $repsonse], 200);
     }
+
+
+    public function update_out(Request $request)
+{
+    $resp_id = Session::get('resp_id');
+
+    // Check if the respondent ID exists in the session
+    if (!$resp_id) {
+        return redirect()->back()->with('error', 'Respondent ID not found in session.');
+    }
+
+    try {
+        // Find the respondent
+        $respondent = Respondents::find($resp_id);
+
+        // Check if the respondent exists
+        if (!$respondent) {
+            return redirect()->back()->with('error', 'Respondent not found.');
+        }
+
+        // Update the opted status
+        $respondent->opted_status = 1;
+        $respondent->save();
+
+        return redirect()->back()->with('success', 'Opted status updated successfully.');
+    } catch (\Exception $e) {
+        // Log the exception or handle it as needed
+        \Log::error('Failed to update opted status: ' . $e->getMessage());
+
+        return redirect()->back()->with('error', 'An error occurred while updating the opted status. Please try again.');
+    }
+}
+
+public function respondent_mobile_check(Request $request)
+{
+    // Retrieve the mobile number from the request
+    $mobileNumber = '27' . $request->input('basic.mobile_number'); // Assuming mobile numbers start with '27'
+
+    // Remove all non-numeric characters (leaving only digits)
+    $onlyNumbers = preg_replace('/\D/', '', $mobileNumber);
+
+    // Extract the ID (if any)
+    $id = $request->input('id');
+
+    // Remove spaces from the mobile number
+    $mobile = preg_replace('/\s+/', '', $mobileNumber);  // Remove all spaces
+
+    // Check if mobile number is provided
+    if (empty($mobile)) {
+        return response()->json(['valid' => false, 'message' => 'Mobile number is required.']);
+    }
+
+    // Check if the email ID is provided and validate it
+    $email = $request->input('email');  // Assuming the email is in the request
+
+    // If email is provided, check if it already exists in the database
+    if ($email) {
+        $emailExists = DB::table('respondents')->where('email', $email);
+        
+        if ($id) {
+            // If ID exists, exclude the current respondent from the check
+            $emailExists->where('id', '!=', $id);
+        }
+
+        $emailExists = $emailExists->exists();
+
+        if ($emailExists) {
+            return response()->json(['valid' => false, 'message' => 'Email address already exists.']);
+        }
+    }
+
+    // Check if the mobile number already exists (similar to email check)
+    $mobileExists = DB::table('respondents')->where('mobile', $mobile);
+    
+    if ($id) {
+        // If ID exists, exclude the current respondent from the check
+        $mobileExists->where('id', '!=', $id);
+    }
+
+    $mobileExists = $mobileExists->exists();
+
+    if ($mobileExists) {
+        return response()->json(['valid' => false, 'message' => 'Mobile number already exists.']);
+    }
+
+    // If neither mobile nor email exists, return valid
+    return response()->json(['valid' => true]);
+}
+
+
+public function respondent_whatsap_check(Request $request)
+{
+
+    $mobileNumber = '27' . $request->input('basic.whatsapp_number'); // Assuming mobile numbers start with '27'
+    
+    // Remove all non-numeric characters (leaving only digits)
+    $onlyNumbers = preg_replace('/\D/', '', $mobileNumber);
+    
+    // Check if the length of numeric characters is less than 9
+    if (strlen($onlyNumbers) < 9) {
+        return response()->json(['valid' => false, 'message' => 'Invalid whatsapp number format.'], 400);
+    }
+
+    // Extract the ID and clean up the mobile number
+    $id = $request->input('id');
+    $mobile = preg_replace('/\s+/', '', $mobileNumber);  // Remove all spaces
+
+    // If no mobile number is provided, consider it valid (you can adjust this depending on your requirements)
+    if (empty($mobile)) {
+        return response()->json(['valid' => true]); 
+    }
+
+    // Build the query to check if the mobile number exists
+    $query = DB::table('respondents')
+        ->where('whatsapp', $mobile);
+
+    if ($id) {
+        // Exclude current respondent if ID is provided
+        $query->where('id', '!=', $id);
+    }
+
+    // Check if the mobile number exists
+    $exists = $query->exists();
+
+    // Return JSON response
+    return response()->json(['valid' => !$exists]); // Return 'valid' true if it does not exist
+}
     
 
 }

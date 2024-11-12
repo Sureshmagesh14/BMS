@@ -80,8 +80,18 @@ class RespondentsController extends Controller
                 $respondents->surname = $request->input('surname');
                 $respondents->date_of_birth = $request->input('date_of_birth');
                 $respondents->id_passport = $request->input('id_passport');
-                $mobile= str_replace(' ', '', $request->mobile);
-                $whatsapp = str_replace(' ', '', $request->whatsapp);
+                if(isset($request->mobile)){
+                    $mobile= str_replace(' ', '', $request->mobile);
+                    if (!str_starts_with($mobile, '27')) {
+                        $mobile = '27' . ltrim($mobile, '0'); // Remove leading 0 if present
+                    }
+                }
+                if(isset($request->whatsapp)){
+                    $whatsapp = str_replace(' ', '', $request->whatsapp);
+                    if (!str_starts_with($whatsapp, '27')) {
+                        $whatsapp = '27' . ltrim($whatsapp, '0'); // Remove leading 0 if present
+                    }
+                }
                 $password = Hash::make($request->input('password'));
                 $respondents->password = $password;
                 $respondents->mobile = $mobile;
@@ -97,13 +107,31 @@ class RespondentsController extends Controller
                 $respondents->referral_code = $request->input('referral_code');
                 $respondents->accept_terms = $request->input('accept_terms');
                 $respondents->deactivated_date = $request->input('deactivated_date');
+                $respondents->created_by = Auth::guard('admin')->user()->id;
                 
                 $respondents->save();
                 $respondents->id;
                 app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'created','respondent');
                 $ref=array('respondent_id'=>$respondents->id,'user_id'=>Auth::guard('admin')->user()->id,'created_at'=>date("Y-m-d H:i:s A"));
                 DB::table('respondent_referrals')->insert($ref);
-         
+
+                $basic_details = array(
+                    'email'           => $request->input('email'),
+                    'first_name'      => $request->input('name'),
+                    'last_name'       => $request->input('surname'),
+                    'updated_at'      => date('Y-m-d H:i:s'),
+                    'date_of_birth'   => $request->input('date_of_birth'),
+                    'mobile_number'   => $mobile,
+                    'whatsapp_number' => $whatsapp
+                );
+
+                $basic_insert = array(
+                    'respondent_id' => $respondents->id,
+                    'pid'           => $respondents->id,
+                    'basic_details' => json_encode($basic_details)
+                );
+
+                RespondentProfile::insert($basic_insert);
 
                 //email starts
                 $id =$respondents->id;
@@ -187,96 +215,132 @@ class RespondentsController extends Controller
         }
 
     }
+    public function update(Request $request, string $id)
+    {
+        try {
+            // Define validation rules and messages
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'active_status_id' => 'required|integer',
+                'accept_terms' => 'required|boolean',
+                'mobile' => 'nullable|string', // Optional mobile validation
+                'whatsapp' => 'nullable|string', // Optional whatsapp validation
+                'password' => 'nullable|string|min:8', // Optional password validation
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 400,
+                    'errors' => $validator->messages(),
+                ]);
+            }
+    
+            // Normalize email for comparison
+            $email = trim(strtolower($request->input('email')));
+    
+            // Check if email already exists for another respondent
+            $existingRespondent = Respondents::where('email', $email)
+                ->where('id', '!=', $id) // Exclude current respondent ID
+                ->first();
+    
+            if ($existingRespondent) {
+                return response()->json([
+                    'status' => 400,
+                    'error' => 'Email already exists.',
+                    'message' => 'Email already exists.',
+                ]);
+            }
+    
+            // Find the respondent by ID
+            $respondent = Respondents::find($id);
+    
+            if (!$respondent) {
+                return response()->json([
+                    'status' => 404,
+                    'error' => 'No Respondent Found.',
+                    'message' => 'No Respondent Found.',
+                ]);
+            }
+    
+            // Update respondent details
+            $respondent->name = $request->input('name', $respondent->name);
+            $respondent->surname = $request->input('surname', $respondent->surname);
+            $respondent->date_of_birth = $request->input('date_of_birth', $respondent->date_of_birth);
+            $respondent->id_passport = $request->input('id_passport', $respondent->id_passport);
+    
+            // Normalize mobile and whatsapp numbers
+            $mobile = $request->input('mobile') ? str_replace(' ', '', $request->input('mobile')) : $respondent->mobile;
+            if ($mobile && !str_starts_with($mobile, '27')) {
+                $mobile = '27' . ltrim($mobile, '0');
+            }
+            $respondent->mobile = $mobile;
+    
+            $whatsapp = $request->input('whatsapp') ? str_replace(' ', '', $request->input('whatsapp')) : $respondent->whatsapp;
+            if ($whatsapp && !str_starts_with($whatsapp, '27')) {
+                $whatsapp = '27' . ltrim($whatsapp, '0');
+            }
+            $respondent->whatsapp = $whatsapp;
+    
+            // Update password only if provided
+            if ($request->has('password') && $request->input('password') !== null) {
+                $respondent->password = Hash::make($request->input('password'));
+            }
+    
+            // Update other fields
+            $respondent->email = $email;
+            $respondent->bank_name = $request->input('bank_name', $respondent->bank_name);
+            $respondent->branch_code = $request->input('branch_code', $respondent->branch_code);
+            $respondent->account_type = $request->input('account_type', $respondent->account_type);
+            $respondent->account_holder = $request->input('account_holder', $respondent->account_holder);
+            $respondent->account_number = $request->input('account_number', $respondent->account_number);
+            $respondent->active_status_id = $request->input('active_status_id', $respondent->active_status_id);
+            // $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
+            $respondent->accept_terms = $request->input('accept_terms', $respondent->accept_terms);
+            $respondent->deactivated_date = $request->input('deactivated_date', $respondent->deactivated_date);
+            $respondent->created_by = Auth::guard('admin')->user()->id;
+    
+            // Save changes
+            $respondent->save();
 
+            $basic_details = array(
+                'email'           => $email,
+                'first_name'      => $request->input('name', $respondent->name),
+                'last_name'       => $request->input('surname', $respondent->surname),
+                'updated_at'      => date('Y-m-d H:i:s'),
+                'date_of_birth'   => $request->input('date_of_birth', $respondent->date_of_birth),
+                'mobile_number'   => $mobile,
+                'whatsapp_number' => $whatsapp
+            );
+
+            $basic_insert = array(
+                'basic_details' => json_encode($basic_details)
+            );
+
+            RespondentProfile::where('respondent_id', $id)->update($basic_insert);
+    
+            // Log the update activity
+            app('App\Http\Controllers\InternalReportController')
+                ->call_activity(Auth::guard('admin')->user()->role_id, Auth::guard('admin')->user()->id, 'updated', 'respondent');
+    
+            return response()->json([
+                'status' => 200,
+                'last_insert_id' => $respondent->id,
+                'message' => 'Respondent Updated.',
+            ]);
+    
+        } catch (\Exception $e) { // Make sure to import Exception
+            // Handle and log the exception
+            return response()->json([
+                'status' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-{
-    try {
-        // Define validation rules and messages
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'active_status_id' => 'required|integer',
-            'accept_terms' => 'required|boolean',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 400,
-                'errors' => $validator->messages(),
-            ]);
-        }
-
-        // Normalize email for comparison
-        $email = trim(strtolower($request->input('email')));
-
-        // Check if email already exists for another respondent
-        $existingRespondent = Respondents::where('email', $email)
-            ->where('id', '!=', $id) // Exclude current respondent ID
-            ->first();
-
-        if ($existingRespondent) {
-            return response()->json([
-                'status' => 400,
-                'error' => 'Email already exists.',
-                'message' => 'Email already exists.',
-            ]);
-        }
-
-        // Find the respondent by ID
-        $respondent = Respondents::find($id);
-
-        if (!$respondent) {
-            return response()->json([
-                'status' => 404,
-                'error' => 'No Respondent Found.',
-                'message' => 'No Respondent Found.',
-            ]);
-        }
-
-        // Update respondent details
-        $respondent->name = $request->input('name', $respondent->name);
-        $respondent->surname = $request->input('surname', $respondent->surname);
-        $respondent->date_of_birth = $request->input('date_of_birth', $respondent->date_of_birth);
-        $respondent->id_passport = $request->input('id_passport', $respondent->id_passport);
-        $respondent->mobile = str_replace(' ', '', $request->input('mobile', $respondent->mobile));
-        $respondent->whatsapp = str_replace(' ', '', $request->input('whatsapp', $respondent->whatsapp));
-        $password = Hash::make($request->input('password'));
-        $respondent->password = $password;
-        $respondent->email = $email;
-        $respondent->bank_name = $request->input('bank_name', $respondent->bank_name);
-        $respondent->branch_code = $request->input('branch_code', $respondent->branch_code);
-        $respondent->account_type = $request->input('account_type', $respondent->account_type);
-        $respondent->account_holder = $request->input('account_holder', $respondent->account_holder);
-        $respondent->account_number = $request->input('account_number', $respondent->account_number);
-        $respondent->active_status_id = $request->input('active_status_id', $respondent->active_status_id);
-        $respondent->referral_code = $request->input('referral_code', $respondent->referral_code);
-        $respondent->accept_terms = $request->input('accept_terms', $respondent->accept_terms);
-        $respondent->deactivated_date = $request->input('deactivated_date', $respondent->deactivated_date);
-
-        // Save changes
-        $respondent->save();
-
-        // Log the update activity
-        app('App\Http\Controllers\InternalReportController')
-            ->call_activity(Auth::guard('admin')->user()->role_id, Auth::guard('admin')->user()->id, 'updated', 'respondent');
-
-        return response()->json([
-            'status' => 200,
-            'last_insert_id' => $respondent->id,
-            'message' => 'Respondent Updated.',
-        ]);
-
-    } catch (Exception $e) {
-        // Handle and log the exception
-        return response()->json([
-            'status' => 500,
-            'error' => 'An error occurred while updating the respondent.',
-        ]);
-    }
-}
-
+    
     /**
      * Remove the specified resource from storage.
      */
@@ -551,7 +615,7 @@ class RespondentsController extends Controller
                     3 => 'Unsubscribed',
                     4 => 'Pending',
                     5 => 'Blocked',
-                    6 => 'Unregistred'
+                    6 => 'Unregistered'
                 ];
 
             
@@ -568,7 +632,7 @@ class RespondentsController extends Controller
                     } else if ($length == 10 && $m_number[0] == '0'){
                         $mobile = '27' . substr($m_number, 1);
                     }elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
-                        $mobile = $m_number;
+                        $mobile = '+'.$m_number;
                     } elseif (strlen($m_number) == 12 && strpos($m_number, '+27') === 0) {
                         $mobile = $m_number;
                     }
@@ -586,7 +650,7 @@ class RespondentsController extends Controller
                         $whatsapp = '27' . substr($w_number, 1);
                     }
                     elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
-                        $whatsapp = $w_number;
+                        $whatsapp = '+'. $w_number;
                     } elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                         $whatsapp = $w_number;
                     }
@@ -594,7 +658,7 @@ class RespondentsController extends Controller
 
                 $opted_in = ($post->opted_in && $post->opted_in !== '0000-00-00 00:00:00') ? date("d-m-Y", strtotime($post->opted_in)) : '-';
                 $updated_at = ($post->updated_at != null) ? date("d-m-Y", strtotime($post->updated_at)) : '';
-                $accept_terms = $post->accept_terms == 1 ? 'Yes' : 'No';
+                $accept_terms = $post->accept_terms == 0 ? 'Yes' : 'No';
                 $referral_code = strlen($post->referral_code) > 10 ? substr($post->referral_code, 0, 10) . '...' : $post->referral_code;
 
                 // Build each row of data
@@ -615,11 +679,11 @@ class RespondentsController extends Controller
                     'updated_at' => $updated_at,
                  'referral_code' => '<div class="text-container" title="' . htmlspecialchars($post->referral_code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($referral_code, ENT_QUOTES, 'UTF-8') . '</div>',
                     'accept_terms' => $accept_terms,
-                    'id_show' => '<a href="' . $view_route . '" class="rounded waves-light waves-effect">' . $post->id . '</a>',
+                    'id_show' => (Auth::guard('admin')->user()->role_id != 3) ? '<a href="' . $view_route . '" class="rounded waves-light waves-effect">' . $post->id . '</a>' : '<a href="#">' . $post->id . '</a>',
                 ];
     
                 // Add options for each row based on user permissions
-                if (Auth::guard('admin')->user()->role_id == 1 || Auth::guard('admin')->user()->id == $post->id) {
+                if (Auth::guard('admin')->user()->role_id != 3) {
                     $nestedData['options'] = '<div class="col-md-2">
                         <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
                             title="Action" aria-haspopup="true" aria-expanded="false">
@@ -640,7 +704,7 @@ class RespondentsController extends Controller
                         // If coming from projects page
                         $nestedData['options'] .= '<li class="list-group-item">
                             <a id="deattach_respondents" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                <i class="far fa-trash-alt"></i> De-attach
+                                <i class="far fa-trash-alt"></i> Detach
                             </a>
                         </li>';
                     }else if(str_contains(url()->previous(), '/admin/tags')){
@@ -652,7 +716,7 @@ class RespondentsController extends Controller
                         </li>';
                         $nestedData['options'] .= '<li class="list-group-item">
                             <a id="deattach_tags" data-id="' . $post->id . '" class="rounded waves-light waves-effect">
-                                <i class="far fa-trash-alt"></i> De-attach
+                                <i class="far fa-trash-alt"></i> Detach
                             </a>
                         </li>';
                     } else {

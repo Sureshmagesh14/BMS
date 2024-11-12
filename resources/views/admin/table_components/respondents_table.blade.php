@@ -5,68 +5,72 @@
         @php $projects_id = '0'; @endphp
     @endisset
 
-    @if (str_contains(Request::url(), '/admin/projects'))
-        <a href="#!" data-url="{{ route('attach_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
-            data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attach Respondents') }}"
-            class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-            Attach Respondents
-        </a>
+    @if (Auth::guard('admin')->user()->role_id != 3)
+        @if (str_contains(Request::url(), '/admin/projects'))
+            <a href="#!" data-url="{{ route('attach_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
+                data-ajax-popup="true" class="btn btn-primary" data-bs-original-title="{{ __('Attach Respondents') }}"
+                class="btn btn-primary" data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                Attach Respondents
+            </a>
 
-        <a href="#!" data-url="{{ route('import_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
-            data-ajax-popup="true" class="btn btn-primary"
-            data-bs-original-title="{{ __('Import - Respondents to Project') }}" class="btn btn-primary" data-size="xl"
-            data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-            Import Respondents
-        </a>
-    @elseif (str_contains(Request::url(), '/admin/respondents'))
-        <a href="#!" data-url="{{ route('respondents.create') }}" data-size="xl" data-ajax-popup="true"
-            class="btn btn-primary" data-bs-original-title="{{ __('Create Respondents') }}" class="btn btn-primary"
-            data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
-            Create Respondents
-        </a>
-    @else
-   
+            <a href="#!" data-url="{{ route('import_respondents', ['project_id' => $projects_id]) }}" data-size="xl"
+                data-ajax-popup="true" class="btn btn-primary"
+                data-bs-original-title="{{ __('Import - Respondents to Project') }}" class="btn btn-primary" data-size="xl"
+                data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                Import Respondents
+            </a>
+        @elseif (str_contains(Request::url(), '/admin/respondents'))
+            <a href="#!" data-url="{{ route('respondents.create') }}" data-size="xl" data-ajax-popup="true"
+                class="btn btn-primary" data-bs-original-title="{{ __('Create Respondents') }}" class="btn btn-primary"
+                data-size="xl" data-ajax-popup="true" data-bs-toggle="tooltip" id="create">
+                Create Respondents
+            </a>
+        @else
+    
+        @endif
     @endif
     <br><br>
 
-    <div class="btn-group mr-2 respondents_datatable hided_option" role="group" aria-label="First group" style="display: none;">
+    @if (Auth::guard('admin')->user()->role_id != 3)
+        <div class="btn-group mr-2 respondents_datatable hided_option" role="group" aria-label="First group" style="display: none;">
 
-        {{-- ACTION --}}
-        <select name="action_2" id="action_2" class="form-control respondents_datatable hided_option respondents_select_box">
-            <option value="">Select Action</option>
-            @if (str_contains(Request::url(), '/admin/tags'))
-                <optgroup label="Extras">
-                    <option value="11">Un-Assign from Project</option>
-                </optgroup>
-            @else
-                <optgroup label="Extras">
-                    <option value="10">Notify All Respondents</option>
-                    <option value="11">Un-Assign from Project</option>
-                </optgroup>
+            {{-- ACTION --}}
+            <select name="action_2" id="action_2" class="form-control respondents_datatable hided_option respondents_select_box">
+                <option value="">Select Action</option>
+                @if (str_contains(Request::url(), '/admin/tags'))
+                    <optgroup label="Extras">
+                        <option value="11">Un-Assign from Project</option>
+                    </optgroup>
+                @else
+                    <optgroup label="Extras">
+                        <option value="10">Notify All Respondents</option>
+                        <option value="11">Un-Assign from Project</option>
+                    </optgroup>
 
-                <optgroup label="Respondent">
-                    @if (str_contains(Request::url(), '/admin/projects'))
-                        <option value="qualified">Move to Qualified</option>
-                    @endif
-                    <option value="1">Status > Activate</option>
-                    <option value="2">Status > Deactivate</option>
-                    <option value="3">Status > Opt-Out</option>
-                    @if (Auth::guard('admin')->user()->role_id == 1)
-                        @if (str_contains(Request::url(), '/admin/respondents'))
-                            <option value="delete_all">Delete Selected All</option>
+                    <optgroup label="Respondent">
+                        @if (str_contains(Request::url(), '/admin/projects'))
+                            <option value="qualified">Move to Qualified</option>
                         @endif
-                    @endif
-                </optgroup>
-            @endif
-        </select>
+                        <option value="1">Status > Activate</option>
+                        <option value="2">Status > Deactivate</option>
+                        <option value="3">Status > Opt-Out</option>
+                        @if (Auth::guard('admin')->user()->role_id == 1)
+                            @if (str_contains(Request::url(), '/admin/respondents'))
+                                <option value="delete_all">Delete Selected All</option>
+                            @endif
+                        @endif
+                    </optgroup>
+                @endif
+            </select>
 
-        {{-- PLAY BUTTON --}}
-        <div class="play-button-container ml-3">
-            <a class="play-button respondents_play_button">
-                <div class="play-button__triangle"></div>
-            </a>
+            {{-- PLAY BUTTON --}}
+            <div class="play-button-container ml-3">
+                <a class="play-button respondents_play_button">
+                    <div class="play-button__triangle"></div>
+                </a>
+            </div>
         </div>
-    </div>
+    @endif
 
 
     {{-- FILTER --}}
@@ -101,6 +105,7 @@
                                 <option value="2">Deactivated</option>
                                 <option value="3">Unsubscribed</option>
                                 <option value="5">Blacklisted</option>
+                                <option value="6">Unregistered</option>
                             </select>
                         </li>
                         <li class="mb-3">

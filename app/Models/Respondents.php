@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Searchable;
 use DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Models\RespondentTags; 
 class Respondents extends Authenticatable 
 {
     use HasApiTokens, HasFactory, Notifiable, Searchable, SoftDeletes;
@@ -20,7 +20,7 @@ class Respondents extends Authenticatable
     protected $guarded = ['id'];
     protected $hidden = ['password', 'remember_token',];
     protected $fillable = ['name','surname','date_of_birth','id_passport','mobile','whatsapp','email','bank_name',
-        'branch_code','account_type','account_holder','account_number','active_status_id','password','updated_at','referral_code','accept_terms','type','deactivated_date'
+        'branch_code','account_type','account_holder','account_number','active_status_id','password','updated_at','referral_code','accept_terms','type','deactivated_date','opted_status'
     ];
     
     public function getAuthPassword()
@@ -177,4 +177,9 @@ class Respondents extends Authenticatable
 
         return $array_send;
     }
+
+    public function respondentTags()
+{
+    return $this->hasMany(RespondentTags::class, 'respondent_id', 'id');
+}
 }

@@ -29,30 +29,33 @@
                         <div class="card-body">
 
                             <div class="mb-0">
-                                <div class="text-right">
+                                @if (Auth::guard('admin')->user()->role_id != 3)
+                                    <div class="text-right">
 
-                                    <div class="btn-group mr-2">
+                                        <div class="btn-group mr-2">
 
-                                        <a href="#!" data-url="{{ route('projects.edit', $data->id) }}"
-                                            data-size="xl" data-ajax-popup="true" class="btn btn-primary"
-                                            data-bs-original-title="Edit Projects" data-bs-toggle="tooltip"
-                                            id="create">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
+                                            <a href="#!" data-url="{{ route('projects.edit', $data->id) }}"
+                                                data-size="xl" data-ajax-popup="true" class="btn btn-primary"
+                                                data-bs-original-title="Edit Projects" data-bs-toggle="tooltip"
+                                                id="create">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                        <div class="btn-group mr-2" role="group" aria-label="First group">
+    
+                                            <input type="hidden" name="project_id" id="project_id" value="{{ $data->id }}">
+                                            <select name="action_1" id="action_1" class="form-control projects_table show_hided_option select_box">
+                                                <option value="">Select Action</option>
+                                                <option value="3">Status &gt; Complete</option>
+                                                <option value="5">Project Complete &amp; Qualified</option>
+                                            </select>
+                                        </div>
+
+
+
                                     </div>
-                                    <div class="btn-group mr-2" role="group" aria-label="First group">
- 
-                                        <input type="hidden" name="project_id" id="project_id" value="{{ $data->id }}">
-                                        <select name="action_1" id="action_1" class="form-control projects_table show_hided_option select_box">
-                                            <option value="">Select Action</option>
-                                            <option value="3">Status &gt; Complete</option>
-                                            <option value="5">Project Complete &amp; Qualified</option>
-                                        </select>
-                                    </div>
+                                @endif
 
-
-
-                                </div>
                                 <table class="table">
                                     <tbody>
                                         <tr>
@@ -172,56 +175,59 @@
                         <!-- end card-body -->
                     </div>
                     <!-- end card -->
-
-                    <!-- rewards start page title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box d-flex align-items-center justify-content-between">
-                                <h4 class="mb-0">Rewards</h4>
+                    
+                    @if (Auth::guard('admin')->user()->role_id != 3)
+                        <!-- rewards start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-flex align-items-center justify-content-between">
+                                    <h4 class="mb-0">Rewards</h4>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- rewards end page title -->
-                    <div class="card">
-                        <div class="card-body">
-                            @include('admin.table_components.rewards_table')
+                        <!-- rewards end page title -->
+                        <div class="card">
+                            <div class="card-body">
+                                @include('admin.table_components.rewards_table')
+                            </div>
+                            <!-- end card-body -->
                         </div>
-                        <!-- end card-body -->
-                    </div>
 
-                    <!-- Respondent start page title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box d-flex align-items-center justify-content-between">
-                                <h4 class="mb-0">Respondents</h4>
+                        <!-- Respondent start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-flex align-items-center justify-content-between">
+                                    <h4 class="mb-0">Respondents</h4>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Respondent end page title -->
-                    <div class="card">
-                        <div class="card-body">
-                            @include('admin.table_components.respondents_table', [
-                                'project_id' => $data->id,
-                            ])
+                        <!-- Respondent end page title -->
+                        <div class="card">
+                            <div class="card-body">
+                                @include('admin.table_components.respondents_table', [
+                                    'project_id' => $data->id,
+                                ])
+                            </div>
+                            <!-- end card-body -->
                         </div>
-                        <!-- end card-body -->
-                    </div>
 
-                    <!-- Respondent start page title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box d-flex align-items-center justify-content-between">
-                                <h4 class="mb-0">Qualified Respondents</h4>
+                    
+                        <!-- Respondent start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-flex align-items-center justify-content-between">
+                                    <h4 class="mb-0">Qualified Respondents</h4>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Respondent end page title -->
-                    <div class="card">
-                        <div class="card-body">
-                            @include('admin.table_components.qualified_table', ['project_id' => $data->id,])
+                        <!-- Respondent end page title -->
+                        <div class="card">
+                            <div class="card-body">
+                                @include('admin.table_components.qualified_table', ['project_id' => $data->id,])
+                            </div>
+                            <!-- end card-body -->
                         </div>
-                        <!-- end card-body -->
-                    </div>
+                    @endif
 
                 </div> <!-- end col -->
             </div> <!-- end row -->
@@ -512,7 +518,7 @@
         if (select_value == 11) {
             titles = "Un-Assign from Project";
             select_action("POST", all_id, project_id, "{{ route('project_unassign') }}",
-                'respondents_datatable', titles, "Are You Want To Un-Assign from Project", "Action");
+                'respondents_datatable', titles, "Confirm that you want to Un-Assign respondents from Project", "Action");
         } else if (select_value == 10) {
             titles = "Notify Respondent";
             select_action("POST", all_id, project_id, "{{ route('notify_respondent') }}",
@@ -545,7 +551,7 @@
         else if (select_value == 11) {
             titles = "Un-Assign from Project";
             select_action("POST", all_id, project_id, "{{ route('project_unassign') }}",
-                'respondents_datatable', titles, "Are You Want To Un-Assign from Project", "Action");
+                'respondents_datatable', titles, "Confirm that you want to Un-Assign respondents from Project", "Confirm");
         }
         else if (select_value == 10) {
             titles = "Notify Respondent";

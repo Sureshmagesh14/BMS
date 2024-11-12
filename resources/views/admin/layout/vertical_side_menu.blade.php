@@ -33,7 +33,7 @@
                     </a>
                 </li>
 
-
+                @if (Auth::guard('admin')->user()->status_id != 2)
                 <li class="menu-title" key="t-apps">Admin</li>
 
                 <li>
@@ -84,34 +84,41 @@
                 }
                 
                 ?>
-                <li>
-                    <a href="{{ $templateRoute }}" class="waves-effect">
-                        <i class="fas fa-poll"></i>
-                        <span class="menu-item" key="t-contacts">Survey</span>
-                    </a>
-                </li>
-                <li style="display:none;">
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="icon nav-icon" data-feather="book"></i>
-                        <span class="menu-item" key="t-contacts">Survey</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="#" key="t-user-grid">Folder</a></li>
-                        {{-- <li><a href="{{route('folder')}}" key="t-user-grid">Folder</a></li> --}}
-                        <li><a href="{{ route('survey') }}" key="t-user-list">Survey</a></li>
-                        <li><a href="{{ $templateRoute }}" key="t-profile">Templates</a></li>
-                        <li><a href="contacts-profile.html" key="t-profile">Response</a></li>
-                    </ul>
-                </li>
 
-                <li>
-                    <a href="{{ route('user-events') }}" class=" waves-effect">
-                        <i class="fas fa-database"></i>
-                        <span class="menu-item" key="t-chat">Internal Reports</span>
-                    </a>
-                </li>
+                @if (Auth::guard('admin')->user()->role_id != 3)
+                    <li>
+                        <a href="{{ $templateRoute }}" class="waves-effect">
+                            <i class="fas fa-poll"></i>
+                            <span class="menu-item" key="t-contacts">Survey</span>
+                        </a>
+                    </li>
+                
+                    <li style="display:none;">
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="icon nav-icon" data-feather="book"></i>
+                            <span class="menu-item" key="t-contacts">Survey</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="#" key="t-user-grid">Folder</a></li>
+                            {{-- <li><a href="{{route('folder')}}" key="t-user-grid">Folder</a></li> --}}
+                            <li><a href="{{ route('survey') }}" key="t-user-list">Survey</a></li>
+                            <li><a href="{{ $templateRoute }}" key="t-profile">Templates</a></li>
+                            <li><a href="contacts-profile.html" key="t-profile">Response</a></li>
+                        </ul>
+                    </li>
+                @endif
 
-                @if (Auth::guard('admin')->user()->role_id == 1)
+                @if (Auth::guard('admin')->user()->role_id == 1 || Auth::guard('admin')->user()->role_id == 2)
+                    <li>
+                        <a href="{{ route('user-events') }}" class=" waves-effect">
+                            <i class="fas fa-database"></i>
+                            <span class="menu-item" key="t-chat">Internal Reports</span>
+                        </a>
+                    </li>
+                @endif
+
+               
+                @if (Auth::guard('admin')->user()->role_id != 3)
                     <li>
                         <a href="{{ route('cashouts') }}" class=" waves-effect">
                             <i class="fas fa-money-bill"></i>
@@ -119,6 +126,7 @@
                         </a>
                     </li>
                 @endif
+                
 
                 {{-- <li>
                     <a href="{{route('actions')}}" class=" waves-effect">
@@ -136,12 +144,14 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="{{ route('respondents.index') }}" class=" waves-effect">
-                        <i class="fas fa-user-friends"></i>
-                        <span class="menu-item" key="t-chat">Respondents</span>
-                    </a>
-                </li>
+                @if (Auth::guard('admin')->user()->role_id != 3)
+                    <li>
+                        <a href="{{ route('respondents.index') }}" class=" waves-effect">
+                            <i class="fas fa-user-friends"></i>
+                            <span class="menu-item" key="t-chat">Respondents</span>
+                        </a>
+                    </li>
+                @endif
 
                 <li>
                     <a href="{{ route('tags.index') }}" class=" waves-effect">
@@ -159,62 +169,69 @@
 
                 <li class="menu-title">Settings</li>
 
-                <li>
-                    <a href="{{ route('groups.index') }}" class="waves-effect">
-                        <i class="fas fa-layer-group"></i>
-                        <span class="menu-item" key="t-calendar">Profile Groups</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('banks.index') }}" class=" waves-effect">
-                        <i class="fas fa-piggy-bank"></i>
-                        <span class="menu-item" key="t-chat">Banks</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('charities.index') }}" class=" waves-effect">
-                        <i class="fas fa-briefcase"></i>
-                        <span class="menu-item" key="t-chat">Charities</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('networks.index') }}" class=" waves-effect">
-                        <i class="fas fa-network-wired"></i>
-                        <span class="menu-item" key="t-chat">Cellular Networks
-                        </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('qualified_respondent.index') }}" class=" waves-effect">
-                        <i class="fa fa-certificate" aria-hidden="true"></i>
-                        <span class="menu-item" key="t-chat">Qualified Respondent
-                        </span>
-                    </a>
-                </li>
-
                 @if (Auth::guard('admin')->user()->role_id == 1)
                     <li>
-                        <a href="{{ route('contents.index') }}" class=" waves-effect">
-                            <i class="fab fa-elementor"></i>
-                            <span class="menu-item" key="t-chat">Contents
+                        <a href="{{ route('groups.index') }}" class="waves-effect">
+                            <i class="fas fa-layer-group"></i>
+                            <span class="menu-item" key="t-calendar">Profile Groups</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('banks.index') }}" class=" waves-effect">
+                            <i class="fas fa-piggy-bank"></i>
+                            <span class="menu-item" key="t-chat">Banks</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('charities.index') }}" class=" waves-effect">
+                            <i class="fas fa-briefcase"></i>
+                            <span class="menu-item" key="t-chat">Charities</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('networks.index') }}" class=" waves-effect">
+                            <i class="fas fa-network-wired"></i>
+                            <span class="menu-item" key="t-chat">Cellular Networks
                             </span>
                         </a>
                     </li>
                 @endif
 
-                <li class="menu-title" key="t-apps">Downloads </li>
+                @if (Auth::guard('admin')->user()->role_id != 3)
+                    <li>
+                        <a href="{{ route('qualified_respondent.index') }}" class=" waves-effect">
+                            <i class="fa fa-certificate" aria-hidden="true"></i>
+                            <span class="menu-item" key="t-chat">Qualified Respondent
+                            </span>
+                        </a>
+                    </li>
+                @endif
+                
 
+                
                 <li>
-                    <a href="{{ route('admin.export') }}" class="waves-effect">
-                        <i class="fas fa-file-export"></i>
-                        <span class="menu-item" key="t-calendar">Export</span>
+                    <a href="{{ route('contents.index') }}" class=" waves-effect">
+                        <i class="fab fa-elementor"></i>
+                        <span class="menu-item" key="t-chat">Contents
+                        </span>
                     </a>
                 </li>
+                
 
+                @if (Auth::guard('admin')->user()->role_id != 3)
+                    <li class="menu-title" key="t-apps">Downloads </li>
+
+                    <li>
+                        <a href="{{ route('admin.export') }}" class="waves-effect">
+                            <i class="fas fa-file-export"></i>
+                            <span class="menu-item" key="t-calendar">Export</span>
+                        </a>
+                    </li>
+                @endif
+                @endif
             </ul>
         </div>
         <!-- Sidebar -->

@@ -103,9 +103,11 @@
     .star_require {
         color: red;
     }
-    .wizard > .steps a{
-        background-color:#fff;
+
+    .wizard>.steps a {
+        background-color: #fff;
     }
+
     @media only screen and (max-width: 600px) {
         .col-sm-12 {
             width: 100% !important;
@@ -131,11 +133,13 @@
                         <form action="" name="profile_wizard_form" id="profile_wizard_form">
                             <div id="profile_wizard">
                                 @php
-                                if (!empty($basic_details['updated_at'])) {
-                                    $basic_formatted_date = \Carbon\Carbon::parse($basic_details['updated_at'])->format('Y/m/d');
-                                } else {
-                                    $basic_formatted_date = ''; // or some default value
-                                }
+                                    if (!empty($basic_details['updated_at'])) {
+                                        $basic_formatted_date = \Carbon\Carbon::parse(
+                                            $basic_details['updated_at'],
+                                        )->format('Y/m/d');
+                                    } else {
+                                        $basic_formatted_date = ''; // or some default value
+                                    }
                                 @endphp
                                 <h2>Basic Details <br><small>(Last Updated: {{ $basic_formatted_date }})</small></h2>
                                 <section>
@@ -146,8 +150,8 @@
                                                 value="{{ $pid }}">
                                             <input type="hidden" name="unique_id" class="form-control unique_id"
                                                 id="get_unique_id" value="{{ $pid }}">
-                                                <input type="hidden" name="basic[updated_at]" class="form-control updated_at_basic"
-                                                id="updated_at_basic" >
+                                            <input type="hidden" name="basic[updated_at]"
+                                                class="form-control updated_at_basic" id="updated_at_basic">
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="first_name">First Name <span
@@ -173,7 +177,8 @@
                                                 <input type="text" name="basic[mobile_number]" id="mobile_number"
                                                     placeholder="08 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
-                                                    value="{{ $resp_details->mobile }}" maxlength="16" >
+                                                    value="{{ str_starts_with($resp_details->mobile, '27') ? ltrim(substr($resp_details->mobile, 2), '0') : ltrim($resp_details->mobile, '0') }}"
+                                                    maxlength="16">
 
                                             </div>
                                             <small class="form-text text-muted">Don’t include 0 in starting.</small>
@@ -189,14 +194,15 @@
                                                 <input type="text" name="basic[whatsapp_number]" id="whatsapp_number"
                                                     placeholder="08 966 0786"
                                                     class="form-control vi-border-clr border-radius-0"
-                                                    value="{{ $resp_details->whatsapp }}" maxlength="16" required>
+                                                    value="{{ str_starts_with($resp_details->whatsapp, '27') ? ltrim(substr($resp_details->whatsapp, 2), '0') : ltrim($resp_details->whatsapp, '0') }}"
+                                                    maxlength="16" required>
                                             </div>
                                             <small class="form-text text-muted">Don’t include 0 in starting.</small>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="email">Email <span class="star_require">*</span></label>
                                             <input type="email" class="form-control" id="email"
-                                                name="basic[email]" value="{{ $resp_details->email }}" >
+                                                name="basic[email]" value="{{ $resp_details->email }}">
                                             {{-- <a style="float: right;" href="{{ route('emailChangeOtpSend') }}">Do you want to change your email? Click here.</a> --}}
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
@@ -211,10 +217,14 @@
                                             @if ($resp_details->date_of_birth != null)
                                                 <code>
                                                     @php
-                                                        $bday = new \DateTime($resp_details->date_of_birth);
-                                                        $today = new \DateTime(date('m.d.y'));
-                                                        $diff = $today->diff($bday);
-                                                        $age = $diff->y . ' Years';
+                                                        if ($resp_details->date_of_birth === '0000-00-00') {
+                                                            $age = '';
+                                                        } else {
+                                                            $bday = new \DateTime($resp_details->date_of_birth);
+                                                            $today = new \DateTime();
+                                                            $diff = $today->diff($bday);
+                                                            $age = $diff->y . ' Years';
+                                                        }
                                                     @endphp
                                                 </code>
                                                 <small id="agecal" class="text-danger">{{ $age }}</small>
@@ -222,23 +232,26 @@
                                                 <span id="agecal"></span>
                                             @endif
 
+
                                         </div>
                                     </div>
                                 </section>
                                 @php
-                                if (!empty($essential_details['updated_at'])) {
-                                    $formatted_date = \Carbon\Carbon::parse($essential_details['updated_at'])->format('Y/m/d');
-                                } else {
-                                    $formatted_date = ''; // or some default value
-                                }
+                                    if (!empty($essential_details['updated_at'])) {
+                                        $formatted_date = \Carbon\Carbon::parse(
+                                            $essential_details['updated_at'],
+                                        )->format('Y/m/d');
+                                    } else {
+                                        $formatted_date = ''; // or some default value
+                                    }
                                 @endphp
                                 <h2>Essential Details <br><small>(Last Updated: {{ $formatted_date }})</small></h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
                                         <!-- Relationship Status -->
                                         <div class="col-12 col-md-6 mb-3">
-                                            <input type="hidden" name="essential[updated_at]" class="form-control updated_at_essential"
-                                            id="updated_at_essential" >
+                                            <input type="hidden" name="essential[updated_at]"
+                                                class="form-control updated_at_essential" id="updated_at_essential">
                                             <label for="relationship_status">Relationship Status <span
                                                     class="text-danger">*</span></label>
                                             <select name="essential[relationship_status]" id="relationship_status"
@@ -477,27 +490,31 @@
 
 
                                         <div class="col-12 col-md-6 mb-3">
-                                            <label for="household_income_per_month">Household Income Per Month <span class="text-danger">*</span></label>
-                                            <select name="essential[household_income_per_month]" id="household_income_per_month" class="form-control" required>
+                                            <label for="household_income_per_month">Household Income Per Month <span
+                                                    class="text-danger">*</span></label>
+                                            <select name="essential[household_income_per_month]"
+                                                id="household_income_per_month" class="form-control" required>
                                                 <option value="">Select</option>
                                                 @foreach ($income_per_month as $income)
-                                                @php
-                                                    // Check if $personalIncomeValue is an object and get its ID, otherwise use it as is
-                                                    $personalIncomeId = is_object($personalIncomeValue) ? $personalIncomeValue->id : $personalIncomeValue;
-                                                    // Disable options where the income is less than the selected personal income
-                                                    $isDisabled = $income->id < $personalIncomeId;
-                                                @endphp
-                                                <option value="{{ $income->id }}"
-                                                    @isset($essential_details['household_income_per_month'])
+                                                    @php
+                                                        // Check if $personalIncomeValue is an object and get its ID, otherwise use it as is
+                                                        $personalIncomeId = is_object($personalIncomeValue)
+                                                            ? $personalIncomeValue->id
+                                                            : $personalIncomeValue;
+                                                        // Disable options where the income is less than the selected personal income
+                                                        $isDisabled = $income->id < $personalIncomeId;
+                                                    @endphp
+                                                    <option value="{{ $income->id }}"
+                                                        @isset($essential_details['household_income_per_month'])
                                                         @if ($essential_details['household_income_per_month'] == $income->id) selected @endif
                                                     @endisset
-                                                    @if ($isDisabled) disabled @endif>
-                                                    {{ $income->income }}
-                                                </option>
+                                                        @if ($isDisabled) disabled @endif>
+                                                        {{ $income->income }}
+                                                    </option>
                                                 @endforeach
-                                            </select>                                            
+                                            </select>
                                         </div>
-                                        
+
 
 
 
@@ -511,8 +528,8 @@
                                                 min="0" max="10">
                                         </div>
 
-                                         <!-- Number of Vehicles -->
-                                         <div class="col-12 col-md-6 mb-3">
+                                        <!-- Number of Vehicles -->
+                                        <div class="col-12 col-md-6 mb-3">
                                             <label for="no_vehicle">Number of Vehicles <span
                                                     class="text-danger">*</span></label>
                                             <input type="number" name="essential[no_vehicle]" id="no_vehicle"
@@ -534,13 +551,16 @@
                                 </section>
 
                                 @php
-                                if (!empty($extended_details['updated_at'])) {
-                                    $extended_formatted_date = \Carbon\Carbon::parse($extended_details['updated_at'])->format('Y/m/d');
-                                } else {
-                                    $extended_formatted_date = ''; // or some default value
-                                }
+                                    if (!empty($extended_details['updated_at'])) {
+                                        $extended_formatted_date = \Carbon\Carbon::parse(
+                                            $extended_details['updated_at'],
+                                        )->format('Y/m/d');
+                                    } else {
+                                        $extended_formatted_date = ''; // or some default value
+                                    }
                                 @endphp
-                                <h2>Extended Details <br><small>(Last Updated: {{ $extended_formatted_date }})</small></h2>
+                                <h2>Extended Details <br><small>(Last Updated: {{ $extended_formatted_date }})</small>
+                                </h2>
                                 <section style="overflow-x: auto;">
                                     <div class="row">
                                         <div class="col-6 col-md-6 col-sm-12 overflow-auto">
@@ -554,13 +574,16 @@
                                                 <thead>
                                                     <tr>
                                                         <th style="text-align: center;">Child</th>
-                                                        <th style="text-align: center;">DOB <span class="text-danger">*</span></th>
-                                                        <th style="text-align: center;">Gender <span class="text-danger">*</span></th>
+                                                        <th style="text-align: center;">DOB <span
+                                                                class="text-danger">*</span></th>
+                                                        <th style="text-align: center;">Gender <span
+                                                                class="text-danger">*</span></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <input type="hidden" name="children[updated_at]" class="form-control updated_at_children"
-                                                    id="updated_at_children" >
+                                                    <input type="hidden" name="children[updated_at]"
+                                                        class="form-control updated_at_children"
+                                                        id="updated_at_children">
                                                     @php $child_key = 1; @endphp
                                                     @if ($children_set == 0)
                                                         @foreach ($child_details as $child)
@@ -574,7 +597,8 @@
                                                                         id="children_child_{{ $child_key }}"
                                                                         class="form-control child_age"
                                                                         name="children[dob_{{ $child_key }}][]"
-                                                                        value="{{ $child['date'] }}">
+                                                                        value="{{ $child['date'] === '0000-00-00' ? '0000/00/00' : str_replace('-', '/', $child['date']) }}">
+
                                                                 </td>
                                                                 <td>
                                                                     <select id="gender_{{ $child_key }}"
@@ -633,18 +657,23 @@
                                                 <thead>
                                                     <tr>
                                                         <th style="text-align: center;">Vehicle</th>
-                                                        <th style="text-align: center;">Brand <span class="text-danger">*</span></th>
-                                                        <th style="text-align: center;">Type of vehicle <span class="text-danger">*</span></th>
-                                                        <th style="text-align: center;">Model <span class="text-danger">*</span></th>
-                                                        <th style="text-align: center;">Year <span class="text-danger">*</span></th>
+                                                        <th style="text-align: center;">Brand <span
+                                                                class="text-danger">*</span></th>
+                                                        <th style="text-align: center;">Type of vehicle <span
+                                                                class="text-danger">*</span></th>
+                                                        <th style="text-align: center;">Model <span
+                                                                class="text-danger">*</span></th>
+                                                        <th style="text-align: center;">Year <span
+                                                                class="text-danger">*</span></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @php $vehicle_key = 1; @endphp
                                                     @if ($vehicle_set == 0)
                                                         @foreach ($vehicle_details as $vehicle)
-                                                        <input type="hidden" name="vehicle[updated_at]" class="form-control updated_at_vehicle"
-                                                        id="updated_at_vehicle" >
+                                                            <input type="hidden" name="vehicle[updated_at]"
+                                                                class="form-control updated_at_vehicle"
+                                                                id="updated_at_vehicle">
                                                             <tr class="more_tr role_tr"
                                                                 id="vehicle_tr{{ $vehicle_key }}">
                                                                 <td>
@@ -666,6 +695,7 @@
                                                                     <select class="form-control vehicle_type"
                                                                         id="type_{{ $vehicle_key }}"
                                                                         name="vehicle[type_{{ $vehicle_key }}][]">
+                                                                        <option value="">Select</option>
                                                                         <option value="sedan"
                                                                             @isset($vehicle['type']) @if ('sedan' == $vehicle['type']) selected @endif @endisset>
                                                                             Sedan</option>
@@ -859,8 +889,10 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
-                                            <label for="bank_main">Which bank do you bank with (which is your bank main) <span class="text-danger">*</span></label>
-                                            <select name="extended[bank_main]" id="bank_main" onchange="show_other(this, 'bank_main')" required>
+                                            <label for="bank_main">Which bank do you bank with (which is your bank
+                                                main) <span class="text-danger">*</span></label>
+                                            <select name="extended[bank_main]" id="bank_main"
+                                                onchange="show_other(this, 'bank_main')" required>
                                                 <option value="">Select</option>
                                                 @foreach ($banks as $bank)
                                                     <option value="{{ $bank->id }}"
@@ -872,8 +904,8 @@
                                                     Other</option>
                                             </select>
                                             <br>
-                                            <input type="hidden" name="extended[updated_at]" class="form-control updated_at_extended"
-                                            id="updated_at_extended" >
+                                            <input type="hidden" name="extended[updated_at]"
+                                                class="form-control updated_at_extended" id="updated_at_extended">
                                             <input type="text" name="extended[bank_main_other]"
                                                 id="bank_main_other" class="form-control"
                                                 placeholder="Please specify"
@@ -885,10 +917,11 @@
                                                 @isset($extended_details['bank_main_other']) value="{{ $extended_details['bank_main_other'] }}" @endisset>
                                         </div>
 
-                                        
+
 
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
-                                            <label for="bank_secondary">Which is your secondary bank? <span class="text-danger">*</span></label>
+                                            <label for="bank_secondary">Which is your secondary bank? <span
+                                                    class="text-danger">*</span></label>
                                             <select name="extended[bank_secondary]" id="bank_secondary"
                                                 onchange="show_other(this, 'bank_secondary')" required>
                                                 <option value="">Select</option>
@@ -900,7 +933,7 @@
                                                 <option value="other"
                                                     @isset($extended_details['bank_secondary']) @if ($extended_details['bank_secondary'] == 'other') selected @endif @endisset>
                                                     Other</option>
-                                                    <option value="I_dont_have_a_second_bank_account"
+                                                <option value="I_dont_have_a_second_bank_account"
                                                     @isset($extended_details['bank_secondary']) @if ($extended_details['bank_secondary'] == 'I_dont_have_a_second_bank_account') selected @endif @endisset>
                                                     I don’t have a second bank account</option>
                                             </select>
@@ -917,7 +950,8 @@
                                         </div>
 
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
-                                            <label for="home_lang">Home Language <span class="text-danger">*</span></label>
+                                            <label for="home_lang">Home Language <span
+                                                    class="text-danger">*</span></label>
                                             <select name="extended[home_lang]" id="home_lang"
                                                 onchange="show_other(this, 'home_lang')" required>
                                                 <option value="">Select</option>
@@ -971,7 +1005,8 @@
                                         </div>
 
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
-                                            <label for="secondary_home_lang">Secondary Language <span class="text-danger">*</span></label>
+                                            <label for="secondary_home_lang">Secondary Language <span
+                                                    class="text-danger">*</span></label>
                                             <select name="extended[secondary_home_lang]" id="secondary_home_lang"
                                                 onchange="show_other(this, 'secondary_home_lang')" required>
                                                 <option value="">Select</option>
@@ -1011,7 +1046,7 @@
                                                 <option value="other"
                                                     @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'other') selected @endif @endisset>
                                                     Other</option>
-                                                    <option value="none"
+                                                <option value="none"
                                                     @isset($extended_details['secondary_home_lang']) @if ($extended_details['secondary_home_lang'] == 'none') selected @endif @endisset>
                                                     None</option>
                                             </select>
@@ -1073,43 +1108,85 @@
 
 
         // Custom validation method for phone numbers
-        $.validator.addMethod("phoneFormat", function(value, element) {
-            return this.optional(element) || /^\d{3} \d{3} \d{4}$/.test(value);
-        }, "Please enter a valid phone number.");
+        $.validator.addMethod("mobile_format", function(value, element) {
+            // Remove all non-numeric characters before validating
+            var cleanedValue = value.replace(/\D/g,
+            ''); // This removes any non-digit characters (spaces, underscores)
+
+            // Check if the cleaned value is 11 digits long
+            return cleanedValue.length === 9;
+
+        }, "Invalid Mobile Number Format.");
 
         // Initialize form validation
         form.validate({
             rules: {
-                // mobile_number: {
-                //     required: true,
-                //     phoneFormat: true
-                // },
-                whatsapp_number: {
+                "basic[mobile_number]": {
                     required: true,
-                    phoneFormat: true
+                    minlength: 11, // Minimum length (after removing spaces and underscores)
+                    maxlength: 11, // Maximum length (after removing spaces and underscores)
+                    mobile_format: true, // Use the correct custom validation method name here
+                    remote: {
+                        url: '{{ route('respondent_mobile_check') }}',
+                        type: "GET",
+                        data: {
+                            mobile_number: function() {
+                                // Remove spaces and underscores before submitting the phone number
+                                return $('input[name="basic[mobile_number]"]').val().replace(
+                                    /[\s_]+/g, ''); // Remove spaces and underscores
+                            },
+                            form_name: "profile_wizard_form",
+                            id: function() {
+                                return '{{ $pid }}'; // Ensure this variable is properly rendered in the template
+                            },
+                        },
+                        dataFilter: function(response) {
+                            var json = JSON.parse(response);
+                            return json.valid ? "true" : "false";
+                        }
+                    }
                 },
-                relationship_status: "required",
-                gender: "required",
-                ethnic_group: "required",
-                education_level: "required",
-                employment_status: "required",
-                industry_my_company: "required",
-                personal_income_per_month: "required",
-                household_income_per_month: "required",
-                province: "required",
-                suburb: "required",
-                business_org: "required",
-                org_company: "required",
-                bank_main: "required",
-                home_lang: "required",
+                "basic[whatsapp_number]": {
+                    required: true,
+                    minlength: 11, // Minimum length (after removing spaces and underscores)
+                    maxlength: 11, // Maximum length (after removing spaces and underscores)
+                    mobile_format: true, // Use the correct custom validation method name here
+                    remote: {
+                        url: '{{ route('respondent_whatsap_check') }}',
+                        type: "GET",
+                        data: {
+                            whatsapp_number: function() {
+                                // Remove spaces and underscores before submitting the phone number
+                                return $('input[name="basic[whatsapp_number]"]').val().replace(
+                                    /[\s_]+/g, ''); // Remove spaces and underscores
+                            },
+                            form_name: "profile_wizard_form",
+                            id: function() {
+                                return '{{ $pid }}'; // Ensure this variable is properly rendered in the template
+                            },
+                        },
+                        dataFilter: function(response) {
+                            var json = JSON.parse(response);
+                            return json.valid ? "true" : "false";
+                        }
+                    }
+                },
+                // other fields...
             },
             messages: {
-                // mobile_number: {
-                //     phoneFormat: "Please enter a valid phone number (XXX XXX XXXX)"
-                // },
-                whatsapp_number: {
-                    phoneFormat: "Please enter a valid phone number (XXX XXX XXXX)"
-                }
+                "basic[mobile_number]": {
+                    required: "Mobile number is required.",
+                    minlength: "Mobile number must be at least 11 characters.",
+                    maxlength: "Mobile number cannot exceed 11 characters.",
+                    mobile_format: "Invalid Mobile Number Format."
+                },
+                "basic[whatsapp_number]": {
+                    required: "Whatsapp number is required.",
+                    minlength: "Whatsapp number must be at least 11 characters.",
+                    maxlength: "Whatsapp number cannot exceed 11 characters.",
+                    mobile_format: "Invalid Whatsapp Number Format."
+                },
+                // other messages...
             },
             highlight: function(element, errorClass) {
                 var $element = $(element);
@@ -1138,6 +1215,7 @@
                 }
             }
         });
+
 
         // Setup Steps Wizard
         $("#profile_wizard").steps({
@@ -1180,7 +1258,7 @@
                     // Prevent step change if validation fails
                     return false;
                 }
-                
+
                 $.confirm({
                     title: "",
                     content: "Are you happy with the information and want to complete your profile?",
@@ -1234,7 +1312,14 @@
                                 };
 
                                 wizard_save(datas);
-                                window.location.href = "{{ route('user.dashboard') }}";
+                                var delayTime =
+                                3000; // Change this to your desired time
+
+                                setTimeout(function() {
+                                    window.location.href =
+                                        "{{ route('user.dashboard') }}";
+                                }, delayTime);
+
                             }
                         },
                         cancel: function() {
@@ -1253,7 +1338,7 @@
             $('#children_table > tbody > tr').each(function() {
                 var tdCount = $(this).find('td').length;
 
-                if(tdCount > 0){
+                if (tdCount > 0) {
                     var get_date = $(this).find(".child_age").val();
                     var get_gender = $(this).find(".child_gender").val();
                     if (!get_date || !get_gender) {
@@ -1261,7 +1346,7 @@
                         return false; // Break out of each loop
                     }
                 }
-                
+
             });
 
             if (!isValid) {
@@ -1273,7 +1358,7 @@
             $('#vehicle_table > tbody > tr').each(function() {
                 var tdCount = $(this).find('td').length;
 
-                if(tdCount > 0){
+                if (tdCount > 0) {
                     var get_brand = $(this).find(".vehicle_brand").val();
                     var get_type = $(this).find(".vehicle_type").val();
                     var get_model = $(this).find(".vehicle_model").val();
@@ -1339,6 +1424,7 @@
                         '</select></td>' +
                         '<td><select class="form-control vehicle_type" id="type_' + vehicles +
                         '" name="vehicle[type_' + vehicles + '][]">' +
+                        '<option value="">Select</option>' +
                         '<option value="sedan">Sedan</option>' +
                         '<option value="coupe">Coupe</option>' +
                         '<option value="sports_car">Sports Car</option>' +
@@ -1434,85 +1520,56 @@
             return this.optional(element) || /^\d{3} \d{3} \d{4}$/.test(value);
         }, "Please enter a valid phone number.");
 
-        $("#profile_wizard_form").validate({
-            rules: {
-                mobile_number: {
-                    required: true,
-                    phoneUS: true
-                },
-                whatsapp_number: {
-                    required: true,
-                    phoneUS: true
-                },
-                relationship_status: "required",
-                gender: "required",
-                ethnic_group: "required",
-                education_level: "required",
-                employment_status: "required",
-                industry_my_company: "required",
-                personal_income_per_month: "required",
-                household_income_per_month: "required",
-                province: "required",
-                suburb: "required",
-                business_org: "required",
-                org_company: "required",
-                bank_main: "required",
-                home_lang: "required",
-            },
-            messages: {
-                mobile_number: {
-                    phoneUS: "Please enter a valid mobile number."
-                },
-                whatsapp_number: {
-                    phoneUS: "Please enter a valid WhatsApp number."
-                }
-            }
-        });
+
+
+        // Event listener for personal income change
         $('#personal_income_per_month').on('change', function() {
-    // Get the selected personal income value
-    var personalIncomeText = $(this).find('option:selected').text();
-    
-    // Extract numerical values from the personal income range
-    var personalIncomeRange = personalIncomeText.match(/\d+/g);
-    if (!personalIncomeRange || personalIncomeRange.length < 2) {
-        console.error("Selected personal income range is invalid.");
-        return;
-    }
-    
-    // Convert to integers
-    var personalIncomeMin = parseInt(personalIncomeRange[0].replace(/\D/g, ''), 10);
-    var personalIncomeMax = parseInt(personalIncomeRange[1].replace(/\D/g, ''), 10);
+            // Get the selected personal income value
+            var personalIncomeText = $(this).find('option:selected').text();
 
-    // Get the household income options
-    var householdIncomeOptions = $('#household_income_per_month').find('option');
-    
-    // Filter the household income options based on the selected personal income
-    householdIncomeOptions.each(function() {
-        var householdIncomeText = $(this).text();
-        var householdIncomeRange = householdIncomeText.match(/\d+/g);
-        
-        if (!householdIncomeRange || householdIncomeRange.length < 2) {
-            console.error("Household income range is invalid for option: " + householdIncomeText);
-            return;
-        }
-        
-        // Convert to integers
-        var householdIncomeMin = parseInt(householdIncomeRange[0].replace(/\D/g, ''), 10);
-        var householdIncomeMax = parseInt(householdIncomeRange[1].replace(/\D/g, ''), 10);
+            // Extract numerical values from the personal income range
+            var personalIncomeRange = personalIncomeText.match(/\d+/g);
 
-        // Disable options where household income is less than the personal income minimum
-        if (householdIncomeMin < personalIncomeMin) {
-            $(this).prop('disabled', true);
-        } else {
-            $(this).prop('disabled', false);
-        }
-    });
-});
+            // Validate the personal income range
 
+
+            // Convert to integers
+            var personalIncomeMin = parseInt(personalIncomeRange[0], 10);
+            var personalIncomeMax = parseInt(personalIncomeRange[1], 10);
+
+            // Get the household income options
+            var householdIncomeOptions = $('#household_income_per_month').find('option');
+
+            // Filter the household income options based on the selected personal income
+            householdIncomeOptions.each(function() {
+                var householdIncomeText = $(this).text();
+                var householdIncomeRange = householdIncomeText.match(/\d+/g);
+
+                // Validate the household income range
+                if (!householdIncomeRange || householdIncomeRange.length < 2) {
+
+                    $(this).prop('disabled', true); // Disable invalid options
+                    return; // Exit this iteration
+                }
+
+                // Convert to integers
+                var householdIncomeMin = parseInt(householdIncomeRange[0], 10);
+                var householdIncomeMax = parseInt(householdIncomeRange[1], 10);
+
+                // Disable options where household income is less than the personal income minimum
+                $(this).prop('disabled', householdIncomeMin < personalIncomeMin);
+            });
+        });
 
 
     });
     $(function() {
+        $('input[name="basic[mobile_number]"]').on('input', function() {
+            $(this).valid(); // Trigger validation on input
+        });
+        $('input[name="basic[whatsapp_number]"]').on('input', function() {
+            $(this).valid(); // Trigger validation on input
+        });
         $('#relationship_status, #gender, #ethnic_group, #education_level, #employment_status, #industry_my_company, #personal_income_per_month, #business_org,' +
             '#household_income_per_monty, #province, #suburb, #org, #org_company, #bank_main, #home_lang, #household_income_per_month,#bank_secondary,#secondary_home_lang'
         ).select2({
@@ -1523,6 +1580,7 @@
             $(this).valid();
 
         });
+
     });
     $(document).ready(function() {
         // Remove all <li> elements with role="tab", class="disabled", and aria-disabled="true"
@@ -1531,41 +1589,41 @@
         $('#nav_profile').addClass('active');
 
         function toggleFields() {
-        var selectedStatus = $('#employment_status').val();
+            var selectedStatus = $('#employment_status').val();
 
-        // Array of values for which the job-related fields should be hidden
-        var jobExemptStatuses = ['unemployed', 'study', 'home_person', 'retired'];
+            // Array of values for which the job-related fields should be hidden
+            var jobExemptStatuses = ['unemployed', 'study', 'home_person', 'retired'];
 
-        if (jobExemptStatuses.includes(selectedStatus)) {
-            // Hide job-related fields
-            $('#job_title_container').hide();
-            $('#industry_container').hide();
-            $('#role_container').hide();
-            $('#organization_size_container').hide();
-        } else {
-            // Show job-related fields
-            $('#job_title_container').show();
-            $('#industry_container').show();
-            $('#role_container').show();
-            $('#organization_size_container').show();
+            if (jobExemptStatuses.includes(selectedStatus)) {
+                // Hide job-related fields
+                $('#job_title_container').hide();
+                $('#industry_container').hide();
+                $('#role_container').hide();
+                $('#organization_size_container').hide();
+            } else {
+                // Show job-related fields
+                $('#job_title_container').show();
+                $('#industry_container').show();
+                $('#role_container').show();
+                $('#organization_size_container').show();
+            }
+
+            // Show/hide the "other" input field based on the "other" option
+            if (selectedStatus === 'other') {
+                $('#employment_status_other').show();
+            } else {
+                $('#employment_status_other').hide();
+            }
         }
 
-        // Show/hide the "other" input field based on the "other" option
-        if (selectedStatus === 'other') {
-            $('#employment_status_other').show();
-        } else {
-            $('#employment_status_other').hide();
-        }
-    }
-
-    // Trigger the function on page load
-    toggleFields();
-
-    // Trigger the function on change of employment status
-    $('#employment_status').on('change', function() {
+        // Trigger the function on page load
         toggleFields();
-    });
-        
+
+        // Trigger the function on change of employment status
+        $('#employment_status').on('change', function() {
+            toggleFields();
+        });
+
     });
 </script>
 

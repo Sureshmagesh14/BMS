@@ -21,6 +21,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use App\Models\RespondentProfile;
 use App\Models\RespondentTags;
 use App\Models\IndustryCompany;
+use App\Models\Users;
 
 class ExportController extends Controller
 {
@@ -167,13 +168,20 @@ class ExportController extends Controller
                 \DB::raw('JSON_EXTRACT(respondent_profile.essential_details, "$.household_income_per_month") AS household_income_per_month'),
             ])
             ->where('respondents.active_status_id', 1)
+            ->whereNotExists(function ($query) {
+                $query->select(\DB::raw(1))
+                    ->from('respondent_tag')
+                    ->whereColumn('respondent_tag.respondent_id', '=', 'respondents.id')
+                    ->where('respondent_tag.tag_id', 1);
+            }) // Exclude respondents with tag_id = 1
+            ->orderBy('respondents.id', 'ASC')
             ->orderByRaw('CASE WHEN CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) IS NULL OR CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) = 0 THEN 1 ELSE 0 END ASC')
             ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.personal_income_per_month") AS UNSIGNED) ASC')
             ->orderByRaw('CAST(JSON_EXTRACT(respondent_profile.essential_details, "$.household_income_per_month") AS UNSIGNED) ASC')
             ->get()
             ->unique('id');
             
-         
+
         
         
            
@@ -242,18 +250,41 @@ class ExportController extends Controller
                         $first_name = $basic['first_name'] ?? '-';
                         $last_name = $basic['last_name'] ?? '-';
                         $email = $basic['email'] ?? '-';
-                        $date_of_birth = isset($basic['date_of_birth']) ? $basic['date_of_birth'] : null;
-                    
-                        // Calculate age if date_of_birth is available
-                        $age = '-';
-                        if (!empty($date_of_birth) && $date_of_birth != '0000-00-00') {
-                            // Create DateTime objects
-                            $dob = new DateTime($date_of_birth);
-                            $now = new DateTime();
-                            
-                            // Calculate age
-                            $diff = $now->diff($dob);
-                            $age = $diff->y; // This will give the age in years
+                        $dob = $basic['date_of_birth'] ?? '-';
+                        $age = ''; // Set initial age to empty
+                        
+                        $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                        if ($get_resp != null) {
+                            if (!empty($get_resp->date_of_birth)) {
+                                $dob = $get_resp->date_of_birth;
+                        
+                                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                            } else {
+                                $dob = ''; // Handle the case where there's no date of birth found
+                            }
+                        } else {
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                } else {
+                                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Ensure age is empty if dob is not set or invalid
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $age = ''; // Set age to empty if date of birth is empty or invalid
                         }
                     
                         // Set cell values
@@ -264,7 +295,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $email);
                         $sheet->setCellValue('G' . $rows, $age);
-                        $sheet->setCellValue('H' . $rows, $date_of_birth ?: '-');
+                        $sheet->setCellValue('H' . $rows, $dob ?: '-');
                     
                         // Set row height
                         $sheet->getRowDimension($rows)->setRowHeight(20);
@@ -360,8 +391,44 @@ class ExportController extends Controller
                         $sheet->setCellValue('D' . $rows, $mobile_number ?? '');
                         $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
-
-                        $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+                        $dob = $basic->date_of_birth ?? '';
+                        $age = ''; // Set initial age to empty
+                        
+                        $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                        if ($get_resp != null) {
+                            if (!empty($get_resp->date_of_birth)) {
+                                $dob = $get_resp->date_of_birth;
+                        
+                                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                            } else {
+                                $dob = ''; // Handle the case where there's no date of birth found
+                            }
+                        } else {
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                } else {
+                                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Ensure age is empty if dob is not set or invalid
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $age = ''; // Set age to empty if date of birth is empty or invalid
+                        }
+                        
+                      
 
                         $employment_status = null; // Initialize $employment_status to null
 
@@ -376,7 +443,7 @@ class ExportController extends Controller
                         }
 
                        
-                        $sheet->setCellValue('G' . $rows, $year);
+                        $sheet->setCellValue('G' . $rows, $age);
                         $relationshipStatus = $essential->relationship_status ?? '';
                         $sheet->setCellValue('H' . $rows, ucfirst($relationshipStatus));
                         // Define the mapping of ethnic group codes to names
@@ -718,8 +785,44 @@ class ExportController extends Controller
                         $sheet->setCellValue('E' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('F' . $rows, $basic->email ?? '');
                     
-                        $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
-                    
+                        $dob = $basic->date_of_birth ?? '';
+                        $age = ''; // Set initial age to empty
+                        
+                        $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                        if ($get_resp != null) {
+                            if (!empty($get_resp->date_of_birth)) {
+                                $dob = $get_resp->date_of_birth;
+                        
+                                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                            } else {
+                                $dob = ''; // Handle the case where there's no date of birth found
+                            }
+                        } else {
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                } else {
+                                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Ensure age is empty if dob is not set or invalid
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $age = ''; // Set age to empty if date of birth is empty or invalid
+                        }
+                        
+                   
                         $employment_status = isset($essential) && $essential->employment_status == 'other' ? $essential->employment_status_other : ($essential ? $essential->employment_status : null);
                         $industry_my_company = isset($essential) && $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : ($essential ? $essential->industry_my_company : null);
                     
@@ -741,7 +844,7 @@ class ExportController extends Controller
                         $personal_income = ($p_income != null) ? $p_income->income : '-';
                         $household_income = ($h_income != null) ? $h_income->income : '-';
                     
-                        $sheet->setCellValue('G' . $rows, $year);
+                        $sheet->setCellValue('G' . $rows, $age);
                         $relationship_status = ucfirst($essential->relationship_status ?? '');
                         $sheet->setCellValue('H' . $rows, $relationship_status);
                        // Define the mapping of ethnic group codes to names
@@ -1103,11 +1206,9 @@ class ExportController extends Controller
                         $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                     }
 
-                    if($from != null && $to != null){
-                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
-                    }
+                  
                         
-                    $all_datas = $all_datas->get();
+                    $all_datas = $all_datas->orderBy('respondents.id', 'ASC')->get();
 
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
@@ -1144,14 +1245,19 @@ class ExportController extends Controller
 
                        
 
-                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('A' . $rows, value: $all_data->id);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
                         $sheet->setCellValue('D' . $rows, $mobile_number);
                         $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
-                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $user_name = Users::where('id', $all_data->created_by)->first();
+                        if ($user_name) {
+                            $sheet->setCellValue('H' . $rows, $user_name->name . ' ' . $user_name->surname);
+                        } else {
+                            $sheet->setCellValue('H' . $rows, ''); // or some default value if user is not found
+                        }
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
@@ -1180,12 +1286,8 @@ class ExportController extends Controller
                     if($respondents != ""){
                         $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                     }
-
-                    if($from != null && $to != null){
-                        $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
-                    }
                         
-                    $all_datas = $all_datas->get();
+                    $all_datas = $all_datas->orderBy('respondents.id', 'ASC')->get();
 
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
@@ -1222,14 +1324,20 @@ class ExportController extends Controller
 
 
 
-                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
                         $sheet->setCellValue('D' . $rows, $mobile_number);
                         $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
                         $sheet->setCellValue('G' . $rows, $all_data->updated_at);
-                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $user_name = Users::where('id', $all_data->created_by)->first();
+                        if ($user_name) {
+                            $sheet->setCellValue('H' . $rows, $user_name->name . ' ' . $user_name->surname);
+                        } else {
+                            $sheet->setCellValue('H' . $rows, ''); // or some default value if user is not found
+                        }
+                        
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
                         $sheet->getStyle('C' . $rows . ':H' . $rows)->applyFromArray($styleArray2);
@@ -1262,8 +1370,13 @@ class ExportController extends Controller
                     if($from != null && $to != null){
                         $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
                     }
-                        
-                    $all_datas = $all_datas->get();
+                    $all_datas = $all_datas->whereNotExists(function ($query) {
+                        $query->select(\DB::raw(1))
+                            ->from('respondent_tag')
+                            ->whereColumn('respondent_tag.respondent_id', '=', 'respondents.id')
+                            ->where('respondent_tag.tag_id', 1);
+                    }); // Exclude respondents with tag_id = 1
+                    $all_datas = $all_datas->orderBy('respondents.id', 'ASC')->get();
 
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
@@ -1300,7 +1413,7 @@ class ExportController extends Controller
 
 
 
-                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
                         $sheet->setCellValue('D' . $rows, $mobile_number);
@@ -1337,10 +1450,8 @@ class ExportController extends Controller
                         if($respondents != ""){
                             $all_datas = $all_datas->whereIn('respondents.id', [$respondents]);
                         }
-                        if($from != null && $to != null){
-                            $all_datas = $all_datas->where('respondents.created_at', '>=', $from)->where('respondents.created_at', '<=', $to);
-                        }
-                    $all_datas = $all_datas->get();
+                       
+                    $all_datas = $all_datas->orderBy('respondents.id', 'ASC')->get();
 
                     foreach ($all_datas as $all_data) {
                         $mobile_number = '-';
@@ -1375,14 +1486,19 @@ class ExportController extends Controller
                         }
 
                 
-                        $sheet->setCellValue('A' . $rows, $i);
+                        $sheet->setCellValue('A' . $rows, $all_data->id);
                         $sheet->setCellValue('B' . $rows, $all_data->name);
                         $sheet->setCellValue('C' . $rows, $all_data->surname);
                         $sheet->setCellValue('D' . $rows, $mobile_number);
                         $sheet->setCellValue('E' . $rows, $whatsapp_number);
                         $sheet->setCellValue('F' . $rows, $all_data->email);
-                        $sheet->setCellValue('G' . $rows, $all_data->updated_at);
-                        $sheet->setCellValue('H' . $rows, $all_data->created_by);
+                        $sheet->setCellValue('G' . $rows, $all_data->created_at);
+                        $user_name = Users::where('id', $all_data->created_by)->first();
+                        if ($user_name) {
+                            $sheet->setCellValue('H' . $rows, $user_name->name . ' ' . $user_name->surname);
+                        } else {
+                            $sheet->setCellValue('H' . $rows, ''); // or some default value if user is not found
+                        }
                         // $sheet->setCellValue('I' . $rows, $all_data->created_by);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':H' . $rows)->applyFromArray($styleArray3);
@@ -1429,12 +1545,17 @@ class ExportController extends Controller
                     'respondents.email',
                     'respondents.mobile',
                     'respondents.whatsapp',
+                    'cashouts.type_id',
+                    'cashouts.created_at',
+                    DB::raw('COUNT(CASE WHEN cashouts.status_id = 3 THEN 1 END) as total_complete_count'),
+                    DB::raw('COUNT(CASE WHEN cashouts.status_id = 1 THEN 1 END) as total_pending_count'),
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 3 THEN cashouts.amount ELSE 0 END) as total_complete_cashout'), 
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 1 THEN cashouts.amount ELSE 0 END) as pending'),
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 4 THEN cashouts.amount ELSE 0 END) as declined'),
                     DB::raw('SUM(CASE WHEN cashouts.status_id = 0 THEN cashouts.amount ELSE 0 END) as failed')
                 )
                 ->leftJoin('cashouts', 'respondents.id', '=', 'cashouts.respondent_id')
+                ->whereNull('cashouts.deleted_at')
                 ->groupBy('respondents.id'); // Don't forget to group by respondent ID
     
                 
@@ -1452,7 +1573,7 @@ class ExportController extends Controller
 
                 $all_datas = $all_datas
                     ->groupBy('respondents.id')
-                    ->orderBy("respondents.id", "desc")  // Use respondents.id for consistent ordering
+                    ->orderBy("respondents.id", "ASC")  // Use respondents.id for consistent ordering
                     ->get();
 
             
@@ -1463,7 +1584,7 @@ class ExportController extends Controller
                 $sheet->setCellValue('E1', 'WA Number');
                 $sheet->setCellValue('F1', 'Email');
                 $sheet->setCellValue('G1', 'Cashout Type');
-                $sheet->setCellValue('H1', 'Total cash paid');
+                $sheet->setCellValue('H1', 'Total Cashouts paid');
                 $sheet->setCellValue('I1', 'Value of incentives paid');
                 $sheet->setCellValue('J1', 'Total cashouts unpaid');
                 $sheet->setCellValue('K1', 'Pending cashout');
@@ -1547,20 +1668,20 @@ class ExportController extends Controller
 
                 
 
-                    $sheet->setCellValue('A' . $rows, $i);
+                    $sheet->setCellValue('A' . $rows, $all_data->resp_id);
                     $sheet->setCellValue('B' . $rows, $all_data->name);
                     $sheet->setCellValue('C' . $rows, $all_data->surname);
                     $sheet->setCellValue('D' . $rows, $mobile_number);
                     $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $all_data->email);
                     $sheet->setCellValue('G' . $rows, $type_val);
-                    $sheet->setCellValue('H' . $rows, $all_data->total_complete_cashout);
-                    $sheet->setCellValue('I' . $rows, ($get_incentive > 0) ? $get_incentive/10 : 0);
-                    $sheet->setCellValue('J' . $rows, $all_data->failed);
-                    $sheet->setCellValue('K' . $rows, $all_data->pending);
-                    $sheet->setCellValue('L' . $rows, $all_data->declined);
-                    $sheet->setCellValue('M' . $rows, $all_data->complete);
-                    $sheet->setCellValue('N' . $rows, ($get_incentive_owed > 0) ? $get_incentive_owed/10 : 0);
+                    $sheet->setCellValue('H' . $rows, $all_data->total_complete_count);
+                    $sheet->setCellValue('I' . $rows, $all_data->total_complete_cashout/10);
+                    $sheet->setCellValue('J' . $rows, $all_data->total_pending_count);
+                    $sheet->setCellValue('K' . $rows, $all_data->pending/10);
+                    $sheet->setCellValue('L' . $rows, $all_data->declined/10);
+                    $sheet->setCellValue('M' . $rows, $all_data->total_complete_cashout/10);
+                    $sheet->setCellValue('N' . $rows, $all_data->pending/10);
                     $get_project = Projects::select('projects.id','projects.name')->join('project_respondent as resp','projects.id','resp.project_id')
                         ->where('resp.respondent_id',$all_data->resp_id)
                         ->groupBy('projects.id')
@@ -1572,7 +1693,7 @@ class ExportController extends Controller
 
                     $sheet->setCellValue('O' . $rows, $project_total);
                     $sheet->getStyle('O' . $rows)->getAlignment()->setWrapText(true);
-                    $sheet->setCellValue('P' . $rows, ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '');
+                    $sheet->setCellValue('P' . $rows, ($all_data->created_at != null) ? date("d-m-Y", strtotime($all_data->created_at)) : '');
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                     $sheet->getStyle('C' . $rows . ':P' . $rows)->applyFromArray($styleArray2);
@@ -1609,6 +1730,7 @@ class ExportController extends Controller
                         $join->on('rewards.respondent_id', '=', 'respondents.id');
                     })
                     ->where('respondents.active_status_id',1)
+                    ->orderBy('respondents.id', 'ASC')
                     ->get([
                         'respondents.id',
                         'respondents.name',
@@ -1626,7 +1748,9 @@ class ExportController extends Controller
                     if($projects != ""){
                         $all_datas = $all_datas->whereIn('rewards.project_id', [$projects]);
                     }
-                    $all_datas = $all_datas->where('respondents.active_status_id',1)->get([
+                    $all_datas = $all_datas->where('respondents.active_status_id',1)
+                    ->orderBy('respondents.id', 'ASC')
+                    ->get([
                         'respondents.id',
                         'respondents.name',
                         'respondents.surname',
@@ -1655,7 +1779,7 @@ class ExportController extends Controller
                     $mobile_number = '-';
                     if (!empty($all_data->mobile)) {
                         $m_number =  preg_replace('/\s+/', '',$all_data->mobile);
-                        $length = strlen($w_number);
+                        $length = strlen($m_number);
                         if (strlen($m_number) == 9) {
                             $mobile_number = '27' . $m_number;
                         } elseif (strlen($m_number) == 11 && strpos($m_number, '27') === 0) {
@@ -1684,7 +1808,7 @@ class ExportController extends Controller
 
                     
 
-                    $sheet->setCellValue('A' . $rows, $i);
+                    $sheet->setCellValue('A' . $rows, $all_data->id);
                     $sheet->setCellValue('B' . $rows, $all_data->name);
                     $sheet->setCellValue('C' . $rows, $all_data->surname);
                     $sheet->setCellValue('D' . $rows, $mobile_number);
@@ -1707,8 +1831,8 @@ class ExportController extends Controller
                     $sheet->setCellValue('G' . $rows, $status);
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                    $sheet->getStyle('C' . $rows . ':F' . $rows)->applyFromArray($styleArray2);
-                    $sheet->getStyle('C' . $rows . ':F' . $rows)->getAlignment()->setIndent(1);
+                    $sheet->getStyle('C' . $rows . ':G' . $rows)->applyFromArray($styleArray2);
+                    $sheet->getStyle('C' . $rows . ':G' . $rows)->getAlignment()->setIndent(1);
                     $rows++;
                     $i++;
                 }
@@ -1789,6 +1913,7 @@ class ExportController extends Controller
                 $i = 1;
               
                 foreach ($all_datas as $all_data) {
+                    dd($all_datas);
                     $basic = json_decode($all_data->basic_details);
                     $essential = json_decode($all_data->essential_details);
                     $extended  = json_decode($all_data->extended_details);
@@ -1829,8 +1954,43 @@ class ExportController extends Controller
                     $sheet->setCellValue('D' . $rows, $mobile_number);
                     $sheet->setCellValue('E' . $rows, $whatsapp_number);
                     $sheet->setCellValue('F' . $rows, $basic->email ?? '');
-
-                    $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+                    $dob = $basic->date_of_birth ?? '';
+                    $age = ''; // Set initial age to empty
+                    
+                    $get_resp = Respondents::select('date_of_birth')->where('id', $all_data->id)->first();
+                    if ($get_resp != null) {
+                        if (!empty($get_resp->date_of_birth)) {
+                            $dob = $get_resp->date_of_birth;
+                    
+                            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                            if ($dobDate) {
+                                $now = new DateTime();
+                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            }
+                        } else {
+                            $dob = ''; // Handle the case where there's no date of birth found
+                        }
+                    } else {
+                        if (empty($dob) || $dob === '0000-00-00') {
+                            $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                            if ($dobDate) {
+                                $now = new DateTime();
+                                $age = $now->diff($dobDate)->y; // Get the difference in years
+                            } else {
+                                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                if ($dobDate) {
+                                    $now = new DateTime();
+                                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Ensure age is empty if dob is not set or invalid
+                    if (empty($dob) || $dob === '0000-00-00') {
+                        $age = ''; // Set age to empty if date of birth is empty or invalid
+                    }
+                  
 
                     $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
                     $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
@@ -1840,7 +2000,7 @@ class ExportController extends Controller
                     $personal_income = ($p_income != null) ? $p_income->income : '-';
                     $household_income = ($h_income != null) ? $h_income->income : '-';
 
-                    $sheet->setCellValue('G' . $rows, $year);
+                    $sheet->setCellValue('G' . $rows, $age);
                     $relationship_status = ucfirst($essential->relationship_status ?? '');
                     $sheet->setCellValue('H' . $rows, $relationship_status);
                     // Define the mapping of ethnic group codes to names
@@ -1967,24 +2127,62 @@ class ExportController extends Controller
                 $fileName = $module . "_" . $resp_type . "_" . date('ymd') . "." . $type;
             }
             else if ($module == 'Projects') {
+                // $all_datas = Projects::leftJoin('users', function ($join) {
+                //         $join->on('users.id', '=', 'projects.user_id');
+                //     });
+
+                //     if($from != null && $to != null){
+                //         $all_datas = $all_datas->whereDate('projects.created_at', '>=', $from)->whereDate('projects.created_at', '<=', $to);
+                //     }
+
+                // $all_datas = $all_datas->get([
+                //     'users.name as uname',
+                //     'users.surname',
+                //     'projects.number',
+                //     'projects.name',
+                //     'projects.published_date',
+                //     'projects.closing_date',
+                //     'projects.total_responnded_attended',
+                //     'projects.total_responded_recruited',
+                // ]);
+
+                // use Illuminate\Support\Facades\DB;
+
                 $all_datas = Projects::leftJoin('users', function ($join) {
                         $join->on('users.id', '=', 'projects.user_id');
-                    });
+                    })
+                    ->leftJoin('project_respondent', 'project_respondent.project_id', '=', 'projects.id')
+                    ->leftJoin('qualified_respondent', 'qualified_respondent.project_id', '=', 'projects.id');
 
-                    if($from != null && $to != null){
-                        $all_datas = $all_datas->whereDate('projects.created_at', '>=', $from)->whereDate('projects.created_at', '<=', $to);
-                    }
+                // Apply date filters if provided
+                if ($from != null && $to != null) {
+                    $all_datas = $all_datas->whereDate('projects.created_at', '>=', $from)
+                                        ->whereDate('projects.created_at', '<=', $to);
+                }
 
-                $all_datas = $all_datas->get([
+                // Select fields with COUNT aggregation
+                $all_datas = $all_datas->select(
                     'users.name as uname',
                     'users.surname',
                     'projects.number',
                     'projects.name',
                     'projects.published_date',
                     'projects.closing_date',
-                    'projects.total_responnded_attended',
-                    'projects.total_responded_recruited',
-                ]);
+                    DB::raw('COUNT(DISTINCT project_respondent.respondent_id) as total_responnded_attended'),
+                    DB::raw('COUNT(DISTINCT qualified_respondent.respondent_id) as total_responded_recruited')
+                )
+                ->groupBy(
+                    'projects.id',  // Group by necessary fields to avoid incorrect aggregation
+                    'users.name',
+                    'users.surname',
+                    'projects.number',
+                    'projects.name',
+                    'projects.published_date',
+                    'projects.closing_date'
+                )
+                ->get();
+
+
 
                 $sheet->setCellValue('A1', 'Project Number & Project Name');
                 $sheet->setCellValue('B1', 'PM Name');
@@ -1998,7 +2196,7 @@ class ExportController extends Controller
                 $rows = 2;
                 $i = 1;
                 foreach ($all_datas as $all_data) {
-                    $sheet->setCellValue('A' . $rows, $all_data->number.' '.$all_data->name);
+                    $sheet->setCellValue('A' . $rows, $all_data->number.' '.$all_data->name.' '.$all_data->id);
                     $sheet->setCellValue('B' . $rows, $all_data->uname.$all_data->surname);
                     if(isset($all_data->published_date)){
                         $published_date=date("d-m-Y", strtotime($all_data->published_date));
@@ -2060,7 +2258,7 @@ class ExportController extends Controller
                       $query->whereIn('respondent_tag.respondent_id', $respondents);
                   })
                   ->where('respondents.active_status_id', 1)
-                  ->orderBy('respondent_tag.id', 'desc')
+                  ->orderBy('respondents.id', 'asc')
                   ->get();
           
                 // $query = DB::table('respondent_tag')
@@ -2171,7 +2369,10 @@ class ExportController extends Controller
                         $sheet->setCellValue('F' . $rows, $whatsapp_number ?? '');
                         $sheet->setCellValue('G' . $rows, $basic->email ?? '');
 
-                        $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+                        $dob = $basic->date_of_birth ?? '';
+                        $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
+                            ? (date('Y') - date('Y', strtotime($dob))) 
+                            : '-';
 
                         $employment_status = null; // Initialize $employment_status to null
 
@@ -2400,9 +2601,9 @@ class ExportController extends Controller
                 foreach ($all_datas as $all_data) {
                     $sheet->setCellValue('A' . $rows, $i);
                     $sheet->setCellValue('B' . $rows, $all_data->name.$all_data->surname);
-                    $sheet->setCellValue('C' . $rows, $all_data->action);
-                    $sheet->setCellValue('D' . $rows, $all_data->type);
-                    $sheet->setCellValue('E' . $rows, $all_data->month);
+                    $sheet->setCellValue('C' . $rows, ucfirst($all_data->action));
+                    $sheet->setCellValue('D' . $rows, ucfirst($all_data->type));
+                    $sheet->setCellValue('E' . $rows, ucfirst($all_data->month));
                     $sheet->setCellValue('F' . $rows, $all_data->year);
                     $sheet->setCellValue('G' . $rows, $all_data->count);
                     $sheet->getRowDimension($rows)->setRowHeight(20);
@@ -2420,30 +2621,55 @@ class ExportController extends Controller
             }
             else if ($module == 'Team Activity') {
                 // Build the base query
-                $query = UserEvents::select('users.name', 'users.surname', 'user_events.user_id')
-                                ->join('users', 'user_events.user_id', 'users.id')
-                                ->where('user_events.type', '=', 'respondent');
-            
-                // Apply filters if provided
-                if ($respondents != "") {
-                    $query->whereIn('user_events.user_id', [$respondents]);
+
+                 // Base query
+                 $query = DB::table('users as u')
+                 ->select('u.id',
+                     DB::raw('CONCAT(u.name, " ", u.surname) AS full_name'),
+                     DB::raw('SUM(CASE WHEN user_events.action = "created" THEN user_events.count ELSE 0 END) AS createCount'),
+                     DB::raw('SUM(CASE WHEN user_events.action = "updated" THEN user_events.count ELSE 0 END) AS updateCount'),
+                     DB::raw('SUM(CASE WHEN user_events.action = "deactivated" THEN user_events.count ELSE 0 END) AS deactCount')
+                 )
+                 ->leftJoin('user_events', 'u.id', '=', 'user_events.user_id')
+                 ->where('user_events.type', '=', 'respondent')
+                 ->groupBy('u.id'); // Group by user_id
+             
+                // Filter by user_ids if provided
+                $users = ($request->users != null) ? array_filter($request->users) : null;
+                if (!empty($users)) {
+                    $query->whereIn('user_events.user_id', $users);
                 }
-            
-                if ($from != null && $to != null) {
-                    $query->whereDate('user_events.created_at', '>=', $from)
-                          ->whereDate('user_events.created_at', '<=', $to);
+                
+                // Initialize start and end variables
+                $start = null;
+                $end = null;
+                
+                // Check and convert start date if provided
+                if (!empty($request->start)) {
+                    $start = \Carbon\Carbon::createFromFormat('d-m-Y', $request->start)->startOfDay();
                 }
-            
-                // Group by user_id to avoid duplication
-                $query->groupBy('user_events.user_id', 'users.name', 'users.surname');
-            
+                
+                // Check and convert end date if provided
+                if (!empty($request->end)) {
+                    $end = \Carbon\Carbon::createFromFormat('d-m-Y', $request->end)->endOfDay();
+                }
+                
+                // Apply the date filters only if they are set
+                if ($start) {
+                    $query->where('user_events.created_at', '>=', $start);
+                }
+                if ($end) {
+                    $query->where('user_events.created_at', '<=', $end);
+                }
+                
                 // Fetch all data
-                $all_datas = $query->orderBy("users.name")->get();
+                $all_datas = $query->orderBy('u.id','asc')->get();
+           
             
                 $sheet->setCellValue('A1', 'Name of team member');
                 $sheet->setCellValue('B1', 'Total recruited respondents');
                 $sheet->setCellValue('C1', 'Total deactivated respondents');
-                $sheet->setCellValue('D1', 'Total blacklisted respondents');
+                $sheet->setCellValue('D1', 'Total respondents updated');
             
                 $sheet->getStyle('A1:D1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
                 $sheet->getStyle('A1:D1')->applyFromArray($styleArray);
@@ -2451,40 +2677,16 @@ class ExportController extends Controller
                 $rows = 2;
                 foreach ($all_datas as $data) {
                     // Count total recruited respondents for this specific user
-                    $total_created = UserEvents::where('user_id', $data->user_id)
-                                                ->where('action', 'created')
-                                                ->where('type', 'respondent');
-                    if ($from != null && $to != null) {
-                        $total_created->whereDate('created_at', '>=', $from)
-                                      ->whereDate('created_at', '<=', $to);
-                    }
-                    $total_created = $total_created->count();
-            
-                    // Count total deactivated respondents for this specific user
-                    $total_deactivated = UserEvents::where('user_id', $data->user_id)
-                                                    ->where('action', 'deleted')
-                                                    ->where('type', 'respondent');
-                    if ($from != null && $to != null) {
-                        $total_deactivated->whereDate('created_at', '>=', $from)
-                                          ->whereDate('created_at', '<=', $to);
-                    }
-                    $total_deactivated = $total_deactivated->count();
-            
-                    // Count total blacklisted respondents for this specific user
-                    $total_blacklisted = UserEvents::where('user_id', $data->user_id)
-                                                    ->where('action', 'deactivated')
-                                                    ->where('type', 'respondent');
-                    if ($from != null && $to != null) {
-                        $total_blacklisted->whereDate('created_at', '>=', $from)
-                                          ->whereDate('created_at', '<=', $to);
-                    }
-                    $total_blacklisted = $total_blacklisted->count();
+                 
+                  
+                 
+                  
             
                     // Set values for each row
-                    $sheet->setCellValue('A' . $rows, $data->name . " " . $data->surname);
-                    $sheet->setCellValue('B' . $rows, $total_created);
-                    $sheet->setCellValue('C' . $rows, $total_deactivated);
-                    $sheet->setCellValue('D' . $rows, $total_blacklisted);
+                    $sheet->setCellValue('A' . $rows, $data->full_name);
+                    $sheet->setCellValue('B' . $rows, $data->createCount);
+                    $sheet->setCellValue('C' . $rows, $data->deactCount);
+                    $sheet->setCellValue('D' . $rows, $data->updateCount);
                     $sheet->getRowDimension($rows)->setRowHeight(20);
                     $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
                     $sheet->getStyle('C' . $rows . ':D' . $rows)->applyFromArray($styleArray2);
@@ -2532,7 +2734,11 @@ class ExportController extends Controller
                             $row = $data[$i];
                             $rearrangedRow = [];
                             foreach ($header as $key) {
-                                $rearrangedRow[] = $row[$key] ?? '';
+                                if (isset($row[$key])) {
+                                    $rearrangedRow[] = $row[$key];
+                                } else {
+                                    $rearrangedRow[] = '';
+                                }
                             }
                             $values[] = $rearrangedRow;
                         }
@@ -2541,100 +2747,110 @@ class ExportController extends Controller
                     }
                     foreach ($survey_IDs as $survey_id) {
                         // Custom array data to export
-                        $survey = Survey::where(['id' => $survey_id])->first();
-                    
-                        $question = Questions::where(['survey_id' => $survey_id])->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you', 'rankorder', 'multi_choice'])->get();
-                        $matrix_qus = Questions::where(['qus_type' => 'matrix_qus', 'survey_id' => $survey_id])->get();
-                        $multi_choice_qus = Questions::where(['qus_type' => 'multi_choice', 'survey_id' => $survey_id])->get();
-                        $rankorder_qus = Questions::where(['qus_type' => 'rankorder', 'survey_id' => $survey_id])->get();
-                
-                        $cols = ["Respondent Name", "Mobile","Whatsapp","Email","Age","Gender","Highest Education Level","Employment Status","Industry my company","Personal Income","Personal LSM","Household Income","Household LSM","Relationship Status","Ethnic Group","Province","Metropolitan Area","Date","Device ID", "Device Name", "Completion Status", "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"];
-
-                        foreach ($question as $qus) {
-                            array_push($cols, $qus->question_name);
-                        }
-                        foreach ($multi_choice_qus as $qus) {
-                            $qus_ans = json_decode($qus->qus_ans);
-                            $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                            foreach ($choices as $qus1) {
-                                array_push($cols, $qus->question_name . '_' . $qus1);
-                            }
-                        }
-                        foreach ($rankorder_qus as $qus) {
-                            $qus_ans = json_decode($qus->qus_ans);
-                            $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                            foreach ($choices as $qus1) {
-                                array_push($cols, $qus->question_name . '_' . $qus1);
-                            }
-                        }
-                        foreach ($matrix_qus as $qus) {
-                            $qus = json_decode($qus->qus_ans);
-                            array_push($cols, $qus->question_name);
-                            $exiting_qus_matrix = $qus != null ? explode(",", $qus->matrix_qus) : [];
-                            foreach ($exiting_qus_matrix as $qus1) {
-                                array_push($cols, $qus1);
-                            }
-                        }
-                
-                    
-                
-                        // Get Survey Data
-                        $question = Questions::where(['survey_id' => $survey_id])->whereNotIn('qus_type', ['welcome_page', 'thank_you'])->get();
-                        
-                        if($methods=='respondents_type'){
-                            $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id,'response_user_id'=>$user_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
-                        }else{
-                            $surveyResponseUsers = SurveyResponse::where(['survey_id' => $survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
-                        }
-                        $finalResult = [$cols];
-
-                        foreach ($surveyResponseUsers as $userID) {
-                            $user = Respondents::where('id', $userID)->first();
-                            $fname = $user->name ?? '';
-                            $surname = $user->surname ?? '';
-                            $resp_name = $fname.' '.$surname;
-                            $starttime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "asc")->first();
-                            $endtime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
-                            $startedAt = $starttime->created_at;
-                            $endedAt = $endtime->created_at;
-                            $time = $endedAt->diffInSeconds($startedAt);
-                            $responseinfo = $startedAt->toDayDateTimeString() . ' | ' . $time . ' seconds';
-                            $other_details = json_decode($endtime->other_details);
-                            $deviceID = $other_details->device_id ?? '';
-                            $device_name = $other_details->device_name ?? '';
-                            $browser = $other_details->browser ?? '';
-                            $os = $other_details->os ?? '';
-                            $device_type = '';
-                            $lang_name = $other_details->lang_name ?? '';
-                            $long = $other_details->long ?? '';
-                            $lat = $other_details->lat ?? '';
-                            $location = $other_details->location ?? '';
-                            $ip_address = $other_details->ip_address ?? '';
-                            $lang_code = $other_details->lang_code ?? '';
-                            $name = $resp_name ?? 'Anonymous';
-                
-                            $completedRes = SurveyResponse::where(['response_user_id' => $userID, 'survey_id' => $survey_id, 'answer' => 'thankyou_submitted'])->first();
-
-                            $profile = RespondentProfile::where('respondent_id',$userID)->first();
-                            if(isset($profile->basic_details)){
-                                $basic = json_decode($profile->basic_details);
-                            }else{
-                                $basic = array();
-                            }
+                       $survey = Survey::where(['id'=>$survey_id])->first();
+                       $question=Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['matrix_qus','welcome_page','thank_you','rankorder','multi_choice'])->get();
+                       $matrix_qus=Questions::where(['qus_type'=>'matrix_qus','survey_id'=>$survey_id])->get();
+                       $multi_choice_qus=Questions::where(['qus_type'=>'multi_choice','survey_id'=>$survey_id])->get();
+                       $rankorder_qus=Questions::where(['qus_type'=>'rankorder','survey_id'=>$survey_id])->get();
+           
+                       $cols = [];
+                       foreach($question as $qus){
+                           array_push($cols,$qus->question_name);
+                       }
+                       foreach($multi_choice_qus as $qus){
+                           $qus_ans = json_decode($qus->qus_ans); 
+                           $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                           foreach($choices as $qus1){
+                               array_push($cols,$qus->question_name.'_'.$qus1);
+                           }
+                       }
+                       foreach($rankorder_qus as $qus){
+                           $qus_ans = json_decode($qus->qus_ans); 
+                           // array_push($cols,$qus->question_name);
+                           $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                           foreach($choices as $qus1){
+                               array_push($cols,$qus->question_name.'_'.$qus1);
+                           }
+                       }
+                       foreach($matrix_qus as $qus){
+                           $qus = json_decode($qus->qus_ans); 
+                           array_push($cols,$qus->question_name);
+                           $exiting_qus_matrix= $qus!=null ? explode(",",$qus->matrix_qus): []; $i=0;
+                           foreach($exiting_qus_matrix as $qus1){
+                               array_push($cols,$qus1);
+                           }
+                       }
+           
+                       // Get Survey Data 
+                       $question = Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+                               
+                       $surveyResponseUsers =  SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
+                       array_push($cols,"Respondent Name","Mobile","Whatsapp","Email","Age","Gender","Highest Education Level","Employment Status","Industry my company","Personal Income","Personal LSM","Household Income","Household LSM","Relationship Status","Ethnic Group","Province","Metropolitan Area", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
+                       $finalResult =[$cols];
+                       foreach($surveyResponseUsers as $userID){
+                           $user = Respondents::where('id', '=' , $userID)->first();
+                           $starttime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "asc")->first();
+                           $endtime = SurveyResponse::where(['survey_id'=>$survey_id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
+                           $startedAt = $starttime->created_at;
+                           $endedAt = $endtime->created_at;
+                           $time = $endedAt->diffInSeconds($startedAt); 
+                           $responseinfo = $startedAt->toDayDateTimeString().' | '.$time.' seconds';
+                           $other_details = json_decode($endtime->other_details);
+                           $deviceID = '';
+                           $device_name ='';
+                           $browser =''; $os ='';$device_type='';
+                           $lang_name =''; $long='';$lat =''; $location=''; $ip_address =''; $lang_code =''; $lang_name ='';
+           
+                           if(isset($other_details->device_id)){
+                               $deviceID = $other_details->device_id;
+                           }
+                           if(isset($other_details->device_name)){
+                               $device_name = $other_details->device_name;
+                           }
+                           if(isset($other_details->browser)){
+                               $browser = $other_details->browser;
+                           }
+                           if(isset($other_details->os)){
+                               $os = $other_details->os;
+                           }
+                           if(isset($other_details->lang_name)){
+                               $lang_name = $other_details->lang_name;
+                           }
+                           if(isset($other_details->lang_code)){
+                               $lang_code = $other_details->lang_code;
+                           }
+                           if(isset($other_details->ip_address)){
+                               $ip_address = $other_details->ip_address;
+                           }
+                           if(isset($other_details->location)){
+                               $location = $other_details->location;
+                           }
+                           if(isset($other_details->lat)){
+                               $lat = $other_details->lat;
+                           }
+                           if(isset($other_details->long)){
+                               $long = $other_details->long;
+                           }
+                           if(isset($other_details->lang_name)){
+                               $lang_name = $other_details->lang_name;
+                           }
+                           $name = 'Anonymous';
+                           if(isset($user->name)){
+                               $name = $user->name;
+                           }
+           
+                           $completedRes = SurveyResponse::where(['response_user_id'=>$userID ,'survey_id'=>$survey_id,'answer'=>'thankyou_submitted'])->first();
+           
+                           if($completedRes){
+                               $completion_status = 'Completed';
+                           }else{
                             
-                            if(isset($profile->essential_details)){
-                                $essential = json_decode($profile->essential_details);
-                            }else{
-                                $essential = array();
-                            }
-                            
-                            //dd($essential);
-
-                            $completion_status = $completedRes ? 'Completed' : 'Partially Completed';
-                            
+                                $completion_status = 'Partially Completed';                              
+                           }
+                            //    Essential Details
                             $mobile_number = '-';
-                            if (!empty($basic->mobile_number)) {
-                                $m_number = preg_replace('/\s+/', '',$basic->mobile_number);
+                            if (!empty($mobile)) {
+                                $m_number = preg_replace('/\s+/', '',$mobile);
                                 $length = strlen($m_number);
                                 if (strlen($m_number) == 9) {
                                     $mobile_number = '27' . $m_number;
@@ -2646,29 +2862,80 @@ class ExportController extends Controller
                                     $mobile_number = $m_number;
                                 }
                             }
-                           
 
                             $whatsapp_number = '-';
                             if (!empty($basic->whatsapp_number)) {
-                              
+                            
                                 $w_number = preg_replace('/\s+/', '',$basic->whatsapp_number);
                                 $length = strlen($w_number);
                                 if (strlen($w_number) == 9) {
                                     $whatsapp_number = '27' . $w_number;
                                 } elseif (strlen($w_number) == 11 && strpos($w_number, '27') === 0) {
                                     $whatsapp_number = $w_number;
-                                } else if ($length == 10 && $m_number[0] == '0'){
+                                } else if ($length == 10 && $w_number[0] == '0'){
                                     $whatsapp_number = '27' . substr($w_number, 1);
                                 }
                                 elseif (strlen($w_number) == 12 && strpos($w_number, '+27') === 0) {
                                     $whatsapp_number = $w_number;
                                 }
                             }
-                           
+                        
                             
                             $email = $basic->email ?? '';
-                            $year = (isset($basic->date_of_birth)) ? (date('Y') - date('Y', strtotime($basic->date_of_birth ?? ''))) : '-';
+                            $dob = $basic->date_of_birth ?? '';
+                            $age = ''; // Set initial age to empty
+                            
+                            $get_resp = Respondents::select('date_of_birth')->where('id', $userID)->first();
+                            if ($get_resp != null) {
+                                if (!empty($get_resp->date_of_birth)) {
+                                    $dob = $get_resp->date_of_birth;
+                            
+                                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    }
+                                } else {
+                                    $dob = ''; // Handle the case where there's no date of birth found
+                                }
+                            } else {
+                                if (empty($dob) || $dob === '0000-00-00') {
+                                    $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                                    if ($dobDate) {
+                                        $now = new DateTime();
+                                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                                    } else {
+                                        $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                                        if ($dobDate) {
+                                            $now = new DateTime();
+                                            $age = $now->diff($dobDate)->y; // Get the difference in years
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // Ensure age is empty if dob is not set or invalid
+                            if (empty($dob) || $dob === '0000-00-00') {
+                                $age = ''; // Set age to empty if date of birth is empty or invalid
+                            }
+                  
 
+                            $all_data = RespondentProfile::where('respondent_id', $userID)->first();
+
+                            //dd($all_data->basic_details);
+                            if ($all_data) {
+                                $basic = json_decode($all_data->basic_details);
+                                $essential = json_decode($all_data->essential_details);
+                            }
+
+                            $dob = $basic->date_of_birth ?? '';
+                            $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
+                            ? (date('Y') - date('Y', strtotime($dob))) 
+                            : '-';
+
+
+                            //dd($essential);
+                            
                             $employment_status = null;
 
                             if (isset($essential) && is_array($essential) && !empty($essential)) {
@@ -2725,7 +2992,7 @@ class ExportController extends Controller
                                 $ethnic_group = '';
                             }
 
-                         
+                        
                             // Initialize the gender variable with a default value
                             $gender = '';
 
@@ -2734,7 +3001,7 @@ class ExportController extends Controller
                                 // Set the gender value, ensuring it's properly capitalized
                                 $gender = ucfirst($essential->gender);
                             }
-                           
+                        
                             $education_level = '';
 
                             // Check if $essential is not null and has the education_level property
@@ -2780,165 +3047,191 @@ class ExportController extends Controller
 
                             $get_state = ($state != null) ? $state->state : '-';
                             $get_district = ($district != null) ? $district->district : '-';
-                            
-                            $result = ['Respondent Name' => $name,'Mobile'=>$mobile_number, 'Whatsapp'=>$whatsapp_number, 'Email'=>$email, 'Age'=>$year,'Gender'=>$gender,'Highest Education Level'=>$education_level,'Employment Status'=>$employment_status,'Industry my company'=>$industry_my_company,'Personal Income'=>$personal_income,'Personal LSM'=>$personal_lsm,'Household Income'=>$household_income,'Household LSM'=>$household_lsm,'Relationship Status'=>$relationship_status,'Ethnic Group'=>$ethnic_group,'Province'=>$get_state,'Metropolitan Area'=>$get_district, 'Date' => $responseinfo, 'Device ID' => $deviceID, 'Device Name' => $device_name, 'Completion Status' => $completion_status, 'Browser' => $browser, 'OS' => $os, 'Device Type' => $device_type, 'Long' => $long, 'Lat' => $lat, 'Location' => $location, 'IP Address' => $ip_address, 'Language Code' => $lang_code, 'Language Name' => $lang_name];
-                            
-                            //dd($result);
-                            
-                            foreach ($question as $qus) {
-                                $respone = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
-                                $output = $respone ? ($respone->skip == 'yes' ? 'Skip' : $respone->answer) : '-';
-                
-                                if ($qus->qus_type == 'likert') {
-                                    $qusvalue = json_decode($qus->qus_ans);
-                                    $left_label = $qusvalue->left_label ?? 'Least Likely';
-                                    $middle_label = $qusvalue->middle_label ?? 'Neutral';
-                                    $right_label = $qusvalue->right_label ?? 'Most Likely';
-                                    $likert_range = $qusvalue->likert_range ?? 10;
-                                    $output = intval($output);
-                                    $likert_label = $output;
-                
-                                    if ($likert_range <= 4 && $output <= 4) {
-                                        $likert_label = $output <= 2 ? $left_label : $right_label;
-                                    } else if ($likert_range >= 5 && $output >= 5) {
-                                        if ($likert_range == 5) {
-                                            if ($output <= 2) {
-                                                $likert_label = $left_label;
-                                            } else if ($output == 3) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        } else if ($likert_range == 6) {
-                                            if ($output <= 2) {
-                                                $likert_label = $left_label;
-                                            } else if ($output <= 4) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        } else if ($likert_range == 7) {
-                                            if ($output <= 2) {
-                                                $likert_label = $left_label;
-                                            } else if ($output <= 5) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        } else if ($likert_range == 8) {
-                                            if ($output <= 3) {
-                                                $likert_label = $left_label;
-                                            } else if ($output <= 5) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        } else if ($likert_range == 9) {
-                                            if ($output <= 3) {
-                                                $likert_label = $left_label;
-                                            } else if ($output <= 6) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        } else if ($likert_range == 10) {
-                                            if ($output <= 3) {
-                                                $likert_label = $left_label;
-                                            } else if ($output <= 7) {
-                                                $likert_label = $middle_label;
-                                            } else {
-                                                $likert_label = $right_label;
-                                            }
-                                        }
-                                    }
-                
-                                    $result[$qus->question_name] = $likert_label;
-                                } else if ($qus->qus_type == 'matrix_qus') {
-                                    $result[$qus->question_name] = '';
-                                    if ($output == 'Skip') {
-                                        foreach (json_decode($qus->qus_ans) as $matrix_qus) {
-                                            $result[$matrix_qus] = 'Skip';
-                                        }
-                                    } else {
-                                        foreach (json_decode($qus->qus_ans) as $matrix_qus) {
-                                            $matrixQus = SurveyResponse::where(['survey_id' => $survey_id, 'matrix_qus' => $matrix_qus, 'response_user_id' => $userID])->orderBy("id", "desc")->first();
-                                            $output_matrix_qus = $matrixQus ? $matrixQus->answer : '-';
-                                            $result[$matrix_qus] = $output_matrix_qus;
-                                        }
-                                    }
-                                } else {
-                                    $result[$qus->question_name] = $output;
-                                }
-                            }
-                
-                            foreach ($multi_choice_qus as $qus) {
-                                $qus_ans = json_decode($qus->qus_ans);
-                                $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                                $multichoicesResult = [];
-                                foreach ($choices as $choice) {
-                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
-                                    $multichoicesResult[$qus->question_name . '_' . $choice] = $answer ? 'Yes' : 'No';
-                                }
-                                $result = array_merge($result, $multichoicesResult);
-                            }
-                
-                            foreach ($rankorder_qus as $qus) {
-                                $qus_ans = json_decode($qus->qus_ans);
-                                $choices = $qus_ans != null ? explode(",", $qus_ans->choices_list) : [];
-                                $rankorderResult = [];
-                                foreach ($choices as $choice) {
-                                    $answer = SurveyResponse::where(['survey_id' => $survey_id, 'question_id' => $qus->id, 'response_user_id' => $userID, 'answer' => $choice])->orderBy("id", "desc")->first();
-                                    $rankorderResult[$qus->question_name . '_' . $choice] = $answer ? $answer->rank_ans : 'No';
-                                }
-                                $result = array_merge($result, $rankorderResult);
-                            }
-                
-                            $finalResult[] = $result;
-                        }
-                
-                        $finalResult = getValuesUser($finalResult);
-                       // dd($finalResult);
-
-                        // Loop through the array and rearrange the elements
-                        foreach ($finalResult as &$subArray) {
-                            // Extract the values of keys 3, 4, 5, and 6
-                            $keysToMove = [17,18,19,20,21,22,23,24,25,26,27,28,29];
-                            $movedValues = [];
-                            
-                            foreach ($keysToMove as $key) {
-                                $movedValues[] = $subArray[$key];
-                                unset($subArray[$key]);
-                            }
-                            
-                            // Append the extracted values to the end of the sub-array
-                            $subArray = array_merge($subArray, $movedValues);
-                        }
-
-                        unset($subArray); // Unset reference
-
-                        // Final array
-                        //dd($finalResult);
-                        
-                        
-                        if($survey){
-                            $survey_name = $survey->title;
-                        }else{
-                            $survey_name = "Survey-".$survey_id;
-                        }
-                        $survey_name = $this->sanitizeSheetName($survey_name);
-
-                        $sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $survey_name);
-                        $spreadsheet->addSheet($sheet, 0);
-                        $spreadsheet->setActiveSheetIndex(0);
-                        $sheet = $spreadsheet->getActiveSheet();
-                
-                        // Export Data to Excel
-                        $sheet->fromArray($finalResult, null, 'A1', false, false);
-                
-                        foreach (range('A', $sheet->getHighestDataColumn()) as $col) {
-                            $sheet->getColumnDimension($col)->setAutoSize(true);
-                        }
-                    }
+                            //    Essential Details Ends
+                           $result =[];
+                           foreach($question as $qus){
+                               $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
+                               if($respone){
+                                   if($respone->skip == 'yes'){
+                                       $output = 'Skip';
+                                   }else{
+                                       $output = $respone->answer;
+                                   }
+                               }else{
+                                   $output = '-';
+                               }
+                               if($qus->qus_type == 'likert'){
+                                   $qusvalue = json_decode($qus->qus_ans);
+                                   $left_label = 'Least Likely';
+                                   $middle_label = 'Netural';
+                                   $right_label = 'Most Likely';
+                                   $likert_range = 10;
+                                   if(isset($qusvalue->right_label)){
+                                       $right_label = $qusvalue->right_label;
+                                   }
+                                   if(isset($qusvalue->middle_label)){
+                                       $middle_label = $qusvalue->middle_label;
+                                   }
+                                   if(isset($qusvalue->likert_range)){
+                                       $likert_range = $qusvalue->likert_range;
+                                   }
+                                   if(isset($qusvalue->left_label)){
+                                       $left_label = $qusvalue->left_label;
+                                   }
+                                   $output = intval($output);
+                                   $likert_label = $output;
+                                   if($likert_range <= 4 && $output <= 4){
+                                       if($output == 1 || $output == 2){
+                                           $likert_label = $left_label;
+                                       }else{
+                                           $likert_label = $right_label;
+                                       }
+                                   }else if($likert_range >= 5 && $output >=5){
+                                       if($likert_range == 5){
+                                           if($output == 1 || $output == 2){
+                                               $likert_label = $left_label;
+                                           }else if($output == 3){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 4 || $output == 5){
+                                               $likert_label = $right_label;
+                                           }
+                                       }else if($likert_range == 6){
+                                           if($output == 1 || $output == 2){
+                                               $likert_label = $left_label;
+                                           }else if($output == 3 || $output == 4){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 5 || $output == 6){
+                                               $likert_label = $right_label;
+                                           }
+                                       }else if($likert_range == 7){
+                                           if($output == 1 || $output == 2){
+                                               $likert_label = $left_label;
+                                           }else if($output == 3 || $output == 4 || $output == 5){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 6 || $output == 7){
+                                               $likert_label = $right_label;
+                                           }
+                                       }else if($likert_range == 8){
+                                           if($output == 1 || $output == 2 || $output == 3){
+                                               $likert_label = $left_label;
+                                           }else if($output == 4 || $output == 5){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 6 || $output == 7 || $output == 8){
+                                               $likert_label = $right_label;
+                                           }
+                                       }else if($likert_range == 9){
+                                           if($output == 1 || $output == 2 || $output == 3){
+                                               $likert_label = $left_label;
+                                           }else if($output == 4 || $output == 5 || $output == 6){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 7 || $output == 8 || $output == 9){
+                                               $likert_label = $right_label;
+                                           }
+                                       }else if($likert_range == 10){
+                                           if($output == 1 || $output == 2 || $output == 3){
+                                               $likert_label = $left_label;
+                                           }else if($output == 4 || $output == 5 || $output == 6 || $output == 7){
+                                               $likert_label = $middle_label;
+                                           }else if($output == 8 || $output == 9 || $output == 10){
+                                               $likert_label = $right_label;
+                                           }
+                                       }
+                                   }
+                                   $tempresult = [$qus->question_name => $likert_label];
+                                   $result[$qus->question_name]= $likert_label;
+           
+                               }
+                               else if($qus->qus_type == 'matrix_qus'){
+                                   $result[$qus->question_name]=''; 
+                                   if($output=='Skip'){
+                                       $qusvalue = json_decode($qus->qus_ans); 
+                                       $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
+                                       foreach($exiting_qus_matrix as $op){
+                                           $result[$op]='Skip'; 
+                                       }
+                                   }else{
+                                       $output = json_decode($output);
+                                       if($output!=null)
+                                       foreach($output as $op){
+                                           $tempresult = [$op->qus =>$op->ans];
+                                           $result[$op->qus]=$op->ans; 
+                                       }
+                                   }
+                                   
+                               }else if($qus->qus_type == 'rankorder'){
+                                   // $result[$qus->question_name]=''; 
+                                   $qus_ans = json_decode($qus->qus_ans); 
+                                   $output = json_decode($output,true);
+                                   $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                                   foreach($choices as $qus1){
+                                       // echo "<pre>";
+                                       // print_r($qus1);
+                                       if($output!=null){
+                                           foreach($output as $op){
+                                               if($qus1 == $op['id']){
+                                                   $arrId= $qus->question_name.'_'.$qus1;
+                                                   $result[$arrId]=$op['val'];
+                                               }
+                                           }
+                                       }
+                                   
+                                   }
+                               
+                               }else if($qus->qus_type == 'multi_choice'){
+                                   // $result[$qus->question_name]=''; 
+                                   $qus_ans = json_decode($qus->qus_ans); 
+                                   $output = explode(",", $output);
+                                   $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                                   foreach($choices as $qus1){
+                                       if($output!=null){
+                                           foreach($output as $op){
+                                               if($qus1 == $op){
+                                                   $arrId= $qus->question_name.'_'.$qus1;
+                                                   $result[$arrId]=$op;
+                                               }
+                                           }
+                                       }
+                                   }
+                               
+                               }else if($qus->qus_type == 'photo_capture'){
+                                   $img = $output;
+                                   $tempresult = [$qus->question_name =>$img];
+                                   $result[$qus->question_name]=$img;
+                               }else if($qus->qus_type=='upload'){
+                                   $output1=asset('uploads/survey/'.$output);
+                                   $img = $output1;
+                                   $tempresult = [$qus->question_name =>$img];
+                                   $result[$qus->question_name]=$img;
+                               }else{
+                                   $tempresult = [$qus->question_name =>$output];
+                                   $result[$qus->question_name]=$output;
+                               }
+                           }
+                           $result = array_merge($result,['Respondent Name'=>$name,'Mobile'=>$mobile_number, 'Whatsapp'=>$whatsapp_number, 'Email'=>$email, 'Age'=>$year,'Gender'=>$gender,'Highest Education Level'=>$education_level,'Employment Status'=>$employment_status,'Industry my company'=>$industry_my_company,'Personal Income'=>$personal_income,'Personal LSM'=>$personal_lsm,'Household Income'=>$household_income,'Household LSM'=>$household_lsm,'Relationship Status'=>$relationship_status,'Ethnic Group'=>$ethnic_group,'Province'=>$get_state,'Metropolitan Area'=>$get_district,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name]);
+                           array_push($finalResult,$result);
+                       }
+                   
+                       $data = getValuesUser($finalResult);
+                       if($survey){
+                           $survey_name = $survey->title;
+                       }else{
+                           $survey_name = "Survey-".$survey_id;
+                       }
+                       $survey_name = preg_replace('/[\\/*?:[\]]/', '', $survey_name);
+                       $survey_name = substr($survey_name, 0, 31);
+           
+                       $sheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $survey_name);
+                       $spreadsheet->addSheet($sheet, 0);
+                       $spreadsheet->setActiveSheetIndex(0);
+                       $sheet = $spreadsheet->getActiveSheet();
+               
+                       // Export Data to Excel
+                       $sheet->fromArray($finalResult, null, 'A1', false, false);
+               
+                       foreach (range('A', $sheet->getHighestDataColumn()) as $col) {
+                           $sheet->getColumnDimension($col)->setAutoSize(true);
+                       }
+                   }
                 
                     $spreadsheet->removeSheetByIndex(count($spreadsheet->getSheetNames()) - 1);
                     
@@ -2969,10 +3262,14 @@ class ExportController extends Controller
                 $writer = new Xls($spreadsheet);
             }
             
-            $writer->save("../public/" . $fileName); 
+            $writer->save(public_path() . '/' . $fileName);
 
-            header("Content-Type: application/vnd.ms-excel");
-            return redirect(url('/') . "/" . $fileName);
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="' . $fileName . '"');
+            header('Content-Length: ' . filesize(public_path() . '/' . $fileName));
+            
+            readfile(public_path() . '/' . $fileName);
+            exit;
         } catch (Exception $e) {
             $errorMessage = sprintf(
                 "Error: %s in %s on line %d",
@@ -3001,4 +3298,5 @@ class ExportController extends Controller
     
         return $name;
     }
+
 }

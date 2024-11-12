@@ -11,6 +11,14 @@
         width: 100% !important;
     }
 
+    span#whatsapp-error {
+        padding-left: 200px;
+    }
+
+    span#date_of_birth-error {
+        padding-left: 200px;
+    }
+
     label#whatsapp-error {
         width: 100% !important;
     }
@@ -74,7 +82,7 @@
     <div class="form-group row">
         <label for="example-text-input" class="col-md-2 col-form-label">Date Of Birth </label>
         <div class="col-md-10">
-            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" autocomplete="off">
+            <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" autocomplete="off">
         </div>
     </div>
 
@@ -248,10 +256,10 @@
                     Choose an option
                 </option>
                 <option value="0">
-                    No
+                    Yes
                 </option>
                 <option value="1">
-                    Yes
+                    No
                 </option>
             </select>
         </div>
@@ -275,173 +283,214 @@
 
 <script>
     $(function() {
-
-        $('#mobile').inputmask("99 999 9999");
-        $('#whatsapp').inputmask("99 999 9999");
-        $(document).ready(function() {
-            $(document).ready(function() {
-                $('#respondents_form').validate({
-                    rules: {
-                        email: {
-                            required: true,
-                            email: true,
-                            remote: {
-                                url: '{{ route('user_respondent_id_check') }}',
-                                type: "GET",
-                                data: {
-                                    email: function() {
-                                        return $('#email')
-                                            .val(); // Ensure this matches the input's ID or name
-                                    },
-                                    form_name: "usercreate"
-                                },
-                                dataFilter: function(response) {
-                                    // Parse the JSON response from the server
-                                    var json = JSON.parse(response);
-                                    // Return validation result based on 'exists' key
-                                    return json.exists === false ? 'true' : 'false';
-                                }
-                            }
-                        },
-                        mobile: {
-                            required: true,
-
-
-                            remote: {
-                                url: '{{ route('user_respondent_mobile_check') }}',
-                                type: "GET",
-                                data: {
-                                    mobile: function() {
-                                        return $('#mobile')
-                                            .val(); // Ensure this matches the input's ID or name
-                                    },
-                                    form_name: "usercreate"
-                                },
-                                dataFilter: function(response) {
-                                    var json = JSON.parse(response);
-                                    return json.valid ? "true" : "false";
-                                }
-                            }
-                        },
-                        password: {
-                            required: true,
-                            minlength: 8
-                        }
-                    },
-                    messages: {
-                        email: {
-                            remote: "Email already exists!" // Display this message if the email is not valid
-                        },
-                        mobile: {
-                            remote: "Mobile number already exists!" // Error message for mobile number
-                        }
-                    },
-                    errorElement: "span", // HTML element for error messages
-                    errorPlacement: function(error, element) {
-                        error.addClass(
-                            'invalid-feedback'); // Add a class for styling
-                        element.closest('.form-group').append(
-                            error); // Append the error message to the form group
-                    },
-                    highlight: function(element, errorClass, validClass) {
-                        $(element).addClass('is-invalid').removeClass(
-                            'is-valid'); // Add class for invalid state
-                    },
-                    unhighlight: function(element, errorClass, validClass) {
-                        $(element).removeClass('is-invalid').addClass(
-                            'is-valid'); // Add class for valid state
-                    }
-                });
-            });
-
+        // Input masks for date of birth and mobile
+        $('#date_of_birth').inputmask("yyyy/mm/dd", {
+            "placeholder": "YYYY/MM/DD",
+            onincomplete: function() {
+                $(this).val('');
+            }
         });
 
-    });
+        $('#mobile').inputmask("99 999 9999"); // Mobile number format (spaces allowed)
+        $('#whatsapp').inputmask("99 999 9999");
 
-    $.validator.addMethod("validate_email", function(value, element) {
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+        // Form validation
+        $('#respondents_form').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                    remote: {
+                        url: '{{ route('user_respondent_id_check') }}',
+                        type: "GET",
+                        data: {
+                            email: function() {
+                                return $('#email')
+                            .val(); // Ensure this matches the input's ID or name
+                            },
+                            form_name: "usercreate"
+                        },
+                        dataFilter: function(response) {
+                            var json = JSON.parse(response);
+                            return json.exists === false ? 'true' : 'false';
+                        }
+                    }
+                },
+                // Date of birth validation
+                date_of_birth: {
+                    required: true,
+                    date: true,
+                    date_of_birth_check: true // Custom date validation (not in the future)
+                },
+                mobile: {
+                    required: true,
+                    minlength: 11, // Minimum length of 11 digits
+                    maxlength: 11, // Maximum length of 11 digits
+                    mobile_format: true, // Custom validation to allow digits, spaces, and optional underscore at the end
+                    remote: {
+                        url: '{{ route('user_respondent_mobile_check') }}',
+                        type: "GET",
+                        data: {
+                            mobile: function() {
+                                // Remove spaces and underscores before submitting the phone number
+                                return $('#mobile').val().replace(/[\s_]+/g,
+                                ''); // Remove spaces and underscores
+                            },
+                            form_name: "usercreate"
+                        },
+                        dataFilter: function(response) {
+                            var json = JSON.parse(response);
+                            return json.valid ? "true" : "false";
+                        }
+                    }
+                },
+                whatsapp: {
+                    required: true,
+                    minlength: 11, // Minimum length of 11 digits
+                    maxlength: 11, // Maximum length of 11 digits
+                    mobile_format: true, // Custom validation to allow digits, spaces, and optional underscore at the end
+                },
+                password: {
+                    required: true,
+                    minlength: 8
+                }
+            },
+            messages: {
+                email: {
+                    remote: "Email already exists!"
+                },
+                mobile: {
+                    remote: "Mobile number already exists!",
+                    minlength: "Mobile number must be exactly 11 digits.",
+                    maxlength: "Mobile number must be exactly 11 digits.",
+                    mobile_format: "Invalid Mobile Number Format."
+                },
+                whatsapp: {
+                    remote: "Whatsapp number already exists!",
+                    minlength: "Whatsapp number must be exactly 11 digits.",
+                    maxlength: "Whatsapp number must be exactly 11 digits.",
+                    mobile_format: "Invalid Whatsapp Number Format."
+                },
+                date_of_birth: {
+                    date: "Please enter a valid date.",
+                    date_of_birth_check: "Date of birth cannot be in the future."
+                }
+            },
+            errorElement: "span", // HTML element for error messages
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback'); // Add a class for styling
+                element.closest('.form-group').append(
+                error); // Append the error message to the form group
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid').removeClass(
+                'is-valid'); // Add class for invalid state
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid').addClass(
+                'is-valid'); // Add class for valid state
+            }
+        });
+
+        // Custom method to check if date of birth is not in the future
+        $.validator.addMethod("date_of_birth_check", function(value, element) {
+            var dateOfBirth = new Date(value);
+            var today = new Date();
+            // Compare the entered date with today's date
+            if (dateOfBirth > today) {
+                return false; // Date should not be in the future
+            }
             return true;
-        } else {
-            return false;
-        }
-    }, "Please enter a valid email address.");
+        }, "Date of birth cannot be in the future.");
 
-    $("#respondents_create").click(function() {
-        if (!$("#respondents_form").valid()) { // Not Valid
-            return false;
-        } else {
-            var data = $('#respondents_form').serialize();
+        // Custom method to validate mobile format (only digits, spaces, and underscore at the end)
+        $.validator.addMethod("mobile_format", function(value, element) {
+            // Regex allows digits, spaces, and one underscore at the end
+            return /^(\d{2} \d{3} \d{4})(_|)?$/.test(
+            value); // This regex allows the underscore only at the end
+        }, "Invalid Mobile Number Format");
 
+        $.validator.addMethod("validate_email", function(value, element) {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+                return true;
+            } else {
+                return false;
+            }
+        }, "Please enter a valid email address.");
+
+        // Handle form submission
+        $("#respondents_create").click(function() {
+            if (!$("#respondents_form").valid()) { // Not Valid
+                return false;
+            } else {
+                var data = $('#respondents_form').serialize();
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('respondents.store') }}",
+                    data: data,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        $('#respondents_create').html('....Please wait');
+                    },
+                    success: function(response) {
+                        toastr.success(response.message);
+                        $("#commonModal").modal('hide');
+                        respondents_datatable();
+                    },
+                    complete: function(response) {
+                        $('#respondents_create').html('Create New');
+                    }
+                });
+            }
+        });
+
+        // Handle bank name change
+        $("#bank_name").change(function() {
+            var bank_id = this.value;
             $.ajax({
-                type: 'POST',
-                url: "{{ route('respondents.store') }}",
-                data: data,
+                type: "GET",
+                url: "{{ route('get_branch_code') }}",
+                data: {
+                    "bank_id": bank_id,
+                },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                beforeSend: function() {
-                    $('#respondents_create').html('....Please wait');
-                },
-                success: function(response) {
-                    toastr.success(response.message);
-                    $("#commonModal").modal('hide');
-                    respondents_datatable();
-                },
-                complete: function(response) {
-                    $('#respondents_create').html('Create New');
+                success: function(data) {
+                    $("#branch_code").val(data.repsonse);
+                    $("#branch").val(data.repsonse);
                 }
             });
-        }
-    });
+        });
 
-    $("#bank_name").change(function() {
-        var bank_id = this.value;
-        $.ajax({
-
-            type: "GET",
-            url: "{{ route('get_branch_code') }}",
-            data: {
-                "bank_id": bank_id,
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-                $("#branch_code").val(data.repsonse);
-                $("#branch").val(data.repsonse);
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-
+        // Toggle password visibility
+        $(".toggle-password").click(function() {
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
             }
         });
-    });
 
-    $(".toggle-password").click(function() {
+        // Get today's date and set the minimum date for deactivation date
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; // January is 0!
+        var yyyy = today.getFullYear();
 
-        $(this).toggleClass("fa-eye fa-eye-slash");
-        var input = $($(this).attr("toggle"));
-        if (input.attr("type") == "password") {
-            input.attr("type", "text");
-        } else {
-            input.attr("type", "password");
+        if (dd < 10) {
+            dd = '0' + dd;
         }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+
+        today = yyyy + '-' + mm + '-' + dd;
+        document.getElementById("deactivated_date").setAttribute("min", today);
     });
-    // Get the current date
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-
-    // Format the date
-    if (dd < 10) {
-        dd = '0' + dd;
-    }
-    if (mm < 10) {
-        mm = '0' + mm;
-    }
-
-    today = yyyy + '-' + mm + '-' + dd;
-
-    // Set the minimum date
-    document.getElementById("deactivated_date").setAttribute("min", today);
 </script>

@@ -190,10 +190,13 @@ class UsersController extends Controller
                     $users->surname = $request->input('surname');
                     $users->id_passport = $request->input('id_passport');
                     $users->email = $request->input('email');
-                    $users->password = Hash::make($request->password);
+                  // Only update password if provided
+                    if ($request->has('password') && $request->input('password') !== null) {
+                        $users->password = Hash::make($request->input('password'));
+                    }
                     $users->role_id = $request->input('role_id');
                     $users->status_id = $request->input('status_id');
-                    $users->share_link = $request->input('share_link');
+                    // $users->share_link = $request->input('share_link');
                     $users->update();
                     $users->id;
                     return response()->json([
@@ -321,8 +324,8 @@ class UsersController extends Controller
                     $edit_route = route("users.edit",$all_data->id);
                     $view_route = route("users.show",$all_data->id);
 
-
-                    $design = '<div class="col-md-2">
+                    if (Auth::guard('admin')->user()->role_id == 1){
+                        $design = '<div class="col-md-2">
                             <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
                                 title="Action" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-tasks" aria-hidden="true"></i>
@@ -347,6 +350,33 @@ class UsersController extends Controller
                                 </li>
                             </ul>
                         </div>';
+                    }
+                    else if(Auth::guard('admin')->user()->role_id == 3){
+                        $design = '<div class="col-md-2">
+                            <button class="btn btn-primary dropdown-toggle tooltip-toggle" data-toggle="dropdown" data-placement="bottom"
+                                title="Action" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-tasks" aria-hidden="true"></i>
+                                <i class="mdi mdi-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li class="list-group-item">
+                                    <a href="'.$view_route.'" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-eye"></i> View
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#!" data-url="'.$edit_route.'" data-size="xl" data-ajax-popup="true" data-ajax-popup="true"
+                                        data-bs-original-title="Edit User" class="rounded waves-light waves-effect">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>';
+                    }
+                    else{
+                        $design = '';
+                    }
+                    
 
                     if(Auth::guard('admin')->user()->role_id == 1){
                         return $design;
@@ -657,6 +687,36 @@ class UsersController extends Controller
         }
         catch (Exception $e) {
             throw new Exception($e->getMessage());
+        }
+    }
+
+    public function users_search_result(Request $request) {
+        try {
+            $searchValue = $request->input('q'); // Use input method for clarity
+            
+            // Initialize an empty array for respondents
+            $respondents = [];
+    
+            if ($request->filled('q')) {
+                $respondents_data = Users::search($searchValue)
+                    ->query(function ($query) {
+                        $query->whereNull('deleted_at');
+                    })
+                    ->orderBy('id', 'ASC')
+                    ->get();
+    
+                // Populate the respondents array if there are results
+                foreach ($respondents_data as $resp) {
+                    $respondents[] = [
+                        'id' => $resp->id,
+                        'name' => $resp->name . ' - ' . $resp->surname,
+                    ];
+                }
+            }
+    
+            return response()->json($respondents); // Return JSON response properly
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500); // Return JSON error response
         }
     }
 }

@@ -91,7 +91,7 @@ class AdminLoginController extends Controller
                 $active_val   = DB::table('respondents')->where("active_status_id",1)->count();
                 $deactive_val = DB::table('respondents')->where("active_status_id",2)->count();
                 $unsub_val    = DB::table('respondents')->where("active_status_id",3)->count();
-                $pending_val  = DB::table('respondents')->where("active_status_id",5)->count();
+                $pending_val  = DB::table('respondents')->where("active_status_id",4)->count();
                 $black_val    = DB::table('respondents')->where("active_status_id",5)->count();
                 $complete = DB::table('respondents')->where("profile_completion_id",1)->count();
                 $incomplete = DB::table('respondents')->where("profile_completion_id",0)->count();
@@ -103,7 +103,7 @@ class AdminLoginController extends Controller
                 $dec_per=($tot > 0) ? number_format( $deactive_val/$tot * 100, 2 ) . ' %' : 0;
             
 
-                $unsub_pre=($tot > 0) ? number_format( $unsub_val/$tot * 100, 2 ) . ' %' : 0;
+                $unsub_per=($tot > 0) ? number_format( $unsub_val/$tot * 100, 2 ) . ' %' : 0;
           
 
                 $pen_per=($tot > 0) ? number_format( $pending_val/$tot * 100, 2 ) . ' %' : 0;
@@ -185,7 +185,7 @@ class AdminLoginController extends Controller
 
                 //dd($dashboard_data);
                 $dashboard_data='';
-;                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val','black_val','pending_val','complete','incomplete','tot','comp_per','incomp_per','act_per','dec_per','unsub_pre','pen_per','bla_per','share_link','dashboard_data'));
+;                return view('admin.dashboard',compact('active_val','deactive_val','unsub_val','black_val','pending_val','complete','incomplete','tot','comp_per','incomp_per','act_per','dec_per','unsub_per','pen_per','bla_per','share_link','dashboard_data'));
                 
                 return redirect("/")->withSuccess('You are not allowed to access');
             }
@@ -197,49 +197,25 @@ class AdminLoginController extends Controller
             throw new Exception($e->getMessage());
         }
     }
-
     public function get_activity_data(Request $request) {
         if ($request->ajax()) {
             // Base query
             $query = DB::table('users as u')
-                ->select('u.id', DB::raw('CONCAT(u.name, " ", u.surname) AS full_name'))
-                ->selectSub(function ($query) {
-                    $query->select(DB::raw('count(*)'))
-                        ->from('user_events')
-                        ->whereColumn('user_events.user_id', 'u.id')
-                        ->where('user_events.action', 'created')
-                        ->where('user_events.type', 'respondent');
-                }, 'createCount')
-                ->selectSub(function ($query) {
-                    $query->select(DB::raw('count(*)'))
-                        ->from('user_events')
-                        ->whereColumn('user_events.user_id', 'u.id')
-                        ->where('user_events.action', 'updated')
-                        ->where('user_events.type', 'respondent');
-                }, 'updateCount')
-                ->selectSub(function ($query) {
-                    $query->select(DB::raw('count(*)'))
-                        ->from('user_events')
-                        ->whereColumn('user_events.user_id', 'u.id')
-                        ->where('user_events.action', 'deactivated')
-                        ->where('user_events.type', 'respondent');
-                }, 'deactCount');
+                ->select('u.id',
+                    DB::raw('CONCAT(u.name, " ", u.surname) AS full_name'),
+                    DB::raw('SUM(CASE WHEN user_events.action = "created" THEN user_events.count ELSE 0 END) AS createCount'),
+                    DB::raw('SUM(CASE WHEN user_events.action = "updated" THEN user_events.count ELSE 0 END) AS updateCount'),
+                    DB::raw('SUM(CASE WHEN user_events.action = "deactivated" THEN user_events.count ELSE 0 END) AS deactCount')
+                )
+                ->leftJoin('user_events', 'u.id', '=', 'user_events.user_id') // Use leftJoin to include users with no events
+                ->where('user_events.type', '=', 'respondent')
+                ->groupBy('u.id'); // Group by user_id
     
-           
-            // Apply filters based on DataTables search input
-            // if (!empty($request->input('year')) || !empty($request->input('month'))) {
-            //     $year = $request->input('year');
-            //     $month = $request->input('month');
-            //     $query->where(function ($query) use ($year,$month) {
-            //         $query->orWhere('user_events.year','=',$year)
-            //                   ->orWhere('user_events.month','=',$month);
-            //     });
-            // }
-
+            // Apply filters based on year and month
             if ($request->filled('year') || $request->filled('month')) {
                 $year = $request->input('year');
                 $month = $request->input('month');
-                
+    
                 $query->whereExists(function ($subQuery) use ($year, $month) {
                     $subQuery->select(DB::raw(1))
                              ->from('user_events')
@@ -254,32 +230,28 @@ class AdminLoginController extends Controller
                              });
                 });
             }
-            
-
-              
-        
     
             // Count total records before pagination
             $totalRecords = $query->count();
     
             // Ordering and pagination
-            $query->offset($request->input('start'))
-                  ->limit($request->input('length'));
-    
-            // Get data
-            $data = $query->get();
+            $data = $query->offset($request->input('start'))
+                          ->limit($request->input('length'))
+                          ->get();
     
             // Prepare JSON response for DataTables
             $json_data = [
                 "draw" => intval($request->input('draw')),
                 "recordsTotal" => $totalRecords,
-                "recordsFiltered" => $totalRecords, // For simplicity, assuming no search filter on server
+                "recordsFiltered" => $totalRecords, // This can be adjusted based on filtered results
                 "data" => $data,
             ];
     
             return response()->json($json_data);
         }
     }
+    
+    
 
     public function admin_password_reset_save(Request $request){
         $request->validate([
@@ -415,9 +387,9 @@ class AdminLoginController extends Controller
         $count_ass = $request->count_ass;
         $get_import_data = DB::table('profile_data')->where('imported_status',0)->take($total)->get();
         $password = Hash::make('Change@123');
-
+        $resp_inc_get = Respondents::orderBy('id','DESC')->first();
+        $res_inc = ($resp_inc_get != null) ? ($resp_inc_get->id + 1) : 1;
         foreach($get_import_data as $resp){
-            $resp_id = $resp->id;
             $no_vehicle = 0;
             $no_children = 0;
 
@@ -445,7 +417,7 @@ class AdminLoginController extends Controller
             }
             
             $respondent_insert = array(
-                'id'        => $resp_id,
+                'id'        => $resp->id,
                 'name'      => $resp->fname,
                 'surname'   => $resp->lname,
                 'date_of_birth' => $resp->dob,
@@ -460,8 +432,8 @@ class AdminLoginController extends Controller
 
             $basic_details = array(
                 'email'           => $resp->main_email,
-                'last_name'       => $resp->fname,
-                'first_name'      => $resp->lname,
+                'first_name'      => $resp->fname,
+                'last_name'       => $resp->lname,
                 'updated_at'      => date('Y-m-d H:i:s'),
                 'mobile_number'   => $resp->pnumber,
                 'whatsapp_number' => $resp->whatsapp
@@ -501,8 +473,8 @@ class AdminLoginController extends Controller
             $car_detials   = array();
 
             $resp_profile = array(
-                'pid'               => $resp_id,
-                'respondent_id'     => $resp_id,
+                'pid'               => $resp->id,
+                'respondent_id'     => $resp->id,
                 'basic_details'     => json_encode($basic_details),
                 'essential_details' => json_encode($essential_details),
                 'extended_details'  => json_encode($extended_details),
@@ -547,7 +519,8 @@ class AdminLoginController extends Controller
 
             Respondents::insert($respondent_insert);
             RespondentProfile::insert($resp_profile);
-            DB::table('profile_data')->where('id',$resp_id)->update(['imported_status' => 1]);
+            DB::table('profile_data')->where('id',$resp->id)->update(['imported_status' => 1]);
+            $res_inc++;
         }
 
         return $count_ass;

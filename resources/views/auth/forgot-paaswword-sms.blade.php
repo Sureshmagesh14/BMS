@@ -107,13 +107,32 @@
         $('#forgot_table').validate({
             rules: {
                 phone: {
+                    minlength: 11, // Minimum length of 11 digits
+                    maxlength: 11, // Maximum length of 11 digits
+                    mobile_format: true, // Custom validation to allow digits, spaces, and optional underscore at the end
                     required: true,
-                    phone: true,
+                
                    
                 },
 
-            }
+            },
+            messages: {
+               
+                phone: {
+                    remote: "Mobile number already exists!",
+                    minlength: "Mobile number must be exactly 11 digits.",
+                    maxlength: "Mobile number must be exactly 11 digits.",
+                    mobile_format: "Invalid Mobile Number Format."
+                },
+                
+            },
         });
+
+        $.validator.addMethod("mobile_format", function(value, element) {
+            // Regex allows digits, spaces, and one underscore at the end
+            return /^(\d{2} \d{3} \d{4})(_|)?$/.test(
+            value); // This regex allows the underscore only at the end
+        }, "Invalid Mobile Number Format");
     });
 
   

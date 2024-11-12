@@ -16,6 +16,40 @@
     .apexcharts-legend.apexcharts-align-center.position-right {
         top: 38px !important;
     }
+
+    #loader {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        /* Dark background */
+        z-index: 9999;
+        /* On top of everything */
+        text-align: center;
+    }
+
+    #loader .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    #loader p {
+        color: white;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .loader-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
@@ -50,7 +84,7 @@
                             <h4 class="card-title"></h4>
 
 
-                            <form action="{{ url('admin/export_all') }}" method="post">
+                            <form action="{{ url('admin/export_all') }}" id="export_form" method="post">
                                 @csrf
 
                                 <div class="form-group row">
@@ -58,6 +92,7 @@
                                     <div class="col-md-10">
                                         <select name="module" id="module" class="form-control">
                                             <option value="">Select</option>
+                                            
                                             <option value="Respondents info">Respondents Info</option>
                                             <option value="Respondents">Respondents</option>
                                             <option value="Projects">Projects</option>
@@ -83,7 +118,7 @@
                                 </div>
 
 
-                                
+
 
                                 <div class="form-group row date_range" style="display: none;">
                                     <label class="col-md-2 col-form-label">Date Range</label>
@@ -136,7 +171,7 @@
                                     </div>
                                 </div>
 
-                               
+
                                 <div class="form-group row show_resp">
                                     <label class="col-md-2 col-form-label">Status</label>
                                     <div class="col-md-10">
@@ -162,7 +197,8 @@
                                         <div class="custom-control custom-radio mb-3">
                                             <input type="radio" id="Unsubscribed" name="resp_status"
                                                 class="custom-control-input" value="Unsubscribed">
-                                            <label class="custom-control-label" for="Unsubscribed">Unsubscribed</label>
+                                            <label class="custom-control-label"
+                                                for="Unsubscribed">Unsubscribed</label>
                                         </div>
 
                                     </div>
@@ -192,8 +228,8 @@
                                     <label class="col-md-2 col-form-label">Projects</label>
                                     <div class="col-md-10">
 
-                                        <input class="form-control" type="text" id="projects"
-                                            name="projects[]" value="{{ request()->get('q') }}">
+                                        <input class="form-control" type="text" id="projects" name="projects[]"
+                                            value="{{ request()->get('q') }}">
                                     </div>
                                 </div>
 
@@ -201,8 +237,8 @@
                                     <label class="col-md-2 col-form-label">Panel Name</label>
                                     <div class="col-md-10">
 
-                                        <input class="form-control" type="text" id="panel"
-                                            name="panel[]" value="{{ request()->get('q') }}">
+                                        <input class="form-control" type="text" id="panel" name="panel[]"
+                                            value="{{ request()->get('q') }}">
                                     </div>
                                 </div>
 
@@ -214,6 +250,16 @@
                                             name="respondents[]" value="{{ request()->get('q') }}">
                                     </div>
                                 </div>
+
+                                <div class="form-group row users_list">
+                                    <label class="col-md-2 col-form-label">User</label>
+                                    <div class="col-md-10">
+
+                                        <input class="form-control" type="text" id="users"
+                                            name="users[]" value="{{ request()->get('q') }}">
+                                    </div>
+                                </div>
+
 
                                 <div class="form-group row respondents_survey">
                                     <label class="col-md-2 col-form-label">Respondents</label>
@@ -255,7 +301,7 @@
                                     </div>
                                 </div>
 
-                                
+
                                 <div class="form-group row show_month">
                                     <label class="col-md-2 col-form-label">Month</label>
                                     <div class="col-md-10">
@@ -289,6 +335,16 @@
                                             <option value="respondent">Respondent</option>
                                         </select>
                                     </div>
+                                </div>
+                                <!-- Loader Element -->
+                                <div id="loader"
+                                    style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <p class="loader-text">
+                                        Exporting data, please wait...
+                                    </p>
                                 </div>
 
                                 <div class="modal-footer">
@@ -325,9 +381,10 @@
                     $(".show_action").hide();
                     $(".show_pro_type").hide();
                     $(".methods").hide();
+                    $(".users_list").hide();
                     $(".show_cashout_type").hide();
                     $(".respondents_survey").hide();
-                    
+
                     $("#module").val("");
                     $("#year").val("");
                     $("#month").val("");
@@ -338,14 +395,24 @@
                         } else if (this.value == 'All') {
                             $(".respondents").hide();
                         }
+
+                         // Check if module is "Team Activity" when type_method is Individual
+                        if (this.value == 'Individual' && $("#module").val() == "Team Activity") {
+                            $(".users_list").show();
+                            $(".respondents").hide();
+                        } else {
+                            $(".users_list").hide();
+                          
+                        }
+
                     });
 
-                    
+
                     $('#methods').on('change', function() {
                         if (this.value == 'projects_type') {
                             $(".projects").show();
                             $(".respondents_survey").hide();
-                        } else{
+                        } else {
                             $(".projects").hide();
                             $(".respondents_survey").show();
                         }
@@ -369,6 +436,7 @@
                             $(".panel").hide();
                             $(".methods").hide();
                             $(".respondents_survey").hide();
+                            $(".users_list").hide();
                             $(".show_cashout_type").hide();
                         } else if (this.value == 'Respondents info') {
                             $(".show_year").hide();
@@ -381,12 +449,13 @@
                             $(".show_user").hide();
                             $(".report_type").show();
                             $(".respondents").hide();
-                            $(".date_range").hide(); 
+                            $(".date_range").hide();
                             $(".respondents_survey").hide();
                             $(".projects").hide();
                             $(".show_pro_type").hide();
                             $(".methods").hide();
                             $(".panel").hide();
+                            $(".users_list").hide();
                             $(".show_cashout_type").hide();
                         } else if ((this.value == 'Cashout')) {
                             $(".show_year").hide();
@@ -405,6 +474,7 @@
                             $(".show_pro_type").hide();
                             $(".date_range").show();
                             $(".panel").hide();
+                            $(".users_list").hide();
                             $(".show_cashout_type").show();
                         } else if (this.value == 'Rewards') {
                             $(".methods").show();
@@ -422,6 +492,7 @@
                             $(".projects").hide();
                             $(".show_pro_type").hide();
                             $(".date_range").hide();
+                            $(".users_list").hide();
                             $(".panel").hide();
                             $(".show_cashout_type").hide();
                         } else if (this.value == 'Team Activity') {
@@ -434,7 +505,7 @@
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").show();
-                            $(".respondents").show();
+                            $(".respondents").hide();
                             $(".show_pro_type").hide();
                             $(".report_type").show();
                             $(".date_range").show();
@@ -447,10 +518,11 @@
                             $(".show_month").show();
                             $(".show_role").show();
                             $(".show_action").show();
-                            $(".show_resp").hide(); 
+                            $(".show_resp").hide();
                             $(".respondents_survey").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
+                            $(".users_list").hide();
                             $(".show_user").show();
                             $(".respondents").hide();
                             $(".report_type").hide();
@@ -460,12 +532,13 @@
                             $(".projects").hide();
                             $(".panel").hide();
                             $(".show_cashout_type").hide();
-                        }else if (this.value == 'Panel') {
+                        } else if (this.value == 'Panel') {
                             $(".show_year").hide();
                             $(".show_month").hide();
                             $(".show_role").hide();
                             $(".show_action").hide();
                             $(".show_resp").hide();
+                            $(".users_list").hide();
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
@@ -478,9 +551,8 @@
                             $(".methods").hide();
                             $(".projects").hide();
                             $(".show_cashout_type").hide();
-                           
-                        }
-                        else if (this.value == 'Survey') {
+
+                        } else if (this.value == 'Survey') {
                             $(".methods").show();
                             $(".show_year").hide();
                             $(".show_month").hide();
@@ -491,14 +563,14 @@
                             $(".show_resp_status").hide();
                             $(".show_resp_type").hide();
                             $(".show_user").hide();
+                            $(".users_list").hide();
                             $(".respondents").hide();
                             $(".projects").hide();
                             $(".show_pro_type").hide();
                             $(".date_range").hide();
                             $(".panel").hide();
                             $(".show_cashout_type").hide();
-                        } 
-                        else {
+                        } else {
                             $(".show_user").hide();
                             $(".projects").hide();
                             $(".show_year").hide();
@@ -515,6 +587,7 @@
                             $(".show_pro_type").show();
                             $(".date_range").show();
                             $(".methods").hide();
+                            $(".users_list").hide();
                             $(".panel").hide();
                             $(".show_cashout_type").hide();
                             $(".respondents_survey").hide();
@@ -557,7 +630,7 @@
                         theme: "bootstrap"
                     });
 
-                 
+
                     $("#panel").tokenInput("{{ route('tags_search_result') }}", {
                         propertyToSearch: "name",
                         tokenValue: "id",
@@ -599,4 +672,65 @@
                         ignore: ':hidden:not("#respondents")'
                     });
                 });
+                document.getElementById("export_form").addEventListener("submit", function(event) {
+
+
+                    disablePage(); // Disable the page and show loader
+
+                    // Create a FormData object to capture the form fields
+                    let formData = new FormData(this);
+
+                    // Send AJAX request
+                    fetch("{{ url('admin/export_all') }}", {
+                            method: "POST",
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            enablePage(); // Re-enable the page
+
+                        })
+                        .catch(error => {
+                            enablePage(); // Re-enable on error
+
+                        });
+                });
+                $("#users").tokenInput("{{ route('users_search_result') }}", {
+                        propertyToSearch: "name",
+                        tokenValue: "id",
+                        tokenDelimiter: ",",
+                        hintText: "{{ __('Search Users... By(ID, Name, Surname, Mobile)') }}",
+                        noResultsText: "{{ __('Users not found.') }}",
+                        searchingText: "{{ __('Searching...') }}",
+                        deleteText: "&#215;",
+                        minChars: 2,
+                        tokenLimit: 20,
+                        zindex: 9999,
+                        animateDropdown: false,
+                        resultsLimit: 20,
+                        deleteText: "&times;",
+                        preventDuplicates: true,
+                        theme: "bootstrap"
+                    });
+                function disablePage() {
+                    console.log("vl");
+                    document.querySelector("body").style.pointerEvents = 'none';
+
+                    // Show a loader or message (optional)
+                    document.getElementById("loader").style.display = 'block';
+
+
+
+
+
+                }
+
+                function enablePage() {
+                    document.querySelector("body").style.pointerEvents = 'auto';
+                    document.getElementById("loader").style.display = 'none';
+
+                }
             </script>

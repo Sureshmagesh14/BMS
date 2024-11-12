@@ -1330,7 +1330,9 @@ function enableNextButton(classname,btnname){
         $(btnname).toggleClass('disabled');
         $('#next_button').removeClass('disabled');
         $('#answered').val('yes');
-        $('#next_button').click();
+        if(classname!='.multi_choice_choice'){
+            $('#next_button').click();
+        }
     }else{
         $(btnname).toggleClass('disabled');
         $('#next_button').addClass('disabled');
