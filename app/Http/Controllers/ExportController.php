@@ -1575,13 +1575,8 @@ class ExportController extends Controller
                     ->groupBy('respondents.id')
                     ->orderBy("respondents.id", "ASC")  // Use respondents.id for consistent ordering
                     ->get();
-<<<<<<< HEAD
-
-                dd($all_datas);
-=======
                 
                 //dd($all_datas);
->>>>>>> 0e57f422e1e930e111fd2e3053f8b185352cbea8
             
                 $sheet->setCellValue('A1', 'PID');
                 $sheet->setCellValue('B1', 'First Name');
@@ -2759,7 +2754,7 @@ class ExportController extends Controller
                        $multi_choice_qus=Questions::where(['qus_type'=>'multi_choice','survey_id'=>$survey_id])->get();
                        $rankorder_qus=Questions::where(['qus_type'=>'rankorder','survey_id'=>$survey_id])->get();
            
-                       $cols = ["Respondent Name","Mobile","Whatsapp","Email","Age","Gender","Highest Education Level","Employment Status","Industry my company","Personal Income","Personal LSM","Household Income","Household LSM","Relationship Status","Ethnic Group","Province","Metropolitan Area", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name"];
+                       $cols = ["First Name","Last Name","Mobile","Whatsapp","Email","Age","Gender","Highest Education Level","Employment Status","Industry my company","Personal Income","Personal LSM","Household Income","Household LSM","Relationship Status","Ethnic Group","Province","Metropolitan Area", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name"];
 
                        foreach($question as $qus){
                            array_push($cols,$qus->question_name);
@@ -2844,6 +2839,13 @@ class ExportController extends Controller
                            if(isset($user->name)){
                                $name = $user->name;
                            }
+                           if(isset($user->name)){
+                                $surname = $user->surname;
+                            }
+
+                            if(isset($user->mobile)){
+                                $mobile = $user->mobile;
+                            }
            
                            $completedRes = SurveyResponse::where(['response_user_id'=>$userID ,'survey_id'=>$survey_id,'answer'=>'thankyou_submitted'])->first();
            
@@ -2854,6 +2856,8 @@ class ExportController extends Controller
                                 $completion_status = 'Partially Completed';                              
                            }
                             //    Essential Details
+                            
+
                             $mobile_number = '-';
                             if (!empty($mobile)) {
                                 $m_number = preg_replace('/\s+/', '',$mobile);
@@ -2888,7 +2892,8 @@ class ExportController extends Controller
                         
                             
                             $email = $basic->email ?? '';
-                            $dob = $basic->date_of_birth ?? '';
+                            $dob = $user->date_of_birth ?? '';
+                           // dd($dob);
                             $age = ''; // Set initial age to empty
                             
                             $get_resp = Respondents::select('date_of_birth')->where('id', $userID)->first();
@@ -2923,9 +2928,13 @@ class ExportController extends Controller
                             
                             // Ensure age is empty if dob is not set or invalid
                             if (empty($dob) || $dob === '0000-00-00') {
-                                $age = ''; // Set age to empty if date of birth is empty or invalid
+                                $dob = $basic->date_of_birth ?? '';
+                                $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') ? (date('Y') - date('Y', strtotime($dob))) : '-';
+                            }else{
+                                $year = '';
                             }
 
+                            
                             $all_data = RespondentProfile::where('respondent_id', $userID)->first();
                             
                             //dd($all_data->basic_details);
@@ -2934,11 +2943,6 @@ class ExportController extends Controller
                                 $essential = json_decode($all_data->essential_details);
                             }
 
-                            $dob = $basic->date_of_birth ?? '';
-                            $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') 
-                            ? (date('Y') - date('Y', strtotime($dob))) 
-                            : '-';
-                            
                            
                             //dd($essential);
 
@@ -2950,14 +2954,7 @@ class ExportController extends Controller
                                 $essential = json_decode($all_data->essential_details);
                             }
 
-                            if (isset($basic) && is_array($basic) && !empty($basic)) {
-                                $dob = $basic->date_of_birth ?? '';
-                                $year = (isset($basic->date_of_birth) && $dob !== '0000-00-00') ? (date('Y') - date('Y', strtotime($dob))) : '-';
-                            }else{
-                                $year = '';
-                            }
-
-
+                           
                             //dd($essential);
 
                             $employment_status = null;
@@ -3072,7 +3069,9 @@ class ExportController extends Controller
                             $get_state = ($state != null) ? $state->state : '-';
                             $get_district = ($district != null) ? $district->district : '-';
                             //    Essential Details Ends
-                           $result =['Respondent Name'=>$name,'Mobile'=>$mobile_number, 'Whatsapp'=>$whatsapp_number, 'Email'=>$email, 'Age'=>$year,'Gender'=>$gender,'Highest Education Level'=>$education_level,'Employment Status'=>$employment_status,'Industry my company'=>$industry_my_company,'Personal Income'=>$personal_income,'Personal LSM'=>$personal_lsm,'Household Income'=>$household_income,'Household LSM'=>$household_lsm,'Relationship Status'=>$relationship_status,'Ethnic Group'=>$ethnic_group,'Province'=>$get_state,'Metropolitan Area'=>$get_district,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name];
+                           $result =['First Name'=>$name,'Last Name'=>$surname,'Mobile'=>$mobile_number, 'Whatsapp'=>$whatsapp_number, 'Email'=>$email, 'Age'=>$year,'Gender'=>$gender,'Highest Education Level'=>$education_level,'Employment Status'=>$employment_status,'Industry my company'=>$industry_my_company,'Personal Income'=>$personal_income,'Personal LSM'=>$personal_lsm,'Household Income'=>$household_income,'Household LSM'=>$household_lsm,'Relationship Status'=>$relationship_status,'Ethnic Group'=>$ethnic_group,'Province'=>$get_state,'Metropolitan Area'=>$get_district,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name];
+
+
                            foreach($question as $qus){
                                $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
                                if($respone){
@@ -3233,8 +3232,65 @@ class ExportController extends Controller
                            }
                            array_push($finalResult,$result);
                        }
+
+                       //dd($finalResult);
+                    //    $columnsToMove_title = [18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+                    //     $columnsToMove_others = [
+                    //         "Date", "Device ID", "Device Name", "Completion Status", "Browser", "OS",
+                    //         "Device Type", "Long", "Lat", "Location", "IP Address", "Language Code", "Language Name"
+                    //     ];
+
+                    
+                    //    // Separate heading (first row) and data rows
+                    //     $heading = $finalResult[0]; // First row is the heading
+                    //     $dataRows = array_slice($finalResult, 1); // Remaining rows are data
+
+                    //     // Reorder heading: Move columns in $columnsToMove_title to the end
+                    //     $newHeading = [];
+                    //     foreach ($heading as $key => $value) {
+                    //         if (!in_array($key, $columnsToMove_title)) {
+                    //             $newHeading[$key] = $value; // Retain original order for other columns
+                    //         }
+                    //     }
+                    //     foreach ($columnsToMove_title as $index) {
+                    //         if (array_key_exists($index, $heading)) {
+                    //             $newHeading[$index] = $heading[$index]; // Append columns to move
+                    //         }
+                    //     }
+
+                    //     // Reorder data rows: Move columns in $columnsToMove_others to the end
+                    //     $newDataRows = [];
+                    //     foreach ($dataRows as $record) {
+                    //         $newRecord = [];
+                    //         // Retain original order for columns not in $columnsToMove_others
+                    //         foreach ($record as $key => $value) {
+                    //             if (!in_array($key, $columnsToMove_others)) {
+                    //                 $newRecord[$key] = $value; // Retain original order for other columns
+                    //             }
+                    //         }
+                    //         // Now append the columns that need to be moved
+                    //         foreach ($columnsToMove_others as $columnName) {
+                    //             if (array_key_exists($columnName, $record)) {
+                    //                 $newRecord[$columnName] = $record[$columnName]; // Append columns to move
+                    //             }
+                    //         }
+                    //         $newDataRows[] = $newRecord;
+                    //     }
+
+                    //    // Combine the reordered heading and data rows
+                    //    $finalResult = array_merge([$newHeading], $newDataRows);
+                       
+                       // Print or use $reorderedResult
+                       //dd($finalResult);
+                       
+
+
+
                    
-                       $data = getValuesUser($finalResult);
+                      // $data = getValuesUser($finalResult);
+
+                       //dd($data);
+
                        if($survey){
                            $survey_name = $survey->title;
                        }else{
