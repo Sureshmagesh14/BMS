@@ -1576,6 +1576,7 @@ class ExportController extends Controller
                     ->orderBy("respondents.id", "ASC")  // Use respondents.id for consistent ordering
                     ->get();
 
+                dd($all_datas);
             
                 $sheet->setCellValue('A1', 'PID');
                 $sheet->setCellValue('B1', 'First Name');
