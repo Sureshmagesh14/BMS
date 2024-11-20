@@ -2759,19 +2759,25 @@ class ExportController extends Controller
                             'multi_choice' => Questions::where(['qus_type' => 'multi_choice', 'survey_id' => $survey_id])->get(),
                             'rankorder' => Questions::where(['qus_type' => 'rankorder', 'survey_id' => $survey_id])->get(),
                         ];
-                    
+                        // Desired columns to be placed first
+                        $priorityColumns = [
+                            "Respondent Name",  "Name",  "Surname", 'Mobile', 'Whatsapp', 'Email', 'Age', 'Gender', 'Highest Education Level', 
+                            'Employment Status', 'Industry my company', 'Personal Income', 'Personal LSM', 
+                            'Household Income', 'Household LSM', 'Relationship Status', 'Ethnic Group', 
+                            'Province', 'Metropolitan Area'
+                        ];
+
                         // Build the column headers
                         $columns = array_merge(
+                            $priorityColumns, 
                             $questions->pluck('question_name')->toArray(),
-                            $this->extractDynamicColumns($questionTypes)
+                            $this->extractDynamicColumns($questionTypes),
+                            [
+                                "Date", "Device ID", "Device Name", "Completion Status", 
+                                "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", 
+                                "Language Code", "Language Name"
+                            ]
                         );
-                        $columns = array_merge($columns, [
-                            "Respondent Name", "Date", "Device ID", "Device Name", "Completion Status", 
-                            "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", 
-                            "Language Code", "Language Name", 'Mobile', 'Whatsapp', 'Email', 'Age', 'Gender', 'Highest Education Level', 'Employment Status', 
-                            'Industry my company', 'Personal Income', 'Personal LSM', 'Household Income', 'Household LSM', 
-                            'Relationship Status', 'Ethnic Group', 'Province', 'Metropolitan Area'
-                        ]);
                     
                         // Prepare final results
                         $finalResults = [$columns];
@@ -2779,9 +2785,9 @@ class ExportController extends Controller
                             ->groupBy('response_user_id')
                             ->pluck('response_user_id')
                             ->toArray();
-                    
+                        $question = Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
                         foreach ($surveyResponses as $userID) {
-                            $finalResults[] = $this->processSurveyResponse($userID, $survey_id, $questions, $questionTypes);
+                            $finalResults[] = $this->processSurveyResponse($userID, $survey_id, $question, $questionTypes);
                         }
                     
                     
@@ -2935,7 +2941,7 @@ class ExportController extends Controller
         return $columns;
     }
 
-    function processSurveyResponse($userID, $survey_id, $questions, $questionTypes)
+    function processSurveyResponse($userID, $survey_id, $question, $questionTypes)
     {
         $user = Respondents::find($userID);
         $startTime = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])
@@ -2956,8 +2962,166 @@ class ExportController extends Controller
         ])->exists() ? 'Completed' : 'Partially Completed';
 
         $responseData = [];
-        foreach ($questions as $question) {
-            $responseData[$question->question_name] = $this->processQuestionResponse($userID, $survey_id, $question);
+        // foreach ($questions as $question) {
+        //     $responseData[$question->question_name] = $this->processQuestionResponse($userID, $survey_id, $question);
+        // }
+        foreach($question as $qus){
+            $respone = SurveyResponse::where(['survey_id'=>$survey_id,'question_id'=>$qus->id,'response_user_id'=>$userID])->orderBy("id", "desc")->first();
+            if($respone){
+                if($respone->skip == 'yes'){
+                    $output = 'Skip';
+                }else{
+                    $output = $respone->answer;
+                }
+            }else{
+                $output = '-';
+            }
+            if($qus->qus_type == 'likert'){
+                $qusvalue = json_decode($qus->qus_ans);
+                $left_label = 'Least Likely';
+                $middle_label = 'Netural';
+                $right_label = 'Most Likely';
+                $likert_range = 10;
+                if(isset($qusvalue->right_label)){
+                    $right_label = $qusvalue->right_label;
+                }
+                if(isset($qusvalue->middle_label)){
+                    $middle_label = $qusvalue->middle_label;
+                }
+                if(isset($qusvalue->likert_range)){
+                    $likert_range = $qusvalue->likert_range;
+                }
+                if(isset($qusvalue->left_label)){
+                    $left_label = $qusvalue->left_label;
+                }
+                $output = intval($output);
+                $likert_label = $output;
+                if($likert_range <= 4 && $output <= 4){
+                    if($output == 1 || $output == 2){
+                        $likert_label = $left_label;
+                    }else{
+                        $likert_label = $right_label;
+                    }
+                }else if($likert_range >= 5 && $output >=5){
+                    if($likert_range == 5){
+                        if($output == 1 || $output == 2){
+                            $likert_label = $left_label;
+                        }else if($output == 3){
+                            $likert_label = $middle_label;
+                        }else if($output == 4 || $output == 5){
+                            $likert_label = $right_label;
+                        }
+                    }else if($likert_range == 6){
+                        if($output == 1 || $output == 2){
+                            $likert_label = $left_label;
+                        }else if($output == 3 || $output == 4){
+                            $likert_label = $middle_label;
+                        }else if($output == 5 || $output == 6){
+                            $likert_label = $right_label;
+                        }
+                    }else if($likert_range == 7){
+                        if($output == 1 || $output == 2){
+                            $likert_label = $left_label;
+                        }else if($output == 3 || $output == 4 || $output == 5){
+                            $likert_label = $middle_label;
+                        }else if($output == 6 || $output == 7){
+                            $likert_label = $right_label;
+                        }
+                    }else if($likert_range == 8){
+                        if($output == 1 || $output == 2 || $output == 3){
+                            $likert_label = $left_label;
+                        }else if($output == 4 || $output == 5){
+                            $likert_label = $middle_label;
+                        }else if($output == 6 || $output == 7 || $output == 8){
+                            $likert_label = $right_label;
+                        }
+                    }else if($likert_range == 9){
+                        if($output == 1 || $output == 2 || $output == 3){
+                            $likert_label = $left_label;
+                        }else if($output == 4 || $output == 5 || $output == 6){
+                            $likert_label = $middle_label;
+                        }else if($output == 7 || $output == 8 || $output == 9){
+                            $likert_label = $right_label;
+                        }
+                    }else if($likert_range == 10){
+                        if($output == 1 || $output == 2 || $output == 3){
+                            $likert_label = $left_label;
+                        }else if($output == 4 || $output == 5 || $output == 6 || $output == 7){
+                            $likert_label = $middle_label;
+                        }else if($output == 8 || $output == 9 || $output == 10){
+                            $likert_label = $right_label;
+                        }
+                    }
+                }
+                $tempresult = [$qus->question_name => $likert_label];
+                $responseData[$qus->question_name]= $likert_label;
+
+            }
+            else if($qus->qus_type == 'matrix_qus'){
+                $responseData[$qus->question_name]=''; 
+                if($output=='Skip'){
+                    $qusvalue = json_decode($qus->qus_ans); 
+                    $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
+                    foreach($exiting_qus_matrix as $op){
+                        $responseData[$op]='Skip'; 
+                    }
+                }else{
+                    $output = json_decode($output);
+                    if($output!=null)
+                    foreach($output as $op){
+                        $tempresult = [$op->qus =>$op->ans];
+                        $responseData[$op->qus]=$op->ans; 
+                    }
+                }
+                
+            }else if($qus->qus_type == 'rankorder'){
+                // $responseData[$qus->question_name]=''; 
+                $qus_ans = json_decode($qus->qus_ans); 
+                $output = json_decode($output,true);
+                $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                foreach($choices as $qus1){
+                    // echo "<pre>";
+                    // print_r($qus1);
+                    if($output!=null){
+                        foreach($output as $op){
+                            if($qus1 == $op['id']){
+                                $arrId= $qus->question_name.'_'.$qus1;
+                                $responseData[$arrId]=$op['val'];
+                            }
+                        }
+                    }
+                   
+                }
+               
+            }else if($qus->qus_type == 'multi_choice'){
+                // $responseData[$qus->question_name]=''; 
+                $qus_ans = json_decode($qus->qus_ans); 
+                $output = explode(",", $output);
+                $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                foreach($choices as $qus1){
+                    if($output!=null){
+                        foreach($output as $op){
+                            if($qus1 == $op){
+                                $arrId= $qus->question_name.'_'.$qus1;
+                                $responseData[$arrId]=$op;
+                            }
+                        }
+                    }
+                }
+               
+            }else if($qus->qus_type == 'photo_capture'){
+                $img = $output;
+                $tempresult = [$qus->question_name =>$img];
+                $responseData[$qus->question_name]=$img;
+            }else if($qus->qus_type=='upload'){
+                $output1=asset('uploads/survey/'.$output);
+                $img = $output1;
+                $tempresult = [$qus->question_name =>$img];
+                $responseData[$qus->question_name]=$img;
+            }else{
+                $tempresult = [$qus->question_name =>$output];
+                $responseData[$qus->question_name]=$output;
+            }
         }
 
         return array_merge(
@@ -3011,10 +3175,17 @@ class ExportController extends Controller
         $district = null;
         $get_state = '-';
         $get_district = '-';
-    
+        $first_name = '';
+        $last_name ='';
+        if (!empty($basic->first_name)) {
+            $first_name = $basic->first_name;
+        }
+        if (!empty($basic->last_name)) {
+            $last_name = $basic->last_name;
+        }
         // Process Mobile Number
-        if (!empty($basic->mobile)) {
-            $mobile_number = $this->formatPhoneNumber($basic->mobile);
+        if (!empty($basic->mobile_number)) {
+            $mobile_number = $this->formatPhoneNumber($basic->mobile_number);
         }
     
         // Process WhatsApp Number
@@ -3087,6 +3258,8 @@ class ExportController extends Controller
         $dob = $basic->date_of_birth ?? '';
         // Assemble all essential details into the response array
         $essentialDetails = [
+            "Name" =>$first_name,  
+            "Surname" =>$last_name,
             'Mobile' => $mobile_number,
             'Whatsapp' => $whatsapp_number,
             'Email' =>$email,
