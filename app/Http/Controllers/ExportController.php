@@ -2768,7 +2768,9 @@ class ExportController extends Controller
                         $columns = array_merge($columns, [
                             "Respondent Name", "Date", "Device ID", "Device Name", "Completion Status", 
                             "Browser", "OS", "Device Type", "Long", "Lat", "Location", "IP Address", 
-                            "Language Code", "Language Name"
+                            "Language Code", "Language Name", 'Mobile', 'Whatsapp', 'Email', 'Age', 'Gender', 'Highest Education Level', 'Employment Status', 
+                            'Industry my company', 'Personal Income', 'Personal LSM', 'Household Income', 'Household LSM', 
+                            'Relationship Status', 'Ethnic Group', 'Province', 'Metropolitan Area'
                         ]);
                     
                         // Prepare final results
@@ -2945,6 +2947,7 @@ class ExportController extends Controller
         $responseInfo = "{$startTime->created_at->toDayDateTimeString()} | {$timeTaken} seconds";
 
         $details = $this->extractDetails(json_decode($endTime->other_details ?? '{}'));
+        $essential = $this->getEssentialDetails($userID);
         $name = $user->name ?? 'Anonymous';
         $completionStatus = SurveyResponse::where([
             'response_user_id' => $userID, 
@@ -2960,7 +2963,7 @@ class ExportController extends Controller
         return array_merge(
             $responseData, 
             ['Respondent Name' => $name, 'Date' => $responseInfo, 'Completion Status' => $completionStatus], 
-            $details
+            $details, $essential
         );
     }
 
@@ -2980,6 +2983,158 @@ class ExportController extends Controller
             'Language Name' => $otherDetails->lang_name ?? ''
         ];
     }
+    function getEssentialDetails($userID) {
+        // Initialize the response array to hold essential details
+        $essentialDetails = [];
+    
+        // Retrieve the respondent profile data
+        $all_data = RespondentProfile::where('respondent_id', $userID)->first();
+        if ($all_data) {
+            $basic = json_decode($all_data->basic_details);
+            $essential = json_decode($all_data->essential_details);
+        }
+    
+        // Initialize essential fields with default values
+        $mobile_number = '-';
+        $whatsapp_number = '-';
+        $dob = $basic->date_of_birth ?? '';
+        $age = '';
+        $employment_status = null;
+        $industry_my_company = null;
+        $personal_income = '-';
+        $household_income = '-';
+        $relationship_status = '';
+        $ethnic_group = '';
+        $gender = '';
+        $education_level = '';
+        $state = null;
+        $district = null;
+        $get_state = '-';
+        $get_district = '-';
+    
+        // Process Mobile Number
+        if (!empty($basic->mobile)) {
+            $mobile_number = $this->formatPhoneNumber($basic->mobile);
+        }
+    
+        // Process WhatsApp Number
+        if (!empty($basic->whatsapp_number)) {
+            $whatsapp_number = $this->formatPhoneNumber($basic->whatsapp_number);
+        }
+    
+        // Process Date of Birth and Age
+        if (!empty($dob)) {
+            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+            if ($dobDate) {
+                $now = new DateTime();
+                $age = $now->diff($dobDate)->y; // Calculate age
+            }
+        }
+    
+        // Process Employment Status
+        if (isset($essential->employment_status)) {
+            $employment_status = $essential->employment_status == 'other' ? $essential->employment_status_other : $essential->employment_status;
+        }
+    
+        // Process Industry Info
+        if (isset($essential->industry_my_company)) {
+            $industry_my_company = $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : $essential->industry_my_company;
+        }
+    
+        // Process Income Information
+        if (isset($essential->personal_income_per_month)) {
+            $p_income = DB::table('income_per_month')->where('id', $essential->personal_income_per_month)->first();
+            $personal_income = $p_income ? $p_income->income : '-';
+        }
+    
+        if (isset($essential->household_income_per_month)) {
+            $h_income = DB::table('income_per_month')->where('id', $essential->household_income_per_month)->first();
+            $household_income = $h_income ? $h_income->income : '-';
+        }
+    
+        // Process Relationship Status
+        $relationship_status = ucfirst($essential->relationship_status ?? '');
+    
+        // Process Ethnic Group
+        if (isset($essential->ethnic_group)) {
+            $ethnic_group = ucfirst($essential->ethnic_group);
+        }
+    
+        // Process Gender
+        if (isset($essential->gender)) {
+            $gender = ucfirst($essential->gender);
+        }
+    
+        // Process Education Level
+        if (isset($essential->education_level)) {
+            $education_level = $this->mapEducationLevel($essential->education_level);
+        }
+    
+        // Process Location Info
+        if (isset($essential->province)) {
+            $state = DB::table('state')->where('id', $essential->province)->first();
+            $get_state = $state ? $state->state : '-';
+        }
+    
+        if (isset($essential->suburb)) {
+            $district = DB::table('district')->where('id', $essential->suburb)->first();
+            $get_district = $district ? $district->district : '-';
+        }
+    
+        // Assemble all essential details into the response array
+        $essentialDetails = [
+            'mobile_number' => $mobile_number,
+            'whatsapp_number' => $whatsapp_number,
+            'dob' => $dob,
+            'age' => $age,
+            'employment_status' => $employment_status,
+            'industry_my_company' => $industry_my_company,
+            'personal_income' => $personal_income,
+            'household_income' => $household_income,
+            'relationship_status' => $relationship_status,
+            'ethnic_group' => $ethnic_group,
+            'gender' => $gender,
+            'education_level' => $education_level,
+            'state' => $get_state,
+            'district' => $get_district
+        ];
+    
+        return $essentialDetails;
+    }
+    
+    // Helper function to format phone numbers
+    function formatPhoneNumber($phoneNumber) {
+        $formattedNumber = '-';
+        $phoneNumber = preg_replace('/\s+/', '', $phoneNumber);
+        $length = strlen($phoneNumber);
+    
+        if ($length == 9) {
+            $formattedNumber = '27' . $phoneNumber;
+        } elseif ($length == 10 && $phoneNumber[0] == '0') {
+            $formattedNumber = '27' . substr($phoneNumber, 1);
+        } elseif ($length == 11 && strpos($phoneNumber, '27') === 0) {
+            $formattedNumber = $phoneNumber;
+        } elseif ($length == 12 && strpos($phoneNumber, '+27') === 0) {
+            $formattedNumber = $phoneNumber;
+        }
+    
+        return $formattedNumber;
+    }
+    
+    // Helper function to map education levels
+    function mapEducationLevel($educationCode) {
+        $educationLevels = [
+            'matric' => 'Matric',
+            'post_matric_courses' => 'Post Matric Courses / Higher Certificate',
+            'post_matric_diploma' => 'Post Matric Diploma',
+            'ug' => 'Undergrad University Degree',
+            'pg' => 'Post Grad Degree - Honours, Masters, PhD, MBA',
+            'school_no_metric' => 'School But No Matric',
+        ];
+    
+        return $educationLevels[$educationCode] ?? '';
+    }
+    
 
     function processQuestionResponse($userID, $survey_id, $question)
     {
