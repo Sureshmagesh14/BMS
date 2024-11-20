@@ -3051,7 +3051,10 @@ class ExportController extends Controller
             $h_income = DB::table('income_per_month')->where('id', $essential->household_income_per_month)->first();
             $household_income = $h_income ? $h_income->income : '-';
         }
-    
+        $personal_lsm = $essential->personal_income_per_month ?? '';
+        $household_lsm = $essential->household_income_per_month ?? '';
+
+
         // Process Relationship Status
         $relationship_status = ucfirst($essential->relationship_status ?? '');
     
@@ -3080,23 +3083,27 @@ class ExportController extends Controller
             $district = DB::table('district')->where('id', $essential->suburb)->first();
             $get_district = $district ? $district->district : '-';
         }
-    
+        $email = $basic->email ?? '';
+        $dob = $basic->date_of_birth ?? '';
         // Assemble all essential details into the response array
         $essentialDetails = [
-            'mobile_number' => $mobile_number,
-            'whatsapp_number' => $whatsapp_number,
-            'dob' => $dob,
-            'age' => $age,
-            'employment_status' => $employment_status,
-            'industry_my_company' => $industry_my_company,
-            'personal_income' => $personal_income,
-            'household_income' => $household_income,
-            'relationship_status' => $relationship_status,
-            'ethnic_group' => $ethnic_group,
-            'gender' => $gender,
-            'education_level' => $education_level,
-            'state' => $get_state,
-            'district' => $get_district
+            'Mobile' => $mobile_number,
+            'Whatsapp' => $whatsapp_number,
+            'Email' =>$email,
+            'Age'  => $age,
+            'Gender' => $gender,
+            'Highest Education Level' => $education_level,
+            'Employment Status' => $employment_status,
+            'Industry my company' => $industry_my_company, 
+            'Personal Income' => $personal_income,
+            'Personal LSM' =>$personal_lsm,
+            'Household Income' => $household_income,
+            'Household LSM' =>$household_lsm,
+            'Relationship Status' => $relationship_status,
+            'Ethnic Group' => $ethnic_group,
+            'Province' => $get_state,
+            'Metropolitan Area' => $get_district
+
         ];
     
         return $essentialDetails;
