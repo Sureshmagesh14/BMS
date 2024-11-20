@@ -2868,7 +2868,7 @@ class ExportController extends Controller
             // Set the active sheet and rename it with the survey name
             $spreadsheet->setActiveSheetIndex($sheetIndex);
             $worksheet = $spreadsheet->getActiveSheet();
-            $worksheet->setTitle(substr($surveyName, 0, 31)); // Excel sheet name limit is 31 characters
+            $worksheet->setTitle($this->sanitizeSheetName($surveyName)); // Excel sheet name limit is 31 characters
     
             // Extract headers (first element in survey data)
             $headers = $surveyData[0];
