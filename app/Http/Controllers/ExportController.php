@@ -2778,7 +2778,6 @@ class ExportController extends Controller
                                 "Language Code", "Language Name"
                             ]
                         );
-                    
                         // Prepare final results
                         $finalResults = [$columns];
                         $surveyResponses = SurveyResponse::where(['survey_id' => $survey_id])
@@ -2930,7 +2929,10 @@ class ExportController extends Controller
 
                 if ($type === 'matrix_qus') {
                     $matrixQuestions = explode(",", json_decode($question->qus_ans)->matrix_qus ?? '');
-                    $columns = array_merge($columns, $matrixQuestions);
+                    // $columns = array_merge($columns, $matrixQuestions);
+                    foreach ($matrixQuestions as $matrixQuestion) {
+                        $columns[] = "{$question->question_name}_{$matrixQuestion}";
+                    }
                 } else {
                     foreach ($choicesArray as $choice) {
                         $columns[] = "{$question->question_name}_{$choice}";
@@ -3063,14 +3065,18 @@ class ExportController extends Controller
                     $qusvalue = json_decode($qus->qus_ans); 
                     $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
                     foreach($exiting_qus_matrix as $op){
-                        $responseData[$op]='Skip'; 
+                        // $responseData[$op]='Skip'; 
+                        $arrId = $qus->question_name . '_' . $op;
+                        $responseData[$arrId] = 'Skip'; 
                     }
                 }else{
                     $output = json_decode($output);
                     if($output!=null)
                     foreach($output as $op){
                         $tempresult = [$op->qus =>$op->ans];
-                        $responseData[$op->qus]=$op->ans; 
+                        // $responseData[$op->qus]=$op->ans; 
+                        $arrId = $qus->question_name . '_' . $op->qus;
+                        $responseData[$arrId] = $op->ans; 
                     }
                 }
                 
