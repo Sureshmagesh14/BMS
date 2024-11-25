@@ -1914,7 +1914,6 @@ class ExportController extends Controller
                 $i = 1;
               
                 foreach ($all_datas as $all_data) {
-                    dd($all_datas);
                     $basic = json_decode($all_data->basic_details);
                     $essential = json_decode($all_data->essential_details);
                     $extended  = json_decode($all_data->extended_details);
@@ -1995,6 +1994,44 @@ class ExportController extends Controller
 
                     $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
                     $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
+                    $employment_name = '';
+
+                    // Check if $essential is not null and has the employment_status property
+                    if ($essential && isset($employment_status)) {
+                        switch ($employment_status) {
+                            case 'emp_full_time':
+                                $employment_name = 'Employed Full-Time';
+                                break;
+                            case 'emp_part_time':
+                                $employment_name = 'Employed Part-Time';
+                                break;
+                            case 'self':
+                                $employment_name = 'Self-Employed';
+                                break;
+                            case 'study':
+                                $employment_name = 'Studying Full-Time (Not Working)';
+                                break;
+                            case 'working_and_studying':
+                                $employment_name = 'Working & Studying';
+                                break;
+                            case 'home_person':
+                                $employment_name = 'Stay at Home Person';
+                                break;
+                            case 'retired':
+                                $employment_name = 'Retired';
+                                break;
+                            case 'unemployed':
+                                $employment_name = 'Unemployed';
+                                break;
+                            case 'other':
+                                $employment_name = 'Other';
+                                break;
+                            default:
+                                $employment_name = ''; // Handle unexpected values
+                                break;
+                        }
+                    }
+                
                    
                     $p_income = DB::table('income_per_month')->where('id',$essential->personal_income_per_month)->first();
                     $h_income = DB::table('income_per_month')->where('id',$essential->household_income_per_month)->first();
@@ -2050,7 +2087,7 @@ class ExportController extends Controller
                         }
                     }
                     $sheet->setCellValue('K' . $rows, $education_level);
-                    $sheet->setCellValue('L' . $rows, $employment_status ?? '');
+                    $sheet->setCellValue('L' . $rows, $employment_name ?? '');
                     $industry = IndustryCompany::find($industry_my_company);
                     $companyName = $industry ? $industry->company : '';
                     $sheet->setCellValue('M' . $rows, $companyName);
@@ -3183,6 +3220,42 @@ class ExportController extends Controller
         $get_district = '-';
         $first_name = '';
         $last_name ='';
+        $age = ''; // Set initial age to empty
+                        
+        $get_resp = Respondents::select('date_of_birth')->where('id', $userID)->first();
+        if ($get_resp != null) {
+            if (!empty($get_resp->date_of_birth)) {
+                $dob = $get_resp->date_of_birth;
+        
+                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                if ($dobDate) {
+                    $now = new DateTime();
+                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                }
+            } else {
+                $dob = ''; // Handle the case where there's no date of birth found
+            }
+        } else {
+            if (empty($dob) || $dob === '0000-00-00') {
+                $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                if ($dobDate) {
+                    $now = new DateTime();
+                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                } else {
+                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                    if ($dobDate) {
+                        $now = new DateTime();
+                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                    }
+                }
+            }
+        }
+        
+        // Ensure age is empty if dob is not set or invalid
+        if (empty($dob) || $dob === '0000-00-00') {
+            $age = ''; // Set age to empty if date of birth is empty or invalid
+        }
+
         if (!empty($basic->first_name)) {
             $first_name = $basic->first_name;
         }
@@ -3200,23 +3273,55 @@ class ExportController extends Controller
         }
     
         // Process Date of Birth and Age
-        if (!empty($dob)) {
-            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
-            if ($dobDate) {
-                $now = new DateTime();
-                $age = $now->diff($dobDate)->y; // Calculate age
-            }
-        }
+       
     
         // Process Employment Status
         if (isset($essential->employment_status)) {
             $employment_status = $essential->employment_status == 'other' ? $essential->employment_status_other : $essential->employment_status;
         }
-    
-        // Process Industry Info
-        if (isset($essential->industry_my_company)) {
-            $industry_my_company = $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : $essential->industry_my_company;
+
+        $employment_name = '';
+
+        // Check if $essential is not null and has the employment_status property
+        if ($essential && isset($employment_status)) {
+            switch ($employment_status) {
+                case 'emp_full_time':
+                    $employment_name = 'Employed Full-Time';
+                    break;
+                case 'emp_part_time':
+                    $employment_name = 'Employed Part-Time';
+                    break;
+                case 'self':
+                    $employment_name = 'Self-Employed';
+                    break;
+                case 'study':
+                    $employment_name = 'Studying Full-Time (Not Working)';
+                    break;
+                case 'working_and_studying':
+                    $employment_name = 'Working & Studying';
+                    break;
+                case 'home_person':
+                    $employment_name = 'Stay at Home Person';
+                    break;
+                case 'retired':
+                    $employment_name = 'Retired';
+                    break;
+                case 'unemployed':
+                    $employment_name = 'Unemployed';
+                    break;
+                case 'other':
+                    $employment_name = 'Other';
+                    break;
+                default:
+                    $employment_name = ''; // Handle unexpected values
+                    break;
+            }
         }
+    
+        $industry_my_company = isset($essential) && $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : ($essential ? $essential->industry_my_company : null);
+        $industry = IndustryCompany::find($industry_my_company);
+        $companyName = $industry ? $industry->company : '';
+     
     
         // Process Income Information
         if (isset($essential->personal_income_per_month)) {
@@ -3272,8 +3377,8 @@ class ExportController extends Controller
             'Age'  => $age,
             'Gender' => $gender,
             'Highest Education Level' => $education_level,
-            'Employment Status' => $employment_status,
-            'Industry my company' => $industry_my_company, 
+            'Employment Status' => $employment_name,
+            'Industry my company' => $companyName, 
             'Personal Income' => $personal_income,
             'Personal LSM' =>$personal_lsm,
             'Household Income' => $household_income,
