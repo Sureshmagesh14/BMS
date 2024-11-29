@@ -1524,42 +1524,47 @@
 
         // Event listener for personal income change
         $('#personal_income_per_month').on('change', function() {
-            // Get the selected personal income value
-            var personalIncomeText = $(this).find('option:selected').text();
+        // Get the selected personal income value
+        var personalIncomeText = $(this).find('option:selected').text();
 
-            // Extract numerical values from the personal income range
-            var personalIncomeRange = personalIncomeText.match(/\d+/g);
+        // Extract numerical values from the personal income range
+        var personalIncomeRange = personalIncomeText.match(/\d+/g);
 
-            // Validate the personal income range
+        // Validate the personal income range
+        if (!personalIncomeRange || personalIncomeRange.length < 2) return; // Exit if invalid range
 
+        // Convert to integers
+        var personalIncomeMin = parseInt(personalIncomeRange[0], 10);
+        var personalIncomeMax = parseInt(personalIncomeRange[1], 10);
+
+        // Get the household income options
+        var householdIncomeOptions = $('#household_income_per_month').find('option');
+
+        // Filter the household income options based on the selected personal income
+        householdIncomeOptions.each(function() {
+            var householdIncomeText = $(this).text();
+            var householdIncomeRange = householdIncomeText.match(/\d+/g);
+
+            // Handle cases like "R200000+" where the max value is considered infinite
+            if (householdIncomeText.includes("+")) {
+                householdIncomeRange[1] = Infinity; // Treat "R200000+" as an infinitely large number
+            }
+
+            // Validate the household income range
+            if (!householdIncomeRange || householdIncomeRange.length < 2) {
+                $(this).prop('disabled', true); // Disable invalid options
+                return; // Exit this iteration
+            }
 
             // Convert to integers
-            var personalIncomeMin = parseInt(personalIncomeRange[0], 10);
-            var personalIncomeMax = parseInt(personalIncomeRange[1], 10);
+            var householdIncomeMin = parseInt(householdIncomeRange[0], 10);
+            var householdIncomeMax = parseInt(householdIncomeRange[1], 10);
 
-            // Get the household income options
-            var householdIncomeOptions = $('#household_income_per_month').find('option');
-
-            // Filter the household income options based on the selected personal income
-            householdIncomeOptions.each(function() {
-                var householdIncomeText = $(this).text();
-                var householdIncomeRange = householdIncomeText.match(/\d+/g);
-
-                // Validate the household income range
-                if (!householdIncomeRange || householdIncomeRange.length < 2) {
-
-                    $(this).prop('disabled', true); // Disable invalid options
-                    return; // Exit this iteration
-                }
-
-                // Convert to integers
-                var householdIncomeMin = parseInt(householdIncomeRange[0], 10);
-                var householdIncomeMax = parseInt(householdIncomeRange[1], 10);
-
-                // Disable options where household income is less than the personal income minimum
-                $(this).prop('disabled', householdIncomeMin < personalIncomeMin);
-            });
+            // Disable options where household income is less than the personal income minimum
+            $(this).prop('disabled', householdIncomeMin < personalIncomeMin || householdIncomeMax < personalIncomeMin);
         });
+    });
+
 
 
     });

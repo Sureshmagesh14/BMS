@@ -36,7 +36,23 @@
                     </div>
                 </div>
                 <div class="text-center text-white" style="font-size:25px;">
-                    <span id="demo"> {{ $ref_code }}</span><br>
+                    <span id="demo"> 
+                        @php
+                        $refer_code = $ref_code; // Example input, can be dynamic
+                    
+                        // Check if $refer_code is a valid URL
+                        if (filter_var($refer_code, FILTER_VALIDATE_URL)) {
+                            // If it's already a full URL, leave it as is
+                            $final_url = $refer_code;
+                        } else {
+                            // If it's a string (not a URL), add the ref_code as a query parameter to the base URL
+                            $final_url = env('APP_URL') . '?r=' . $refer_code;
+                        }
+                    @endphp
+                    
+                    
+                        {{ $final_url }}
+                    </span><br>
                     <p class="text-secondary btn text-white" onclick="copy('#demo')" style="font-size:20px;">Tap to copy link</p>
                 </div>
                 </div>
@@ -57,28 +73,28 @@
         $('#nav_share').addClass('active');
    
         $("#whatsap").click(function() {
-            var whatsapurl ='https://wa.me/?text=I think you should join The Brand Surgeon and get paid for your opinion - {{ $ref_code }}';
+            var whatsapurl ='https://wa.me/?text=I think you should join The Brand Surgeon and get paid for your opinion - {{ $final_url }}';
             window.location.href = whatsapurl;
         });
 
         $("#facebook").click(function() {
-            var facebook ='https://www.facebook.com/sharer/sharer.php?u={{ $ref_code }}';
+            var facebook ='https://www.facebook.com/sharer/sharer.php?u={{ $final_url }}';
             window.location.href = facebook;
         });
      
         $("#twitter").click(function() {
-            var twitter ='https://twitter.com/intent/tweet?url={{ $ref_code }}&amp;text=I think you should join The Brand Surgeon and get paid for your opinion';
+            var twitter ='https://twitter.com/intent/tweet?url={{ $final_url }}&amp;text=I think you should join The Brand Surgeon and get paid for your opinion';
             window.location.href = twitter;
         });
         
         $("#mail123").click(function() {
-            var whatsapurl ='mailto:?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ $ref_code }}';
+            var whatsapurl ='mailto:?&subject=I think you should join The Brand Surgeon and get paid for your opinion - {{ $final_url }}';
             window.location.href = whatsapurl;
         });
 
         $("#mail").click(function() {
             var subject = "Get paid for your opinion - Join The Brand Surgeon for free";
-            var body = "I think you should join The Brand Surgeon and get paid for your opinion - {{ $ref_code }}";
+            var body = "I think you should join The Brand Surgeon and get paid for your opinion - {{ $final_url }}";
             var mailtoUrl = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
             window.location.href = mailtoUrl;
         });
