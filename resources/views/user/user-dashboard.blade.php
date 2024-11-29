@@ -510,7 +510,7 @@
                                                             {{ $res->name }}
                                                         @endif
                                                     </td>
-                                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
+                                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}     {{$res->access_id}}</td>
                                                     <td title="{{ $res->description }}">
                                                         @if ($res->type_id == 1)
                                                             Pre-Screener
@@ -843,3 +843,13 @@
         $('#commonModal').modal('hide'); // Replace #myModal with your modal ID
     });
 </script>
+@if (Session::has('successMsg'))
+<script>
+    toastr.error("{{ session('successMsg') }}");
+</script>
+@endif
+@if (Session::has('error'))
+<script>
+    toastr.error("{{ session('error') }}");
+</script>
+@endif
