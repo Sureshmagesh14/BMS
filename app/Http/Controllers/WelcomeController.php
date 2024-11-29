@@ -16,7 +16,7 @@ use App\Models\Cashout;
 use App\Models\Networks;
 use App\Models\Charities;
 use App\Models\Project_respondent;
-use App\Services\SendGrid\SendGridService;
+use App\Services\SendGridService;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -91,13 +91,13 @@ class WelcomeController extends Controller
                 'payment_method' => strtoupper('test')
             ];
 
-            $sendgrid = new SendGridService();
-            $sendgrid->setFrom();
-            $sendgrid->setDynamicData($dynamicData);
-            $sendgrid->setSubject('New Cashout Created');
-            $sendgrid->setToEmail('hemanathans1@gmail.com', 'test user');
-            $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
-            $sendgrid->send();
+            // $sendgrid = new SendGridService();
+            // $sendgrid->setFrom();
+            // $sendgrid->setDynamicData($dynamicData);
+            // $sendgrid->setSubject('New Cashout Created');
+            // $sendgrid->setToEmail('sample@gmail.com', 'test user');
+            // $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
+            // $sendgrid->send();
 
 
             return view('user.user-terms', compact('data'));
