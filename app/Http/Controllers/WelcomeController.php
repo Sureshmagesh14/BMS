@@ -333,17 +333,17 @@ class WelcomeController extends Controller
                     ->join('survey', 'survey.id', 'projects.survey_link')
                     ->where('projects.project_link',$id)->first();
         
-
+            $project_id = $res->id;
             if($res->access_id==2){
                 //access_id 2 assigned
-                if(Project_respondent::where('project_id', $id)->where('respondent_id', $resp_id)->exists()){
+                if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->exists()){
                     
                 }else{
                     return redirect('dashboard')->with('successMsg', 'Project not assigned');
                 }
             }
             
-            $project_id = $res->id;
+          
             if($user_id != $resp_id){
          
                 if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->exists()){
