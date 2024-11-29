@@ -510,7 +510,7 @@
                                                             {{ $res->name }}
                                                         @endif
                                                     </td>
-                                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}     {{$res->access_id}}</td>
+                                                    <td>{{ date('d-m-Y', strtotime($res->closing_date)) }}</td>
                                                     <td title="{{ $res->description }}">
                                                         @if ($res->type_id == 1)
                                                             Pre-Screener
