@@ -28,7 +28,7 @@
 
 
 <script>
-    $("#edit_tags_form").click(function () {
+    $("#tags_update").click(function () {
         if (!$("#edit_tags_form").valid()) { // Not Valid
             return false;
         } else {
@@ -37,7 +37,7 @@
             var url_set = "{{ route('tags.update', ':id') }}";
             url_set     = url_set.replace(':id', id);
             $.ajax({
-                type: 'POST',
+                type: 'PUT',
                 url: url_set,
                 data: data,
                 headers: {
@@ -49,7 +49,15 @@
                 success: function(response) {
                     toastr.success(response.message);
                     $("#commonModal").modal('hide');
-                    tags_table();
+                    if (typeof tags_table === 'function') {
+                        tags_table(); // Call the function to update the projects table
+                    } else {
+                        setTimeout(function(){
+                            location.reload(); // Reload the page if the function is not defined
+                        },800);
+                        
+                    }
+                  
                 },
                 complete: function(response) {
                     $('#tags_update').html('Create New');

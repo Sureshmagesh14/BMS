@@ -449,15 +449,10 @@
                                         <div class="col-12 col-md-6 mb-3">
                                             <label for="suburb">Metropolitan Area <span
                                                     class="text-danger">*</span></label>
-                                            <select name="essential[suburb]" id="suburb" class="form-control"
-                                                required>
-                                                <option value="">Select</option>
-                                                @foreach ($get_suburb as $suburb)
-                                                    <option value="{{ $suburb->id }}"
-                                                        @isset($essential_details['suburb']) @if ($essential_details['suburb'] == $suburb->id) selected @endif @endisset>
-                                                        {{ $suburb->district }}</option>
-                                                @endforeach
-                                            </select>
+                                                    <input type="text" name="essential[metropolitan_area]"
+                                                    id="metropolitan_area" class="form-control" required
+                                                    @isset($essential_details['metropolitan_area']) value="{{ $essential_details['metropolitan_area'] }}" @endisset>
+                                          
                                         </div>
 
 
@@ -483,9 +478,15 @@
                                         <div class="col-12 col-md-6 mb-3">
                                             <label for="metropolitan_area">Suburb <span
                                                     class="text-danger">*</span></label>
-                                            <input type="text" name="essential[metropolitan_area]"
-                                                id="metropolitan_area" class="form-control" required
-                                                @isset($essential_details['metropolitan_area']) value="{{ $essential_details['metropolitan_area'] }}" @endisset>
+                                                    <select name="essential[suburb]" id="suburb" class="form-control"
+                                                    required>
+                                                    <option value="">Select</option>
+                                                    @foreach ($get_suburb as $suburb)
+                                                        <option value="{{ $suburb->id }}"
+                                                            @isset($essential_details['suburb']) @if ($essential_details['suburb'] == $suburb->id) selected @endif @endisset>
+                                                            {{ $suburb->district }}</option>
+                                                    @endforeach
+                                                </select>
                                         </div>
 
 
@@ -723,6 +724,9 @@
                                                                         <option value="pickup_tuck"
                                                                             @isset($vehicle['type']) @if ('pickup_tuck' == $vehicle['type']) selected @endif @endisset>
                                                                             Pickup Truck</option>
+                                                                            <option value="other"
+                                                                            @isset($vehicle['type']) @if ('other' == $vehicle['type']) selected @endif @endisset>
+                                                                            other</option>
                                                                     </select>
                                                                 </td>
                                                                 <td>
@@ -1434,6 +1438,7 @@
                         '<option value="suv">SUV (SPORT-UTILITY VEHICLE)</option>' +
                         '<option value="minivan">Minivan</option>' +
                         '<option value="pickup_tuck">Pickup Truck</option>' +
+                        '<option value="other">Other</option>' +
                         '</select></td>' +
                         '<td><input type="text" id="model_' + vehicles +
                         '" class="form-control vehicle_model" name="vehicle[model_' + vehicles +
