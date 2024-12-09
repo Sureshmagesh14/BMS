@@ -16,9 +16,10 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 class TagsController extends Controller
 {   
-    public function index()
+    public function index(Request $request)
     {
         try {
+            $request->session()->forget('tag_id');
             return view('admin.tags.index');
         }
         catch (Exception $e) {
@@ -94,6 +95,7 @@ class TagsController extends Controller
     {
         
         try {
+            Session::put('tag_id', $id);
             $data = Tags::find($id);
             return view('admin.tags.view',compact('data'));
 
@@ -320,34 +322,55 @@ class TagsController extends Controller
         }
     }
 
-    public function deattach_tags($id)
+    public function deattach_tags(Request $request,$id)
     {
         try {
-            // Explode $id string into an array of IDs
-            $idArray = explode(',', $id);
-
+         
+            // Check if $id is an array or a string and handle accordingly
+            if (is_string($id)) {
+                $idArray = explode(',', $id);
+            } elseif (is_array($id)) {
+                $idArray = $id; // Assuming $id is already an array
+            } else {
+                // Return an error if $id is neither an array nor a string
+                return response()->json([
+                    'status'  => 400,
+                    'success' => false,
+                    'message' => 'Invalid input format for $id.'
+                ]);
+            }
+   
             // Trim whitespace from each ID in the array
             $idArray = array_map('trim', $idArray);
 
+            // Ensure the array is not empty
+            if (empty($idArray)) {
+                return response()->json([
+                    'status'  => 400,
+                    'success' => false,
+                    'message' => 'No valid tags provided to detach.'
+                ]);
+            }
+    
             // Use transaction for bulk deletion
             DB::beginTransaction();
-
-            // Delete records where respondent_id is in the $idArray
-            RespondentTags::whereIn('tag_id', $idArray)->delete();
-
+    
+            // Delete records where tag_id is in the $idArray
+            RespondentTags::where('tag_id',Session::get('tag_id'))->whereIn('respondent_id', $idArray)->delete();
+    
             // Commit transaction
             DB::commit();
-
+    
             // Return JSON response
             return response()->json([
                 'status'  => 200,
                 'success' => true,
-                'message' =>'Tags De-attached'
+                'message' => 'Tags de-attached successfully.'
             ]);
         } catch (\Exception $e) {
             // Rollback transaction on error
             DB::rollBack();
-
+    
             // Return error response
             return response()->json([
                 'status'  => 500,
@@ -356,7 +379,9 @@ class TagsController extends Controller
             ]);
         }
     }
-
+   
+    
+    
     
     public function deattach_multi_panel(Request $request)
     {

@@ -19,14 +19,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\RespondentProfile;
 use Illuminate\Support\Facades\Hash;
+use Session;
+use App\Models\RespondentTags;
 class RespondentsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
+            $request->session()->forget('respondent_id');
+            $request->session()->forget('tag_id');
             return view('admin.respondents.index');
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -166,6 +170,7 @@ class RespondentsController extends Controller
     {
 
         try {
+            Session::put('respondent_id', $id);
             $data = Respondents::leftJoin('respondent_profile', function ($join) {
                 $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
             })
@@ -1329,6 +1334,41 @@ class RespondentsController extends Controller
             Log::error($e->getMessage());
             // You can also send an email or notification to the admin/team
             // or perform any other error handling mechanism
+        }
+    }
+
+    public function deattach_resp_tags(Request $request,$id)
+    {
+        try {
+         
+            // Check if $id is an array or a string and handle accordingly
+          
+    
+            // Use transaction for bulk deletion
+            DB::beginTransaction();
+    
+            // Delete records where tag_id is in the $idArray
+            RespondentTags::where('tag_id',$id)->where('respondent_id', Session::get('respondent_id'))->delete();
+    
+            // Commit transaction
+            DB::commit();
+    
+            // Return JSON response
+            return response()->json([
+                'status'  => 200,
+                'success' => true,
+                'message' => 'Tags de-attached successfully.'
+            ]);
+        } catch (\Exception $e) {
+            // Rollback transaction on error
+            DB::rollBack();
+    
+            // Return error response
+            return response()->json([
+                'status'  => 500,
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
         }
     }
    
