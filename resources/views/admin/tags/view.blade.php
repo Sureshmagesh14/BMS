@@ -2,6 +2,16 @@
 @include('admin.layout.horizontal_left_menu')
 @include('admin.layout.horizontal_right_menu')
 @include('admin.layout.vertical_side_menu')
+<style>
+        .dataTables_wrapper {
+    overflow-x: auto;
+}
+
+#respondents_datatable {
+    width: 100%;
+    display: block; /* Ensure it takes full width */
+}
+    </style>
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
@@ -250,8 +260,6 @@
                 id: id // Sending 'id' as data to the controller
             },
             success: function(response) {
-                // Assuming response is handled appropriately in 'single_delete' function or elsewhere
-                console.log(response); // Log response for debugging purposes
               
                 toastr.success("De-attached Panel Successfully");
                 respondents_datatable();
@@ -266,7 +274,7 @@
         });
     });
 
-    $(document).on('click', '.user_play_button', function(e) {
+    $(document).on('click', '.play-button__triangle', function(e) {
         var all_id = [];
 
         var values = $("#respondents_datatable tbody tr").map(function() {
@@ -280,13 +288,13 @@
 
         select_value = (all_id.length == 0) ? $(".show_hided_option").val() : $("#action_2").val();
 
-        // alert(select_value);
+        console.log("select_value",select_value);
 
         if (select_value == 11) {
             titles = "Un-Assign from Project";
             var url = "{{ route('deattach_tags', ':id') }}";
             url = url.replace(':id', all_id);
-            
+            console.log("all_id",all_id);
             multi_delete("POST", all_id, url, "Respondents Deleted",
                 'respondents_datatable');
         }  else {

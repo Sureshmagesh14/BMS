@@ -1121,6 +1121,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('AD' . $rows, ucfirst($secondary_home_lang?? ''));
                         // Handle $children_data
                         $new_alpha = 'AE';
+                        $children_data = json_decode($all_data->children_data, true) ?? [];
                         if (!empty($children_data) && is_array($children_data)) {
                             foreach ($children_data as $children) {
                                 $sheet->setCellValue($new_alpha . $rows, $children['date'] ?? '');
@@ -1130,7 +1131,7 @@ class ExportController extends Controller
                             }
                         }
                     
-                        $children_data = json_decode($all_data->children_data, true) ?? [];
+                       
                         $vehicle_data = json_decode($all_data->vehicle_data, true) ?? [];
                         $vehicle_alpha = 'AM';
                         

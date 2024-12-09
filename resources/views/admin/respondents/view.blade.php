@@ -409,7 +409,9 @@
                                                 );
                                             @endphp
                                             <td>
-                                                {{ $metropolitan_area_name ? $metropolitan_area_name->area : '' }}
+                                                {{ $metropolitan_area_name && $metropolitan_area_name->area ? $metropolitan_area_name->area : $essential->metropolitan_area }}
+
+
                                             </td>
 
                                         </tr>
@@ -1172,7 +1174,7 @@
     $(document).on('click', '#deattach_tags', function(e) {
         e.preventDefault();
         var id = $(this).data("id");
-        var url = "{{ route('deattach_tags', ':id') }}";
+        var url = "{{ route('deattach_resp_tags', ':id') }}";
         url = url.replace(':id', id);
 
         single_delete("POST", id, url, "De-attach Panel Successfully", 'tags_table');
