@@ -984,8 +984,9 @@ class ExportController extends Controller
                         $get_district = ($district != null) ? $district->district : '-';
                     
                         $sheet->setCellValue('S' . $rows, $get_state ?? '');
-                        $sheet->setCellValue('T' . $rows, $get_district ?? '');
-                        $sheet->setCellValue('U' . $rows, $essential->metropolitan_area ?? '');
+                        $sheet->setCellValue('T' . $rows, $essential->metropolitan_area ?? '');
+                        $sheet->setCellValue('U' . $rows, $get_district ?? '');
+                       
                         $sheet->setCellValue('V' . $rows, $essential->no_houehold ?? '');
                         $sheet->setCellValue('W' . $rows, $essential->no_children ?? '');
                         $sheet->setCellValue('X' . $rows, $essential->no_vehicle ?? '');
