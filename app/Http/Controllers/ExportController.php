@@ -984,8 +984,9 @@ class ExportController extends Controller
                         $get_district = ($district != null) ? $district->district : '-';
                     
                         $sheet->setCellValue('S' . $rows, $get_state ?? '');
-                        $sheet->setCellValue('T' . $rows, $get_district ?? '');
-                        $sheet->setCellValue('U' . $rows, $essential->metropolitan_area ?? '');
+                        $sheet->setCellValue('T' . $rows, $get_district  ?? '');
+                        $sheet->setCellValue('U' . $rows, $essential->metropolitan_area?? '');
+                       
                         $sheet->setCellValue('V' . $rows, $essential->no_houehold ?? '');
                         $sheet->setCellValue('W' . $rows, $essential->no_children ?? '');
                         $sheet->setCellValue('X' . $rows, $essential->no_vehicle ?? '');
@@ -1134,13 +1135,13 @@ class ExportController extends Controller
                        
                         $vehicle_data = json_decode($all_data->vehicle_data, true) ?? [];
                         $vehicle_alpha = 'AM';
-                        
+                    
                         foreach ($vehicle_data as $vehicle) {
                             $brand_id = $vehicle['brand'];
                         
                             // Debugging line to check $brand_id
                
-                        
+                        // dd($vehicle_data);
                             $get_vehicle = DB::table('vehicle_master')->where('id', $brand_id)->first();
                       
                         
@@ -1153,11 +1154,11 @@ class ExportController extends Controller
                             $vehicle_alpha++;
                             $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['type'] ?? '');
                             $vehicle_alpha++;
-                            $brand = '';
-                            if (isset($vehicle) && is_array($vehicle) && isset($vehicle['brand'])) {
-                                $brand = ucfirst($vehicle['brand']);
+                            $model = '';
+                            if (isset($vehicle) && is_array($vehicle) && isset($vehicle['model'])) {
+                                $model = ucfirst($vehicle['model']);
                             }
-                            $sheet->setCellValue($vehicle_alpha . $rows, $brand);
+                            $sheet->setCellValue($vehicle_alpha . $rows, $model);
                             $vehicle_alpha++;
                             $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['year'] ?? '');
                             $vehicle_alpha++;
