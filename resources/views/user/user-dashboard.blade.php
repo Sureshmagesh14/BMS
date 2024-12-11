@@ -843,3 +843,13 @@
         $('#commonModal').modal('hide'); // Replace #myModal with your modal ID
     });
 </script>
+@if (Session::has('successMsg'))
+<script>
+    toastr.error("{{ session('successMsg') }}");
+</script>
+@endif
+@if (Session::has('error'))
+<script>
+    toastr.error("{{ session('error') }}");
+</script>
+@endif

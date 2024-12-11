@@ -209,7 +209,7 @@ Route::group([
     Route::any('upload_respondent', 'RespondentsController@upload_respondent')->name('upload_respondent');
     Route::any('qualified_respondent_status', 'RespondentsController@qualified_respondent_status')->name('qualified_respondent_status');
     Route::any('download-sample-csv', 'RespondentsController@downloadSampleCSV')->name('download-sample-csv');
-
+    Route::any('deattach_resp_tags/{tags_id}', 'RespondentsController@deattach_resp_tags')->name('deattach_resp_tags');
  
     
     
@@ -235,7 +235,7 @@ Route::group([
     Route::any('deattach_tags/{tags_id}', 'TagsController@deattach_tags')->name('deattach_tags');
     Route::any('deattach_multi_panel', 'TagsController@deattach_multi_panel')->name('deattach_multi_panel');
     Route::any('tags-download-sample-csv', 'TagsController@downloadSampleCSV')->name('tags-download-sample-csv');
-    
+
 
     /* Rewards MENU*/
     Route::resource('rewards', 'RewardsController')->name('index', 'rewards.index')->name('destroy', 'rewards.destroy')
