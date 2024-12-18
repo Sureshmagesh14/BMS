@@ -36,6 +36,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
+set_time_limit(900);
+
 class SurveyController extends Controller
 {
     public function folder()
