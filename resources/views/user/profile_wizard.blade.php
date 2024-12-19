@@ -724,9 +724,6 @@
                                                                         <option value="pickup_tuck"
                                                                             @isset($vehicle['type']) @if ('pickup_tuck' == $vehicle['type']) selected @endif @endisset>
                                                                             Pickup Truck</option>
-                                                                            <option value="other"
-                                                                            @isset($vehicle['type']) @if ('other' == $vehicle['type']) selected @endif @endisset>
-                                                                            other</option>
                                                                     </select>
                                                                 </td>
                                                                 <td>
@@ -1438,7 +1435,6 @@
                         '<option value="suv">SUV (SPORT-UTILITY VEHICLE)</option>' +
                         '<option value="minivan">Minivan</option>' +
                         '<option value="pickup_tuck">Pickup Truck</option>' +
-                        '<option value="other">Other</option>' +
                         '</select></td>' +
                         '<td><input type="text" id="model_' + vehicles +
                         '" class="form-control vehicle_model" name="vehicle[model_' + vehicles +
