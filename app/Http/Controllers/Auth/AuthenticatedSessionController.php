@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Respondents;
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -34,11 +35,15 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+        $user = Auth::user();
+        Respondents::where('id', $user->id)
+        ->where('active_status_id', 3) 
+        ->update(['active_status_id' => 1]);
 
         $request->session()->regenerate();
 
         return redirect()->intended(RouteServiceProvider::HOME);
-    }
+    }
 
     /**
      * Destroy an authenticated session.
