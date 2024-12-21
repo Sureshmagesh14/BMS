@@ -593,10 +593,27 @@ class ProfileController extends Controller
 
             $get_email  = Respondents::where('id', $resp_id)->first();
             $to_address = $get_email->email;
+            $resp_name = $get_email->name;
 
-            $data = ['subject' => 'OTP for mobile number change','type' => 'mobile_change_otp', 'otp' => $get_email->email_or_phone_change_otp];
+            $dynamicData = [
+                'otp' => $get_email->email_or_phone_change_otp,
+            ];
+            $dynamicData['first_name'] = $resp_name;
 
-            Mail::to($to_address)->send(new WelcomeEmail($data));
+            $subject = 'OTP for mobile number change';
+            $templateId = 'd-46d60233bf2844158b5b5f5b9576c481';
+
+            $sendgrid = new SendGridService();
+            $sendgrid->setFrom();
+            $sendgrid->setSubject($subject);
+            $sendgrid->setTemplateId($templateId);
+            $sendgrid->setDynamicData($dynamicData);
+            $sendgrid->setToEmail($to_address, $resp_name);
+            $sendgrid->send();
+
+            // $data = ['subject' => 'OTP for mobile number change','type' => 'mobile_change_otp', 'otp' => $get_email->email_or_phone_change_otp];
+
+            // Mail::to($to_address)->send(new WelcomeEmail($data));
           
             return view('user.mobile_change_otp');
     
