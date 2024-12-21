@@ -36,7 +36,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-set_time_limit(900);
+// set_time_limit(9000);
 
 class SurveyController extends Controller
 {
@@ -2681,7 +2681,480 @@ class SurveyController extends Controller
 
         return $output;
     }
+
+    // New Report Code Starts
+  // Helper function to determine the likert label
+  function getLikertLabel($output, $likert_range, $left_label, $middle_label, $right_label) {
+    if ($likert_range <= 4 && $output <= 4) {
+        return in_array($output, [1, 2]) ? $left_label : $right_label;
+    }
+    if ($likert_range >= 5) {
+        switch ($likert_range) {
+            case 5:
+                if (in_array($output, [1, 2])) return $left_label;
+                if ($output == 3) return $middle_label;
+                return $right_label;
+            case 6:
+                if (in_array($output, [1, 2])) return $left_label;
+                if (in_array($output, [3, 4])) return $middle_label;
+                return $right_label;
+            case 7:
+                if (in_array($output, [1, 2])) return $left_label;
+                if (in_array($output, [3, 4, 5])) return $middle_label;
+                return $right_label;
+            case 8:
+                if (in_array($output, [1, 2, 3])) return $left_label;
+                if (in_array($output, [4, 5])) return $middle_label;
+                return $right_label;
+            case 9:
+                if (in_array($output, [1, 2, 3])) return $left_label;
+                if (in_array($output, [4, 5, 6])) return $middle_label;
+                return $right_label;
+            case 10:
+                if (in_array($output, [1, 2, 3])) return $left_label;
+                if (in_array($output, [4, 5, 6, 7])) return $middle_label;
+                return $right_label;
+        }
+    }
+    return $right_label; // Fallback to right label
+}
     public function generateReport(Excel $excel, $survey_id, $type)
+    {
+        // Record start time
+        $startTime = microtime(true);
+        $survey = Survey::findOrFail($survey_id);
+        
+        // Fetching all questions at once based on their types
+        $questions = Questions::where('survey_id', $survey_id)
+            ->whereNotIn('qus_type', ['matrix_qus', 'welcome_page', 'thank_you', 'rankorder', 'multi_choice'])
+            ->get();
+            
+        $multiChoiceQuestions = Questions::where(['qus_type' => 'multi_choice', 'survey_id' => $survey_id])->get();
+        $rankOrderQuestions = Questions::where(['qus_type' => 'rankorder', 'survey_id' => $survey_id])->get();
+        $matrixQuestions = Questions::where(['qus_type' => 'matrix_qus', 'survey_id' => $survey_id])->get();
+        
+        $cols = $questions->pluck('question_name')->toArray();
+        
+        // Handle multi-choice and rankorder questions dynamically
+        $this->processChoiceQuestions($multiChoiceQuestions, $cols);
+        $this->processChoiceQuestions($rankOrderQuestions, $cols, true);
+        
+        // Handle matrix questions dynamically
+        $this->processMatrixQuestions($matrixQuestions, $cols);
+         // Record end time
+         $endTime = microtime(true);
+
+         // Calculate elapsed time in seconds
+         $executionTime = $endTime - $startTime;
+         
+        // echo "<pre>";
+        // print_r($cols);
+
+        // Start measuring execution time
+        $start = microtime(true);
+
+        // Get Survey Data (eager load relevant data)
+        $questions = Questions::where('survey_id', $survey_id)
+            ->whereNotIn('qus_type', ['welcome_page', 'thank_you'])
+            ->get();
+
+        $surveyResponseUsers = SurveyResponse::where('survey_id', $survey_id)
+            ->groupBy('response_user_id')
+            ->pluck('response_user_id')
+            ->toArray();
+
+        array_push($cols,"Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
+        $finalResult = [$cols];
+
+        // Eager load respondent data and survey responses
+        $respondents = Respondents::whereIn('id', $surveyResponseUsers)->get()->keyBy('id');
+        $surveyResponses = SurveyResponse::whereIn('response_user_id', $surveyResponseUsers)
+            ->where('survey_id', $survey_id)
+            ->orderBy('id', 'asc')
+            ->get()
+            ->groupBy('response_user_id');
+
+        // Process each user
+        foreach ($surveyResponseUsers as $userID) {
+            $user = $respondents->get($userID);
+            $responses = $surveyResponses->get($userID);
+
+            // Get start and end times for the user
+            $starttime = $responses->first();
+            $endtime = $responses->last();
+            $startedAt = $starttime->created_at;
+            $endedAt = $endtime->created_at;
+            $time = $endedAt->diffInSeconds($startedAt);
+            $responseinfo = $startedAt->toDayDateTimeString() . ' | ' . $time . ' seconds';
+
+            $other_details = json_decode($endtime->other_details);
+            $name = $user->name ?? 'Anonymous';
+
+            // Completion status logic
+            $completedRes = $responses->firstWhere('answer', 'thankyou_submitted');
+            $completion_status = $completedRes ? 'Completed' : 'Partially Completed';
+
+            // Prepare result array
+            $result = [];
+            // Fetch all responses for the given survey_id and userID in a single query
+            $responses = SurveyResponse::where(['survey_id' => $survey_id, 'response_user_id' => $userID])
+                                        ->orderBy("id", "desc")
+                                        ->get()
+                                        ->keyBy('question_id'); // Key responses by question_id for easy lookup
+
+            foreach ($questions as $qus) {
+                // Look up the response for the current question
+                $response = isset($responses[$qus->id]) ? $responses[$qus->id] : null;
+                
+                // Default output when no response is found
+                $output = $response ? ($response->skip == 'yes' ? 'Skip' : $response->answer) : '-';
+
+                // Handle different question types
+                if ($qus->qus_type == 'likert') {
+                    $qusvalue = json_decode($qus->qus_ans, true);
+                    $left_label = $qusvalue['left_label'] ?? 'Least Likely';
+                    $middle_label = $qusvalue['middle_label'] ?? 'Neutral';
+                    $right_label = $qusvalue['right_label'] ?? 'Most Likely';
+                    $likert_range = $qusvalue['likert_range'] ?? 10;
+
+                    $output = intval($output);
+                    $likert_label = $output;
+
+                    // Determine the likert label based on the range
+                    $likert_label = $this->getLikertLabel($output, $likert_range, $left_label, $middle_label, $right_label);
+                    
+                    $result[$qus->question_name] = $likert_label;
+
+                } else if ($qus->qus_type == 'matrix_qus') {
+                    $result[$qus->question_name]=''; 
+                    if($output=='Skip'){
+                        $qusvalue = json_decode($qus->qus_ans); 
+                        $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
+                        foreach($exiting_qus_matrix as $op){
+                            $result[$op]='Skip'; 
+                        }
+                    }else{
+                        $output = json_decode($output);
+                        if($output!=null)
+                        foreach($output as $op){
+                            $tempresult = [$op->qus =>$op->ans];
+                            $result[$op->qus]=$op->ans; 
+                        }
+                    }
+
+                } else if ($qus->qus_type == 'rankorder') {
+                    // $result[$qus->question_name]=''; 
+                 $qus_ans = json_decode($qus->qus_ans); 
+                 $output = json_decode($output,true);
+                 $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                 foreach($choices as $qus1){
+                     // echo "<pre>";
+                     // print_r($qus1);
+                     if($output!=null){
+                         foreach($output as $op){
+                             if($qus1 == $op['id']){
+                                 $arrId= $qus->question_name.'_'.$qus1;
+                                 $result[$arrId]=$op['val'];
+                             }
+                         }
+                     }
+                    
+                 }
+                
+                } else if ($qus->qus_type == 'multi_choice') {
+                     // $result[$qus->question_name]=''; 
+                 $qus_ans = json_decode($qus->qus_ans); 
+                 $output = explode(",", $output);
+                 $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+                 foreach($choices as $qus1){
+                     if($output!=null){
+                         foreach($output as $op){
+                             if($qus1 == $op){
+                                 $arrId= $qus->question_name.'_'.$qus1;
+                                 $result[$arrId]=$op;
+                             }
+                         }
+                     }
+                 }
+
+                } else if ($qus->qus_type == 'photo_capture' || $qus->qus_type == 'upload') {
+                    $img = ($qus->qus_type == 'photo_capture') ? $output : asset('uploads/survey/' . $output);
+                    $result[$qus->question_name] = $img;
+
+                } else {
+                    $result[$qus->question_name] = $output;
+                }
+            }
+
+          
+
+            // Append respondent details
+            $result = array_merge($result, [
+                'Respondent Name' => $name,
+                'Date' => $responseinfo,
+                'Device ID' => $other_details->device_id ?? '',
+                'Device Name' => $other_details->device_name ?? '',
+                'Completion Status' => $completion_status,
+                'Browser' => $other_details->browser ?? '',
+                'OS' => $other_details->os ?? '',
+                'Device Type' => $other_details->device_type ?? '',
+                'Long' => $other_details->long ?? '',
+                'Lat' => $other_details->lat ?? '',
+                'Location' => $other_details->location ?? '',
+                'IP Address' => $other_details->ip_address ?? '',
+                'Language Code' => $other_details->lang_code ?? '',
+                'Language Name' => $other_details->lang_name ?? ''
+            ]);
+            
+            array_push($finalResult,$result);
+
+            // foreach ($questions as $qus) {
+            //     // Get response for each question
+            //     $respone = $responses->firstWhere('question_id', $qus->id);
+            //     $output = $respone ? ($respone->skip == 'yes' ? 'Skip' : $respone->answer) : '-';
+
+            //     // Handle different question types
+            //     switch ($qus->qus_type) {
+            //         case 'likert':
+            //             $output = $this->handleLikertQuestion($qus, $output);
+            //             break;
+            //         case 'matrix_qus':
+            //             $output = $this->handleMatrixQuestion($qus, $output);
+            //             break;
+            //         case 'rankorder':
+            //             $output = $this->handleRankOrderQuestion($qus, $output);
+            //             break;
+            //         case 'multi_choice':
+            //             $output = $this->handleMultiChoiceQuestion($qus, $output);
+            //             break;
+            //         case 'photo_capture':
+            //             $output = asset('uploads/survey/' . $output);
+            //             break;
+            //         case 'upload':
+            //             $output = asset('uploads/survey/' . $output);
+            //             break;
+            //         default:
+            //             // For other question types
+            //             break;
+            //     }
+
+            //     $result[$qus->question_name] = $output;
+            // }
+
+            // Append respondent details
+            $result = array_merge($result, [
+                'Respondent Name' => $name,
+                'Date' => $responseinfo,
+                'Device ID' => $other_details->device_id ?? '',
+                'Device Name' => $other_details->device_name ?? '',
+                'Completion Status' => $completion_status,
+                'Browser' => $other_details->browser ?? '',
+                'OS' => $other_details->os ?? '',
+                'Device Type' => $other_details->device_type ?? '',
+                'Long' => $other_details->long ?? '',
+                'Lat' => $other_details->lat ?? '',
+                'Location' => $other_details->location ?? '',
+                'IP Address' => $other_details->ip_address ?? '',
+                'Language Code' => $other_details->lang_code ?? '',
+                'Language Name' => $other_details->lang_name ?? ''
+            ]);
+
+            // array_push($finalResult, $result);
+        }
+        $data = $this->getValuesReport($finalResult);
+        // End measuring execution time
+        $end = microtime(true);
+        $executionTime1 = $end - $start; // in seconds
+        // Log or display the execution time
+        \Log::info('Execution time: ' . $executionTime . ' seconds');
+        \Log::info('Execution time1: ' . $executionTime1 . ' seconds');
+        if($type == 'csv'){
+            // Generate a dynamic filename based on the current timestamp
+            $filename = $survey->title.'_Report' . now()->format('YmdHis') . '.csv';
+   
+            // Export data to Excel with the dynamic filename
+            $callback = function () use ($data) {
+                $file = fopen('php://output', 'w');
+                foreach ($data as $row) {
+                    fputcsv($file, $row);
+                }
+                fclose($file);
+            };
+   
+            // Generate the Excel file and return a download response
+            return response()->streamDownload($callback, $filename, [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ]);
+        }else{
+          
+             // Generate the Excel content and store the file directly
+            $filename = $survey->title.'_Report_' . now()->format('YmdHis') . '.xlsx';
+            $filePath = storage_path('app/' . $filename);
+            $this->generateAndStoreExcelContent($data, $filePath);
+   
+            // Return a download response
+            return response()->download($filePath, $filename);
+        }
+        
+    }
+    function getValuesReport($data) {
+        // echo "<pre>";
+        // print_r($data);
+        // Extract the header row
+        $header = $data[0];
+
+        // Create a mapping of header keys to their positions
+        $headerMapping = array_flip($header);
+
+        // Initialize an array to store the rearranged rows
+        $values = [];
+
+        // Add the header row to the values array
+        $values[] = array_values($header);
+
+        // Loop through each row starting from the second element (skip header row)
+        for ($i = 1; $i < count($data); $i++) {
+            $row = $data[$i];
+            $rearrangedRow = [];
+
+            // Loop through the header keys and arrange the row values accordingly
+            foreach ($header as $key) {
+                if (isset($row[$key])) {
+                    $rearrangedRow[] = $row[$key];
+                } else {
+                    $rearrangedRow[] = ''; // Handle missing keys by adding an empty string
+                }
+            }
+
+            $values[] = $rearrangedRow;
+        }
+
+        return $values;
+    }
+
+    // Handle Likert Question
+    function handleLikertQuestion($question, $output)
+    {
+        $qusvalue = json_decode($question->qus_ans);
+        $left_label = $qusvalue->left_label ?? 'Least Likely';
+        $middle_label = $qusvalue->middle_label ?? 'Neutral';
+        $right_label = $qusvalue->right_label ?? 'Most Likely';
+        $likert_range = $qusvalue->likert_range ?? 10;
+
+        $output = (int)$output;
+        $likert_label = $output;
+
+        if ($likert_range <= 4 && $output <= 4) {
+            $likert_label = $output == 1 || $output == 2 ? $left_label : $right_label;
+        } else if ($likert_range >= 5 && $output >= 5) {
+            // Logic for Likert with range 5 or greater
+            $likert_label = match ($likert_range) {
+                5 => ($output <= 2) ? $left_label : ($output == 3 ? $middle_label : $right_label),
+                6 => ($output <= 4) ? $middle_label : $right_label,
+                default => $middle_label,
+            };
+        }
+        return $likert_label;
+    }
+
+    // Handle Matrix Question
+    function handleMatrixQuestion($qus, $output)
+    {
+        $result[$qus->question_name]=''; 
+        if($output=='Skip'){
+            $qusvalue = json_decode($qus->qus_ans); 
+            $exiting_qus_matrix= $qus!=null ? explode(",",$qusvalue->matrix_qus): []; 
+            foreach($exiting_qus_matrix as $op){
+                $result[$op]='Skip'; 
+            }
+        }else{
+            $output = json_decode($output);
+            if($output!=null)
+            foreach($output as $op){
+                $tempresult = [$op->qus =>$op->ans];
+                $result[$op->qus]=$op->ans; 
+            }
+        }
+        // if ($output == 'Skip') {
+        //     $matrix_questions = json_decode($question->qus_ans)->matrix_qus ?? [];
+        //     return array_fill_keys($matrix_questions, 'Skip');
+        // }
+        // return json_decode($output);
+        return $result;
+    }
+
+    // Handle RankOrder Question
+    function handleRankOrderQuestion($qus, $output)
+    {
+        $result = [];
+        $qus_ans = json_decode($qus->qus_ans); 
+        $output = json_decode($output,true);
+        $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+        foreach($choices as $qus1){
+            // echo "<pre>";
+            // print_r($qus1);
+            if($output!=null){
+                foreach($output as $op){
+                    if($qus1 == $op['id']){
+                        $arrId= $qus->question_name.'_'.$qus1;
+                        $result[$arrId]=$op['val'];
+                    }
+                }
+            }
+           
+        }
+        return $result;
+    }
+
+    // Handle Multi Choice Question
+    function handleMultiChoiceQuestion($qus, $output)
+    {
+        $result=[];
+        // $result[$qus->question_name]=''; 
+        $qus_ans = json_decode($qus->qus_ans); 
+        $output = explode(",", $output);
+        $choices= $qus_ans!=null ? explode(",",$qus_ans->choices_list): []; $i=0;
+        foreach($choices as $qus1){
+            if($output!=null){
+                foreach($output as $op){
+                    if($qus1 == $op){
+                        $arrId= $qus->question_name.'_'.$qus1;
+                        $result[$arrId]=$op;
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+
+    private function processChoiceQuestions($questions, &$cols, $isRankOrder = false)
+    {
+        foreach ($questions as $question) {
+            $choices = json_decode($question->qus_ans)->choices_list ?? '';
+            $choices = $choices ? explode(',', $choices) : [];
+            
+            foreach ($choices as $choice) {
+                $cols[] = $question->question_name . ($isRankOrder ? "_{$choice}" : '_'.$choice);
+            }
+        }
+    }
+    
+    private function processMatrixQuestions($questions, &$cols)
+    {
+        foreach($questions as $qus){
+            $qus = json_decode($qus->qus_ans); 
+            array_push($cols,$qus->question_name);
+            $exiting_qus_matrix= $qus!=null ? explode(",",$qus->matrix_qus): []; $i=0;
+            foreach($exiting_qus_matrix as $qus1){
+                array_push($cols,$qus1);
+            }
+        }
+    }
+    // New Report Code Ends
+    
+    
+    public function generateReport_504(Excel $excel, $survey_id, $type)
     {
         // Custom array data to export
         $survey = Survey::where(['id'=>$survey_id])->first();
