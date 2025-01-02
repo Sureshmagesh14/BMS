@@ -144,11 +144,27 @@ class RespondentsController extends Controller
 
                     $get_email = Respondents::where('id', $id)->first();
                     $to_address = $get_email->email;
+                    $resp_name = $get_email->name;
+
+                    $dynamicData = [
+                        'first_name' => $resp_name,
+                    ];
+        
+                    $subject = 'New account created';
+                    $templateId = 'd-02d0ec6cb9c24367891ad12d0ec575ac';
+        
+                    $sendgrid = new SendGridService();
+                    $sendgrid->setFrom();
+                    $sendgrid->setSubject($subject);
+                    $sendgrid->setTemplateId($templateId);
+                    $sendgrid->setDynamicData($dynamicData);
+                    $sendgrid->setToEmail($to_address, $resp_name);
+                    $sendgrid->send();
                     //$to_address = 'hemanathans1@gmail.com';
 
-                    $data = ['subject' => 'New account created','type' => 'new_register'];
+                    // $data = ['subject' => 'New account created','type' => 'new_register'];
 
-                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                    // Mail::to($to_address)->send(new WelcomeEmail($data));
                 }
                 //email ends 
               

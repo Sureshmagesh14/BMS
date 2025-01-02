@@ -58,8 +58,26 @@ class PasswordResetLinkController extends Controller
                 'token' => $token,
                 'resetUrl' => $resetUrl,
             ];
+
+            $dynamicData = [
+                'first_name' => $user->name,
+                'type' => 'forgot_password_email',
+                'token' => $token,
+                'resetUrl' => $resetUrl,
+            ];
+
+            $subject = 'Reset Password Notification';
+            $templateId = 'd-46d60233bf2844158b5b5f5b9576c481';
+
+            $sendgrid = new SendGridService();
+            $sendgrid->setFrom();
+            $sendgrid->setSubject($subject);
+            $sendgrid->setTemplateId($templateId);
+            $sendgrid->setDynamicData($dynamicData);
+            $sendgrid->setToEmail($user->email, $user->name);
+            $sendgrid->send();
     
-            Mail::to($user->email)->send(new ResetPasswordEmail($data));
+            // Mail::to($user->email)->send(new ResetPasswordEmail($data));
         } catch (\Exception $e) {
             dd($e->getMessage());
             // Log the exception for debugging
