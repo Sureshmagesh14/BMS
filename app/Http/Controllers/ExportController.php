@@ -672,8 +672,8 @@ class ExportController extends Controller
                     $sheet->setCellValue('Q1', 'HHI per Month');
                     $sheet->setCellValue('R1', 'Household LSM');
                     $sheet->setCellValue('S1', 'Province');
-                    $sheet->setCellValue('T1', 'Suburb');
-                    $sheet->setCellValue('U1', 'Metropolitan Area');
+                    $sheet->setCellValue('T1', 'Metropolitan Area');
+                    $sheet->setCellValue('U1', 'Suburb');
                     $sheet->setCellValue('V1', 'No. of people living in your household');
                     $sheet->setCellValue('W1', 'Number of children');
                     $sheet->setCellValue('X1', 'Number of vehicles');
@@ -3197,6 +3197,8 @@ class ExportController extends Controller
         $essentialDetails = [];
     
         // Retrieve the respondent profile data
+        $essential = [];
+        $basic = [];
         $all_data = RespondentProfile::where('respondent_id', $userID)->first();
         if ($all_data) {
             $basic = json_decode($all_data->basic_details);
@@ -3320,7 +3322,9 @@ class ExportController extends Controller
             }
         }
     
-        $industry_my_company = isset($essential) && $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : ($essential ? $essential->industry_my_company : null);
+        $industry_my_company = isset($essential) && isset($essential->industry_my_company) && $essential->industry_my_company == 'other' 
+        ? $essential->industry_my_company_other 
+        : (isset($essential->industry_my_company) ? $essential->industry_my_company : null);
         $industry = IndustryCompany::find($industry_my_company);
         $companyName = $industry ? $industry->company : '';
      
