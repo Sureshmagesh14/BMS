@@ -3197,6 +3197,8 @@ class ExportController extends Controller
         $essentialDetails = [];
     
         // Retrieve the respondent profile data
+        $essential = [];
+        $basic = [];
         $all_data = RespondentProfile::where('respondent_id', $userID)->first();
         if ($all_data) {
             $basic = json_decode($all_data->basic_details);
@@ -3320,7 +3322,9 @@ class ExportController extends Controller
             }
         }
     
-        $industry_my_company = isset($essential) && $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : ($essential ? $essential->industry_my_company : null);
+        $industry_my_company = isset($essential) && isset($essential->industry_my_company) && $essential->industry_my_company == 'other' 
+        ? $essential->industry_my_company_other 
+        : (isset($essential->industry_my_company) ? $essential->industry_my_company : null);
         $industry = IndustryCompany::find($industry_my_company);
         $companyName = $industry ? $industry->company : '';
      
