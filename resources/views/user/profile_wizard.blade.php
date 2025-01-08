@@ -449,9 +449,16 @@
                                         <div class="col-12 col-md-6 mb-3">
                                             <label for="suburb">Metropolitan Area <span
                                                     class="text-danger">*</span></label>
-                                                    <input type="text" name="essential[metropolitan_area]"
-                                                    id="metropolitan_area" class="form-control" required
-                                                    @isset($essential_details['metropolitan_area']) value="{{ $essential_details['metropolitan_area'] }}" @endisset>
+                                                    <select name="essential[suburb]" id="suburb" class="form-control"
+                                                    required>
+                                                    <option value="">Select</option>
+                                                    @foreach ($get_suburb as $suburb)
+                                                        <option value="{{ $suburb->id }}"
+                                                            @isset($essential_details['suburb']) @if ($essential_details['suburb'] == $suburb->id) selected @endif @endisset>
+                                                            {{ $suburb->district }}</option>
+                                                    @endforeach
+                                                </select>
+                                                   
                                           
                                         </div>
 
@@ -478,15 +485,9 @@
                                         <div class="col-12 col-md-6 mb-3">
                                             <label for="metropolitan_area">Suburb <span
                                                     class="text-danger">*</span></label>
-                                                    <select name="essential[suburb]" id="suburb" class="form-control"
-                                                    required>
-                                                    <option value="">Select</option>
-                                                    @foreach ($get_suburb as $suburb)
-                                                        <option value="{{ $suburb->id }}"
-                                                            @isset($essential_details['suburb']) @if ($essential_details['suburb'] == $suburb->id) selected @endif @endisset>
-                                                            {{ $suburb->district }}</option>
-                                                    @endforeach
-                                                </select>
+                                            <input type="text" name="essential[metropolitan_area]"
+                                            id="metropolitan_area" class="form-control" required
+                                            @isset($essential_details['metropolitan_area']) value="{{ $essential_details['metropolitan_area'] }}" @endisset> 
                                         </div>
 
 

@@ -388,21 +388,10 @@
                                         <tr>
                                             <th>Suburb </th>
                                             @php
-                                                $district = isset($essential->suburb) ? $essential->suburb : null;
-                                                $district_name = \App\Models\RespondentProfile::district($district);
-                                            @endphp
-                                            <td>
-                                                {{ $district_name ? $district_name->district : '' }}
-                                            </td>
-
-                                        </tr>
-
-                                        <tr>
-                                            <th>Metropolitan Area </th>
-                                            @php
                                                 $metropolitan_area = isset($essential->metropolitan_area)
                                                     ? $essential->metropolitan_area
                                                     : null;
+                                                $district = isset($essential->suburb) ? $essential->suburb : null;
                                                 $metropolitan_area_name = \App\Models\RespondentProfile::metropolitan_area(
                                                     $province,
                                                     $district,
@@ -410,8 +399,19 @@
                                             @endphp
                                             <td>
                                                 {{ $metropolitan_area_name && $metropolitan_area_name->area ? $metropolitan_area_name->area : $essential->metropolitan_area }}
+                                            </td>
 
+                                        </tr>
 
+                                        <tr>
+                                            <th>Metropolitan Area </th>
+                                            @php
+                                                $district = isset($essential->suburb) ? $essential->suburb : null;
+                                                $district_name = \App\Models\RespondentProfile::district($district);
+                                            @endphp
+                                          
+                                            <td>
+                                                {{ $district_name ? $district_name->district : '' }}
                                             </td>
 
                                         </tr>

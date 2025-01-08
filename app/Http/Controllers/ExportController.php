@@ -672,8 +672,8 @@ class ExportController extends Controller
                     $sheet->setCellValue('Q1', 'HHI per Month');
                     $sheet->setCellValue('R1', 'Household LSM');
                     $sheet->setCellValue('S1', 'Province');
-                    $sheet->setCellValue('T1', 'Suburb');
-                    $sheet->setCellValue('U1', 'Metropolitan Area');
+                    $sheet->setCellValue('T1', 'Metropolitan Area');
+                    $sheet->setCellValue('U1', 'Suburb');
                     $sheet->setCellValue('V1', 'No. of people living in your household');
                     $sheet->setCellValue('W1', 'Number of children');
                     $sheet->setCellValue('X1', 'Number of vehicles');

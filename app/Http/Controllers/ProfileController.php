@@ -117,7 +117,7 @@ class ProfileController extends Controller
             $child_details     = ($profile != null) ? (($profile->children_data != null) ? json_decode($profile->children_data, true) : array()) : array();
             $vehicle_details   = ($profile != null) ? (($profile->vehicle_data != null) ? json_decode($profile->vehicle_data, true) : array()) : array();
 
-            $get_suburb = (isset($essential_details['province'])) ? DB::table('district')->where('type',$essential_details['province'])->whereNull('deleted_at')->orderBy('district','ASC')->get() : array();
+            $get_suburb = (isset($essential_details['province'])) ? DB::table(table: 'district')->where('type',$essential_details['province'])->whereNull('deleted_at')->orderBy('district','ASC')->get() : array();
             $get_area  = (isset($essential_details['suburb'])) ? DB::table('metropolitan_area')->where('district_id',$essential_details['suburb'])->whereNull('deleted_at')->orderBy('area','ASC')->get() : array();
 
             $check_basic = ($profile != null) ? (($profile->basic_details != null) ? json_decode($profile->basic_details, true) : array()) : array();
