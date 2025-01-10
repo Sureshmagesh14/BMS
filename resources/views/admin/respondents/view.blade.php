@@ -397,9 +397,9 @@
                                                     $district,
                                                 );
                                             @endphp
-                                            <td>
-                                                {{ $metropolitan_area_name && $metropolitan_area_name->area ? $metropolitan_area_name->area : $essential->metropolitan_area }}
-                                            </td>
+                                          <td>
+                                            {{ $metropolitan_area_name && isset($metropolitan_area_name->area) ? $metropolitan_area_name->area : ($essential->metropolitan_area ?? 'N/A') }}
+                                        </td>
 
                                         </tr>
 
