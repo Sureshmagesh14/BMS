@@ -32,6 +32,7 @@ use App\Models\Project_respondent;
 use App\Mail\Respondentprojectmail;
 use App\Mail\WelcomeEmail;
 use Illuminate\Support\Facades\Mail;
+use App\Services\SendGridService;
 
 class ProfileController extends Controller
 {
