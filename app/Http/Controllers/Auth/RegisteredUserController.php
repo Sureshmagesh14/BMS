@@ -20,6 +20,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Session;
 use App\Models\Contents;
+use App\Services\SendGridService;
 
 class RegisteredUserController extends Controller
 {
