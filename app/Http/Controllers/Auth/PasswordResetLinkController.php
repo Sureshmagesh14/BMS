@@ -13,6 +13,7 @@ use App\Models\Respondents;
 use App\Mail\ResetPasswordEmail;
 use App\Models\PasswordResetsViaPhone;
 use Exception;
+use App\Services\SendGridService;
 class PasswordResetLinkController extends Controller
 {
     /**
