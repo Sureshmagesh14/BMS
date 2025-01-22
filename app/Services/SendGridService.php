@@ -65,38 +65,42 @@ class SendGridService
      * @return $this
      */
     public function setDynamicData($dynamicData)
-    {
-        // Log each field in dynamic data to check for arrays
-        foreach ($dynamicData as $key => $value) {
-            if (is_array($value)) {
-                \Log::error("Field '$key' contains an array, expected string", ['value' => $value]);
-            }
+{
+    // Initialize an array for formatted dynamic data
+    $formattedData = [];
+
+    // Check if there's an 'insert' key and process its contents
+    if (isset($dynamicData['insert']) && is_array($dynamicData['insert'])) {
+        foreach ($dynamicData['insert'] as $key => $value) {
+            $formattedData[$key] = $value;
         }
-    
-        // If any field contains an array, convert it to a string
-        foreach ($dynamicData as $key => $value) {
-            if (is_array($value)) {
-                $dynamicData[$key] = implode(', ', $value);  // Convert array to string
-            }
-        }
-    
-        \Log::info('Formatted Dynamic Data:', $dynamicData);  // Log for debugging
-    
-        try {
-            // Add dynamic template data to the email
-            $this->email->addDynamicTemplateData($dynamicData);
-        } catch (Exception $e) {
-            // Log the error with the stack trace
-            \Log::error("Error in dynamic template data:", [
-                'error_message' => $e->getMessage(),
-                'stack_trace' => $e->getTraceAsString(),
-                'dynamic_data' => $dynamicData
-            ]);
-        }
-    
-        // Return $this to allow method chaining
-        return $this;
     }
+
+    // Include direct dynamic data
+    foreach ($dynamicData as $key => $value) {
+        if ($key !== 'insert') {
+            $formattedData[$key] = $value;
+        }
+    }
+
+    \Log::info('Formatted Dynamic Data:', $formattedData);  // Log for debugging
+
+    try {
+        // Add dynamic template data to the email
+        foreach ($formattedData as $key => $value) {
+            $this->email->addDynamicTemplateData($key, $value);
+        }
+    } catch (Exception $e) {
+        \Log::error("Error in adding dynamic template data:", [
+            'error_message' => $e->getMessage(),
+            'stack_trace' => $e->getTraceAsString(),
+            'dynamic_data' => $formattedData
+        ]);
+    }
+
+    return $this;
+}
+
     
     
     

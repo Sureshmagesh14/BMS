@@ -81,24 +81,30 @@ class WelcomeController extends Controller
     {
         try {
             $id = 1;
+            // $user='vijay';
+            // $email='smartvijay018@gmail.com';
             $data = Contents::find($id);
-
-            $dynamicData = [
-                'points' => 20,
-                'date_requested' => date('d-m-Y'),
-                'first_name' => 'tetst user',
-                'rand_value' => 'R ' . (20 / 10),
-                'payment_method' => strtoupper('test')
-            ];
+            // $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            // $dynamicData = [
+            //     'first_name' => $user,
+            //     'otp' => $otp
+            // ];
+            // $subject = 'Reset Password Notification';
+            // $templateId = 'd-46d60233bf2844158b5b5f5b9576c481';
 
             // $sendgrid = new SendGridService();
             // $sendgrid->setFrom();
+            // $sendgrid->setSubject($subject);
+            // $sendgrid->setTemplateId($templateId);
             // $sendgrid->setDynamicData($dynamicData);
-            // $sendgrid->setSubject('New Cashout Created');
-            // $sendgrid->setToEmail('sample@gmail.com', 'test user');
-            // $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
+            // $sendgrid->setToEmail($email, $user);
             // $sendgrid->send();
 
+           
+    
+            
+
+     
 
             return view('user.user-terms', compact('data'));
         } catch (Exception $e) {
@@ -106,6 +112,43 @@ class WelcomeController extends Controller
         }
 
     }
+
+    //testing mail template starts
+    // public function terms()
+    // {
+    //     try {
+    //         $id = 1;
+    //         $user='vijay';
+    //         $email='smartvijay018@gmail.com';
+    //         $data = Contents::find($id);
+    //         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+    //         $dynamicData = [
+    //             'first_name' => $user,
+    //             'otp' => $otp
+    //         ];
+    //         $subject = 'Reset Password Notification';
+    //         $templateId = 'd-46d60233bf2844158b5b5f5b9576c481';
+
+    //         $sendgrid = new SendGridService();
+    //         $sendgrid->setFrom();
+    //         $sendgrid->setSubject($subject);
+    //         $sendgrid->setTemplateId($templateId);
+    //         $sendgrid->setDynamicData($dynamicData);
+    //         $sendgrid->setToEmail($email, $user);
+    //         $sendgrid->send();
+    //testing mail template starts
+           
+    
+            
+
+     
+
+    //         return view('user.user-terms', compact('data'));
+    //     } catch (Exception $e) {
+    //         throw new Exception($e->getMessage());
+    //     }
+
+    // }
 
     /**
      * Store a newly created resource in storage.
