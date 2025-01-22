@@ -1212,7 +1212,7 @@ class WelcomeController extends Controller
                 $sendgrid->setDynamicData($dynamicData);
                 $sendgrid->setSubject('New Cashout Created');
                 $sendgrid->setToEmail($to_address, $resp_name);
-                $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
+                $sendgrid->setTemplateId('d-5d2729f3674c4b0085c8b105ca258094');
                 $sendgrid->send();
 
                 return response()->json(['message' => 'Cashout created successfully'], 200);
