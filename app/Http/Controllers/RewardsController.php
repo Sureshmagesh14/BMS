@@ -15,6 +15,9 @@ use Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use App\Models\Projects;
+use App\Models\Respondents;
+use App\Services\SendGridService;
 
 class RewardsController extends Controller
 {   
@@ -297,16 +300,31 @@ class RewardsController extends Controller
                     //$to_address = 'hemanathans1@gmail.com';
                     $resp_name = $resp->name.' '.$resp->surname;
                    
-                    if ($res->project_name_resp != ''){
+                    if ($resp->project_name_resp != ''){
 
                         $proj_name = $proj->project_name_resp;
                     }else{
                         $proj_name = $proj->name;
                     }
                    
-                    $data = ['subject' => 'Rewards Approved','name' => $resp_name,'project' => $proj_name,'type' => 'reward_approve'];
-                
-                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                    // $data = ['subject' => 'Rewards Approved','name' => $resp_name,'project' => $proj_name,'type' => 'reward_approve'];
+                    $dynamicData = [
+                        'first_name' => $resp_name,
+                        'project_code ' => $proj_name,
+                        'points' => $reward_data->points,
+                        'rand_value' => 'R ' . ($reward_data->points / 10),
+                    ];
+                    $subject = 'Reward Approved';
+                    $templateId = 'd-d4a08e9f4bfd4ae5af512fbec8fd5016';
+
+                    $sendgrid = new SendGridService();
+                    $sendgrid->setFrom();
+                    $sendgrid->setSubject($subject);
+                    $sendgrid->setTemplateId($templateId);
+                    $sendgrid->setDynamicData($dynamicData);
+                    $sendgrid->setToEmail($to_address, $resp_name);
+                    $sendgrid->send();
+                    // Mail::to($to_address)->send(new WelcomeEmail($data));
                 }
                 //email ends
 
