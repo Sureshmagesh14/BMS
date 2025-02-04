@@ -17,6 +17,7 @@ use App\Mail\ResetPasswordEmail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Mail;
+use App\Services\SendGridService;
 class AdminLoginController extends Controller
 {
 
