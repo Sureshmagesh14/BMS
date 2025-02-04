@@ -286,11 +286,11 @@ class AdminLoginController extends Controller
                 'first_name' => $user->name,
                 'type' => 'forgot_password_email',
                 'token' => $token,
-                'resetUrl' => $resetUrl,
+                'reset_link' => $resetUrl,
             ];
 
             $subject = 'Reset Password Notification';
-            $templateId = 'd-46d60233bf2844158b5b5f5b9576c481';
+            $templateId = 'd-a30f8f4af1e34e0da5dc3f6b7e036743'; 
 
             $sendgrid = new SendGridService();
             $sendgrid->setFrom();
