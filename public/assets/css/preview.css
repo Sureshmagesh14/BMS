@@ -13487,3 +13487,9 @@ button#camera_btn {
         font-size: 1.2em; /* Adjust button text size */
     }
 }
+.surveybackground .ss-header-text--fluid.main-header-font-size--md{
+    font-size: 30px;
+}
+.surveybackground .surveysparrow-survey-container--classic-form .ss_cl_qstn_action{
+    
+}
