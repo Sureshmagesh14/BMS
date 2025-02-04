@@ -82,7 +82,7 @@ class WelcomeController extends Controller
         try {
             $id = 1;
             // $user='vijay';
-            // $email='smartvijay018@gmail.com';
+            // $email='test@gmail.com';
             $data = Contents::find($id);
             // $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             // $dynamicData = [
