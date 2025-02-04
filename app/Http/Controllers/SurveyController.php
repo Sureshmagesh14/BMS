@@ -767,19 +767,19 @@ class SurveyController extends Controller
     public function viewsurvey(Request $request, $id){
         $survey = Survey::with('questions')->where(['builderID'=>$id])->first();
          // Create Survey History 
-         if (Auth::check()) {
-         $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=> Auth::user()->id])->first();
-         if($survey_history){
-             // Survey already attended
-             return view('admin.survey.alreadyattempted', compact('survey'));
-         }else{
-             $history = new SurveyHistory();
-             $history->respondent_id= Auth::user()->id;
-             $history->survey_id=$survey->id;
-             $history->status=0;
-             $history->save();
-         }
-        }
+        //  if (Auth::check()) {
+        //     $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=> Auth::user()->id])->first();
+        //     if($survey_history){
+        //         // Survey already attended
+        //         return view('admin.survey.alreadyattempted', compact('survey'));
+        //     }else{
+        //         $history = new SurveyHistory();
+        //         $history->respondent_id= Auth::user()->id;
+        //         $history->survey_id=$survey->id;
+        //         $history->status=0;
+        //         $history->save();
+        //  }
+        // }
         if($survey->is_deleted == 0){
             // Check Shareable Type 
             if($survey->shareable_type == 'share'){
@@ -2822,7 +2822,7 @@ class SurveyController extends Controller
 
                     // Determine the likert label based on the range
                     $likert_label = $this->getLikertLabel($output, $likert_range, $left_label, $middle_label, $right_label);
-                    
+                   
                     $result[$qus->question_name] = $likert_label;
 
                 } else if ($qus->qus_type == 'matrix_qus') {
