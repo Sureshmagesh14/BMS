@@ -5,6 +5,9 @@
 @include('admin.layout.horizontal_left_menu')
 </div>
 <style>
+.activeQus {
+    background: #dbe8e9;
+}
 .shortcuts {
     width: 100%;
     display: flex;
@@ -155,8 +158,12 @@
               
                @endif
                <?php $i=1;?>
-                @foreach($questions as $key => $qus)
-                    <div data-id="{{$key + 1}}" data-qus_id="{{$qus->id}}" data-qus_order_no="{{$qus->qus_order_no}}" draggable="true" class="draggable fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
+               @foreach($questions as $key => $qus)
+    <div data-id="{{$key + 1}}" data-qus_id="{{$qus->id}}" data-qus_order_no="{{$qus->qus_order_no}}"  
+        draggable="true"  
+        class="draggable fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques 
+        {{ ($qus->id === $currentQus->id && $qus->id == 0 && $key == 0) ? 'activeQus' : ($qus->id == 0 ? '' : '') }}">
+
                             <?php  $qus_url=route('survey.builder',[$survey->builderID,$qus->id]); ?>
                             <div class="d-flex qus_set qus" onclick="sectactivequs({{$qus->id}},'{{$qus->qus_type}}','{{$qus_url}}')">
                                 <span class="qus_no"><?php echo $i; ?></span>
@@ -526,24 +533,20 @@
                                 
                                 @if($currentQus->qus_type=='open_qus')
                                         <div class="open_qus">
-                                            {{ Form::label('open_qus_choice', __('Type'),['class'=>'form-label']) }}<br>
+                                            {{ Form::label('open_qus_choice', __('Type'), ['class' => 'form-label']) }}<br>
+                                            @php
+                                                $selectedChoice = $qusvalue->open_qus_choice ?? 'single';
+                                            @endphp
                                             <div>
-                                                @if($qusvalue!=null && $qusvalue->open_qus_choice == 'single')
-                                                    <input type="radio" id="single" name="open_qus_choice" value="single" checked>
-                                                @else 
-                                                    <input type="radio" id="single" name="open_qus_choice" value="single">
-                                                @endif
+                                                <input type="radio" id="single" name="open_qus_choice" value="single" {{ $selectedChoice == 'single' ? 'checked' : '' }}>
                                                 <label for="single">Single Line</label>
                                             </div>
                                             <div>
-                                                @if($qusvalue!=null && $qusvalue->open_qus_choice == 'multi')
-                                                    <input type="radio" id="multi" name="open_qus_choice" value="multi" checked>
-                                                @else 
-                                                    <input type="radio" id="multi" name="open_qus_choice" value="multi">
-                                                @endif
+                                                <input type="radio" id="multi" name="open_qus_choice" value="multi" {{ $selectedChoice == 'multi' ? 'checked' : '' }}>
                                                 <label for="multi">Multi Lines</label>
                                             </div>
                                         </div>
+
                                         <br>
                                         <div>
                                         {{ Form::text('single_choice_qus', null , array('id'=>'single_choice_qus','class' => 'form-control','placeholder'=>'Single Line','readonly'=>true)) }}
@@ -583,9 +586,9 @@
                                                 <p id="left_lable_text">{{$left_label}}</p>
                                             </div>
                                             @if($likert_range != 4)
-                                            <div class="label label--middle">
-                                                <p id="middle_lable_text">{{$middle_label}}</p>
-                                            </div>
+                                                <div class="label label--middle">
+                                                    <p id="middle_lable_text">{{$middle_label}}</p>
+                                                </div>
                                             @endif
                                             <div class="label label--end">
                                                 <p id="right_lable_text">{{$right_label}}</p>
@@ -2150,6 +2153,7 @@ $('#likert_range').change(function(e){
     let output_mid ='<div class="label label--middle"><p id="middle_lable_text">'+$('#middle_label').val()+'</p></div>';
     let output_end= '<div class="label label--end"><p id="right_lable_text">'+$('#right_label').val()+'</p></div>';
     let output='';
+
     if($(this).val() == 4){
     output=output_start+output_end+'<div class="scale-element"><span>1</span></div><div class="scale-element"><span>2</span></div><div class="scale-element"><span>3</span></div><div class="scale-element"><span>4</span></div>';
     }else{
