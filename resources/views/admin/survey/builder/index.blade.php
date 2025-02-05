@@ -279,7 +279,7 @@
                     $qus_name='';
                     $icon_type='';
                     $left_label='Least Likely';
-                    $middle_label='Netural';
+                    $middle_label='Neutral';
                     $right_label='Most Likely';
                     $likert_range = 10;
                     $likert_scale = [4,5,6,7,8,9,10];
@@ -2407,4 +2407,26 @@ $('#survey_thankyou_page').change(function () {
             });
             
         }
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the query parameter from the URL
+            const pathArray = window.location.pathname.split('/');
+
+            // Get the last part of the URL which is the qus_id (588)
+            const qus_id = pathArray[pathArray.length - 1];
+
+            if (qus_id) {
+            // Find the element with matching `data-qus_id`
+            const targetElement = document.querySelector(`[data-qus_id="${qus_id}"]`);
+            
+            if (targetElement) {
+                // Scroll to the element
+                targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
+
+                // Optionally, highlight the section for visibility
+                targetElement.style.border = "2px solid #4A9CA6";
+                targetElement.style.background = "#dbe8e9";
+                // setTimeout(() => targetElement.style.border = "", 2000); // Remove highlight after 2 seconds
+            }
+            }
+        });
 </script>
