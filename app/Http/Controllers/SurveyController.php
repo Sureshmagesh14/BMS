@@ -11,6 +11,7 @@ use App\Models\Survey;
 use App\Models\Questions;
 use App\Models\Users;
 use App\Models\Respondents;
+use App\Models\RespondentProfile;
 use App\Models\Project_respondent;
 use App\Models\Projects;
 use App\Models\SurveyTemplate;
@@ -1950,7 +1951,7 @@ class SurveyController extends Controller
                         if($qus->qus_type == 'likert'){
                             $qusvalue = json_decode($qus->qus_ans);
                             $left_label='Least Likely';
-                            $middle_label='Netural';
+                            $middle_label='Neutral';
                             $right_label='Most Likely';
                             $likert_range = 10;
                             if(isset($qusvalue->right_label)){
@@ -2763,7 +2764,7 @@ class SurveyController extends Controller
             ->pluck('response_user_id')
             ->toArray();
 
-        array_push($cols,"Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
+        array_push($cols,"Profile ID","Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
         $finalResult = [$cols];
 
         // Eager load respondent data and survey responses
@@ -2776,6 +2777,12 @@ class SurveyController extends Controller
 
         // Process each user
         foreach ($surveyResponseUsers as $userID) {
+            $PID='';
+            $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
+            if($respondentProfile){
+                $PID=$respondentProfile->pid;
+            }
+
             $user = $respondents->get($userID);
             $responses = $surveyResponses->get($userID);
 
@@ -2890,6 +2897,7 @@ class SurveyController extends Controller
 
             // Append respondent details
             $result = array_merge($result, [
+                'Profile ID' => $PID,
                 'Respondent Name' => $name,
                 'Date' => $responseinfo,
                 'Device ID' => $other_details->device_id ?? '',
@@ -2943,6 +2951,7 @@ class SurveyController extends Controller
 
             // Append respondent details
             $result = array_merge($result, [
+                'Profile ID' => $PID,
                 'Respondent Name' => $name,
                 'Date' => $responseinfo,
                 'Device ID' => $other_details->device_id ?? '',
@@ -3230,7 +3239,7 @@ class SurveyController extends Controller
         $question = Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
                 
         $surveyResponseUsers =  SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
-        array_push($cols,"Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
+        array_push($cols,"Profile ID","Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
         $finalResult =[$cols];
         foreach($surveyResponseUsers as $userID){
             $user = Respondents::where('id', '=' , $userID)->first();
@@ -3283,7 +3292,11 @@ class SurveyController extends Controller
             if(isset($user->name)){
                 $name = $user->name;
             }
-
+            $PID='';
+            $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
+            if($respondentProfile){
+                $PID=$respondentProfile->pid;
+            }
             $completedRes = SurveyResponse::where(['response_user_id'=>$userID ,'survey_id'=>$survey_id,'answer'=>'thankyou_submitted'])->first();
 
             if($completedRes){
@@ -3318,7 +3331,7 @@ class SurveyController extends Controller
                 if($qus->qus_type == 'likert'){
                     $qusvalue = json_decode($qus->qus_ans);
                     $left_label = 'Least Likely';
-                    $middle_label = 'Netural';
+                    $middle_label = 'Neutral';
                     $right_label = 'Most Likely';
                     $likert_range = 10;
                     if(isset($qusvalue->right_label)){
@@ -3462,7 +3475,7 @@ class SurveyController extends Controller
                     $result[$qus->question_name]=$output;
                 }
             }
-            $result = array_merge($result,['Respondent Name'=>$name,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name]);
+            $result = array_merge($result,["Profile ID"=>$PID,'Respondent Name'=>$name,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name]);
             array_push($finalResult,$result);
         }
        
@@ -3568,7 +3581,7 @@ class SurveyController extends Controller
             $question = Questions::where(['survey_id'=>$survey_id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
                     
             $surveyResponseUsers =  SurveyResponse::where(['survey_id'=>$survey_id])->groupBy('response_user_id')->pluck('response_user_id')->toArray();
-            array_push($cols,"Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
+            array_push($cols,"Profile ID","Respondent Name", "Date","Device ID","Device Name","Completion Status","Browser","OS","Device Type","Long","Lat","Location","IP Address","Language Code","Language Name");
             $finalResult =[$cols];
             foreach($surveyResponseUsers as $userID){
                 $user = Respondents::where('id', '=' , $userID)->first();
@@ -3621,7 +3634,11 @@ class SurveyController extends Controller
                 if(isset($user->name)){
                     $name = $user->name;
                 }
-
+                $PID='';
+                $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
+                if($respondentProfile){
+                    $PID=$respondentProfile->pid;
+                }
                 $completedRes = SurveyResponse::where(['response_user_id'=>$userID ,'survey_id'=>$survey_id,'answer'=>'thankyou_submitted'])->first();
 
                 if($completedRes){
@@ -3657,7 +3674,7 @@ class SurveyController extends Controller
                     if($qus->qus_type == 'likert'){
                         $qusvalue = json_decode($qus->qus_ans);
                         $left_label = 'Least Likely';
-                        $middle_label = 'Netural';
+                        $middle_label = 'Neutral';
                         $right_label = 'Most Likely';
                         $likert_range = 10;
                         if(isset($qusvalue->right_label)){
@@ -3801,7 +3818,7 @@ class SurveyController extends Controller
                         $result[$qus->question_name]=$output;
                     }
                 }
-                $result = array_merge($result,['Respondent Name'=>$name,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name]);
+                $result = array_merge($result,["Profile ID"=>$PID,'Respondent Name'=>$name,'Date'=>$responseinfo,'Device ID'=>$deviceID,'Device Name'=>$device_name,'Completion Status'=>$completion_status,'Browser'=>$browser,'OS'=>$os,'Device Type'=>$device_type,'Long'=>$long,'Lat'=>$lat,'Location'=>$location,'IP Address'=>$ip_address,'Language Code'=>$lang_code,'Language Name'=>$lang_name]);
                 array_push($finalResult,$result);
             }
         
