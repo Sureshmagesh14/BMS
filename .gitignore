@@ -27,3 +27,5 @@ php.ini
 storage/logs/laravel.log
 .gitignore
 public
+/app/services/*
+!app/services/SendGridService.php
