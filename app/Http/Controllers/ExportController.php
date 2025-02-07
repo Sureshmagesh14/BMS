@@ -2996,11 +2996,11 @@ class ExportController extends Controller
         $details = $this->extractDetails(json_decode($endTime->other_details ?? '{}'));
         $essential = $this->getEssentialDetails($userID);
         $name = $user->name ?? 'Anonymous';
-        $PID='';
-        $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
-        if($respondentProfile){
-            $PID=$respondentProfile->pid;
-        }
+        $PID = $userID;
+        // $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
+        // if($respondentProfile){
+        //     $PID=$respondentProfile->pid;
+        // }
         $completionStatus = SurveyResponse::where([
             'response_user_id' => $userID, 
             'survey_id' => $survey_id, 
