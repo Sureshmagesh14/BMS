@@ -2777,11 +2777,11 @@ class SurveyController extends Controller
 
         // Process each user
         foreach ($surveyResponseUsers as $userID) {
-            $PID='';
-            $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
-            if($respondentProfile){
-                $PID=$respondentProfile->pid;
-            }
+            $PID = $userID;
+            // $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
+            // if($respondentProfile){
+            //     $PID=$respondentProfile->pid;
+            // }
 
             $user = $respondents->get($userID);
             $responses = $surveyResponses->get($userID);
@@ -3292,11 +3292,11 @@ class SurveyController extends Controller
             if(isset($user->name)){
                 $name = $user->name;
             }
-            $PID='';
-            $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
-            if($respondentProfile){
-                $PID=$respondentProfile->pid;
-            }
+            $PID = $userID;
+            // $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
+            // if($respondentProfile){
+            //     $PID=$respondentProfile->pid;
+            // }
             $completedRes = SurveyResponse::where(['response_user_id'=>$userID ,'survey_id'=>$survey_id,'answer'=>'thankyou_submitted'])->first();
 
             if($completedRes){
@@ -3634,11 +3634,11 @@ class SurveyController extends Controller
                 if(isset($user->name)){
                     $name = $user->name;
                 }
-                $PID='';
-                $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
-                if($respondentProfile){
-                    $PID=$respondentProfile->pid;
-                }
+                $PID = $userID;
+                // $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
+                // if($respondentProfile){
+                //     $PID=$respondentProfile->pid;
+                // }
                 $completedRes = SurveyResponse::where(['response_user_id'=>$userID ,'survey_id'=>$survey_id,'answer'=>'thankyou_submitted'])->first();
 
                 if($completedRes){
