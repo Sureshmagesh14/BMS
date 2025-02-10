@@ -36,7 +36,7 @@
         font-weight: bold;
         display: block;
         /* Makes it occupy a full line */
-        margin-top: 5px;
+        margin-top: 20px;
         /* Adds spacing */
         margin-bottom: 10px;
         /* Adds spacing */
