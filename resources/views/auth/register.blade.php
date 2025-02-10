@@ -15,6 +15,11 @@
         z-index: 2;
     }
 
+    span.email_error {
+        width: 100%;
+        color:red;
+    }
+
     .rightside.text-center {
         /* margin-top: 85px !important; */
         padding: 20px !important;
@@ -374,9 +379,32 @@
     });
 
     $(function() {
-        var mess =
-            'This email is already registered. Want to <a href="{{ route('login') }}">login</a> or <a href="{{ url('forgot-password') }}">recover your password?</a>';
-        $('form#reg_table').validate({
+        var mess = 'This email is already registered. Want to <a href="{{ route('login') }}">login</a> or <a href="{{ url('forgot-password') }}">recover your password?</a>';
+        
+        // Custom method to check if date of birth is not in the future
+        $.validator.addMethod("date_of_birth_check", function(value, element) {
+            var dateOfBirth = new Date(value);
+            var today = new Date();
+            return dateOfBirth <= today;
+        }, "Date of birth cannot be in the future.");
+
+        // Custom method to validate mobile format
+        $.validator.addMethod("mobile_format", function(value, element) {
+            return /^(\d{2} \d{3} \d{4})(_|)?$/.test(value);
+        }, "Invalid Mobile Number Format");
+
+        // Helper function to format field names
+        function formatFieldName(fieldName) {
+            // Split by underscore and capitalize each word
+            return fieldName.split('_')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+
+        var validatorSettings = {
+            onkeyup: false,        // Disable validation on keyup
+            onfocusout: false,     // Disable validation on focusout
+            onsubmit: true,        // Enable validation on submit
             rules: {
                 email: {
                     required: true,
@@ -384,35 +412,31 @@
                     validate_email: true,
                     remote: {
                         url: "{{ route('check_email_name') }}",
-                        data: {
-                            'form_name': "regsiter"
-                        },
+                        data: { 'form_name': "regsiter" },
                         type: "GET"
                     }
                 },
                 mobile: {
                     required: true,
-                    minlength: 11, // Minimum length of 11 digits
-                    maxlength: 11, // Maximum length of 11 digits
-                    mobile_format: true, // Custom validation to allow digits, spaces, and optional underscore at the end
+                    minlength: 11,
+                    maxlength: 11,
+                    mobile_format: true,
                     remote: {
                         url: "{{ route('check_phone_name') }}",
-                        data: {
-                            'form_name': "regsiter"
-                        },
+                        data: { 'form_name': "regsiter" },
                         type: "GET"
                     }
                 },
                 date_of_birth: {
                     required: true,
                     date: true,
-                    date_of_birth_check: true // Custom date validation (not in the future)
+                    date_of_birth_check: true
                 },
                 whatsapp: {
                     required: true,
-                    minlength: 11, // Minimum length of 11 digits
-                    maxlength: 11, // Maximum length of 11 digits
-                    mobile_format: true, // Custom validation to allow digits, spaces, and optional underscore at the end
+                    minlength: 11,
+                    maxlength: 11,
+                    mobile_format: true
                 },
                 password_register: {
                     required: true,
@@ -424,60 +448,68 @@
                     equalTo: "#password_register"
                 },
                 terms: {
-                    required: true,
-
-                },
-
+                    required: true
+                }
             },
-            messages: {
-                email: {
-                    remote: mess
-                },
-               
-                mobile: {
-                    remote: "Mobile number already exists!",
-                    minlength: "Mobile number must be exactly 11 digits.",
-                    maxlength: "Mobile number must be exactly 11 digits.",
-                    mobile_format: "Invalid Mobile Number Format."
-                },
-                whatsapp: {
-                    remote: "Whatsapp number already exists!",
-                    minlength: "Whatsapp number must be exactly 11 digits.",
-                    maxlength: "Whatsapp number must be exactly 11 digits.",
-                    mobile_format: "Invalid Whatsapp Number Format."
-                },
-                date_of_birth: {
-                    date: "Please enter a valid date.",
-                    date_of_birth_check: "Date of birth cannot be in the future."
-                },
-                "terms": {
-                    required: function() {
-                        toastr.error('Please accept terms and policy field is required')
-                    },
-                },
+            // Hide default error messages
+            errorPlacement: function(error, element) {
+                return true;
             },
-            //     submitHandler: function(form) { // for demo
-
-            //     return false; // for demo
-            // }
-        });
-           // Custom method to check if date of birth is not in the future
-           $.validator.addMethod("date_of_birth_check", function(value, element) {
-            var dateOfBirth = new Date(value);
-            var today = new Date();
-            // Compare the entered date with today's date
-            if (dateOfBirth > today) {
-                return false; // Date should not be in the future
+            // Show toastr messages for all validation errors
+            showErrors: function(errorMap, errorList) {
+                $.each(errorList, function(index, error) {
+                    var message = '';
+                    var fieldName = formatFieldName($(error.element).attr('name'));
+                    
+                    switch(error.method) {
+                        case 'required':
+                            message = fieldName + ' is required';
+                            break;
+                        case 'email':
+                            message = 'Please enter a valid email address';
+                            break;
+                        case 'minlength':
+                            if ($(error.element).attr('name').includes('mobile') || $(error.element).attr('name').includes('whatsapp')) {
+                                message = fieldName + ' number must be exactly 11 digits';
+                            } else {
+                                message = 'Minimum ' + $(error.element).rules().minlength + ' characters required';
+                            }
+                            break;
+                        case 'maxlength':
+                            message = fieldName + ' number must be exactly 11 digits';
+                            break;
+                        case 'mobile_format':
+                            message = 'Invalid ' + fieldName + ' Number Format';
+                            break;
+                        case 'equalTo':
+                            message = 'Passwords do not match';
+                            break;
+                        case 'remote':
+                            if ($(error.element).attr('name') === 'email') {
+                                message = mess;
+                            } else {
+                                message = fieldName + ' number already exists!';
+                            }
+                            break;
+                        case 'date':
+                            message = 'Please enter a valid date';
+                            break;
+                        case 'date_of_birth_check':
+                            message = 'Date of birth cannot be in the future';
+                            break;
+                        default:
+                            message = error.message;
+                    }
+                    
+                    toastr.error(message);
+                });
+            },
+            submitHandler: function(form) {
+                form.submit();
             }
-            return true;
-        }, "Date of birth cannot be in the future.");
+        };
 
-        // Custom method to validate mobile format (only digits, spaces, and underscore at the end)
-        $.validator.addMethod("mobile_format", function(value, element) {
-            // Regex allows digits, spaces, and one underscore at the end
-            return /^(\d{2} \d{3} \d{4})(_|)?$/.test(
-            value); // This regex allows the underscore only at the end
-        }, "Invalid Mobile Number Format");
+        $('form#reg_table').validate(validatorSettings);
     });
 
     $(function() {
