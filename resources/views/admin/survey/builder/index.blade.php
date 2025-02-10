@@ -4,7 +4,15 @@
 <div class="horizontal_left_menu">
 @include('admin.layout.horizontal_left_menu')
 </div>
+
 <style>
+h6.question_name {
+    font-size: 14px;
+    font-weight: bold;
+}
+.activeQus {
+    background: #dbe8e9;
+}
 .shortcuts {
     width: 100%;
     display: flex;
@@ -155,8 +163,8 @@
               
                @endif
                <?php $i=1;?>
-                @foreach($questions as $key => $qus)
-                    <div data-id="{{$key + 1}}" data-qus_id="{{$qus->id}}" data-qus_order_no="{{$qus->qus_order_no}}" draggable="true" class="draggable fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques" >
+               @foreach($questions as $key => $qus)
+                    <div data-id="{{$key + 1}}"  data-qus_id="{{$qus->id}}"  data-qus_order_no="{{$qus->qus_order_no}}"   draggable="true"  class="draggable fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques  {{ (isset($currentQus) && $qus->id === $currentQus->id && $qus->id == 0 && $key == 0) ? 'activeQus' : '' }}">
                             <?php  $qus_url=route('survey.builder',[$survey->builderID,$qus->id]); ?>
                             <div class="d-flex qus_set qus" onclick="sectactivequs({{$qus->id}},'{{$qus->qus_type}}','{{$qus_url}}')">
                                 <span class="qus_no"><?php echo $i; ?></span>
@@ -260,6 +268,15 @@
                     </div>
                 </div>
             </div>
+            @if(isset($currentQus))
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                        <h6 class="question_name">{{$currentQus->qus_order_no}} . {{$currentQus->question_name}}</h4>
+                    </div>
+                </div>
+            </div>
+            @endif
             <meta name="csrf-token" content="{{ csrf_token() }}" />
            
             <!-- end page title -->
@@ -272,7 +289,7 @@
                     $qus_name='';
                     $icon_type='';
                     $left_label='Least Likely';
-                    $middle_label='Netural';
+                    $middle_label='Neutral';
                     $right_label='Most Likely';
                     $likert_range = 10;
                     $likert_scale = [4,5,6,7,8,9,10];
@@ -526,24 +543,20 @@
                                 
                                 @if($currentQus->qus_type=='open_qus')
                                         <div class="open_qus">
-                                            {{ Form::label('open_qus_choice', __('Type'),['class'=>'form-label']) }}<br>
+                                            {{ Form::label('open_qus_choice', __('Type'), ['class' => 'form-label']) }}<br>
+                                            @php
+                                                $selectedChoice = $qusvalue->open_qus_choice ?? 'single';
+                                            @endphp
                                             <div>
-                                                @if($qusvalue!=null && $qusvalue->open_qus_choice == 'single')
-                                                    <input type="radio" id="single" name="open_qus_choice" value="single" checked>
-                                                @else 
-                                                    <input type="radio" id="single" name="open_qus_choice" value="single">
-                                                @endif
+                                                <input type="radio" id="single" name="open_qus_choice" value="single" {{ $selectedChoice == 'single' ? 'checked' : '' }}>
                                                 <label for="single">Single Line</label>
                                             </div>
                                             <div>
-                                                @if($qusvalue!=null && $qusvalue->open_qus_choice == 'multi')
-                                                    <input type="radio" id="multi" name="open_qus_choice" value="multi" checked>
-                                                @else 
-                                                    <input type="radio" id="multi" name="open_qus_choice" value="multi">
-                                                @endif
+                                                <input type="radio" id="multi" name="open_qus_choice" value="multi" {{ $selectedChoice == 'multi' ? 'checked' : '' }}>
                                                 <label for="multi">Multi Lines</label>
                                             </div>
                                         </div>
+
                                         <br>
                                         <div>
                                         {{ Form::text('single_choice_qus', null , array('id'=>'single_choice_qus','class' => 'form-control','placeholder'=>'Single Line','readonly'=>true)) }}
@@ -583,9 +596,9 @@
                                                 <p id="left_lable_text">{{$left_label}}</p>
                                             </div>
                                             @if($likert_range != 4)
-                                            <div class="label label--middle">
-                                                <p id="middle_lable_text">{{$middle_label}}</p>
-                                            </div>
+                                                <div class="label label--middle">
+                                                    <p id="middle_lable_text">{{$middle_label}}</p>
+                                                </div>
                                             @endif
                                             <div class="label label--end">
                                                 <p id="right_lable_text">{{$right_label}}</p>
@@ -914,19 +927,35 @@
                                                                 $qusvalue_display = json_decode($qus_display->qus_ans); 
                                                                 switch ($qus_display->qus_type) {
                                                                     case 'single_choice':
-                                                                        $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
+                                                                        if (isset($qusvalue_display->choices_list)) {
+                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                        } else {
+                                                                            $resp_logic_type_display_value = []; 
+                                                                        }
                                                                         $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                         break;
                                                                     case 'multi_choice':
-                                                                        $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
+                                                                        if (isset($qusvalue_display->choices_list)) {
+                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                        } else {
+                                                                            $resp_logic_type_display_value = []; 
+                                                                        }
                                                                         $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                         break;
                                                                     case 'dropdown':
-                                                                        $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
+                                                                        if (isset($qusvalue_display->choices_list)) {
+                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                        } else {
+                                                                            $resp_logic_type_display_value = []; 
+                                                                        }
                                                                         $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                         break;
                                                                     case 'picturechoice':
-                                                                        $resp_logic_type_display_value=json_decode($qusvalue_display->choices_list);
+                                                                        if (isset($qusvalue_display->choices_list)) {
+                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                        } else {
+                                                                            $resp_logic_type_display_value = []; 
+                                                                        }
                                                                         $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                         break;
                                                                     case 'photo_capture':
@@ -1147,19 +1176,34 @@
                                                         $qusvalue_skip = json_decode($qus_skip->qus_ans); 
                                                         switch ($qus_skip->qus_type) {
                                                             case 'single_choice':
-                                                                $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
+                                                                if (isset($qusvalue_skip->choices_list)) {
+                                                                    $resp_logic_type_skip_value = explode(",", $qusvalue_skip->choices_list);
+                                                                } else {
+                                                                    $resp_logic_type_skip_value = []; 
+                                                                }
                                                                 $resp_logic_type_skip=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                 break;
                                                             case 'multi_choice':
-                                                                $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
-                                                                $resp_logic_type_skip=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                if (isset($qusvalue_skip->choices_list)) {
+                                                                    $resp_logic_type_skip_value = explode(",", $qusvalue_skip->choices_list);
+                                                                } else {
+                                                                    $resp_logic_type_skip_value = []; 
+                                                                }                                                                $resp_logic_type_skip=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                 break;
                                                             case 'dropdown':
-                                                                $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
+                                                                if (isset($qusvalue_skip->choices_list)) {
+                                                                    $resp_logic_type_skip_value = explode(",", $qusvalue_skip->choices_list);
+                                                                } else {
+                                                                    $resp_logic_type_skip_value = []; 
+                                                                }                                                                
                                                                 $resp_logic_type_skip=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                 break;
                                                             case 'picturechoice':
-                                                                $resp_logic_type_skip_value=json_decode($qusvalue_skip->choices_list);
+                                                                if (isset($qusvalue_skip->choices_list)) {
+                                                                    $resp_logic_type_skip_value = explode(",", $qusvalue_skip->choices_list);
+                                                                } else {
+                                                                    $resp_logic_type_skip_value = []; 
+                                                                }
                                                                 $resp_logic_type_skip=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                 break;
                                                             case 'photo_capture':
@@ -2150,6 +2194,7 @@ $('#likert_range').change(function(e){
     let output_mid ='<div class="label label--middle"><p id="middle_lable_text">'+$('#middle_label').val()+'</p></div>';
     let output_end= '<div class="label label--end"><p id="right_lable_text">'+$('#right_label').val()+'</p></div>';
     let output='';
+
     if($(this).val() == 4){
     output=output_start+output_end+'<div class="scale-element"><span>1</span></div><div class="scale-element"><span>2</span></div><div class="scale-element"><span>3</span></div><div class="scale-element"><span>4</span></div>';
     }else{
@@ -2403,4 +2448,26 @@ $('#survey_thankyou_page').change(function () {
             });
             
         }
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the query parameter from the URL
+            const pathArray = window.location.pathname.split('/');
+
+            // Get the last part of the URL which is the qus_id (588)
+            const qus_id = pathArray[pathArray.length - 1];
+
+            if (qus_id) {
+            // Find the element with matching `data-qus_id`
+            const targetElement = document.querySelector(`[data-qus_id="${qus_id}"]`);
+            
+            if (targetElement) {
+                // Scroll to the element
+                targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
+
+                // Optionally, highlight the section for visibility
+                targetElement.style.border = "2px solid #4A9CA6";
+                targetElement.style.background = "#dbe8e9";
+                // setTimeout(() => targetElement.style.border = "", 2000); // Remove highlight after 2 seconds
+            }
+            }
+        });
 </script>
