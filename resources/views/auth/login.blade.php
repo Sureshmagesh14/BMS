@@ -186,6 +186,12 @@
     </script>
 @endif
 
+@if (Session::has('success'))
+    <script>
+        toastr.success("{{ session('success') }}");
+    </script>
+@endif
+
 <script>
     $(function() {
         $('#login_table').validate({

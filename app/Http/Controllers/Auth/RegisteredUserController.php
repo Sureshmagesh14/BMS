@@ -103,15 +103,14 @@ class RegisteredUserController extends Controller
             $get_email = Respondents::where('id', $id)->first();
             $to_address = $get_email->email;
             $resp_name = $get_email->name;
-            //$to_address = 'hemanathans1@gmail.com';
-
-            $data = ['subject' => 'New account created','type' => 'new_register'];
+        
 
             $dynamicData = [
                 'first_name' => $resp_name,
+                'verify_link' => route('login'),
             ];
 
-            $subject = 'New account created';
+            $subject = 'Welcome! Please Verify Your Account';
             $templateId = 'd-02d0ec6cb9c24367891ad12d0ec575ac';
 
             $sendgrid = new SendGridService();
@@ -170,11 +169,13 @@ class RegisteredUserController extends Controller
             Session::forget('u_proj_id');
         }
 
-        event(new Registered($user));
+        return redirect('login')->with('success', __('Registered Successfully.'));
 
-        Auth::login($user);
+        // event(new Registered($user));
 
-        return redirect(RouteServiceProvider::HOME);
+        // Auth::login($user);
+
+        // return redirect(RouteServiceProvider::HOME);
     }
 }
 
