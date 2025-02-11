@@ -4,7 +4,12 @@
 <div class="horizontal_left_menu">
 @include('admin.layout.horizontal_left_menu')
 </div>
+
 <style>
+h6.question_name {
+    font-size: 14px;
+    font-weight: bold;
+}
 .activeQus {
     background: #dbe8e9;
 }
@@ -159,11 +164,7 @@
                @endif
                <?php $i=1;?>
                @foreach($questions as $key => $qus)
-    <div data-id="{{$key + 1}}" data-qus_id="{{$qus->id}}" data-qus_order_no="{{$qus->qus_order_no}}"  
-        draggable="true"  
-        class="draggable fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques 
-        {{ ($qus->id === $currentQus->id && $qus->id == 0 && $key == 0) ? 'activeQus' : ($qus->id == 0 ? '' : '') }}">
-
+                    <div data-id="{{$key + 1}}"  data-qus_id="{{$qus->id}}"  data-qus_order_no="{{$qus->qus_order_no}}"   draggable="true"  class="draggable fx-jc--between ss-builder-add-new ss-builder-add-new--sm-sidebar-card surveyques  {{ (isset($currentQus) && $qus->id === $currentQus->id && $qus->id == 0 && $key == 0) ? 'activeQus' : '' }}">
                             <?php  $qus_url=route('survey.builder',[$survey->builderID,$qus->id]); ?>
                             <div class="d-flex qus_set qus" onclick="sectactivequs({{$qus->id}},'{{$qus->qus_type}}','{{$qus_url}}')">
                                 <span class="qus_no"><?php echo $i; ?></span>
@@ -267,6 +268,15 @@
                     </div>
                 </div>
             </div>
+            @if(isset($currentQus))
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                        <h6 class="question_name">{{$currentQus->qus_order_no}} . {{$currentQus->question_name}}</h4>
+                    </div>
+                </div>
+            </div>
+            @endif
             <meta name="csrf-token" content="{{ csrf_token() }}" />
            
             <!-- end page title -->
@@ -917,19 +927,35 @@
                                                                 $qusvalue_display = json_decode($qus_display->qus_ans); 
                                                                 switch ($qus_display->qus_type) {
                                                                     case 'single_choice':
-                                                                        $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
+                                                                        if (isset($qusvalue_display->choices_list)) {
+                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                        } else {
+                                                                            $resp_logic_type_display_value = []; 
+                                                                        }
                                                                         $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                         break;
                                                                     case 'multi_choice':
-                                                                        $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
+                                                                        if (isset($qusvalue_display->choices_list)) {
+                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                        } else {
+                                                                            $resp_logic_type_display_value = []; 
+                                                                        }
                                                                         $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                         break;
                                                                     case 'dropdown':
-                                                                        $resp_logic_type_display_value=explode(",",$qusvalue_display->choices_list);
+                                                                        if (isset($qusvalue_display->choices_list)) {
+                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                        } else {
+                                                                            $resp_logic_type_display_value = []; 
+                                                                        }
                                                                         $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                         break;
                                                                     case 'picturechoice':
-                                                                        $resp_logic_type_display_value=json_decode($qusvalue_display->choices_list);
+                                                                        if (isset($qusvalue_display->choices_list)) {
+                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                        } else {
+                                                                            $resp_logic_type_display_value = []; 
+                                                                        }
                                                                         $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                         break;
                                                                     case 'photo_capture':
@@ -1150,19 +1176,34 @@
                                                         $qusvalue_skip = json_decode($qus_skip->qus_ans); 
                                                         switch ($qus_skip->qus_type) {
                                                             case 'single_choice':
-                                                                $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
+                                                                if (isset($qusvalue_skip->choices_list)) {
+                                                                    $resp_logic_type_skip_value = explode(",", $qusvalue_skip->choices_list);
+                                                                } else {
+                                                                    $resp_logic_type_skip_value = []; 
+                                                                }
                                                                 $resp_logic_type_skip=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                 break;
                                                             case 'multi_choice':
-                                                                $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
-                                                                $resp_logic_type_skip=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                if (isset($qusvalue_skip->choices_list)) {
+                                                                    $resp_logic_type_skip_value = explode(",", $qusvalue_skip->choices_list);
+                                                                } else {
+                                                                    $resp_logic_type_skip_value = []; 
+                                                                }                                                                $resp_logic_type_skip=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                 break;
                                                             case 'dropdown':
-                                                                $resp_logic_type_skip_value=explode(",",$qusvalue_skip->choices_list);
+                                                                if (isset($qusvalue_skip->choices_list)) {
+                                                                    $resp_logic_type_skip_value = explode(",", $qusvalue_skip->choices_list);
+                                                                } else {
+                                                                    $resp_logic_type_skip_value = []; 
+                                                                }                                                                
                                                                 $resp_logic_type_skip=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                 break;
                                                             case 'picturechoice':
-                                                                $resp_logic_type_skip_value=json_decode($qusvalue_skip->choices_list);
+                                                                if (isset($qusvalue_skip->choices_list)) {
+                                                                    $resp_logic_type_skip_value = explode(",", $qusvalue_skip->choices_list);
+                                                                } else {
+                                                                    $resp_logic_type_skip_value = []; 
+                                                                }
                                                                 $resp_logic_type_skip=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
                                                                 break;
                                                             case 'photo_capture':
