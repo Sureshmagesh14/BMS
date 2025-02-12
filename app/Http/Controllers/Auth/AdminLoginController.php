@@ -419,6 +419,7 @@ class AdminLoginController extends Controller
             $respondent_id = 0;
 
             $getRespondent = Respondents::where('email',$resp->main_email)->first();
+          
             
             if($getRespondent != null){
                 $get_profile = RespondentProfile::where('respondent_id',$getRespondent->id)->get();
@@ -441,7 +442,7 @@ class AdminLoginController extends Controller
                         }
 
                         $encodeEssential = json_encode($getEssential);
-
+                        
                         RespondentProfile::where('id', $profile->id)->update(['essential_details' => $encodeEssential]);
                     }
                 }
@@ -581,7 +582,7 @@ class AdminLoginController extends Controller
                 $res_inc++;
             }
 
-            DB::table('import_providence')->where('id',$respondent_id)->update(['imported_status' => 1]);
+            DB::table('import_providence')->where('main_email',$resp->main_email)->update(['imported_status' => 1]);
         }
 
         return $count_ass;
