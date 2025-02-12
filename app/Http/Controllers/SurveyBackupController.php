@@ -1622,7 +1622,7 @@ class SurveyController extends Controller
                         if($qus->qus_type == 'likert'){
                             $qusvalue = json_decode($qus->qus_ans);
                             $left_label='Least Likely';
-                            $middle_label='Netural';
+                            $middle_label='Neutral';
                             $right_label='Most Likely';
                             $likert_range = 10;
                             if(isset($qusvalue->right_label)){
@@ -2351,7 +2351,7 @@ class SurveyController extends Controller
                 if($qus->qus_type == 'likert'){
                     $qusvalue = json_decode($qus->qus_ans);
                     $left_label='Least Likely';
-                    $middle_label='Netural';
+                    $middle_label='Neutral';
                     $right_label='Most Likely';
                     $likert_range = 10;
                     if(isset($qusvalue->right_label)){

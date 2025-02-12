@@ -132,7 +132,7 @@ $azRange = range('A', 'Z');
 $qusNo=1;
 $icon_type='';
 $left_label='Least Likely';
-$middle_label='Netural';
+$middle_label='Neutral';
 $right_label='Most Likely';
 $likert_range = 10;
 
@@ -612,10 +612,11 @@ if(isset($bg)){
                                                 <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--max-label">{{$right_label}}</label></div>
                                                     
                                                 @elseif($likert_range>=5)
-                                                <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--middle-label">{{$middle_label}}</label></div>
-
+                                                
                                                 <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--min-label">{{$left_label}}</label></div>
-                                                                                            
+                                                
+                                                <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--middle-label">{{$middle_label}}</label></div>
+                                     
                                                 <div><label class="ss-survey-font-family ss-survey-text-size--base sm_ss-survey-text-size--sm ss-survey-line-height--tight ss-survey-text-weight--regular ss-survey-text-color--secondary ss-answer-option__label ss-answer-option__label--max-label">{{$right_label}}</label></div>
                                                     
                                                 @endif

@@ -2800,7 +2800,7 @@ class ExportController extends Controller
                         ];
                         // Desired columns to be placed first
                         $priorityColumns = [
-                            "Respondent Name",  "Name",  "Surname", 'Mobile', 'Whatsapp', 'Email', 'Age', 'Gender', 'Highest Education Level', 
+                           "Profile ID","Respondent Name",  "Name",  "Surname", 'Mobile', 'Whatsapp', 'Email', 'Age', 'Gender', 'Highest Education Level', 
                             'Employment Status', 'Industry my company', 'Personal Income', 'Personal LSM', 
                             'Household Income', 'Household LSM', 'Relationship Status', 'Ethnic Group', 
                             'Province', 'Metropolitan Area'
@@ -2996,6 +2996,11 @@ class ExportController extends Controller
         $details = $this->extractDetails(json_decode($endTime->other_details ?? '{}'));
         $essential = $this->getEssentialDetails($userID);
         $name = $user->name ?? 'Anonymous';
+        $PID = $userID;
+        // $respondentProfile = RespondentProfile::where(['respondent_id'=>$userID])->first();
+        // if($respondentProfile){
+        //     $PID=$respondentProfile->pid;
+        // }
         $completionStatus = SurveyResponse::where([
             'response_user_id' => $userID, 
             'survey_id' => $survey_id, 
@@ -3020,7 +3025,7 @@ class ExportController extends Controller
             if($qus->qus_type == 'likert'){
                 $qusvalue = json_decode($qus->qus_ans);
                 $left_label = 'Least Likely';
-                $middle_label = 'Netural';
+                $middle_label = 'Neutral';
                 $right_label = 'Most Likely';
                 $likert_range = 10;
                 if(isset($qusvalue->right_label)){
@@ -3171,7 +3176,7 @@ class ExportController extends Controller
 
         return array_merge(
             $responseData, 
-            ['Respondent Name' => $name, 'Date' => $responseInfo, 'Completion Status' => $completionStatus], 
+            ["Profile ID"=>$PID,'Respondent Name' => $name, 'Date' => $responseInfo, 'Completion Status' => $completionStatus], 
             $details, $essential
         );
     }

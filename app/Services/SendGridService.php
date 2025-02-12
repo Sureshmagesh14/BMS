@@ -27,7 +27,7 @@ class SendGridService
      * @param string|null $fromName Name of the sender (optional)
      * @return $this
      */
-    public function setFrom($from = null, $fromName = 'Sender')
+    public function setFrom($from = null, $fromName = 'The Brand Surgeon')
     {
         $from = $from ?: env('MAIL_FROM_ADDRESS'); // Default from address from .env
         $this->email->setFrom($from, $fromName);
