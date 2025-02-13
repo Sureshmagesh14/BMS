@@ -268,15 +268,27 @@ h6.question_name {
                     </div>
                 </div>
             </div>
+                
+                  
             @if(isset($currentQus))
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h6 class="question_name">{{$currentQus->qus_order_no}} . {{$currentQus->question_name}}</h4>
+            <?php 
+                    $qusNo=1;
+                    foreach($questions as $key=>$qus){
+                        if($currentQus->id==$qus->id){
+                            $qusNo=$qusNo+$key;
+                        }
+                    } ?>
+                @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-flex align-items-center justify-content-between">
+                            <h6 class="question_name">{{$qusNo}} . {{$currentQus->question_name}}</h4>
+                        </div>
                     </div>
                 </div>
-            </div>
+                @endif
             @endif
+
             <meta name="csrf-token" content="{{ csrf_token() }}" />
            
             <!-- end page title -->
@@ -319,14 +331,7 @@ h6.question_name {
                     }
                     ?>
                     <input type="hidden" name="page_type" id="pagetype" value="{{$pagetype}}"/>
-                    <?php 
-                    $qusNo=1;
-                    foreach($questions as $key=>$qus){
-                        if($currentQus->id==$qus->id){
-                            $qusNo=$qusNo+$key;
-                        }
-                    } ?>
-                  
+                   
                     <div id="qus_content">
                     <div class="page_head">
                         <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
