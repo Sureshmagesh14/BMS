@@ -1120,7 +1120,9 @@ class RespondentsController extends Controller
                         }else{
                             $proj_name = $proj->name;
                         }
-                        $project_link = route('user.dashboard');
+                        // $project_link = route('user.dashboard');
+                        $project_link=Projects::get_survey($proj->survey_link);
+                        $project_link = url('survey/view', $project_link->builderID ?? '');
                         
                         $survey_duration = $proj->survey_duration;
                         $reward = $proj->reward;
