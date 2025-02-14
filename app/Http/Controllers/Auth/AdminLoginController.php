@@ -484,7 +484,7 @@ class AdminLoginController extends Controller
                     'whatsapp'  => $resp->whatsapp,
                     'bank_name' => $resp->bank_name,
                     'password'  => $password,
-                    'opted_in'  => $resp->opted_id,
+                    'opted_in'  => $resp->opted_in,
                     'active_status_id' => 0
                 );
 
@@ -586,6 +586,46 @@ class AdminLoginController extends Controller
         }
 
         return $count_ass;
+    }
+
+    public function updateRespondentToRespondentProfile()
+    {
+        // Select respondents without a profile
+        $getResp = Respondents::select('respondents.*')
+            ->leftJoin('respondent_profile as profile', 'profile.respondent_id', '=', 'respondents.id')
+            ->whereNull('profile.respondent_id')
+            ->get();
+
+        // Prepare data for batch insert
+        $profilesData = [];
+        $currentTimestamp = now()->format('Y-m-d H:i:s');
+
+        foreach ($getResp as $resp) {
+            $basic_details = [
+                'email'           => $resp->email,
+                'first_name'      => $resp->name,
+                'last_name'       => $resp->surname,
+                'updated_at'      => $currentTimestamp,
+                'mobile_number'   => $resp->mobile,
+                'whatsapp_number' => $resp->whatsapp,
+                'date_of_birth'   => $resp->date_of_birth,
+            ];
+
+            $basic_details_encode = json_encode($basic_details);
+
+            $profilesData[] = [
+                'pid' => $resp->id,
+                'respondent_id' => $resp->id,
+                'basic_details' => $basic_details_encode,
+            ];
+        }
+
+        // Insert profiles in batch
+        if (!empty($profilesData)) {
+            RespondentProfile::insert($profilesData);
+        }
+
+        return 'SUCCESS';
     }
     
 }
