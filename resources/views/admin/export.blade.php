@@ -84,7 +84,7 @@
                             <h4 class="card-title"></h4>
 
 
-                            <form action="{{ url('admin/export_all') }}" id="export_form" method="post">
+                            <form action="{{ url('admin/new_export_all') }}" id="export_form" method="post">
                                 @csrf
 
                                 <div class="form-group row">

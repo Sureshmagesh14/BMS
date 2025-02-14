@@ -108,6 +108,7 @@ Route::group([
     Route::get('signout', 'Auth\AdminLoginController@signOut')->name('signout');
     Route::any('export_index', 'ExportController@export_index')->name('admin.export');
     Route::post('export_all', 'ExportController@export_all')->name('export_all');
+    Route::post('new_export_all', 'NewExportCOntroller@export_all')->name('new_export_all');
     
     /* Users MENU*/
     Route::resource('users', 'UsersController')
