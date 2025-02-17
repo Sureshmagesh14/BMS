@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::any('/', 'WelcomeController@home')->name('home');
 Route::any('update_activitation/{id}', 'WelcomeController@update_activitation')->name('update_activitation');
+Route::any('/verify/{token}', 'Auth\RegisteredUserController@verifyAccount')->name('verify.account');
 Route::any('activation_status/{id}/{active_id}', 'WelcomeController@activation_status')->name('activation_status');
 Route::any('forgot_password_sms', 'WelcomeController@forgot_password_sms')->name('forgot_password_sms');
 Route::any('admin_password_reset/{token}', 'WelcomeController@admin_password_reset')->name('admin_password_reset');
@@ -103,6 +104,7 @@ Route::group([
 ], function () {
     Route::any('dashboard', 'Auth\AdminLoginController@admin_dashboard')->name('admin.dashboard');
     Route::any('resp_db_import', 'Auth\AdminLoginController@resp_db_import')->name('resp_db_import');
+    Route::any('updateRespondentToRespondentProfile', 'Auth\AdminLoginController@updateRespondentToRespondentProfile')->name('updateRespondentToRespondentProfile');
 
     Route::any('get_activity_data', 'Auth\AdminLoginController@get_activity_data')->name('get_activity_data');
     Route::get('signout', 'Auth\AdminLoginController@signOut')->name('signout');

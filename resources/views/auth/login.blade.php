@@ -87,6 +87,7 @@
         }
     }
 </style>
+
 <div class="container-fluid vi-background-index h-90">
     <div class="row vi-background-index">
         <div class="col-md-5 d-none-mobile d-flex mob-hide p-0 h-100">
@@ -158,6 +159,20 @@
                             </div>
                         @endif
                     @endif
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            <strong>{{ session('success') }}</strong>
+                        </div>
+                    @endif
+                    @if (session('verification_success') === true)
+                        <div class="alert alert-success">
+                            Your account has been successfully verified. You can now log in.
+                        </div>
+                    @elseif (session('verification_success') === false)
+                        <div class="alert alert-danger">
+                            The verification link is invalid or expired.
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -183,6 +198,12 @@
 @if (Session::has('status'))
     <script>
         toastr.success("{{ session('status') }}");
+    </script>
+@endif
+
+@if (Session::has('success'))
+    <script>
+        toastr.success("{{ session('success') }}");
     </script>
 @endif
 
