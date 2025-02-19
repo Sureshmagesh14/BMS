@@ -84,7 +84,7 @@
                             <h4 class="card-title"></h4>
 
 
-                            <form action="{{ url('admin/new_export_all') }}" id="export_form" method="post">
+                            <form action="{{ route('new_export_all') }}" id="export_form" method="post">
                                 @csrf
 
                                 <div class="form-group row">
@@ -681,7 +681,7 @@
                     let formData = new FormData(this);
 
                     // Send AJAX request
-                    fetch("{{ url('admin/export_all') }}", {
+                    fetch("{{ route('new_export_all') }}", {
                             method: "POST",
                             body: formData,
                             headers: {
