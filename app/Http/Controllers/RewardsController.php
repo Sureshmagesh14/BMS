@@ -310,7 +310,7 @@ class RewardsController extends Controller
                     // $data = ['subject' => 'Rewards Approved','name' => $resp_name,'project' => $proj_name,'type' => 'reward_approve'];
                     $dynamicData = [
                         'first_name' => $resp_name,
-                        'project_code ' => $proj_name,
+                        'project_code' => $proj_name,
                         'points' => $reward_data->points,
                         'rand_value' => 'R ' . ($reward_data->points / 10),
                     ];
