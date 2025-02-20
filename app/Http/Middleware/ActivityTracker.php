@@ -59,24 +59,19 @@ class ActivityTracker
        
         $insertdata=array(
             'user_id'   => \Auth::user()->id,
-            'project_id'    => $project_id,
-            'task_id'      => 0,
-            'deal_id'    => 0,
+           
             'log_type'         => $activity_old,
             'url'         => $route_url_old,
-            'remark' => '-',
+         
            'created_at' => Carbon::now(), // Store as a Carbon instance
             'updated_at' => Carbon::now(), // Store as a Carbon instance
         );
         
-        if(str_contains($route_url_old,'activitieslog')) {
-            
-        }else{
-
+    
             ActivityLog::insert($insertdata);
           
          
-        }
+        
         
        
         
