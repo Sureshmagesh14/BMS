@@ -110,6 +110,7 @@ class NewExportController extends Controller
     private function getDistrict($district_id) {
         return $this->cached_data['district'][$district_id] ?? '-';
     }
+
     private function setupExtendedHeaders($sheet, $headerStyle)
     {
         // Auto-size columns Y through BD
@@ -141,7 +142,7 @@ class NewExportController extends Controller
         ];
 
         $sheet->fromArray([$headers], null, 'A1');
-        $sheet->getStyle('A1:BD1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:BF1')->applyFromArray($headerStyle);
         $sheet->getRowDimension(1)->setRowHeight(30);
     }
 
@@ -172,7 +173,7 @@ class NewExportController extends Controller
     private function processExtendedData($data)
     {
         // First get the basic respondent data
-        $basicData = $this->processRespondentData($data);
+        $basicData = $this->processEssentialRespondentData($data);
         
         // Decode extended details safely
         $extended = json_decode($data->extended_details ?? '{}');
@@ -317,6 +318,9 @@ class NewExportController extends Controller
         $opted_in = ($data->opted_in != null) ? date("d-m-Y", strtotime($data->opted_in)) : '';
         $updated_at = ($data->updated_at != null) ? date("d-m-Y", strtotime($data->updated_at)) : '';
 
+        unset($basicData[24]);
+        unset($basicData[25]);
+
         // Return all data in the correct order to match the columns
         return array_merge(
             $basicData,
@@ -416,8 +420,24 @@ class NewExportController extends Controller
         
         return $result;
     }
+
     public function export_all(Request $request)
     {
+        $module             = $request->module;
+        $methods            = $request->methods;
+        $start              = $request->start;
+        $end                = $request->end;
+        $show_resp_type     = $request->show_resp_type;
+        $show_cashout_val   = $request->show_cashout_val;
+        $resp_status        = $request->resp_status;
+        $type_method        = $request->type_method;
+        $all                = $request->all;
+        $projects           = $request->projects;
+        $respondents        = $request->respondents;
+        $users              = $request->users;
+        $respondents_survey = $request->respondents_survey;
+        $action             = $request->action;
+
         try {
             ini_set('memory_limit', '1024M');
             // Increase execution time to 15 minutes
@@ -431,11 +451,16 @@ class NewExportController extends Controller
             $rowStyle = $this->getRowStyle();
             $indentedStyle = $this->getIndentedStyle();
     
-            if ($request->module === 'Respondents info') {
-                if ($request->show_resp_type === 'essential') {
-                    $this->setupHeaders($sheet, $headerStyle);
-                    $processMethod = 'processRespondentData';
-                } elseif ($request->show_resp_type === 'extended') {
+            if ($module === 'Respondents info') {
+                if ($show_resp_type === 'simple') {
+                    $this->setupBasicHeaders($sheet, $headerStyle);
+                    $processMethod = 'processBasicRespondentData';
+                }
+                elseif ($show_resp_type === 'essential') {
+                    $this->setupEssentialHeaders($sheet, $headerStyle);
+                    $processMethod = 'processEssentialRespondentData';
+                }
+                elseif ($show_resp_type === 'extended') {
                     $this->setupExtendedHeaders($sheet, $headerStyle);
                     $processMethod = 'processExtendedData';
                 }
@@ -451,9 +476,22 @@ class NewExportController extends Controller
                     }
                     
                     $sheet->fromArray($rowData, null, 'A' . ($rows - count($rowData)));
+
+                    $setRange1 = 'A' . ($rows - count($rowData)) . ':';
+                    $setRange2 = '';
+
+                    if($processMethod == 'processBasicRespondentData'){
+                        $setRange2 = 'H' . ($rows - 1);
+                    }
+                    else if($processMethod == 'processEssentialRespondentData'){
+                        $setRange2 = 'Z' . ($rows - 1);
+                    }
+                    else if($processMethod == 'processExtendedData'){
+                        $setRange2 = 'BF' . ($rows - 1);
+                    }
                     
-                    $range = 'A' . ($rows - count($rowData)) . ':' . ($processMethod === 'processExtendedData' ? 'BD' : 'Z') . ($rows - 1);
-                    $sheet->getStyle($range)->applyFromArray($rowStyle);
+                    $rangeMerge = $setRange1 . $setRange2;
+                    $sheet->getStyle($rangeMerge)->applyFromArray($rowStyle);
                 });
             }
     
@@ -489,9 +527,15 @@ class NewExportController extends Controller
 
     private function buildRespondentsQuery(Request $request)
     {
-        return Respondents::join("respondent_profile", "respondent_profile.respondent_id", "=", "respondents.id")
-            ->when($request->type_method === 'Individual', function ($query) use ($request) {
-                $query->whereIn('respondents.id', $request->respondents);
+       
+        $projects           = $request->projects;
+        $respondents        = $request->respondents;
+        $users              = $request->users;
+        $respondents_survey = $request->respondents_survey;
+
+        $data = Respondents::join("respondent_profile", "respondent_profile.respondent_id", "=", "respondents.id")
+            ->when($request->type_method == 'Individual', function ($query) use ($respondents) {
+                $query->whereIn('respondents.id', [$respondents]);
             })
             ->select([
                 'respondents.id',
@@ -504,16 +548,18 @@ class NewExportController extends Controller
                 'respondent_profile.updated_at'
             ])
             ->where('respondents.active_status_id', 1)
-            ->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('respondent_tag')
-                    ->whereColumn('respondent_tag.respondent_id', '=', 'respondents.id')
-                    ->where('respondent_tag.tag_id', 1);
-            })
+            // ->whereNotExists(function ($query) {
+            //     $query->select(DB::raw(1))
+            //         ->from('respondent_tag')
+            //         ->whereColumn('respondent_tag.respondent_id', '=', 'respondents.id')
+            //         ->where('respondent_tag.tag_id', 1);
+            // })
             ->orderBy('respondents.id');
+
+        return $data;
     }
 
-    private function processRespondentData($data)
+    private function processEssentialRespondentData($data)
     {
         $basic = json_decode($data->basic_details);
         $essential = json_decode($data->essential_details);
@@ -548,7 +594,30 @@ class NewExportController extends Controller
         ];
     }
 
-    private function setupHeaders($sheet, $headerStyle)
+    public function processBasicRespondentData($data){
+        $basic = json_decode($data->basic_details);
+
+        return [
+            $data->id,
+            $basic->first_name ?? '',
+            $basic->last_name ?? '',
+            $this->formatPhoneNumber($basic->mobile_number ?? '-'),
+            $this->formatPhoneNumber($basic->whatsapp_number ?? '-'),
+            $basic->email ?? '',
+            $this->calculateAge($basic->date_of_birth ?? ''),
+            $basic->date_of_birth ?? ''
+        ];
+    }
+
+    private function setupBasicHeaders($sheet, $headerStyle) {
+        $headers = ['PID', 'First Name', 'Last Name', 'Mobile Number', 'WA Number', 'Email', 'Age','Date of Birth'];
+
+        $sheet->fromArray([$headers], null, 'A1');
+        $sheet->getStyle('A1:H1')->applyFromArray($headerStyle);
+        $sheet->getRowDimension(1)->setRowHeight(30);
+    }
+
+    private function setupEssentialHeaders($sheet, $headerStyle)
     {
         $headers = [
             'PID', 'First Name', 'Last Name', 'Mobile Number', 'WA Number', 'Email', 'Age',
