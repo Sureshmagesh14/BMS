@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Respondents;
+use App\Models\Projects;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -437,6 +438,7 @@ class NewExportController extends Controller
         $users              = $request->users;
         $respondents_survey = $request->respondents_survey;
         $action             = $request->action;
+        $pro_type           = $request->pro_type;
 
         try {
             ini_set('memory_limit', '1024M');
@@ -451,21 +453,27 @@ class NewExportController extends Controller
             $indentedStyle = $this->getIndentedStyle();
 
             $headersMethodMap = [
-                'simple'   => 'setupBasicHeaders',
-                'essential'=> 'setupEssentialHeaders',
-                'extended' => 'setupExtendedHeaders',
+                'simple'     => 'setupBasicHeaders',
+                'essential'  => 'setupEssentialHeaders',
+                'extended'   => 'setupExtendedHeaders',
+                'respondent' => 'setupProject',
+                'project'    => 'setupProject'
             ];
 
             $processMethodMap = [
-                'simple'   => 'processBasicRespondentData',
-                'essential'=> 'processEssentialRespondentData',
-                'extended' => 'processExtendedData',
+                'simple'     => 'processBasicRespondentData',
+                'essential'  => 'processEssentialRespondentData',
+                'extended'   => 'processExtendedData',
+                'respondent' => 'processProjectData',
+                'project'    => 'processProjectData'
             ];
 
             $excelLetterSize = [
-                'simple'   => 'H',
-                'essential'=> 'Z',
-                'extended' => 'BF',
+                'simple'     => 'H',
+                'essential'  => 'Z',
+                'extended'   => 'BF',
+                'respondent' => 'E',
+                'project'    => 'E'
             ];
     
             if ($module === 'Respondents info') {
@@ -488,6 +496,31 @@ class NewExportController extends Controller
                     $sheet->fromArray($rowData, null, 'A' . ($rows - count($rowData)));
 
                     $rangeSet = 'A' . ($rows - count($rowData)) . ':' . $excelLetterSize[$show_resp_type] . ($rows - 1);
+
+                    $sheet->getStyle($rangeSet)->applyFromArray($rowStyle);
+                });
+            }
+            else if($module === 'Projects'){
+                $this->{$headersMethodMap[$pro_type]}($sheet, $headerStyle);
+                $processMethod = $processMethodMap[$pro_type];
+
+                // Build the query
+                $query = $this->buildProjectQuery($request);
+
+                // Chunk the data efficiently
+                $rows = 2;
+
+                $query->chunk($this->batch_size, function ($all_datas) use (&$rows, $sheet, $rowStyle, $indentedStyle, $processMethod, $excelLetterSize, $pro_type) {
+                    $rowData = [];
+
+                    foreach ($all_datas as $data) {
+                        $rowData[] = $this->$processMethod($data);
+                        $rows++;
+                    }
+                    
+                    $sheet->fromArray($rowData, null, 'A' . ($rows - count($rowData)));
+
+                    $rangeSet = 'A' . ($rows - count($rowData)) . ':' . $excelLetterSize[$pro_type] . ($rows - 1);
 
                     $sheet->getStyle($rangeSet)->applyFromArray($rowStyle);
                 });
@@ -551,6 +584,40 @@ class NewExportController extends Controller
         return $data;
     }
 
+    public function buildProjectQuery(Request $request){
+        DB::statement('SET SESSION sql_mode = ""');
+
+        $data = Projects::leftJoin('users', function ($join) { $join->on('users.id', '=', 'projects.user_id'); })
+                ->leftJoin('project_respondent', 'project_respondent.project_id', '=', 'projects.id')
+                ->leftJoin('qualified_respondent', 'qualified_respondent.project_id', '=', 'projects.id');
+
+            if ($request->from != null && $to != null) {
+                $data = $data->whereDate('projects.created_at', '>=', $request->from)->whereDate('projects.created_at', '<=', $request->to);
+            }
+
+            $data = $data->select(
+                'users.name as uname',
+                'users.surname',
+                'projects.number',
+                'projects.name',
+                'projects.published_date',
+                'projects.closing_date',
+                DB::raw('COUNT(DISTINCT project_respondent.respondent_id) as total_responnded_attended'),
+                DB::raw('COUNT(DISTINCT qualified_respondent.respondent_id) as total_responded_recruited')
+            )
+            ->groupBy(
+                'projects.id',
+                'users.name',
+                'users.surname',
+                'projects.number',
+                'projects.name',
+                'projects.published_date',
+                'projects.closing_date'
+            );
+
+        return $data;
+    }
+
     private function processEssentialRespondentData($data)
     {
         $basic = json_decode($data->basic_details);
@@ -583,6 +650,29 @@ class NewExportController extends Controller
             $essential->no_vehicle ?? '',
             $data->opted_in ? date("d-m-Y", strtotime($data->opted_in)) : '',
             $data->updated_at ? date("d-m-Y", strtotime($data->updated_at)) : ''
+        ];
+    }
+
+    private function processProjectData($data){
+
+        if(isset($data->published_date)){
+            $published_date=date("d-m-Y", strtotime($data->published_date));
+        }else{
+            $published_date='-';
+        }
+
+        if(isset($data->closing_date)){
+            $closing_date=date("d-m-Y", strtotime($data->closing_date));
+        }else{
+            $closing_date='-';
+        }
+
+        return [
+            $data->number .' '. $data->name .' '. $data->id,
+            $data->uname . $data->surname,
+            $published_date. '-' .$closing_date,
+            $data->total_responnded_attended,
+            $data->total_responded_recruited
         ];
     }
 
@@ -622,6 +712,20 @@ class NewExportController extends Controller
 
         $sheet->fromArray([$headers], null, 'A1');
         $sheet->getStyle('A1:Z1')->applyFromArray($headerStyle);
+        $sheet->getRowDimension(1)->setRowHeight(30);
+    }
+
+    private function setupProject($sheet, $headerStyle) {
+        $headers = [
+            'Project Number & Project Name',
+            'PM Name',
+            'Dates of project( Live Date and Closing Date)',
+            'Total respondents recruited',
+            'Total respondents actually attended'
+        ];
+
+        $sheet->fromArray([$headers], null, 'A1');
+        $sheet->getStyle('A1:E1')->applyFromArray($headerStyle);
         $sheet->getRowDimension(1)->setRowHeight(30);
     }
 
