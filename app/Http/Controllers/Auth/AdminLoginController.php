@@ -402,6 +402,8 @@ class AdminLoginController extends Controller
     }
 
     public function resp_db_import(Request $request){
+        ini_set('memory_limit', '1024M');
+        set_time_limit(900);
         $total = $request->total;
         $count_ass = $request->count_ass;
         $get_import_data = DB::table('import_providence')->where('imported_status',0)->take($total)->get();
