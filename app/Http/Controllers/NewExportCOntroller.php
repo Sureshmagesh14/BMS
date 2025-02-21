@@ -440,36 +440,46 @@ class NewExportController extends Controller
 
         try {
             ini_set('memory_limit', '1024M');
-            // Increase execution time to 15 minutes
-            set_time_limit(900);
+            set_time_limit(900); // Increase execution time to 15 minutes
+
+            // Initialize cache and spreadsheet
             $this->initializeCache();
-    
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
-            
             $headerStyle = $this->getHeaderStyle();
             $rowStyle = $this->getRowStyle();
             $indentedStyle = $this->getIndentedStyle();
+
+            $headersMethodMap = [
+                'simple'   => 'setupBasicHeaders',
+                'essential'=> 'setupEssentialHeaders',
+                'extended' => 'setupExtendedHeaders',
+            ];
+
+            $processMethodMap = [
+                'simple'   => 'processBasicRespondentData',
+                'essential'=> 'processEssentialRespondentData',
+                'extended' => 'processExtendedData',
+            ];
+
+            $excelLetterSize = [
+                'simple'   => 'H',
+                'essential'=> 'Z',
+                'extended' => 'BF',
+            ];
     
             if ($module === 'Respondents info') {
-                if ($show_resp_type === 'simple') {
-                    $this->setupBasicHeaders($sheet, $headerStyle);
-                    $processMethod = 'processBasicRespondentData';
-                }
-                elseif ($show_resp_type === 'essential') {
-                    $this->setupEssentialHeaders($sheet, $headerStyle);
-                    $processMethod = 'processEssentialRespondentData';
-                }
-                elseif ($show_resp_type === 'extended') {
-                    $this->setupExtendedHeaders($sheet, $headerStyle);
-                    $processMethod = 'processExtendedData';
-                }
+                $this->{$headersMethodMap[$show_resp_type]}($sheet, $headerStyle);
+                $processMethod = $processMethodMap[$show_resp_type];
     
+                // Build the query
                 $query = $this->buildRespondentsQuery($request);
                 
+                // Chunk the data efficiently
                 $rows = 2;
-                $query->chunk($this->batch_size, function ($all_datas) use (&$rows, $sheet, $rowStyle, $indentedStyle, $processMethod) {
+                $query->chunk($this->batch_size, function ($all_datas) use (&$rows, $sheet, $rowStyle, $indentedStyle, $processMethod, $excelLetterSize, $show_resp_type) {
                     $rowData = [];
+
                     foreach ($all_datas as $data) {
                         $rowData[] = $this->$processMethod($data);
                         $rows++;
@@ -477,33 +487,15 @@ class NewExportController extends Controller
                     
                     $sheet->fromArray($rowData, null, 'A' . ($rows - count($rowData)));
 
-                    $setRange1 = 'A' . ($rows - count($rowData)) . ':';
-                    $setRange2 = '';
+                    $rangeSet = 'A' . ($rows - count($rowData)) . ':' . $excelLetterSize[$show_resp_type] . ($rows - 1);
 
-                    if($processMethod == 'processBasicRespondentData'){
-                        $setRange2 = 'H' . ($rows - 1);
-                    }
-                    else if($processMethod == 'processEssentialRespondentData'){
-                        $setRange2 = 'Z' . ($rows - 1);
-                    }
-                    else if($processMethod == 'processExtendedData'){
-                        $setRange2 = 'BF' . ($rows - 1);
-                    }
-                    
-                    $rangeMerge = $setRange1 . $setRange2;
-                    $sheet->getStyle($rangeMerge)->applyFromArray($rowStyle);
+                    $sheet->getStyle($rangeSet)->applyFromArray($rowStyle);
                 });
             }
     
             $writer = new Xlsx($spreadsheet);
             $writer->setPreCalculateFormulas(false);
-            
-            $fileName = sprintf('%s_%s_%s.xlsx', 
-                $request->module,
-                $request->show_resp_type,
-                date('ymd')
-            );
-            
+            $fileName = sprintf('%s_%s_%s.xlsx', $module, $show_resp_type, date('ymd'));
             $writer->save($fileName);
             
             return response()->download($fileName)->deleteFileAfterSend(true);
