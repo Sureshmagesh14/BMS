@@ -112,7 +112,7 @@ class NewExportController extends Controller
         return $this->cached_data['district'][$district_id] ?? '-';
     }
 
-    private function setupExtendedHeaders($sheet, $headerStyle)
+    private function setupExtendedHeaders($sheet, $headerStyle, $module)
     {
         // Auto-size columns Y through BD
         foreach (range('Y', 'BD') as $column) {
@@ -171,7 +171,7 @@ class NewExportController extends Controller
         'more_than_1000' => 'More than 1000 people'
     ];
 
-    private function processExtendedData($data)
+    private function processExtendedData($data, $module)
     {
         // First get the basic respondent data
         $basicData = $this->processEssentialRespondentData($data);
@@ -501,7 +501,7 @@ class NewExportController extends Controller
                 });
             }
             else if($module === 'Projects'){
-                $this->{$headersMethodMap[$pro_type]}($sheet, $headerStyle);
+                $this->{$headersMethodMap[$pro_type]}($sheet, $headerStyle, $module);
                 $processMethod = $processMethodMap[$pro_type];
 
                 // Build the query
@@ -514,7 +514,7 @@ class NewExportController extends Controller
                     $rowData = [];
 
                     foreach ($all_datas as $data) {
-                        $rowData[] = $this->$processMethod($data);
+                        $rowData[] = $this->$processMethod($data, $module);
                         $rows++;
                     }
                     
@@ -524,6 +524,9 @@ class NewExportController extends Controller
 
                     $sheet->getStyle($rangeSet)->applyFromArray($rowStyle);
                 });
+            }
+            else if($module === 'Rewards'){
+
             }
     
             $writer = new Xlsx($spreadsheet);
@@ -618,7 +621,7 @@ class NewExportController extends Controller
         return $data;
     }
 
-    private function processEssentialRespondentData($data)
+    private function processEssentialRespondentData($data, $module)
     {
         $basic = json_decode($data->basic_details);
         $essential = json_decode($data->essential_details);
@@ -653,7 +656,7 @@ class NewExportController extends Controller
         ];
     }
 
-    private function processProjectData($data){
+    private function processProjectData($data, $module){
 
         if(isset($data->published_date)){
             $published_date=date("d-m-Y", strtotime($data->published_date));
@@ -676,7 +679,7 @@ class NewExportController extends Controller
         ];
     }
 
-    public function processBasicRespondentData($data){
+    public function processBasicRespondentData($data, $module){
         $basic = json_decode($data->basic_details);
 
         return [
@@ -691,7 +694,7 @@ class NewExportController extends Controller
         ];
     }
 
-    private function setupBasicHeaders($sheet, $headerStyle) {
+    private function setupBasicHeaders($sheet, $headerStyle, $module) {
         $headers = ['PID', 'First Name', 'Last Name', 'Mobile Number', 'WA Number', 'Email', 'Age','Date of Birth'];
 
         $sheet->fromArray([$headers], null, 'A1');
@@ -699,7 +702,7 @@ class NewExportController extends Controller
         $sheet->getRowDimension(1)->setRowHeight(30);
     }
 
-    private function setupEssentialHeaders($sheet, $headerStyle)
+    private function setupEssentialHeaders($sheet, $headerStyle, $module)
     {
         $headers = [
             'PID', 'First Name', 'Last Name', 'Mobile Number', 'WA Number', 'Email', 'Age',
@@ -715,7 +718,7 @@ class NewExportController extends Controller
         $sheet->getRowDimension(1)->setRowHeight(30);
     }
 
-    private function setupProject($sheet, $headerStyle) {
+    private function setupProject($sheet, $headerStyle, $module) {
         $headers = [
             'Project Number & Project Name',
             'PM Name',
