@@ -268,15 +268,27 @@ h6.question_name {
                     </div>
                 </div>
             </div>
+                
+                  
             @if(isset($currentQus))
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h6 class="question_name">{{$currentQus->qus_order_no}} . {{$currentQus->question_name}}</h4>
+            <?php 
+                    $qusNo=1;
+                    foreach($questions as $key=>$qus){
+                        if($currentQus->id==$qus->id){
+                            $qusNo=$qusNo+$key;
+                        }
+                    } ?>
+                @if($currentQus->qus_type!='welcome_page' && $currentQus->qus_type!='thank_you')
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-flex align-items-center justify-content-between">
+                            <h6 class="question_name">{{$qusNo}} . {{$currentQus->question_name}}</h4>
+                        </div>
                     </div>
                 </div>
-            </div>
+                @endif
             @endif
+
             <meta name="csrf-token" content="{{ csrf_token() }}" />
            
             <!-- end page title -->
@@ -319,14 +331,7 @@ h6.question_name {
                     }
                     ?>
                     <input type="hidden" name="page_type" id="pagetype" value="{{$pagetype}}"/>
-                    <?php 
-                    $qusNo=1;
-                    foreach($questions as $key=>$qus){
-                        if($currentQus->id==$qus->id){
-                            $qusNo=$qusNo+$key;
-                        }
-                    } ?>
-                  
+                   
                     <div id="qus_content">
                     <div class="page_head">
                         <h4>Question Type : <span id="qus_type">{{$qus_type}}</span></h4>
@@ -649,17 +654,17 @@ h6.question_name {
                                     <div class="ss-rating-icons fx-row fx-align-center">
                                         <a class="ss-rating-icon star_icon" data-value='star_icon'>
                                             <svg width="18" height="18" class="ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 44 44">
-                                                <path fill="none" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="ss-survey-text-color--secondary ss-rating-icon-fill" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path>
+                                                <path fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="ss-survey-text-color--secondary ss-rating-icon-fill" d="M21.108 2.09a.955.955 0 011.787 0l4.832 13.7h13.646a.955.955 0 01.62 1.68l-11.402 9.454 4.773 14.337a.955.955 0 01-1.47 1.07L22 33.606l-11.9 8.727a.955.955 0 01-1.464-1.071l4.773-14.337L2.004 17.47a.955.955 0 01.62-1.68h13.649l4.835-13.7z"></path>
                                             </svg>
                                         </a>
                                         <a class="ss-rating-icon thumb_icon" data-value='thumb_icon'>
                                             <svg width="18" height="18" class="ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 44 41">
-                                                <path fill="none" fill-rule="evenodd" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="ss-survey-text-color--secondary ss-rating-icon-fill" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path>
+                                                <path fill="none" fill-rule="evenodd" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="ss-survey-text-color--secondary ss-rating-icon-fill" d="M2 14.255h3.5c.966 0 1.75.783 1.75 1.75v21a1.75 1.75 0 01-1.75 1.75H2v-24.5zm5.25 19.25c12.843 6.52 12.217 5.661 23.214 5.661 4.606 0 6.926-3.001 8.28-7.399v-.028l3.338-11.2v-.02a3.5 3.5 0 00-3.332-4.514h-8.575a3.5 3.5 0 01-3.384-4.393l1.543-5.852a2.998 2.998 0 00-5.355-2.481l-8.554 12.119a3.5 3.5 0 01-2.86 1.482H7.25v16.625z"></path>
                                             </svg>
                                         </a>
                                         <a class="ss-rating-icon crown_icon" data-value='crown_icon'>
                                             <svg width="18" height="18" class="ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 44 39">
-                                                <g fill="none" fill-rule="evenodd" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)" class="ss-survey-text-color--secondary ss-rating-icon-fill">
+                                                <g fill="none" fill-rule="evenodd" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 2)" class="ss-survey-text-color--secondary ss-rating-icon-fill">
                                                 <circle cx="3.5" cy="7.583" r="2.625"></circle>
                                                 <circle cx="38.5" cy="7.73" r="2.625"></circle>
                                                 <path d="M7 35h28M7 29.75L3.418 10.199S5.25 19.25 12.25 19.25C19.25 19.25 21 7 21 7s1.75 12.25 8.75 12.25 8.832-8.913 8.832-8.913L35 29.75H7z"></path>
@@ -669,7 +674,7 @@ h6.question_name {
                                         </a>
                                         <a class="ss-rating-icon user_icon" data-value='user_icon'>
                                             <svg width="18" height="18" class="ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 39 44">
-                                                <g fill="none" fill-rule="evenodd" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)" class="ss-survey-text-color--secondary ss-rating-icon-fill">
+                                                <g fill="none" fill-rule="evenodd" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(2 1)" class="ss-survey-text-color--secondary ss-rating-icon-fill">
                                                 <circle cx="17.304" cy="12.261" r="11.375"></circle>
                                                 <path d="M35 41.136a18.624 18.624 0 00-35 0h35z"></path>
                                                 </g>
@@ -677,12 +682,12 @@ h6.question_name {
                                         </a>
                                         <a class="ss-rating-icon thunder_icon" data-value='thunder_icon'>
                                             <svg width="18" height="18" class="ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 21 44">
-                                                <path fill="none" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="ss-survey-text-color--secondary ss-rating-icon-fill" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path>
+                                                <path fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="ss-survey-text-color--secondary ss-rating-icon-fill" d="M2.4 41.6L8 22H2.856a1.4 1.4 0 01-1.346-1.784l4.799-16.8A1.4 1.4 0 017.656 2.4h10.472a1.4 1.4 0 011.2 2.12L12.2 16.4h5.662a1.4 1.4 0 011.12 2.22L2.4 41.6z"></path>
                                             </svg>
                                         </a>
                                         <a class="ss-rating-icon smiley_icon" data-value='smiley_icon'>
                                             <svg width="18" height="18" class="ss-smiley-icon ss-smiley-icon--3 ss-survey-text-color--secondary ss-rating-icon-fill" viewBox="0 0 44 44">
-                                                <g fill="none" fill-rule="evenodd" stroke="#dfdfdf" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 1)" class="ss-smiley-icon__g">
+                                                <g fill="none" fill-rule="evenodd" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(1 1)" class="ss-smiley-icon__g">
                                                 <circle cx="21" cy="21" r="20.125"></circle>
                                                 <path class="ss-smiley-icon__path" d="M14.875 13.563a.437.437 0 110 .874.437.437 0 010-.874m12.25 0a.437.437 0 100 .874.437.437 0 000-.874m-17.5 13.562h22.75"></path>
                                                 </g>
