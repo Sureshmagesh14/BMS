@@ -246,7 +246,7 @@
             }
         });
 
-        $(document).on('click', '#delete_respondents', function(e) {
+        $(document).on('click', '#deattach_respondents', function(e) {
             e.preventDefault();
             var id = $(this).data("id");
             var url = "{{ route('respondents.destroy', ':id') }}";
