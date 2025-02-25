@@ -19,7 +19,7 @@ class Respondents extends Authenticatable
     protected $table = 'respondents';
     protected $guarded = ['id'];
     protected $hidden = ['password', 'remember_token',];
-    protected $fillable = ['name','surname','date_of_birth','id_passport','mobile','whatsapp','email','bank_name',
+    protected $fillable = ['name','surname','date_of_birth','id_passport','mobile','whatsapp','email','bank_name','email_verification_token',
         'branch_code','account_type','account_holder','account_number','active_status_id','password','updated_at','referral_code','accept_terms','type','deactivated_date','opted_status'
     ];
     
