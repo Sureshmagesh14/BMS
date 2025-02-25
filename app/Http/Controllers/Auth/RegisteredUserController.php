@@ -77,7 +77,7 @@ class RegisteredUserController extends Controller
             'whatsapp' => $whatsapp,
             'password' => Hash::make($request->password_register),
             'referral_code' => $ref_code,
-            'active_status_id' => 5,
+            'active_status_id' => 6,
             'email_verification_token' => $verificationToken,
         ]);
 

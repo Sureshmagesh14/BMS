@@ -146,15 +146,18 @@
                         <a class="anchor" href="{{ route('forgot_password_sms') }}" class="link">SMS</a>
                     </div>
                     @if (count($errors) > 0)
-                        @if (
+                        @if (isset($errors->get('verify')[0]))
+                            <div class="alert alert-warning">
+                                <strong>{!! $errors->get('verify')[0] !!}</strong>
+                            </div>
+                        @elseif (
                             !str_contains($errors->all()[0], 'Incorrect Email') &&
-                                !str_contains($errors->all()[0], 'Incorrect Phone No') &&
-                                !str_contains($errors->all()[0], 'Unsubscribed') &&
-                                !str_contains($errors->all()[0], 'Your account is deactivated'))
+                            !str_contains($errors->all()[0], 'Incorrect Phone No') &&
+                            !str_contains($errors->all()[0], 'Unsubscribed') &&
+                            !str_contains($errors->all()[0], 'Your account is deactivated'))
                             <div class="alert alert-danger">
                                 @foreach ($errors->all() as $message)
-                                    <strong>{{ $message }}</strong> Please try again or you can <a
-                                        href="{{ url('forgot-password') }}">reset your password.</a>
+                                    <strong>{{ $message }}</strong> Please try again or you can <a href="{{ url('forgot-password') }}">reset your password.</a>
                                 @endforeach
                             </div>
                         @endif
