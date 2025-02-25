@@ -78,6 +78,13 @@ class LoginRequest extends FormRequest
                     'message' => $message,
                 ]);
             }
+
+            if($respondent->active_status_id==6){
+                $verify = strip_tags("<strong>Please verify your email to activate your account.</strong>");
+                throw ValidationException::withMessages([
+                    'verify' => $verify,
+                ]);
+            }
         }
     
         // Authenticate the user
@@ -86,7 +93,7 @@ class LoginRequest extends FormRequest
             if (Auth::attempt(['mobile' => $credentials['email'], 'password' => $credentials['password']])) {
                 RateLimiter::clear($this->throttleKey());
             }
-    
+                $mess='';
             if (Respondents::where('email', $credentials['email'])->first() || Respondents::where('mobile', $credentials['email'])->first()) {
                 $mess = strip_tags("<strong>Incorrect Password.</strong>");
             } else {
