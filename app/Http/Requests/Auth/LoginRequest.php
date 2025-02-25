@@ -93,7 +93,7 @@ class LoginRequest extends FormRequest
             if (Auth::attempt(['mobile' => $credentials['email'], 'password' => $credentials['password']])) {
                 RateLimiter::clear($this->throttleKey());
             }
-                $mess='';
+            
             if (Respondents::where('email', $credentials['email'])->first() || Respondents::where('mobile', $credentials['email'])->first()) {
                 $mess = strip_tags("<strong>Incorrect Password.</strong>");
             } else {
