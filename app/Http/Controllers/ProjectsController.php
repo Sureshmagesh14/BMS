@@ -691,7 +691,11 @@ class ProjectsController extends Controller
                     }
 
             
-                    $project_link = route('user.dashboard');
+                    // $project_link = route('user.dashboard');
+
+                    $refCode = Respondents::randomPassword();
+                    $links = ($proj->project_link) ? $proj->project_link : $refCode;
+                    $project_link = url('share_project', $links);
 
                     // $data = ['subject' => $proj_desc, 'proj_content'=>$proj_desc, 'name' => $resp_name,'project' => $proj_name,'reward' => $reward,'survey_duration' => $survey_duration,'type' => 'project_notification'];
                 
@@ -923,7 +927,13 @@ class ProjectsController extends Controller
                         }else{
                             $proj_name = $proj->name;
                         }
-                        $project_link = route('user.dashboard');
+                       
+                        // $project_link=Projects::get_survey($proj->survey_link);
+                        // $project_link = url('survey/view', $project_link->builderID ?? '');
+
+                        $refCode = Respondents::randomPassword();
+                        $links = ($proj->project_link) ? $proj->project_link : $refCode;
+                        $project_link = url('share_project', $links);
                         
                         $survey_duration = $proj->survey_duration;
                         $reward = $proj->reward;
@@ -1174,7 +1184,11 @@ class ProjectsController extends Controller
                                     $proj_name = $project->name;
                                 }
                            
-                                $project_link = route('user.dashboard');
+                                // $project_link = route('user.dashboard');
+
+                                $refCode = Respondents::randomPassword();
+                                $links = ($project->project_link) ? $project->project_link : $refCode;
+                                $project_link = url('share_project', $links);
                                 
                                 $survey_duration = $project->survey_duration;
                                 $reward = $project->reward;
