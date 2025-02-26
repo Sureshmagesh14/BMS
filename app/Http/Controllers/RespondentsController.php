@@ -372,6 +372,7 @@ class RespondentsController extends Controller
             $contents = Respondents::find($id);
             app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'deleted','respondent');
             if ($contents) {
+                RespondentProfile::where('respondent_id', $id)->delete();
                 $contents->delete();
                 return response()->json([
                     'status' => 200,
