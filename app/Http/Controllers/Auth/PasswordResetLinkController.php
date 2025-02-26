@@ -13,6 +13,7 @@ use App\Models\Respondents;
 use App\Mail\ResetPasswordEmail;
 use App\Models\PasswordResetsViaPhone;
 use Exception;
+use App\Services\SendGridService;
 class PasswordResetLinkController extends Controller
 {
     /**
@@ -34,40 +35,49 @@ class PasswordResetLinkController extends Controller
             'email' => 'required|email',
         ]);
     
+        // Find the user by email
         $user = Respondents::where('email', $request->email)->first();
     
+        // Check if the user exists
         if (!$user) {
             return back()->withErrors(['email' => __('We could not find a user with that email address.')]);
         }
     
-        // Generate password reset token
-        $token = Password::getRepository()->create($user);
-    
-        // Generate password reset URL
-        $resetUrl = URL::temporarySignedRoute(
-            'password.reset', now()->addMinutes(60), ['token' => $token, 'email' => $user->email]
-        );
-
-        
-    
         try {
-            // Send password reset email
-            $data = [
-                'subject' => 'Reset Password Notification',
+            // Generate password reset token
+            $token = Password::getRepository()->create($user);
+    
+            // Generate password reset URL (without expiration)
+            $resetUrl = URL::route('password.reset', ['token' => $token, 'email' => $user->email]);
+    
+            // Prepare dynamic data for SendGrid
+            $dynamicData = [
+                'first_name' => $user->name,
                 'type' => 'forgot_password_email',
                 'token' => $token,
-                'resetUrl' => $resetUrl,
+                'reset_link' => $resetUrl,
             ];
     
-            Mail::to($user->email)->send(new ResetPasswordEmail($data));
+            // Send the email using SendGrid service
+            $subject = 'Reset Password Notification';
+            $templateId = 'd-a30f8f4af1e34e0da5dc3f6b7e036743'; // Replace this with your actual SendGrid template ID
+    
+            $sendgrid = new SendGridService();
+            $sendgrid->setFrom();
+            $sendgrid->setSubject($subject);
+            $sendgrid->setTemplateId($templateId);
+            $sendgrid->setDynamicData($dynamicData);
+            $sendgrid->setToEmail($user->email, $user->name);
+            $sendgrid->send();
+    
+            // If everything goes well, return success response
+            return back()->with('status', __('Password reset email sent! Please check your email.'));
+        
         } catch (\Exception $e) {
-            dd($e->getMessage());
-            // Log the exception for debugging
+            // Log the exception and return error message
             \Log::error('Failed to send password reset email: ' . $e->getMessage());
             return back()->withErrors(['email' => __('Failed to send password reset email. Please try again later.')]);
         }
-    
-        return back()->with('status', __('Password reset email sent! Please check your email.'));
     }
 
     public function resetPassword(Request $request)

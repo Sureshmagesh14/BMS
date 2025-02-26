@@ -20,6 +20,9 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Session;
 use App\Models\Contents;
+use Redirect;
+use App\Services\SendGridService;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -62,7 +65,8 @@ class RegisteredUserController extends Controller
         if (!str_starts_with($whatsapp, '27')) {
             $whatsapp = '27' . ltrim($whatsapp, '0'); // Remove leading 0 if present
         }
-
+        $verificationToken = Str::random(60);
+    
         $user = Respondents::create([
             'name' => $request->name,
             'surname' => $request->surname,
@@ -73,6 +77,8 @@ class RegisteredUserController extends Controller
             'whatsapp' => $whatsapp,
             'password' => Hash::make($request->password_register),
             'referral_code' => $ref_code,
+            'active_status_id' => 6,
+            'email_verification_token' => $verificationToken,
         ]);
 
         $id = DB::getPdo()->lastInsertId();
@@ -101,11 +107,27 @@ class RegisteredUserController extends Controller
 
             $get_email = Respondents::where('id', $id)->first();
             $to_address = $get_email->email;
-            //$to_address = 'hemanathans1@gmail.com';
+            $resp_name = $get_email->name;
+            $verificationToken = $get_email->email_verification_token;
+            $verify_link = route('verify.account', ['token' => $verificationToken]);
 
-            $data = ['subject' => 'New account created','type' => 'new_register'];
+            $dynamicData = [
+                'first_name' => $resp_name,
+                'verify_link' => $verify_link,
+            ];
 
-            Mail::to($to_address)->send(new WelcomeEmail($data));
+            $subject = 'Welcome! Please Verify Your Account';
+            $templateId = 'd-02d0ec6cb9c24367891ad12d0ec575ac';
+
+            $sendgrid = new SendGridService();
+            $sendgrid->setFrom();
+            $sendgrid->setSubject($subject);
+            $sendgrid->setTemplateId($templateId);
+            $sendgrid->setDynamicData($dynamicData);
+            $sendgrid->setToEmail($to_address, $resp_name);
+            $sendgrid->send();
+
+            // Mail::to($to_address)->send(new WelcomeEmail($data));
         }
         //email ends 
         if (session()->has('refer_id')) {
@@ -152,12 +174,40 @@ class RegisteredUserController extends Controller
             Session::forget('u_proj_refer_id');
             Session::forget('u_proj_id');
         }
-
         event(new Registered($user));
+        return redirect('login')->with('success', __('Success! Your registration was completed successfully. A confirmation email has been sent to verify your account'));
 
-        Auth::login($user);
+       
 
-        return redirect(RouteServiceProvider::HOME);
+        // Auth::login($user);
+
+        // return redirect(RouteServiceProvider::HOME);
+    }
+
+    public function verifyAccount($token)
+    {
+        // Find the respondent by the verification token (Assume email_verification_token is being used)
+        $respondent = Respondents::where('email_verification_token', $token)->first();
+
+        // Check if respondent exists
+        if ($respondent) {
+            // Update the active_status_id to 1 (active)
+            $respondent->active_status_id = 1;
+            $respondent->email_verified_at = now(); // Record the time of email verification
+            $respondent->email_verification_token = null; // Clear the verification token after use
+            $respondent->save();
+
+            // Optionally, set a session message to indicate success
+            Session::flash('verification_success', true);
+
+            // Redirect to login page
+            return Redirect::route('login');
+        }
+
+        // If respondent not found or token is invalid
+        Session::flash('verification_success', false);
+
+        return Redirect::route('login');
     }
 }
 

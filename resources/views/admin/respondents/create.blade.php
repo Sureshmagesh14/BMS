@@ -493,4 +493,21 @@
         today = yyyy + '-' + mm + '-' + dd;
         document.getElementById("deactivated_date").setAttribute("min", today);
     });
+    $(document).ready(function() {
+    // Listen for changes to the status field
+    $('#active_status_id').change(function() {
+        // Get the selected status
+        var status = $(this).val();
+
+        // Check if the status is Deactivated (value 2)
+        if (status == 2) {
+            // Set the deactivated date to the current date
+            var currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+            $('#deactivated_date').val(currentDate); // Set the deactivation date
+        } else {
+            // Optionally clear the deactivation date if the status is not deactivated
+            $('#deactivated_date').val('');
+        }
+    });
+});
 </script>

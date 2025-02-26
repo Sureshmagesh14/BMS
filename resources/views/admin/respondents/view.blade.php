@@ -388,28 +388,30 @@
                                         <tr>
                                             <th>Suburb </th>
                                             @php
+                                                $metropolitan_area = isset($essential->metropolitan_area)
+                                                    ? $essential->metropolitan_area
+                                                    : null;
                                                 $district = isset($essential->suburb) ? $essential->suburb : null;
-                                                $district_name = \App\Models\RespondentProfile::district($district);
+                                                $metropolitan_area_name = \App\Models\RespondentProfile::metropolitan_area(
+                                                    $province,
+                                                    $district,
+                                                );
                                             @endphp
-                                            <td>
-                                                {{ $district_name ? $district_name->district : '' }}
-                                            </td>
+                                          <td>
+                                            {{ $metropolitan_area_name && isset($metropolitan_area_name->area) ? $metropolitan_area_name->area : ($essential->metropolitan_area ?? 'N/A') }}
+                                        </td>
 
                                         </tr>
 
                                         <tr>
                                             <th>Metropolitan Area </th>
                                             @php
-                                                $metropolitan_area = isset($essential->metropolitan_area)
-                                                    ? $essential->metropolitan_area
-                                                    : null;
-                                                $metropolitan_area_name = \App\Models\RespondentProfile::metropolitan_area(
-                                                    $province,
-                                                    $district,
-                                                );
+                                                $district = isset($essential->suburb) ? $essential->suburb : null;
+                                                $district_name = \App\Models\RespondentProfile::district($district);
                                             @endphp
+                                          
                                             <td>
-                                                {{ $metropolitan_area_name ? $metropolitan_area_name->area : '' }}
+                                                {{ $district_name ? $district_name->district : '' }}
                                             </td>
 
                                         </tr>
@@ -1172,7 +1174,7 @@
     $(document).on('click', '#deattach_tags', function(e) {
         e.preventDefault();
         var id = $(this).data("id");
-        var url = "{{ route('deattach_tags', ':id') }}";
+        var url = "{{ route('deattach_resp_tags', ':id') }}";
         url = url.replace(':id', id);
 
         single_delete("POST", id, url, "De-attach Panel Successfully", 'tags_table');

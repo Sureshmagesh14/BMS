@@ -329,16 +329,17 @@ class ExportController extends Controller
                     $sheet->setCellValue('Q1', 'HHI per month'); // Corrected to unique column
                     $sheet->setCellValue('R1', 'Household LSM'); // Corrected to unique column
                     $sheet->setCellValue('S1', 'Province');
-                    $sheet->setCellValue('T1', 'Area');
-                    $sheet->setCellValue('U1', 'No. of people living in your household');
-                    $sheet->setCellValue('V1', 'Number of children');
-                    $sheet->setCellValue('W1', 'Number of vehicles');
-                    $sheet->setCellValue('X1', 'Opted in'); // Moved Opted in to column X
-                    $sheet->setCellValue('Y1', 'Last Updated'); // Moved Last Updated to column Y
+                    $sheet->setCellValue('T1', 'Metropolitan Area');
+                    $sheet->setCellValue('U1', 'Suburb');
+                    $sheet->setCellValue('V1', 'No. of people living in your household');
+                    $sheet->setCellValue('W1', 'Number of children');
+                    $sheet->setCellValue('X1', 'Number of vehicles');
+                    $sheet->setCellValue('Y1', 'Opted in'); // Moved Opted in to column X
+                    $sheet->setCellValue('Z1', 'Last Updated'); // Moved Last Updated to column Y
 
 
-                    $sheet->getStyle('A1:Y1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:Y1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:Z1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:Z1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -602,19 +603,20 @@ class ExportController extends Controller
                       
                         $sheet->setCellValue('S' . $rows, $get_state ?? '');
                         $sheet->setCellValue('T' . $rows, $get_district ?? '');
-                        $sheet->setCellValue('U' . $rows, $essential->no_houehold ?? '');
-                        $sheet->setCellValue('V' . $rows, $essential->no_children ?? '');
-                        $sheet->setCellValue('W' . $rows, $essential->no_vehicle ?? '');
+                        $sheet->setCellValue('U' . $rows, $essential->metropolitan_area?? '');
+                        $sheet->setCellValue('V' . $rows, $essential->no_houehold ?? '');
+                        $sheet->setCellValue('W' . $rows, $essential->no_children ?? '');
+                        $sheet->setCellValue('X' . $rows, $essential->no_vehicle ?? '');
 
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
 
-                        $sheet->setCellValue('X' . $rows, $opted_in);
-                        $sheet->setCellValue('Y' . $rows, $updated_at);
+                        $sheet->setCellValue('Y' . $rows, $opted_in);
+                        $sheet->setCellValue('Z' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':Y' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':Y' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('C' . $rows . ':Z' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':Z' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                     }
 
@@ -672,8 +674,8 @@ class ExportController extends Controller
                     $sheet->setCellValue('Q1', 'HHI per Month');
                     $sheet->setCellValue('R1', 'Household LSM');
                     $sheet->setCellValue('S1', 'Province');
-                    $sheet->setCellValue('T1', 'Suburb');
-                    $sheet->setCellValue('U1', 'Metropolitan Area');
+                    $sheet->setCellValue('T1', 'Metropolitan Area');
+                    $sheet->setCellValue('U1', 'Suburb');
                     $sheet->setCellValue('V1', 'No. of people living in your household');
                     $sheet->setCellValue('W1', 'Number of children');
                     $sheet->setCellValue('X1', 'Number of vehicles');
@@ -984,8 +986,9 @@ class ExportController extends Controller
                         $get_district = ($district != null) ? $district->district : '-';
                     
                         $sheet->setCellValue('S' . $rows, $get_state ?? '');
-                        $sheet->setCellValue('T' . $rows, $get_district ?? '');
-                        $sheet->setCellValue('U' . $rows, $essential->metropolitan_area ?? '');
+                        $sheet->setCellValue('T' . $rows, $get_district  ?? '');
+                        $sheet->setCellValue('U' . $rows, $essential->metropolitan_area?? '');
+                       
                         $sheet->setCellValue('V' . $rows, $essential->no_houehold ?? '');
                         $sheet->setCellValue('W' . $rows, $essential->no_children ?? '');
                         $sheet->setCellValue('X' . $rows, $essential->no_vehicle ?? '');
@@ -1121,6 +1124,7 @@ class ExportController extends Controller
                         $sheet->setCellValue('AD' . $rows, ucfirst($secondary_home_lang?? ''));
                         // Handle $children_data
                         $new_alpha = 'AE';
+                        $children_data = json_decode($all_data->children_data, true) ?? [];
                         if (!empty($children_data) && is_array($children_data)) {
                             foreach ($children_data as $children) {
                                 $sheet->setCellValue($new_alpha . $rows, $children['date'] ?? '');
@@ -1130,16 +1134,16 @@ class ExportController extends Controller
                             }
                         }
                     
-                        $children_data = json_decode($all_data->children_data, true) ?? [];
+                       
                         $vehicle_data = json_decode($all_data->vehicle_data, true) ?? [];
                         $vehicle_alpha = 'AM';
-                        
+                    
                         foreach ($vehicle_data as $vehicle) {
                             $brand_id = $vehicle['brand'];
                         
                             // Debugging line to check $brand_id
                
-                        
+                        // dd($vehicle_data);
                             $get_vehicle = DB::table('vehicle_master')->where('id', $brand_id)->first();
                       
                         
@@ -1152,11 +1156,11 @@ class ExportController extends Controller
                             $vehicle_alpha++;
                             $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['type'] ?? '');
                             $vehicle_alpha++;
-                            $brand = '';
-                            if (isset($vehicle) && is_array($vehicle) && isset($vehicle['brand'])) {
-                                $brand = ucfirst($vehicle['brand']);
+                            $model = '';
+                            if (isset($vehicle) && is_array($vehicle) && isset($vehicle['model'])) {
+                                $model = ucfirst($vehicle['model']);
                             }
-                            $sheet->setCellValue($vehicle_alpha . $rows, $brand);
+                            $sheet->setCellValue($vehicle_alpha . $rows, $model);
                             $vehicle_alpha++;
                             $sheet->setCellValue($vehicle_alpha . $rows, $vehicle['year'] ?? '');
                             $vehicle_alpha++;
@@ -1914,7 +1918,6 @@ class ExportController extends Controller
                 $i = 1;
               
                 foreach ($all_datas as $all_data) {
-                    dd($all_datas);
                     $basic = json_decode($all_data->basic_details);
                     $essential = json_decode($all_data->essential_details);
                     $extended  = json_decode($all_data->extended_details);
@@ -1995,6 +1998,44 @@ class ExportController extends Controller
 
                     $employment_status = ($essential->employment_status == 'other') ? $essential->employment_status_other : $essential->employment_status;
                     $industry_my_company = ($essential->industry_my_company == 'other') ? $essential->industry_my_company_other : $essential->industry_my_company;
+                    $employment_name = '';
+
+                    // Check if $essential is not null and has the employment_status property
+                    if ($essential && isset($employment_status)) {
+                        switch ($employment_status) {
+                            case 'emp_full_time':
+                                $employment_name = 'Employed Full-Time';
+                                break;
+                            case 'emp_part_time':
+                                $employment_name = 'Employed Part-Time';
+                                break;
+                            case 'self':
+                                $employment_name = 'Self-Employed';
+                                break;
+                            case 'study':
+                                $employment_name = 'Studying Full-Time (Not Working)';
+                                break;
+                            case 'working_and_studying':
+                                $employment_name = 'Working & Studying';
+                                break;
+                            case 'home_person':
+                                $employment_name = 'Stay at Home Person';
+                                break;
+                            case 'retired':
+                                $employment_name = 'Retired';
+                                break;
+                            case 'unemployed':
+                                $employment_name = 'Unemployed';
+                                break;
+                            case 'other':
+                                $employment_name = 'Other';
+                                break;
+                            default:
+                                $employment_name = ''; // Handle unexpected values
+                                break;
+                        }
+                    }
+                
                    
                     $p_income = DB::table('income_per_month')->where('id',$essential->personal_income_per_month)->first();
                     $h_income = DB::table('income_per_month')->where('id',$essential->household_income_per_month)->first();
@@ -2050,7 +2091,7 @@ class ExportController extends Controller
                         }
                     }
                     $sheet->setCellValue('K' . $rows, $education_level);
-                    $sheet->setCellValue('L' . $rows, $employment_status ?? '');
+                    $sheet->setCellValue('L' . $rows, $employment_name ?? '');
                     $industry = IndustryCompany::find($industry_my_company);
                     $companyName = $industry ? $industry->company : '';
                     $sheet->setCellValue('M' . $rows, $companyName);
@@ -2312,16 +2353,16 @@ class ExportController extends Controller
                     $sheet->setCellValue('R1', 'HHI per Month');
                     $sheet->setCellValue('S1', 'Household LSM');
                     $sheet->setCellValue('T1', 'Province');
-                    $sheet->setCellValue('U1', 'Area');
-                    $sheet->setCellValue('V1', 'No. of People Living in Your Household');
-                    $sheet->setCellValue('W1', 'Number of Children');
-                    $sheet->setCellValue('X1', 'Number of Vehicles');
-                    $sheet->setCellValue('Y1', 'Opted In');
-                    $sheet->setCellValue('Z1', 'Last Updated');
-                
+                    $sheet->setCellValue('U1', 'Suburb');
+                    $sheet->setCellValue('V1', 'Metropolitan Area');
+                    $sheet->setCellValue('W1', 'No. of People Living in Your Household');
+                    $sheet->setCellValue('X1', 'Number of Children');
+                    $sheet->setCellValue('Y1', 'Number of Vehicles');
+                    $sheet->setCellValue('Z1', 'Opted In');
+                    $sheet->setCellValue('AA1', 'Last Updated');
 
-                    $sheet->getStyle('A1:Z1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:Z1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:AA1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:AA1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -2407,7 +2448,7 @@ class ExportController extends Controller
                         }
 
                         $sheet->setCellValue('J' . $rows, $ethnic_group);
-                        $sheet->setCellValue('K' . $rows, ucfirst($essential->gender) ?? '');
+                        $sheet->setCellValue('K' . $rows, isset($essential) && $essential->gender ? ucfirst($essential->gender) : '');
                         $education_level = '';
 
                         // Check if $essential is not null and has the education_level property
@@ -2536,19 +2577,20 @@ class ExportController extends Controller
                       
                         $sheet->setCellValue('T' . $rows, $get_state ?? '');
                         $sheet->setCellValue('U' . $rows, $get_district ?? '');
-                        $sheet->setCellValue('V' . $rows, $essential->no_houehold ?? '');
-                        $sheet->setCellValue('W' . $rows, $essential->no_children ?? '');
-                        $sheet->setCellValue('X' . $rows, $essential->no_vehicle ?? '');
+                        $sheet->setCellValue('V' . $rows, $essential->metropolitan_area ?? '');
+                        $sheet->setCellValue('W' . $rows, $essential->no_houehold ?? '');
+                        $sheet->setCellValue('X' . $rows, $essential->no_children ?? '');
+                        $sheet->setCellValue('Y' . $rows, $essential->no_vehicle ?? '');
 
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
 
-                        $sheet->setCellValue('Y' . $rows, $opted_in);
-                        $sheet->setCellValue('X' . $rows, $updated_at);
+                        $sheet->setCellValue('Z' . $rows, $opted_in);
+                        $sheet->setCellValue('AA' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':Z' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':Z' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('C' . $rows . ':AA' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':AA' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                     }
                 
@@ -3163,6 +3205,8 @@ class ExportController extends Controller
         $essentialDetails = [];
     
         // Retrieve the respondent profile data
+        $essential = [];
+        $basic = [];
         $all_data = RespondentProfile::where('respondent_id', $userID)->first();
         if ($all_data) {
             $basic = json_decode($all_data->basic_details);
@@ -3188,6 +3232,42 @@ class ExportController extends Controller
         $get_district = '-';
         $first_name = '';
         $last_name ='';
+        $age = ''; // Set initial age to empty
+                        
+        $get_resp = Respondents::select('date_of_birth')->where('id', $userID)->first();
+        if ($get_resp != null) {
+            if (!empty($get_resp->date_of_birth)) {
+                $dob = $get_resp->date_of_birth;
+        
+                $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                if ($dobDate) {
+                    $now = new DateTime();
+                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                }
+            } else {
+                $dob = ''; // Handle the case where there's no date of birth found
+            }
+        } else {
+            if (empty($dob) || $dob === '0000-00-00') {
+                $dobDate = DateTime::createFromFormat('Y/m/d', $dob);
+                if ($dobDate) {
+                    $now = new DateTime();
+                    $age = $now->diff($dobDate)->y; // Get the difference in years
+                } else {
+                    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+                    if ($dobDate) {
+                        $now = new DateTime();
+                        $age = $now->diff($dobDate)->y; // Get the difference in years
+                    }
+                }
+            }
+        }
+        
+        // Ensure age is empty if dob is not set or invalid
+        if (empty($dob) || $dob === '0000-00-00') {
+            $age = ''; // Set age to empty if date of birth is empty or invalid
+        }
+
         if (!empty($basic->first_name)) {
             $first_name = $basic->first_name;
         }
@@ -3205,23 +3285,57 @@ class ExportController extends Controller
         }
     
         // Process Date of Birth and Age
-        if (!empty($dob)) {
-            $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
-            if ($dobDate) {
-                $now = new DateTime();
-                $age = $now->diff($dobDate)->y; // Calculate age
-            }
-        }
+       
     
         // Process Employment Status
         if (isset($essential->employment_status)) {
             $employment_status = $essential->employment_status == 'other' ? $essential->employment_status_other : $essential->employment_status;
         }
-    
-        // Process Industry Info
-        if (isset($essential->industry_my_company)) {
-            $industry_my_company = $essential->industry_my_company == 'other' ? $essential->industry_my_company_other : $essential->industry_my_company;
+
+        $employment_name = '';
+
+        // Check if $essential is not null and has the employment_status property
+        if ($essential && isset($employment_status)) {
+            switch ($employment_status) {
+                case 'emp_full_time':
+                    $employment_name = 'Employed Full-Time';
+                    break;
+                case 'emp_part_time':
+                    $employment_name = 'Employed Part-Time';
+                    break;
+                case 'self':
+                    $employment_name = 'Self-Employed';
+                    break;
+                case 'study':
+                    $employment_name = 'Studying Full-Time (Not Working)';
+                    break;
+                case 'working_and_studying':
+                    $employment_name = 'Working & Studying';
+                    break;
+                case 'home_person':
+                    $employment_name = 'Stay at Home Person';
+                    break;
+                case 'retired':
+                    $employment_name = 'Retired';
+                    break;
+                case 'unemployed':
+                    $employment_name = 'Unemployed';
+                    break;
+                case 'other':
+                    $employment_name = 'Other';
+                    break;
+                default:
+                    $employment_name = ''; // Handle unexpected values
+                    break;
+            }
         }
+    
+        $industry_my_company = isset($essential) && isset($essential->industry_my_company) && $essential->industry_my_company == 'other' 
+        ? $essential->industry_my_company_other 
+        : (isset($essential->industry_my_company) ? $essential->industry_my_company : null);
+        $industry = IndustryCompany::find($industry_my_company);
+        $companyName = $industry ? $industry->company : '';
+     
     
         // Process Income Information
         if (isset($essential->personal_income_per_month)) {
@@ -3277,8 +3391,8 @@ class ExportController extends Controller
             'Age'  => $age,
             'Gender' => $gender,
             'Highest Education Level' => $education_level,
-            'Employment Status' => $employment_status,
-            'Industry my company' => $industry_my_company, 
+            'Employment Status' => $employment_name,
+            'Industry my company' => $companyName, 
             'Personal Income' => $personal_income,
             'Personal LSM' =>$personal_lsm,
             'Household Income' => $household_income,

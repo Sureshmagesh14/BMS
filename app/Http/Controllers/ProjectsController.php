@@ -691,7 +691,11 @@ class ProjectsController extends Controller
                     }
 
             
-                    $project_link = route('user.dashboard');
+                    // $project_link = route('user.dashboard');
+
+                    $refCode = Respondents::randomPassword();
+                    $links = ($proj->project_link) ? $proj->project_link : $refCode;
+                    $project_link = url('share_project', $links);
 
                     // $data = ['subject' => $proj_desc, 'proj_content'=>$proj_desc, 'name' => $resp_name,'project' => $proj_name,'reward' => $reward,'survey_duration' => $survey_duration,'type' => 'project_notification'];
                 
@@ -923,7 +927,13 @@ class ProjectsController extends Controller
                         }else{
                             $proj_name = $proj->name;
                         }
-                        $project_link = route('user.dashboard');
+                       
+                        // $project_link=Projects::get_survey($proj->survey_link);
+                        // $project_link = url('survey/view', $project_link->builderID ?? '');
+
+                        $refCode = Respondents::randomPassword();
+                        $links = ($proj->project_link) ? $proj->project_link : $refCode;
+                        $project_link = url('share_project', $links);
                         
                         $survey_duration = $proj->survey_duration;
                         $reward = $proj->reward;
@@ -1162,37 +1172,41 @@ class ProjectsController extends Controller
                             // Send email notification
                             $project = Projects::find($project_id);
                             $respondent = Respondents::find($respondent_id);
-    
+                         
                             if ($project && $respondent) {
                                 $to_address = $respondent->email;
                                 $resp_name = $respondent->name . ' ' . $respondent->surname;
 
-                                if ($proj->project_name_resp != ''){
+                                if ($project->project_name_resp != ''){
 
-                                    $proj_name = $proj->project_name_resp;
+                                    $proj_name = $project->project_name_resp;
                                 }else{
-                                    $proj_name = $proj->name;
+                                    $proj_name = $project->name;
                                 }
+                           
+                                // $project_link = route('user.dashboard');
+
+                                $refCode = Respondents::randomPassword();
+                                $links = ($project->project_link) ? $project->project_link : $refCode;
+                                $project_link = url('share_project', $links);
                                 
-                                $project_link = route('user.dashboard');
+                                $survey_duration = $project->survey_duration;
+                                $reward = $project->reward;
                                 
-                                $survey_duration = $proj->survey_duration;
-                                $reward = $proj->reward;
-                                
-                                if($proj->description!=''){
-                                    $proj_desc = $proj->description;
+                                if($project->description!=''){
+                                    $proj_desc = $project->description;
                                 }else{
                                     $proj_desc = 'Get paid for your opinion - Join The Brand Surgeon for free';
                                 }
                                 
-                                if($proj->description1!=''){
-                                    $proj_desc1 = $proj->description1;
+                                if($project->description1!=''){
+                                    $proj_desc1 = $project->description1;
                                 }else{
                                     $proj_desc1 = '';
                                 }
             
-                                if($proj->description2!=''){
-                                    $proj_desc2 = $proj->description2;
+                                if($project->description2!=''){
+                                    $proj_desc2 = $project->description2;
                                 }else{
                                     $proj_desc2 = '';
                                 }
@@ -1208,20 +1222,20 @@ class ProjectsController extends Controller
 
                                 // mail starts
             
-                                if($proj->type_id==1){
+                                if($project->type_id==1){
                                     $subject = 'New Pre-Screener Survey';
                                     $templateId = 'd-5079fe69fe5d404e9019b2eeb9243739';
                                     $dynamicData = [
                                         'url_link' => $project_link,
                                         'description' => ($proj_desc !== null) ? $proj_desc: '',
-                                        'rand_value' => 'R' . $proj->reward,
+                                        'rand_value' => 'R' . $project->reward,
                                         'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
                                         'duration' => $survey_duration,
                                         'survery_duration' => '',
                                     ];
                                 }
                                 
-                                if($proj->type_id==2){
+                                if($project->type_id==2){
                                     $subject = 'New Pre-Task Survey';
                                     $templateId = 'd-9951ddd319244eb79980954158650a5b';
                                     $dynamicData = [
@@ -1233,7 +1247,7 @@ class ProjectsController extends Controller
                                     ];
                                 }
 
-                                if($proj->type_id==3){
+                                if($project->type_id==3){
                                     $subject = 'New Paid Survey';
                                     $templateId = 'd-4252fb83805545ffbcbf9e3dd904e895';
                                     $dynamicData = [
@@ -1242,16 +1256,16 @@ class ProjectsController extends Controller
                                         'survery_duration' => $survey_duration,
                                         'description' => ($proj_desc !== null) ? $proj_desc: '',
                                         'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
-                                        'rand_value' => 'R' . $proj->reward,
+                                        'rand_value' => 'R' . $project->reward,
                                         'duration' => $survey_duration,
                                     ];
                                 }
                         
-                                if($proj->type_id==4){
+                                if($project->type_id==4){
                                     $subject = 'New Un-Paid Survey';
                                     $templateId = 'd-09c056d840114f90bc7088eea56e3e97';
                                     $dynamicData = [
-                                        'points' => $proj->reward * 10,
+                                        'points' => $project->reward * 10,
                                         'url_link' => $project_link,
                                         'description' => ($proj_desc !== null) ? $proj_desc: '',
                                         'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
@@ -1297,7 +1311,8 @@ class ProjectsController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error occurred: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
+
         }
     }
     

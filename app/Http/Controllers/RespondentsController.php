@@ -19,14 +19,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\RespondentProfile;
 use Illuminate\Support\Facades\Hash;
+use Session;
+use App\Models\RespondentTags;
+use App\Services\SendGridService;
 class RespondentsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
+            $request->session()->forget('respondent_id');
+            $request->session()->forget('tag_id');
             return view('admin.respondents.index');
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -139,11 +144,27 @@ class RespondentsController extends Controller
 
                     $get_email = Respondents::where('id', $id)->first();
                     $to_address = $get_email->email;
+                    $resp_name = $get_email->name;
+
+                    $dynamicData = [
+                        'first_name' => $resp_name,
+                    ];
+        
+                    $subject = 'New account created';
+                    $templateId = 'd-02d0ec6cb9c24367891ad12d0ec575ac';
+        
+                    $sendgrid = new SendGridService();
+                    $sendgrid->setFrom();
+                    $sendgrid->setSubject($subject);
+                    $sendgrid->setTemplateId($templateId);
+                    $sendgrid->setDynamicData($dynamicData);
+                    $sendgrid->setToEmail($to_address, $resp_name);
+                    $sendgrid->send();
                     //$to_address = 'hemanathans1@gmail.com';
 
-                    $data = ['subject' => 'New account created','type' => 'new_register'];
+                    // $data = ['subject' => 'New account created','type' => 'new_register'];
 
-                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                    // Mail::to($to_address)->send(new WelcomeEmail($data));
                 }
                 //email ends 
               
@@ -166,6 +187,7 @@ class RespondentsController extends Controller
     {
 
         try {
+            Session::put('respondent_id', $id);
             $data = Respondents::leftJoin('respondent_profile', function ($join) {
                 $join->on('respondent_profile.respondent_id', '=', 'respondents.id');
             })
@@ -1088,14 +1110,107 @@ class RespondentsController extends Controller
                  
                  if($proj->name!='')
                  {
-                    $to_address = $resp->email;
-                    //$to_address = 'hemanathans1@gmail.com';
-                    $resp_name = $resp->name.' '.$resp->surname;
-                    $proj_name = $proj->name;
+                        $to_address = $resp->email;
+                        //$to_address = 'hemanathans1@gmail.com';
+                        $resp_name = $resp->name.' '.$resp->surname;
 
-                    $data = ['subject' => 'New Survey Assigned','name' => $resp_name,'project' => $proj_name,'type' => 'new_project'];
+                        if ($proj->project_name_resp != ''){
+
+                            $proj_name = $proj->project_name_resp;
+                        }else{
+                            $proj_name = $proj->name;
+                        }
+                        // $project_link = route('user.dashboard');
+                        // $project_link=Projects::get_survey($proj->survey_link);
+                        // $project_link = url('survey/view', $project_link->builderID ?? '');
+
+                        $refCode = Respondents::randomPassword();
+                        $links = ($proj->project_link) ? $proj->project_link : $refCode;
+                        $project_link = url('share_project', $links);
+                        
+                        $survey_duration = $proj->survey_duration;
+                        $reward = $proj->reward;
+                        
+                        if($proj->description!=''){
+                            $proj_desc = $proj->description;
+                        }else{
+                            $proj_desc = 'Get paid for your opinion - Join The Brand Surgeon for free';
+                        }
+                        
+                        if($proj->description1!=''){
+                            $proj_desc1 = $proj->description1;
+                        }else{
+                            $proj_desc1 = '';
+                        }
+
+                        if($proj->description2!=''){
+                            $proj_desc2 = $proj->description2;
+                        }else{
+                            $proj_desc2 = '';
+                        }
+
+                    if($proj->type_id==1){
+                        $subject = 'New Pre-Screener Survey';
+                        $templateId = 'd-5079fe69fe5d404e9019b2eeb9243739';
+                        $dynamicData = [
+                            'url_link' => $project_link,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'rand_value' => 'R' . $proj->reward,
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'duration' => $survey_duration,
+                            'survery_duration' => '',
+                        ];
+                    }
+                    
+                    if($proj->type_id==2){
+                        $subject = 'New Pre-Task Survey';
+                        $templateId = 'd-9951ddd319244eb79980954158650a5b';
+                        $dynamicData = [
+                            'url_link' => $project_link,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'description2' => ($proj_desc2 !== null) ? $proj_desc2: '',
+                            'survery_duration' => $survey_duration,
+                        ];
+                    }
+                    if($proj->type_id==3){
+                        $subject = 'New Paid Survey';
+                        $templateId = 'd-4252fb83805545ffbcbf9e3dd904e895';
+                        $dynamicData = [
+                            'points' => $reward * 10,
+                            'url_link' => $project_link,
+                            'survery_duration' => $survey_duration,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'rand_value' => 'R' . $proj->reward,
+                            'duration' => $survey_duration,
+                        ];
+                    }
+            
+                    if($proj->type_id==4){
+                        $subject = 'New Un-Paid Survey';
+                        $templateId = 'd-09c056d840114f90bc7088eea56e3e97';
+                        $dynamicData = [
+                            'points' => $proj->reward * 10,
+                            'url_link' => $project_link,
+                            'description' => ($proj_desc !== null) ? $proj_desc: '',
+                            'description1' => ($proj_desc1 !== null) ? $proj_desc1: '',
+                            'duration' => $survey_duration,
+                            'survery_duration' => '',
+                        ];
+                    }
+            
+                    $dynamicData['first_name'] = $resp_name;
+            
+                    $sendgrid = new SendGridService();
+                    $sendgrid->setFrom();
+                    $sendgrid->setSubject($subject);
+                    $sendgrid->setTemplateId($templateId);
+                    $sendgrid->setDynamicData($dynamicData);
+                    $sendgrid->setToEmail($to_address, $resp_name);
+                    $sendgrid->send();
                 
-                    Mail::to($to_address)->send(new WelcomeEmail($data));
+                   
                  }
                 //email ends
                 
@@ -1329,6 +1444,41 @@ class RespondentsController extends Controller
             Log::error($e->getMessage());
             // You can also send an email or notification to the admin/team
             // or perform any other error handling mechanism
+        }
+    }
+
+    public function deattach_resp_tags(Request $request,$id)
+    {
+        try {
+         
+            // Check if $id is an array or a string and handle accordingly
+          
+    
+            // Use transaction for bulk deletion
+            DB::beginTransaction();
+    
+            // Delete records where tag_id is in the $idArray
+            RespondentTags::where('tag_id',$id)->where('respondent_id', Session::get('respondent_id'))->delete();
+    
+            // Commit transaction
+            DB::commit();
+    
+            // Return JSON response
+            return response()->json([
+                'status'  => 200,
+                'success' => true,
+                'message' => 'Tags de-attached successfully.'
+            ]);
+        } catch (\Exception $e) {
+            // Rollback transaction on error
+            DB::rollBack();
+    
+            // Return error response
+            return response()->json([
+                'status'  => 500,
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
         }
     }
    

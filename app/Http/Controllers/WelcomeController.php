@@ -16,7 +16,7 @@ use App\Models\Cashout;
 use App\Models\Networks;
 use App\Models\Charities;
 use App\Models\Project_respondent;
-use App\Services\SendGrid\SendGridService;
+use App\Services\SendGridService;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -81,24 +81,30 @@ class WelcomeController extends Controller
     {
         try {
             $id = 1;
+            // $user='vijay';
+            // $email='test@gmail.com';
             $data = Contents::find($id);
+            // $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            // $dynamicData = [
+            //     'first_name' => $user,
+            //     'otp' => $otp
+            // ];
+            // $subject = 'Reset Password Notification';
+            // $templateId = 'd-46d60233bf2844158b5b5f5b9576c481';
 
-            $dynamicData = [
-                'points' => 20,
-                'date_requested' => date('d-m-Y'),
-                'first_name' => 'tetst user',
-                'rand_value' => 'R ' . (20 / 10),
-                'payment_method' => strtoupper('test')
-            ];
+            // $sendgrid = new SendGridService();
+            // $sendgrid->setFrom();
+            // $sendgrid->setSubject($subject);
+            // $sendgrid->setTemplateId($templateId);
+            // $sendgrid->setDynamicData($dynamicData);
+            // $sendgrid->setToEmail($email, $user);
+            // $sendgrid->send();
 
-            $sendgrid = new SendGridService();
-            $sendgrid->setFrom();
-            $sendgrid->setDynamicData($dynamicData);
-            $sendgrid->setSubject('New Cashout Created');
-            $sendgrid->setToEmail('hemanathans1@gmail.com', 'test user');
-            $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
-            $sendgrid->send();
+           
+    
+            
 
+     
 
             return view('user.user-terms', compact('data'));
         } catch (Exception $e) {
@@ -106,6 +112,43 @@ class WelcomeController extends Controller
         }
 
     }
+
+    //testing mail template starts
+    // public function terms()
+    // {
+    //     try {
+    //         $id = 1;
+    //         $user='vijay';
+    //         $email='smartvijay018@gmail.com';
+    //         $data = Contents::find($id);
+    //         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+    //         $dynamicData = [
+    //             'first_name' => $user,
+    //             'otp' => $otp
+    //         ];
+    //         $subject = 'Reset Password Notification';
+    //         $templateId = 'd-46d60233bf2844158b5b5f5b9576c481';
+
+    //         $sendgrid = new SendGridService();
+    //         $sendgrid->setFrom();
+    //         $sendgrid->setSubject($subject);
+    //         $sendgrid->setTemplateId($templateId);
+    //         $sendgrid->setDynamicData($dynamicData);
+    //         $sendgrid->setToEmail($email, $user);
+    //         $sendgrid->send();
+    //testing mail template starts
+           
+    
+            
+
+     
+
+    //         return view('user.user-terms', compact('data'));
+    //     } catch (Exception $e) {
+    //         throw new Exception($e->getMessage());
+    //     }
+
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -333,17 +376,17 @@ class WelcomeController extends Controller
                     ->join('survey', 'survey.id', 'projects.survey_link')
                     ->where('projects.project_link',$id)->first();
         
-
+            $project_id = $res->id;
             if($res->access_id==2){
                 //access_id 2 assigned
-                if(Project_respondent::where('project_id', $id)->where('respondent_id', $resp_id)->exists()){
+                if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->exists()){
                     
                 }else{
                     return redirect('dashboard')->with('successMsg', 'Project not assigned');
                 }
             }
             
-            $project_id = $res->id;
+          
             if($user_id != $resp_id){
          
                 if(Project_respondent::where('project_id', $project_id)->where('respondent_id', $resp_id)->exists()){
@@ -1212,7 +1255,7 @@ class WelcomeController extends Controller
                 $sendgrid->setDynamicData($dynamicData);
                 $sendgrid->setSubject('New Cashout Created');
                 $sendgrid->setToEmail($to_address, $resp_name);
-                $sendgrid->setTemplateId('d-fadcfcb9f22a4e3d873fcb0459dc1b58');
+                $sendgrid->setTemplateId('d-5d2729f3674c4b0085c8b105ca258094');
                 $sendgrid->send();
 
                 return response()->json(['message' => 'Cashout created successfully'], 200);

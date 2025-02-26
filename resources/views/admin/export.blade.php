@@ -98,7 +98,7 @@
                                             <option value="Projects">Projects</option>
                                             <option value="Rewards">Rewards</option>
                                             <option value="Cashout">Cashout</option>
-                                            <option value="Team Activity">Team Activity</option>
+                                            {{-- <option value="Team Activity">Team Activity</option> --}}
                                             <option value="Internal Reports">Internal Reports</option>
                                             <option value="Panel">Panel</option>
                                             <option value="Survey">Survey</option>
@@ -603,7 +603,7 @@
                         searchingText: "{{ __('Searching...') }}",
                         deleteText: "&#215;",
                         minChars: 2,
-                        tokenLimit: 20,
+                        tokenLimit: 1,
                         zindex: 9999,
                         animateDropdown: false,
                         resultsLimit: 20,

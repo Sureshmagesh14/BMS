@@ -32,6 +32,7 @@ use App\Models\Project_respondent;
 use App\Mail\Respondentprojectmail;
 use App\Mail\WelcomeEmail;
 use Illuminate\Support\Facades\Mail;
+use App\Services\SendGridService;
 
 class ProfileController extends Controller
 {
@@ -117,7 +118,7 @@ class ProfileController extends Controller
             $child_details     = ($profile != null) ? (($profile->children_data != null) ? json_decode($profile->children_data, true) : array()) : array();
             $vehicle_details   = ($profile != null) ? (($profile->vehicle_data != null) ? json_decode($profile->vehicle_data, true) : array()) : array();
 
-            $get_suburb = (isset($essential_details['province'])) ? DB::table('district')->where('type',$essential_details['province'])->whereNull('deleted_at')->orderBy('district','ASC')->get() : array();
+            $get_suburb = (isset($essential_details['province'])) ? DB::table(table: 'district')->where('type',$essential_details['province'])->whereNull('deleted_at')->orderBy('district','ASC')->get() : array();
             $get_area  = (isset($essential_details['suburb'])) ? DB::table('metropolitan_area')->where('district_id',$essential_details['suburb'])->whereNull('deleted_at')->orderBy('area','ASC')->get() : array();
 
             $check_basic = ($profile != null) ? (($profile->basic_details != null) ? json_decode($profile->basic_details, true) : array()) : array();
@@ -593,10 +594,27 @@ class ProfileController extends Controller
 
             $get_email  = Respondents::where('id', $resp_id)->first();
             $to_address = $get_email->email;
+            $resp_name = $get_email->name;
 
-            $data = ['subject' => 'OTP for mobile number change','type' => 'mobile_change_otp', 'otp' => $get_email->email_or_phone_change_otp];
+            $dynamicData = [
+                'otp' => $get_email->email_or_phone_change_otp,
+            ];
+            $dynamicData['first_name'] = $resp_name;
 
-            Mail::to($to_address)->send(new WelcomeEmail($data));
+            $subject = 'OTP for mobile number change';
+            $templateId = 'd-46d60233bf2844158b5b5f5b9576c481';
+
+            $sendgrid = new SendGridService();
+            $sendgrid->setFrom();
+            $sendgrid->setSubject($subject);
+            $sendgrid->setTemplateId($templateId);
+            $sendgrid->setDynamicData($dynamicData);
+            $sendgrid->setToEmail($to_address, $resp_name);
+            $sendgrid->send();
+
+            // $data = ['subject' => 'OTP for mobile number change','type' => 'mobile_change_otp', 'otp' => $get_email->email_or_phone_change_otp];
+
+            // Mail::to($to_address)->send(new WelcomeEmail($data));
           
             return view('user.mobile_change_otp');
     

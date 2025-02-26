@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::any('/', 'WelcomeController@home')->name('home');
 Route::any('update_activitation/{id}', 'WelcomeController@update_activitation')->name('update_activitation');
+Route::any('/verify/{token}', 'Auth\RegisteredUserController@verifyAccount')->name('verify.account');
 Route::any('activation_status/{id}/{active_id}', 'WelcomeController@activation_status')->name('activation_status');
 Route::any('forgot_password_sms', 'WelcomeController@forgot_password_sms')->name('forgot_password_sms');
 Route::any('admin_password_reset/{token}', 'WelcomeController@admin_password_reset')->name('admin_password_reset');
@@ -103,6 +104,7 @@ Route::group([
 ], function () {
     Route::any('dashboard', 'Auth\AdminLoginController@admin_dashboard')->name('admin.dashboard');
     Route::any('resp_db_import', 'Auth\AdminLoginController@resp_db_import')->name('resp_db_import');
+    Route::any('updateRespondentToRespondentProfile', 'Auth\AdminLoginController@updateRespondentToRespondentProfile')->name('updateRespondentToRespondentProfile');
 
     Route::any('get_activity_data', 'Auth\AdminLoginController@get_activity_data')->name('get_activity_data');
     Route::get('signout', 'Auth\AdminLoginController@signOut')->name('signout');
@@ -209,7 +211,7 @@ Route::group([
     Route::any('upload_respondent', 'RespondentsController@upload_respondent')->name('upload_respondent');
     Route::any('qualified_respondent_status', 'RespondentsController@qualified_respondent_status')->name('qualified_respondent_status');
     Route::any('download-sample-csv', 'RespondentsController@downloadSampleCSV')->name('download-sample-csv');
-
+    Route::any('deattach_resp_tags/{tags_id}', 'RespondentsController@deattach_resp_tags')->name('deattach_resp_tags');
  
     
     
@@ -235,7 +237,7 @@ Route::group([
     Route::any('deattach_tags/{tags_id}', 'TagsController@deattach_tags')->name('deattach_tags');
     Route::any('deattach_multi_panel', 'TagsController@deattach_multi_panel')->name('deattach_multi_panel');
     Route::any('tags-download-sample-csv', 'TagsController@downloadSampleCSV')->name('tags-download-sample-csv');
-    
+
 
     /* Rewards MENU*/
     Route::resource('rewards', 'RewardsController')->name('index', 'rewards.index')->name('destroy', 'rewards.destroy')
