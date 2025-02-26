@@ -704,22 +704,24 @@ h6.question_name {
                                 <?php $exiting_choices=$qusvalue!=null ? json_decode($qusvalue->choices_list): []; ?>
                                 <div id="picture_choices_section" class="row">
                                     @if($exiting_choices!=null)
-                                    @foreach($exiting_choices as $choice)
-                                    <div class="img_placeholder">
-                                        <?php echo "<pre>"; print_r($choice); ?>
-                                        <!-- <img class="current_image" src="{{$choice->img}}"> -->
-                                        <div class="trigger_choice"  style="display:none;">
-                                            <svg class="svgsection" width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
+                                        @foreach($exiting_choices as $choice)
+                                        <div class="img_placeholder">
+                                            @if(optional($choice)->img)
+                                                <img class="current_image" src="{{ $choice->img }}">
+                                            @endif
+
+                                            <div class="trigger_choice"  style="display:none;">
+                                                <svg class="svgsection" width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
+                                            </div>
+                                            <input type="file" class="choice_image"   name="choice_image" style="visibility:hidden;"/>
+                                            <div class="option-action">
+                                                <textarea class="choice_desc"  maxlength="500" name="choice_desc" placeholder="Enter Choice" style="max-height: 44px; height: 25px;">{{$choice->text}}</textarea>
+                                                <a class="deletepic_choice ss-button ss-button__icon-only mr--zero" role="button">
+                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.90912 4H3.18185H13.3637" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.09093 4.00004V2.66671C5.09093 2.31309 5.22502 1.97395 5.4637 1.7239C5.70239 1.47385 6.02611 1.33337 6.36366 1.33337H8.90913C9.24669 1.33337 9.57041 1.47385 9.80909 1.7239C10.0478 1.97395 10.1819 2.31309 10.1819 2.66671V4.00004M12.091 4.00004V13.3334C12.091 13.687 11.9569 14.0261 11.7182 14.2762C11.4795 14.5262 11.1558 14.6667 10.8182 14.6667H4.45456C4.11701 14.6667 3.79328 14.5262 3.5546 14.2762C3.31592 14.0261 3.18182 13.687 3.18182 13.3334V4.00004H12.091Z" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.36368 7.33337V11.3334" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.90915 7.33337V11.3334" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                                </a>
+                                            </div>
                                         </div>
-                                        <input type="file" class="choice_image"   name="choice_image" style="visibility:hidden;"/>
-                                        <div class="option-action">
-                                            <textarea class="choice_desc"  maxlength="500" name="choice_desc" placeholder="Enter Choice" style="max-height: 44px; height: 25px;">{{$choice->text}}</textarea>
-                                            <a class="deletepic_choice ss-button ss-button__icon-only mr--zero" role="button">
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.90912 4H3.18185H13.3637" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.09093 4.00004V2.66671C5.09093 2.31309 5.22502 1.97395 5.4637 1.7239C5.70239 1.47385 6.02611 1.33337 6.36366 1.33337H8.90913C9.24669 1.33337 9.57041 1.47385 9.80909 1.7239C10.0478 1.97395 10.1819 2.31309 10.1819 2.66671V4.00004M12.091 4.00004V13.3334C12.091 13.687 11.9569 14.0261 11.7182 14.2762C11.4795 14.5262 11.1558 14.6667 10.8182 14.6667H4.45456C4.11701 14.6667 3.79328 14.5262 3.5546 14.2762C3.31592 14.0261 3.18182 13.687 3.18182 13.3334V4.00004H12.091Z" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.36368 7.33337V11.3334" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.90915 7.33337V11.3334" stroke="#64748B" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    @endforeach
+                                        @endforeach
                                     @endif
                                 </div>
                                 @endif
