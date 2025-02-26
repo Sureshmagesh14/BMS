@@ -215,9 +215,11 @@ if(isset($qusvalue->left_label)){
                                                         </svg>
                                                     </button>
                                                 </div>
-                                                <div class="ss-skip-container">
-                                                    <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                                </div>
+                                                @if($currentQus->qus_required!=1)
+                                                    <div class="ss-skip-container">
+                                                        <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -280,9 +282,11 @@ if(isset($qusvalue->left_label)){
                                             </svg>
                                         </button>
                                     </div>
-                                <div class="ss-skip-container">
-                                    <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                </div>
+                                    @if($currentQus->qus_required!=1)
+                                        <div class="ss-skip-container">
+                                            <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                        </div>
+                                    @endif
                             </div>
                         </span>
                     </div>
@@ -345,9 +349,11 @@ if(isset($qusvalue->left_label)){
                                             </svg>
                                         </button>
                                     </div>
-                                <div class="ss-skip-container">
-                                    <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                </div>
+                                    @if($currentQus->qus_required!=1)
+                                        <div class="ss-skip-container">
+                                            <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                        </div>
+                                    @endif
                             </div>
                             </span>
                         </div>
@@ -635,10 +641,11 @@ if(isset($qusvalue->left_label)){
                                     </div>
                                 </div>
                                 <div class="ss_cl_qstn_action">
-                                    <div class="ss-skip-container"><button data-qa="skip_button"
-                                            data-hotkey-item="hotkey-skip-button"
-                                            class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                    </div>
+                                @if($currentQus->qus_required!=1)
+                                        <div class="ss-skip-container">
+                                            <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </span> </div>
                     </div>
@@ -686,10 +693,11 @@ if(isset($qusvalue->left_label)){
                                     </div>
                                 </div>
                                 <div class="ss_cl_qstn_action">
-                                    <div class="ss-skip-container">
-                                        <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button"
-                                            class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                    </div>
+                                    <@if($currentQus->qus_required!=1)
+                                        <div class="ss-skip-container">
+                                            <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </span>
                         </div>
@@ -818,9 +826,11 @@ if(isset($qusvalue->left_label)){
                                             </svg>
                                         </button>
                                     </div>
-                                    <div class="ss-skip-container">
-                                        <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                    </div>
+                                    @if($currentQus->qus_required!=1)
+                                        <div class="ss-skip-container">
+                                            <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </span>
                         </div>
@@ -877,9 +887,11 @@ if(isset($qusvalue->left_label)){
                                             </svg>
                                         </button>
                                     </div>
-                                    <div class="ss-skip-container">
-                                        <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                    </div>
+                                    @if($currentQus->qus_required!=1)
+                                        <div class="ss-skip-container">
+                                            <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </span>
                         </div>
@@ -935,9 +947,11 @@ if(isset($qusvalue->left_label)){
                                             </svg>
                                         </button>
                                     </div>
-                                    <div class="ss-skip-container">
-                                        <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
-                                    </div>
+                                    @if($currentQus->qus_required!=1)
+                                        <div class="ss-skip-container">
+                                            <button data-qa="skip_button" data-hotkey-item="hotkey-skip-button" class="ss-skip-action-btn ss-survey-font-family ss-survey-text-size--sm ss-survey-line-height--none ss-survey-text-weight--bold ss-survey-text-color--primary-04">Skip</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </span>
                         </div>
