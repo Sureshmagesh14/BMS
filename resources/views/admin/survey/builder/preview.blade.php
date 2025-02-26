@@ -745,11 +745,12 @@ if(isset($qusvalue->left_label)){
                                                         </svg>
                                                     </div>
                                                     <div class="ss-picturechoice-image-holder ss-picturechoice-image--holder--cover">
-                                                        <div class="ss-img-container ss-img-container--default">
-                                                            <img alt="{{$choice->text}}" class="ss-img-container__img ss-img-container__cover" src="{{$choice->img}}" style="object-fit: contain; height: 100%; width: 100%;">
-                                                        </div>
-                                                        <div class="ss-img-container ss-img-container--fallback" style="background-image: url(&quot;{{$choice->img}}&quot;); background-size: cover;">
-                                                        </div>
+                                                        @if(optional($choice)->img)
+                                                            <div class="ss-img-container ss-img-container--default">
+                                                                <img alt="{{$choice->text}}" class="ss-img-container__img ss-img-container__cover" src="{{$choice->img}}" style="object-fit: contain; height: 100%; width: 100%;">
+                                                            </div>
+                                                            <div class="ss-img-container ss-img-container--fallback" style="background-image: url(&quot;{{$choice->img}}&quot;); background-size: cover;"></div>
+                                                        @endif
                                                     </div>
                                                     <div class="ss-choice-content">
                                                         <p title="{{$choice->text}}">{{$choice->text}}</p>
