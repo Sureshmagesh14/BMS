@@ -944,52 +944,29 @@ class SurveyController extends Controller
     }
     public function endsurvey(Request $request, $id,$qus){
         // Check User already taken the survey 
-        $response_user_id =  Auth::user()->id;
-        $survey=Survey::with('questions')->where(['id'=>$id])->first();
-        $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
-       
-        if($request->type == 'welcome'){
-            // Update started Count 
-            $started_count=Survey::where(['id'=>$id])->update(['started_count'=>$survey->started_count+1]);
-        }
+        if (Auth::check()) {
+            $response_user_id =  Auth::user()->id;
+            $survey=Survey::with('questions')->where(['id'=>$id])->first();
+            $checkresponse = SurveyResponse::where(['response_user_id'=>$response_user_id ,'survey_id'=>$survey->id,'answer'=>'thankyou_submitted'])->first();
         
-        $question=Questions::where(['id'=>$qus])->first();
-
-        $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
-        
-        $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
-        // Check Survey has question or not 
-        $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
-        
-        if(count($surveyQus)<=0){
+            if($request->type == 'welcome'){
+                // Update started Count 
+                $started_count=Survey::where(['id'=>$id])->update(['started_count'=>$survey->started_count+1]);
+            }
             
-            return view('admin.survey.noquserror', compact('survey'));
-        }else{
-            if($qus == 0){
-                //  update Survey History
-                $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=>$response_user_id])->first();
-                if($survey_history){
-                    $survey_history->status=1;
-                    $survey_history->save();
-                }
-                return view('admin.survey.thankyoudefault', compact('survey'));
-            }else{
-                if($question){
-                    if($question->qus_type =='thank_you'){
-                        //  update Survey History
-                        $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=>$response_user_id])->first();
-                        if($survey_history){
-                            $survey_history->status=1;
-                            $survey_history->save();
-                        }
-                    }
-                    if($question->qus_type =='thank_you' && $question->question_name ==''){
-                        return view('admin.survey.thankyoudefault', compact('survey'));
-                    }else{
-                        return view('admin.survey.response', compact('survey','question','question1','questionsset'));
-                    }
+            $question=Questions::where(['id'=>$qus])->first();
 
-                }else{
+            $questionsset=Questions::where(['survey_id'=>$survey->id])->whereNotIn('qus_type',['welcome_page','thank_you'])->get();
+            
+            $question1=Questions::where('id', '>', $qus)->where('survey_id', $survey->id)->orderBy('id')->first();
+            // Check Survey has question or not 
+            $surveyQus = Questions::where(['survey_id'=>$survey->id])->get();
+            
+            if(count($surveyQus)<=0){
+                
+                return view('admin.survey.noquserror', compact('survey'));
+            }else{
+                if($qus == 0){
                     //  update Survey History
                     $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=>$response_user_id])->first();
                     if($survey_history){
@@ -997,8 +974,41 @@ class SurveyController extends Controller
                         $survey_history->save();
                     }
                     return view('admin.survey.thankyoudefault', compact('survey'));
+                }else{
+                    if($question){
+                        if($question->qus_type =='thank_you'){
+                            //  update Survey History
+                            $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=>$response_user_id])->first();
+                            if($survey_history){
+                                $survey_history->status=1;
+                                $survey_history->save();
+                            }
+                        }
+                        if($question->qus_type =='thank_you' && $question->question_name ==''){
+                            return view('admin.survey.thankyoudefault', compact('survey'));
+                        }else{
+                            return view('admin.survey.response', compact('survey','question','question1','questionsset'));
+                        }
+
+                    }else{
+                        //  update Survey History
+                        $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=>$response_user_id])->first();
+                        if($survey_history){
+                            $survey_history->status=1;
+                            $survey_history->save();
+                        }
+                        return view('admin.survey.thankyoudefault', compact('survey'));
+                    }
                 }
             }
+        }else{
+             //  update Survey History
+             $survey_history = SurveyHistory::where(['survey_id'=>$survey->id,'respondent_id'=>$response_user_id])->first();
+             if($survey_history){
+                 $survey_history->status=1;
+                 $survey_history->save();
+             }
+             return view('admin.survey.thankyoudefault', compact('survey'));
         }
 
         
@@ -1290,8 +1300,9 @@ class SurveyController extends Controller
 
                     $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
 
-                    $ans = self::getAnswerValue($resp_logic_type_display_value, $logicv);
+                    $ans = trim(self::getAnswerValue($resp_logic_type_display_value, $logicv));
                     $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0], 'response_user_id' => $response_user_id])->orderBy("id", "desc")->first();
+                   
                     list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
 
                     // Adjust the result based on the logic type
@@ -1763,7 +1774,7 @@ class SurveyController extends Controller
     {
         if ($get_ans_usr) {
             return [
-                $get_ans_usr->answer,
+                trim($get_ans_usr->answer),
                 $get_ans_usr->skip,
                 $get_ans_usr->questions[0]->qus_type
             ];
