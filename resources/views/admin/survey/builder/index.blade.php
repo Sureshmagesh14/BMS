@@ -706,7 +706,8 @@ h6.question_name {
                                     @if($exiting_choices!=null)
                                     @foreach($exiting_choices as $choice)
                                     <div class="img_placeholder">
-                                        <img class="current_image" src="{{$choice->img}}">
+                                        <?php echo "<pre>"; print_r($choice); ?>
+                                        <!-- <img class="current_image" src="{{$choice->img}}"> -->
                                         <div class="trigger_choice"  style="display:none;">
                                             <svg class="svgsection" width="40" height="40" viewBox="0 0 36 27"><path fill="#D7D7D7" d="M7.5 8.25a2.25 2.25 0 114.502.002A2.25 2.25 0 017.5 8.25zM21 9l-3.779 6-3.721-2.94-6 8.94h21L21 9zm12-6v21H3V3h30zm3-3H0v27h36V0z"></path></svg>
                                         </div>
