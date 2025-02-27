@@ -1051,43 +1051,44 @@ h6.question_name {
                                                         @endif
                                                     </div>
                                                 @endforeach
-                                            @endif
-                                            @if(count($display_logic_DB1)<=0)
-                                                <div class="logic_section_display_row">
-                                                    <div class="row">
-                                                        <div class="col-md-4">
-                                                            {{ Form::text('display_type',"Question" , array('id'=>'display_type','class' => 'form-control','readonly'=>true)) }}
-                                                        </div>
-                                                        <div class="col-md-8">
-                                                            <div class="form-group mb-0">
-                                                            <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
-                                                                    <option value="">Choose ...</option>
-                                                                    @foreach($display_logic as $disqus)
-                                                                        @if($disqus['qus_type'] !== 'matrix_qus')
-                                                                            <option value="{{ $disqus['id'] }}">
-                                                                                {{ $disqus['question_name'] }}
-                                                                            </option>
-                                                                        @else
-                                                                            <optgroup label="{{ $disqus['question_name'] }}">
-                                                                                @php
-                                                                                    $qusvalue1 = $disqus['qus_ans'] ? json_decode($disqus['qus_ans'], true) : [];
-                                                                                    $existing_qus_matrix = isset($qusvalue1['matrix_qus']) ? explode(",", $qusvalue1['matrix_qus']) : [];
-                                                                                @endphp
-                                                                                @foreach($existing_qus_matrix as $key1 => $qus)
-                                                                                    <option value="{{ $disqus['id'] }}_{{ $key1 }}">
-                                                                                        {{ $qus }}
-                                                                                    </option>
-                                                                                @endforeach
-                                                                            </optgroup>
-                                                                        @endif
-                                                                    @endforeach
+                                            
+                                                @if(count($display_logic_DB1)<=0)
+                                                    <div class="logic_section_display_row">
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                {{ Form::text('display_type',"Question" , array('id'=>'display_type','class' => 'form-control','readonly'=>true)) }}
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="form-group mb-0">
+                                                                <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
+                                                                        <option value="">Choose ...</option>
+                                                                        @foreach($display_logic as $disqus)
+                                                                            @if($disqus['qus_type'] !== 'matrix_qus')
+                                                                                <option value="{{ $disqus['id'] }}">
+                                                                                    {{ $disqus['question_name'] }}
+                                                                                </option>
+                                                                            @else
+                                                                                <optgroup label="{{ $disqus['question_name'] }}">
+                                                                                    @php
+                                                                                        $qusvalue1 = $disqus['qus_ans'] ? json_decode($disqus['qus_ans'], true) : [];
+                                                                                        $existing_qus_matrix = isset($qusvalue1['matrix_qus']) ? explode(",", $qusvalue1['matrix_qus']) : [];
+                                                                                    @endphp
+                                                                                    @foreach($existing_qus_matrix as $key1 => $qus)
+                                                                                        <option value="{{ $disqus['id'] }}_{{ $key1 }}">
+                                                                                            {{ $qus }}
+                                                                                        </option>
+                                                                                    @endforeach
+                                                                                </optgroup>
+                                                                            @endif
+                                                                        @endforeach
 
-                                                                   
-                                                                </select>
+                                                                    
+                                                                    </select>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                @endif
                                             @endif
                                     </div>
                             </div>
