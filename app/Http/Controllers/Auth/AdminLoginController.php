@@ -402,147 +402,233 @@ class AdminLoginController extends Controller
     }
 
     public function resp_db_import(Request $request){
+        ini_set('memory_limit', '1024M');
+        set_time_limit(900);
         $total = $request->total;
         $count_ass = $request->count_ass;
-        $get_import_data = DB::table('profile_data')->where('imported_status',0)->take($total)->get();
+        $get_import_data = DB::table('import_providence')->where('imported_status',0)->take($total)->get();
         $password = Hash::make('Change@123');
         $resp_inc_get = Respondents::orderBy('id','DESC')->first();
         $res_inc = ($resp_inc_get != null) ? ($resp_inc_get->id + 1) : 1;
+
         foreach($get_import_data as $resp){
-            $no_vehicle = 0;
-            $no_children = 0;
+            $province = DB::table('state')
+                ->whereRaw("LOWER(REPLACE(TRIM(state), ' ', '_')) = ?", [strtolower(str_replace(' ', '_', trim($resp->province)))])
+                ->first();
 
-            if($resp->car_3_brand != null && $resp->car_3_brand != ''){
-                $no_vehicle = 3;
-            }
-            else if($resp->car_2_brand != null && $resp->car_2_brand != ''){
-                $no_vehicle = 2;
-            }
-            else if($resp->car_1_brand != null && $resp->car_1_brand != ''){
-                $no_vehicle = 1;
-            }
+            $metropolitan_area = ($resp->suburb) ? $resp->suburb : "";
+            $suburb = DB::table('district')->where('district', 'LIKE', '%' . $resp->metropolitan_area . '%')->first();
+            $respondent_id = 0;
 
-            if($resp->child_4_birth != null && $resp->child_4_birth != ''){
-                $no_children = 4;
-            }
-            else if($resp->child_4_birth != null && $resp->child_4_birth != ''){
-                $no_children = 3;
-            }
-            else if($resp->child_4_birth != null && $resp->child_4_birth != ''){
-                $no_children = 2;
-            }
-            else if($resp->child_4_birth != null && $resp->child_4_birth != ''){
-                $no_children = 1;
-            }
+            $getRespondent = Respondents::where('email',$resp->main_email)->first();
+          
             
-            $respondent_insert = array(
-                'id'        => $resp->id,
-                'name'      => $resp->fname,
-                'surname'   => $resp->lname,
-                'date_of_birth' => $resp->dob,
-                'email'     => $resp->main_email,
-                'mobile'    => $resp->pnumber,
-                'whatsapp'  => $resp->whatsapp,
-                'bank_name' => $resp->bank_main,
-                'password'  => $password,
-                'opted_in'  => $resp->opted_id,
-                'active_status_id' => ($resp->blacklist > 0 ? 5 : ($resp->unregistered > 0 ? 6 : 0))
-            );
+            if($getRespondent != null){
+                $get_profile = RespondentProfile::where('respondent_id',$getRespondent->id)->get();
+                $respondent_id = $getRespondent->id;
 
-            $basic_details = array(
-                'email'           => $resp->main_email,
-                'first_name'      => $resp->fname,
-                'last_name'       => $resp->lname,
-                'updated_at'      => date('Y-m-d H:i:s'),
-                'mobile_number'   => $resp->pnumber,
-                'whatsapp_number' => $resp->whatsapp
-            );
+                foreach($get_profile as $profile){
+                    $getEssential = ($profile->essential_details != null) ? json_decode($profile->essential_details, TRUE) : array();
 
-            $get_industry_in = DB::table('industry_company')->where(DB::raw('REPLACE(company, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->industry_my_company) . '%')->first();
-            $get_percenal_income = DB::table('income_per_month')->where(DB::raw('REPLACE(income, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->personal_income) . '%')->first();
-            $get_house_income = DB::table('income_per_month')->where(DB::raw('REPLACE(income, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->personal_income) . '%')->first();
-            $get_bank = DB::table('banks')->where(DB::raw('REPLACE(bank_name, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->bank_main) . '%')->first();
+                    if(count($getEssential) > 0){
+                        if($getEssential['province'] == ""){
+                            $getEssential['province'] = ($province != null) ? $province->id : "";
+                        }
 
-            $essential_details = array(
-                'gender'                     => ($resp->gender == 'Male') ? 'male' : 'female',
-                'suburb'                     => '',
-                'province'                   => '',
-                'metropolitan_area'          => '',
-                'job_title'                  => $resp->job_title,
-                'no_vehicle'                 => $no_vehicle,
-                'no_children'                => $no_children,
-                'ethnic_group'               => ($resp->ethnic_group_race != null && $resp->ethnic_group_race != '') ? strtolower($resp->ethnic_group_race) : null,
-                'education_level'            => $this->get_education($resp->highest_level_education, 'education'),
-                'employment_status'          => $this->get_education($resp->highest_level_education, 'employment'),
-                'industry_my_company'        => ($get_industry_in != null) ? $get_industry_in->id : 0,
-                'relationship_status'        => ($resp->relationship_status != null && $resp->relationship_status != '') ? strtolower($resp->relationship_status) : null,
-                'personal_income_per_month'  => ($get_percenal_income != null) ? $get_percenal_income->id : 0,
-                'household_income_per_month' => ($get_house_income != null) ? $get_house_income->id : 0,
-                'updated_at'                 => date('Y-m-d H:i:s')
-            );
+                        if($getEssential['suburb'] == ""){
+                            $getEssential['suburb'] = ($suburb != null) ? $suburb->id : "";
+                        }
 
-            $extended_details = array(
-                'bank_main'                 => ($get_bank != null) ? $get_bank->id : 0,
-                'home_lang'                 => ($resp->home_language != null && $resp->home_language != '') ? strtolower($resp->home_language) : null,
-                'updated_at'                => date('Y-m-d H:i:s'),
-                'org_company'               => $this->get_education($resp->role_business_organization, 'role_organization'),
-            );
+                        if($getEssential['metropolitan_area'] == ""){
+                            $getEssential['metropolitan_area'] = $metropolitan_area;
+                        }
 
-            $child_detials = array();
-            $car_detials   = array();
+                        $encodeEssential = json_encode($getEssential);
+                        
+                        RespondentProfile::where('id', $profile->id)->update(['essential_details' => $encodeEssential]);
+                    }
+                }
+            }
+            else{
 
-            $resp_profile = array(
-                'pid'               => $resp->id,
-                'respondent_id'     => $resp->id,
-                'basic_details'     => json_encode($basic_details),
-                'essential_details' => json_encode($essential_details),
-                'extended_details'  => json_encode($extended_details),
-            );
+                $no_vehicle = 0;
+                $no_children = 0;
 
-            if($no_children > 0){
-                for($ch = 1; $ch <= $no_children; $ch++){
-                    $child_birth_var = 'child_'.$ch.'_birth';
-                    $child_gender_var = 'child_'.$ch.'_gender';
-
-                    $child_json = array(
-                        "date" => $resp->$child_birth_var,
-                        "gender" => ($resp->$child_gender_var == "Male") ? 'male' : 'female'
-                    );
-
-                    array_push($child_detials, $child_json);
+                if($resp->car_3_brand != null && $resp->car_3_brand != ''){
+                    $no_vehicle = 3;
+                }
+                else if($resp->car_2_brand != null && $resp->car_2_brand != ''){
+                    $no_vehicle = 2;
+                }
+                else if($resp->car_1_brand != null && $resp->car_1_brand != ''){
+                    $no_vehicle = 1;
                 }
 
-                $resp_profile['children_data'] = json_encode($child_detials);
-            }
+                if($resp->child_4_birth_year != null && $resp->child_4_birth_year != ''){
+                    $no_children = 4;
+                }
+                else if($resp->child_3_birth_year != null && $resp->child_3_birth_year != ''){
+                    $no_children = 3;
+                }
+                else if($resp->child_2_birth_year != null && $resp->child_2_birth_year != ''){
+                    $no_children = 2;
+                }
+                else if($resp->child_1_birth_year != null && $resp->child_1_birth_year != ''){
+                    $no_children = 1;
+                }
+            
+                $respondent_insert = array(
+                    'name'      => $resp->first_name,
+                    'surname'   => $resp->last_name,
+                    'date_of_birth' => $resp->date_of_birth,
+                    'email'     => $resp->main_email,
+                    'mobile'    => $resp->phone_number,
+                    'whatsapp'  => $resp->whatsapp,
+                    'bank_name' => $resp->bank_name,
+                    'password'  => $password,
+                    'opted_in'  => $resp->opted_in,
+                    'active_status_id' => 0
+                );
 
-            if($no_vehicle > 0){
-                for($ch = 1; $ch <= $no_vehicle; $ch++){
-                    $car_brand_var   = 'car_'.$ch.'_brand';
-                    $car_model_var   = 'car_'.$ch.'_model';
-                    $car_vehicle_var = 'car_'.$ch.'_vehicle';
-                    $car_year_var    = 'car_'.$ch.'_year';
+                $basic_details = array(
+                    'email'           => $resp->main_email,
+                    'first_name'      => $resp->first_name,
+                    'last_name'       => $resp->last_name,
+                    'updated_at'      => date('Y-m-d H:i:s'),
+                    'mobile_number'   => $resp->phone_number,
+                    'whatsapp_number' => $resp->whatsapp
+                );
 
-                    $car_json = array(
-                        "type" => ($resp->$car_vehicle_var != null && $resp->$car_vehicle_var != '') ? strtolower($resp->$car_vehicle_var) : null,
-                        "year" => $resp->$car_year_var,
-                        "brand" => $resp->$car_brand_var,
-                        "model" => ($resp->$car_model_var != null && $resp->$car_model_var != '') ? strtolower($resp->$car_model_var) : null,
-                    );
+                $get_industry_in = DB::table('industry_company')->where(DB::raw('REPLACE(company, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->industry_my_company_is_in) . '%')->first();
+                $get_percenal_income = DB::table('income_per_month')->where(DB::raw('REPLACE(income, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->personal_income) . '%')->first();
+                $get_house_income = DB::table('income_per_month')->where(DB::raw('REPLACE(income, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->personal_income) . '%')->first();
+                $get_bank = DB::table('banks')->where(DB::raw('REPLACE(bank_name, " ", "")'), 'like', '%' . str_replace(' ', '', $resp->bank_name) . '%')->first();
 
-                    array_push($car_detials, $car_json);
+                $essential_details = array(
+                    'gender'                     => ($resp->gender == 'Male') ? 'male' : 'female',
+                    'suburb'                     => '',
+                    'province'                   => '',
+                    'metropolitan_area'          => '',
+                    'job_title'                  => $resp->job_title,
+                    'no_vehicle'                 => $no_vehicle,
+                    'no_children'                => $no_children,
+                    'ethnic_group'               => ($resp->ethnic_group != null && $resp->ethnic_group != '') ? strtolower($resp->ethnic_group) : null,
+                    'education_level'            => $this->get_education($resp->highest_level_of_education, 'education'),
+                    'employment_status'          => $this->get_education($resp->highest_level_of_education, 'employment'),
+                    'industry_my_company'        => ($get_industry_in != null) ? $get_industry_in->id : 0,
+                    'relationship_status'        => ($resp->relationship_status != null && $resp->relationship_status != '') ? strtolower($resp->relationship_status) : null,
+                    'personal_income_per_month'  => ($get_percenal_income != null) ? $get_percenal_income->id : 0,
+                    'household_income_per_month' => ($get_house_income != null) ? $get_house_income->id : 0,
+                    'updated_at'                 => date('Y-m-d H:i:s')
+                );
+
+                $extended_details = array(
+                    'bank_main'                 => ($get_bank != null) ? $get_bank->id : 0,
+                    'home_lang'                 => ($resp->home_language != null && $resp->home_language != '') ? strtolower($resp->home_language) : null,
+                    'updated_at'                => date('Y-m-d H:i:s'),
+                    'org_company'               => $this->get_education($resp->role_in_business, 'role_organization'),
+                );
+
+                $child_detials = array();
+                $car_detials   = array();
+
+                $resp_profile = array(
+                    'pid'               => $resp->id,
+                    'respondent_id'     => $resp->id,
+                    'basic_details'     => json_encode($basic_details),
+                    'essential_details' => json_encode($essential_details),
+                    'extended_details'  => json_encode($extended_details),
+                );
+
+                if($no_children > 0){
+                    for($ch = 1; $ch <= $no_children; $ch++){
+                        $child_birth_var = 'child_'.$ch.'_birth_year';
+                        $child_gender_var = 'child_'.$ch.'_gender';
+
+                        $child_json = array(
+                            "date" => $resp->$child_birth_var,
+                            "gender" => ($resp->$child_gender_var == "Male") ? 'male' : 'female'
+                        );
+
+                        array_push($child_detials, $child_json);
+                    }
+
+                    $resp_profile['children_data'] = json_encode($child_detials);
                 }
 
-                $resp_profile['vehicle_data'] = json_encode($car_detials);
-            }
+                if($no_vehicle > 0){
+                    for($ch = 1; $ch <= $no_vehicle; $ch++){
+                        $car_brand_var   = 'car_'.$ch.'_brand';
+                        $car_model_var   = 'car_'.$ch.'_model';
+                        $car_vehicle_var = 'car_'.$ch.'_type_of_vehicle';
+                        $car_year_var    = 'car_'.$ch.'_year';
+
+                        $car_json = array(
+                            "type" => ($resp->$car_vehicle_var != null && $resp->$car_vehicle_var != '') ? strtolower($resp->$car_vehicle_var) : null,
+                            "year" => $resp->$car_year_var,
+                            "brand" => $resp->$car_brand_var,
+                            "model" => ($resp->$car_model_var != null && $resp->$car_model_var != '') ? strtolower($resp->$car_model_var) : null,
+                        );
+
+                        array_push($car_detials, $car_json);
+                    }
+
+                    $resp_profile['vehicle_data'] = json_encode($car_detials);
+                }
            
 
-            Respondents::insert($respondent_insert);
-            RespondentProfile::insert($resp_profile);
-            DB::table('profile_data')->where('id',$resp->id)->update(['imported_status' => 1]);
-            $res_inc++;
+                $inserted_id = DB::table('respondents')->insertGetId($respondent_insert);
+                RespondentProfile::insert($resp_profile);
+
+                $respondent_id = $inserted_id;
+                $res_inc++;
+            }
+
+            DB::table('import_providence')->where('main_email',$resp->main_email)->update(['imported_status' => 1]);
         }
 
         return $count_ass;
+    }
+
+
+    public function updateRespondentToRespondentProfile()
+    {
+        // Select respondents without a profile
+        $getResp = Respondents::select('respondents.*')
+            ->leftJoin('respondent_profile as profile', 'profile.respondent_id', '=', 'respondents.id')
+            ->whereNull('profile.respondent_id')
+            ->get();
+
+        // Prepare data for batch insert
+        $profilesData = [];
+        $currentTimestamp = now()->format('Y-m-d H:i:s');
+
+        foreach ($getResp as $resp) {
+            $basic_details = [
+                'email'           => $resp->email,
+                'first_name'      => $resp->name,
+                'last_name'       => $resp->surname,
+                'updated_at'      => $currentTimestamp,
+                'mobile_number'   => $resp->mobile,
+                'whatsapp_number' => $resp->whatsapp,
+                'date_of_birth'   => $resp->date_of_birth,
+            ];
+
+            $basic_details_encode = json_encode($basic_details);
+
+            $profilesData[] = [
+                'pid' => $resp->id,
+                'respondent_id' => $resp->id,
+                'basic_details' => $basic_details_encode,
+            ];
+        }
+
+        // Insert profiles in batch
+        if (!empty($profilesData)) {
+            RespondentProfile::insert($profilesData);
+        }
+
+        return 'SUCCESS';
     }
     
 }

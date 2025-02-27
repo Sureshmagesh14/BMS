@@ -372,6 +372,7 @@ class RespondentsController extends Controller
             $contents = Respondents::find($id);
             app('App\Http\Controllers\InternalReportController')->call_activity(Auth::guard('admin')->user()->role_id,Auth::guard('admin')->user()->id,'deleted','respondent');
             if ($contents) {
+                RespondentProfile::where('respondent_id', $id)->delete();
                 $contents->delete();
                 return response()->json([
                     'status' => 200,
@@ -1120,7 +1121,13 @@ class RespondentsController extends Controller
                         }else{
                             $proj_name = $proj->name;
                         }
-                        $project_link = route('user.dashboard');
+                        // $project_link = route('user.dashboard');
+                        // $project_link=Projects::get_survey($proj->survey_link);
+                        // $project_link = url('survey/view', $project_link->builderID ?? '');
+
+                        $refCode = Respondents::randomPassword();
+                        $links = ($proj->project_link) ? $proj->project_link : $refCode;
+                        $project_link = url('share_project', $links);
                         
                         $survey_duration = $proj->survey_duration;
                         $reward = $proj->reward;
