@@ -6,6 +6,7 @@
                 <option value="5">EFT > Approve & Process</option>
                 <option value="3">Status > Completed</option>
                 <option value="4">Status > Declined</option>
+                <option value="1">Status > Pending</option>
                 <option value="0">Status > Failed</option>
                 <option value="delete_all">Delete Cash Outs</option>
             </optgroup>
