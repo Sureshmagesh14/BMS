@@ -871,185 +871,187 @@ h6.question_name {
                                             }
                                             // echo "<pre>"; print_r($logic_type_value);
                                             ?>
-                                            @foreach($display_logic_DB1 as $key=>$v1)
-                                                <?php 
-                                                if($logic_type_value){
-                                                    $vlogic= $logic_type_value[$key]; 
-                                                    $vlogicoption= $logic_type_value_option_display[$key]; 
-                                                    $andOrVal=$display_qus_choice_andor_display[$key]; 
-                                                }else{
-                                                    $vlogic= ''; 
-                                                    $vlogicoption= ''; 
-                                                    $andOrVal=''; 
-                                                } 
-                                                // echo $vlogic.'-vlogic';
-                                                ?>
-                                                <div class="logic_section_display_row">
-                                                    <div class="row">
-                                                        @if($key>0)
-                                                        <div class="col-md-4">
-                                                            <select class="display_qus_choice_andor form-control" name="display_qus_choice_andor" data-placeholder="Choose ...">
-                                                                <option value="and" @if($andOrVal=='and') selected @endif>AND</option>
-                                                                <option value="or" @if($andOrVal=='or') selected @endif>OR</option>
-                                                            </select>
-                                                        </div>
-                                                        @endif
-                                                        <div class="col-md-4">
-                                                            {{ Form::text('display_type',"Question" , array('id'=>'display_type','class' => 'form-control','readonly'=>true)) }}
-                                                        </div>
-                                                      
-                                                        <div class="@if($key>0) col-md-4 @else col-md-8 @endif ">
-                                                            <div class="form-group mb-0">
-                                                                <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
-                                                                    <option value="">Choose ...</option>
-                                                                    @foreach($display_logic as $disqus)
-                                                                        @if($disqus['qus_type'] !== 'matrix_qus')
-                                                                            <option value="{{ $disqus['id'] }}" {{ $v1 == $disqus['id'] ? 'selected' : '' }}>
-                                                                                {{ $disqus['question_name'] }}
-                                                                            </option>
-                                                                        @else
-                                                                            <optgroup label="{{ $disqus['question_name'] }}">
-                                                                                @php
-                                                                                    $qusvalue1 = $disqus['qus_ans'] ? json_decode($disqus['qus_ans'], true) : [];
-                                                                                    $existing_qus_matrix = isset($qusvalue1['matrix_qus']) ? explode(",", $qusvalue1['matrix_qus']) : [];
-                                                                                @endphp
-                                                                                @foreach($existing_qus_matrix as $key1 => $qus)
-                                                                                    <option value="{{ $disqus['id'] }}_{{ $key1 }}" {{ $v1 == $disqus['id'] . '_' . $key1 ? 'selected' : '' }}>
-                                                                                        {{ $qus }}
-                                                                                    </option>
-                                                                                @endforeach
-                                                                            </optgroup>
-                                                                        @endif
-                                                                    @endforeach
-
-                                                                   
+                                            @if (!empty($display_logic_DB1))
+                                                @foreach($display_logic_DB1 as $key=>$v1)
+                                                    <?php 
+                                                    if($logic_type_value){
+                                                        $vlogic= $logic_type_value[$key]; 
+                                                        $vlogicoption= $logic_type_value_option_display[$key]; 
+                                                        $andOrVal=$display_qus_choice_andor_display[$key]; 
+                                                    }else{
+                                                        $vlogic= ''; 
+                                                        $vlogicoption= ''; 
+                                                        $andOrVal=''; 
+                                                    } 
+                                                    // echo $vlogic.'-vlogic';
+                                                    ?>
+                                                    <div class="logic_section_display_row">
+                                                        <div class="row">
+                                                            @if($key>0)
+                                                            <div class="col-md-4">
+                                                                <select class="display_qus_choice_andor form-control" name="display_qus_choice_andor" data-placeholder="Choose ...">
+                                                                    <option value="and" @if($andOrVal=='and') selected @endif>AND</option>
+                                                                    <option value="or" @if($andOrVal=='or') selected @endif>OR</option>
                                                                 </select>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Get Qus Choice Details -->
-                                                    <?php $qus_display=\App\Models\Questions::where(['id'=>$v1])->first();
-                                                            $resp_logic_type_display=[];
-                                                            $resp_logic_type_display_value=[];
-                                                            if($qus_display!=null){
-                                                                $qusvalue_display = json_decode($qus_display->qus_ans); 
-                                                                switch ($qus_display->qus_type) {
-                                                                    case 'single_choice':
-                                                                        if (isset($qusvalue_display->choices_list)) {
-                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
-                                                                        } else {
-                                                                            $resp_logic_type_display_value = []; 
-                                                                        }
-                                                                        $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
-                                                                        break;
-                                                                    case 'multi_choice':
-                                                                        if (isset($qusvalue_display->choices_list)) {
-                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
-                                                                        } else {
-                                                                            $resp_logic_type_display_value = []; 
-                                                                        }
-                                                                        $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
-                                                                        break;
-                                                                    case 'dropdown':
-                                                                        if (isset($qusvalue_display->choices_list)) {
-                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
-                                                                        } else {
-                                                                            $resp_logic_type_display_value = []; 
-                                                                        }
-                                                                        $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
-                                                                        break;
-                                                                    case 'picturechoice':
-                                                                        if (isset($qusvalue_display->choices_list)) {
-                                                                            $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
-                                                                        } else {
-                                                                            $resp_logic_type_display_value = []; 
-                                                                        }
-                                                                        $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
-                                                                        break;
-                                                                    case 'photo_capture':
-                                                                        $resp_logic_type_display=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
-                                                                        break;
-                                                                    case 'open_qus':
-                                                                        $resp_logic_type_display=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
-                                                                        break; 
-                                                                    case 'likert':
-                                                                        $resp_logic_type_display_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5,"6"=>6,"7"=>7,"8"=>8,"9"=>9];
-                                                                        $resp_logic_type_display=['lessThanForScale'=>'Less than','greaterThanForScale'=>'Greater than','equalToForScale'=>'Equal To','notEqualToForScale'=>'Not Equal To','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
-                                                                        break;
-                                                                    case 'rankorder':
-                                                                        $resp_logic_type_display=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
-                                                                        break;
-                                                                    case 'rating':
-                                                                        $resp_logic_type_display_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5];
-                                                                        $resp_logic_type_display=['lessThanForScale'=>'Less than','greaterThanForScale'=>'Greater than','equalToForScale'=>'Equal To','notEqualToForScale'=>'Not Equal To','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
-                                                                        break;
-                                                                    case 'email':
-                                                                        $resp_logic_type_display=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
-                                                                        break;
-                                                                    case 'matrix_qus':
-                                                                        $resp_logic_type_display_value=explode(",",$qusvalue_display->matrix_choice);
-                                                                        $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
-                                                                        break;
-                                                                }
-                                                            }else{
-                                                                $qusvalue_display=[];
-                                                            }
-                                                            // echo "<pre>"; print_r($resp_logic_type_display);
-                                                            ?>
-                                                    @if($qus_display!=null)
-                                                    <div class="respondant_selection row">
-                                                        <div class="col-md-4" >
-                                                            <?php //echo (strval($logic_type_value[$key])); ?>
-                                                            <select class="form-control logic_type_value_display" name="logic_type_value_display">
-                                                                <option value="">Choose</option>
-                                                                @foreach($resp_logic_type_display as $key1=>$value)
-                                                                    @if($key1 == $vlogic)
-                                                                    <option value="{{$key1}}" selected>{{$value}}</option>
-                                                                    @else
-                                                                    <option value="{{$key1}}">{{$value}}</option>
-                                                                    @endif
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-4 choice_list_sec" style="@if($vlogic=='isAnswered' || $vlogic=='isNotAnswered') display:none; @endif">
-                                                        @if($qus_display->qus_type=='email' || $qus_display->qus_type=='open_qus')
-                                                            <input class="form-control logic_type_value_option" value="{{$vlogicoption}}" type="text" name="logic_type_value_option"/>
-                                                        @elseif($qus_display->qus_type=='rankorder')
-                                                            <input style="display:none;" class="form-control logic_type_value_option" value="{{$vlogicoption}}" type="text" name="logic_type_value_option"/>
-                                                        @elseif($qus_display->qus_type=='picturechoice')
-                                                            <select class="form-control logic_type_value_option" name="logic_type_value_option">
-                                                                <option value="">Choose</option>
-                                                                @foreach($resp_logic_type_display_value as $key=>$value)
-                                                                    @if($key==$vlogicoption)
-                                                                        <option selected value="{{$key}}">{{$value->text}}</option>
-                                                                    @else 
-                                                                        <option value="{{$key}}">{{$value->text}}</option>
-                                                                    @endif
-                                                                @endforeach
-                                                            </select>
-                                                        @else
-                                                            <select class="form-control logic_type_value_option" name="logic_type_value_option">
-                                                                <option value="">Choose</option>
-                                                                @foreach($resp_logic_type_display_value as $key=>$value)
-                                                                    @if($value==$vlogicoption || $key==$vlogicoption)
-                                                                        <option selected value="{{$key}}">{{$value}}</option>
-                                                                    @else 
-                                                                        <option value="{{$key}}">{{$value}}</option>
-                                                                    @endif
-                                                                @endforeach
-                                                            </select>
-                                                        @endif
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <div class="ss-logic-item-actions mb-3">
-                                                                <button type="button" name="minus" class="removechoicelist_display">−</button>
-                                                                <button type="button" name="add" class="addchoicelist_display">+</button>
+                                                            @endif
+                                                            <div class="col-md-4">
+                                                                {{ Form::text('display_type',"Question" , array('id'=>'display_type','class' => 'form-control','readonly'=>true)) }}
+                                                            </div>
+                                                        
+                                                            <div class="@if($key>0) col-md-4 @else col-md-8 @endif ">
+                                                                <div class="form-group mb-0">
+                                                                    <select class="display_qus_choice form-control" name="display_qus_choice" data-placeholder="Choose ...">
+                                                                        <option value="">Choose ...</option>
+                                                                        @foreach($display_logic as $disqus)
+                                                                            @if($disqus['qus_type'] !== 'matrix_qus')
+                                                                                <option value="{{ $disqus['id'] }}" {{ $v1 == $disqus['id'] ? 'selected' : '' }}>
+                                                                                    {{ $disqus['question_name'] }}
+                                                                                </option>
+                                                                            @else
+                                                                                <optgroup label="{{ $disqus['question_name'] }}">
+                                                                                    @php
+                                                                                        $qusvalue1 = $disqus['qus_ans'] ? json_decode($disqus['qus_ans'], true) : [];
+                                                                                        $existing_qus_matrix = isset($qusvalue1['matrix_qus']) ? explode(",", $qusvalue1['matrix_qus']) : [];
+                                                                                    @endphp
+                                                                                    @foreach($existing_qus_matrix as $key1 => $qus)
+                                                                                        <option value="{{ $disqus['id'] }}_{{ $key1 }}" {{ $v1 == $disqus['id'] . '_' . $key1 ? 'selected' : '' }}>
+                                                                                            {{ $qus }}
+                                                                                        </option>
+                                                                                    @endforeach
+                                                                                </optgroup>
+                                                                            @endif
+                                                                        @endforeach
+
+                                                                    
+                                                                    </select>
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                        <!-- Get Qus Choice Details -->
+                                                        <?php $qus_display=\App\Models\Questions::where(['id'=>$v1])->first();
+                                                                $resp_logic_type_display=[];
+                                                                $resp_logic_type_display_value=[];
+                                                                if($qus_display!=null){
+                                                                    $qusvalue_display = json_decode($qus_display->qus_ans); 
+                                                                    switch ($qus_display->qus_type) {
+                                                                        case 'single_choice':
+                                                                            if (isset($qusvalue_display->choices_list)) {
+                                                                                $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                            } else {
+                                                                                $resp_logic_type_display_value = []; 
+                                                                            }
+                                                                            $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                            break;
+                                                                        case 'multi_choice':
+                                                                            if (isset($qusvalue_display->choices_list)) {
+                                                                                $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                            } else {
+                                                                                $resp_logic_type_display_value = []; 
+                                                                            }
+                                                                            $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                            break;
+                                                                        case 'dropdown':
+                                                                            if (isset($qusvalue_display->choices_list)) {
+                                                                                $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                            } else {
+                                                                                $resp_logic_type_display_value = []; 
+                                                                            }
+                                                                            $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                            break;
+                                                                        case 'picturechoice':
+                                                                            if (isset($qusvalue_display->choices_list)) {
+                                                                                $resp_logic_type_display_value = explode(",", $qusvalue_display->choices_list);
+                                                                            } else {
+                                                                                $resp_logic_type_display_value = []; 
+                                                                            }
+                                                                            $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                            break;
+                                                                        case 'photo_capture':
+                                                                            $resp_logic_type_display=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                            break;
+                                                                        case 'open_qus':
+                                                                            $resp_logic_type_display=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
+                                                                            break; 
+                                                                        case 'likert':
+                                                                            $resp_logic_type_display_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5,"6"=>6,"7"=>7,"8"=>8,"9"=>9];
+                                                                            $resp_logic_type_display=['lessThanForScale'=>'Less than','greaterThanForScale'=>'Greater than','equalToForScale'=>'Equal To','notEqualToForScale'=>'Not Equal To','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                            break;
+                                                                        case 'rankorder':
+                                                                            $resp_logic_type_display=['isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                            break;
+                                                                        case 'rating':
+                                                                            $resp_logic_type_display_value=["1"=>1,"2"=>3,"3"=>3,"4"=>4,"5"=>5];
+                                                                            $resp_logic_type_display=['lessThanForScale'=>'Less than','greaterThanForScale'=>'Greater than','equalToForScale'=>'Equal To','notEqualToForScale'=>'Not Equal To','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                            break;
+                                                                        case 'email':
+                                                                            $resp_logic_type_display=['contains'=>'Contains','doesNotContain'=>'Does not Contain','startsWith'=>'Starts With','endsWith'=>'Ends With','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered','equalsString'=>'Equals','notEqualTo'=>'Not Equal To'];
+                                                                            break;
+                                                                        case 'matrix_qus':
+                                                                            $resp_logic_type_display_value=explode(",",$qusvalue_display->matrix_choice);
+                                                                            $resp_logic_type_display=['isSelected'=>'Respondent selected','isNotSelected'=>'Respondent has not selected','isAnswered'=>'Is Answered','isNotAnswered'=>'Is Not Answered'];
+                                                                            break;
+                                                                    }
+                                                                }else{
+                                                                    $qusvalue_display=[];
+                                                                }
+                                                                // echo "<pre>"; print_r($resp_logic_type_display);
+                                                                ?>
+                                                        @if($qus_display!=null)
+                                                        <div class="respondant_selection row">
+                                                            <div class="col-md-4" >
+                                                                <?php //echo (strval($logic_type_value[$key])); ?>
+                                                                <select class="form-control logic_type_value_display" name="logic_type_value_display">
+                                                                    <option value="">Choose</option>
+                                                                    @foreach($resp_logic_type_display as $key1=>$value)
+                                                                        @if($key1 == $vlogic)
+                                                                        <option value="{{$key1}}" selected>{{$value}}</option>
+                                                                        @else
+                                                                        <option value="{{$key1}}">{{$value}}</option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-4 choice_list_sec" style="@if($vlogic=='isAnswered' || $vlogic=='isNotAnswered') display:none; @endif">
+                                                            @if($qus_display->qus_type=='email' || $qus_display->qus_type=='open_qus')
+                                                                <input class="form-control logic_type_value_option" value="{{$vlogicoption}}" type="text" name="logic_type_value_option"/>
+                                                            @elseif($qus_display->qus_type=='rankorder')
+                                                                <input style="display:none;" class="form-control logic_type_value_option" value="{{$vlogicoption}}" type="text" name="logic_type_value_option"/>
+                                                            @elseif($qus_display->qus_type=='picturechoice')
+                                                                <select class="form-control logic_type_value_option" name="logic_type_value_option">
+                                                                    <option value="">Choose</option>
+                                                                    @foreach($resp_logic_type_display_value as $key=>$value)
+                                                                        @if($key==$vlogicoption)
+                                                                            <option selected value="{{$key}}">{{$value->text}}</option>
+                                                                        @else 
+                                                                            <option value="{{$key}}">{{$value->text}}</option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </select>
+                                                            @else
+                                                                <select class="form-control logic_type_value_option" name="logic_type_value_option">
+                                                                    <option value="">Choose</option>
+                                                                    @foreach($resp_logic_type_display_value as $key=>$value)
+                                                                        @if($value==$vlogicoption || $key==$vlogicoption)
+                                                                            <option selected value="{{$key}}">{{$value}}</option>
+                                                                        @else 
+                                                                            <option value="{{$key}}">{{$value}}</option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </select>
+                                                            @endif
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="ss-logic-item-actions mb-3">
+                                                                    <button type="button" name="minus" class="removechoicelist_display">−</button>
+                                                                    <button type="button" name="add" class="addchoicelist_display">+</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @endif
                                                     </div>
-                                                    @endif
-                                                </div>
-                                            @endforeach
+                                                @endforeach
+                                            @endif
                                             @if(count($display_logic_DB1)<=0)
                                                 <div class="logic_section_display_row">
                                                     <div class="row">
