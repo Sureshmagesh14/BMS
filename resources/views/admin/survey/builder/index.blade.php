@@ -1270,11 +1270,16 @@ h6.question_name {
                                                     <select class="form-control skip_logic_type_value_option" name="skip_logic_type_value_option">
                                                         <option value="">Choose</option>
                                                         @foreach($resp_logic_type_skip_value as $key=>$value)
-                                                            @if($key==$vlogicoption_skip)
-                                                                <option selected value="{{$key}}">{{$value->text}}</option>
+                                                            @if($key == $vlogicoption_skip)
+                                                                <option selected value="{{$key}}">
+                                                                    {{ is_object($value) ? $value->text : $value }}
+                                                                </option>
                                                             @else 
-                                                                <option value="{{$key}}">{{$value->text}}</option>
+                                                                <option value="{{$key}}">
+                                                                    {{ is_object($value) ? $value->text : $value }}
+                                                                </option>
                                                             @endif
+
                                                         @endforeach
                                                     </select>
                                                 @else
