@@ -393,7 +393,7 @@ class CashoutsController extends Controller
                     'payment_method' => strtoupper($req_type)
                 ];
     
-                if (in_array($value, [1, 3, 4, 5])) {
+                if (in_array($value, [0, 1, 3, 4, 5])) {
                     $subject = '';
                     $templateId = '';
                     
