@@ -399,6 +399,10 @@ class CashoutsController extends Controller
                     
                     // Fixed email template selection based on value
                     switch ($value) {
+                        case 0:
+                            $subject = 'Cash Out Failed';
+                            $templateId = 'd-5040b5ea8f864ff9886bed8d06e44888';
+                            break;
                         case 1:
                             $subject = 'Cashout Request';
                             $templateId = 'd-fadcfcb9f22a4e3d873fcb0459dc1b58';
