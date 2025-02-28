@@ -61,7 +61,7 @@
 <div class="container">
     <h5>Terms & Conditions</h5>
     <section>
-        <p> {{ $data->data }}</p>
+        <p> {!! $data->data !!}</p>
     </section>
 </div>
 

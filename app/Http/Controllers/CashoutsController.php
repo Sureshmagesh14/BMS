@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use App\Models\Users;
 use Exception;
+use App\Services\SendGridService;
 class CashoutsController extends Controller
 {   
     public function cashouts()
@@ -331,23 +332,128 @@ class CashoutsController extends Controller
         }
     }
 
-    public function cashout_action(Request $request){
+    public function cashout_action(Request $request) {
         try {
             $all_id = $request->all_id;
             $value  = $request->value;
-           
-            foreach($all_id as $id){
-                $tags = Cashout::where('id',$id)->update(['status_id' => $value]);
+    
+            if (empty($all_id) || !isset($value)) {
+                return response()->json([
+                    'status' => 400,
+                    'success' => false,
+                    'message' => 'Missing required parameters'
+                ]);
             }
-            
+    
+            foreach ($all_id as $id) {
+                $cash = DB::table('cashouts as c')
+                    ->leftJoin('respondents as r', 'c.respondent_id', '=', 'r.id')
+                    ->leftJoin('banks as b', 'c.bank_id', '=', 'b.id')
+                    ->select('c.*', 'r.name', 'r.surname', 'r.email', 'b.bank_name', 'b.branch_code')
+                    ->where('c.id', $id)
+                    ->first();
+    
+                // Check if the $cash object is null
+                if (!$cash) {
+                    continue;  // Skip if no data is found for the current id
+                }
+    
+                $to_address = $cash->email;
+                $resp_name = $cash->name ?? 'Customer'; // Fallback if name is null
+                $points = $cash->amount;
+    
+                // Determine request type based on type_id
+                $req_type = '';
+                switch ($cash->type_id) {
+                    case 1:
+                        $req_type = 'EFT';
+                        break;
+                    case 2:
+                        $req_type = 'Data';
+                        break;
+                    case 3:
+                        $req_type = 'Airtime';
+                        break;
+                    case 4:
+                        $req_type = 'Donation';
+                        break;
+                    default:
+                        $req_type = 'Unknown';
+                        break;
+                }
+    
+                // Update the status in the cashouts table
+                Cashout::where('id', $id)->update(['status_id' => $value]);
+    
+                $dynamicData = [
+                    'points' => $points,
+                    'date_requested' => date('d-m-Y'),
+                    'first_name' => $resp_name,
+                    'rand_value' => 'R ' . number_format($points / 10, 2),
+                    'payment_method' => strtoupper($req_type)
+                ];
+    
+                if (in_array($value, [1, 3, 4, 5])) {
+                    $subject = '';
+                    $templateId = '';
+                    
+                    // Fixed email template selection based on value
+                    switch ($value) {
+                        case 1:
+                            $subject = 'Cashout Request';
+                            $templateId = 'd-fadcfcb9f22a4e3d873fcb0459dc1b58';
+                            break;
+                        case 3:
+                            $subject = 'Cash Out Approved';
+                            $templateId = 'd-5d2729f3674c4b0085c8b105ca258094';
+                            break;
+                        case 4:
+                            $subject = 'Cash Out Failed';
+                            $templateId = 'd-5040b5ea8f864ff9886bed8d06e44888';
+                            break;
+                        case 5:
+                            $subject = 'Cash Out Approved';
+                            $templateId = 'd-5d2729f3674c4b0085c8b105ca258094';
+                            break;
+                    }
+    
+                    // Only try to send email if we have a valid recipient
+                    if (!empty($to_address)) {
+                        try {
+                            // Send the email using SendGrid
+                            $sendgrid = new SendGridService();
+                            $sendgrid->setFrom();
+                            $sendgrid->setSubject($subject);
+                            $sendgrid->setTemplateId($templateId);
+                            $sendgrid->setDynamicData($dynamicData);
+                            $sendgrid->setToEmail($to_address, $resp_name);
+                            $sendgrid->send();
+                            
+                            // Log successful email sending for debugging
+                            \Log::info("Email sent for cashout ID $id: Status $value, Template: $templateId");
+                        } catch (\Exception $emailException) {
+                            // Log the email error but continue processing other IDs
+                            \Log::error("Failed to send email for cashout ID $id: " . $emailException->getMessage());
+                        }
+                    } else {
+                        \Log::warning("Cannot send email for cashout ID $id: Email address missing");
+                    }
+                }
+            }
+    
             return response()->json([
-                'status'=>200,
+                'status' => 200,
                 'success' => true,
-                'message'=>'Status Changed'
+                'message' => 'Status Changed'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Cashout action error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'success' => false,
+                'message' => 'An error occurred: ' . $e->getMessage()
             ]);
         }
-        catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
     }
+    
 }
