@@ -1264,7 +1264,7 @@ class WelcomeController extends Controller
         }
     }
 
-    public function process_cashout(){
+eclo    public function process_cashout(){
         
         //status id 5 - ApprovedForProcessing
         $now = new Carbon();
