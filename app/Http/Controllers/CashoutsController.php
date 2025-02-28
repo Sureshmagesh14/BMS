@@ -415,9 +415,6 @@ class CashoutsController extends Controller
                             $subject = 'Cash Out Approved';
                             $templateId = 'd-5d2729f3674c4b0085c8b105ca258094';
                             break;
-                        default:
-                            // This shouldn't be reached due to the in_array check
-                            continue;
                     }
     
                     // Only try to send email if we have a valid recipient
