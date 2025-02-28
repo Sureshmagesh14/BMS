@@ -283,62 +283,90 @@ class RewardsController extends Controller
     public function change_rewards_status(Request $request){
         try {
             $all_id = $request->all_id;
+            
+            if (empty($all_id)) {
+                return response()->json([
+                    'status' => 400,
+                    'success' => false,
+                    'message' => 'No rewards selected'
+                ]);
+            }
+            
             foreach($all_id as $id){
-                $data=array('status_id'=>2);
-
-                $reward_data = Rewards::where('id',$id)->first();
-                $project_id = $reward_data->project_id;
-                $respondents = $reward_data->respondent_id;
-
-                //email starts
-                $proj = Projects::where('id',$project_id)->first();
-                $resp = Respondents::where('id',$respondents)->first();
+                $data = ['status_id' => 2];
+    
+                // Get reward data
+                $reward_data = Rewards::where('id', $id)->first();
                 
-                if($proj->name!='')
-                {
+                if (!$reward_data) {
+                    continue; // Skip if reward not found
+                }
+                
+                $project_id = $reward_data->project_id;
+                $respondent_id = $reward_data->respondent_id;
+    
+                // Update reward status first
+                Rewards::where('id', $id)->update($data);
+    
+                // Fetch related data for email
+                $proj = Projects::where('id', $project_id)->first();
+                $resp = Respondents::where('id', $respondent_id)->first();
+                
+                // Only proceed with email if project and respondent exist
+                if ($proj && $resp && !empty($resp->email)) {
                     $to_address = $resp->email;
-                    //$to_address = 'hemanathans1@gmail.com';
-                    $resp_name = $resp->name.' '.$resp->surname;
+                    $resp_name = $resp->name . ' ' . $resp->surname;
                    
-                    if ($resp->project_name_resp != ''){
-
-                        $proj_name = $proj->project_name_resp;
-                    }else{
-                        $proj_name = $proj->name;
-                    }
+                    // Determine project name to use
+                    $proj_name = !empty($proj->project_name_resp) ? $proj->project_name_resp : $proj->name;
                    
-                    // $data = ['subject' => 'Rewards Approved','name' => $resp_name,'project' => $proj_name,'type' => 'reward_approve'];
+                    // Format reward points
+                    $points = $reward_data->points;
+                    $rand_value = 'R ' . number_format($points / 10, 2);
+                    
                     $dynamicData = [
                         'first_name' => $resp_name,
-                        'project_code ' => $proj_name,
-                        'points' => $reward_data->points,
-                        'rand_value' => 'R ' . ($reward_data->points / 10),
+                        'project_code' => $proj_name,
+                        'points' => $points,
+                        'rand_value' => $rand_value,
                     ];
-                    $subject = 'Reward Approved';
-                    $templateId = 'd-d4a08e9f4bfd4ae5af512fbec8fd5016';
-
-                    $sendgrid = new SendGridService();
-                    $sendgrid->setFrom();
-                    $sendgrid->setSubject($subject);
-                    $sendgrid->setTemplateId($templateId);
-                    $sendgrid->setDynamicData($dynamicData);
-                    $sendgrid->setToEmail($to_address, $resp_name);
-                    $sendgrid->send();
-                    // Mail::to($to_address)->send(new WelcomeEmail($data));
+                    
+                    try {
+                        $subject = 'Reward Approved';
+                        $templateId = 'd-d4a08e9f4bfd4ae5af512fbec8fd5016';
+    
+                        $sendgrid = new SendGridService();
+                        $sendgrid->setFrom();
+                        $sendgrid->setSubject($subject);
+                        $sendgrid->setTemplateId($templateId);
+                        $sendgrid->setDynamicData($dynamicData);
+                        $sendgrid->setToEmail($to_address, $resp_name);
+                        $sendgrid->send();
+                        
+                        // Log successful email
+                        \Log::info("Reward approval email sent for reward ID $id to $to_address");
+                    } catch (\Exception $emailException) {
+                        // Log email error but continue processing
+                        \Log::error("Failed to send reward approval email for ID $id: " . $emailException->getMessage());
+                    }
+                } else {
+                    \Log::warning("Cannot send reward approval email for ID $id: Missing project, respondent, or email data");
                 }
-                //email ends
-
-                $rewards = Rewards::whereIn('id', [$id])->update($data);
             }
             
             return response()->json([
-                'status'=>200,
+                'status' => 200,
                 'success' => true,
-                'message'=>'Rewards Status Changed'
+                'message' => 'Rewards Status Changed'
             ]);
         }
-        catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        catch (\Exception $e) {
+            \Log::error('Change rewards status error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'success' => false,
+                'message' => 'An error occurred: ' . $e->getMessage()
+            ]);
         }
     }
     public function rewards_multi_delete(Request $request){
