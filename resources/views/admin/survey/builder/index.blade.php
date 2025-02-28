@@ -1594,9 +1594,23 @@ function triggersubmit(qus_type){
 
     if(qus_type=='picturechoice'){
         let choice_pic=[];
-        $('.img_placeholder').each(function(){
-            choice_pic.push({'img':$(this).children('.current_image').attr('src'),'text':$(this).children('.option-action').children('textarea.choice_desc').val()});
+        // $('.img_placeholder').each(function(){
+        //     choice_pic.push({'img':$(this).children('.current_image').attr('src'),'text':$(this).children('.option-action').children('textarea.choice_desc').val()});
+        // });
+        $('.img_placeholder').each(function(index){
+            let textValue = $(this).children('.option-action').children('textarea.choice_desc').val().trim();
+            
+            // If textValue is empty, set a default value like "Choice 1", "Choice 2", etc.
+            if (!textValue) {
+                textValue = 'Choice ' + (index + 1);
+            }
+
+            choice_pic.push({
+                'img': $(this).children('.current_image').attr('src'),
+                'text': textValue
+            });
         });
+
         $('#choices_list_pic').val(JSON.stringify(choice_pic));
         if(choice_pic.length>0){
             $('#update_qus_final').click();
