@@ -1269,18 +1269,18 @@ h6.question_name {
                                                 @elseif($qus_skip->qus_type=='picturechoice')
                                                     <select class="form-control skip_logic_type_value_option" name="skip_logic_type_value_option">
                                                         <option value="">Choose</option>
-                                                        @foreach($resp_logic_type_skip_value as $key=>$value)
+                                                        @foreach($resp_logic_type_skip_value as $key => $value)
                                                             @if($key == $vlogicoption_skip)
                                                                 <option selected value="{{$key}}">
-                                                                    {{ is_object($value) ? $value->text : $value }}
+                                                                    {{ is_object($value) && property_exists($value, 'text') ? $value->text : '' }}
                                                                 </option>
                                                             @else 
                                                                 <option value="{{$key}}">
-                                                                    {{ is_object($value) ? $value->text : $value }}
+                                                                    {{ is_object($value) && property_exists($value, 'text') ? $value->text : '' }}
                                                                 </option>
                                                             @endif
-
                                                         @endforeach
+
                                                     </select>
                                                 @else
                                                     <select class="form-control skip_logic_type_value_option" name="skip_logic_type_value_option">
