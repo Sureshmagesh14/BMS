@@ -64,13 +64,13 @@
                         <label for="phone" class="fw-bolder fs-20">Mobile</label>
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
-                                <div class="input-group-text">+27 (0)</div>
+                                <div class="input-group-text">+27 <strong>(0)</strong></div>
                             </div>
-                            <input type="text" name="phone" id="phone" placeholder="(0xx) xxx xxxx"
+                            <input type="text" name="phone" id="phone" placeholder="819 966 078"
                                 class="form-control vi-border-clr border-radius-0 w-50" maxlength="11">
                                
                         </div>
-                        <span>(0xx) xxx xxxx</span>
+                        <span>Don't include 0 in starting</span>
                         <div class="row my-2">
                         <div class="col-md-6 col-sm-12">
                         <button type="submit"

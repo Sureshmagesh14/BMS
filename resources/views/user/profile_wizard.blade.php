@@ -172,16 +172,16 @@
                                                     class="star_require">*</span></label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">+27 (0)</div>
+                                                    <div class="input-group-text">+27 <strong>(0)</strong></div>
                                                 </div>
                                                 <input type="text" name="basic[mobile_number]" id="mobile_number"
-                                                    placeholder="(0xx) xxx xxxx"
+                                                    placeholder="819 966 078"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ str_starts_with($resp_details->mobile, '27') ? ltrim(substr($resp_details->mobile, 2), '0') : ltrim($resp_details->mobile, '0') }}"
                                                     maxlength="16">
 
                                             </div>
-                                            <small class="form-text text-muted">(0xx) xxx xxxx</small>
+                                            <small class="form-text text-muted">Don't include 0 in starting</small>
                                             {{-- <a style="float: right;" href="{{ route('mobileChangeOtpSend') }}">Do you want to change your mobile number? Click here.</a> --}}
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
@@ -189,15 +189,15 @@
                                                     class="star_require">*</span></label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">+27 (0)</div>
+                                                    <div class="input-group-text">+27 <strong>(0)</strong></div>
                                                 </div>
                                                 <input type="text" name="basic[whatsapp_number]" id="whatsapp_number"
-                                                    placeholder="(0xx) xxx xxxx"
+                                                    placeholder="819 966 078"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ str_starts_with($resp_details->whatsapp, '27') ? ltrim(substr($resp_details->whatsapp, 2), '0') : ltrim($resp_details->whatsapp, '0') }}"
                                                     maxlength="16" required>
                                             </div>
-                                            <small class="form-text text-muted">(0xx) xxx xxxx</small>
+                                            <small class="form-text text-muted">Don't include 0 in starting</small>
                                         </div>
                                         <div class="col-md-6 col-6 col-sm-12 mt-3">
                                             <label for="email">Email <span class="star_require">*</span></label>
