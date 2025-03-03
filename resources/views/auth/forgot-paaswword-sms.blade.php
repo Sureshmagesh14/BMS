@@ -66,11 +66,11 @@
                             <div class="input-group-prepend">
                                 <div class="input-group-text">+27 (0)</div>
                             </div>
-                            <input type="text" name="phone" id="phone" placeholder="000 000 000"
+                            <input type="text" name="phone" id="phone" placeholder="(0xx) xxx xxxx"
                                 class="form-control vi-border-clr border-radius-0 w-50" maxlength="11">
                                
                         </div>
-                        <span>Don’t include 0 in starting.</span>
+                        <span>(0xx) xxx xxxx</span>
                         <div class="row my-2">
                         <div class="col-md-6 col-sm-12">
                         <button type="submit"

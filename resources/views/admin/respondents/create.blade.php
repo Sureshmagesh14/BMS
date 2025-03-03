@@ -103,10 +103,10 @@
             <div class="input-group">
                 <div class="input-group-text">+27(0)</div>
                 <input type="text" class="form-control" id="mobile" name="mobile" maxlength="16"
-                    placeholder="Don’t include 0 in starting." autocomplete="off" required>
+                    placeholder="(0xx) xxx xxxx" autocomplete="off" required>
                 <span id="mobile-error" class="invalid-feedback"></span>
             </div>
-            <small class="form-text text-muted">Don’t include 0 in starting.</small>
+            <small class="form-text text-muted">(0xx) xxx xxxx</small>
         </div>
     </div>
 
@@ -117,9 +117,9 @@
             <div class="input-group">
                 <div class="input-group-text">+27</div>
                 <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="15"
-                    autocomplete="off" placeholder="Don’t include 0 in starting." required>
+                    autocomplete="off" placeholder="(0xx) xxx xxxx" required>
             </div>
-            <small class="form-text text-muted">Don’t include 0 in starting.</small>
+            <small class="form-text text-muted">(0xx) xxx xxxx</small>
         </div>
     </div>
 
