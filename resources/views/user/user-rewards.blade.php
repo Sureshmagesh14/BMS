@@ -163,3 +163,20 @@
         $(this).hide();
     });
 </script>
+@if (count($errors) > 0)
+    @foreach ($errors->all() as $message)
+        <script>
+            toastr.error("{{ $message }}");
+        </script>
+    @endforeach
+@endif
+@if (Session::has('success'))
+    <script>
+        toastr.success("{{ session('success') }}");
+    </script>
+@endif
+@if (Session::has('error'))
+    <script>
+        toastr.error("{{ session('error') }}");
+    </script>
+@endif
