@@ -1046,59 +1046,118 @@ class WelcomeController extends Controller
         $mobile_network = $request->network;
         $mobile_number  = $request->mobile_number;
         $charitie       = $request->charitie;
-        $mobile_number = str_replace(' ', '', $mobile_number); // Remove all spaces
-       
-        $result_mobile  = '27' . str_replace(' ', '', $mobile_number); // Remove all spaces
-      
+    
+        // Ensure there are no spaces in the mobile number
+        $mobile_number = str_replace(' ', '', $mobile_number); 
+    
+        // Format mobile number
+        $result_mobile  = '27' . $mobile_number; 
+    
+        // Retrieve cashout data for the respondent
+        $cash = DB::table('cashouts as c')
+            ->leftJoin('respondents as r', 'c.respondent_id', '=', 'r.id')
+            ->leftJoin('banks as b', 'c.bank_id', '=', 'b.id')
+            ->select('c.*', 'r.name', 'r.surname', 'r.email', 'b.bank_name', 'b.branch_code')
+            ->where('c.respondent_id', $resp_id)
+            ->first();
 
         if ($reward != 0) {
-            if($method == "EFT"){
-                $insert_array = array(
-                    'respondent_id'  => $resp_id,
-                    'bank_id'        => $banks,
-                    'bank_type_id'   => $bank_type_id,
-                    'type_id'        => 1,
-                    'account_number' => $account_number,
-                    'amount'         => $reward,
-                    'created_at'    => now(),
-                );
-                DB::table('respondents')->where('id', $resp_id)->update(['account_number' => $account_number, 'account_holder' => $holder_name]);
-            }
-            else if($method == "Airtime" || $method == "Data"){
-                $insert_array = array(
-                    'respondent_id'  => $resp_id,
-                    'mobile_network' => $mobile_network,
-                    'mobile_number'  => $result_mobile,
-                    'type_id'        => ($method == "Airtime") ? 3 : 2,
-                    'amount'         => $reward,
-                    'created_at'    => now(),
-                );
-            }
-            else if($method == "Donations"){
-                $insert_array = array(
-                    'respondent_id' => $resp_id,
-                    'charity_id'    => $charitie,
-                    'type_id'       => 4,
-                    'amount'        => $reward,
-                    'created_at'    => now(),
-                );
-            }
-
-
-            $insert_id = DB::table('cashouts')->insertGetId($insert_array);
-
-            Rewards::where('respondent_id', $resp_id)
-                    ->whereNull('cashout_id') // Check if cashout_id is NULL
+            try {
+                // Insert array based on selected method
+                if ($method == "EFT") {
+                    $insert_array = [
+                        'respondent_id'  => $resp_id,
+                        'bank_id'        => $banks,
+                        'bank_type_id'   => $bank_type_id,
+                        'type_id'        => 1,
+                        'account_number' => $account_number,
+                        'amount'         => $reward,
+                        'created_at'     => now(),
+                    ];
+                    DB::table('respondents')->where('id', $resp_id)->update(['account_number' => $account_number, 'account_holder' => $holder_name]);
+                } elseif ($method == "Airtime" || $method == "Data") {
+                    $insert_array = [
+                        'respondent_id'  => $resp_id,
+                        'mobile_network' => $mobile_network,
+                        'mobile_number'  => $result_mobile,
+                        'type_id'        => ($method == "Airtime") ? 3 : 2,
+                        'amount'         => $reward,
+                        'created_at'     => now(),
+                    ];
+                } elseif ($method == "Donations") {
+                    $insert_array = [
+                        'respondent_id' => $resp_id,
+                        'charity_id'    => $charitie,
+                        'type_id'       => 4,
+                        'amount'        => $reward,
+                        'created_at'    => now(),
+                    ];
+                } else {
+                    return redirect()->back()->withErrors('Invalid payment method.');
+                }
+    
+                // If no cashout data is found, return an error
+                if (!$cash) {
+                    return redirect()->back()->withErrors('No cashout data found for this respondent.');
+                }
+    
+                // Prepare email variables
+                $to_address = $cash->email;
+                $resp_name = $cash->name ?? 'Respondent'; 
+                $points = $cash->amount;
+              
+                // Prepare dynamic data for the email
+                $dynamicData = [
+                    'points' => $points,
+                    'date_requested' => date('d-m-Y'),
+                    'first_name' => $resp_name,
+                    'rand_value' => 'R ' . number_format($points / 10, 2),
+                    'payment_method' => strtoupper($method)
+                ];
+    
+                // Send email to the respondent
+                $subject = 'Cashout Request';
+                $templateId = 'd-fadcfcb9f22a4e3d873fcb0459dc1b58';
+             
+                if (!empty($to_address)) {
+                    try {
+                        // Send the email using SendGrid
+                        $sendgrid = new SendGridService();
+                        $sendgrid->setFrom();
+                        $sendgrid->setSubject($subject);
+                        $sendgrid->setTemplateId($templateId);
+                        $sendgrid->setDynamicData($dynamicData);
+                        $sendgrid->setToEmail($to_address, $resp_name);
+                        $sendgrid->send();
+    
+                        // Log success
+                        \Log::info("Email sent for cashout to respondent $resp_id: Status success, Template: $templateId");
+                    } catch (\Exception $emailException) {
+                        // Log email error
+                        \Log::error("Failed to send email for cashout to respondent $resp_id: " . $emailException->getMessage());
+                    }
+                } else {
+                    \Log::warning("Cannot send email for cashout to respondent $resp_id: Email address missing");
+                }
+    
+                // Insert cashout entry
+                $insert_id = DB::table('cashouts')->insertGetId($insert_array);
+    
+                // Update rewards table with the cashout ID
+                Rewards::where('respondent_id', $resp_id)
+                    ->whereNull('cashout_id')
                     ->update(['cashout_id' => $insert_id]);
-
-
-
-            return redirect()->back()->withsuccess('Request Send Successfully');
-        }
-        else{
-            return redirect()->back()->witherror('Your reward is 0');
+    
+                return redirect()->back()->withSuccess('Request Sent Successfully');
+            } catch (\Exception $e) {
+                \Log::error("Cashout request failed: " . $e->getMessage());
+                return redirect()->back()->withError('An error occurred while processing the request.');
+            }
+        } else {
+            return redirect()->back()->withError('Your reward is 0.');
         }
     }
+    
 
     public function update_activitation(Request $request)
     {
