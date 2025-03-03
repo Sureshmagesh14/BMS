@@ -172,7 +172,7 @@
                                                     class="star_require">*</span></label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">+27 <strong>(0)</strong></div>
+                                                    <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
                                                 </div>
                                                 <input type="text" name="basic[mobile_number]" id="mobile_number"
                                                     placeholder="819 966 078"
@@ -189,7 +189,7 @@
                                                     class="star_require">*</span></label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">+27 <strong>(0)</strong></div>
+                                                    <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
                                                 </div>
                                                 <input type="text" name="basic[whatsapp_number]" id="whatsapp_number"
                                                     placeholder="819 966 078"
