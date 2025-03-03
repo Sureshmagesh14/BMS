@@ -119,7 +119,7 @@
                                 <label for="mobile" class="fw-bolder fs-20">Mobile <span class="text-danger">*</span></label>
                                 <div class="input-group mb-2">
                                     <div class="input-group-prepend w-15">
-                                        <div class="input-group-text">+27 (0)</div>
+                                        <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
                                     </div>
                                     <input type="text" name="phone_no" id="phone_no" placeholder="819 966 078" class="form-control vi-border-clr border-radius-0 w-50"
                                     autocomplete="off">
