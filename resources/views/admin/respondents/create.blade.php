@@ -101,7 +101,7 @@
         </label>
         <div class="col-md-10">
             <div class="input-group">
-                <div class="input-group-text">+27 <strong>(0)</strong></div>
+                <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
                 <input type="text" class="form-control" id="mobile" name="mobile" maxlength="16"
                     placeholder="819 966 078" autocomplete="off" required>
                 <span id="mobile-error" class="invalid-feedback"></span>
@@ -115,7 +115,7 @@
         <label for="whatsapp" class="col-md-2 col-form-label">WhatsApp Number *</label>
         <div class="col-md-10">
             <div class="input-group">
-                <div class="input-group-text">+27 <strong>(0)</strong></div>
+                <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
                 <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="15"
                     autocomplete="off" placeholder="819 966 078" required>
             </div>
