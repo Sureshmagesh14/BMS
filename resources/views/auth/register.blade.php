@@ -188,12 +188,12 @@
                             <label for="mobile">Mobile <span class="text-danger">*</span></label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend w-15">
-                                    <div class="input-group-text">+27 (0)</div>
+                                    <div class="input-group-text">+27 <strong>(0)</strong></div>
                                 </div>
-                                <input type="text" name="mobile" id="mobile" placeholder="(0xx) xxx xxxx"
+                                <input type="text" name="mobile" id="mobile" placeholder="819 966 078"
                                        class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" autocomplete="off" required>
                             </div>
-                            <small class="text-muted">(0xx) xxx xxxx</small>
+                            <small class="text-muted">Don't include 0 in starting</small>
                         </div>
 
                         <div class="mobile text-start w-48 m-auto my-3">
@@ -202,12 +202,12 @@
                                     Mobile)</span></label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend w-15">
-                                    <div class="input-group-text">+27 (0)</div>
+                                    <div class="input-group-text">+27 <strong>(0)</strong></div>
                                 </div>
-                                <input  type="text" name="whatsapp" id="whatsapp" placeholder="(0xx) xxx xxxx"
+                                <input  type="text" name="whatsapp" id="whatsapp" placeholder="819 966 078"
                                     class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" autocomplete="off" required>
                             </div>
-                            <small class="text-muted">(0xx) xxx xxxx</small>
+                            <small class="text-muted">Don't include 0 in starting</small>
                         </div>
                     </div>
                     <div class="first-row d-md-flex">

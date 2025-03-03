@@ -103,12 +103,12 @@
         </label>
         <div class="col-md-10">
             <div class="input-group">
-                <div class="input-group-text">+27(0)</div>
-                <input type="text" class="form-control" id="mobile" name="mobile" autocomplete="off" placeholder="(0xx) xxx xxxx"
+                <div class="input-group-text">+27 <strong>(0)</strong></div>
+                <input type="text" class="form-control" id="mobile" name="mobile" autocomplete="off" placeholder="819 966 078"
                     value="{{ str_starts_with($respondents->mobile, '27') ? ltrim(substr($respondents->mobile, 2), '0') : ltrim($respondents->mobile, '0') }}"
                     maxlength="16" required>
             </div>
-            <small class="form-text text-muted">(0xx) xxx xxxx</small>
+            <small class="form-text text-muted">Don't include 0 in starting</small>
         </div>
     </div>
 
@@ -118,15 +118,15 @@
         </label>
         <div class="col-md-10">
             <div class="input-group">
-                <div class="input-group-text">+27(0)</div>
+                <div class="input-group-text">+27 <strong>(0)</strong></div>
                 <input type="text" class="form-control" id="whatsapp" name="whatsapp"
-                    placeholder="(0xx) xxx xxxx" autocomplete="off"
+                    placeholder="819 966 078" autocomplete="off"
                     value="{{ str_starts_with($respondents->whatsapp, '27') ? ltrim(substr($respondents->whatsapp, 2), '0') : ltrim($respondents->whatsapp, '0') }}"
                     maxlength="16">
 
                 <span id="mobile-error" class="invalid-feedback"></span>
             </div>
-            <small class="form-text text-muted">(0xx) xxx xxxx</small>
+            <small class="form-text text-muted">Don't include 0 in starting</small>
         </div>
     </div>
 
