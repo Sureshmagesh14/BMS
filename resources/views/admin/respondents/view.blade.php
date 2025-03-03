@@ -151,17 +151,20 @@
                                         </tr>
                                         <tr>
                                             <th>Status</th>
-                                            @if ($data->active_status_id == 1)
-                                                @php $active_status_id='Active'; @endphp
-                                            @elseif ($data->active_status_id == 2)
-                                                @php $active_status_id='Deactivated'; @endphp
-                                            @elseif ($data->active_status_id == 3)
-                                                @php $active_status_id='Unsubscribed'; @endphp
-                                            @elseif ($data->active_status_id == 4)
-                                                @php $active_status_id='Pending'; @endphp
-                                            @elseif ($data->active_status_id == 5)
-                                                @php $active_status_id='Blacklisted'; @endphp
-                                            @endif
+                                            @php 
+                                                $active_status_id = '';
+                                                if ($data->active_status_id == 1) {
+                                                    $active_status_id = 'Active';
+                                                } elseif ($data->active_status_id == 2) {
+                                                    $active_status_id = 'Deactivated';
+                                                } elseif ($data->active_status_id == 3) {
+                                                    $active_status_id = 'Unsubscribed';
+                                                } elseif ($data->active_status_id == 4) {
+                                                    $active_status_id = 'Pending';
+                                                } elseif ($data->active_status_id == 5) {
+                                                    $active_status_id = 'Blacklisted';
+                                                }
+                                            @endphp
                                             <td>{{ $active_status_id }}</td>
                                         </tr>
                                         <tr>

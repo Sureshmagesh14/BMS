@@ -329,16 +329,17 @@ class ExportController extends Controller
                     $sheet->setCellValue('Q1', 'HHI per month'); // Corrected to unique column
                     $sheet->setCellValue('R1', 'Household LSM'); // Corrected to unique column
                     $sheet->setCellValue('S1', 'Province');
-                    $sheet->setCellValue('T1', 'Area');
-                    $sheet->setCellValue('U1', 'No. of people living in your household');
-                    $sheet->setCellValue('V1', 'Number of children');
-                    $sheet->setCellValue('W1', 'Number of vehicles');
-                    $sheet->setCellValue('X1', 'Opted in'); // Moved Opted in to column X
-                    $sheet->setCellValue('Y1', 'Last Updated'); // Moved Last Updated to column Y
+                    $sheet->setCellValue('T1', 'Metropolitan Area');
+                    $sheet->setCellValue('U1', 'Suburb');
+                    $sheet->setCellValue('V1', 'No. of people living in your household');
+                    $sheet->setCellValue('W1', 'Number of children');
+                    $sheet->setCellValue('X1', 'Number of vehicles');
+                    $sheet->setCellValue('Y1', 'Opted in'); // Moved Opted in to column X
+                    $sheet->setCellValue('Z1', 'Last Updated'); // Moved Last Updated to column Y
 
 
-                    $sheet->getStyle('A1:Y1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:Y1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:Z1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:Z1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -602,19 +603,20 @@ class ExportController extends Controller
                       
                         $sheet->setCellValue('S' . $rows, $get_state ?? '');
                         $sheet->setCellValue('T' . $rows, $get_district ?? '');
-                        $sheet->setCellValue('U' . $rows, $essential->no_houehold ?? '');
-                        $sheet->setCellValue('V' . $rows, $essential->no_children ?? '');
-                        $sheet->setCellValue('W' . $rows, $essential->no_vehicle ?? '');
+                        $sheet->setCellValue('U' . $rows, $essential->metropolitan_area?? '');
+                        $sheet->setCellValue('V' . $rows, $essential->no_houehold ?? '');
+                        $sheet->setCellValue('W' . $rows, $essential->no_children ?? '');
+                        $sheet->setCellValue('X' . $rows, $essential->no_vehicle ?? '');
 
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
 
-                        $sheet->setCellValue('X' . $rows, $opted_in);
-                        $sheet->setCellValue('Y' . $rows, $updated_at);
+                        $sheet->setCellValue('Y' . $rows, $opted_in);
+                        $sheet->setCellValue('Z' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':Y' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':Y' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('C' . $rows . ':Z' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':Z' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                     }
 
@@ -2351,16 +2353,16 @@ class ExportController extends Controller
                     $sheet->setCellValue('R1', 'HHI per Month');
                     $sheet->setCellValue('S1', 'Household LSM');
                     $sheet->setCellValue('T1', 'Province');
-                    $sheet->setCellValue('U1', 'Area');
-                    $sheet->setCellValue('V1', 'No. of People Living in Your Household');
-                    $sheet->setCellValue('W1', 'Number of Children');
-                    $sheet->setCellValue('X1', 'Number of Vehicles');
-                    $sheet->setCellValue('Y1', 'Opted In');
-                    $sheet->setCellValue('Z1', 'Last Updated');
-                
+                    $sheet->setCellValue('U1', 'Suburb');
+                    $sheet->setCellValue('V1', 'Metropolitan Area');
+                    $sheet->setCellValue('W1', 'No. of People Living in Your Household');
+                    $sheet->setCellValue('X1', 'Number of Children');
+                    $sheet->setCellValue('Y1', 'Number of Vehicles');
+                    $sheet->setCellValue('Z1', 'Opted In');
+                    $sheet->setCellValue('AA1', 'Last Updated');
 
-                    $sheet->getStyle('A1:Z1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
-                    $sheet->getStyle('A1:Z1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:AA1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0f609b'); // cell color
+                    $sheet->getStyle('A1:AA1')->applyFromArray($styleArray);
 
                     $rows = 2;
                     $i = 1;
@@ -2446,7 +2448,7 @@ class ExportController extends Controller
                         }
 
                         $sheet->setCellValue('J' . $rows, $ethnic_group);
-                        $sheet->setCellValue('K' . $rows, ucfirst($essential->gender) ?? '');
+                        $sheet->setCellValue('K' . $rows, isset($essential) && $essential->gender ? ucfirst($essential->gender) : '');
                         $education_level = '';
 
                         // Check if $essential is not null and has the education_level property
@@ -2575,19 +2577,20 @@ class ExportController extends Controller
                       
                         $sheet->setCellValue('T' . $rows, $get_state ?? '');
                         $sheet->setCellValue('U' . $rows, $get_district ?? '');
-                        $sheet->setCellValue('V' . $rows, $essential->no_houehold ?? '');
-                        $sheet->setCellValue('W' . $rows, $essential->no_children ?? '');
-                        $sheet->setCellValue('X' . $rows, $essential->no_vehicle ?? '');
+                        $sheet->setCellValue('V' . $rows, $essential->metropolitan_area ?? '');
+                        $sheet->setCellValue('W' . $rows, $essential->no_houehold ?? '');
+                        $sheet->setCellValue('X' . $rows, $essential->no_children ?? '');
+                        $sheet->setCellValue('Y' . $rows, $essential->no_vehicle ?? '');
 
                         $opted_in = ($all_data->opted_in != null) ? date("d-m-Y", strtotime($all_data->opted_in)) : '';
                         $updated_at = ($all_data->updated_at != null) ? date("d-m-Y", strtotime($all_data->updated_at)) : '';
 
-                        $sheet->setCellValue('Y' . $rows, $opted_in);
-                        $sheet->setCellValue('X' . $rows, $updated_at);
+                        $sheet->setCellValue('Z' . $rows, $opted_in);
+                        $sheet->setCellValue('AA' . $rows, $updated_at);
                         $sheet->getRowDimension($rows)->setRowHeight(20);
                         $sheet->getStyle('A' . $rows . ':B' . $rows)->applyFromArray($styleArray3);
-                        $sheet->getStyle('C' . $rows . ':Z' . $rows)->applyFromArray($styleArray2);
-                        $sheet->getStyle('C' . $rows . ':Z' . $rows)->getAlignment()->setIndent(1);
+                        $sheet->getStyle('C' . $rows . ':AA' . $rows)->applyFromArray($styleArray2);
+                        $sheet->getStyle('C' . $rows . ':AA' . $rows)->getAlignment()->setIndent(1);
                         $rows++;
                     }
                 
