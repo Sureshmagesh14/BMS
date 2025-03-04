@@ -28,7 +28,19 @@
             pointer-events: none;
             transition: opacity 0.2s;
         }
-        
+
+        @media (max-width: 768px) {
+            .custom-placeholder {
+                left: 60px; /* Adjust this value as needed */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .custom-placeholder {
+                left: 30px; /* Adjust for very small screens */
+            }
+        }
+                
         .bold-zero {
             font-weight: bold;
             color: #000000;
@@ -383,8 +395,16 @@
 
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
-    $('#mobile').inputmask("99 999 9999");
-    $('#whatsapp').inputmask("99 999 9999");
+    $('#mobile').inputmask("99 999 9999", {
+        "showMaskOnHover": false,
+        "showMaskOnFocus": false,
+        "placeholder": ""
+    });
+    $('#whatsapp').inputmask("99 999 9999", {
+        "showMaskOnHover": false,
+        "showMaskOnFocus": false,
+        "placeholder": ""
+    });
     $('form#reg_table').on('blur', '.reg_email', function() {
         var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
         var reg_email = $(this).val();

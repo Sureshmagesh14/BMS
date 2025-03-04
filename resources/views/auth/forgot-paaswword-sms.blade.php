@@ -14,6 +14,17 @@
     label#phone-error{
         width: 100% !important;
     }
+    @media (max-width: 768px) {
+        .custom-placeholder {
+            left: 60px; /* Adjust this value as needed */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .custom-placeholder {
+            left: 30px; /* Adjust for very small screens */
+        }
+    }
     h2, .h2{
         font-size: 3rem !important;
     }
@@ -129,7 +140,11 @@
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script>
     $(function() {
-        $('#phone').inputmask("99 999 9999");
+        $('#phone').inputmask("99 999 9999", {
+            "showMaskOnHover": false,
+            "showMaskOnFocus": false,
+            "placeholder": ""
+        });
         $('#forgot_table').validate({
             rules: {
                 phone: {
