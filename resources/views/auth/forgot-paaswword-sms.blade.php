@@ -53,7 +53,7 @@
 
 .custom-placeholder {
     position: absolute;
-    left: 90px;
+    left: 65px;
     top: 50%;
     transform: translateY(-50%);
     color: #999;
@@ -63,6 +63,7 @@
 
 .bold-zero {
     font-weight: bold;
+    color: #000000;
 }
 
 .form-control {
@@ -89,11 +90,11 @@
                         <label for="phone" class="fw-bolder fs-20">Mobile</label>
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
-                                <div class="input-group-text">+27 (0)</div>
+                                <div class="input-group-text">+27</div>
                             </div>
                             <input type="text" name="phone" id="phone" 
                                 class="form-control vi-border-clr border-radius-0 w-50" maxlength="11">
-                            <div class="custom-placeholder">(<span class="bold-zero">0</span>82) 533 6845</div>
+                            <div class="custom-placeholder mobile">(<span class="bold-zero">0</span>82) 533 6845</div>
                         </div>
                         <span>Don't include 0 in starting</span>
                         <div class="row my-2">
@@ -161,31 +162,34 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-        const input = document.getElementById('mobile');
-        const placeholder = document.querySelector('.custom-placeholder');
+        const mobile = document.getElementById('phone');
+        const mobilePlaceholder = document.querySelector('.custom-placeholder.mobile');
         
         // Hide placeholder when input has content
-        input.addEventListener('input', function() {
-            if (input.value.length > 0) {
-                placeholder.style.opacity = '0';
-            } else {
-                placeholder.style.opacity = '1';
-            }
-        });
-        
-        // Hide placeholder when input is focused
-        input.addEventListener('focus', function() {
-            if (input.value.length === 0) {
-                placeholder.style.opacity = '0.5';
-            }
-        });
-        
-        // Show placeholder when input loses focus and is empty
-        input.addEventListener('blur', function() {
-            if (input.value.length === 0) {
-                placeholder.style.opacity = '1';
-            }
-        });
+        mobile.addEventListener('input', function() {
+        if (mobile.value.length > 0) {
+            mobilePlaceholder.style.display = 'none'; // Hide placeholder when there is content
+        } else {
+            mobilePlaceholder.style.display = 'block'; // Show placeholder again if input is empty
+        }
+    });
+
+    mobile.addEventListener('focus', function() {
+        if (mobile.value.length === 0) {
+            mobilePlaceholder.style.opacity = '0.5'; // Faded when focused
+        } else {
+            mobilePlaceholder.style.display = 'none'; // Hide if there's text
+        }
+    });
+
+    mobile.addEventListener('blur', function() {
+        if (mobile.value.length === 0) {
+            mobilePlaceholder.style.display = 'block';
+            mobilePlaceholder.style.opacity = '1'; // Ensure full opacity when unfocused
+        } else {
+            mobilePlaceholder.style.display = 'none'; // Keep hidden if there's text
+        }
+    });
     });
 </script>
 @if (count($errors) > 0)
