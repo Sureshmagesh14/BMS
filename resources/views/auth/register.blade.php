@@ -31,6 +31,7 @@
         
         .bold-zero {
             font-weight: bold;
+            color: #000000;
         }
         
         .form-control {
@@ -39,10 +40,10 @@
             border-radius: 0;
             width: 100%;
         }
-    .rightside.text-center {
-        /* margin-top: 85px !important; */
-        padding: 20px !important;
-    }
+        .rightside.text-center {
+            /* margin-top: 85px !important; */
+            padding: 20px !important;
+        }
 
     .container {
         /* padding-top: 50px; */
@@ -212,12 +213,12 @@
                             <label for="mobile">Mobile <span class="text-danger">*</span></label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend w-15">
-                                    <div class="input-group-text">+27 (0)</div>
+                                    <div class="input-group-text">+27</div>
                                 </div>
                                 <input type="text" name="mobile" id="mobile" 
                                 class="form-control vi-border-clr border-radius-0 w-50" 
                                 maxlength="11" autocomplete="off" required>
-                                <div class="custom-placeholder">(<span class="bold-zero">0</span>82) 533 6845</div>
+                                <div class="custom-placeholder mobile">(<span class="bold-zero">0</span>82) 533 6845</div>
                             </div>
                             <small class="text-muted">Don't include 0 in starting</small>
                         </div>
@@ -228,11 +229,11 @@
                                     Mobile)</span></label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend w-15">
-                                    <div class="input-group-text">+27 (0)</div>
+                                    <div class="input-group-text">+27</div>
                                 </div>
                                 <input  type="text" name="whatsapp" id="whatsapp" 
                                     class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" autocomplete="off" required>
-                                    <div class="custom-placeholder">(<span class="bold-zero">0</span>82) 533 6845</div>
+                                    <div class="custom-placeholder whatsapp">(<span class="bold-zero">0</span>82) 533 6845</div>
                             </div>
                             <small class="text-muted">Don't include 0 in starting</small>
                         </div>
@@ -668,30 +669,62 @@
         });
     });
     document.addEventListener('DOMContentLoaded', function() {
-        const input = document.getElementById('mobile');
-        const placeholder = document.querySelector('.custom-placeholder');
-        
-        // Hide placeholder when input has content
-        input.addEventListener('input', function() {
-            if (input.value.length > 0) {
-                placeholder.style.opacity = '0';
-            } else {
-                placeholder.style.opacity = '1';
-            }
-        });
-        
-        // Hide placeholder when input is focused
-        input.addEventListener('focus', function() {
-            if (input.value.length === 0) {
-                placeholder.style.opacity = '0.5';
-            }
-        });
-        
-        // Show placeholder when input loses focus and is empty
-        input.addEventListener('blur', function() {
-            if (input.value.length === 0) {
-                placeholder.style.opacity = '1';
-            }
-        });
+    const mobile = document.getElementById('mobile');
+    const whatsapp = document.getElementById('whatsapp');
+    const mobilePlaceholder = document.querySelector('.custom-placeholder.mobile');
+    const whatsappPlaceholder = document.querySelector('.custom-placeholder.whatsapp');
+
+    // Mobile input event listeners
+    mobile.addEventListener('input', function() {
+        if (mobile.value.length > 0) {
+            mobilePlaceholder.style.display = 'none'; // Hide placeholder when there is content
+        } else {
+            mobilePlaceholder.style.display = 'block'; // Show placeholder again if input is empty
+        }
     });
+
+    mobile.addEventListener('focus', function() {
+        if (mobile.value.length === 0) {
+            mobilePlaceholder.style.opacity = '0.5'; // Faded when focused
+        } else {
+            mobilePlaceholder.style.display = 'none'; // Hide if there's text
+        }
+    });
+
+    mobile.addEventListener('blur', function() {
+        if (mobile.value.length === 0) {
+            mobilePlaceholder.style.display = 'block';
+            mobilePlaceholder.style.opacity = '1'; // Ensure full opacity when unfocused
+        } else {
+            mobilePlaceholder.style.display = 'none'; // Keep hidden if there's text
+        }
+    });
+
+    // WhatsApp input event listeners
+    whatsapp.addEventListener('input', function() {
+        if (whatsapp.value.length > 0) {
+            whatsappPlaceholder.style.display = 'none'; // Hide placeholder when there is content
+        } else {
+            whatsappPlaceholder.style.display = 'block'; // Show placeholder again if input is empty
+        }
+    });
+
+    whatsapp.addEventListener('focus', function() {
+        if (whatsapp.value.length === 0) {
+            whatsappPlaceholder.style.opacity = '0.5'; // Faded when focused
+        } else {
+            whatsappPlaceholder.style.display = 'none'; // Hide if there's text
+        }
+    });
+
+    whatsapp.addEventListener('blur', function() {
+        if (whatsapp.value.length === 0) {
+            whatsappPlaceholder.style.display = 'block';
+            whatsappPlaceholder.style.opacity = '1'; // Ensure full opacity when unfocused
+        } else {
+            whatsappPlaceholder.style.display = 'none'; // Keep hidden if there's text
+        }
+    });
+});
+
 </script>

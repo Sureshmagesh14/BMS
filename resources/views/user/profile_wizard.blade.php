@@ -172,10 +172,10 @@
                                                     class="star_require">*</span></label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
+                                                    <div class="input-group-text">+27</div>
                                                 </div>
                                                 <input type="text" name="basic[mobile_number]" id="mobile_number"
-                                                    placeholder="819 966 078"
+                                                    placeholder="(082) 533 6845"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ str_starts_with($resp_details->mobile, '27') ? ltrim(substr($resp_details->mobile, 2), '0') : ltrim($resp_details->mobile, '0') }}"
                                                     maxlength="16">
@@ -189,10 +189,10 @@
                                                     class="star_require">*</span></label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
+                                                    <div class="input-group-text">+27</div>
                                                 </div>
                                                 <input type="text" name="basic[whatsapp_number]" id="whatsapp_number"
-                                                    placeholder="819 966 078"
+                                                    placeholder="(082) 533 6845"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ str_starts_with($resp_details->whatsapp, '27') ? ltrim(substr($resp_details->whatsapp, 2), '0') : ltrim($resp_details->whatsapp, '0') }}"
                                                     maxlength="16" required>

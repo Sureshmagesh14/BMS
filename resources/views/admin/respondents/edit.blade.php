@@ -11,6 +11,33 @@
         width: 100% !important;
     }
 
+    .placeholder-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .custom-placeholder {
+        position: absolute;
+        left: 65px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        pointer-events: none;
+        transition: opacity 0.2s;
+    }
+
+    .bold-zero {
+        font-weight: bold;
+        color: #000000;
+    }
+
+    .form-control {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 0;
+        width: 100%;
+    }
+
     span#whatsapp-error {
         padding-left: 200px;
     }
@@ -103,10 +130,11 @@
         </label>
         <div class="col-md-10">
             <div class="input-group">
-                <div class="input-group-text">+27 (0)</div>
-                <input type="text" class="form-control" id="mobile" name="mobile" autocomplete="off" placeholder="(082) 533 6845"
+                <div class="input-group-text">+27</div>
+                <input type="text" class="form-control" id="mobile" name="mobile" autocomplete="off" 
                     value="{{ str_starts_with($respondents->mobile, '27') ? ltrim(substr($respondents->mobile, 2), '0') : ltrim($respondents->mobile, '0') }}"
                     maxlength="16" required>
+                <div class="custom-placeholder mobile">(<span class="bold-zero">0</span>82) 533 6845</div>
             </div>
             <small class="form-text text-muted">Don't include 0 in starting</small>
         </div>
@@ -118,12 +146,12 @@
         </label>
         <div class="col-md-10">
             <div class="input-group">
-                <div class="input-group-text">+27 (0)</div>
+                <div class="input-group-text">+27</div>
                 <input type="text" class="form-control" id="whatsapp" name="whatsapp"
-                    placeholder="(082) 533 6845" autocomplete="off"
+                    autocomplete="off"
                     value="{{ str_starts_with($respondents->whatsapp, '27') ? ltrim(substr($respondents->whatsapp, 2), '0') : ltrim($respondents->whatsapp, '0') }}"
                     maxlength="16">
-
+                    <div class="custom-placeholder whatsapp">(<span class="bold-zero">0</span>82) 533 6845</div>
                 <span id="mobile-error" class="invalid-feedback"></span>
             </div>
             <small class="form-text text-muted">Don't include 0 in starting</small>
@@ -541,6 +569,58 @@
             // Optionally clear the deactivation date if the status is not deactivated
             $('#deactivated_date').val('');
         }
+    });
+
+    $(document).on('input', '#mobile, #whatsapp', function() {
+        var placeholder = $(this).closest('.input-group').find('.custom-placeholder');
+        if ($(this).val().length > 0) {
+            placeholder.hide();  // Hide the placeholder when there is input
+        } else {
+            placeholder.show();  // Show the placeholder if input is empty
+        }
+    });
+
+    // Listen for focus events for mobile and whatsapp
+    $(document).on('focus', '#mobile, #whatsapp', function() {
+        var placeholder = $(this).closest('.input-group').find('.custom-placeholder');
+        if ($(this).val().length === 0) {
+            placeholder.css('opacity', '0.5');  // Fade the placeholder when focused
+        } else {
+            placeholder.hide();  // Hide placeholder when input has content
+        }
+    });
+
+    // Listen for blur events for mobile and whatsapp
+    $(document).on('blur', '#mobile, #whatsapp', function() {
+        var placeholder = $(this).closest('.input-group').find('.custom-placeholder');
+        if ($(this).val().length === 0) {
+            placeholder.show();
+            placeholder.css('opacity', '1');  // Restore the opacity when blurred and empty
+        } else {
+            placeholder.hide();  // Hide the placeholder when input is not empty
+        }
+    });
+
+    // Placeholder for mobile and whatsapp fields with specific styles
+    $(document).on('focus', '#mobile, #whatsapp', function() {
+        var placeholder = $(this).closest('.input-group').find('.custom-placeholder');
+        if ($(this).val().length === 0) {
+            placeholder.css('opacity', '0.5');
+        } else {
+            placeholder.hide();
+        }
+    });
+
+    // Reset placeholder visibility when the modal is shown (for example, on popup open)
+    $('#commonModal').on('shown.bs.modal', function() {
+        $('.custom-placeholder').each(function() {
+            var input = $(this).closest('.input-group').find('input');
+            if (input.val().length === 0) {
+                $(this).show();  // Show placeholder if input is empty
+            } else {
+                $(this).hide();  // Hide placeholder if input has content
+            }
+        });
     });
 });
 </script>
