@@ -1055,12 +1055,8 @@ class WelcomeController extends Controller
             $result_mobile  = '27' . $mobile_number; 
         
             // Retrieve cashout data for the respondent
-            $cash = DB::table('cashouts as c')
-                ->leftJoin('respondents as r', 'c.respondent_id', '=', 'r.id')
-                ->leftJoin('banks as b', 'c.bank_id', '=', 'b.id')
-                ->select('c.*', 'r.name', 'r.surname', 'r.email', 'b.bank_name', 'b.branch_code')
-                ->where('c.respondent_id', $resp_id)
-                ->first();
+            $respondent = Respondents::where('id',$resp_id)->first();
+          
 
             if ($reward != 0) {
                 try {
@@ -1098,21 +1094,20 @@ class WelcomeController extends Controller
                     }
         
                     // If no cashout data is found, return an error
-                    if (!$cash) {
+                    if (!$respondent) {
                         return redirect()->back()->with('error', __('No cashout data found for this respondent.'));
                     }
         
                     // Prepare email variables
-                    $to_address = $cash->email;
-                    $resp_name = $cash->name ?? 'Respondent'; 
-                    $points = $cash->amount;
+                    $to_address = $respondent->email;
+                    $resp_name = $respondent->name ?? 'Respondent';
                 
                     // Prepare dynamic data for the email
                     $dynamicData = [
-                        'points' => $points,
+                        'points' => $reward,
                         'date_requested' => date('d-m-Y'),
                         'first_name' => $resp_name,
-                        'rand_value' => 'R ' . number_format($points / 10, 2),
+                        'rand_value' => 'R ' . number_format($reward / 10, 2),
                         'payment_method' => strtoupper($method)
                     ];
         

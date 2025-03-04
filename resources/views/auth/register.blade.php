@@ -14,7 +14,31 @@
         position: relative;
         z-index: 2;
     }
-
+        .placeholder-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .custom-placeholder {
+            position: absolute;
+            left: 90px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        
+        .bold-zero {
+            font-weight: bold;
+        }
+        
+        .form-control {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 0;
+            width: 100%;
+        }
     .rightside.text-center {
         /* margin-top: 85px !important; */
         padding: 20px !important;
@@ -188,10 +212,12 @@
                             <label for="mobile">Mobile <span class="text-danger">*</span></label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend w-15">
-                                    <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
+                                    <div class="input-group-text">+27 (0)</div>
                                 </div>
-                                <input type="text" name="mobile" id="mobile" placeholder="819 966 078"
-                                       class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" autocomplete="off" required>
+                                <input type="text" name="mobile" id="mobile" 
+                                class="form-control vi-border-clr border-radius-0 w-50" 
+                                maxlength="11" autocomplete="off" required>
+                                <div class="custom-placeholder">(<span class="bold-zero">0</span>82) 533 6845</div>
                             </div>
                             <small class="text-muted">Don't include 0 in starting</small>
                         </div>
@@ -202,10 +228,11 @@
                                     Mobile)</span></label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend w-15">
-                                    <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
+                                    <div class="input-group-text">+27 (0)</div>
                                 </div>
-                                <input  type="text" name="whatsapp" id="whatsapp" placeholder="819 966 078"
+                                <input  type="text" name="whatsapp" id="whatsapp" 
                                     class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" autocomplete="off" required>
+                                    <div class="custom-placeholder">(<span class="bold-zero">0</span>82) 533 6845</div>
                             </div>
                             <small class="text-muted">Don't include 0 in starting</small>
                         </div>
@@ -637,6 +664,33 @@
                 $(this).attr('type', 'text');
             } else {
                 $(this).attr('type', 'password');
+            }
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        const input = document.getElementById('mobile');
+        const placeholder = document.querySelector('.custom-placeholder');
+        
+        // Hide placeholder when input has content
+        input.addEventListener('input', function() {
+            if (input.value.length > 0) {
+                placeholder.style.opacity = '0';
+            } else {
+                placeholder.style.opacity = '1';
+            }
+        });
+        
+        // Hide placeholder when input is focused
+        input.addEventListener('focus', function() {
+            if (input.value.length === 0) {
+                placeholder.style.opacity = '0.5';
+            }
+        });
+        
+        // Show placeholder when input loses focus and is empty
+        input.addEventListener('blur', function() {
+            if (input.value.length === 0) {
+                placeholder.style.opacity = '1';
             }
         });
     });

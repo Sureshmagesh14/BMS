@@ -46,6 +46,31 @@
     background-color:#ccc;
     
 }
+.placeholder-container {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-placeholder {
+    position: absolute;
+    left: 90px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.bold-zero {
+    font-weight: bold;
+}
+
+.form-control {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    width: 100%;
+}
 </style>
 <!-- main starts -->
 <main class="forgot-pass py-5  vi-background-index pos-rel m-auto d-flex">
@@ -64,11 +89,11 @@
                         <label for="phone" class="fw-bolder fs-20">Mobile</label>
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
-                                <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
+                                <div class="input-group-text">+27 (0)</div>
                             </div>
-                            <input type="text" name="phone" id="phone" placeholder="819 966 078"
+                            <input type="text" name="phone" id="phone" 
                                 class="form-control vi-border-clr border-radius-0 w-50" maxlength="11">
-                               
+                            <div class="custom-placeholder">(<span class="bold-zero">0</span>82) 533 6845</div>
                         </div>
                         <span>Don't include 0 in starting</span>
                         <div class="row my-2">
@@ -135,7 +160,33 @@
         }, "Invalid Mobile Number Format");
     });
 
-  
+    document.addEventListener('DOMContentLoaded', function() {
+        const input = document.getElementById('mobile');
+        const placeholder = document.querySelector('.custom-placeholder');
+        
+        // Hide placeholder when input has content
+        input.addEventListener('input', function() {
+            if (input.value.length > 0) {
+                placeholder.style.opacity = '0';
+            } else {
+                placeholder.style.opacity = '1';
+            }
+        });
+        
+        // Hide placeholder when input is focused
+        input.addEventListener('focus', function() {
+            if (input.value.length === 0) {
+                placeholder.style.opacity = '0.5';
+            }
+        });
+        
+        // Show placeholder when input loses focus and is empty
+        input.addEventListener('blur', function() {
+            if (input.value.length === 0) {
+                placeholder.style.opacity = '1';
+            }
+        });
+    });
 </script>
 @if (count($errors) > 0)
     @foreach ($errors->all() as $message)
