@@ -22,6 +22,31 @@
     label#whatsapp-error {
         width: 100% !important;
     }
+    .placeholder-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .custom-placeholder {
+        position: absolute;
+        left: 90px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        pointer-events: none;
+        transition: opacity 0.2s;
+    }
+
+    .bold-zero {
+        font-weight: bold;
+    }
+
+    .form-control {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 0;
+        width: 100%;
+    }
 
     .invalid-feedback {
         display: block;
@@ -101,9 +126,10 @@
         </label>
         <div class="col-md-10">
             <div class="input-group">
-                <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
+                <div class="input-group-text">+27 (0)</div>
                 <input type="text" class="form-control" id="mobile" name="mobile" maxlength="16"
-                    placeholder="819 966 078" autocomplete="off" required>
+                     autocomplete="off" required>
+                <div class="custom-placeholder">(<span class="bold-zero">0</span>82) 533 6845</div>
                 <span id="mobile-error" class="invalid-feedback"></span>
             </div>
             <small class="form-text text-muted">Don't include 0 in starting</small>
@@ -115,9 +141,10 @@
         <label for="whatsapp" class="col-md-2 col-form-label">WhatsApp Number *</label>
         <div class="col-md-10">
             <div class="input-group">
-                <div class="input-group-text">+27 &nbsp;<strong>(0)</strong></div>
+                <div class="input-group-text">+27 (0)</div>
                 <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="15"
-                    autocomplete="off" placeholder="819 966 078" required>
+                    autocomplete="off"  required>
+                <div class="custom-placeholder">(<span class="bold-zero">0</span>82) 533 6845</div>
             </div>
             <small class="form-text text-muted">Don't include 0 in starting</small>
         </div>
@@ -507,6 +534,33 @@
         } else {
             // Optionally clear the deactivation date if the status is not deactivated
             $('#deactivated_date').val('');
+        }
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('mobile');
+    const placeholder = document.querySelector('.custom-placeholder');
+    
+    // Hide placeholder when input has content
+    input.addEventListener('input', function() {
+        if (input.value.length > 0) {
+            placeholder.style.opacity = '0';
+        } else {
+            placeholder.style.opacity = '1';
+        }
+    });
+    
+    // Hide placeholder when input is focused
+    input.addEventListener('focus', function() {
+        if (input.value.length === 0) {
+            placeholder.style.opacity = '0.5';
+        }
+    });
+    
+    // Show placeholder when input loses focus and is empty
+    input.addEventListener('blur', function() {
+        if (input.value.length === 0) {
+            placeholder.style.opacity = '1';
         }
     });
 });
