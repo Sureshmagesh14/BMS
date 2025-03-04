@@ -15,6 +15,17 @@
         position: relative;
         display: inline-block;
     }
+    @media (max-width: 768px) {
+        .custom-placeholder {
+            left: 60px; /* Adjust this value as needed */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .custom-placeholder {
+            left: 30px; /* Adjust for very small screens */
+        }
+    }
 
     .custom-placeholder {
         position: absolute;
@@ -324,8 +335,16 @@
             }
         });
 
-        $('#mobile').inputmask("99 999 9999");
-        $('#whatsapp').inputmask("99 999 9999");
+        $('#mobile').inputmask("99 999 9999", {
+            "showMaskOnHover": false,
+            "showMaskOnFocus": false,
+            "placeholder": ""
+        });
+        $('#whatsapp').inputmask("99 999 9999", {
+            "showMaskOnHover": false,
+            "showMaskOnFocus": false,
+            "placeholder": ""
+        });
 
         $('#edit_respondents_form').validate({
             rules: {
