@@ -105,7 +105,7 @@
                             </div>
                             <input type="text" name="phone" id="phone" 
                                 class="form-control vi-border-clr border-radius-0 w-50" maxlength="11">
-                            <div class="custom-placeholder mobile">(<span class="bold-zero">0</span>82) 533 6845</div>
+                            <div class="custom-placeholder mobile">(<span class="bold-zero">0</span>xx) xxx xxxx</div>
                         </div>
                         <span>Don't include 0 in starting</span>
                         <div class="row my-2">
@@ -140,10 +140,18 @@
 <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
 <script>
     $(function() {
-        $('#phone').inputmask("99 999 9999", {
-            "showMaskOnHover": false,
-            "showMaskOnFocus": false,
-            "placeholder": ""
+        $('#phone').inputmask({
+            mask: "99 999 9999",
+            showMaskOnHover: false,
+            showMaskOnFocus: false,
+            placeholder: "",
+            // Custom validation to prevent first digit from being '0'
+            preValidation: function(buffer, pos, char) {
+                if (pos === 0 && char === '0') {
+                    return false;
+                }
+                return true;
+            }
         });
         $('#forgot_table').validate({
             rules: {

@@ -141,7 +141,7 @@
                 <div class="input-group-text">+27</div>
                 <input type="text" class="form-control" id="mobile" name="mobile" maxlength="16"
                      autocomplete="off" required>
-                <div class="custom-placeholder mobile">(<span class="bold-zero">0</span>82) 533 6845</div>
+                <div class="custom-placeholder mobile">(<span class="bold-zero">0</span>xx) xxx xxxx</div>
                 <span id="mobile-error" class="invalid-feedback"></span>
             </div>
             <small class="form-text text-muted">Don't include 0 in starting</small>
@@ -156,7 +156,7 @@
                 <div class="input-group-text">+27</div>
                 <input type="text" class="form-control" id="whatsapp" name="whatsapp" maxlength="15"
                     autocomplete="off"  required>
-                <div class="custom-placeholder whatsapp">(<span class="bold-zero">0</span>82) 533 6845</div>
+                <div class="custom-placeholder whatsapp">(<span class="bold-zero">0</span>xx) xxx xxxx</div>
             </div>
             <small class="form-text text-muted">Don't include 0 in starting</small>
         </div>
@@ -330,14 +330,30 @@
             }
         });
         $('#mobile').inputmask("99 999 9999", {
-            "showMaskOnHover": false,
-            "showMaskOnFocus": false,
-            "placeholder": ""
+            mask: "99 999 9999",
+            showMaskOnHover: false,
+            showMaskOnFocus: false,
+            placeholder: "",
+            // Custom validation to prevent first digit from being '0'
+            preValidation: function(buffer, pos, char) {
+                if (pos === 0 && char === '0') {
+                    return false;
+                }
+                return true;
+            }
         });
         $('#whatsapp').inputmask("99 999 9999", {
-            "showMaskOnHover": false,
-            "showMaskOnFocus": false,
-            "placeholder": ""
+            mask: "99 999 9999",
+            showMaskOnHover: false,
+            showMaskOnFocus: false,
+            placeholder: "",
+            // Custom validation to prevent first digit from being '0'
+            preValidation: function(buffer, pos, char) {
+                if (pos === 0 && char === '0') {
+                    return false;
+                }
+                return true;
+            }
         });
 
         // Form validation
