@@ -1211,7 +1211,9 @@ h6.question_name {
                                                                 break;
                                                             case 'picturechoice':
                                                                 if (isset($qusvalue_skip->choices_list)) {
-                                                                    $resp_logic_type_skip_value = explode(",", $qusvalue_skip->choices_list);
+                                                                    // $resp_logic_type_skip_value = explode(",", $qusvalue_skip->choices_list);
+                                                                    $resp_logic_type_skip_value = json_decode($qusvalue_skip->choices_list, true);
+
                                                                 } else {
                                                                     $resp_logic_type_skip_value = []; 
                                                                 }
@@ -1271,15 +1273,16 @@ h6.question_name {
                                                         <option value="">Choose</option>
                                                         @foreach($resp_logic_type_skip_value as $key => $value)
                                                             @if($key == $vlogicoption_skip)
-                                                                <option selected value="{{$key}}">
-                                                                    {{ is_object($value) && property_exists($value, 'text') ? $value->text : '' }}
+                                                                <option selected value="{{ $key }}">
+                                                                    {{ isset($value['text']) ? $value['text'] : '' }}
                                                                 </option>
                                                             @else 
-                                                                <option value="{{$key}}">
-                                                                    {{ is_object($value) && property_exists($value, 'text') ? $value->text : '' }}
+                                                                <option value="{{ $key }}">
+                                                                    {{ isset($value['text']) ? $value['text'] : '' }}
                                                                 </option>
                                                             @endif
                                                         @endforeach
+
 
                                                     </select>
                                                 @else
