@@ -175,7 +175,7 @@
                                                     <div class="input-group-text">+27</div>
                                                 </div>
                                                 <input type="text" name="basic[mobile_number]" id="mobile_number"
-                                                    placeholder="(082) 533 6845"
+                                                    placeholder="(0xx) xxx xxxx"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ str_starts_with($resp_details->mobile, '27') ? ltrim(substr($resp_details->mobile, 2), '0') : ltrim($resp_details->mobile, '0') }}"
                                                     maxlength="16">
@@ -189,10 +189,10 @@
                                                     class="star_require">*</span></label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">+27</div>
+                                                    <div class="input-group-text">+27</div> 
                                                 </div>
                                                 <input type="text" name="basic[whatsapp_number]" id="whatsapp_number"
-                                                    placeholder="(082) 533 6845"
+                                                    placeholder="(0xx) xxx xxxx"
                                                     class="form-control vi-border-clr border-radius-0"
                                                     value="{{ str_starts_with($resp_details->whatsapp, '27') ? ltrim(substr($resp_details->whatsapp, 2), '0') : ltrim($resp_details->whatsapp, '0') }}"
                                                     maxlength="16" required>
@@ -1097,8 +1097,34 @@
         var form = $("#profile_wizard_form");
 
         // Initialize Inputmask
-        $('#mobile_number').inputmask("99 999 9999");
-        $('#whatsapp_number').inputmask("99 999 9999");
+        // $('#mobile_number').inputmask("99 999 9999");
+        $('#mobile_number').inputmask({
+            mask: "99 999 9999",
+            showMaskOnHover: false,
+            showMaskOnFocus: false,
+            placeholder: "",
+            // Custom validation to prevent first digit from being '0'
+            preValidation: function(buffer, pos, char) {
+                if (pos === 0 && char === '0') {
+                    return false;
+                }
+                return true;
+            }
+        });
+        $('#whatsapp_number').inputmask({
+            mask: "99 999 9999",
+            showMaskOnHover: false,
+            showMaskOnFocus: false,
+            placeholder: "",
+            // Custom validation to prevent first digit from being '0'
+            preValidation: function(buffer, pos, char) {
+                if (pos === 0 && char === '0') {
+                    return false;
+                }
+                return true;
+            }
+        });
+      
         $('#date_of_birth').inputmask("yyyy/mm/dd", {
             "placeholder": "YYYY/MM/DD",
             onincomplete: function() {
@@ -1515,8 +1541,33 @@
         }
     });
     $(document).ready(function() {
-        $('#mobile_number').inputmask("99 999 9999");
-        $('#whatsapp_number').inputmask("99 999 9999");
+        $('#mobile_number').inputmask({
+            mask: "99 999 9999",
+            showMaskOnHover: false,
+            showMaskOnFocus: false,
+            placeholder: "",
+            // Custom validation to prevent first digit from being '0'
+            preValidation: function(buffer, pos, char) {
+                if (pos === 0 && char === '0') {
+                    return false;
+                }
+                return true;
+            }
+        });
+        $('#whatsapp_number').inputmask({
+            mask: "99 999 9999",
+            showMaskOnHover: false,
+            showMaskOnFocus: false,
+            placeholder: "",
+            // Custom validation to prevent first digit from being '0'
+            preValidation: function(buffer, pos, char) {
+                if (pos === 0 && char === '0') {
+                    return false;
+                }
+                return true;
+            }
+        });
+      
 
         $.validator.addMethod("phoneUS", function(value, element) {
             return this.optional(element) || /^\d{3} \d{3} \d{4}$/.test(value);
