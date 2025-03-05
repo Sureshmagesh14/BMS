@@ -236,7 +236,7 @@
                                 <input type="text" name="mobile" id="mobile" 
                                 class="form-control vi-border-clr border-radius-0 w-50" 
                                 maxlength="11" autocomplete="off" required>
-                                <div class="custom-placeholder mobile">(<span class="bold-zero">0</span>82) 533 6845</div>
+                                <div class="custom-placeholder mobile">(<span class="bold-zero">0</span>xx) xxx xxxx</div>
                             </div>
                             <small class="text-muted">Don't include 0 in starting</small>
                         </div>
@@ -251,7 +251,7 @@
                                 </div>
                                 <input  type="text" name="whatsapp" id="whatsapp" 
                                     class="form-control vi-border-clr border-radius-0 w-50" maxlength="11" autocomplete="off" required>
-                                    <div class="custom-placeholder whatsapp">(<span class="bold-zero">0</span>82) 533 6845</div>
+                                    <div class="custom-placeholder whatsapp">(<span class="bold-zero">0</span>xx) xxx xxxx</div>
                             </div>
                             <small class="text-muted">Don't include 0 in starting</small>
                         </div>
@@ -395,15 +395,33 @@
 
 <script>
     var tempcsrf = '{!! csrf_token() !!}';
-    $('#mobile').inputmask("99 999 9999", {
-        "showMaskOnHover": false,
-        "showMaskOnFocus": false,
-        "placeholder": ""
+    $('#mobile').inputmask({
+        mask: "99 999 9999",
+        showMaskOnHover: false,
+        showMaskOnFocus: false,
+        placeholder: "",
+        // Custom validation to prevent first digit from being '0'
+        preValidation: function(buffer, pos, char) {
+            if (pos === 0 && char === '0') {
+                return false;
+            }
+            return true;
+        }
     });
-    $('#whatsapp').inputmask("99 999 9999", {
-        "showMaskOnHover": false,
-        "showMaskOnFocus": false,
-        "placeholder": ""
+
+    // WhatsApp number input validation (same as mobile)
+    $('#whatsapp').inputmask({
+        mask: "99 999 9999",
+        showMaskOnHover: false,
+        showMaskOnFocus: false,
+        placeholder: "",
+        // Custom validation to prevent first digit from being '0'
+        preValidation: function(buffer, pos, char) {
+            if (pos === 0 && char === '0') {
+                return false;
+            }
+            return true;
+        }
     });
     $('form#reg_table').on('blur', '.reg_email', function() {
         var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
