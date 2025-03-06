@@ -6,6 +6,17 @@
     span.badge.bg-primary {
         color: white;
     }
+.dataTables_wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+table.dataTable {
+    width: 100% !important;
+}
+
+.dataTables_wrapper .dataTables_scroll {
+    overflow-x: auto;
+}
 </style>
 <div class="main-content">
     <div class="page-content">
