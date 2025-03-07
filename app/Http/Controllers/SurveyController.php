@@ -1179,6 +1179,12 @@ class SurveyController extends Controller
                     if ($skip_logic !== null) {
                         $display_qus_choice_display = json_decode($skip_logic->display_qus_choice_skip); 
                         $logic_type_value_display = json_decode($skip_logic->skiplogic_type_value_skip); 
+                        if (!is_array($display_qus_choice_display)) {
+                            $display_qus_choice_display = [];
+                        }
+                        if (!is_array($logic_type_value_display)) {
+                            $logic_type_value_display = [];
+                        }
                         if(count($display_qus_choice_display) > 0 && count($logic_type_value_display) > 0) {
                             if (self::processSkipLogic($skip_logic, $response_user_id, $survey_id, $qus_check)) {
                                 return redirect()->route('survey.startsurvey', [$survey_id, $skip_logic->jump_type]);
