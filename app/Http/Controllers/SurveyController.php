@@ -1307,6 +1307,14 @@ class SurveyController extends Controller
                     $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
 
                     $ans = trim(self::getAnswerValue($resp_logic_type_display_value, $logicv));
+                    $answerValue = self::getAnswerValue($resp_logic_type_display_value, $logicv);
+
+                    if (is_object($answerValue)) {
+                        $ans = $answerValue;
+                    } else {
+                        $ans = trim((string) $answerValue);
+                    }
+
                     $get_ans_usr = SurveyResponse::with('questions')->where(['question_id' => $qusID[0], 'response_user_id' => $response_user_id])->orderBy("id", "desc")->first();
                    
                     list($user_answered, $user_skipped, $qus_type) = self::getUserAnsweredData($get_ans_usr);
