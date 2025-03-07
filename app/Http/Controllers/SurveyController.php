@@ -1650,7 +1650,12 @@ class SurveyController extends Controller
         $logic_type_value_display = json_decode($display_logic->logic_type_value_display); 
         $logic_type_value_option_display = json_decode($display_logic->logic_type_value_option_display); 
         $display_qus_choice_andor_display = json_decode($display_logic->display_qus_choice_andor_display); 
-
+        if (!is_array($display_qus_choice_display)) {
+            $display_qus_choice_display = [];
+        }
+        if (!is_array($logic_type_value_display)) {
+            $logic_type_value_display = [];
+        }
         if(count($display_qus_choice_display) > 0 && count($logic_type_value_display) > 0) {
             foreach ($display_qus_choice_display as $k => $display) {
                 $logic = $logic_type_value_display[$k];
