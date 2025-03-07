@@ -1306,7 +1306,6 @@ class SurveyController extends Controller
 
                     $resp_logic_type_display_value = self::getResponseLogicTypeDisplayValue($qus_typeData, $qusvalue_display);
 
-                    $ans = trim(self::getAnswerValue($resp_logic_type_display_value, $logicv));
                     $answerValue = self::getAnswerValue($resp_logic_type_display_value, $logicv);
 
                     if (is_object($answerValue)) {
