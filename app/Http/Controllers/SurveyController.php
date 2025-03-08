@@ -1802,6 +1802,7 @@ class SurveyController extends Controller
     
     private static function evaluateLogicCondition($logic, $qus_type, $ans, $user_answered, $user_skipped,$qusID)
     {
+       
         switch ($logic) {
             case 'isSelected':
                 return self::evaluateIsSelected($qus_type, $ans, $user_answered,$qusID);
@@ -1838,12 +1839,15 @@ class SurveyController extends Controller
     
     private static function evaluateIsSelected($qus_type, $ans, $user_answered,$qusID)
     {
+       
         if ($qus_type == 'matrix_qus') {
             $user_answered = json_decode($user_answered);
             return $user_answered[$qusID[1]]->key == $qusID[1] && $ans == $user_answered[$qusID[1]]->ans;
         } elseif ($qus_type == 'multi_choice') {
             return in_array($ans, explode(",", $user_answered));
-        } else {
+        } elseif($qus_type == 'picturechoice'){
+            return $ans->text == $user_answered;
+        }else {
             return $user_answered == $ans;
         }
     }
@@ -1855,7 +1859,9 @@ class SurveyController extends Controller
             return $user_answered[$qusID[1]]->key == $qusID[1] && $ans != $user_answered[$qusID[1]]->ans;
         } elseif ($qus_type == 'multi_choice') {
             return !in_array($ans, explode(",", $user_answered));
-        } else {
+        } elseif($qus_type == 'picturechoice'){
+            return $ans->text != $user_answered;
+        }else {
             return $user_answered != $ans;
         }
     }
@@ -2578,7 +2584,11 @@ class SurveyController extends Controller
                                     if (in_array($quota->option_value, $user_answered)) {
                                         $limit++;
                                     }
-                                } else {
+                                } elseif($qus_type == 'picturechoice'){
+                                    if( $ans->text == $user_answered){
+                                        $limit++;
+                                    }
+                                }else {
                                     if ($user_answered == $quota->option_value) {
                                         $limit++;
                                     }
@@ -2597,7 +2607,11 @@ class SurveyController extends Controller
                                     if (!in_array($quota->option_value, $user_answered)) {
                                         $limit++;
                                     }
-                                } else {
+                                } elseif($qus_type == 'picturechoice'){
+                                    if( $ans->text != $user_answered){
+                                        $limit++;
+                                    }
+                                }else {
                                     if ($user_answered != $quota->option_value) {
                                         $limit++;
                                     }
